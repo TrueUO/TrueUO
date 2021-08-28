@@ -1,31 +1,23 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading;
+#region References
 using Server.Accounting;
-using Server.Diagnostics;
 using Server.Engines.Help;
 using Server.Network;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+#endregion
 
 namespace Server.Misc
 {
     internal static class ServerConsole
     {
-        private static readonly Func<string> _Listen = Console.ReadLine;
-
-        private static string _Command;
-
-        private static Timer _PollTimer;
-
         private static bool _HearConsole;
 
         public static void Initialize()
         {
             EventSink.ServerStarted += () =>
             {
-                PollCommands();
+                ListenCommands();
 
                 if (_HearConsole)
                 {
@@ -53,43 +45,34 @@ namespace Server.Misc
                 }
                 catch (Exception e)
                 {
-                    ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
                 }
             };
         }
 
-        private static void PollCommands()
+        private static void ListenCommands()
         {
-            _PollTimer = Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromMilliseconds(100), ProcessCommand);
-
-            _Listen.BeginInvoke(r => ProcessInput(_Listen.EndInvoke(r)), null);
-        }
-
-        private static void ProcessInput(string input)
-        {
-            if (!Core.Crashed && !Core.Closing)
+            var task = Task.Factory.StartNew(() =>
             {
-                Interlocked.Exchange(ref _Command, input);
-            }
-        }
+                string line;
 
-        private static void ProcessCommand()
-        {
-            if (Core.Crashed || Core.Closing || World.Loading || World.Saving)
-            {
-                return;
-            }
+                while ((line = Console.ReadLine()) != null)
+                {
+                    if (Core.Crashed || Core.Closing || World.Loading || World.Saving)
+                    {
+                        return;
+                    }
 
-            if (string.IsNullOrEmpty(_Command))
-            {
-                return;
-            }
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        return;
+                    }
 
-            ProcessCommand(_Command);
+                    ProcessCommand(line);
+                }
+            });
 
-            Interlocked.Exchange(ref _Command, string.Empty);
-
-            _Listen.BeginInvoke(r => ProcessInput(_Listen.EndInvoke(r)), null);
+            Task.WhenAny(task, Task.Delay(TimeSpan.FromMilliseconds(250)));
         }
 
         private static PageEntry[] _Pages;
@@ -134,7 +117,7 @@ namespace Server.Misc
             {
                 string sub = input.Substring(3).Trim();
 
-                List<NetState> states = NetState.Instances;
+                System.Collections.Generic.List<NetState> states = NetState.Instances;
 
                 if (states.Count == 0)
                 {
@@ -158,7 +141,7 @@ namespace Server.Misc
             {
                 string sub = input.Substring(4).Trim();
 
-                List<NetState> states = NetState.Instances;
+                System.Collections.Generic.List<NetState> states = NetState.Instances;
 
                 if (states.Count == 0)
                 {
@@ -178,7 +161,7 @@ namespace Server.Misc
                 return;
             }
 
-            switch (input.Trim())
+            switch (input)
             {
                 case "crash":
                     {
@@ -204,34 +187,13 @@ namespace Server.Misc
                     break;
                 case "save recompile":
                     {
-                        var path = AutoRestart.RecompilePath;
-
-                        if (!File.Exists(path))
-                        {
-                            Console.WriteLine("Unable to Re-Compile due to missing file: {0}", AutoRestart.RecompilePath);
-                        }
-                        else
-                        {
-                            AutoSave.Save();
-
-                            Process.Start(path);
-                            Core.Kill();
-                        }
+                        AutoSave.Save();
+                        AutoRestart.ReCompile();
                     }
                     break;
                 case "nosave recompile":
                     {
-                        var path = AutoRestart.RecompilePath;
-
-                        if (!File.Exists(path))
-                        {
-                            Console.WriteLine("Unable to Re-Compile due to missing file: {0}", AutoRestart.RecompilePath);
-                        }
-                        else
-                        {
-                            Process.Start(path);
-                            Core.Kill();
-                        }
+                        AutoRestart.ReCompile();
                     }
                     break;
                 case "restart nosave":
@@ -241,19 +203,16 @@ namespace Server.Misc
                     break;
                 case "online":
                     {
-                        List<NetState> states = NetState.Instances;
+                        System.Collections.Generic.List<NetState> states = NetState.Instances;
 
                         if (states.Count == 0)
                         {
                             Console.WriteLine("There are no users online at this time.");
                         }
 
-                        for (var index = 0; index < states.Count; index++)
+                        foreach (NetState t in states)
                         {
-                            NetState t = states[index];
-                            Account a = t.Account as Account;
-
-                            if (a == null)
+                            if (!(t.Account is Account a))
                             {
                                 continue;
                             }
@@ -325,164 +284,177 @@ namespace Server.Misc
 
         private static void HandlePaging(string sub)
         {
-            while (true)
+            if (sub.StartsWith("help", StringComparison.OrdinalIgnoreCase) ||
+                sub.StartsWith("?", StringComparison.OrdinalIgnoreCase))
             {
-                if (sub.StartsWith("help", StringComparison.OrdinalIgnoreCase) || sub.StartsWith("?", StringComparison.OrdinalIgnoreCase))
+                DisplayPagingHelp();
+
+                HandlePaging(string.Empty);
+                return;
+            }
+
+            if (PageQueue.List.Count == 0)
+            {
+                Console.WriteLine("There are no pages in the queue.");
+
+                if (_Pages != null)
                 {
+                    _Pages = null;
+
+                    Console.WriteLine("[Pages]: Disabled page mode.");
+                }
+
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(sub))
+            {
+                if (_Pages == null)
+                {
+                    Console.WriteLine("[Pages]: Enabled page mode.");
+
                     DisplayPagingHelp();
-
-                    sub = string.Empty;
-                    continue;
                 }
 
-                if (PageQueue.List.Count == 0)
+                _Pages = PageQueue.List.Cast<PageEntry>().ToArray();
+
+                const string format = "{0:D3}:\t{1}\t{2}";
+
+                for (int i = 0; i < _Pages.Length; i++)
                 {
-                    Console.WriteLine("There are no pages in the queue.");
-
-                    if (_Pages != null)
-                    {
-                        _Pages = null;
-
-                        Console.WriteLine("[Pages]: Disabled page mode.");
-                    }
-
-                    return;
+                    Console.WriteLine(format, i + 1, _Pages[i].Type, _Pages[i].Sender);
                 }
 
-                if (string.IsNullOrWhiteSpace(sub))
+                return;
+            }
+
+            if (sub.StartsWith("exit", StringComparison.OrdinalIgnoreCase))
+            {
+                if (_Pages != null)
                 {
-                    if (_Pages == null)
-                    {
-                        Console.WriteLine("[Pages]: Enabled page mode.");
+                    _Pages = null;
 
-                        DisplayPagingHelp();
-                    }
-
-                    List<PageEntry> list = new List<PageEntry>();
-
-                    for (var index = 0; index < PageQueue.List.Count; index++)
-                    {
-                        var entry = (PageEntry) PageQueue.List[index];
-
-                        list.Add(entry);
-                    }
-
-                    _Pages = list.ToArray();
-
-                    const string format = "{0:D3}:\t{1}\t{2}";
-
-                    for (int i = 0; i < _Pages.Length; i++)
-                    {
-                        Console.WriteLine(format, i + 1, _Pages[i].Type, _Pages[i].Sender);
-                    }
-
-                    return;
+                    Console.WriteLine("[Pages]: Disabled page mode.");
                 }
 
-                if (sub.StartsWith("exit", StringComparison.OrdinalIgnoreCase))
+                return;
+            }
+
+            if (sub.StartsWith("clear", StringComparison.OrdinalIgnoreCase))
+            {
+                if (_Pages != null)
                 {
-                    if (_Pages != null)
-                    {
-                        _Pages = null;
-
-                        Console.WriteLine("[Pages]: Disabled page mode.");
-                    }
-
-                    return;
-                }
-
-                if (sub.StartsWith("clear", StringComparison.OrdinalIgnoreCase))
-                {
-                    if (_Pages != null)
-                    {
-                        for (var index = 0; index < _Pages.Length; index++)
-                        {
-                            PageEntry page = _Pages[index];
-
-                            PageQueue.Remove(page);
-                        }
-
-                        Console.WriteLine("[Pages]: Queue cleared.");
-
-                        Array.Clear(_Pages, 0, _Pages.Length);
-
-                        _Pages = null;
-
-                        Console.WriteLine("[Pages]: Disabled page mode.");
-                    }
-
-                    return;
-                }
-
-                if (sub.StartsWith("remove", StringComparison.OrdinalIgnoreCase))
-                {
-                    string[] args;
-
-                    PageEntry page = FindPage(sub, out args);
-
-                    if (page == null)
-                    {
-                        Console.WriteLine("[Pages]: Invalid page entry.");
-                    }
-                    else
+                    foreach (PageEntry page in _Pages)
                     {
                         PageQueue.Remove(page);
-
-                        Console.WriteLine("[Pages]: Removed from queue.");
                     }
 
-                    sub = string.Empty;
-                    continue;
+                    Console.WriteLine("[Pages]: Queue cleared.");
+
+                    Array.Clear(_Pages, 0, _Pages.Length);
+
+                    _Pages = null;
+
+                    Console.WriteLine("[Pages]: Disabled page mode.");
                 }
 
-                if (sub.StartsWith("handle", StringComparison.OrdinalIgnoreCase))
+                return;
+            }
+
+            if (sub.StartsWith("remove", StringComparison.OrdinalIgnoreCase))
+            {
+                string[] args;
+
+                PageEntry page = FindPage(sub, out args);
+
+                if (page == null)
                 {
-                    string[] args;
-
-                    PageEntry page = FindPage(sub, out args);
-
-                    if (page == null)
-                    {
-                        Console.WriteLine("[Pages]: Invalid page entry.");
-
-                        sub = string.Empty;
-                        continue;
-                    }
-
-                    if (args.Length <= 0)
-                    {
-                        Console.WriteLine("[Pages]: Message required.");
-
-                        sub = string.Empty;
-                        continue;
-                    }
-
-                    page.Sender.SendGump(new MessageSentGump(page.Sender, ServerList.ServerName, string.Join(" ", args)));
-
-                    Console.WriteLine("[Pages]: Message sent.");
-
+                    Console.WriteLine("[Pages]: Invalid page entry.");
+                }
+                else
+                {
                     PageQueue.Remove(page);
 
                     Console.WriteLine("[Pages]: Removed from queue.");
-
-                    sub = string.Empty;
-                    continue;
                 }
 
-                if (sub.StartsWith("view", StringComparison.OrdinalIgnoreCase))
+                HandlePaging(string.Empty);
+                return;
+            }
+
+            if (sub.StartsWith("handle", StringComparison.OrdinalIgnoreCase))
+            {
+                string[] args;
+
+                PageEntry page = FindPage(sub, out args);
+
+                if (page == null)
                 {
-                    string[] args;
+                    Console.WriteLine("[Pages]: Invalid page entry.");
 
-                    PageEntry page = FindPage(sub, out args);
+                    HandlePaging(string.Empty);
+                    return;
+                }
 
-                    if (page == null)
-                    {
-                        Console.WriteLine("[Pages]: Invalid page entry.");
+                if (args.Length <= 0)
+                {
+                    Console.WriteLine("[Pages]: Message required.");
 
-                        sub = string.Empty;
-                        continue;
-                    }
+                    HandlePaging(string.Empty);
+                    return;
+                }
 
+                page.Sender.SendGump(new MessageSentGump(page.Sender, ServerList.ServerName, string.Join(" ", args)));
+
+                Console.WriteLine("[Pages]: Message sent.");
+
+                PageQueue.Remove(page);
+
+                Console.WriteLine("[Pages]: Removed from queue.");
+
+                HandlePaging(string.Empty);
+                return;
+            }
+
+            if (sub.StartsWith("view", StringComparison.OrdinalIgnoreCase))
+            {
+                string[] args;
+
+                PageEntry page = FindPage(sub, out args);
+
+                if (page == null)
+                {
+                    Console.WriteLine("[Pages]: Invalid page entry.");
+
+                    HandlePaging(string.Empty);
+                    return;
+                }
+
+                int idx = Array.IndexOf(_Pages, page) + 1;
+
+                Console.WriteLine("[Pages]: {0:D3}:\t{1}\t{2}", idx, page.Type, page.Sender);
+
+                if (!string.IsNullOrWhiteSpace(page.Message))
+                {
+                    Console.WriteLine("[Pages]: {0}", page.Message);
+                }
+                else
+                {
+                    Console.WriteLine("[Pages]: No message supplied.");
+                }
+
+                HandlePaging(string.Empty);
+                return;
+            }
+
+            if (_Pages != null)
+            {
+                string[] args;
+
+                PageEntry page = FindPage(sub, out args);
+
+                if (page != null)
+                {
                     int idx = Array.IndexOf(_Pages, page) + 1;
 
                     Console.WriteLine("[Pages]: {0:D3}:\t{1}\t{2}", idx, page.Type, page.Sender);
@@ -496,43 +468,15 @@ namespace Server.Misc
                         Console.WriteLine("[Pages]: No message supplied.");
                     }
 
-                    sub = string.Empty;
-                    continue;
+                    HandlePaging(string.Empty);
+                    return;
                 }
 
-                if (_Pages != null)
-                {
-                    string[] args;
+                Array.Clear(_Pages, 0, _Pages.Length);
 
-                    PageEntry page = FindPage(sub, out args);
+                _Pages = null;
 
-                    if (page != null)
-                    {
-                        int idx = Array.IndexOf(_Pages, page) + 1;
-
-                        Console.WriteLine("[Pages]: {0:D3}:\t{1}\t{2}", idx, page.Type, page.Sender);
-
-                        if (!string.IsNullOrWhiteSpace(page.Message))
-                        {
-                            Console.WriteLine("[Pages]: {0}", page.Message);
-                        }
-                        else
-                        {
-                            Console.WriteLine("[Pages]: No message supplied.");
-                        }
-
-                        sub = string.Empty;
-                        continue;
-                    }
-
-                    Array.Clear(_Pages, 0, _Pages.Length);
-
-                    _Pages = null;
-
-                    Console.WriteLine("[Pages]: Disabled page mode.");
-                }
-
-                break;
+                Console.WriteLine("[Pages]: Disabled page mode.");
             }
         }
 
@@ -546,25 +490,11 @@ namespace Server.Misc
 
                 if (args.Length > 2)
                 {
-                    List<string> list = new List<string>();
-
-                    foreach (var s in args.Skip(2))
-                    {
-                        list.Add(s);
-                    }
-
-                    args = list.ToArray();
+                    args = args.Skip(2).ToArray();
                 }
                 else
                 {
-                    List<string> list = new List<string>();
-
-                    foreach (var s in args.Skip(1))
-                    {
-                        list.Add(s);
-                    }
-
-                    args = list.ToArray();
+                    args = args.Skip(1).ToArray();
                 }
             }
 

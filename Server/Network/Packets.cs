@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -2318,7 +2319,7 @@ namespace Server.Network
 
 			int packLength = m_PackBuffer.Length;
 
-			Compression.Pack(m_PackBuffer, ref packLength, buffer, length, ZLibQuality.Default);
+            Zlib.Pack(m_PackBuffer, ref packLength, buffer, length, ZlibQuality.Default);
 
 			m_Stream.Write(4 + packLength);
 			m_Stream.Write(length);
@@ -3844,7 +3845,7 @@ namespace Server.Network
 
 		public IPEndPoint Address { get; set; }
 
-		public ServerInfo(string name, int fullPercent, TimeZone tz, IPEndPoint address)
+		public ServerInfo(string name, int fullPercent, TimeZoneInfo tz, IPEndPoint address)
 		{
 			Name = name;
 			FullPercent = fullPercent;
@@ -4161,7 +4162,7 @@ namespace Server.Network
 				lock (m_CompressorBuffers)
 					buffer = m_CompressorBuffers.AcquireBuffer();
 
-				Compression.Compress(m_CompiledBuffer, 0, length, buffer, ref length);
+                NetworkCompression.Compress(m_CompiledBuffer, 0, length, buffer, out length);
 
 				if (length <= 0)
 				{

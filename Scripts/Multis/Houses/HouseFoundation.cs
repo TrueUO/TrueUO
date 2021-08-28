@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Threading;
 
 namespace Server.Multis
@@ -2523,9 +2524,10 @@ namespace Server.Multis
                 byte[] inflatedBuffer = mPlaneBuffers[i];
 
                 int deflatedLength = m_DeflatedBuffer.Length;
-                ZLibError ce = Compression.Pack(m_DeflatedBuffer, ref deflatedLength, inflatedBuffer, size, ZLibQuality.Default);
 
-                if (ce != ZLibError.Okay)
+                var ce = Zlib.Pack(m_DeflatedBuffer, ref deflatedLength, inflatedBuffer, size, ZlibQuality.Default);
+
+                if (ce != ZlibError.Okay)
                 {
                     Console.WriteLine("ZLib error: {0} (#{1})", ce, (int)ce);
                     deflatedLength = 0;
@@ -2559,9 +2561,10 @@ namespace Server.Multis
                 byte[] inflatedBuffer = mStairBuffers[i];
 
                 int deflatedLength = m_DeflatedBuffer.Length;
-                ZLibError ce = Compression.Pack(m_DeflatedBuffer, ref deflatedLength, inflatedBuffer, size, ZLibQuality.Default);
 
-                if (ce != ZLibError.Okay)
+                var ce = Zlib.Pack(m_DeflatedBuffer, ref deflatedLength, inflatedBuffer, size, ZlibQuality.Default);
+
+                if (ce != ZlibError.Okay)
                 {
                     Console.WriteLine("ZLib error: {0} (#{1})", ce, (int)ce);
                     deflatedLength = 0;

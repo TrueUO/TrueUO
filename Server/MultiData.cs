@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
+using System.IO.Compression;
 using Server.Network;
 #endregion
 
@@ -146,7 +146,7 @@ namespace Server
 					{
 						byte[] destData = new byte[decompressedSize];
 						/*ZLibError error = */
-						Compression.Compressor.Decompress(destData, ref decompressedSize, sourceData, compressedSize);
+                        Zlib.Unpack(destData, ref decompressedSize, sourceData, compressedSize);
 
 						data = destData;
 					}
