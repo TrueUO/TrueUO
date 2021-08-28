@@ -13,40 +13,20 @@ namespace Server
         private readonly AssemblyBuilder m_AssemblyBuilder;
         private readonly ModuleBuilder m_ModuleBuilder;
 
-        public AssemblyEmitter(string assemblyName, bool canSave)
+        public AssemblyEmitter(string assemblyName)
         {
             m_AssemblyName = assemblyName;
 
             m_AppDomain = AppDomain.CurrentDomain;
 
-            m_AssemblyBuilder = m_AppDomain.DefineDynamicAssembly(
-                new AssemblyName(assemblyName),
-                canSave ? AssemblyBuilderAccess.RunAndSave : AssemblyBuilderAccess.Run);
+            m_AssemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName(assemblyName), AssemblyBuilderAccess.Run);
 
-            if (canSave)
-            {
-                m_ModuleBuilder = m_AssemblyBuilder.DefineDynamicModule(
-                    assemblyName,
-                    string.Format("{0}.dll", assemblyName.ToLower()),
-                    false);
-            }
-            else
-            {
-                m_ModuleBuilder = m_AssemblyBuilder.DefineDynamicModule(
-                    assemblyName,
-                    false);
-            }
+            m_ModuleBuilder = m_AssemblyBuilder.DefineDynamicModule(assemblyName);
         }
 
         public TypeBuilder DefineType(string typeName, TypeAttributes attrs, Type parentType)
         {
             return m_ModuleBuilder.DefineType(typeName, attrs, parentType);
-        }
-
-        public void Save()
-        {
-            m_AssemblyBuilder.Save(
-                string.Format("{0}.dll", m_AssemblyName.ToLower()));
         }
     }
 

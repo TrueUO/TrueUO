@@ -172,7 +172,7 @@ namespace Server.Network
 		{
 			if (Core.Unix)
 			{
-				if (Core.Is64Bit)
+				if (Core.MultiProcessor)
 				{
 					Compressor = new CompressorUnix64();
 				}
@@ -181,7 +181,7 @@ namespace Server.Network
 					Compressor = new CompressorUnix32();
 				}
 			}
-			else if (Core.Is64Bit)
+			else if (Core.MultiProcessor)
 			{
 				Compressor = new Compressor64();
 			}

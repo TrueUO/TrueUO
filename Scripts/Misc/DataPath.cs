@@ -73,12 +73,7 @@ namespace Server.Misc
         {
             try
             {
-                string keyString;
-
-                if (Core.Is64Bit)
-                    keyString = @"SOFTWARE\Wow6432Node\{0}";
-                else
-                    keyString = @"SOFTWARE\{0}";
+                var keyString = @"SOFTWARE\Wow6432Node\{0}";
 
                 using (RegistryKey key = Registry.LocalMachine.OpenSubKey(string.Format(keyString, subName)))
                 {
