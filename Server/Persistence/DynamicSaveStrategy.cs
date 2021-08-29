@@ -22,10 +22,10 @@ namespace Server
 		public DynamicSaveStrategy()
 		{
 			_decayBag = new ConcurrentBag<Item>();
+
 			_itemThreadWriters = new BlockingCollection<QueuedMemoryWriter>();
             _guildThreadWriters = new BlockingCollection<QueuedMemoryWriter>();
-			new BlockingCollection<QueuedMemoryWriter>();
-		}
+        }
 
 		public override string Name => "Dynamic";
 
@@ -109,7 +109,6 @@ namespace Server
             GenericWriter tdb = new BinaryFileWriter(World.MobileTypesPath, false);
             GenericWriter bin = new BinaryFileWriter(World.MobileDataPath, true);
 
-
             idx.Write(mobiles.Count);
 
             foreach (Mobile m in mobiles.Values)
@@ -148,7 +147,7 @@ namespace Server
 
 			//Start the producer.
 			Parallel.ForEach(items, () => new QueuedMemoryWriter(),
-				(Item item, ParallelLoopState state, QueuedMemoryWriter writer) =>
+				(item, state, writer) =>
 				{
 					long startPosition = writer.Position;
 

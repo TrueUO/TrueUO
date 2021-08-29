@@ -5,6 +5,11 @@ namespace Server
 		public abstract string Name { get; }
 		public static SaveStrategy Acquire()
         {
+            if (Core.MultiProcessor)
+            {
+                return new DynamicSaveStrategy();
+            }
+
             return new DynamicSaveStrategy();
         }
 
