@@ -1,8 +1,6 @@
 using Server.Commands;
 
 using System;
-using System.IO;
-using System.Diagnostics;
 
 namespace Server.Misc
 {
@@ -60,15 +58,13 @@ namespace Server.Misc
             {
                 e.Mobile.SendMessage("You have initiated server restart.");
 
-                StopTimer();
-
-                bool recompile = e.Arguments.Length > 0 && e.Arguments[0].ToLower() == "true";
+                StopTimer();          
 
                 DelayCall(TimeSpan.FromSeconds(1), () =>
                     {
                         AutoSave.Save();
                         Restarting = true;
-                        TimedShutdown(true, recompile);
+                        TimedShutdown(true);
                     });
             }
         }
@@ -138,63 +134,9 @@ namespace Server.Misc
 
         private static void TimedShutdown(bool restart)
         {
-            TimedShutdown(restart, false);
-        }
-
-        private static void TimedShutdown(bool restart, bool recompile)
-        {
             World.Broadcast(0x22, true, string.Format("The server will be going down in about {0} seconds!", RestartDelay.TotalSeconds.ToString()));
-            DelayCall(RestartDelay, (rest, recomp) =>
-                {
-                    if (recomp)
-                    {
-                        ReCompile();
-                    }
-                    else
-                    {
-                        Core.Kill(rest);
-                    }
-                },
-                restart, recompile);
-        }
 
-        public static void ReCompile()
-        {
-            string directory = Path.GetDirectoryName(Core.BaseDirectory);
-            string file = Core.IsWindows ? "publish.cmd" : "publish.sh";
-            string path = Path.Combine(directory, file);
-
-            if (!File.Exists(path))
-            {
-                Console.WriteLine("Unable to Re-Compile due to missing file: {0}", path);
-            }
-            else
-            {
-                string buildmode = Core.Debug ? "Debug" : "Release";
-
-                // determing os
-                Process p = new Process();
-
-                if (Core.IsWindows)
-                {
-                    // windows platform
-                    p.StartInfo.WorkingDirectory = directory;
-                    p.StartInfo.FileName = path;
-                    p.StartInfo.Arguments = buildmode;
-                }
-                else
-                {
-                    // linux command based os
-                    p.StartInfo.WorkingDirectory = directory;
-                    p.StartInfo.FileName = "/bin/bash";
-                    p.StartInfo.Arguments = file + " " + buildmode;
-                    p.StartInfo.UseShellExecute = true;
-                }
-
-                p.Start();
-
-                Core.Kill();
-            }
+            DelayCall(RestartDelay, Core.Kill, restart);
         }
     }
 }

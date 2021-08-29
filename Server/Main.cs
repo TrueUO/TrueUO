@@ -138,13 +138,13 @@ namespace Server
 		public static bool MultiProcessor { get; private set; }
 		public static int ProcessorCount { get; private set; }
 
-        public static bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-        public static bool IsDarwin = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-        public static bool IsFreeBSD = RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
-        public static bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || IsFreeBSD;
-        public static bool Unix = IsDarwin || IsFreeBSD || IsLinux;
+        public static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        public static readonly bool IsDarwin = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        public static readonly bool IsFreeBSD = RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
+        public static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || IsFreeBSD;
+        public static readonly bool Unix = IsDarwin || IsFreeBSD || IsLinux;
 
-        public static string Framework = RuntimeInformation.FrameworkDescription;
+        public static readonly string Framework = RuntimeInformation.FrameworkDescription;
 
         public static string FindDataFile(string path)
 		{
