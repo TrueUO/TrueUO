@@ -153,7 +153,7 @@ namespace Server.Items
             BaseHouse house = BaseHouse.FindHouseAt(this);
             SecureInfo secure = house?.GetSecureInfoFor(this);
 
-            if (house != null && !house.HasSecureAccess(from, secure))
+            if (house != null && secure != null && !house.HasSecureAccess(from, secure))
             {
                 if (IsSecure)
                 {
