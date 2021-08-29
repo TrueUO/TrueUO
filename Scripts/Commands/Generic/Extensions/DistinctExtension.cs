@@ -6,9 +6,11 @@ namespace Server.Commands.Generic
 {
     public sealed class DistinctExtension : BaseExtension
     {
-        public static ExtensionInfo ExtInfo = new ExtensionInfo(30, "Distinct", -1, delegate { return new DistinctExtension(); });
+        private static ExtensionInfo ExtInfo = new(30, "Distinct", -1, () => new DistinctExtension());
+
         private readonly List<Property> m_Properties;
         private IComparer m_Comparer;
+
         public DistinctExtension()
         {
             m_Properties = new List<Property>();
