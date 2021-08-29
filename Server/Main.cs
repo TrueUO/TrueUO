@@ -337,44 +337,38 @@ namespace Server
             }
         }
 
-		public static void Kill()
-		{
-			Kill(false);
-		}
-
-		public static void Kill(bool restart)
-		{
-			HandleClosed();
-
-			if (restart)
-			{
-                Restart();
-			}
-
-			Process.Kill();
-		}
-
-        public static void Restart()
+		public static void Kill(bool restart = false)
         {
-            if (IsWindows)
+            if (Closing)
             {
-                Process.Start(ExePath, Arguments);
+                return;
             }
-            else
+
+            HandleClosed();
+
+            if (restart)
             {
-                var process = new Process
+                if (IsWindows)
                 {
-                    StartInfo = new ProcessStartInfo
+                    Process.Start("dotnet", Assembly.Location);
+                }
+                else
+                {
+                    var process = new Process
                     {
-                        FileName = "dotnet",
-                        Arguments = ExePath,
-                        UseShellExecute = true
-                    }
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = "dotnet",
+                            Arguments = Assembly.Location,
+                            UseShellExecute = true
+                        }
+                    };
 
-                };
-
-                process.Start();
+                    process.Start();
+                }
             }
+
+            Process.Kill();
         }
 
         private static void HandleClosed()
