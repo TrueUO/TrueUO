@@ -43,7 +43,7 @@ namespace Server
 
 		public static MessagePump MessagePump { get; set; }
 
-		public static Slice Slice;
+        private static Slice Slice;
 
 		public static bool Profiling
 		{
