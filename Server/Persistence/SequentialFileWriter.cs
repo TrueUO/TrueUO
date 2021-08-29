@@ -5,24 +5,19 @@ namespace Server
 {
 	public sealed class SequentialFileWriter : Stream
 	{
-		private readonly SaveMetrics metrics;
-		private FileStream fileStream;
+        private FileStream fileStream;
 		private FileQueue fileQueue;
 		private AsyncCallback writeCallback;
-		public SequentialFileWriter(string path, SaveMetrics metrics)
+		public SequentialFileWriter(string path)
 		{
 			if (path == null)
 			{
 				throw new ArgumentNullException(nameof(path));
 			}
 
-			this.metrics = metrics;
-
 			fileStream = FileOperations.OpenSequentialStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
 
-			fileQueue = new FileQueue(
-				Math.Max(1, FileOperations.Concurrency),
-				FileCallback);
+			fileQueue = new FileQueue(Math.Max(1, FileOperations.Concurrency), FileCallback);
 		}
 
 		public override long Position
@@ -82,11 +77,6 @@ namespace Server
 			{
 				fileStream.Write(chunk.Buffer, FileQueue.Chunk.Offset, chunk.Size);
 
-				if (metrics != null)
-				{
-					metrics.OnFileWritten(chunk.Size);
-				}
-
 				chunk.Commit();
 			}
 			else
@@ -106,12 +96,7 @@ namespace Server
 
 			fileStream.EndWrite(asyncResult);
 
-			if (metrics != null)
-			{
-				metrics.OnFileWritten(chunk.Size);
-			}
-
-			chunk.Commit();
-		}
+            chunk?.Commit();
+        }
 	}
 }

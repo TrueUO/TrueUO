@@ -15,10 +15,11 @@ namespace Server
 		private readonly BlockingCollection<QueuedMemoryWriter> _mobileThreadWriters;
 		private readonly BlockingCollection<QueuedMemoryWriter> _guildThreadWriters;
 		private readonly BlockingCollection<QueuedMemoryWriter> _dataThreadWriters;
-		private SaveMetrics _metrics;
+		
 		private SequentialFileWriter _itemData, _itemIndex;
 		private SequentialFileWriter _mobileData, _mobileIndex;
 		private SequentialFileWriter _guildData, _guildIndex;
+
 		public DynamicSaveStrategy()
 		{
 			_decayBag = new ConcurrentBag<Item>();
@@ -29,11 +30,10 @@ namespace Server
 		}
 
 		public override string Name => "Dynamic";
-		public override void Save(SaveMetrics metrics, bool permitBackgroundWrite)
-		{
-			_metrics = metrics;
 
-			OpenFiles();
+		public override void Save(bool permitBackgroundWrite)
+		{
+            OpenFiles();
 
 			Task[] saveTasks = new Task[4];
 
@@ -121,12 +121,7 @@ namespace Server
 						_decayBag.Add(item);
 					}
 
-					if (_metrics != null)
-					{
-						_metrics.OnItemSaved(size);
-					}
-
-					return writer;
+                    return writer;
 				},
 				writer =>
 				{
@@ -159,12 +154,7 @@ namespace Server
 
 					writer.QueueForIndex(mobile, size);
 
-					if (_metrics != null)
-					{
-						_metrics.OnMobileSaved(size);
-					}
-
-					return writer;
+                    return writer;
 				},
 				writer =>
 				{
@@ -197,12 +187,7 @@ namespace Server
 
 					writer.QueueForIndex(guild, size);
 
-					if (_metrics != null)
-					{
-						_metrics.OnGuildSaved(size);
-					}
-
-					return writer;
+                    return writer;
 				},
 				writer =>
 				{
@@ -218,14 +203,14 @@ namespace Server
 
 		private void OpenFiles()
 		{
-			_itemData = new SequentialFileWriter(World.ItemDataPath, _metrics);
-			_itemIndex = new SequentialFileWriter(World.ItemIndexPath, _metrics);
+			_itemData = new SequentialFileWriter(World.ItemDataPath);
+			_itemIndex = new SequentialFileWriter(World.ItemIndexPath);
 
-			_mobileData = new SequentialFileWriter(World.MobileDataPath, _metrics);
-			_mobileIndex = new SequentialFileWriter(World.MobileIndexPath, _metrics);
+			_mobileData = new SequentialFileWriter(World.MobileDataPath);
+			_mobileIndex = new SequentialFileWriter(World.MobileIndexPath);
 
-			_guildData = new SequentialFileWriter(World.GuildDataPath, _metrics);
-			_guildIndex = new SequentialFileWriter(World.GuildIndexPath, _metrics);
+			_guildData = new SequentialFileWriter(World.GuildDataPath);
+			_guildIndex = new SequentialFileWriter(World.GuildIndexPath);
 
 			WriteCount(_itemIndex, World.Items.Count);
 			WriteCount(_mobileIndex, World.Mobiles.Count);

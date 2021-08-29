@@ -12,8 +12,7 @@ namespace Server
 {
 	public static class World
 	{
-		private static readonly bool m_Metrics = Config.Get("General.Metrics", false);
-		private static readonly ManualResetEvent m_DiskWriteHandle = new ManualResetEvent(true);
+        private static readonly ManualResetEvent m_DiskWriteHandle = new ManualResetEvent(true);
 
 		private static Queue<IEntity> _addQueue, _deleteQueue;
 
@@ -880,7 +879,6 @@ namespace Server
 				Directory.CreateDirectory("Saves/Guilds/");
 			}
 
-
 			try
 			{
 				EventSink.InvokeBeforeWorldSave(new BeforeWorldSaveEventArgs());
@@ -890,17 +888,9 @@ namespace Server
 				throw new Exception("FATAL: Exception in EventSink.BeforeWorldSave", e);
 			}
 
-			if (m_Metrics)
-			{
-				using (SaveMetrics metrics = new SaveMetrics())
-					strategy.Save(metrics, permitBackgroundWrite);
-			}
-			else
-			{
-				strategy.Save(null, permitBackgroundWrite);
-			}
+            strategy.Save(permitBackgroundWrite);
 
-			try
+            try
 			{
 				EventSink.InvokeWorldSave(new WorldSaveEventArgs(message));
 			}
@@ -915,8 +905,7 @@ namespace Server
 
 			if (!permitBackgroundWrite)
 			{
-				NotifyDiskWriteComplete();
-				//Sets the DiskWriteHandle.  If we allow background writes, we leave this upto the individual save strategies.
+				NotifyDiskWriteComplete(); //Sets the DiskWriteHandle.  If we allow background writes, we leave this up to the individual save strategies.
 			}
 
 			ProcessSafetyQueues();

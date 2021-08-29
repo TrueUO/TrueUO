@@ -3844,7 +3844,7 @@ namespace Server.Network
 
 		public IPEndPoint Address { get; set; }
 
-		public ServerInfo(string name, int fullPercent, TimeZone tz, IPEndPoint address)
+		public ServerInfo(string name, int fullPercent, TimeZoneInfo tz, IPEndPoint address)
 		{
 			Name = name;
 			FullPercent = fullPercent;
