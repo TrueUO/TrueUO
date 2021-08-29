@@ -2,31 +2,29 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Server.Guilds;
 
 namespace Server
 {
-	public sealed class DynamicSaveStrategy : SaveStrategy
+	public class DynamicSaveStrategy : SaveStrategy
 	{
 		private readonly ConcurrentBag<Item> _decayBag;
+
 		private readonly BlockingCollection<QueuedMemoryWriter> _itemThreadWriters;
-		private readonly BlockingCollection<QueuedMemoryWriter> _mobileThreadWriters;
-		private readonly BlockingCollection<QueuedMemoryWriter> _guildThreadWriters;
-		private readonly BlockingCollection<QueuedMemoryWriter> _dataThreadWriters;
-		
-		private SequentialFileWriter _itemData, _itemIndex;
-		private SequentialFileWriter _mobileData, _mobileIndex;
-		private SequentialFileWriter _guildData, _guildIndex;
+        private readonly BlockingCollection<QueuedMemoryWriter> _guildThreadWriters;
+
+        private SequentialFileWriter _itemData, _itemIndex;
+        private SequentialFileWriter _guildData, _guildIndex;
 
 		public DynamicSaveStrategy()
 		{
 			_decayBag = new ConcurrentBag<Item>();
 			_itemThreadWriters = new BlockingCollection<QueuedMemoryWriter>();
-			_mobileThreadWriters = new BlockingCollection<QueuedMemoryWriter>();
-			_guildThreadWriters = new BlockingCollection<QueuedMemoryWriter>();
-			_dataThreadWriters = new BlockingCollection<QueuedMemoryWriter>();
+            _guildThreadWriters = new BlockingCollection<QueuedMemoryWriter>();
+			new BlockingCollection<QueuedMemoryWriter>();
 		}
 
 		public override string Name => "Dynamic";
@@ -35,15 +33,22 @@ namespace Server
 		{
             OpenFiles();
 
-			Task[] saveTasks = new Task[4];
+            Thread saveMobilesThread = new Thread(SaveMobiles)
+            {
+                Name = "Mobile Save Subset"
+            };
+            saveMobilesThread.Start();
+
+			Task[] saveTasks = new Task[2];
 
 			saveTasks[0] = SaveItems();
-			saveTasks[1] = SaveMobiles();
-			saveTasks[2] = SaveGuilds();
+            saveTasks[1] = SaveGuilds();
 
-			SaveTypeDatabases();
+            SaveTypeDatabases();
 
-			if (permitBackgroundWrite)
+            saveMobilesThread.Join();
+
+            if (permitBackgroundWrite)
 			{
 				//This option makes it finish the writing to disk in the background, continuing even after Save() returns.
 				Task.Factory.ContinueWhenAll(saveTasks, _ =>
@@ -58,12 +63,11 @@ namespace Server
 				Task.WaitAll(saveTasks);    //Waits for the completion of all of the tasks(committing to disk)
 				CloseFiles();
 			}
-		}
+        }
 
 		public override void ProcessDecay()
 		{
-
-			while (_decayBag.TryTake(out Item item))
+            while (_decayBag.TryTake(out Item item))
 			{
 				if (item.OnDecay())
 				{
@@ -96,6 +100,44 @@ namespace Server
 
 			return commitTask;
 		}
+
+        protected virtual void SaveMobiles()
+        {
+            Dictionary<Serial, Mobile> mobiles = World.Mobiles;
+
+            GenericWriter idx = new BinaryFileWriter(World.MobileIndexPath, false);
+            GenericWriter tdb = new BinaryFileWriter(World.MobileTypesPath, false);
+            GenericWriter bin = new BinaryFileWriter(World.MobileDataPath, true);
+
+
+            idx.Write(mobiles.Count);
+
+            foreach (Mobile m in mobiles.Values)
+            {
+                long start = bin.Position;
+
+                idx.Write(m.m_TypeRef);
+                idx.Write(m.Serial);
+                idx.Write(start);
+
+                m.Serialize(bin);
+
+                idx.Write((int)(bin.Position - start));
+
+                m.FreeCache();
+            }
+
+            tdb.Write(World.m_MobileTypes.Count);
+
+            for (int i = 0; i < World.m_MobileTypes.Count; ++i)
+            {
+                tdb.Write(World.m_MobileTypes[i].FullName);
+            }
+
+            idx.Close();
+            tdb.Close();
+            bin.Close();
+        }
 
 		private Task SaveItems()
 		{
@@ -131,39 +173,6 @@ namespace Server
 				});
 
 			_itemThreadWriters.CompleteAdding();    //We only get here after the Parallel.ForEach completes.  Lets our task 
-
-			return commitTask;
-		}
-
-		private Task SaveMobiles()
-		{
-			//Start the blocking consumer; this runs in background.
-			Task commitTask = StartCommitTask(_mobileThreadWriters, _mobileData, _mobileIndex);
-
-			IEnumerable<Mobile> mobiles = World.Mobiles.Values;
-
-			//Start the producer.
-			Parallel.ForEach(mobiles, () => new QueuedMemoryWriter(),
-				(Mobile mobile, ParallelLoopState state, QueuedMemoryWriter writer) =>
-				{
-					long startPosition = writer.Position;
-
-					mobile.Serialize(writer);
-
-					int size = (int)(writer.Position - startPosition);
-
-					writer.QueueForIndex(mobile, size);
-
-                    return writer;
-				},
-				writer =>
-				{
-					writer.Flush();
-
-					_mobileThreadWriters.Add(writer);
-				});
-
-			_mobileThreadWriters.CompleteAdding();  //We only get here after the Parallel.ForEach completes.  Lets our task tell the consumer that we're done
 
 			return commitTask;
 		}
@@ -206,15 +215,11 @@ namespace Server
 			_itemData = new SequentialFileWriter(World.ItemDataPath);
 			_itemIndex = new SequentialFileWriter(World.ItemIndexPath);
 
-			_mobileData = new SequentialFileWriter(World.MobileDataPath);
-			_mobileIndex = new SequentialFileWriter(World.MobileIndexPath);
-
-			_guildData = new SequentialFileWriter(World.GuildDataPath);
+            _guildData = new SequentialFileWriter(World.GuildDataPath);
 			_guildIndex = new SequentialFileWriter(World.GuildIndexPath);
 
 			WriteCount(_itemIndex, World.Items.Count);
-			WriteCount(_mobileIndex, World.Mobiles.Count);
-			WriteCount(_guildIndex, BaseGuild.List.Count);
+            WriteCount(_guildIndex, BaseGuild.List.Count);
 		}
 
 		private void CloseFiles()
@@ -222,17 +227,13 @@ namespace Server
 			_itemData.Close();
 			_itemIndex.Close();
 
-			_mobileData.Close();
-			_mobileIndex.Close();
-
-			_guildData.Close();
+            _guildData.Close();
 			_guildIndex.Close();
 		}
 
 		private static void WriteCount(Stream indexFile, int count)
 		{
-			//Equiv to GenericWriter.Write( (int)count );
-			byte[] buffer = new byte[4];
+            byte[] buffer = new byte[4];
 
 			buffer[0] = (byte)count;
 			buffer[1] = (byte)(count >> 8);
@@ -245,8 +246,7 @@ namespace Server
 		private static void SaveTypeDatabases()
 		{
 			SaveTypeDatabase(World.ItemTypesPath, World.m_ItemTypes);
-			SaveTypeDatabase(World.MobileTypesPath, World.m_MobileTypes);
-		}
+        }
 
 		private static void SaveTypeDatabase(string path, IReadOnlyCollection<Type> types)
 		{

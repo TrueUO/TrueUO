@@ -20,16 +20,3 @@ Have a shard you'd like to advertise? Check out https://shardportal.com
 
 Run `Compile.WIN - Debug.bat` for development environments.
 Run `Compile.WIN - Release.bat` for production environments.
-
-
-#### OSX
-
-`brew install mono`  
-`make`
-
-
-#### Ubuntu / Debian
-
-`apt-get install zlib1g-dev`  
-`apt-get install mono-complete`  
-`make`
