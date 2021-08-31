@@ -5,26 +5,27 @@ namespace Server
 	public sealed class DualSaveStrategy : StandardSaveStrategy
 	{
         public override string Name => "Dual";
+
 		public override void Save(bool permitBackgroundWrite)
 		{
 			PermitBackgroundWrite = permitBackgroundWrite;
 
-			Thread saveThread = new Thread(delegate ()
-			{
-				SaveItems();
-			})
+			Thread saveItemsThread = new Thread(SaveItems)
 			{
 				Name = "Item Save Subset"
 			};
-			saveThread.Start();
+
+			saveItemsThread.Start();
 
 			SaveMobiles();
 			SaveGuilds();
 
-			saveThread.Join();
+			saveItemsThread.Join();
 
-			if (permitBackgroundWrite && UseSequentialWriters)  //If we're permitted to write in the background, but we don't anyways, then notify.
-				World.NotifyDiskWriteComplete();
-		}
+			if (permitBackgroundWrite && UseSequentialWriters)  // If we're permitted to write in the background, but we don't anyways, then notify.
+            {
+                World.NotifyDiskWriteComplete();
+            }
+        }
 	}
 }
