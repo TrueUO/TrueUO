@@ -12,8 +12,7 @@ namespace Server
 {
 	public static class World
 	{
-		private static readonly bool m_Metrics = Config.Get("General.Metrics", false);
-		private static readonly ManualResetEvent m_DiskWriteHandle = new ManualResetEvent(true);
+        private static readonly ManualResetEvent m_DiskWriteHandle = new ManualResetEvent(true);
 
 		private static Queue<IEntity> _addQueue, _deleteQueue;
 
@@ -890,17 +889,9 @@ namespace Server
 				throw new Exception("FATAL: Exception in EventSink.BeforeWorldSave", e);
 			}
 
-			if (m_Metrics)
-			{
-				using (SaveMetrics metrics = new SaveMetrics())
-					strategy.Save(metrics, permitBackgroundWrite);
-			}
-			else
-			{
-				strategy.Save(null, permitBackgroundWrite);
-			}
+            strategy.Save(permitBackgroundWrite);
 
-			try
+            try
 			{
 				EventSink.InvokeWorldSave(new WorldSaveEventArgs(message));
 			}
