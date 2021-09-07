@@ -103,7 +103,15 @@ namespace Server.Engines.Plants
         public override void OnResponse(RelayInfo info)
         {
             if (Box.Deleted)
+            {
                 return;
+            }
+
+            if (!User.InRange(Box.GetWorldLocation(), 3))
+            {
+                User.SendLocalizedMessage(500446); // That is too far away.
+                return;
+            }
 
             switch (info.ButtonID)
             {

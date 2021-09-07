@@ -6,7 +6,7 @@ using System;
 
 namespace Server.Items
 {
-    public class EnchantedApple : BaseMagicalFood
+    public class EnchantedApple : BaseMagicalFood, ICommodity
     {
         [Constructable]
         public EnchantedApple()
@@ -21,6 +21,9 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        TextDefinition ICommodity.Description => LabelNumber;
+        bool ICommodity.IsDeedable => true;
 
         public override MagicalFood FoodID => MagicalFood.EnchantedApple;
         public override TimeSpan Cooldown => TimeSpan.FromSeconds(30);

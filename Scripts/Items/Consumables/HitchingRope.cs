@@ -58,13 +58,15 @@ namespace Server.Items
             protected override void OnTarget(Mobile from, object targeted)
             {
                 if (m_Rope.Deleted)
+                {
                     return;
+                }
 
                 if (targeted is HitchingPost postItem)
                 {
-                    var maxuse = postItem.Replica ? 15 : 30;
+                    var maxUse = postItem.Replica ? 15 : 30;
 
-                    if (postItem.UsesRemaining >= maxuse)
+                    if (postItem.UsesRemaining >= maxUse)
                     {
                         from.SendLocalizedMessage(1038293); // It looks almost new.
                     }
@@ -75,14 +77,14 @@ namespace Server.Items
                     else
                     {
                         postItem.Charges -= 1;
-                        postItem.UsesRemaining = maxuse;
+                        postItem.UsesRemaining = maxUse;
 
                         m_Rope.Delete();
 
                         from.SendLocalizedMessage(1071158, postItem.Name); // You have successfully resupplied the ~1_POST~ with the hitching rope.
                     }
                 }
-                else if (targeted is PetCastleAddon pc)
+                else if (targeted is PetCastleComponent component && component.Addon is PetCastleAddon pc)
                 {
                     if (pc.UsesRemaining >= 30)
                     {
@@ -94,7 +96,7 @@ namespace Server.Items
 
                         m_Rope.Delete();
 
-                        from.SendLocalizedMessage(1071158, pc.Name); // You have successfully resupplied the ~1_POST~ with the hitching rope.
+                        from.SendLocalizedMessage(1071158, "Pet Castle"); // You have successfully resupplied the ~1_POST~ with the hitching rope.
                     }
                 }
                 else

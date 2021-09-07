@@ -7,8 +7,17 @@ using Server.Network;
 
 namespace Server
 {
-	public sealed class ObjectPropertyList : Packet
-	{
+    public interface ObjectPropertyList
+    {
+        void Add(int number);
+        void Add(int number, string arguments);
+        void Add(int number, string format, params object[] args);
+        void Add(string text);
+        void Add(string format, params object[] args);
+    }
+
+    public sealed class ObjectPropertyListPacket : Packet, ObjectPropertyList
+    {
 		private int m_Hash;
 		private int m_Strings;
 
@@ -18,7 +27,7 @@ namespace Server
 		public int Header { get; set; }
 		public string HeaderArgs { get; set; }
 
-		public ObjectPropertyList(IEntity e)
+		public ObjectPropertyListPacket(IEntity e)
 			: base(0xD6)
 		{
 			EnsureCapacity(128);
@@ -160,7 +169,7 @@ namespace Server
 
 	public sealed class OPLInfo : Packet
 	{
-		public OPLInfo(ObjectPropertyList list)
+		public OPLInfo(ObjectPropertyListPacket list)
 			: base(0xDC, 9)
 		{
 			m_Stream.Write(list.Entity.Serial);

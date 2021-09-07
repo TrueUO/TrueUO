@@ -3675,8 +3675,8 @@ namespace Server.Mobiles
             ClumsySpell.RemoveEffects(this);
             FeeblemindSpell.RemoveEffects(this);
             CurseSpell.RemoveEffect(this);
+            StrangleSpell.RemoveCurse(this);
             Spells.Second.ProtectionSpell.EndProtection(this);
-
 
             EndAction(typeof(PolymorphSpell));
             EndAction(typeof(IncognitoSpell));
@@ -3685,13 +3685,11 @@ namespace Server.Mobiles
 
             BaseEscort.DeleteEscort(this);
 
-            #region Stygian Abyss
             if (Flying)
             {
                 Flying = false;
                 BuffInfo.RemoveBuff(this, BuffIcon.Fly);
             }
-            #endregion
 
             StolenItem.ReturnOnDeath(this, c);
 

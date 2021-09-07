@@ -772,35 +772,17 @@ namespace Server.Mobiles
                 }
             }
 
-            if (Female)
+            switch (Utility.Random(2))
             {
-                switch (Utility.Random(2))
-                {
-                    case 0:
-                        SetWearable(new FemaleGargishClothLegs(GetRandomHue()));
-                        SetWearable(new FemaleGargishClothKilt(GetRandomHue()));
-                        SetWearable(new FemaleGargishClothChest(GetRandomHue()));
-                        break;
-                    case 1:
-                        SetWearable(new FemaleGargishClothKilt(GetRandomHue()));
-                        SetWearable(new FemaleGargishClothChest(GetRandomHue()));
-                        break;
-                }
-            }
-            else
-            {
-                switch (Utility.Random(2))
-                {
-                    case 0:
-                        SetWearable(new MaleGargishClothLegs(GetRandomHue()));
-                        SetWearable(new MaleGargishClothKilt(GetRandomHue()));
-                        SetWearable(new MaleGargishClothChest(GetRandomHue()));
-                        break;
-                    case 1:
-                        SetWearable(new MaleGargishClothKilt(GetRandomHue()));
-                        SetWearable(new MaleGargishClothChest(GetRandomHue()));
-                        break;
-                }
+                case 0:
+                    SetWearable(new GargishClothLegs(GetRandomHue()));
+                    SetWearable(new GargishClothKilt(GetRandomHue()));
+                    SetWearable(new GargishClothChest(GetRandomHue()));
+                    break;
+                case 1:
+                    SetWearable(new GargishClothKilt(GetRandomHue()));
+                    SetWearable(new GargishClothChest(GetRandomHue()));
+                    break;
             }
         }
         #endregion
@@ -868,7 +850,7 @@ namespace Server.Mobiles
             list = new List<BuyItemState>(buyInfo.Length);
             Container cont = BuyPack;
 
-            List<ObjectPropertyList> opls = null;
+            List<ObjectPropertyListPacket> opls = null;
 
             for (int idx = 0; idx < buyInfo.Length; idx++)
             {
@@ -901,7 +883,7 @@ namespace Server.Mobiles
 
                 if (opls == null)
                 {
-                    opls = new List<ObjectPropertyList>();
+                    opls = new List<ObjectPropertyListPacket>();
                 }
 
                 if (disp is Item item)
@@ -962,7 +944,7 @@ namespace Server.Mobiles
 
                     if (opls == null)
                     {
-                        opls = new List<ObjectPropertyList>();
+                        opls = new List<ObjectPropertyListPacket>();
                     }
 
                     opls.Add(item.PropertyList);
