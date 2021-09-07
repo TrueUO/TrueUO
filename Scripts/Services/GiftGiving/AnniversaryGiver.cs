@@ -10,13 +10,13 @@ namespace Server.Misc
             GiftGiving.Register(new AnniversaryGiver());
         }
 
-        public override DateTime Start => new DateTime(2019, 09, 01); // When do you want your gift hand out?
-        public override DateTime Finish => new DateTime(2019, 10, 01); // When do you want your gift hand out to stop?
+        public override DateTime Start => new DateTime(2021, 10, 15); // When do you want your gift hand out?
+        public override DateTime Finish => new DateTime(2021, 11, 15); // When do you want your gift hand out to stop?
         public override TimeSpan MinimumAge => TimeSpan.FromDays(30); // How old does a character have to be to obtain?
 
         public override void GiveGift(Mobile mob)
         {
-            Item token = new Anniversary23GiftToken(); // Here you select your Anniversary Gift Pacakage.
+            Item token = new Anniversary24GiftToken(); // Here you select your Anniversary Gift Pacakage.
 
             switch (GiveGift(mob, token))
             {
