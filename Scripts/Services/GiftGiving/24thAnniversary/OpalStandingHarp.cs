@@ -22,6 +22,18 @@ namespace Server.Items
         {
         }
 
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (!from.InRange(GetWorldLocation(), 3))
+            {
+                from.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+            }
+            else
+            {
+                Effects.PlaySound(from.Location, from.Map, Utility.RandomList(913, 914, 915));
+            }
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
