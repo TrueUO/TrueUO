@@ -24,7 +24,9 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (_WeightReduction != 0)
+            {
                 list.Add(1072210, _WeightReduction.ToString()); // Weight reduction: ~1_PERCENTAGE~%
+            }
         }
 
         public override int GetTotal(TotalType type)
@@ -32,7 +34,9 @@ namespace Server.Items
             int total = base.GetTotal(type);
 
             if (type == TotalType.Weight)
+            {
                 total -= total * _WeightReduction / 100;
+            }
 
             return total;
         }
@@ -42,7 +46,9 @@ namespace Server.Items
             if (!CheckType(item))
             {
                 if (message)
+                {
                     m.SendLocalizedMessage(1074836); // The container can not hold that type of object.
+                }
 
                 return false;
             }
@@ -156,6 +162,77 @@ namespace Server.Items
         }
 
         public LumbjacksSatchel(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class FishBushel : BaseResourceSatchel
+    {
+        public override int LabelNumber => 1159779;  // Fisherman's Bushel
+
+        public override Type[] HoldTypes => new[]
+        {
+            typeof(Amberjack), typeof(BlackSeabass), typeof(BlueGrouper), typeof(BlueFish), typeof(BluegillSunfish),
+            typeof(Bonefish), typeof(Bonito), typeof(BrookTrout), typeof(CapeCod), typeof(CaptainSnook),
+            typeof(Cobia), typeof(CragSnapper), typeof(CutThroatTrout), typeof(DarkFish), typeof(DemonTrout),
+            typeof(DrakeFish), typeof(DungeonChub), typeof(GraySnapper), typeof(GreenCatfish), typeof(GrimCisco),
+            typeof(Haddock), typeof(InfernalTuna), typeof(KokaneeSalmon), typeof(LurkerFish), typeof(MahiMahi),
+            typeof(OrcBass), typeof(PikeFish), typeof(PumpkinSeedSunfish), typeof(RainbowTrout), typeof(RedDrum),
+            typeof(RedGrouper), typeof(RedSnook), typeof(RedbellyBream), typeof(Shad), typeof(SmallmouthBass),
+            typeof(SnaggletoothBass), typeof(Tarpon), typeof(TormentedPike), typeof(UncommonShiner), typeof(Walleye),
+            typeof(YellowPerch), typeof(YellowfinTuna), typeof(RareFish)
+        };
+
+        [Constructable]
+        public FishBushel()
+            : base(0xA7AC)
+        {
+        }
+
+        public FishBushel(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class CrabLobsterBushel : BaseResourceSatchel
+    {
+        public override int LabelNumber => 1159780;  // Trapper's Bushel
+
+        public override Type[] HoldTypes => new[] { typeof(BaseCrabAndLobster) };
+
+        [Constructable]
+        public CrabLobsterBushel()
+            : base(0xA7AE)
+        {
+        }
+
+        public CrabLobsterBushel(Serial serial)
             : base(serial)
         {
         }
