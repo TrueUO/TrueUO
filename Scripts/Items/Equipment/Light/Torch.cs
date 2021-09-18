@@ -50,8 +50,8 @@ namespace Server.Items
 
                 if (holding is Torch && Burning)
                 {
-                    Mobiles.MeerMage.StopEffect((Mobile)Parent, true);
-                    SwarmContext.CheckRemove((Mobile)Parent);
+                    Mobiles.MeerMage.StopEffect(mobile, true);
+                    SwarmContext.CheckRemove(mobile);
                 }
             }
         }
