@@ -32,7 +32,7 @@ namespace Server.Items
             {
                 var holding = mobile.FindItemOnLayer(Layer.TwoHanded);
 
-                if (Burning && holding is Torch)
+                if (holding is Torch && Burning)
                 {
                     Mobiles.MeerMage.StopEffect(mobile, true);
                     SwarmContext.CheckRemove(mobile);
@@ -48,7 +48,7 @@ namespace Server.Items
             {
                 var holding = mobile.FindItemOnLayer(Layer.TwoHanded);
 
-                if (Burning && holding is Torch)
+                if (holding is Torch && Burning)
                 {
                     Mobiles.MeerMage.StopEffect((Mobile)Parent, true);
                     SwarmContext.CheckRemove((Mobile)Parent);
