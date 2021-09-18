@@ -503,23 +503,7 @@ namespace Server.Items
 
             if (pack != null)
             {
-                Item[] items = pack.FindItemsByType(typeof(Matches));
-
-                if (items != null)
-                {
-                    for (var index = 0; index < items.Length; index++)
-                    {
-                        Item item = items[index];
-
-                        if (item is Matches matches && matches.IsLight)
-                        {
-                            LightFuse(from);
-                            return;
-                        }
-                    }
-                }
-
-                items = pack.FindItemsByType(typeof(Torch));
+                Item[] items = pack.FindItemsByType(typeof(Torch));
 
                 if (items != null)
                 {
@@ -537,12 +521,6 @@ namespace Server.Items
             }
 
             Item i = from.FindItemOnLayer(Layer.TwoHanded);
-
-            if (i is Matches match && match.IsLight)
-            {
-                LightFuse(from);
-                return;
-            }
 
             if (i is Torch t && t.Burning)
             {
