@@ -14,10 +14,7 @@ namespace Server.Items
         public Torch()
             : base(0xF6B)
         {
-            if (Burnout)
-                Duration = TimeSpan.FromMinutes(30);
-            else
-                Duration = TimeSpan.Zero;
+            Duration = Burnout ? TimeSpan.FromMinutes(30) : TimeSpan.Zero;
 
             Burning = false;
             Light = LightType.Circle300;
@@ -31,12 +28,15 @@ namespace Server.Items
 
         public override void OnAdded(object parent)
         {
-            base.OnAdded(parent);
-
-            if (parent is Mobile mobile && Burning)
+            if (parent is Mobile mobile)
             {
-                Mobiles.MeerMage.StopEffect(mobile, true);
-                SwarmContext.CheckRemove(mobile);
+                var holding = mobile.FindItemOnLayer(Layer.TwoHanded);
+
+                if (Burning && holding is Torch)
+                {
+                    Mobiles.MeerMage.StopEffect(mobile, true);
+                    SwarmContext.CheckRemove(mobile);
+                }
             }
         }
 
@@ -44,10 +44,15 @@ namespace Server.Items
         {
             base.Ignite();
 
-            if (Parent is Mobile && Burning)
+            if (Parent is Mobile mobile)
             {
-                Mobiles.MeerMage.StopEffect((Mobile)Parent, true);
-                SwarmContext.CheckRemove((Mobile)Parent);
+                var holding = mobile.FindItemOnLayer(Layer.TwoHanded);
+
+                if (Burning && holding is Torch)
+                {
+                    Mobiles.MeerMage.StopEffect((Mobile)Parent, true);
+                    SwarmContext.CheckRemove((Mobile)Parent);
+                }
             }
         }
 
@@ -60,7 +65,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
