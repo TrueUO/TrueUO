@@ -43,7 +43,6 @@ namespace Server.Items
     public abstract class BaseCannon : Item, IShipCannon
     {
         private int m_Hits;
-        private bool m_Cleaned;
         private bool m_Charged;
         private bool m_Primed;
         private Type m_LoadedAmmo;
@@ -54,9 +53,6 @@ namespace Server.Items
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Hits { get => m_Hits; set { m_Hits = value; InvalidateDamageState(); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Cleaned { get => m_Cleaned; set => m_Cleaned = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Charged { get => m_Charged; set => m_Charged = value; }
@@ -93,7 +89,7 @@ namespace Server.Items
         public virtual Type[] LoadTypes => null;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool CanLight => m_Cleaned && m_Charged && m_Primed && m_AmmoType != AmmunitionType.Empty && m_LoadedAmmo != null;
+        public bool CanLight => m_Charged && m_Primed && m_AmmoType != AmmunitionType.Empty && m_LoadedAmmo != null;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public double Durability => m_Hits / (double)MaxHits * 100.0;
@@ -103,7 +99,6 @@ namespace Server.Items
         public BaseCannon(BaseGalleon galleon)
         {
             Movable = false;
-            m_Cleaned = true;
             m_Charged = false;
             m_Primed = false;
             m_Galleon = galleon;
@@ -193,23 +188,7 @@ namespace Server.Items
 
             if (pack != null)
             {
-                Item[] items = pack.FindItemsByType(typeof(Matches));
-
-                if (items != null)
-                {
-                    for (var index = 0; index < items.Length; index++)
-                    {
-                        Item item = items[index];
-
-                        if (item is Matches matches && matches.IsLight)
-                        {
-                            LightFuse(from);
-                            return;
-                        }
-                    }
-                }
-
-                items = pack.FindItemsByType(typeof(Torch));
+                Item[] items = pack.FindItemsByType(typeof(Torch));
 
                 if (items != null)
                 {
@@ -227,12 +206,6 @@ namespace Server.Items
             }
 
             Item i = from.FindItemOnLayer(Layer.TwoHanded);
-
-            if (i is Matches match && match.IsLight)
-            {
-                LightFuse(from);
-                return;
-            }
 
             if (i is Torch t && t.Burning)
             {
@@ -523,17 +496,8 @@ namespace Server.Items
             InvalidateProperties();
         }
 
-        private int m_Cleansliness;
-
-        public void CheckDirty()
-        {
-            if (m_Cleansliness++ >= 10)
-                m_Cleaned = false;
-        }
-
         public void ClearCannon()
         {
-            CheckDirty();
             m_Charged = false;
             m_Primed = false;
             m_AmmoType = AmmunitionType.Empty;
@@ -828,35 +792,14 @@ namespace Server.Items
             return false;
         }
 
-        public bool TryClean(Mobile from)
-        {
-            if (m_Cleaned && m_Cleansliness == 0)
-            {
-                from.SendLocalizedMessage(1116007); //The cannon is already clean
-            }
-            else if (CheckForItem(typeof(Swab), from))
-            {
-                AddAction(from, 1149641); //Cleaning started.
-                DoAreaMessage(1116034, 10, from); //~1_NAME~ begins cleaning the cannon with a cannon swab.
-                Timer.DelayCall(ActionTime, new TimerStateCallback(Clean), from);
-                return true;
-            }
-            else
-            {
-                AddAction(from, 1149659);
-                from.SendLocalizedMessage(1149659); //You need a swab.
-            }
-            return false;
-        }
-
         public bool TryCharge(Mobile from)
         {
             Type charge = this is LightShipCannon ? typeof(LightPowderCharge) : typeof(HeavyPowderCharge);
 
             if (m_Charged)
+            {
                 from.SendLocalizedMessage(1116012); //The cannon is already charged.
-            else if (!m_Cleaned)
-                from.SendMessage("The cannon needs to be cleaned before you can use it again.");
+            }
             else if (CheckForItem(charge, from))
             {
                 AddAction(from, 1149644); //Charging started.
@@ -922,31 +865,6 @@ namespace Server.Items
 
             AddAction(from, 1149647); //loading started.
             DoAreaMessage(cliloc, 10, from);
-        }
-
-        public void Clean(object state)
-        {
-            Mobile from = (Mobile)state;
-
-            if (from.InRange(Location, 3))
-            {
-                m_Cleaned = true;
-                m_Cleansliness = 0;
-                AddAction(from, 1149643); //cleaning finished.
-                DoAreaMessage(1116060, 10, from); //~1_NAME~ finishes cleaning the cannon.
-            }
-            else
-            {
-                AddAction(from, 1149642); //Cleaning canceled.
-                DoAreaMessage(1116055, 10, from); //~1_NAME~ cancels the effort of cleaning the cannon.
-            }
-
-            if (from.HasGump(typeof(CannonGump)))
-            {
-                ResendGump(from);
-            }
-
-            InvalidateProperties();
         }
 
         public void Charge(object state)
@@ -1222,7 +1140,6 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1116025, string.Format("#{0}", m_Cleaned ? 1116031 : 1116032)); //Cleaned: ~1_VALUE~
             list.Add(1116026, string.Format("#{0}", m_Charged ? 1116031 : 1116032)); //Charged: ~1_VALUE~
             list.Add(1116027, AmmoInfo.GetAmmoName(this).ToString()); //Ammo: ~1_VALUE~
             list.Add(1116028, string.Format("#{0}", m_Primed ? 1116031 : 1116032)); //Primed: ~1_VALUE~
@@ -1235,9 +1152,6 @@ namespace Server.Items
 
             if (m_Galleon.GetSecurityLevel(from) >= SecurityLevel.Officer)
             {
-                if (!m_Cleaned)
-                    list.Add(new CleanContext(this, from));
-
                 if (!m_Charged)
                     list.Add(new ChargeContext(this, from));
 
@@ -1249,24 +1163,6 @@ namespace Server.Items
 
                 list.Add(new DismantleContext(this, from));
                 list.Add(new RepairContext(this, from));
-            }
-        }
-
-        private class CleanContext : ContextMenuEntry
-        {
-            private readonly Mobile m_From;
-            private readonly BaseCannon m_Cannon;
-
-            public CleanContext(BaseCannon cannon, Mobile from) : base(1149626, 3)
-            {
-                m_From = from;
-                m_Cannon = cannon;
-            }
-
-            public override void OnClick()
-            {
-                if (m_Cannon != null)
-                    m_Cannon.TryClean(m_From);
             }
         }
 
@@ -1340,10 +1236,14 @@ namespace Server.Items
             {
                 if (m_Cannon != null)
                 {
-                    if (!m_Cannon.Cleaned || m_Cannon.Primed || m_Cannon.Charged || m_Cannon.AmmoType != AmmunitionType.Empty)
-                        m_From.SendLocalizedMessage(1116321); //The ship cannon must be cleaned and fully unloaded before it can be dismantled.
+                    if (m_Cannon.Primed || m_Cannon.Charged || m_Cannon.AmmoType != AmmunitionType.Empty)
+                    {
+                        m_From.SendLocalizedMessage(1116321); // The ship cannon and magazine must be fully unloaded before it can be dismantled.
+                    }
                     else if (m_Cannon.DamageState != DamageLevel.Pristine)
-                        m_From.SendLocalizedMessage(1116322); //The ship cannon must be fully repaired before it can be dismantled.
+                    {
+                        m_From.SendLocalizedMessage(1116322); // The ship cannon must be fully repaired before it can be dismantled.
+                    }
                     else
                     {
                         ShipCannonDeed deed = m_Cannon.GetDeed;
@@ -1352,8 +1252,11 @@ namespace Server.Items
                         m_Cannon.Delete();
 
                         Container pack = m_From.Backpack;
+
                         if (pack == null || !pack.TryDropItem(m_From, deed, false))
+                        {
                             deed.MoveToWorld(m_From.Location, m_From.Map);
+                        }
                     }
                 }
             }
@@ -1424,13 +1327,11 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
+            writer.Write(3);
 
-            writer.Write(m_Cleansliness);
             writer.Write(m_LoadedAmmo != null);
             if (m_LoadedAmmo != null)
                 writer.Write(m_LoadedAmmo.Name);
-            writer.Write(m_Cleaned);
             writer.Write(m_Charged);
             writer.Write(m_Primed);
             writer.Write(m_Galleon);
@@ -1444,12 +1345,9 @@ namespace Server.Items
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            if (version > 1)
-                m_Cleansliness = reader.ReadInt();
-            else
+            if (version == 2) // Removes Cleaning per publish 104
             {
-                m_Cleaned = true;
-                m_Cleansliness = 0;
+                reader.ReadInt();
             }
 
             if (version > 0)
@@ -1461,7 +1359,11 @@ namespace Server.Items
                 }
             }
 
-            m_Cleaned = reader.ReadBool();
+            if (version == 2) // Removes Cleaning per publish 104
+            {
+                reader.ReadBool();
+            }
+
             m_Charged = reader.ReadBool();
             m_Primed = reader.ReadBool();
             m_Galleon = reader.ReadItem() as BaseGalleon;
