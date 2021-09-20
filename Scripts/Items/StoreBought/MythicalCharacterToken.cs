@@ -10,7 +10,7 @@ namespace Server.Items
         public override int LabelNumber => 1070997;  // a promotional token
         public TextDefinition ItemName => 1152353;  // Mythic Character Token
 
-        public Type GumpType => typeof(InternalGump);
+        public Type GumpType => typeof(MythicCharacterGump);
 
         [Constructable]
         public MythicCharacterToken()
@@ -31,7 +31,8 @@ namespace Server.Items
                 }
                 else
                 {
-                    BaseGump.SendGump(new InternalGump(mobile, this));
+                    mobile.CloseGump(typeof(MythicCharacterGump));
+                    BaseGump.SendGump(new MythicCharacterGump(mobile, this));
                 }
             }
         }
@@ -60,7 +61,7 @@ namespace Server.Items
             int version = reader.ReadInt();
         }
 
-        public class InternalGump : BaseGump
+        public class MythicCharacterGump : BaseGump
         {
             public MythicCharacterToken Token { get; set; }
             public Skill[] Selected { get; set; }
@@ -98,7 +99,7 @@ namespace Server.Items
                 }
             }
 
-            public InternalGump(PlayerMobile pm, MythicCharacterToken token)
+            public MythicCharacterGump(PlayerMobile pm, MythicCharacterToken token)
                 : base(pm, 100, 100)
             {
                 Token = token;
