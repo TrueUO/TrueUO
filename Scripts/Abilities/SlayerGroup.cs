@@ -380,7 +380,7 @@ namespace Server.Items
                         SlayerName.ScorpionsBane,
 
                         typeof(Scorpion),           typeof(Miasma),
-                        typeof(SpeckledScorpion)
+                        typeof(SpeckledScorpion), typeof(DesertScorpion)
                     ),
 
                 new SlayerEntry
