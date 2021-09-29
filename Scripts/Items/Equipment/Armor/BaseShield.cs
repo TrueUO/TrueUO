@@ -57,6 +57,21 @@ namespace Server.Items
             }
         }
 
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (RootParent == from)
+            {
+                if (ItemID is 0xA76A) // Lantern Shield (off)
+                {
+                    ItemID = 0xA769;
+                }
+                else if (ItemID is 0xA769) // Lantern Shield (on)
+                {
+                    ItemID = 0xA76A;
+                }
+            }
+        }
+
         public override void OnRemoved(object parent)
         {
             LastParryChance = 0;
