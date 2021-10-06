@@ -517,7 +517,14 @@ namespace Server.Mobiles
 
             public override void OnClick()
             {
-                _Mannequin.SwitchClothes(_From, _Mannequin);
+                if (!_From.HasTrade)
+                {
+                    _Mannequin.SwitchClothes(_From, _Mannequin);
+                }
+                else
+                {
+                    _From.SendLocalizedMessage(1004041); // You can't do that while you have a trade pending.
+                }
             }
         }
 
