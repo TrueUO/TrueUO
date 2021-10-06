@@ -484,9 +484,9 @@ namespace Server.Spells
 
                     bool isSuper = false;
 
-                    if (atkSlayer != null && atkSlayer == atkSlayer.Group.Super)
+                    if (atkSlayer != null && atkSlayer == atkSlayer.Group.Super && atkSlayer.Group != SlayerGroup.Groups[6]) //Fey Slayers give 300% damage
                         isSuper = true;
-                    else if (atkSlayer2 != null && atkSlayer2 == atkSlayer2.Group.Super)
+                    else if (atkSlayer2 != null && atkSlayer2 == atkSlayer2.Group.Super && atkSlayer2.Group != SlayerGroup.Groups[6]) 
                         isSuper = true;
 
                     scalar = isSuper ? 2.0 : 3.0;
