@@ -22,14 +22,11 @@ namespace Server.Gumps
 
             AddBackground(0, 0, 300, 200, 2620);
 
-            bool cleaned = cannon.Cleaned;
             bool charged = cannon.Charged;
             bool primed = cannon.Primed;
             bool loaded = cannon.AmmoType != AmmunitionType.Empty;
 
             AddHtmlLocalized(0, 10, 300, 16, 1149614 + (int)m_Cannon.Position, 21758, false, false);
-
-            AddHtmlLocalized(45, 40, 100, 16, 1149626, LabelColor, false, false);  //CLEAN
 
             if (!charged)
                 AddHtmlLocalized(45, 60, 100, 16, 1149630, LabelColor, false, false);  //CHARGE
@@ -48,11 +45,6 @@ namespace Server.Gumps
             else
                 AddHtmlLocalized(45, 100, 100, 16, 1149629, LabelColor, false, false);  //REMOVE
 
-            if (!cleaned)
-                AddHtmlLocalized(150, 40, 100, 16, 1149628, RedHue, false, false); //Dirty
-            else
-                AddHtmlLocalized(150, 40, 100, 16, 1149627, GreenHue, false, false); //Clean
-
             if (!charged)
                 AddHtmlLocalized(150, 60, 100, 16, 1149632, RedHue, false, false); //Not Charged
             else
@@ -62,17 +54,15 @@ namespace Server.Gumps
                 AddHtmlLocalized(150, 80, 100, 16, 1149636, RedHue, false, false); //Not Loaded
             else
                 AddHtmlLocalized(150, 80, 100, 16, 1114057, AmmoInfo.GetAmmoName(cannon).ToString(), GreenHue, false, false);
-            //AddHtmlLocalized(150, 80, 100, 16, cannon.AmmoType == AmmoType.Grapeshot ? 1095741 : 1116029, GreenHue, false, false);
 
             if (!primed)
                 AddHtmlLocalized(150, 100, 100, 16, 1149639, RedHue, false, false); //No Fuse
             else
                 AddHtmlLocalized(150, 100, 100, 16, 1149640, GreenHue, false, false); //Primed
 
-            AddButton(10, 40, 0xFA5, 0xFA7, 1, GumpButtonType.Reply, 0);
-            AddButton(10, 60, 0xFA5, 0xFA7, 2, GumpButtonType.Reply, 0);
-            AddButton(10, 80, 0xFA5, 0xFA7, 3, GumpButtonType.Reply, 0);
-            AddButton(10, 100, 0xFA5, 0xFA7, 4, GumpButtonType.Reply, 0);
+            AddButton(10, 60, 0xFA5, 0xFA7, 1, GumpButtonType.Reply, 0);
+            AddButton(10, 80, 0xFA5, 0xFA7, 2, GumpButtonType.Reply, 0);
+            AddButton(10, 100, 0xFA5, 0xFA7, 3, GumpButtonType.Reply, 0);
 
             if (!cannon.Actions.ContainsKey(from) || cannon.Actions[from].Count == 0)
                 cannon.AddAction(from, 1149653); //You are now operating the cannon.
@@ -106,22 +96,19 @@ namespace Server.Gumps
             {
                 default:
                 case 0: return;
-                case 1: //clean
-                    m_Cannon.TryClean(from);
-                    break;
-                case 2: //Charge
+                case 1: //Charge
                     if (!m_Cannon.Charged)
                         m_Cannon.TryCharge(from);
                     else
                         m_Cannon.RemoveCharge(from);
                     break;
-                case 3: //load
+                case 2: //load
                     if (m_Cannon.AmmoType == AmmunitionType.Empty)
                         m_Cannon.TryLoad(from);
                     else
                         m_Cannon.RemoveLoad(from);
                     break;
-                case 4: //prime
+                case 3: //prime
                     if (!m_Cannon.Primed)
                         m_Cannon.TryPrime(from);
                     else if (m_Cannon.CanLight)

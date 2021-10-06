@@ -3,13 +3,13 @@ using System;
 
 namespace Server.Items
 {
-    public class HammerOfHephaestus : AncientSmithyHammer
+    public class HammerOfHephaestus : SmithyHammer
     {
         public static readonly TimeSpan RechargDuration = TimeSpan.FromMinutes(5);
         public static readonly string TimerID = "HammerOfHephaestusTimer";
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public override int UsesRemaining
+        public new int UsesRemaining
         {
             get => base.UsesRemaining;
             set
@@ -34,10 +34,10 @@ namespace Server.Items
 
         [Constructable]
         public HammerOfHephaestus()
-            : base(10, 20)
         {
+            SkillBonuses.SetValues(0, SkillName.Blacksmith, 10.0);
             LootType = LootType.Blessed;
-            Hue = 0x0;
+            UsesRemaining = 20;
         }
 
         public HammerOfHephaestus(Serial serial)
@@ -69,7 +69,9 @@ namespace Server.Items
                     }
                 }
                 else
+                {
                     from.SendLocalizedMessage(1072306); // You must wait a moment for it to recharge.
+                }
             }
             else
             {
@@ -95,14 +97,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.WriteEncodedInt(1); // version
+            writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadEncodedInt();
 
             if (UsesRemaining < 20)

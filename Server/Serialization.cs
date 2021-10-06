@@ -245,7 +245,7 @@ namespace Server
 
 			while (v >= 0x80)
 			{
-				if ((m_Index + 1) > m_Buffer.Length)
+				if (m_Index + 1 > m_Buffer.Length)
 				{
 					Flush();
 				}
@@ -254,7 +254,7 @@ namespace Server
 				v >>= 7;
 			}
 
-			if ((m_Index + 1) > m_Buffer.Length)
+			if (m_Index + 1 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -285,10 +285,10 @@ namespace Server
 
 				while (charsLeft > 0)
 				{
-					int charCount = (charsLeft > m_MaxBufferChars) ? m_MaxBufferChars : charsLeft;
+					int charCount = charsLeft > m_MaxBufferChars ? m_MaxBufferChars : charsLeft;
 					int byteLength = m_Encoding.GetBytes(value, current, charCount, m_CharacterBuffer, 0);
 
-					if ((m_Index + byteLength) > m_Buffer.Length)
+					if (m_Index + byteLength > m_Buffer.Length)
 					{
 						Flush();
 					}
@@ -304,7 +304,7 @@ namespace Server
 			{
 				int byteLength = m_Encoding.GetBytes(value, 0, value.Length, m_CharacterBuffer, 0);
 
-				if ((m_Index + byteLength) > m_Buffer.Length)
+				if (m_Index + byteLength > m_Buffer.Length)
 				{
 					Flush();
 				}
@@ -320,7 +320,7 @@ namespace Server
 			{
 				if (value == null)
 				{
-					if ((m_Index + 1) > m_Buffer.Length)
+					if (m_Index + 1 > m_Buffer.Length)
 					{
 						Flush();
 					}
@@ -329,7 +329,7 @@ namespace Server
 				}
 				else
 				{
-					if ((m_Index + 1) > m_Buffer.Length)
+					if (m_Index + 1 > m_Buffer.Length)
 					{
 						Flush();
 					}
@@ -468,7 +468,7 @@ namespace Server
 
 		public override void Write(uint value)
 		{
-			if ((m_Index + 4) > m_Buffer.Length)
+			if (m_Index + 4 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -482,7 +482,7 @@ namespace Server
 
 		public override void Write(short value)
 		{
-			if ((m_Index + 2) > m_Buffer.Length)
+			if (m_Index + 2 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -494,7 +494,7 @@ namespace Server
 
 		public override void Write(ushort value)
 		{
-			if ((m_Index + 2) > m_Buffer.Length)
+			if (m_Index + 2 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -506,7 +506,7 @@ namespace Server
 
 		public override unsafe void Write(double value)
 		{
-			if ((m_Index + 8) > m_Buffer.Length)
+			if (m_Index + 8 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -521,7 +521,7 @@ namespace Server
 
 		public override unsafe void Write(float value)
 		{
-			if ((m_Index + 4) > m_Buffer.Length)
+			if (m_Index + 4 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -538,7 +538,7 @@ namespace Server
 
 		public override void Write(char value)
 		{
-			if ((m_Index + 8) > m_Buffer.Length)
+			if (m_Index + 8 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -551,7 +551,7 @@ namespace Server
 
 		public override void Write(byte value)
 		{
-			if ((m_Index + 1) > m_Buffer.Length)
+			if (m_Index + 1 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -561,7 +561,7 @@ namespace Server
 
 		public override void Write(sbyte value)
 		{
-			if ((m_Index + 1) > m_Buffer.Length)
+			if (m_Index + 1 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -571,7 +571,7 @@ namespace Server
 
 		public override void Write(bool value)
 		{
-			if ((m_Index + 1) > m_Buffer.Length)
+			if (m_Index + 1 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -1113,12 +1113,12 @@ namespace Server
 			long ticks = m_File.ReadInt64();
 			long now = DateTime.UtcNow.Ticks;
 
-			if (ticks > 0 && (ticks + now) < 0)
+			if (ticks > 0 && ticks + now < 0)
 			{
 				return DateTime.MaxValue;
 			}
 
-            if (ticks < 0 && (ticks + now) < 0)
+            if (ticks < 0 && ticks + now < 0)
             {
                 return DateTime.MinValue;
             }
@@ -1205,7 +1205,7 @@ namespace Server
 			}
 			catch (EndOfStreamException)
 			{
-				// Ignore this exception, the defalut value 0 will be returned
+				// Ignore this exception, the default value 0 will be returned
 			}
 
 			m_File.BaseStream.Seek(returnTo, SeekOrigin.Begin);

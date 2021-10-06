@@ -369,7 +369,7 @@ namespace Server.Multis
         public Hold Hold { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsMoving => (m_MoveTimer != null);
+        public bool IsMoving => m_MoveTimer != null;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsTurning => m_TurnTimer != null;
@@ -513,7 +513,7 @@ namespace Server.Multis
                     return 1043015; // This structure is in danger of collapsing.
 
                 TimeSpan decaySpan = m_DecayTime - DateTime.UtcNow;
-                int percentWorn = 1000 - (int)((decaySpan.Ticks * 1000) / BoatDecayDelay.Ticks);
+                int percentWorn = 1000 - (int)(decaySpan.Ticks * 1000 / BoatDecayDelay.Ticks);
 
                 if (percentWorn >= 923) // 92.3% worn
                     return 1043015; // This structure is in danger of collapsing
@@ -1240,7 +1240,7 @@ namespace Server.Multis
             {
                 if (TillerMan is TillerMan tillerman)
                 {
-                    tillerman.Location = new Point3D(X + (xOffset * TillerManDistance) + (m_Facing == Direction.North ? 1 : 0), Y + (yOffset * TillerManDistance), tillerman.Z);
+                    tillerman.Location = new Point3D(X + xOffset * TillerManDistance + (m_Facing == Direction.North ? 1 : 0), Y + yOffset * TillerManDistance, tillerman.Z);
                     tillerman.SetFacing(m_Facing);
                     tillerman.InvalidateProperties();
                 }
@@ -1248,7 +1248,7 @@ namespace Server.Multis
 
             if (Hold != null)
             {
-                Hold.Location = new Point3D(X + (xOffset * HoldDistance), Y + (yOffset * HoldDistance), Hold.Z);
+                Hold.Location = new Point3D(X + xOffset * HoldDistance, Y + yOffset * HoldDistance, Hold.Z);
                 Hold.SetFacing(m_Facing);
             }
         }
@@ -1832,19 +1832,29 @@ namespace Server.Multis
                 if (secure != null) cloth += secure.GetAmount(type);
             }
 
-            double durability = (Hits / (double)MaxHits) * 100;
+            double durability = Hits / (double)MaxHits * 100;
 
             //Now, how much do they need for 100% repair
             double woodNeeded = WoodPer * (100.0 - durability);
             double clothNeeded = ClothPer * (100.0 - durability);
 
             //Apply skill bonus
-            woodNeeded -= (from.Skills[SkillName.Carpentry].Value / 200.0) * woodNeeded;
-            clothNeeded -= (from.Skills[SkillName.Tailoring].Value / 200.0) * clothNeeded;
+            woodNeeded -= from.Skills[SkillName.Carpentry].Value / 200.0 * woodNeeded;
+            clothNeeded -= from.Skills[SkillName.Tailoring].Value / 200.0 * clothNeeded;
 
             //get 10% of needed repairs
             double minWood = woodNeeded / 10;
             double minCloth = clothNeeded / 10;
+
+            if (woodNeeded < 1)
+            {
+                woodNeeded = 1;
+            }
+
+            if (clothNeeded < 1)
+            {
+                clothNeeded = 1;
+            }
 
             if (wood < minWood || cloth < minCloth)
             {
@@ -2252,10 +2262,10 @@ namespace Server.Multis
             Movement.Movement.Offset(facing, ref xOffset, ref yOffset);
 
             if (TillerMan is Item tillerMan)
-                tillerMan.Location = new Point3D(X + (xOffset * TillerManDistance) + (facing == Direction.North ? 1 : 0), Y + (yOffset * TillerManDistance), ((Item)TillerMan).Z);
+                tillerMan.Location = new Point3D(X + xOffset * TillerManDistance + (facing == Direction.North ? 1 : 0), Y + yOffset * TillerManDistance, ((Item)TillerMan).Z);
 
             if (Hold != null)
-                Hold.Location = new Point3D(X + (xOffset * HoldDistance), Y + (yOffset * HoldDistance), Hold.Z);
+                Hold.Location = new Point3D(X + xOffset * HoldDistance, Y + yOffset * HoldDistance, Hold.Z);
 
             int count = m_Facing - old & 0x7;
             count /= 2;
@@ -2552,7 +2562,7 @@ namespace Server.Multis
 
             for (int i = 1; i <= speed; ++i)
             {
-                if (!CanFit(new Point3D(X + (i * rx), Y + (i * ry), Z), Map, ItemID))
+                if (!CanFit(new Point3D(X + i * rx, Y + i * ry, Z), Map, ItemID))
                 {
                     if (i == 1)
                     {
@@ -2593,7 +2603,7 @@ namespace Server.Multis
 
                     for (int j = 1; j <= speed; ++j)
                     {
-                        if (!CanFit(new Point3D(newX + (j * rx), newY + (j * ry), Z), Map, ItemID))
+                        if (!CanFit(new Point3D(newX + j * rx, newY + j * ry, Z), Map, ItemID))
                         {
                             if (message && TillerMan != null)
                                 TillerManSay(501424); // Ar, we've stopped sir.

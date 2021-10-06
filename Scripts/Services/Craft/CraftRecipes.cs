@@ -93,7 +93,8 @@ namespace Server.Engines.Craft
         LuminousRuneBlade = 353,
         ShardTrasher = 354, 
         BritchesOfWarding = 355,
-        GlovesOfFeudalGrip = 356,        
+        GlovesOfFeudalGrip = 356,
+        ShieldOrb = 357,  
 
         // DefTinkering
         InvisibilityPotion = 400,

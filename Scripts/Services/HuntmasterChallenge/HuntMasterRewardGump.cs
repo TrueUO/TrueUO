@@ -98,6 +98,8 @@ namespace Server.Engines.HuntsmasterChallenge
             new CollectionItem(typeof(RecipeScroll), 0x2831, 1158771, 0, 1.0), // sausage recipe
             new CollectionItem(typeof(MinersSatchel), 0xA272, 1158773, 0, 1.0),
             new CollectionItem(typeof(LumbjacksSatchel), 0xA274, 1158772, 0, 1.0),
+            new CollectionItem(typeof(FishBushel), 0xA7AC, 1159779, 0, 1.0),
+            new CollectionItem(typeof(CrabLobsterBushel), 0xA7AE, 1159780, 0, 1.0),
             new CollectionItem(typeof(HarvestersAxe), 0x1443, 1158774, 0, 1.0),
             new CollectionItem(typeof(GargishHarvestersAxe), 0x48B2, 1158774, 0, 1.0),
             new CollectionItem(typeof(RecipeScroll), 0x2831, 1159204, 0, 1.0), // grilled serpent steak recipe
