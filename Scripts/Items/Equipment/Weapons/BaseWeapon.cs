@@ -2849,7 +2849,7 @@ namespace Server.Items
 
         private readonly List<SlayerName> _SuperSlayers = new List<SlayerName>
         {
-            SlayerName.Repond, SlayerName.Silver, SlayerName.Fey,
+            SlayerName.Repond, SlayerName.Silver,
             SlayerName.ElementalBan, SlayerName.Exorcism, SlayerName.ArachnidDoom,
             SlayerName.ReptilianDeath, SlayerName.Dinosaur, SlayerName.Myrmidex,
             SlayerName.Eodon
