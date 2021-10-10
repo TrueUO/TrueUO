@@ -371,6 +371,7 @@ namespace Server.Items
 
             if (makersMark)
             {
+                m_PlayerConstructed = true;
                 Crafter = from;
             }
 
