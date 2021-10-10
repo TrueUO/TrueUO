@@ -220,7 +220,7 @@ namespace Server.Items
 
         private void OnTick()
         {
-            if (DateTime.UtcNow > m_DeadLine)
+            if (DateTime.UtcNow > m_DeadLine && m_Boss != null)
             {
                 OnDeadLine();
             }
@@ -290,8 +290,11 @@ namespace Server.Items
             foreach (Mobile m in m_BossRegion.GetMobiles())
             {
                 if (m is PlayerMobile)
+                {
                     m.SendMessage("You have failed to slay Corgul in time.");
+                }
             }
+
             Reset();
         }
 
