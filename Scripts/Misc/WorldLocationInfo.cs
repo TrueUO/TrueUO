@@ -23,6 +23,7 @@ namespace Server
         }
 
         public static WorldLocationInfo[][] Locations => m_Locations;
+
         private static readonly WorldLocationInfo[][] m_Locations =
         {
             new[] // Felucca
@@ -162,7 +163,7 @@ namespace Server
             new[] // TerMur
 			{
                 new WorldLocationInfo("somewhere in TerMur", new Rectangle2D(270, 2754, 1000, 1339))
-            }
+            },
         };
 
         public static string GetLocationString(IEntity e)
@@ -172,38 +173,39 @@ namespace Server
 
         public static string GetLocationString(Point3D p, Map map)
         {
-            Region r = Region.Find(p, map);
-
-            if (r != null)
+            if (map == null)
             {
-                if (r.Name != null && r is TownRegion)
+                return "an unknown location";
+            }
+
+            var r = Region.Find(p, map);
+		
+            if (r != null && r.Name != null)
+	        {
+		        if (r is TownRegion)
                 {
                     return $"somewhere near {r.Name}.";
                 }
 
-                if (r.Name != null && r is DungeonRegion)
+                if (r is DungeonRegion)
                 {
                     return $"somewhere in dungeon {r.Name}.";
                 }
             }
-
+		
             int mapID = map.MapID;
-
-            if (mapID < 0 || mapID > m_Locations.Length)
+		
+            if (mapID < 0 || mapID >= m_Locations.Length)
             {
                 return "an unknown location";
             }
 
             WorldLocationInfo[] infos = m_Locations[mapID];
 
-            for (var index = 0; index < infos.Length; index++)
+            foreach (WorldLocationInfo info in infos)
             {
-                WorldLocationInfo info = infos[index];
-
-                for (var i = 0; i < info.m_Bounds.Length; i++)
+                foreach (Rectangle2D rec in info.m_Bounds)
                 {
-                    Rectangle2D rec = info.m_Bounds[i];
-
                     if (rec.Contains(p))
                     {
                         return info.m_RegionName;
