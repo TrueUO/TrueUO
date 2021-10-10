@@ -1,3 +1,4 @@
+using System.Linq;
 using Server.Commands;
 using Server.Regions;
 
@@ -204,19 +205,16 @@ namespace Server
 
             foreach (WorldLocationInfo info in infos)
             {
-                foreach (Rectangle2D rec in info.m_Bounds)
+                if (info.m_Bounds.Any(rec => rec.Contains(p)))
                 {
-                    if (rec.Contains(p))
-                    {
-                        return info.m_RegionName;
-                    }
+                    return info.m_RegionName;
                 }
             }
 
             return "an unknown location";
         }
 
-        public static void GetLocation_OnCommand(CommandEventArgs e)
+        private static void GetLocation_OnCommand(CommandEventArgs e)
         {
             e.Mobile.SendMessage(GetLocationString(e.Mobile.Location, e.Mobile.Map));
         }
