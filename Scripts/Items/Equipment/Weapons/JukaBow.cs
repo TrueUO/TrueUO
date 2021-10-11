@@ -108,7 +108,7 @@ namespace Server.Items
                 }
                 case 0:
                 {
-                    if (Slayer != SlayerName.None)
+                    if (version < 1 && Slayer != SlayerName.None)
                     {
                         IsModified = true;
                     }
