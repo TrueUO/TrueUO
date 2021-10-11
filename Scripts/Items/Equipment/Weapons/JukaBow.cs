@@ -3,6 +3,8 @@ namespace Server.Items
     [Flipable(0x13B2, 0x13B1)]
     public class JukaBow : Bow
     {
+        private bool m_IsModified;
+
         [Constructable]
         public JukaBow()
         { 
@@ -14,7 +16,11 @@ namespace Server.Items
 		}
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsModified => Slayer != SlayerName.None;
+        public bool IsModified
+        {
+            get => m_IsModified;
+            set => m_IsModified = value;
+        }
 
         public override bool CanEquip(Mobile from)
         {
@@ -72,6 +78,7 @@ namespace Server.Items
             {
                 g.Consume();
 
+                IsModified = true;
                 Hue = 0x453;
                 Slayer = BaseRunicTool.GetRandomSlayer();
 
@@ -82,13 +89,33 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0); // version
+            writer.Write(1); // version
+
+            writer.Write(m_IsModified);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            reader.ReadInt();
+            int version = reader.ReadInt();
+
+            switch (version)
+            {
+                case 1:
+                {
+                    m_IsModified = reader.ReadBool();
+                    goto case 0;
+                }
+                case 0:
+                {
+                    if (Slayer != SlayerName.None)
+                    {
+                        IsModified = true;
+                    }
+
+                    break;
+                }
+            }
         }
     }
 }
