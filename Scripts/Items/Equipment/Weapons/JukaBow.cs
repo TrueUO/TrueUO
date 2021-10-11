@@ -14,7 +14,7 @@ namespace Server.Items
 		}
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsModified => Slayer != SlayerName.None;
+        public bool IsModified => Slayer2 != SlayerName.None;
 
         public override bool CanEquip(Mobile from)
         {
@@ -73,7 +73,7 @@ namespace Server.Items
                 g.Consume();
 
                 Hue = 0x453;
-                Slayer = BaseRunicTool.GetRandomSlayer();
+                Slayer2 = BaseRunicTool.GetRandomSlayer();
 
                 from.SendMessage("You modify the bow.");
             }

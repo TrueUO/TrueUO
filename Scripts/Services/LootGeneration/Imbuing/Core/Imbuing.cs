@@ -92,13 +92,6 @@ namespace Server.SkillHandlers
             {
                 from.SendLocalizedMessage(1079576); // You cannot imbue this item.
             }
-            else if (item.GetType() == typeof(JukaBow))
-            {
-                if (((JukaBow)item).IsModified)
-                    from.SendLocalizedMessage(1079576); // You cannot imbue this item.
-                else
-                    return true;
-            }
             else if (item is BaseJewel && !(item is BaseRing) && !(item is BaseBracelet))
             {
                 from.SendLocalizedMessage(1079576); // You cannot imbue this item.
