@@ -81,14 +81,7 @@ namespace Server.Items
                 IsModified = true;
                 Hue = 0x453;
 
-                if (Slayer == SlayerName.None)
-                {
-                    Slayer = BaseRunicTool.GetRandomSlayer();
-                }
-                else
-                {
-                    Slayer2 = BaseRunicTool.GetRandomSlayer();
-                }
+                Slayer = BaseRunicTool.GetRandomSlayer();
 
                 from.SendMessage("You modify the bow.");
             }
