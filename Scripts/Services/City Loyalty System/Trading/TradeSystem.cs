@@ -57,7 +57,7 @@ namespace Server.Engines.CityLoyalty
             if (entry == null)
                 return 1;
 
-            return Math.Min(8, Math.Max(1, entry.Completed / 25 + 1));
+            return Math.Min(5, Math.Max(1, entry.Completed / 25 + 1));
         }
 
         public static bool HasTrade(Mobile from)
