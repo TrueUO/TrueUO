@@ -159,7 +159,7 @@ namespace Server.Engines.CityLoyalty
             {
                 TradeEntry.TradeDetails details = Entry.Details[index];
 
-                if (details.Match(item.GetType()))
+                if (details.Match(item.GetType()) && !item.Insured)
                 {
                     int hasAmount = details.Count(this);
 
@@ -167,10 +167,14 @@ namespace Server.Engines.CityLoyalty
                     {
                         if (message)
                         {
-                            from.SendLocalizedMessage(
-                                1151726); // You are trying to add too many of this item to the trade order. Only add the required quantity
+                            from.SendLocalizedMessage(1151726); // You are trying to add too many of this item to the trade order. Only add the required quantity
                         }
 
+                        break;
+                    }
+
+                    if (item is Spellbook book && book.Content != 0)
+                    {
                         break;
                     }
 
