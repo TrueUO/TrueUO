@@ -3,16 +3,26 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public static class MoonstoneJewelry
+    public class MoonstoneJewelry
     {
         private static readonly List<BaseJewel> _JewelryList = new List<BaseJewel>();
 
         public static readonly List<BaseJewel> JewelryList = _JewelryList;
 
+        public static int FeluccaHueIndex { get; set; }
+        public static int TrammelHueIndex { get; set; }
+        public static int Count { get; set; }
+
         public static void Initialize()
         {
             Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), () =>
             {
+                if (_JewelryList.Count != 0)
+                {
+                    Count++;
+                    IndexCalculate();
+                }
+
                 for (var index = 0; index < _JewelryList.Count; index++)
                 {
                     var j = _JewelryList[index];
@@ -20,64 +30,75 @@ namespace Server.Items
                     if (j == null || j.Deleted || j.Map == Map.Internal)
                     {
                         continue;
-                    }
+                    }                    
 
                     ChangeHue(j);
-                }
+                }                
             });
+        }
+
+        public static int[] TrammelHueArray = new int[] { 99, 299, 499, 699, 934, 699, 499, 299, 99 };
+        public static int[] FeluccaHueArray = new int[] { 34, 234, 434, 634, 934, 634, 434, 234, 34 };
+
+        public static void IndexCalculate()
+        {
+            if (Count == 2 || Count == 5)
+            {
+                if (TrammelHueIndex < TrammelHueArray.Length)
+                {
+                    TrammelHueIndex++;
+                }
+                else
+                {
+                    TrammelHueIndex = 0;
+                }
+
+                if (FeluccaHueIndex < FeluccaHueArray.Length)
+                {
+                    FeluccaHueIndex++;
+                }
+                else
+                {
+                    FeluccaHueIndex = 0;
+                }
+
+                if (Count == 5)
+                    Count = 0;
+            }
         }
 
         public static void ChangeHue(Item item)
         {
-            var p = item.Location;
             var map = item.Map;
-            var hue = 960;
-
-            if (item.RootParent is Mobile m)
-            {
-                p = m.Location;
-            }
+            var hue = 934;
 
             if (map == Map.Felucca || map == Map.Trammel)
             {
                 if (map == Map.Felucca)
                 {
-                    hue = 1628;
+                    hue = FeluccaHueArray[FeluccaHueIndex];
                 }
 
                 if (map == Map.Trammel)
                 {
-                    hue = 1319;
-                }
-
-                var moonhue = hue + (int)Clock.GetMoonPhase(map, p.X, p.Y);
-
-                Clock.GetTime(map, p.X, p.Y, out int hours, out int minutes);
-
-                if (hours >= 20)
-                {
-                    hue = moonhue;
-                }
-                else if (hours >= 19)
-                {
-                    hue = moonhue - 1;
-                }
-                else if (hours >= 18)
-                {
-                    hue = moonhue - 2;
-                }
-                else if (hours >= 17)
-                {
-                    hue = moonhue - 3;
+                    hue = TrammelHueArray[TrammelHueIndex];
                 }
             }
 
             item.Hue = hue;
         }
+
+        public static void RemoveList(BaseJewel jewel)
+        {
+            if (JewelryList.Contains(jewel))
+                JewelryList.Remove(jewel);
+        }
     }
 
     public class MoonstoneBracelet : BaseBracelet
     {
+        public override bool IsArtifact => true;
+
         [Constructable]
         public MoonstoneBracelet()
             : base(Utility.RandomList(0x1086, 0x1F06))
@@ -102,10 +123,9 @@ namespace Server.Items
 
         public override void Delete()
         {
-            base.Delete();
+            MoonstoneJewelry.RemoveList(this);
 
-            if (MoonstoneJewelry.JewelryList.Contains(this))
-                MoonstoneJewelry.JewelryList.Remove(this);
+            base.Delete();
         }
 
         public override void Serialize(GenericWriter writer)
@@ -125,6 +145,8 @@ namespace Server.Items
 
     public class MoonstoneEarrings : BaseEarrings
     {
+        public override bool IsArtifact => true;
+
         [Constructable]
         public MoonstoneEarrings()
             : base(0x1087)
@@ -149,10 +171,9 @@ namespace Server.Items
 
         public override void Delete()
         {
-            base.Delete();
+            MoonstoneJewelry.RemoveList(this);
 
-            if (MoonstoneJewelry.JewelryList.Contains(this))
-                MoonstoneJewelry.JewelryList.Remove(this);
+            base.Delete();
         }
 
         public override void Serialize(GenericWriter writer)
@@ -172,6 +193,8 @@ namespace Server.Items
 
     public class MoonstoneRing : BaseRing
     {
+        public override bool IsArtifact => true;
+
         [Constructable]
         public MoonstoneRing()
             : base(Utility.RandomList(0x108A, 0x1F09))
@@ -196,10 +219,9 @@ namespace Server.Items
 
         public override void Delete()
         {
-            base.Delete();
+            MoonstoneJewelry.RemoveList(this);
 
-            if (MoonstoneJewelry.JewelryList.Contains(this))
-                MoonstoneJewelry.JewelryList.Remove(this);
+            base.Delete();
         }
 
         public override void Serialize(GenericWriter writer)
@@ -219,6 +241,8 @@ namespace Server.Items
 
     public class MoonstoneNecklace : BaseNecklace
     {
+        public override bool IsArtifact => true;
+
         [Constructable]
         public MoonstoneNecklace()
             : base(Utility.RandomList(0x1088, 0x1089, 0x1F05))
@@ -243,10 +267,9 @@ namespace Server.Items
 
         public override void Delete()
         {
-            base.Delete();
+            MoonstoneJewelry.RemoveList(this);
 
-            if (MoonstoneJewelry.JewelryList.Contains(this))
-                MoonstoneJewelry.JewelryList.Remove(this);
+            base.Delete();
         }
 
         public override void Serialize(GenericWriter writer)
