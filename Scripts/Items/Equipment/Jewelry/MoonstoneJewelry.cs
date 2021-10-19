@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class MoonstoneJewelry
+    public static class MoonstoneJewelry
     {
         private static readonly List<BaseJewel> _JewelryList = new List<BaseJewel>();
 
@@ -37,8 +37,8 @@ namespace Server.Items
             });
         }
 
-        public static int[] TrammelHueArray = new int[] { 99, 299, 499, 699, 934, 699, 499, 299, 99 };
-        public static int[] FeluccaHueArray = new int[] { 34, 234, 434, 634, 934, 634, 434, 234, 34 };
+        private static readonly int[] TrammelHueArray = new int[] { 99, 299, 499, 699, 934, 699, 499, 299, 99 };
+        private static readonly int[] FeluccaHueArray = new int[] { 34, 234, 434, 634, 934, 634, 434, 234, 34 };
 
         public static void IndexCalculate()
         {
