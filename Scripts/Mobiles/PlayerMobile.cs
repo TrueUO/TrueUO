@@ -6150,7 +6150,7 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    if (!pet.CanAutoStable || Stabled.Count >= AnimalTrainer.GetMaxStabled(this))
+                    if (!pet.CanAutoStable || Stabled.Count >= AnimalTrainer.GetMaxStabled(this) + 1 )
                     {
                         continue;
                     }
