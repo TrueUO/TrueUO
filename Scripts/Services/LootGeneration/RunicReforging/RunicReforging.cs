@@ -128,6 +128,8 @@ namespace Server.Items
                     goodtogo = false;
                 else if (Imbuing.IsInNonImbueList(item.GetType()))
                     goodtogo = false;
+                else if (item is GargishOctopusNecklace gon && gon.GemType != GemType.None)
+                    goodtogo = false;
 
                 if (!goodtogo)
                 {
@@ -1134,6 +1136,7 @@ namespace Server.Items
             m_AllowableTable[typeof(BarbedWhip)] = DefTailoring.CraftSystem;
             m_AllowableTable[typeof(SpikedWhip)] = DefTailoring.CraftSystem;
             m_AllowableTable[typeof(BladedWhip)] = DefTailoring.CraftSystem;
+            m_AllowableTable[typeof(GargishOctopusNecklace)] = DefBlacksmithy.CraftSystem;
         }
 
         public static void Configure()

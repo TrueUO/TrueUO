@@ -115,6 +115,8 @@ namespace Server.Items
 
     public class GargishOctopusNecklace : GargishNecklace, IRepairable
     {
+        public override int LabelNumber => 1125826; // gargish octopus necklace
+
         public CraftSystem RepairSystem => DefTinkering.CraftSystem;
 
         public override int InitMaxHits => 65;
@@ -143,7 +145,7 @@ namespace Server.Items
 
         private void AssignRandomGem()
         {
-            int ran = Utility.RandomMinMax(1, 9);
+            int ran = Utility.RandomMinMax(0, 9);
             GemType = (GemType)ran;
         }
 
@@ -194,7 +196,7 @@ namespace Server.Items
             }
             else
             {
-                list.Add(1125826); // gargish octopus necklace
+                base.AddNameProperty(list);
             }
         }
 
