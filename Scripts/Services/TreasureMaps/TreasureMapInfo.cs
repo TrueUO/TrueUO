@@ -592,7 +592,7 @@ namespace Server.Items
 
         private static readonly Type[] _SpecialCacheHordeAndTrove =
         {
-            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword)
+            typeof(OctopusNecklace), typeof(GargishOctopusNecklace), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword)
         };
 
         private static readonly Type[] _DecorativeMinorArtifacts =
