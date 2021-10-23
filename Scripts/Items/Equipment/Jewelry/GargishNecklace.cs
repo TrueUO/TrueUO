@@ -1,3 +1,5 @@
+using Server.Engines.Craft;
+
 namespace Server.Items
 {
     public class GargishNecklace : BaseArmor
@@ -111,8 +113,10 @@ namespace Server.Items
         }
     }
 
-    public class GargishOctopusNecklace : GargishNecklace
+    public class GargishOctopusNecklace : GargishNecklace, IRepairable
     {
+        public CraftSystem RepairSystem => DefTinkering.CraftSystem;
+
         public override int InitMaxHits => 65;
 
         private GemType m_GemType;
