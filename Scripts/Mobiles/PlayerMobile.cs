@@ -6130,7 +6130,7 @@ namespace Server.Mobiles
 
         public void AutoStablePets()
         {
-            if (AllFollowers.Count > 0)
+            if (AllFollowers.Count > 0 && Stabled.Count <= AnimalTrainer.GetMaxStabled(this))
             {
                 for (int i = m_AllFollowers.Count - 1; i >= 0; --i)
                 {
@@ -6150,7 +6150,7 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    if (!pet.CanAutoStable || Stabled.Count >= AnimalTrainer.GetMaxStabled(this) + 1 )
+                    if (!pet.CanAutoStable)
                     {
                         continue;
                     }
