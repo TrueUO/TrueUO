@@ -11,59 +11,51 @@ namespace Server.Items
 
         public static int FeluccaHueIndex { get; set; }
         public static int TrammelHueIndex { get; set; }
-        public static int Count { get; set; }
 
         public static void Initialize()
         {
-            Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), () =>
+            Timer.DelayCall(TimeSpan.FromMinutes(3), TimeSpan.FromMinutes(3), () =>
             {
                 if (_JewelryList.Count != 0)
                 {
-                    Count++;
                     IndexCalculate();
-                }
 
-                for (var index = 0; index < _JewelryList.Count; index++)
-                {
-                    var j = _JewelryList[index];
-
-                    if (j == null || j.Deleted || j.Map == Map.Internal)
+                    for (var index = 0; index < _JewelryList.Count; index++)
                     {
-                        continue;
-                    }                    
+                        var j = _JewelryList[index];
 
-                    ChangeHue(j);
-                }                
+                        if (j == null || j.Deleted || j.Map == Map.Internal)
+                        {
+                            continue;
+                        }
+
+                        ChangeHue(j);
+                    }
+                }
             });
         }
 
-        private static readonly int[] TrammelHueArray = new int[] { 99, 299, 499, 699, 934, 699, 499, 299, 99 };
-        private static readonly int[] FeluccaHueArray = new int[] { 34, 234, 434, 634, 934, 634, 434, 234, 34 };
+        private static readonly int[] TrammelHueArray = new int[] { 99, 299, 499, 699, 934, 699, 499, 299 };
+        private static readonly int[] FeluccaHueArray = new int[] { 34, 234, 434, 634, 934, 634, 434, 234 };
 
         public static void IndexCalculate()
         {
-            if (Count == 2 || Count == 5)
+            if (TrammelHueIndex < TrammelHueArray.Length - 1)
             {
-                if (TrammelHueIndex < TrammelHueArray.Length)
-                {
-                    TrammelHueIndex++;
-                }
-                else
-                {
-                    TrammelHueIndex = 0;
-                }
+                TrammelHueIndex++;
+            }
+            else
+            {
+                TrammelHueIndex = 0;
+            }
 
-                if (FeluccaHueIndex < FeluccaHueArray.Length)
-                {
-                    FeluccaHueIndex++;
-                }
-                else
-                {
-                    FeluccaHueIndex = 0;
-                }
-
-                if (Count == 5)
-                    Count = 0;
+            if (FeluccaHueIndex < FeluccaHueArray.Length - 1)
+            {
+                FeluccaHueIndex++;
+            }
+            else
+            {
+                FeluccaHueIndex = 0;
             }
         }
 
