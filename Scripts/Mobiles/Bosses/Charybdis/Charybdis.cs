@@ -583,6 +583,34 @@ namespace Server.Mobiles
                     c.DropItem(steak);
             }
 
+
+            List<DamageStore> rights = GetLootingRights();
+
+            Item armor = Loot.Construct(m_VirtuousOrVillainousArmor[Utility.Random(m_VirtuousOrVillainousArmor.Length)]);
+
+            Mobile dropplayer = null;
+
+            if (m_Fisher != null && m_Fisher.Alive && InRange(Location, 30))
+            {
+                dropplayer = m_Fisher;
+            }
+            else if (rights.Count > 0)
+            {
+                dropplayer = rights[Utility.Random(rights.Count)].m_Mobile;                
+            }
+
+            if (dropplayer != null)
+            {
+                dropplayer.SendLocalizedMessage(1150879, dropplayer.Name); // ~1_token~ has magically received an item from the charybdis corpse.
+
+                if (dropplayer.Backpack == null || !dropplayer.Backpack.TryDropItem(dropplayer, armor, false))
+                    dropplayer.BankBox.DropItem(armor);
+            }
+            else
+            {
+                c.DropItem(armor);
+            }
+
             c.DropItem(new MessageInABottle(c.Map));
             c.DropItem(new SpecialFishingNet());
             c.DropItem(new SpecialFishingNet());
@@ -649,6 +677,34 @@ namespace Server.Mobiles
             typeof(SummerDragonfishSteak),
             typeof(UnicornFishSteak),
             typeof(YellowtailBarracudaSteak)
+        };
+
+        private readonly Type[] m_VirtuousOrVillainousArmor =
+        {
+            typeof(HelmOfVillainousRegeneration),
+            typeof(HelmOfVirtuousRegeneration),
+            typeof(GorgetOfVillainousRegeneration),
+            typeof(GorgetOfVirtuousRegeneration),
+            typeof(BreastplateOfVillainousRegeneration),
+            typeof(BreastplateOfVirtuousRegeneration),
+            typeof(ArmsOfVillainousRegeneration),
+            typeof(ArmsOfVirtuousRegeneration),
+            typeof(GauntletsOfVillainousRegeneration),
+            typeof(GauntletsOfVirtuousRegeneration),
+            typeof(LegsOfVillainousRegeneration),
+            typeof(LegsOfVirtuousRegeneration),
+            typeof(KiltOfVillainousRegeneration),
+            typeof(KiltOfVirtuousRegeneration),
+            typeof(EarringsOfVillainousRegeneration),
+            typeof(EarringsOfVirtuousRegeneration),
+            typeof(GargishBreastplateOfVillainousRegeneration),
+            typeof(GargishBreastplateOfVirtuousRegeneration),
+            typeof(GargishArmsOfVillainousRegeneration),
+            typeof(GargishArmsOfVirtuousRegeneration),
+            typeof(NecklaceOfVillainousRegeneration),
+            typeof(NecklaceOfVirtuousRegeneration),
+            typeof(GargishLegsOfVillainousRegeneration),
+            typeof(GargishLegsOfVirtuousRegeneration)
         };
 
         public override void GenerateLoot()
