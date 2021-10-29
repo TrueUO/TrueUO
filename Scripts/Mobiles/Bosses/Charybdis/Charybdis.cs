@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
+    [CorpseName("a charydbis corpse")]
     public class Charydbis : BaseSeaChampion
     {
         public static readonly TimeSpan SpawnRate = TimeSpan.FromSeconds(30);
@@ -30,6 +31,7 @@ namespace Server.Mobiles
         public override Poison PoisonImmune => Poison.Lethal;
         public override double TreasureMapChance => 0.50;
         public override int TreasureMapLevel => 5;
+        public override bool AlwaysMurderer => true;
 
         public override Type[] UniqueList => new Type[] { };
         public override Type[] SharedList => new Type[] { };
@@ -46,7 +48,7 @@ namespace Server.Mobiles
         {
             RangeFight = 8;
 
-            Name = "charydbis";
+            Name = "Charydbis";
             Body = 1244;
             BaseSoundID = 353;
 
@@ -578,6 +580,7 @@ namespace Server.Mobiles
                 Type steakType = m_Steaks[Utility.Random(m_Steaks.Length)];
 
                 Item steak = Loot.Construct(steakType);
+                steak.Amount = Utility.RandomMinMax(1, 5);
 
                 if (steak != null)
                     c.DropItem(steak);
@@ -610,16 +613,6 @@ namespace Server.Mobiles
             {
                 c.DropItem(armor);
             }
-
-            c.DropItem(new MessageInABottle(c.Map));
-            c.DropItem(new SpecialFishingNet());
-            c.DropItem(new SpecialFishingNet());
-            c.DropItem(new SpecialFishingNet());
-            c.DropItem(new SpecialFishingNet());
-
-            FishingPole pole = new FishingPole();
-            BaseRunicTool.ApplyAttributesTo(pole, false, 0, Utility.RandomMinMax(2, 5), 50, 100);
-            c.DropItem(pole);
 
             SkillMasteryPrimer.CheckPrimerDrop(this);
         }
@@ -709,7 +702,7 @@ namespace Server.Mobiles
 
         public override void GenerateLoot()
         {
-            AddLoot(LootPack.SuperBoss, 8);
+            AddLoot(LootPack.SuperBoss, 2);
             AddLoot(LootPack.LootItemCallback(RandomGoody, 10.0, 1, false, false));
         }
 
