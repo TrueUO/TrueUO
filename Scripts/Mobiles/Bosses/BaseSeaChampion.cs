@@ -19,7 +19,7 @@ namespace Server.Mobiles
 
         private DateTime m_NextBoatDamage;
         private bool m_InDamageMode;
-        private readonly Mobile m_Fisher;
+        public readonly Mobile m_Fisher;
 
         public virtual bool CanDamageBoats => false;
         public virtual TimeSpan BoatDamageCooldown => TimeSpan.MaxValue;
