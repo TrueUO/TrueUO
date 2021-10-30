@@ -145,7 +145,7 @@ namespace Server.Items
 
         private void AssignRandomGem()
         {
-            int ran = Utility.RandomMinMax(0, 9);
+            int ran = Utility.RandomMinMax(1, 9);
             GemType = (GemType)ran;
         }
 
