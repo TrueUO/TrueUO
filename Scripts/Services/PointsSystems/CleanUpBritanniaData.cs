@@ -163,6 +163,7 @@ namespace Server.Engines.Points
             Entries[typeof(SmugglersLiquor)] = 30.0;
             Entries[typeof(MessageInABottle)] = 100.0;
             Entries[typeof(SOS)] = 100.0;
+            Entries[typeof(SOSChest)] = 100.0;
             Entries[typeof(RunedDriftwoodBow)] = 500.0;
             Entries[typeof(Rope)] = 1600.0;
             Entries[typeof(SpecialFishingNet)] = 250.0;
@@ -703,6 +704,7 @@ namespace Server.Engines.Points
 
             //Treasure Hunting
             Entries[typeof(Lockpick)] = 0.10;
+            Entries[typeof(ParagonChest)] = 100;
         }
 
         public static int GetPointsForEquipment(Item item)

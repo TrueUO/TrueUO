@@ -165,40 +165,49 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1157244); // You may not add anything to the fermentation barrel after fermentation has begun.
             }
-            else if (dropped is Yeast)
+            else if (!IsLockedDown)
             {
-                if (HasYeast())
+                if (dropped is Yeast)
                 {
-                    from.SendLocalizedMessage(1157256); // You have already added yeast to the barrel.
+                    if (HasYeast())
+                    {
+                        from.SendLocalizedMessage(1157256); // You have already added yeast to the barrel.
+                    }
+                    else
+                    {
+                        dropped.Movable = false;
+                        return true;
+                    }
                 }
                 else
                 {
-                    dropped.Movable = false;
-                    return true;
+                    var type = GetFruitType(dropped.GetType());
+
+                    if (type == FruitType.None)
+                    {
+                        from.SendLocalizedMessage(
+                            1157246); // You may only put fruit and yeast in the fermentation barrel.
+                    }
+                    else if (FruitType != FruitType.None && FruitType != type)
+                    {
+                        from.SendLocalizedMessage(
+                            1157243); // You may only put one type of fruit in the fermentation barrel at one time. Empty the barrel first.
+                    }
+                    else if (dropped.Amount >= MaxItems)
+                    {
+                        from.SendLocalizedMessage(1157285); // The barrel cannot hold anymore fruit.
+                    }
+                    else
+                    {
+                        FruitType = type;
+                        dropped.Movable = false;
+                        return true;
+                    }
                 }
             }
             else
             {
-                var type = GetFruitType(dropped.GetType());
-
-                if (type == FruitType.None)
-                {
-                    from.SendLocalizedMessage(1157246); // You may only put fruit and yeast in the fermentation barrel.
-                }
-                else if (FruitType != FruitType.None && FruitType != type)
-                {
-                    from.SendLocalizedMessage(1157243); // You may only put one type of fruit in the fermentation barrel at one time. Empty the barrel first.
-                }
-                else if (dropped.Amount >= MaxItems)
-                {
-                    from.SendLocalizedMessage(1157285); // The barrel cannot hold anymore fruit.
-                }
-                else
-                {
-                    FruitType = type;
-                    dropped.Movable = false;
-                    return true;
-                }
+                from.SendLocalizedMessage(1010449); // You may not use this object while it is locked down.
             }
 
             return false;
