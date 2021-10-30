@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
+    [CorpseName("a charydbis corpse")]
     public class Charydbis : BaseSeaChampion
     {
         public static readonly TimeSpan SpawnRate = TimeSpan.FromSeconds(30);
@@ -30,6 +31,7 @@ namespace Server.Mobiles
         public override Poison PoisonImmune => Poison.Lethal;
         public override double TreasureMapChance => 0.50;
         public override int TreasureMapLevel => 5;
+        public override bool AlwaysMurderer => true;
 
         public override Type[] UniqueList => new Type[] { };
         public override Type[] SharedList => new Type[] { };
@@ -46,7 +48,7 @@ namespace Server.Mobiles
         {
             RangeFight = 8;
 
-            Name = "charydbis";
+            Name = "Charydbis";
             Body = 1244;
             BaseSoundID = 353;
 
@@ -578,20 +580,39 @@ namespace Server.Mobiles
                 Type steakType = m_Steaks[Utility.Random(m_Steaks.Length)];
 
                 Item steak = Loot.Construct(steakType);
+                steak.Amount = Utility.RandomMinMax(1, 5);
 
                 if (steak != null)
                     c.DropItem(steak);
             }
 
-            c.DropItem(new MessageInABottle(c.Map));
-            c.DropItem(new SpecialFishingNet());
-            c.DropItem(new SpecialFishingNet());
-            c.DropItem(new SpecialFishingNet());
-            c.DropItem(new SpecialFishingNet());
 
-            FishingPole pole = new FishingPole();
-            BaseRunicTool.ApplyAttributesTo(pole, false, 0, Utility.RandomMinMax(2, 5), 50, 100);
-            c.DropItem(pole);
+            List<DamageStore> rights = GetLootingRights();
+
+            Item armor = Loot.Construct(m_VirtuousOrVillainousArmor[Utility.Random(m_VirtuousOrVillainousArmor.Length)]);
+
+            Mobile dropplayer = null;
+
+            if (m_Fisher != null && m_Fisher.Alive && InRange(Location, 30))
+            {
+                dropplayer = m_Fisher;
+            }
+            else if (rights.Count > 0)
+            {
+                dropplayer = rights[Utility.Random(rights.Count)].m_Mobile;                
+            }
+
+            if (dropplayer != null)
+            {
+                dropplayer.SendLocalizedMessage(1150879, dropplayer.Name); // ~1_token~ has magically received an item from the charybdis corpse.
+
+                if (dropplayer.Backpack == null || !dropplayer.Backpack.TryDropItem(dropplayer, armor, false))
+                    dropplayer.BankBox.DropItem(armor);
+            }
+            else
+            {
+                c.DropItem(armor);
+            }
 
             SkillMasteryPrimer.CheckPrimerDrop(this);
         }
@@ -651,9 +672,37 @@ namespace Server.Mobiles
             typeof(YellowtailBarracudaSteak)
         };
 
+        private readonly Type[] m_VirtuousOrVillainousArmor =
+        {
+            typeof(HelmOfVillainousRegeneration),
+            typeof(HelmOfVirtuousRegeneration),
+            typeof(GorgetOfVillainousRegeneration),
+            typeof(GorgetOfVirtuousRegeneration),
+            typeof(BreastplateOfVillainousRegeneration),
+            typeof(BreastplateOfVirtuousRegeneration),
+            typeof(ArmsOfVillainousRegeneration),
+            typeof(ArmsOfVirtuousRegeneration),
+            typeof(GauntletsOfVillainousRegeneration),
+            typeof(GauntletsOfVirtuousRegeneration),
+            typeof(LegsOfVillainousRegeneration),
+            typeof(LegsOfVirtuousRegeneration),
+            typeof(KiltOfVillainousRegeneration),
+            typeof(KiltOfVirtuousRegeneration),
+            typeof(EarringsOfVillainousRegeneration),
+            typeof(EarringsOfVirtuousRegeneration),
+            typeof(GargishBreastplateOfVillainousRegeneration),
+            typeof(GargishBreastplateOfVirtuousRegeneration),
+            typeof(GargishArmsOfVillainousRegeneration),
+            typeof(GargishArmsOfVirtuousRegeneration),
+            typeof(NecklaceOfVillainousRegeneration),
+            typeof(NecklaceOfVirtuousRegeneration),
+            typeof(GargishLegsOfVillainousRegeneration),
+            typeof(GargishLegsOfVirtuousRegeneration)
+        };
+
         public override void GenerateLoot()
         {
-            AddLoot(LootPack.SuperBoss, 8);
+            AddLoot(LootPack.SuperBoss, 2);
             AddLoot(LootPack.LootItemCallback(RandomGoody, 10.0, 1, false, false));
         }
 
