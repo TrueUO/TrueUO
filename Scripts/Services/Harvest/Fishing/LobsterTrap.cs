@@ -486,7 +486,7 @@ namespace Server.Items
 
             InUse = true;
 
-            m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3), OnTick);            
+            m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), OnTick);            
         }
 
         public void EndTimer(Mobile from)
