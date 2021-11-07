@@ -373,7 +373,7 @@ namespace Server.Items
             return item;
         }
 
-        public static List<FishInfo> GetInfoFor(IEntity fisher, bool fishing, double skill, bool deep)
+        public static List<FishInfo> GetInfoFor(IEntity fisher, bool isfishingpole, double skill, bool deepwater)
         {
             var list = new List<FishInfo>();
             var fisherMap = fisher.Map;
@@ -383,8 +383,8 @@ namespace Server.Items
             {
                 var info = m_FishInfos[i];
 
-                if ((fishing && info.Type.IsSubclassOf(typeof(RareFish)) || !fishing && !info.Type.IsSubclassOf(typeof(RareFish))) &&
-                    skill >= info.MinSkill && (info.RequiresDeepWater == deep || !info.RequiresDeepWater == deep))
+                if ((isfishingpole && info.Type.IsSubclassOf(typeof(RareFish)) || !isfishingpole && info.Type.IsSubclassOf(typeof(RareCrabAndLobster))) &&
+                    skill >= info.MinSkill && (info.RequiresDeepWater == deepwater || !info.RequiresDeepWater == deepwater))
                 {
                     if (info.Location is string stringLoc)
                     {
