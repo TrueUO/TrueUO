@@ -106,23 +106,15 @@ namespace Server.Mobiles
             if (m_NextSpawn < DateTime.UtcNow && m_Tentacles.Count < SpawnMax)
                 SpawnTentacle();
 
-            if (m_NextTeleport < DateTime.UtcNow)
-                DoTeleport();
+            if (m_NextTeleport < DateTime.UtcNow && Combatant is Mobile m && !InRange(m, RangeFight) && BaseBoat.FindBoatAt(m, Map) != null)
+                DoTeleport(m.Location);
         }
 
         private Point3D m_LastLocation;
         private Map m_LastMap;
 
-        public void DoTeleport()
+        public void DoTeleport(Point3D p)
         {
-            Mobile combatant = Combatant as Mobile;
-
-            if (combatant == null)
-            {
-                m_NextTeleport = DateTime.UtcNow + TeleportRate;
-                return;
-            }
-
             m_LastLocation = Location;
             m_LastMap = Map;
             DoTeleportEffects(m_LastLocation, m_LastMap);
@@ -130,28 +122,17 @@ namespace Server.Mobiles
             Hidden = true;
             Internalize();
 
-            DoAreaLightningAttack(combatant);
+            DoAreaLightningAttack(p);
 
-            Timer.DelayCall(TimeSpan.FromSeconds(3), FinishTeleport, combatant);
+            Timer.DelayCall(TimeSpan.FromSeconds(3), FinishTeleport, p);
             m_NextTeleport = DateTime.UtcNow + TeleportRate;
         }
 
-        public void FinishTeleport(Mobile combatant)
+        public void FinishTeleport(Point3D p)
         {
-            Point3D focusLoc;
-
-            if (combatant == null || combatant.Map == null)
-            {
-                focusLoc = Location;
-            }
-            else
-            {
-                focusLoc = combatant.Location;
-            }
-
             Map map = m_LastMap;
             Point3D newLoc = Point3D.Zero;
-            BaseBoat boat = BaseBoat.FindBoatAt(focusLoc, map);
+            BaseBoat boat = BaseBoat.FindBoatAt(p, map);
 
             for (int i = 0; i < 25; i++)
             {
@@ -161,8 +142,8 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    int x = focusLoc.X + Utility.RandomMinMax(-12, 12);
-                    int y = focusLoc.Y + Utility.RandomMinMax(-12, 12);
+                    int x = p.X + Utility.RandomMinMax(-12, 12);
+                    int y = p.Y + Utility.RandomMinMax(-12, 12);
                     int z = map.GetAverageZ(x, y);
 
                     newLoc = new Point3D(x, y, z);
@@ -181,7 +162,7 @@ namespace Server.Mobiles
 
             DoTeleportEffects(newLoc, map);
             Hidden = false;
-            Timer.DelayCall(TimeSpan.FromSeconds(.5), new TimerStateCallback(TimedMoveToWorld), new object[] { newLoc, map, combatant });
+            Timer.DelayCall(TimeSpan.FromSeconds(.5), new TimerStateCallback(TimedMoveToWorld), new object[] { newLoc, map });
         }
 
         public void TimedMoveToWorld(object o)
@@ -189,20 +170,15 @@ namespace Server.Mobiles
             object[] ojs = (object[])o;
             Point3D pnt = (Point3D)ojs[0];
             Map map = ojs[1] as Map;
-            Mobile focus = ojs[2] as Mobile;
 
             MoveToWorld(pnt, map);
-            Combatant = focus;
 
-            DoAreaLightningAttack(focus);
+            DoAreaLightningAttack(pnt);
         }
 
-        public void DoAreaLightningAttack(Mobile focus)
+        public void DoAreaLightningAttack(Point3D p)
         {
-            if (focus == null)
-                return;
-
-            BaseBoat boat = BaseBoat.FindBoatAt(focus, focus.Map);
+            BaseBoat boat = BaseBoat.FindBoatAt(p, m_LastMap);
 
             if (boat != null)
             {
@@ -210,10 +186,10 @@ namespace Server.Mobiles
                 {
                     if (CanBeHarmful(mob, false) && mob.Alive)
                     {
-                        double damage = Math.Max(40, Utility.RandomMinMax(50, 100) * (Hits / (double) HitsMax));
+                        double damage = Math.Max(40, Utility.RandomMinMax(50, 100) * (Hits / (double)HitsMax));
 
                         mob.BoltEffect(0);
-                        AOS.Damage(mob, this, (int) damage, false, 0, 0, 0, 0, 0, 0, 100, false, false, false);
+                        AOS.Damage(mob, this, (int)damage, false, 0, 0, 0, 0, 0, 0, 100, false, false, false);
                         mob.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
                     }
                 }
@@ -599,7 +575,7 @@ namespace Server.Mobiles
             }
             else if (rights.Count > 0)
             {
-                dropplayer = rights[Utility.Random(rights.Count)].m_Mobile;                
+                dropplayer = rights[Utility.Random(rights.Count)].m_Mobile;
             }
 
             if (dropplayer != null)
