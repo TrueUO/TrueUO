@@ -323,6 +323,7 @@ namespace Server.Items
 
             double skill = from.Skills[SkillName.Fishing].Value;
             bool fishing = harvestItem is FishingPole;
+            bool deep = IsDeepWater(pnt, map, reg);
 
             Type bait = null;
             Type item = null;
@@ -334,7 +335,7 @@ namespace Server.Items
                 enhanced = baitable.EnhancedBait;
             }
 
-            var infos = GetInfoFor(from);
+            var infos = GetInfoFor(from, fishing, skill, deep);
 
             foreach (var info in infos.OrderByDescending(i => i.Type == bait))
             {
@@ -352,8 +353,7 @@ namespace Server.Items
                 double chance = skill / 121.5;
 
                 bool dungeon = IsDungeon(pnt, map, reg);
-                bool shore = IsShore(pnt, map, reg);
-                bool deep = IsDeepWater(pnt, map, reg);
+                bool shore = IsShore(pnt, map, reg);                
 
                 if (fishing && chance >= Utility.RandomDouble())
                 {
@@ -373,7 +373,7 @@ namespace Server.Items
             return item;
         }
 
-        public static List<FishInfo> GetInfoFor(IEntity fisher)
+        public static List<FishInfo> GetInfoFor(IEntity fisher, bool fishing, double skill, bool deep)
         {
             var list = new List<FishInfo>();
             var fisherMap = fisher.Map;
@@ -383,42 +383,46 @@ namespace Server.Items
             {
                 var info = m_FishInfos[i];
 
-                if (info.Location is string stringLoc)
+                if ((fishing && info.Type.IsSubclassOf(typeof(RareFish)) || !fishing && !info.Type.IsSubclassOf(typeof(RareFish))) &&
+                    skill >= info.MinSkill && (info.RequiresDeepWater == deep || !info.RequiresDeepWater == deep))
                 {
-                    if (stringLoc.ToLower() == "cannotfishup")
-                        continue;
-
-                    switch (stringLoc)
+                    if (info.Location is string stringLoc)
                     {
-                        case "T2A":
-                            if (SpellHelper.IsAnyT2A(fisherMap, fisherLoc))
-                            {
-                                list.Add(info);
-                            }
-                            break;
-                        case "TrammelAndFelucca":
-                            if ((fisherMap == Map.Trammel || fisherMap == Map.Felucca) && SpellHelper.IsAnyT2A(fisherMap, fisherLoc))
-                            {
-                                list.Add(info);
-                            }
-                            break;
-                        case "Gravewater Lake":
-                            if (IsGravewaterLake(fisherLoc, fisherMap))
-                            {
-                                list.Add(info);
-                            }
-                            break;
-                        default:
-                            if (Region.Find(fisherLoc, fisherMap).IsPartOf(stringLoc))
-                            {
-                                list.Add(info);
-                            }
-                            break;
+                        if (stringLoc.ToLower() == "cannotfishup")
+                            continue;
+
+                        switch (stringLoc)
+                        {
+                            case "T2A":
+                                if (SpellHelper.IsAnyT2A(fisherMap, fisherLoc))
+                                {
+                                    list.Add(info);
+                                }
+                                break;
+                            case "TrammelAndFelucca":
+                                if ((fisherMap == Map.Trammel || fisherMap == Map.Felucca) && SpellHelper.IsAnyT2A(fisherMap, fisherLoc))
+                                {
+                                    list.Add(info);
+                                }
+                                break;
+                            case "Gravewater Lake":
+                                if (IsGravewaterLake(fisherLoc, fisherMap))
+                                {
+                                    list.Add(info);
+                                }
+                                break;
+                            default:
+                                if (Region.Find(fisherLoc, fisherMap).IsPartOf(stringLoc))
+                                {
+                                    list.Add(info);
+                                }
+                                break;
+                        }
                     }
-                }
-                else if (info.Location is Map map && fisherMap == map)
-                {
-                    list.Add(info);
+                    else if (info.Location is Map map && fisherMap == map)
+                    {
+                        list.Add(info);
+                    }
                 }
             }
 
