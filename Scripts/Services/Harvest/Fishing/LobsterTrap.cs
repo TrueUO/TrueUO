@@ -543,10 +543,7 @@ namespace Server.Items
                 case 5:
                 case 8:
                     {
-                        if (!IsLava)
-                        {
-                            OnTrapLost();
-                        }
+                        OnTrapLost();
 
                         break;
                     }

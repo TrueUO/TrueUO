@@ -67,7 +67,6 @@ namespace Server.Items
             if (IsChildOf(from.Backpack))
             {
                 from.Target = new InternalTarget(this);
-                //TODO: Message?
             }
         }
 
@@ -119,8 +118,12 @@ namespace Server.Items
                     pole.HookUses = m_Hook.Uses;
                     pole.OriginalHue = pole.Hue;
                     pole.Hue = m_Hook.Hue;
-                    from.SendLocalizedMessage(1150884); //You tie the hook to the fishing line.
+                    from.SendLocalizedMessage(1150884); // You tie the hook to the fishing line.
                     m_Hook.Delete();
+                }
+                else
+                {
+                    from.SendLocalizedMessage(1046439); // That is not a valid target.
                 }
             }
         }
@@ -154,13 +157,13 @@ namespace Server.Items
         [Constructable]
         public LavaHook(int uses) : base(uses)
         {
-            Hue = 2075;
+            Hue = 2515;
         }
 
         [Constructable]
         public LavaHook()
         {
-            Hue = 2075;
+            Hue = 2515;
         }
 
         public LavaHook(Serial serial) : base(serial) { }
