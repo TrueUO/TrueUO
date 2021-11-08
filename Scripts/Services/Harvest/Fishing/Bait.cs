@@ -133,7 +133,7 @@ namespace Server.Items
                 {
                     if (bait.IsChildOf(from.Backpack))
                     {
-                        if (bait.BaitType == m_Bait.BaitType)
+                        if (bait.BaitType == m_Bait.BaitType && bait.Enhanced == m_Bait.Enhanced)
                         {
                             m_Bait.UsesRemaining += bait.UsesRemaining;
                             bait.Delete();
