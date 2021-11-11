@@ -209,20 +209,20 @@ namespace Server.Items
 
         public virtual bool IsValidTile(Mobile from, object targeted, bool lava)
         {
-            bool iswater = false;
-            bool islava = false;
+            bool isWater = false;
+            bool isLava = false;
 
             IPoint3D pnt = (IPoint3D)targeted;
 
             if (targeted is LandTarget landTarget)
             {
-                iswater = IsNotShallowWaterLand(from.Map, pnt);
-                islava = LaveTileValidate(landTarget.TileID);
+                isWater = IsNotShallowWaterLand(from.Map, pnt);
+                isLava = LaveTileValidate(landTarget.TileID);
             }
             else if (targeted is StaticTarget staticTarget)
             {
-                islava = LaveTileValidate(staticTarget.ItemID);
-                iswater = IsNotShallowWaterStaticTile(from.Map, pnt);
+                isLava = LaveTileValidate(staticTarget.ItemID);
+                isWater = IsNotShallowWaterStaticTile(from.Map, pnt);
             }
             else
             {
@@ -230,19 +230,19 @@ namespace Server.Items
                 return false;
             }            
 
-            if (!islava && iswater && lava)
+            if (!isLava && isWater && lava)
             {
                 from.SendLocalizedMessage(1149622); // You need lava to fish in!
                 return false;
             }
 
-            if (!iswater && islava && !lava)
+            if (!isWater && isLava && !lava)
             {
                 from.SendLocalizedMessage(500978); // You need water to fish in!
                 return false;
             }
 
-            if (!iswater && !lava || !islava && lava)
+            if (!isWater && !lava || !isLava && lava)
             {
                 from.SendLocalizedMessage(1116695); // The water there is too shallow for the trap.
                 return false;
@@ -250,7 +250,7 @@ namespace Server.Items
 
             if (lava && !from.Region.IsPartOf("Abyss"))
             {
-                islava = false;
+                isLava = false;
             }
 
             return true;
@@ -258,8 +258,6 @@ namespace Server.Items
 
         public static bool IsNotShallowWaterStaticTile(Map map, IPoint3D pnt)
         {
-            var tiles = Engines.Harvest.Fishing.WaterTiles;
-
             bool water = true;
 
             Misc.Geometry.Circle2D(new Point3D(pnt.X, pnt.Y, pnt.Z), map, 5, (p, m) =>
