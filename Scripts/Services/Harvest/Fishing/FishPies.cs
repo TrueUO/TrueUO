@@ -36,11 +36,13 @@ namespace Server.Items
         public bool PlayerConstructed => true;
 
         public virtual TimeSpan Duration => TimeSpan.FromMinutes(5);
+        public virtual int Buff => 0;
         public virtual int BuffName => 0;
         public virtual int BuffAmount => 0;
+        public virtual int BuffDescription => 0;
         public virtual FishPieEffect Effect => FishPieEffect.None;
 
-        public static Dictionary<Mobile, List<FishPieEffect>> m_EffectsList = new Dictionary<Mobile, List<FishPieEffect>>();
+        public static Dictionary<Mobile, FishPieEffect> m_EffectsList = new Dictionary<Mobile, FishPieEffect>();
 
         public BaseFishPie() : base(4161)
         {
@@ -56,50 +58,27 @@ namespace Server.Items
 
         public static bool IsUnderEffects(Mobile from, FishPieEffect type)
         {
-            if (!m_EffectsList.ContainsKey(from) || m_EffectsList[from] == null)
-            {
-                return false;
-            }
-
-            return m_EffectsList[from].Contains(type);
-        }
-
-        public static bool TryAddBuff(Mobile from, FishPieEffect type)
-        {
-            if (IsUnderEffects(from, type))
-            {
-                return false;
-            }
-
             if (!m_EffectsList.ContainsKey(from))
             {
-                m_EffectsList.Add(from, new List<FishPieEffect>());
+                return false;
             }
 
-            m_EffectsList[from].Add(type);
-            return true;
+            return m_EffectsList[from] == type;
         }
 
-        public static void RemoveBuff(Mobile from, FishPieEffect type)
+        public static void RemoveEffects(Mobile from)
         {
             if (!m_EffectsList.ContainsKey(from))
             {
                 return;
             }
 
-            if (m_EffectsList[from] != null && m_EffectsList[from].Contains(type))
-            {
-                m_EffectsList[from].Remove(type);
-            }
+            if (m_EffectsList[from] == FishPieEffect.WeaponDam)
+                from.Delta(MobileDelta.WeaponDamage);
 
-            if (m_EffectsList[from] == null || m_EffectsList[from].Count == 0)
-            {
-                m_EffectsList.Remove(from);
-            }
+            m_EffectsList.Remove(from);
 
-            BuffInfo.RemoveBuff(from, BuffIcon.FishPie);
-
-            from.Delta(MobileDelta.WeaponDamage);
+            BuffInfo.RemoveBuff(from, BuffIcon.FishPie);            
         }
 
         public static void ScaleDamage(Mobile from, Mobile to, ref int totalDamage, int phys, int fire, int cold, int pois, int nrgy, int direct)
@@ -135,73 +114,68 @@ namespace Server.Items
             }
         }
 
-        public virtual bool Apply(Mobile from)
+        public virtual void Apply(Mobile from)
         {
-            if (TryAddBuff(from, Effect))
+            RemoveEffects(from);
+
+            m_EffectsList[from] = Effect;
+
+            switch (Effect)
             {
-                switch (Effect)
-                {
-                    default:
-                    case FishPieEffect.None: break;
-                    case FishPieEffect.MedBoost:
-                        TimedSkillMod mod1 = new TimedSkillMod(SkillName.Meditation, true, 10.0, Duration)
-                        {
-                            ObeyCap = true
-                        };
-                        from.AddSkillMod(mod1);
-                        break;
-                    case FishPieEffect.FocusBoost:
-                        TimedSkillMod mod2 = new TimedSkillMod(SkillName.Focus, true, 10.0, Duration)
-                        {
-                            ObeyCap = true
-                        };
-                        from.AddSkillMod(mod2);
-                        break;
-                    case FishPieEffect.ColdSoak: break;
-                    case FishPieEffect.EnergySoak: break;
-                    case FishPieEffect.PoisonSoak: break;
-                    case FishPieEffect.FireSoak: break;
-                    case FishPieEffect.PhysicalSoak: break;
-                    case FishPieEffect.WeaponDam: break;
-                    case FishPieEffect.HitChance: break;
-                    case FishPieEffect.DefChance: break;
-                    case FishPieEffect.SpellDamage: break;
-                    case FishPieEffect.ManaRegen: break;
-                    case FishPieEffect.StamRegen: break;
-                    case FishPieEffect.HitsRegen: break;
-                    case FishPieEffect.SoulCharge: break;
-                    case FishPieEffect.CastFocus: break;
-                }
-
-                if (Effect != FishPieEffect.None)
-                {
-                    new InternalTimer(Duration, from, Effect);
-
-                    BuffInfo.AddBuff(from, new BuffInfo(BuffIcon.FishPie, 1116340, LabelNumber));
-                }
-
-                return true;
+                default:
+                case FishPieEffect.None: break;
+                case FishPieEffect.MedBoost:
+                    TimedSkillMod mod1 = new TimedSkillMod(SkillName.Meditation, true, 10.0, Duration)
+                    {
+                        ObeyCap = true
+                    };
+                    from.AddSkillMod(mod1);
+                    break;
+                case FishPieEffect.FocusBoost:
+                    TimedSkillMod mod2 = new TimedSkillMod(SkillName.Focus, true, 10.0, Duration)
+                    {
+                        ObeyCap = true
+                    };
+                    from.AddSkillMod(mod2);
+                    break;
+                case FishPieEffect.ColdSoak: break;
+                case FishPieEffect.EnergySoak: break;
+                case FishPieEffect.PoisonSoak: break;
+                case FishPieEffect.FireSoak: break;
+                case FishPieEffect.PhysicalSoak: break;
+                case FishPieEffect.WeaponDam: break;
+                case FishPieEffect.HitChance: break;
+                case FishPieEffect.DefChance: break;
+                case FishPieEffect.SpellDamage: break;
+                case FishPieEffect.ManaRegen: break;
+                case FishPieEffect.StamRegen: break;
+                case FishPieEffect.HitsRegen: break;
+                case FishPieEffect.SoulCharge: break;
+                case FishPieEffect.CastFocus: break;
             }
 
-            from.SendLocalizedMessage(502173); // You are already under a similar effect.
-            return false;
+            if (Effect != FishPieEffect.None)
+            {
+                new InternalTimer(Duration, from);
+
+                BuffInfo.AddBuff(from, new BuffInfo(BuffIcon.FishPie, 1116559, string.Format("#{0}", Buff), 1116560, string.Format("+{0}\t#{1}", BuffAmount, BuffDescription), Duration, from)); // Magic Fish Buff<br>~1_val~
+            }
         }
 
         private class InternalTimer : Timer
         {
             private readonly Mobile m_From;
-            private readonly FishPieEffect m_EffectType;
 
-            public InternalTimer(TimeSpan duration, Mobile from, FishPieEffect type) : base(duration)
+            public InternalTimer(TimeSpan duration, Mobile from)
+                : base(duration)
             {
                 m_From = from;
-                m_EffectType = type;
                 Start();
             }
 
             protected override void OnTick()
             {
-                RemoveBuff(m_From, m_EffectType);
+                RemoveEffects(m_From);
             }
         }
 
@@ -222,14 +196,18 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (!IsChildOf(from.Backpack))
+            if (!Movable)
+                return;
+
+            if (!from.InRange(GetWorldLocation(), 1))
             {
-                from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
+                from.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
-            else if (Apply(from))
+            else if (Food.FillHunger(from, 4))
             {
-                from.FixedEffect(0x375A, 10, 15);
-                from.PlaySound(0x1E7);
+                Apply(from);
+
+                from.Animate(AnimationType.Eat, 0);
 
                 from.SendLocalizedMessage(1116285, $"#{LabelNumber}"); //You eat the ~1_val~.  Mmm, tasty!
 
@@ -258,15 +236,17 @@ namespace Server.Items
 
     public class AutumnDragonfishPie : BaseFishPie
     {
-        public override int LabelNumber => 1116224;
-        public override int BuffName => 1116280;
+        public override int LabelNumber => 1116224; // autumn dragonfish pie
+        public override int Buff => 1116553; // Autumn Dragonfish Serenity
+        public override int BuffName => 1116280; // (Eat to increase meditation skill: ~1_val~)
         public override int BuffAmount => 10;
+        public override int BuffDescription => 1116537; // Meditation Skill
         public override FishPieEffect Effect => FishPieEffect.MedBoost;
 
         [Constructable]
         public AutumnDragonfishPie()
         {
-            Hue = FishInfo.GetFishHue(typeof(AutumnDragonfish));
+            Hue = 544;
         }
 
         public AutumnDragonfishPie(Serial serial) : base(serial) { }
@@ -284,18 +264,19 @@ namespace Server.Items
         }
     }
 
-
     public class BullFishPie : BaseFishPie
     {
-        public override int LabelNumber => 1116220;
-        public override int BuffName => 1116276;
+        public override int LabelNumber => 1116220; // bull fish pie
+        public override int Buff => 1116549; // Bull Fish Rage
+        public override int BuffName => 1116276; // (Eat to increase weapon damage: ~1_val~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116533; // Melee Damage
         public override FishPieEffect Effect => FishPieEffect.WeaponDam;
 
         [Constructable]
         public BullFishPie()
         {
-            Hue = FishInfo.GetFishHue(typeof(BullFish));
+            Hue = 1175;
         }
 
         public BullFishPie(Serial serial) : base(serial) { }
@@ -313,12 +294,13 @@ namespace Server.Items
         }
     }
 
-
     public class CrystalFishPie : BaseFishPie
     {
-        public override int LabelNumber => 1116219;
-        public override int BuffName => 1116275;
+        public override int LabelNumber => 1116219; // crystal fish pie
+        public override int Buff => 1116548; // Crystal Fish Kindred
+        public override int BuffName => 1116275; // (Eat to soak energy damage: ~1_val~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116532; // Soak Energy
         public override FishPieEffect Effect => FishPieEffect.EnergySoak;
 
         [Constructable]
@@ -344,9 +326,11 @@ namespace Server.Items
 
     public class FairySalmonPie : BaseFishPie
     {
-        public override int LabelNumber => 1116222;
-        public override int BuffName => 1116278;
+        public override int LabelNumber => 1116222; // fairy salmon pie
+        public override int Buff => 1116551; // Fairy Salmon Clarity
+        public override int BuffName => 1116278; // (Eat to increase casting focus: ~1_val~)
         public override int BuffAmount => 2;
+        public override int BuffDescription => 1116535; // Casting Focus
         public override FishPieEffect Effect => FishPieEffect.CastFocus;
 
         [Constructable]
@@ -370,18 +354,19 @@ namespace Server.Items
         }
     }
 
-
     public class FireFishPie : BaseFishPie
     {
-        public override int LabelNumber => 1116217;
-        public override int BuffName => 1116271;
+        public override int LabelNumber => 1116217; // fire fish pie
+        public override int Buff => 1116546; // Fire Fish Kindred
+        public override int BuffName => 1116271; // (Eat to soak fire damage: ~1_val~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116528; // Soak Fire
         public override FishPieEffect Effect => FishPieEffect.FireSoak;
 
         [Constructable]
         public FireFishPie()
         {
-            Hue = FishInfo.GetFishHue(typeof(FireFish));
+            Hue = 2117;
         }
 
         public FireFishPie(Serial serial) : base(serial) { }
@@ -399,12 +384,13 @@ namespace Server.Items
         }
     }
 
-
     public class GiantKoiPie : BaseFishPie
     {
-        public override int LabelNumber => 1116216;
-        public override int BuffName => 1116270;
+        public override int LabelNumber => 1116216; // giant koi pie
+        public override int Buff => 1116545; // Giant Koi Evasion
+        public override int BuffName => 1116270; // (Eat to increase defense chance: ~1_TOKEN~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116527; // Defense Chance
         public override FishPieEffect Effect => FishPieEffect.DefChance;
 
         [Constructable]
@@ -430,15 +416,17 @@ namespace Server.Items
 
     public class GreatBarracudaPie : BaseFishPie
     {
-        public override int LabelNumber => 1116214;
-        public override int BuffName => 1116269;
+        public override int LabelNumber => 1116214; // great barracuda pie
+        public override int Buff => 1116543; // Great Barracuda Strike
+        public override int BuffName => 1116269; // (Eat to increase hit chance: ~1_val~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116526; // Hit Chance
         public override FishPieEffect Effect => FishPieEffect.HitChance;
 
         [Constructable]
         public GreatBarracudaPie()
         {
-            Hue = 1287;// FishInfo.GetFishHue(typeof(GreatBarracuda));
+            Hue = 1287;
         }
 
         public GreatBarracudaPie(Serial serial) : base(serial) { }
@@ -456,12 +444,13 @@ namespace Server.Items
         }
     }
 
-
     public class HolyMackerelPie : BaseFishPie
     {
-        public override int LabelNumber => 1116225;
-        public override int BuffName => 1116283;
+        public override int LabelNumber => 1116225; // holy mackerel pie
+        public override int Buff => 1116554; // Holy Mackerel Spirit
+        public override int BuffName => 1116283; // (Eat to increase mana regeneration: ~1_val~)
         public override int BuffAmount => 3;
+        public override int BuffDescription => 1116540; // Mana Regeneration
         public override FishPieEffect Effect => FishPieEffect.ManaRegen;
 
         [Constructable]
@@ -485,18 +474,19 @@ namespace Server.Items
         }
     }
 
-
     public class LavaFishPie : BaseFishPie
     {
-        public override int LabelNumber => 1116223;
-        public override int BuffName => 1116279;
+        public override int LabelNumber => 1116223; // lava fish pie
+        public override int Buff => 1116552; // Lava Fish Soul
+        public override int BuffName => 1116279; // (Eat to increase soul charge ability: ~1_val~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116536; // Soul Charge
         public override FishPieEffect Effect => FishPieEffect.SoulCharge;
 
         [Constructable]
         public LavaFishPie()
         {
-            Hue = FishInfo.GetFishHue(typeof(LavaFish));
+            Hue = 1779;
         }
 
         public LavaFishPie(Serial serial) : base(serial) { }
@@ -514,18 +504,19 @@ namespace Server.Items
         }
     }
 
-
     public class ReaperFishPie : BaseFishPie
     {
-        public override int LabelNumber => 1116218;
-        public override int BuffName => 1116274;
+        public override int LabelNumber => 1116218; // reaper fish pie
+        public override int Buff => 1116547; // Reaper Fish Kindred
+        public override int BuffName => 1116274; // (Eat to soak poison damage: ~1_val~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116531; // Soak Poison
         public override FishPieEffect Effect => FishPieEffect.PoisonSoak;
 
         [Constructable]
         public ReaperFishPie()
         {
-            Hue = 1152;// FishInfo.GetFishHue(typeof(ReaperFish));
+            Hue = 1152;
         }
 
         public ReaperFishPie(Serial serial) : base(serial) { }
@@ -545,9 +536,11 @@ namespace Server.Items
 
     public class SummerDragonfishPie : BaseFishPie
     {
-        public override int LabelNumber => 1116221;
-        public override int BuffName => 1116277;
+        public override int LabelNumber => 1116221; // summer dragonfish pie
+        public override int Buff => 1116550; // Summer Dragonfish Rage
+        public override int BuffName => 1116277; // (Eat to increase spell damage: ~1_val~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116534; // Spell Damage
         public override FishPieEffect Effect => FishPieEffect.SpellDamage;
 
         [Constructable]
@@ -573,9 +566,11 @@ namespace Server.Items
 
     public class UnicornFishPie : BaseFishPie
     {
-        public override int LabelNumber => 1116226;
-        public override int BuffName => 1116284;
+        public override int LabelNumber => 1116226; // unicorn fish pie
+        public override int Buff => 1116555; // Unicorn Fish Endurance
+        public override int BuffName => 1116284; // (Eat to increase stamina regeneration: ~1_val~)
         public override int BuffAmount => 3;
+        public override int BuffDescription => 1116541; // Staminia Regeneration
         public override FishPieEffect Effect => FishPieEffect.StamRegen;
 
         [Constructable]
@@ -601,9 +596,11 @@ namespace Server.Items
 
     public class YellowtailBarracudaPie : BaseFishPie
     {
-        public override int LabelNumber => 1116215;
-        public override int BuffName => 1116282;
+        public override int LabelNumber => 1116215; // yellowtail barracuda pie
+        public override int Buff => 1116544; // Yellowtail Barracuda Vitality
+        public override int BuffName => 1116282; // (Eat to increase hp regeneration: ~1_val~)
         public override int BuffAmount => 3;
+        public override int BuffDescription => 1116539; // HP Regeneration
         public override FishPieEffect Effect => FishPieEffect.HitsRegen;
 
         [Constructable]
@@ -629,9 +626,11 @@ namespace Server.Items
 
     public class StoneCrabPie : BaseFishPie
     {
-        public override int LabelNumber => 1116227;
-        public override int BuffName => 1116272;
+        public override int LabelNumber => 1116227; // stone crab pie
+        public override int Buff => 1116556; // Stone Crab Kindred
+        public override int BuffName => 1116272; // (Eat to soak physical damage: ~1_val~)
         public override int BuffAmount => 3;
+        public override int BuffDescription => 1116529; // Soak Physical
         public override FishPieEffect Effect => FishPieEffect.PhysicalSoak;
 
         [Constructable]
@@ -657,9 +656,11 @@ namespace Server.Items
 
     public class SpiderCrabPie : BaseFishPie
     {
-        public override int LabelNumber => 1116229;
-        public override int BuffName => 1116281;
+        public override int LabelNumber => 1116229; // spider crab pie
+        public override int Buff => 1116558; // Spider Crab Focus
+        public override int BuffName => 1116281; // (Eat to increase focus skill: ~1_val~)
         public override int BuffAmount => 10;
+        public override int BuffDescription => 1116538; // Focus Skill
         public override FishPieEffect Effect => FishPieEffect.FocusBoost;
 
         [Constructable]
@@ -685,9 +686,11 @@ namespace Server.Items
 
     public class BlueLobsterPie : BaseFishPie
     {
-        public override int LabelNumber => 1116228;
-        public override int BuffName => 1116273;
+        public override int LabelNumber => 1116228; // blue lobster pie
+        public override int Buff => 1116557; // Blue Lobster Kindred
+        public override int BuffName => 1116273; // (Eat to soak cold damage: ~1_val~)
         public override int BuffAmount => 5;
+        public override int BuffDescription => 1116530; // Soak Cold
         public override FishPieEffect Effect => FishPieEffect.ColdSoak;
 
         [Constructable]
