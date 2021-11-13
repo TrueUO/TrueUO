@@ -42,7 +42,7 @@ namespace Server.Items
         public virtual int BuffDescription => 0;
         public virtual FishPieEffect Effect => FishPieEffect.None;
 
-        public static Dictionary<Mobile, FishPieEffect> m_EffectsList = new Dictionary<Mobile, FishPieEffect>();
+        private static readonly Dictionary<Mobile, FishPieEffect> m_EffectsList = new Dictionary<Mobile, FishPieEffect>();
 
         public BaseFishPie() : base(4161)
         {

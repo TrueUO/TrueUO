@@ -253,8 +253,6 @@ namespace Server.Items
 
         public static bool IsNotShallowWaterStaticTile(Map map, IPoint3D pnt)
         {
-            var tiles = Engines.Harvest.Fishing.WaterTiles;
-
             bool water = true;
 
             Misc.Geometry.Circle2D(new Point3D(pnt.X, pnt.Y, pnt.Z), map, 5, (p, m) =>
@@ -289,8 +287,6 @@ namespace Server.Items
 
         public static bool IsNotShallowWaterLand(Map map, IPoint3D pnt)
         {
-            var tiles = Engines.Harvest.Fishing.WaterTiles;
-
             bool water = true;
 
             Misc.Geometry.Circle2D(new Point3D(pnt.X, pnt.Y, pnt.Z), map, 5, (p, m) =>
@@ -507,7 +503,7 @@ namespace Server.Items
             {
                 trap.Caught = Caught;
                 trap.CheckTrap();
-            };
+            }
 
             if (from.Backpack == null || !from.Backpack.TryDropItem(from, trap, false))
                 trap.MoveToWorld(from.Location, from.Map);
