@@ -55,6 +55,11 @@ namespace Server.Items
             Amount = amount;
         }
 
+        public LobsterTrap(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnAfterDuped(Item newItem)
         {
             if (!(newItem is LobsterTrap trap))
@@ -351,11 +356,6 @@ namespace Server.Items
             eable.Free();
 
             return true;
-        }        
-
-        public LobsterTrap(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -437,6 +437,11 @@ namespace Server.Items
             Caught = new List<Type>();
 
             StartTimer();
+        }
+
+        public LobsterTrapMechanism(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void AddNameProperty(ObjectPropertyList list)
@@ -630,11 +635,6 @@ namespace Server.Items
 
             from.SendLocalizedMessage(1116391); //You realize that the trap isn't yours so you leave it alone.
             return false;
-        }
-
-        public LobsterTrapMechanism(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

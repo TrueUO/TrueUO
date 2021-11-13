@@ -43,6 +43,11 @@ namespace Server.Items
         {
         }
 
+        public RareCrabAndLobster(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -51,11 +56,6 @@ namespace Server.Items
 
             if (m_DateCaught != DateTime.MinValue)
                 list.Add("[{0}]", m_DateCaught.ToShortDateString());
-        }
-
-        public RareCrabAndLobster(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

@@ -50,7 +50,12 @@ namespace Server.Items
         {
             Index = index;
             m_UsesRemaining = remaining;
-        }        
+        }
+
+        public Bait(Serial serial)
+            : base(serial)
+        {
+        }
 
         public override void OnDoubleClick(Mobile from)
         {
@@ -154,11 +159,6 @@ namespace Server.Items
                     from.SendLocalizedMessage(1116467); // Your bait is used up so you destroy the container.
                 }
             }
-        }
-
-        public Bait(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
