@@ -242,15 +242,10 @@ namespace Server.Items
                 return false;
             }
 
-            if (!iswater && !lava || !islava && lava)
+            if (!iswater && !lava || !islava && lava || lava && !from.Region.IsPartOf("Abyss"))
             {
                 from.SendLocalizedMessage(1116695); // The water there is too shallow for the trap.
                 return false;
-            }
-
-            if (lava && !from.Region.IsPartOf("Abyss"))
-            {
-                islava = false;
             }
 
             return true;
