@@ -57,10 +57,17 @@ namespace Server.Mobiles
             Fame = 22000;
             Karma = -22000;
 
-            var bow = new Bow();
-            bow.Attributes.SpellChanneling = 1;
-            bow.Attributes.CastSpeed = 1;
-            bow.LootType = LootType.Blessed;
+            var bow = new Bow
+            {
+                Attributes =
+                {
+                    SpellChanneling = 1,
+                    CastSpeed = 1
+                },
+
+                LootType = LootType.Blessed
+            };
+
             AddItem(bow);
 
             PackItem(new Arrow(Utility.RandomMinMax(125, 175)));
@@ -68,6 +75,11 @@ namespace Server.Mobiles
             m_Statues = new List<BaseCreature>();
 
             SetWeaponAbility(WeaponAbility.MortalStrike);
+        }
+
+        public Medusa(Serial serial)
+            : base(serial)
+        {
         }
 
         public override int GetAttackSound() { return 0x612; }
@@ -108,14 +120,12 @@ namespace Server.Mobiles
                         m_NextCarve = DateTime.UtcNow + TimeSpan.FromMinutes(1.0);
                         return true;
                     }
-                    else
-                    {
-                        from.SendLocalizedMessage(1112675, "", 33); // Your attempt fails and angers the creature!!
 
-                        PlaySound(GetHurtSound());
+                    from.SendLocalizedMessage(1112675, "", 33); // Your attempt fails and angers the creature!!
 
-                        Combatant = from;
-                    }
+                    PlaySound(GetHurtSound());
+
+                    Combatant = from;
                 }
             }
             else
@@ -128,11 +138,10 @@ namespace Server.Mobiles
         #endregion
 
         #region Statues
-        private static readonly Type[] m_StatueTypes = new Type[]
+        private static readonly Type[] m_StatueTypes =
         {
-            typeof(OphidianArchmage),     typeof(OphidianWarrior),
-            typeof(WailingBanshee),       typeof(OgreLord),
-            typeof(Dragon),               typeof(UndeadGargoyle)
+            typeof(OphidianArchmage), typeof(OphidianWarrior), typeof(WailingBanshee),
+            typeof(OgreLord), typeof(Dragon), typeof(UndeadGargoyle)
         };
 
         private BaseCreature CreateStatue()
@@ -155,9 +164,9 @@ namespace Server.Mobiles
             }
         }
 
-        public override void OnBeforeSpawn(Point3D location, Map map)
+        public override void OnBeforeSpawn(Point3D location, Map m)
         {
-            base.OnBeforeSpawn(location, map);
+            base.OnBeforeSpawn(location, m);
 
             for (int i = 0; i < InitialStatueAmount; i++)
             {
@@ -165,10 +174,10 @@ namespace Server.Mobiles
 
                 if (statue != null)
                 {
-                    Point3D loc = map.GetSpawnPosition(location, 40);
+                    Point3D loc = m.GetSpawnPosition(location, 40);
 
-                    statue.MoveToWorld(loc, map);
-                    statue.OnBeforeSpawn(loc, map);
+                    statue.MoveToWorld(loc, m);
+                    statue.OnBeforeSpawn(loc, m);
 
                     m_Statues.Add(statue);
                 }
@@ -184,7 +193,9 @@ namespace Server.Mobiles
                 BaseCreature bc = m_Statues[i];
 
                 if (!bc.Deleted)
+                {
                     bc.Delete();
+                }
             }
         }
 
@@ -192,22 +203,19 @@ namespace Server.Mobiles
         {
             base.OnDamage(amount, from, willKill);
 
-            if (0.1 > Utility.RandomDouble())
+            if (0.1 > Utility.RandomDouble() && m_Statues.Count > 0)
             {
-                if (m_Statues.Count > 0)
+                BaseCreature bc = m_Statues[0];
+
+                m_Statues.RemoveAt(0);
+
+                if (bc != null && !bc.Deleted)
                 {
-                    BaseCreature bc = m_Statues[0];
+                    PublicOverheadMessage(MessageType.Regular, 33, 1112767); // Medusa releases one of the petrified creatures!!
 
-                    m_Statues.RemoveAt(0);
-
-                    if (bc != null && !bc.Deleted)
-                    {
-                        PublicOverheadMessage(MessageType.Regular, 33, 1112767); // Medusa releases one of the petrified creatures!!
-
-                        bc.Frozen = false;
-                        bc.Blessed = false;
-                        bc.HueMod = -1;
-                    }
+                    bc.Frozen = false;
+                    bc.Blessed = false;
+                    bc.HueMod = -1;
                 }
             }
         }
@@ -216,10 +224,12 @@ namespace Server.Mobiles
         #region Replicas
         private EvilReplica BuildReplica(Mobile m)
         {
-            if (m is BaseCreature)
-                return new PetReplica(m as BaseCreature);
-            else
-                return new PlayerReplica(m);
+            if (m is BaseCreature bc)
+            {
+                return new PetReplica(bc);
+            }
+
+            return new PlayerReplica(m);
         }
 
         private void CreateReplica(Mobile m)
@@ -229,14 +239,14 @@ namespace Server.Mobiles
             replica.OnBeforeSpawn(m.Location, m.Map);
             replica.MoveToWorld(m.Location, m.Map);
 
-            if (m is BaseCreature)
+            if (m is BaseCreature pet)
             {
-                BaseCreature pet = m as BaseCreature;
-
                 Mobile master = pet.Summoned ? pet.SummonMaster : pet.ControlMaster;
 
                 if (master != null)
+                {
                     master.SendLocalizedMessage(1113285, "", 42); // Beware! A statue of your pet has been created!
+                }
             }
 
             Timer.DelayCall(TimeSpan.FromSeconds(10.0), new TimerCallback(replica.Unpetrify));
@@ -513,14 +523,9 @@ namespace Server.Mobiles
         }
         #endregion
 
-        public override bool CanFlee { get { return false; } }
+        public override bool CanFlee => false;
         public override bool BardImmune => true;
         public override Poison PoisonImmune => Poison.Lethal;
-
-        public Medusa(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -544,8 +549,8 @@ namespace Server.Mobiles
     #region Replicas
     public abstract class EvilReplica : BaseCreature
     {
-        public override bool DeleteCorpseOnDeath { get { return true; } }
-        public override bool AlwaysMurderer { get { return true; } }
+        public override bool DeleteCorpseOnDeath => true;
+        public override bool AlwaysMurderer => true;
 
         public EvilReplica(Mobile m)
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
@@ -581,6 +586,11 @@ namespace Server.Mobiles
             HueMod = PetrifiedHue;
         }
 
+        public EvilReplica(Serial serial)
+            : base(serial)
+        {
+        }
+
         public abstract int PetrifiedHue { get; }
         public abstract string NameFormat { get; }
 
@@ -599,11 +609,6 @@ namespace Server.Mobiles
 
             SolidHueOverride = -1;
             HueMod = -1;
-        }
-
-        public EvilReplica(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -628,8 +633,8 @@ namespace Server.Mobiles
             return m_Original.GetWeaponAbility();
         }
 
-        public override int PetrifiedHue { get { return 0x2E1; } }
-        public override string NameFormat { get { return "{0} (evil)"; } }
+        public override int PetrifiedHue => 0x2E1;
+        public override string NameFormat => "{0} (evil)";
 
         private readonly BaseCreature m_Original;
 
@@ -653,16 +658,16 @@ namespace Server.Mobiles
             SetDamageType(ResistanceType.Energy, m.EnergyDamage);
         }
 
+        public PetReplica(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnBeforeSpawn(Point3D location, Map m)
         {
             base.OnBeforeSpawn(location, m);
 
             Direction = m_Original.Direction;
-        }
-
-        public PetReplica(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -692,11 +697,11 @@ namespace Server.Mobiles
             return Utility.RandomBool() ? weapon.PrimaryAbility : weapon.SecondaryAbility;
         }
 
-        public override int PetrifiedHue { get { return 0x961; } }
-        public override string NameFormat { get { return "{0} the Evil Twin"; } }
+        public override int PetrifiedHue => 0x961;
+        public override string NameFormat => "{0} the Evil Twin";
 
-        public override Mobile ConstantFocus { get { return m_Original; } }
-        public override bool BardImmune { get { return true; } }
+        public override Mobile ConstantFocus => m_Original;
+        public override bool BardImmune => true;
 
         private readonly Mobile m_Original;
         private readonly DateTime m_ExpireTime;
@@ -727,6 +732,11 @@ namespace Server.Mobiles
             }
         }
 
+        public PlayerReplica(Serial serial)
+            : base(serial)
+        {
+        }
+
         public Item CloneItem(Item item)
         {
             Item cloned = new Item(item.ItemID)
@@ -744,14 +754,17 @@ namespace Server.Mobiles
         public override void OnThink()
         {
             if (Frozen)
+            {
                 return;
+            }
 
             if (!m_Original.Alive || m_Original.IsDeadBondedPet || DateTime.UtcNow > m_ExpireTime)
             {
                 Kill();
                 return;
             }
-            else if (Map != m_Original.Map || !this.InRange(m_Original, 15))
+
+            if (Map != m_Original.Map || !this.InRange(m_Original, 15))
             {
                 Map fromMap = Map;
                 Point3D from = Location;
@@ -770,15 +783,13 @@ namespace Server.Mobiles
                             to = loc;
                             break;
                         }
-                        else
-                        {
-                            loc.Z = toMap.GetAverageZ(loc.X, loc.Y);
 
-                            if (toMap.CanSpawnMobile(loc))
-                            {
-                                to = loc;
-                                break;
-                            }
+                        loc.Z = toMap.GetAverageZ(loc.X, loc.Y);
+
+                        if (toMap.CanSpawnMobile(loc))
+                        {
+                            to = loc;
+                            break;
                         }
                     }
                 }
@@ -850,11 +861,6 @@ namespace Server.Mobiles
                 ai = AIType.AI_Melee;
 
             ChangeAIType(ai);
-        }
-
-        public PlayerReplica(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
