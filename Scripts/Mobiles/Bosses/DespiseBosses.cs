@@ -38,6 +38,17 @@ namespace Server.Engines.Despise
             return 0;
         }
 
+        public override bool OnBeforeDeath()
+        {
+            if (m_Wisp != null && !m_Wisp.Deleted)
+            {
+                m_Wisp.Delete();
+                m_SummonTimer = null;
+            }
+
+            return base.OnBeforeDeath();
+        }
+
         public override void OnKilledBy(Mobile mob)
         {
             if (mob is PlayerMobile mobile)
@@ -116,8 +127,7 @@ namespace Server.Engines.Despise
         public void SummonWisp_Callback()
         {
             m_Wisp = SummonWisp;
-            Summon(m_Wisp, true, this, Location, 0, TimeSpan.FromMinutes(90));
-
+            m_Wisp.MoveToWorld(Location, Map);
             m_SummonTimer = null;
         }
 
@@ -126,7 +136,7 @@ namespace Server.Engines.Despise
             base.Delete();
 
             if (m_Wisp != null && m_Wisp.Alive)
-                m_Wisp.Kill();
+                m_Wisp.Delete();
         }
 
         public static Type[] Artifacts => m_Artifacts;
@@ -228,7 +238,7 @@ namespace Server.Engines.Despise
         }
 
         public override bool InitialInnocent => true;
-        public override BaseCreature SummonWisp => new EnsorcledWisp();
+        public override BaseCreature SummonWisp => new EnsorcledWisp(this);
 
         public override void GenerateLoot()
         {
@@ -315,7 +325,7 @@ namespace Server.Engines.Despise
         }
 
         public override bool AlwaysMurderer => true;
-        public override BaseCreature SummonWisp => new CorruptedWisp();
+        public override BaseCreature SummonWisp => new CorruptedWisp(this);
 
         public override void GenerateLoot()
         {
@@ -342,8 +352,12 @@ namespace Server.Engines.Despise
 
     public class EnsorcledWisp : BaseCreature
     {
-        public EnsorcledWisp() : base(AIType.AI_Melee, FightMode.None, 10, 1, .2, .4)
+        public Mobile Boss { get; set; }
+
+        public EnsorcledWisp(Mobile boss)
+            : base(AIType.AI_Melee, FightMode.None, 10, 1, .2, .4)
         {
+            Boss = boss;
             Name = "Ensorcled Wisp";
             Body = 165;
             Hue = 0x901;
@@ -380,10 +394,12 @@ namespace Server.Engines.Despise
         {
             base.OnThink();
 
-            if (ControlTarget != ControlMaster || ControlOrder != OrderType.Follow)
+            if (Boss != null && !Boss.Deleted)
             {
-                ControlTarget = ControlMaster;
-                ControlOrder = OrderType.Follow;
+                if (!InRange(Boss, 20))
+                {
+                    MoveToWorld(Boss.Location, Boss.Map);
+                }
             }
         }
 
@@ -392,14 +408,7 @@ namespace Server.Engines.Despise
             AddLoot(LootPack.FilthyRich, 3);
         }
 
-        public override bool OnBeforeDeath()
-        {
-            Summoned = false;
-            return base.OnBeforeDeath();
-        }
-
         public override bool InitialInnocent => true;
-        //public override bool ForceNotoriety { get { return true; } }
 
         public EnsorcledWisp(Serial serial) : base(serial)
         {
@@ -409,19 +418,27 @@ namespace Server.Engines.Despise
         {
             base.Serialize(writer);
             writer.Write(0);
+
+            writer.Write(Boss);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            Boss = reader.ReadMobile();
         }
     }
 
     public class CorruptedWisp : BaseCreature
     {
-        public CorruptedWisp() : base(AIType.AI_Melee, FightMode.None, 10, 1, .2, .4)
+        public Mobile Boss { get; set; }
+
+        public CorruptedWisp(Mobile boss)
+            : base(AIType.AI_Melee, FightMode.None, 10, 1, .2, .4)
         {
+            Boss = boss;
             Name = "Corrupted Wisp";
             Body = 165;
             Hue = 1955;
@@ -458,10 +475,12 @@ namespace Server.Engines.Despise
         {
             base.OnThink();
 
-            if (ControlTarget != ControlMaster || ControlOrder != OrderType.Follow)
+            if (Boss != null && !Boss.Deleted)
             {
-                ControlTarget = ControlMaster;
-                ControlOrder = OrderType.Follow;
+                if (!InRange(Boss, 20))
+                {
+                    MoveToWorld(Boss.Location, Boss.Map);
+                }
             }
         }
 
@@ -470,14 +489,7 @@ namespace Server.Engines.Despise
             AddLoot(LootPack.FilthyRich, 3);
         }
 
-        public override bool OnBeforeDeath()
-        {
-            Summoned = false;
-            return base.OnBeforeDeath();
-        }
-
         public override bool AlwaysMurderer => true;
-        //public override bool ForceNotoriety { get { return true; } }
 
         public CorruptedWisp(Serial serial) : base(serial)
         {
@@ -487,12 +499,16 @@ namespace Server.Engines.Despise
         {
             base.Serialize(writer);
             writer.Write(0);
+
+            writer.Write(Boss);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            Boss = reader.ReadMobile();
         }
     }
 }
