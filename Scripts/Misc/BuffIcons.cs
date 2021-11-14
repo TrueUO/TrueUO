@@ -105,21 +105,21 @@ namespace Server
             });
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, bool notimer)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, bool noTimer)
             : this(iconID, titleCliloc, secondaryCliloc, length, m)
         {
-            m_NoTimer = notimer;
+            m_NoTimer = noTimer;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition secargs)
-            : this(iconID, titleCliloc, titleCliloc + 1, secargs)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition secArgs)
+            : this(iconID, titleCliloc, titleCliloc + 1, secArgs)
         {
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition secargs)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition secArgs)
             : this(iconID, titleCliloc, secondaryCliloc)
         {
-            m_SecondaryArguments = secargs;
+            m_SecondaryArguments = secArgs;
         }
 
         public BuffInfo(BuffIcon iconID, int titleCliloc, bool retainThroughDeath)
@@ -133,52 +133,52 @@ namespace Server
             m_RetainThroughDeath = retainThroughDeath;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition secargs, bool retainThroughDeath)
-            : this(iconID, titleCliloc, titleCliloc + 1, secargs, retainThroughDeath)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition secArgs, bool retainThroughDeath)
+            : this(iconID, titleCliloc, titleCliloc + 1, secArgs, retainThroughDeath)
         {
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition secargs, bool retainThroughDeath)
-            : this(iconID, titleCliloc, secondaryCliloc, secargs)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition secArgs, bool retainThroughDeath)
+            : this(iconID, titleCliloc, secondaryCliloc, secArgs)
         {
             m_RetainThroughDeath = retainThroughDeath;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m, TextDefinition secargs)
-            : this(iconID, titleCliloc, titleCliloc + 1, length, m, secargs)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m, TextDefinition secArgs)
+            : this(iconID, titleCliloc, titleCliloc + 1, length, m, secArgs)
         {
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, TextDefinition secargs)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, TextDefinition secArgs)
             : this(iconID, titleCliloc, secondaryCliloc, length, m)
         {
-            m_SecondaryArguments = secargs;
+            m_SecondaryArguments = secArgs;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition titleargs, int secondaryCliloc, TextDefinition secargs, TimeSpan length, Mobile m)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition titleArgs, int secondaryCliloc, TextDefinition secArgs, TimeSpan length, Mobile m)
             : this(iconID, titleCliloc, secondaryCliloc, length, m)
         {
-            m_TitleArguments = titleargs;
-            m_SecondaryArguments = secargs;
+            m_TitleArguments = titleArgs;
+            m_SecondaryArguments = secArgs;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition titleargs, int secondaryCliloc, TextDefinition secargs, int thirdCliloc, TextDefinition thirdargs, TimeSpan length, Mobile m)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition titleArgs, int secondaryCliloc, TextDefinition secArgs, int thirdCliloc, TextDefinition thirdArgs, TimeSpan length, Mobile m)
             : this(iconID, titleCliloc, secondaryCliloc, thirdCliloc, length, m)
         {
-            m_TitleArguments = titleargs;
-            m_SecondaryArguments = secargs;
-            m_ThirdArguments = thirdargs;
+            m_TitleArguments = titleArgs;
+            m_SecondaryArguments = secArgs;
+            m_ThirdArguments = thirdArgs;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m, TextDefinition secargs, bool retainThroughDeath)
-            : this(iconID, titleCliloc, titleCliloc + 1, length, m, secargs, retainThroughDeath)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m, TextDefinition secArgs, bool retainThroughDeath)
+            : this(iconID, titleCliloc, titleCliloc + 1, length, m, secArgs, retainThroughDeath)
         {
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, TextDefinition secargs, bool retainThroughDeath)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, TextDefinition secArgs, bool retainThroughDeath)
             : this(iconID, titleCliloc, secondaryCliloc, length, m)
         {
-            m_SecondaryArguments = secargs;
+            m_SecondaryArguments = secArgs;
             m_RetainThroughDeath = retainThroughDeath;
         }
 
@@ -409,14 +409,14 @@ namespace Server
         {
         }
 
-        public AddBuffPacket(Mobile mob, BuffIcon iconID, int titleCliloc, TextDefinition titleargs, int secondaryCliloc, TextDefinition secargs, int thirdCliloc, TextDefinition thirdargs, TimeSpan length)
+        public AddBuffPacket(Mobile mob, BuffIcon iconID, int titleCliloc, TextDefinition titleArgs, int secondaryCliloc, TextDefinition secArgs, int thirdCliloc, TextDefinition thirdArgs, TimeSpan length)
             : base(0xDF)
         {
-            bool args = titleargs != null || secargs != null || thirdargs != null;
+            bool args = titleArgs != null || secArgs != null || thirdArgs != null;
 
-            string title = string.Format("{0}{1}", titleargs ?? "", args ? "\0" : "");
-            string secondary = string.Format("{0}{1}", secargs ?? "", args ? "\0" : "");
-            string third = string.Format("{0}{1}", thirdargs ?? "", args ? "\0" : "");
+            string title = string.Format("{0}{1}", titleArgs ?? "", args ? "\0" : "");
+            string secondary = string.Format("{0}{1}", secArgs ?? "", args ? "\0" : "");
+            string third = string.Format("{0}{1}", thirdArgs ?? "", args ? "\0" : "");
 
             EnsureCapacity(46 + (title.Length * 2) + (secondary.Length * 2) + (third.Length * 2));
 
