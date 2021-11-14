@@ -355,12 +355,12 @@ namespace Server.Engines.Despise
         public Mobile Boss { get; set; }
 
         public EnsorcledWisp(Mobile boss)
-            : base(AIType.AI_Melee, FightMode.None, 10, 1, .2, .4)
+            : base(AIType.AI_Melee, FightMode.None, 10, 1, 0.2, 0.4)
         {
             Boss = boss;
             Name = "Ensorcled Wisp";
-            Body = 165;
-            Hue = 0x901;
+            Body = 0x3A;
+            Hue = 1927;
             BaseSoundID = 466;
 
             SetStr(600, 700);
@@ -375,16 +375,20 @@ namespace Server.Engines.Despise
             SetDamageType(ResistanceType.Fire, 30);
             SetDamageType(ResistanceType.Energy, 30);
 
-            SetResistance(ResistanceType.Physical, 50);
+            SetResistance(ResistanceType.Physical, 50, 65);
             SetResistance(ResistanceType.Fire, 60, 70);
-            SetResistance(ResistanceType.Cold, 60, 70);
-            SetResistance(ResistanceType.Poison, 50, 60);
+            SetResistance(ResistanceType.Cold, 50, 60);
+            SetResistance(ResistanceType.Poison, 50, 65);
             SetResistance(ResistanceType.Energy, 60, 70);
 
-            SetSkill(SkillName.MagicResist, 110, 125);
-            SetSkill(SkillName.Tactics, 110, 125);
-            SetSkill(SkillName.Wrestling, 110, 125);
-            SetSkill(SkillName.Anatomy, 110, 125);
+            SetSkill(SkillName.MagicResist, 110, 120);
+            SetSkill(SkillName.Tactics, 110, 120);
+            SetSkill(SkillName.Wrestling, 110, 120);
+            SetSkill(SkillName.Anatomy, 110, 120);
+            SetSkill(SkillName.Focus, 110, 120);
+            SetSkill(SkillName.EvalInt, 110, 120);
+            SetSkill(SkillName.Magery, 110, 120);
+            SetSkill(SkillName.Parry, 110, 120);
 
             Fame = 8000;
             Karma = 8000;
@@ -436,12 +440,12 @@ namespace Server.Engines.Despise
         public Mobile Boss { get; set; }
 
         public CorruptedWisp(Mobile boss)
-            : base(AIType.AI_Melee, FightMode.None, 10, 1, .2, .4)
+            : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Boss = boss;
             Name = "Corrupted Wisp";
-            Body = 165;
-            Hue = 1955;
+            Body = 0xA5;
+            Hue = 1964;
             BaseSoundID = 466;
 
             SetStr(600, 700);
@@ -456,16 +460,20 @@ namespace Server.Engines.Despise
             SetDamageType(ResistanceType.Fire, 30);
             SetDamageType(ResistanceType.Energy, 30);
 
-            SetResistance(ResistanceType.Physical, 50);
+            SetResistance(ResistanceType.Physical, 50, 65);
             SetResistance(ResistanceType.Fire, 60, 70);
-            SetResistance(ResistanceType.Cold, 60, 70);
-            SetResistance(ResistanceType.Poison, 50, 60);
+            SetResistance(ResistanceType.Cold, 50, 60);
+            SetResistance(ResistanceType.Poison, 50, 65);
             SetResistance(ResistanceType.Energy, 60, 70);
 
-            SetSkill(SkillName.MagicResist, 110, 125);
-            SetSkill(SkillName.Tactics, 110, 125);
-            SetSkill(SkillName.Wrestling, 110, 125);
-            SetSkill(SkillName.Anatomy, 110, 125);
+            SetSkill(SkillName.MagicResist, 110, 120);
+            SetSkill(SkillName.Tactics, 110, 120);
+            SetSkill(SkillName.Wrestling, 110, 120);
+            SetSkill(SkillName.Anatomy, 110, 120);
+            SetSkill(SkillName.Focus, 110, 120);
+            SetSkill(SkillName.EvalInt, 110, 120);
+            SetSkill(SkillName.Magery, 110, 120);
+            SetSkill(SkillName.Parry, 110, 120);
 
             Fame = 8000;
             Karma = -8000;
