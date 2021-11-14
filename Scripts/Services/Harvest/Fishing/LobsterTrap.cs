@@ -108,6 +108,7 @@ namespace Server.Items
             if (Caught != null && Caught.Count > 0)
             {
                 DumpContents(from);
+                InvalidateProperties();
                 return;
             }
 
@@ -209,20 +210,20 @@ namespace Server.Items
 
         public virtual bool IsValidTile(Mobile from, object targeted, bool lava)
         {
-            bool iswater = false;
-            bool islava = false;
+            bool isWater = false;
+            bool isLava = false;
 
             IPoint3D pnt = (IPoint3D)targeted;
 
             if (targeted is LandTarget landTarget)
             {
-                iswater = IsNotShallowWaterLand(from.Map, pnt);
-                islava = LaveTileValidate(landTarget.TileID);
+                isWater = IsNotShallowWaterLand(from.Map, pnt);
+                isLava = LaveTileValidate(landTarget.TileID);
             }
             else if (targeted is StaticTarget staticTarget)
             {
-                islava = LaveTileValidate(staticTarget.ItemID);
-                iswater = IsNotShallowWaterStaticTile(from.Map, pnt);
+                isLava = LaveTileValidate(staticTarget.ItemID);
+                isWater = IsNotShallowWaterStaticTile(from.Map, pnt);
             }
             else
             {
@@ -230,19 +231,19 @@ namespace Server.Items
                 return false;
             }            
 
-            if (!islava && iswater && lava)
+            if (!isLava && isWater && lava)
             {
                 from.SendLocalizedMessage(1149622); // You need lava to fish in!
                 return false;
             }
 
-            if (!iswater && islava && !lava)
+            if (!isWater && isLava && !lava)
             {
                 from.SendLocalizedMessage(500978); // You need water to fish in!
                 return false;
             }
 
-            if (!iswater && !lava || !islava && lava || lava && !from.Region.IsPartOf("Abyss"))
+            if (!isWater && !lava || !isLava && lava || lava && !from.Region.IsPartOf("Abyss"))
             {
                 from.SendLocalizedMessage(1116695); // The water there is too shallow for the trap.
                 return false;
@@ -341,7 +342,7 @@ namespace Server.Items
 
             foreach (Item item in eable)
             {
-                if (item is LobsterTrap)
+                if (item is LobsterTrapMechanism)
                 {
                     eable.Free();
                     return false;
@@ -370,10 +371,9 @@ namespace Server.Items
 
             if (Caught != null)
             {
-                for (var i = 0; i < Caught.Count; i++)
+                foreach (var c in Caught)
                 {
-                    var b = Caught[index];
-                    writer.Write(b.Name);
+                    writer.Write(c.Name);
                 }
             }
         }
@@ -438,6 +438,8 @@ namespace Server.Items
 
             StartTimer();
         }
+
+        public override bool IsVirtualItem => true;
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
@@ -651,10 +653,9 @@ namespace Server.Items
 
             if (Caught != null)
             {
-                for (var i = 0; i < Caught.Count; i++)
+                foreach (var c in Caught)
                 {
-                    var b = Caught[index];
-                    writer.Write(b.Name);
+                    writer.Write(c.Name);
                 }
             }
         }
