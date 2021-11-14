@@ -425,7 +425,7 @@ namespace Server.Items
 
         [Constructable]
         public LobsterTrapMechanism(Mobile owner, Type bait, bool enhanced)
-            : base(0x44CD)
+            : base(0x44CC)
         {
             Owner = owner;
             BaitType = bait;
