@@ -3678,6 +3678,8 @@ namespace Server.Mobiles
             StrangleSpell.RemoveCurse(this);
             Spells.Second.ProtectionSpell.EndProtection(this);
 
+            BaseFishPie.RemoveEffects(this);
+
             EndAction(typeof(PolymorphSpell));
             EndAction(typeof(IncognitoSpell));
 

@@ -18,7 +18,6 @@ namespace Server.Items
         private bool m_EnhancedBait;
         private HookType m_HookType;
         private int m_HookUses;
-        private int m_BaitUses;
         private int m_OriginalHue;
 
         private Mobile m_Crafter;
@@ -79,24 +78,6 @@ namespace Server.Items
                 {
                     m_HookUses = 0;
                     HookType = HookType.None;
-                }
-
-                InvalidateProperties();
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int BaitUses
-        {
-            get => m_BaitUses;
-            set
-            {
-                m_BaitUses = value;
-
-                if (m_BaitUses <= 0)
-                {
-                    m_BaitUses = 0;
-                    BaitType = null;
                 }
 
                 InvalidateProperties();
@@ -218,7 +199,7 @@ namespace Server.Items
             }
 
             if (caughtAnything && m_BaitType != null)
-                BaitUses--;
+                m_BaitType = null;
         }
 
         public override bool AllowEquipedCast(Mobile from)
@@ -442,8 +423,6 @@ namespace Server.Items
                     list.Add(1116468, string.Format("#{0}", i)); //baited to attract: ~1_val~
                 else if (label is string s)
                     list.Add(1116468, s);
-
-                list.Add(1116466, m_BaitUses.ToString()); // amount: ~1_val~
             }
 
             list.Add(1061170, GetStrRequirement().ToString()); // strength requirement ~1_val~
@@ -469,7 +448,7 @@ namespace Server.Items
         {
             base.Serialize(writer);
 
-            writer.Write(4); // version
+            writer.Write(5); // version
 
             writer.Write(m_PlayerConstructed);
             writer.Write(m_LowerStatReq);
@@ -482,7 +461,6 @@ namespace Server.Items
             writer.Write(FishInfo.GetIndexFromType(m_BaitType));
             writer.Write((int)m_HookType);
             writer.Write(m_HookUses);
-            writer.Write(m_BaitUses);
             writer.Write(m_EnhancedBait);
 
             SaveFlag flags = SaveFlag.None;
@@ -507,6 +485,7 @@ namespace Server.Items
 
             switch (version)
             {
+                case 5:
                 case 4:
                     m_PlayerConstructed = reader.ReadBool();
                     m_LowerStatReq = reader.ReadInt();
@@ -521,7 +500,10 @@ namespace Server.Items
                     m_BaitType = FishInfo.GetTypeFromIndex(idx);
                     m_HookType = (HookType)reader.ReadInt();
                     m_HookUses = reader.ReadInt();
-                    m_BaitUses = reader.ReadInt();
+
+                    if (version < 5)
+                        reader.ReadInt();
+
                     m_EnhancedBait = reader.ReadBool();
 
                     SaveFlag flags = (SaveFlag)reader.ReadInt();
@@ -567,9 +549,6 @@ namespace Server.Items
 
             if (Parent is Mobile parent)
                 parent.CheckStatTimers();
-
-            if (m_BaitType != null && m_BaitUses <= 0)
-                BaitType = null;
 
             if (m_HookType != HookType.None && m_HookUses <= 0)
                 HookType = HookType.None;
