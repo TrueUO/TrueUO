@@ -398,12 +398,9 @@ namespace Server.Engines.Despise
         {
             base.OnThink();
 
-            if (Boss != null && !Boss.Deleted)
+            if (Boss != null && !Boss.Deleted && !InRange(Boss, 20))
             {
-                if (!InRange(Boss, 20))
-                {
-                    MoveToWorld(Boss.Location, Boss.Map);
-                }
+                MoveToWorld(Boss.Location, Boss.Map);
             }
         }
 
@@ -483,12 +480,9 @@ namespace Server.Engines.Despise
         {
             base.OnThink();
 
-            if (Boss != null && !Boss.Deleted)
+            if (Boss != null && !Boss.Deleted && !InRange(Boss, 20))
             {
-                if (!InRange(Boss, 20))
-                {
-                    MoveToWorld(Boss.Location, Boss.Map);
-                }
+                MoveToWorld(Boss.Location, Boss.Map);
             }
         }
 
