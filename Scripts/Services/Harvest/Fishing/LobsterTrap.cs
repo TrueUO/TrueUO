@@ -55,11 +55,6 @@ namespace Server.Items
             Amount = amount;
         }
 
-        public LobsterTrap(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void OnAfterDuped(Item newItem)
         {
             if (!(newItem is LobsterTrap trap))
@@ -113,6 +108,7 @@ namespace Server.Items
             if (Caught != null && Caught.Count > 0)
             {
                 DumpContents(from);
+                InvalidateProperties();
                 return;
             }
 
@@ -140,7 +136,7 @@ namespace Server.Items
 
             Container pack = from.Backpack;
 
-            foreach(var t in Caught)
+            foreach (var t in Caught)
             {
                 Item item = Loot.Construct(t);
 
@@ -208,46 +204,46 @@ namespace Server.Items
                     mechanism.MoveToWorld(new Point3D(pnt.X, pnt.Y, pnt.Z), map);
 
                     Consume();
-                }               
+                }
             }
-        }        
+        }
 
         public virtual bool IsValidTile(Mobile from, object targeted, bool lava)
         {
-            bool iswater = false;
-            bool islava = false;
+            bool isWater = false;
+            bool isLava = false;
 
             IPoint3D pnt = (IPoint3D)targeted;
 
             if (targeted is LandTarget landTarget)
             {
-                iswater = IsNotShallowWaterLand(from.Map, pnt);
-                islava = LaveTileValidate(landTarget.TileID);
+                isWater = IsNotShallowWaterLand(from.Map, pnt);
+                isLava = LaveTileValidate(landTarget.TileID);
             }
             else if (targeted is StaticTarget staticTarget)
             {
-                islava = LaveTileValidate(staticTarget.ItemID);
-                iswater = IsNotShallowWaterStaticTile(from.Map, pnt);
+                isLava = LaveTileValidate(staticTarget.ItemID);
+                isWater = IsNotShallowWaterStaticTile(from.Map, pnt);
             }
             else
             {
                 from.SendLocalizedMessage(500977); // You can't reach the water there.
                 return false;
-            }            
+            }
 
-            if (!islava && iswater && lava)
+            if (!isLava && isWater && lava)
             {
                 from.SendLocalizedMessage(1149622); // You need lava to fish in!
                 return false;
             }
 
-            if (!iswater && islava && !lava)
+            if (!isWater && isLava && !lava)
             {
                 from.SendLocalizedMessage(500978); // You need water to fish in!
                 return false;
             }
 
-            if (!iswater && !lava || !islava && lava || lava && !from.Region.IsPartOf("Abyss"))
+            if (!isWater && !lava || !isLava && lava || lava && !from.Region.IsPartOf("Abyss"))
             {
                 from.SendLocalizedMessage(1116695); // The water there is too shallow for the trap.
                 return false;
@@ -295,8 +291,8 @@ namespace Server.Items
             bool water = true;
 
             Misc.Geometry.Circle2D(new Point3D(pnt.X, pnt.Y, pnt.Z), map, 5, (p, m) =>
-            {               
-               LandTile ltile = map.Tiles.GetLandTile(p.X, p.Y);
+            {
+                LandTile ltile = map.Tiles.GetLandTile(p.X, p.Y);
 
                 if (WaterTileValidate(ltile.ID) && water)
                 {
@@ -346,7 +342,7 @@ namespace Server.Items
 
             foreach (Item item in eable)
             {
-                if (item is LobsterTrap)
+                if (item is LobsterTrapMechanism)
                 {
                     eable.Free();
                     return false;
@@ -356,6 +352,11 @@ namespace Server.Items
             eable.Free();
 
             return true;
+        }
+
+        public LobsterTrap(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -370,10 +371,9 @@ namespace Server.Items
 
             if (Caught != null)
             {
-                for (var i = 0; i < Caught.Count; i++)
+                foreach (var c in Caught)
                 {
-                    var b = Caught[index];
-                    writer.Write(b.Name);
+                    writer.Write(c.Name);
                 }
             }
         }
@@ -385,7 +385,7 @@ namespace Server.Items
 
             int index = reader.ReadInt();
             m_BaitType = FishInfo.GetTypeFromIndex(index);
-            m_EnhancedBait = reader.ReadBool();            
+            m_EnhancedBait = reader.ReadBool();
 
             int count = reader.ReadInt();
 
@@ -425,7 +425,7 @@ namespace Server.Items
 
         [Constructable]
         public LobsterTrapMechanism(Mobile owner, Type bait, bool enhanced)
-            : base(0x44CD)
+            : base(0x44CC)
         {
             Owner = owner;
             BaitType = bait;
@@ -439,10 +439,7 @@ namespace Server.Items
             StartTimer();
         }
 
-        public LobsterTrapMechanism(Serial serial)
-            : base(serial)
-        {
-        }
+        public override bool IsVirtualItem => true;
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
@@ -482,7 +479,7 @@ namespace Server.Items
 
             InUse = true;
 
-            m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), OnTick);            
+            m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), OnTick);
         }
 
         public void EndTimer(Mobile from)
@@ -502,7 +499,7 @@ namespace Server.Items
             else
             {
                 trap = new LobsterTrap();
-            }             
+            }
 
             if (Caught.Count > 0)
             {
@@ -637,6 +634,11 @@ namespace Server.Items
             return false;
         }
 
+        public LobsterTrapMechanism(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -651,10 +653,9 @@ namespace Server.Items
 
             if (Caught != null)
             {
-                for (var i = 0; i < Caught.Count; i++)
+                foreach (var c in Caught)
                 {
-                    var b = Caught[index];
-                    writer.Write(b.Name);
+                    writer.Write(c.Name);
                 }
             }
         }

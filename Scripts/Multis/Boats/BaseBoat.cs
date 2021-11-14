@@ -999,7 +999,8 @@ namespace Server.Multis
                 !item.Visible ||
                 item is Corpse ||
                 IsComponentItem(item) ||
-                item is EffectItem;
+                item is EffectItem ||
+                item is LobsterTrapMechanism;
         }
 
         public virtual bool CanCommand(Mobile m)
@@ -1019,7 +1020,7 @@ namespace Server.Multis
                 return false;
             }
 
-            return entity is Blood;
+            return entity is Blood || entity is LobsterTrapMechanism;
         }
 
         protected virtual bool CheckOnBoard(IEntity e)
