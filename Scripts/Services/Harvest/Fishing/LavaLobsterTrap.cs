@@ -2,19 +2,18 @@ namespace Server.Items
 {
     public class LavaLobsterTrap : LobsterTrap
     {
+        public override int LabelNumber => 1116474; // lava lobster trap
+
         [Constructable]
         public LavaLobsterTrap()
         {
+            Hue = 2515;
         }
 
-        public override int[] UseableTiles => Engines.Harvest.Fishing.LavaTiles;
-
-        public override void AddNameProperty(ObjectPropertyList list)
+        public LavaLobsterTrap(Serial serial)
+            : base(serial)
         {
-            list.Add(1116474); //lava lobster trap
         }
-
-        public LavaLobsterTrap(Serial serial) : base(serial) { }
 
         public override void Serialize(GenericWriter writer)
         {

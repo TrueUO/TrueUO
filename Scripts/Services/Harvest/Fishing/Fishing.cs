@@ -803,6 +803,7 @@ namespace Server.Engines.Harvest
             return true;
         }
 
+        public static int[] WaterTiles => m_WaterTiles;
         private static readonly int[] m_WaterTiles =
         {
             0x00A8, 0x00AB,
