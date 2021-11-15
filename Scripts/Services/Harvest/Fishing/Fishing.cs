@@ -771,7 +771,15 @@ namespace Server.Engines.Harvest
             if (!base.BeginHarvesting(from, tool))
                 return false;
 
-            from.SendLocalizedMessage(500974); // What water do you want to fish in?
+            if (tool is FishingPole pole && pole.HookType == HookType.Lava)
+            {
+                from.SendLocalizedMessage(1149623); // What lava do you want to fish in?
+            }
+            else
+            {
+                from.SendLocalizedMessage(500974); // What water do you want to fish in?
+            }
+
             return true;
         }
 
