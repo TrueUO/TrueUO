@@ -9,9 +9,12 @@ namespace Server.Engines.Plants
     public class SeedBoxGump : BaseGump
     {
         public SeedBox Box { get; set; }
-        public int Page { get; set; }
 
-        public int Pages => (int)Math.Ceiling(Box.Entries.Count / 20.0);
+		private int m_Page;
+
+        public int Page { get => m_Page; set => m_Page = Math.Max(1, Math.Min(Pages, value)); }
+
+        public int Pages => 1 + (Box.Entries.Count / 20);
 
         public SeedBoxGump(PlayerMobile user, SeedBox box, int page = 1)
             : base(user, 150, 200)
@@ -95,23 +98,13 @@ namespace Server.Engines.Plants
 
         public void CheckPage(SeedEntry entry)
         {
-            int index = Box.Entries.IndexOf(entry);
-
-            Page = (int)Math.Ceiling((double)(index + 1) / 20);
-        }
+			Page = (Box.Entries.IndexOf(entry) + 1) / 20;
+		}
 
         public override void OnResponse(RelayInfo info)
         {
             if (Box.Deleted)
-            {
                 return;
-            }
-
-            if (!User.InRange(Box.GetWorldLocation(), 3))
-            {
-                User.SendLocalizedMessage(500446); // That is too far away.
-                return;
-            }
 
             switch (info.ButtonID)
             {
@@ -133,13 +126,6 @@ namespace Server.Engines.Plants
                     Refresh();
                     break;
                 default:
-
-                    if (Box.RootParent is PlayerVendor pv && !pv.IsOwner(User))
-                    {
-                        User.SendLocalizedMessage(502402); // That is inaccessible.
-                        return;
-                    }
-
                     int id = info.ButtonID - 100;
 
                     if (id >= 0 && id < Box.Entries.Count)
@@ -294,7 +280,9 @@ namespace Server.Engines.Plants
                     User.SendLocalizedMessage(1151849); // Click this button and target a seed to add it here.
                     User.BeginTarget(-1, false, TargetFlags.None, (from, targeted) =>
                         {
-                            if (targeted is Seed seed)
+                            Seed seed = targeted as Seed;
+
+                            if (seed != null)
                             {
                                 if (Box != null && !Box.Deleted && index >= 0)
                                 {
@@ -302,9 +290,7 @@ namespace Server.Engines.Plants
                                 }
                             }
                             else
-                            {
                                 from.SendLocalizedMessage(1151838); // This item cannot be stored in the seed box.
-                            }
 
                             RefreshParent();
                         });
@@ -315,7 +301,9 @@ namespace Server.Engines.Plants
                         User.SendLocalizedMessage(1151849); // Click this button and target a seed to add it here.
                         User.BeginTarget(-1, false, TargetFlags.None, (from, targeted) =>
                             {
-                                if (targeted is Seed seed)
+                                Seed seed = targeted as Seed;
+
+                                if (seed != null)
                                 {
                                     if (Box != null && !Box.Deleted && index >= 0)
                                     {
@@ -323,9 +311,7 @@ namespace Server.Engines.Plants
                                     }
                                 }
                                 else
-                                {
                                     from.SendLocalizedMessage(1151838); // This item cannot be stored in the seed box.
-                                }
 
                                 RefreshParent();
                             });
@@ -336,10 +322,8 @@ namespace Server.Engines.Plants
                     {
                         Box.Entries.Insert(index, null);
 
-                        if (Parent is SeedBoxGump gump)
-                        {
-                            gump.CheckPage(Entry);
-                        }
+                        if (Parent is SeedBoxGump)
+                            ((SeedBoxGump)Parent).CheckPage(Entry);
 
                         RefreshParent(false);
                     }
@@ -351,10 +335,8 @@ namespace Server.Engines.Plants
 
                         Box.TrimEntries();
 
-                        if (Parent is SeedBoxGump gump)
-                        {
-                            gump.CheckPage(Entry);
-                        }
+                        if (Parent is SeedBoxGump)
+                            ((SeedBoxGump)Parent).CheckPage(Entry);
 
                         RefreshParent(false);
                     }
