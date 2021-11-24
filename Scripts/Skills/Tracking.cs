@@ -559,39 +559,40 @@ namespace Server.SkillHandlers
             int detectHidden = from.Skills[SkillName.DetectHidden].Fixed;
             int hiding = m.Skills[SkillName.Hiding].Fixed;
             int stealth = m.Skills[SkillName.Stealth].Fixed;
-            int divisor = hiding + stealth;
+            int hiderSkill = hiding + stealth;
+            int detectorSkill = tracking + detectHidden;
 
             if (m.Race == Race.Elf)
             {
-                divisor /= 2; // From testing OSI Humans track at ~70%, elves at ~35%, which is half the total chance
+                detectorSkill /= 2; // From testing OSI Humans track at ~70%, elves at ~35%, which is half the total chance
             }
 
             // Necromancy forms affect tracking difficulty 
             if (TransformationSpellHelper.UnderTransformation(m, typeof(HorrificBeastSpell)))
             {
-                divisor -= 200;
+                hiderSkill -= 200;
             }
-            else if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)) && divisor < 500)
+            else if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)) && hiderSkill < 500)
             {
-                divisor = 500;
+                hiderSkill = 500;
             }
             else if (TransformationSpellHelper.UnderTransformation(m, typeof(WraithFormSpell)))
             {
-                divisor += 200;
+                hiderSkill += 200;
             }
             else if (TransformationSpellHelper.UnderTransformation(m, typeof(LichFormSpell)))
             {
-                divisor -= 200;
+                hiderSkill -= 200;
             }
 
-            if (divisor > 2200)
+            if (hiderSkill > 2200)
             {
-                divisor = 2200;
+                hiderSkill = 2200;
             }
 
-            int chance = divisor > 0 ? 70 * (tracking + detectHidden) / divisor : 100;
+            int chanceOfDetection = hiderSkill > 0 ? 70 * detectorSkill / hiderSkill : 100;
 
-            return chance > Utility.Random(100);
+            return chanceOfDetection > Utility.Random(100);
         }
 
         private static bool IsAnimal(Mobile m)
