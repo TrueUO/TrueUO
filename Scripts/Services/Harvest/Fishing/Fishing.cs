@@ -769,15 +769,13 @@ namespace Server.Engines.Harvest
         public override bool BeginHarvesting(Mobile from, Item tool)
         {
             if (!base.BeginHarvesting(from, tool))
+            {
                 return false;
-
-            if (tool is FishingPole pole && pole.HookType == HookType.Lava)
-            {
-                from.SendLocalizedMessage(1149623); // What lava do you want to fish in?
             }
-            else
+
+            if (tool is FishingPole pole)
             {
-                from.SendLocalizedMessage(500974); // What water do you want to fish in?
+                from.SendLocalizedMessage(pole.HookType == HookType.Lava ? 1149623 : 500974);
             }
 
             return true;
