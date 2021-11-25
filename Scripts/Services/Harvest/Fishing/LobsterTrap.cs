@@ -421,6 +421,9 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsLava => Hue == 2515;
 
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int TickCount { get; set; }
+
         private List<Type> Caught;
 
         [Constructable]
@@ -515,31 +518,23 @@ namespace Server.Items
 
         public void OnTick()
         {
-            int random = Utility.Random(10);
+            TickCount++;
 
-            switch (random)
+            int lostChance = TickCount * 5;
+            int random = Utility.Random(100);
+
+            if (lostChance > random)
             {
-                default:
-                case 0: { break; }
-                case 1:
-                case 2:
-                case 4:
-                case 9:
-                    {
-                        if (Caught.Count <= 5)
-                        {
-                            GetReward(random);
-                        }
+                OnTrapLost();
+            }
+            else
+            {
+                bool skip = Utility.RandomBool();
 
-                        break;
-                    }
-                case 5:
-                case 8:
-                    {
-                        OnTrapLost();
-
-                        break;
-                    }
+                if (!skip && Caught.Count <= 5)
+                {
+                    GetReward(TickCount);
+                }
             }
         }
 
