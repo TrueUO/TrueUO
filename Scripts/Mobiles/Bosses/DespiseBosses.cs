@@ -38,6 +38,17 @@ namespace Server.Engines.Despise
             return 0;
         }
 
+        public override bool OnBeforeDeath()
+        {
+            if (m_Wisp != null && !m_Wisp.Deleted)
+            {
+                m_Wisp.Delete();
+                m_SummonTimer = null;
+            }
+
+            return base.OnBeforeDeath();
+        }
+
         public override void OnKilledBy(Mobile mob)
         {
             if (mob is PlayerMobile mobile)
@@ -116,8 +127,7 @@ namespace Server.Engines.Despise
         public void SummonWisp_Callback()
         {
             m_Wisp = SummonWisp;
-            Summon(m_Wisp, true, this, Location, 0, TimeSpan.FromMinutes(90));
-
+            m_Wisp.MoveToWorld(Location, Map);
             m_SummonTimer = null;
         }
 
@@ -126,7 +136,7 @@ namespace Server.Engines.Despise
             base.Delete();
 
             if (m_Wisp != null && m_Wisp.Alive)
-                m_Wisp.Kill();
+                m_Wisp.Delete();
         }
 
         public static Type[] Artifacts => m_Artifacts;
@@ -228,7 +238,7 @@ namespace Server.Engines.Despise
         }
 
         public override bool InitialInnocent => true;
-        public override BaseCreature SummonWisp => new EnsorcledWisp();
+        public override BaseCreature SummonWisp => new EnsorcledWisp(this);
 
         public override void GenerateLoot()
         {
@@ -315,7 +325,7 @@ namespace Server.Engines.Despise
         }
 
         public override bool AlwaysMurderer => true;
-        public override BaseCreature SummonWisp => new CorruptedWisp();
+        public override BaseCreature SummonWisp => new CorruptedWisp(this);
 
         public override void GenerateLoot()
         {
@@ -342,11 +352,15 @@ namespace Server.Engines.Despise
 
     public class EnsorcledWisp : BaseCreature
     {
-        public EnsorcledWisp() : base(AIType.AI_Melee, FightMode.None, 10, 1, .2, .4)
+        public Mobile Boss { get; set; }
+
+        public EnsorcledWisp(Mobile boss)
+            : base(AIType.AI_Melee, FightMode.None, 10, 1, 0.2, 0.4)
         {
+            Boss = boss;
             Name = "Ensorcled Wisp";
-            Body = 165;
-            Hue = 0x901;
+            Body = 0x3A;
+            Hue = 1927;
             BaseSoundID = 466;
 
             SetStr(600, 700);
@@ -361,16 +375,20 @@ namespace Server.Engines.Despise
             SetDamageType(ResistanceType.Fire, 30);
             SetDamageType(ResistanceType.Energy, 30);
 
-            SetResistance(ResistanceType.Physical, 50);
+            SetResistance(ResistanceType.Physical, 50, 65);
             SetResistance(ResistanceType.Fire, 60, 70);
-            SetResistance(ResistanceType.Cold, 60, 70);
-            SetResistance(ResistanceType.Poison, 50, 60);
+            SetResistance(ResistanceType.Cold, 50, 60);
+            SetResistance(ResistanceType.Poison, 50, 65);
             SetResistance(ResistanceType.Energy, 60, 70);
 
-            SetSkill(SkillName.MagicResist, 110, 125);
-            SetSkill(SkillName.Tactics, 110, 125);
-            SetSkill(SkillName.Wrestling, 110, 125);
-            SetSkill(SkillName.Anatomy, 110, 125);
+            SetSkill(SkillName.MagicResist, 110, 120);
+            SetSkill(SkillName.Tactics, 110, 120);
+            SetSkill(SkillName.Wrestling, 110, 120);
+            SetSkill(SkillName.Anatomy, 110, 120);
+            SetSkill(SkillName.Focus, 110, 120);
+            SetSkill(SkillName.EvalInt, 110, 120);
+            SetSkill(SkillName.Magery, 110, 120);
+            SetSkill(SkillName.Parry, 110, 120);
 
             Fame = 8000;
             Karma = 8000;
@@ -380,10 +398,9 @@ namespace Server.Engines.Despise
         {
             base.OnThink();
 
-            if (ControlTarget != ControlMaster || ControlOrder != OrderType.Follow)
+            if (Boss != null && !Boss.Deleted && !InRange(Boss, 20))
             {
-                ControlTarget = ControlMaster;
-                ControlOrder = OrderType.Follow;
+                MoveToWorld(Boss.Location, Boss.Map);
             }
         }
 
@@ -392,14 +409,7 @@ namespace Server.Engines.Despise
             AddLoot(LootPack.FilthyRich, 3);
         }
 
-        public override bool OnBeforeDeath()
-        {
-            Summoned = false;
-            return base.OnBeforeDeath();
-        }
-
         public override bool InitialInnocent => true;
-        //public override bool ForceNotoriety { get { return true; } }
 
         public EnsorcledWisp(Serial serial) : base(serial)
         {
@@ -409,22 +419,30 @@ namespace Server.Engines.Despise
         {
             base.Serialize(writer);
             writer.Write(0);
+
+            writer.Write(Boss);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            Boss = reader.ReadMobile();
         }
     }
 
     public class CorruptedWisp : BaseCreature
     {
-        public CorruptedWisp() : base(AIType.AI_Melee, FightMode.None, 10, 1, .2, .4)
+        public Mobile Boss { get; set; }
+
+        public CorruptedWisp(Mobile boss)
+            : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
+            Boss = boss;
             Name = "Corrupted Wisp";
-            Body = 165;
-            Hue = 1955;
+            Body = 0xA5;
+            Hue = 1964;
             BaseSoundID = 466;
 
             SetStr(600, 700);
@@ -439,16 +457,20 @@ namespace Server.Engines.Despise
             SetDamageType(ResistanceType.Fire, 30);
             SetDamageType(ResistanceType.Energy, 30);
 
-            SetResistance(ResistanceType.Physical, 50);
+            SetResistance(ResistanceType.Physical, 50, 65);
             SetResistance(ResistanceType.Fire, 60, 70);
-            SetResistance(ResistanceType.Cold, 60, 70);
-            SetResistance(ResistanceType.Poison, 50, 60);
+            SetResistance(ResistanceType.Cold, 50, 60);
+            SetResistance(ResistanceType.Poison, 50, 65);
             SetResistance(ResistanceType.Energy, 60, 70);
 
-            SetSkill(SkillName.MagicResist, 110, 125);
-            SetSkill(SkillName.Tactics, 110, 125);
-            SetSkill(SkillName.Wrestling, 110, 125);
-            SetSkill(SkillName.Anatomy, 110, 125);
+            SetSkill(SkillName.MagicResist, 110, 120);
+            SetSkill(SkillName.Tactics, 110, 120);
+            SetSkill(SkillName.Wrestling, 110, 120);
+            SetSkill(SkillName.Anatomy, 110, 120);
+            SetSkill(SkillName.Focus, 110, 120);
+            SetSkill(SkillName.EvalInt, 110, 120);
+            SetSkill(SkillName.Magery, 110, 120);
+            SetSkill(SkillName.Parry, 110, 120);
 
             Fame = 8000;
             Karma = -8000;
@@ -458,10 +480,9 @@ namespace Server.Engines.Despise
         {
             base.OnThink();
 
-            if (ControlTarget != ControlMaster || ControlOrder != OrderType.Follow)
+            if (Boss != null && !Boss.Deleted && !InRange(Boss, 20))
             {
-                ControlTarget = ControlMaster;
-                ControlOrder = OrderType.Follow;
+                MoveToWorld(Boss.Location, Boss.Map);
             }
         }
 
@@ -470,14 +491,7 @@ namespace Server.Engines.Despise
             AddLoot(LootPack.FilthyRich, 3);
         }
 
-        public override bool OnBeforeDeath()
-        {
-            Summoned = false;
-            return base.OnBeforeDeath();
-        }
-
         public override bool AlwaysMurderer => true;
-        //public override bool ForceNotoriety { get { return true; } }
 
         public CorruptedWisp(Serial serial) : base(serial)
         {
@@ -487,12 +501,16 @@ namespace Server.Engines.Despise
         {
             base.Serialize(writer);
             writer.Write(0);
+
+            writer.Write(Boss);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            Boss = reader.ReadMobile();
         }
     }
 }
