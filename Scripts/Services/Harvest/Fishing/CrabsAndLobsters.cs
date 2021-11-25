@@ -43,7 +43,20 @@ namespace Server.Items
         {
         }
 
-        public RareCrabAndLobster(Serial serial) : base(serial) { }
+        public RareCrabAndLobster(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            base.GetProperties(list);
+
+            list.Add(1070857, m_CaughtBy != null ? m_CaughtBy.Name : "An Unknown Fisher"); // Caught by ~1_fisherman~
+
+            if (m_DateCaught != DateTime.MinValue)
+                list.Add("[{0}]", m_DateCaught.ToShortDateString());
+        }
 
         public override void Serialize(GenericWriter writer)
         {

@@ -29,6 +29,9 @@ namespace Server
         private readonly int m_SecondaryCliloc;
         public int SecondaryCliloc => m_SecondaryCliloc;
 
+        private readonly int m_ThirdCliloc;
+        public int ThirdCliloc => m_ThirdCliloc;
+
         private readonly bool m_NoTimer;
         public bool NoTimer => m_NoTimer;
 
@@ -44,8 +47,14 @@ namespace Server
         private readonly bool m_RetainThroughDeath;
         public bool RetainThroughDeath => m_RetainThroughDeath;
 
-        private readonly TextDefinition m_Args;
-        public TextDefinition Args => m_Args;
+        private readonly TextDefinition m_TitleArguments;
+        public TextDefinition TitleArguments => m_TitleArguments;
+
+        private readonly TextDefinition m_SecondaryArguments;
+        public TextDefinition SecondaryArguments => m_SecondaryArguments;
+
+        private readonly TextDefinition m_ThirdArguments;
+        public TextDefinition ThirdArguments => m_ThirdArguments;
 
         #endregion
 
@@ -56,10 +65,16 @@ namespace Server
         }
 
         public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc)
+            : this(iconID, titleCliloc, secondaryCliloc, 0)
+        {
+        }
+
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, int thirdCliloc)
         {
             m_ID = iconID;
             m_TitleCliloc = titleCliloc;
             m_SecondaryCliloc = secondaryCliloc;
+            m_ThirdCliloc = thirdCliloc;
         }
 
         public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m)
@@ -67,9 +82,14 @@ namespace Server
         {
         }
 
-        //Only the timed one needs to Mobile to know when to automagically remove it.
         public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m)
-            : this(iconID, titleCliloc, secondaryCliloc)
+            : this(iconID, titleCliloc, secondaryCliloc, 0, length, m)
+        {
+        }
+
+        //Only the timed one needs to Mobile to know when to automagically remove it.
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, int thirdCliloc, TimeSpan length, Mobile m)
+            : this(iconID, titleCliloc, secondaryCliloc, thirdCliloc)
         {
             m_TimeLength = length;
             m_TimeStart = DateTime.UtcNow;
@@ -91,15 +111,15 @@ namespace Server
             m_NoTimer = notimer;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition args)
-            : this(iconID, titleCliloc, titleCliloc + 1, args)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition secargs)
+            : this(iconID, titleCliloc, titleCliloc + 1, secargs)
         {
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition args)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition secargs)
             : this(iconID, titleCliloc, secondaryCliloc)
         {
-            m_Args = args;
+            m_SecondaryArguments = secargs;
         }
 
         public BuffInfo(BuffIcon iconID, int titleCliloc, bool retainThroughDeath)
@@ -113,37 +133,52 @@ namespace Server
             m_RetainThroughDeath = retainThroughDeath;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition args, bool retainThroughDeath)
-            : this(iconID, titleCliloc, titleCliloc + 1, args, retainThroughDeath)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition secargs, bool retainThroughDeath)
+            : this(iconID, titleCliloc, titleCliloc + 1, secargs, retainThroughDeath)
         {
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition args, bool retainThroughDeath)
-            : this(iconID, titleCliloc, secondaryCliloc, args)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition secargs, bool retainThroughDeath)
+            : this(iconID, titleCliloc, secondaryCliloc, secargs)
         {
             m_RetainThroughDeath = retainThroughDeath;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m, TextDefinition args)
-            : this(iconID, titleCliloc, titleCliloc + 1, length, m, args)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m, TextDefinition secargs)
+            : this(iconID, titleCliloc, titleCliloc + 1, length, m, secargs)
         {
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, TextDefinition args)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, TextDefinition secargs)
             : this(iconID, titleCliloc, secondaryCliloc, length, m)
         {
-            m_Args = args;
+            m_SecondaryArguments = secargs;
         }
 
-        public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m, TextDefinition args, bool retainThroughDeath)
-            : this(iconID, titleCliloc, titleCliloc + 1, length, m, args, retainThroughDeath)
-        {
-        }
-
-        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, TextDefinition args, bool retainThroughDeath)
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition titleargs, int secondaryCliloc, TextDefinition secargs, TimeSpan length, Mobile m)
             : this(iconID, titleCliloc, secondaryCliloc, length, m)
         {
-            m_Args = args;
+            m_TitleArguments = titleargs;
+            m_SecondaryArguments = secargs;
+        }
+
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TextDefinition titleargs, int secondaryCliloc, TextDefinition secargs, int thirdCliloc, TextDefinition thirdargs, TimeSpan length, Mobile m)
+            : this(iconID, titleCliloc, secondaryCliloc, thirdCliloc, length, m)
+        {
+            m_TitleArguments = titleargs;
+            m_SecondaryArguments = secargs;
+            m_ThirdArguments = thirdargs;
+        }
+
+        public BuffInfo(BuffIcon iconID, int titleCliloc, TimeSpan length, Mobile m, TextDefinition secargs, bool retainThroughDeath)
+            : this(iconID, titleCliloc, titleCliloc + 1, length, m, secargs, retainThroughDeath)
+        {
+        }
+
+        public BuffInfo(BuffIcon iconID, int titleCliloc, int secondaryCliloc, TimeSpan length, Mobile m, TextDefinition secargs, bool retainThroughDeath)
+            : this(iconID, titleCliloc, secondaryCliloc, length, m)
+        {
+            m_SecondaryArguments = secargs;
             m_RetainThroughDeath = retainThroughDeath;
         }
 
@@ -370,53 +405,64 @@ namespace Server
     public sealed class AddBuffPacket : Packet
     {
         public AddBuffPacket(Mobile m, BuffInfo info)
-            : this(m, info.ID, info.TitleCliloc, info.SecondaryCliloc, info.Args, info.NoTimer ? TimeSpan.Zero : (info.TimeStart != DateTime.MinValue) ? ((info.TimeStart + info.TimeLength) - DateTime.UtcNow) : TimeSpan.Zero)
+            : this(m, info.ID, info.TitleCliloc, info.TitleArguments, info.SecondaryCliloc, info.SecondaryArguments, info.ThirdCliloc, info.ThirdArguments, info.NoTimer ? TimeSpan.Zero : (info.TimeStart != DateTime.MinValue) ? ((info.TimeStart + info.TimeLength) - DateTime.UtcNow) : TimeSpan.Zero)
         {
         }
 
-        public AddBuffPacket(Mobile mob, BuffIcon iconID, int titleCliloc, int secondaryCliloc, TextDefinition args, TimeSpan length)
+        public AddBuffPacket(Mobile mob, BuffIcon iconID, int titleCliloc, TextDefinition titleargs, int secondaryCliloc, TextDefinition secargs, int thirdCliloc, TextDefinition thirdargs, TimeSpan length)
             : base(0xDF)
         {
-            bool hasArgs = (args != null);
+            bool args = titleargs != null || secargs != null || thirdargs != null;
 
-            EnsureCapacity((hasArgs ? (48 + args.ToString().Length * 2) : 44));
-            m_Stream.Write(mob.Serial);
+            string title = string.Format("{0}{1}", titleargs ?? "", args ? "\0" : "");
+            string secondary = string.Format("{0}{1}", secargs ?? "", args ? "\0" : "");
+            string third = string.Format("{0}{1}", thirdargs ?? "", args ? "\0" : "");
 
-            m_Stream.Write((short)iconID);	//ID
-            m_Stream.Write((short)0x1);	//Type 0 for removal. 1 for add 2 for Data
+            EnsureCapacity(46 + (title.Length * 2) + (secondary.Length * 2) + (third.Length * 2));
 
-            m_Stream.Fill(4);
+            m_Stream.Write(mob.Serial); // Serial
 
-            m_Stream.Write((short)iconID);	//ID
-            m_Stream.Write((short)0x01);	//Type 0 for removal. 1 for add 2 for Data
+            m_Stream.Write((short)iconID);	// BuffIconType
+            m_Stream.Write((short)0x1); // Buffs Count
 
-            m_Stream.Fill(4);
+            m_Stream.Write((short)0x0); // Source Type
+            m_Stream.Write((short)0x0);
+
+            m_Stream.Write((short)iconID); // Buff Icon ID
+            m_Stream.Write((short)0x1); // Buff Queue Index
+
+            m_Stream.Write(0x0);
 
             if (length < TimeSpan.Zero)
                 length = TimeSpan.Zero;
 
-            m_Stream.Write((short)length.TotalSeconds);	//Time in seconds
+            m_Stream.Write((short)length.TotalSeconds);	// Buff Duration in seconds
 
-            m_Stream.Fill(3);
-            m_Stream.Write(titleCliloc);
-            m_Stream.Write(secondaryCliloc);
+            m_Stream.Fill(3); // byte[3] 0x00
 
-            if (!hasArgs)
-            {
-                //m_Stream.Fill( 2 );
-                m_Stream.Fill(10);
+            m_Stream.Write(titleCliloc); // Buff Title Cliloc
+            m_Stream.Write(secondaryCliloc); // Buff Secondary Cliloc
+            m_Stream.Write(thirdCliloc); // Buff Third Cliloc
+
+            m_Stream.Write((short)(title.Length)); // Primary Cliloc Arguments Length
+
+            if (title.Length > 0)
+            {                
+                m_Stream.WriteLittleUniFixed(title, title.Length); // Primary Cliloc Arguments
             }
-            else
-            {
-                m_Stream.Fill(4);
-                m_Stream.Write((short)0x1);	//Unknown -> Possibly something saying 'hey, I have more data!'?
-                m_Stream.Fill(2);
 
-                //m_Stream.WriteLittleUniNull( "\t#1018280" );
-                m_Stream.WriteLittleUniNull(string.Format("\t{0}", args));
+            m_Stream.Write((short)(secondary.Length)); // Secondary Cliloc Arguments
 
-                m_Stream.Write((short)0x1);	//Even more Unknown -> Possibly something saying 'hey, I have more data!'?
-                m_Stream.Fill(2);
+            if (secondary.Length > 0)
+            {                
+                m_Stream.WriteLittleUniFixed(secondary, secondary.Length); // Secondary Cliloc Arguments
+            }
+
+            m_Stream.Write((short)(third.Length)); // Third Cliloc Arguments Length
+
+            if (third.Length > 0)
+            {                
+                m_Stream.WriteLittleUniFixed(third, third.Length); // Third Cliloc Arguments
             }
         }
     }
