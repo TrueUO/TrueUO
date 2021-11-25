@@ -163,6 +163,7 @@ namespace Server.Engines.Despise
         {
             if (CheckOwnerAlignment() && IsChildOf(from.Backpack) && from == m_Owner)
             {
+                from.RevealingAction();
                 int cliloc = m_Pet == null ? 1153274 : 1153277;
                 from.SendLocalizedMessage(cliloc); // Target a creature to possess. / Target an object or creature to set the anchor. Target the Wisp Orb to change the leash setting. Target the possessed creature to change its aggression.
                 from.Target = new InternalTarget(this);
@@ -297,6 +298,8 @@ namespace Server.Engines.Despise
             {
                 if (m_Orb.Pet != null && m_Orb.IsChildOf(m_From.Backpack) && !m_Orb.Conscripted && m_Orb.Pet.Alignment == m_Orb.Alignment)
                 {
+                    m_From.RevealingAction();
+
                     if (m_Orb.Pet.Power < MinPowerToConscript)
                         m_From.SendLocalizedMessage(1153311); // The creature under control of your Wisp Orb cannot be conscripted at this time.
                     else
@@ -326,6 +329,7 @@ namespace Server.Engines.Despise
             {
                 if (m_Orb.Pet != null)
                 {
+                    m_From.RevealingAction();
                     m_Orb.Pet.Unlink();
                 }
             }
