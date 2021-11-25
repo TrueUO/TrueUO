@@ -520,10 +520,10 @@ namespace Server.Items
         {
             TickCount++;
 
-            int lostchance = TickCount * 5;
+            int lostChance = TickCount * 5;
             int random = Utility.Random(100);
 
-            if (lostchance > random)
+            if (lostChance > random)
             {
                 OnTrapLost();
             }
