@@ -384,7 +384,7 @@ namespace Server.Items
             reader.ReadInt();
 
             int index = reader.ReadInt();
-            m_BaitType = FishInfo.GetTypeFromIndex(index);
+            m_BaitType = index == -1 ? null : FishInfo.GetTypeFromIndex(index);
             m_EnhancedBait = reader.ReadBool();
 
             int count = reader.ReadInt();
@@ -661,7 +661,7 @@ namespace Server.Items
             reader.ReadInt();
 
             int index = reader.ReadInt();
-            BaitType = FishInfo.GetTypeFromIndex(index);
+            BaitType = index == -1 ? null : FishInfo.GetTypeFromIndex(index);
             EnhancedBait = reader.ReadBool();
             Owner = reader.ReadMobile();
             InUse = reader.ReadBool();
