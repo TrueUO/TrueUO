@@ -61,10 +61,9 @@ namespace Server.Items
             get => m_Incubating;
             set
             {
-                if (m_Incubating && !value)
+                if (m_Incubating && !value && IncubationStart < DateTime.UtcNow)
                 {
-                    if (IncubationStart < DateTime.UtcNow)
-                        TotalIncubationTime += DateTime.UtcNow - IncubationStart;
+                    TotalIncubationTime += DateTime.UtcNow - IncubationStart;
                 }
 
                 m_Incubating = value;
@@ -90,6 +89,11 @@ namespace Server.Items
             m_TotalIncubationTime = TimeSpan.Zero;
             Stage = EggStage.New;
             Dryness = Dryness.Dry;
+        }
+
+        public ChickenLizardEgg(Serial serial)
+            : base(serial)
+        {
         }
 
         public override int LabelNumber
@@ -403,11 +407,6 @@ namespace Server.Items
                         break;
                 }
             }
-        }
-
-        public ChickenLizardEgg(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
