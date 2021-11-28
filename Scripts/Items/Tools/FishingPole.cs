@@ -496,8 +496,10 @@ namespace Server.Items
                     goto case 2;
                 case 2:
                     m_OriginalHue = reader.ReadInt();
+
                     int idx = reader.ReadInt();
-                    m_BaitType = FishInfo.GetTypeFromIndex(idx);
+
+                    m_BaitType = idx == -1 ? null : FishInfo.GetTypeFromIndex(idx);
                     m_HookType = (HookType)reader.ReadInt();
                     m_HookUses = reader.ReadInt();
 

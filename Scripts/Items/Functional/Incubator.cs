@@ -1,16 +1,16 @@
 using Server.Commands;
 using Server.Gumps;
 using Server.Multis;
+using Server.Network;
 using System;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
     [Flipable(0x407C, 0x407D)]
     public class Incubator : Container, ISecurable
     {
-        public static readonly int MaxEggs = 6;
-
-        public override int LabelNumber => 1112479;  //an incubator
+        public override int LabelNumber => 1112479; // an incubator
 
         private SecureLevel m_Level;
 
@@ -21,14 +21,14 @@ namespace Server.Items
             set => m_Level = value;
         }
 
-        public override int DefaultGumpID => 1156;
-        public override int DefaultDropSound => 66;
+        public override int DefaultGumpID => 0x40;
 
         [Constructable]
         public Incubator()
             : base(0x407C)
         {
             m_Level = SecureLevel.CoOwners;
+            Weight = 10;
         }
 
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
@@ -69,24 +69,12 @@ namespace Server.Items
 
         public override bool CheckHold(Mobile m, Item item, bool message, bool checkItems, int plusItems, int plusWeight)
         {
-            if (!BaseHouse.CheckSecured(this))
+            if (BaseHouse.CheckLockedDown(this))
             {
-                m.SendLocalizedMessage(1113711); //The incubator must be secured for the egg to grow, not locked down.
-                return false;
-            }
-            if (!(item is ChickenLizardEgg))
-            {
-                m.SendMessage("This will only accept chicken eggs.");
-                return false;
+                PrivateOverheadMessage(MessageType.Regular, 0x21, 1113711, m.NetState); // The incubator must be secured for the egg to grow, not locked down.
             }
 
-            if (MaxEggs > -1 && Items.Count >= MaxEggs)
-            {
-                m.SendMessage("You can only put {0} chicken eggs in the incubator at a time.", MaxEggs.ToString()); //TODO: Get Message
-                return false;
-            }
-
-            return true;
+            return base.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
         }
 
         public void CheckEggs_Callback()
@@ -94,10 +82,22 @@ namespace Server.Items
             if (!BaseHouse.CheckSecured(this))
                 return;
 
-            foreach (Item item in Items)
+            List<Item> items = Items;
+
+            if (items.Count > 0)
             {
-                if (item is ChickenLizardEgg egg)
-                    egg.CheckStatus();
+                for (int i = items.Count - 1; i >= 0; --i)
+                {
+                    if (i >= items.Count)
+                    {
+                        continue;
+                    }
+
+                    if (items[i] is ChickenLizardEgg egg)
+                    {
+                        egg.CheckStatus();
+                    }
+                }
             }
         }
 

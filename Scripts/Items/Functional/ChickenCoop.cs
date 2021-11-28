@@ -4,6 +4,7 @@ using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
 using Server.Targeting;
+using System;
 using System.Collections.Generic;
 
 namespace Server.Items
@@ -15,8 +16,7 @@ namespace Server.Items
 
         public override int LabelNumber => 1112570;  // a chicken coop
 
-        private SecureLevel m_Level;
-        private readonly Dictionary<Mobile, List<BaseCreature>> m_Stored = new Dictionary<Mobile, List<BaseCreature>>();
+        private SecureLevel m_Level;        
 
         [CommandProperty(AccessLevel.GameMaster)]
         public SecureLevel Level
@@ -25,7 +25,7 @@ namespace Server.Items
             set => m_Level = value;
         }
 
-        public Dictionary<Mobile, List<BaseCreature>> Stored => m_Stored;
+        public List<BaseCreature> m_Stored;
 
         [Constructable]
         public ChickenCoop()
@@ -33,12 +33,19 @@ namespace Server.Items
         {
             Weight = 20;
             m_Level = SecureLevel.CoOwners;
+            m_Stored = new List<BaseCreature>();
         }
 
         public void OnChop(Mobile from)
         {
             if (CheckAccess(from))
             {
+                if (IsLockedDown)
+                {
+                    from.SendLocalizedMessage(1010019); // Locked down resources cannot be used!
+                    return;
+                }
+
                 Effects.PlaySound(GetWorldLocation(), Map, 0x3B3);
                 from.SendLocalizedMessage(500461); // You destroy the item.
 
@@ -50,15 +57,9 @@ namespace Server.Items
         {
             if (m_Stored != null && m_Stored.Count > 0)
             {
-                List<List<BaseCreature>> masterList = new List<List<BaseCreature>>(m_Stored.Values);
-
-                for (int i = 0; i < masterList.Count; i++)
+                for (int i = 0; i < m_Stored.Count; i++)
                 {
-                    for (int j = 0; j < masterList[i].Count; j++)
-                    {
-                        if (masterList[i][j] != null && !masterList[i][j].Deleted)
-                            masterList[i][j].Delete();
-                    }
+                    m_Stored[i].Delete();
                 }
 
                 m_Stored.Clear();
@@ -75,9 +76,10 @@ namespace Server.Items
             {
                 SetSecureLevelEntry.AddTo(from, this, list);
 
-                list.Add(new StableEntry(this, from));
+                if (m_Stored.Count < MaxStables)
+                    list.Add(new StableEntry(this, from));
 
-                if (m_Stored.ContainsKey(from) && m_Stored[from].Count > 0)
+                if (m_Stored.Count > 0)
                     list.Add(new ClaimAllEntry(this, from));
             }
         }
@@ -88,7 +90,7 @@ namespace Server.Items
             private readonly Mobile m_From;
 
             public StableEntry(ChickenCoop coop, Mobile from)
-                : base(6126, 12)
+                : base(1112556, 12) // Stable a chicken
             {
                 m_Coop = coop;
                 m_From = from;
@@ -106,7 +108,7 @@ namespace Server.Items
             private readonly Mobile m_From;
 
             public ClaimAllEntry(ChickenCoop coop, Mobile from)
-                : base(6127, 12)
+                : base(1112557, 12) // Claim a chicken
             {
                 m_Coop = coop;
                 m_From = from;
@@ -121,13 +123,6 @@ namespace Server.Items
         public ChickenCoop(Serial serial)
             : base(serial)
         {
-        }
-
-        public override bool ForceShowProperties => true;
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.AddNameProperties(list);
         }
 
         private class ClaimListGump : Gump
@@ -147,20 +142,17 @@ namespace Server.Items
 
                 AddPage(0);
 
-                AddBackground(0, 0, 325, 50 + (list.Count * 20), 9250);
+                AddBackground(0, 0, 325, 50 + (list.Count * 20), 0x2422);
                 AddAlphaRegion(5, 5, 315, 40 + (list.Count * 20));
 
-                AddHtml(15, 15, 275, 20, "<BASEFONT COLOR=#FFFFFF>Select a pet to retrieve from the stables:</BASEFONT>", false, false);
+                AddHtmlLocalized(15, 15, 275, 20, 1080333, false, false); // Select a pet to retrieve from the stables:
 
-                for (int i = 0; i < list.Count; ++i)
+                for (int i = 0; i < MaxStables; ++i)
                 {
                     BaseCreature pet = list[i];
 
-                    if (pet == null || pet.Deleted)
-                        continue;
-
                     AddButton(15, 39 + (i * 20), 10006, 10006, i + 1, GumpButtonType.Reply, 0);
-                    AddHtml(32, 35 + (i * 20), 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
+                    AddHtml(32, 35 + (i * 20), 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet == null || pet.Deleted ? "empty" : pet.Name), false, false);
                 }
             }
 
@@ -171,12 +163,6 @@ namespace Server.Items
                 if (index >= 0 && index < m_List.Count)
                     m_Post.EndClaimList(m_From, m_List[index]);
             }
-        }
-
-        public static int GetMaxStabled(Mobile from)
-        {
-            int max = 3;
-            return max;
         }
 
         private class StableTarget : Target
@@ -200,38 +186,9 @@ namespace Server.Items
             }
         }
 
-        public void BeginClaimList(Mobile from)
-        {
-            if (Deleted || !from.CheckAlive() || !m_Stored.ContainsKey(from) || m_Stored[from] == null)
-                return;
-
-            List<BaseCreature> stabled = m_Stored[from];
-
-            for (int i = 0; i < stabled.Count; i++)
-            {
-                BaseCreature pet = stabled[i];
-
-                if (pet == null || pet.Deleted)
-                {
-                    if (pet != null)
-                    {
-                        pet.IsStabled = false;
-                    }
-
-                    stabled.RemoveAt(i);
-                    --i;
-                }
-            }
-
-            if (stabled.Count > 0)
-                from.SendGump(new ClaimListGump(this, from, stabled));
-            else
-                from.SendLocalizedMessage(502671); // But I have no animals stabled with me at the moment!
-        }
-
         public void EndClaimList(Mobile from, BaseCreature pet)
         {
-            if (Deleted || !from.CheckAlive() || !m_Stored.ContainsKey(from))
+            if (Deleted || !from.CheckAlive() || !CanUse(from))
                 return;
 
             if ((from.Followers + pet.ControlSlots) <= from.FollowersMax)
@@ -248,8 +205,8 @@ namespace Server.Items
 
                 pet.IsStabled = false;
 
-                if (m_Stored[from].Contains(pet))
-                    m_Stored[from].Remove(pet);
+                if (m_Stored.Contains(pet))
+                    m_Stored.Remove(pet);
 
                 from.SendLocalizedMessage(1042559); // Here you go... and good day to you!
             }
@@ -261,41 +218,40 @@ namespace Server.Items
 
         public void BeginStable(Mobile from)
         {
-            if (Deleted || !from.CheckAlive() || !CanUse() || !CheckAccess(from))
+            if (Deleted || !from.CheckAlive() || !CanUse(from) || !CheckAccess(from))
                 return;
 
-            if (GetCount() >= MaxStables)
+            if (m_Stored.Count >= MaxStables)
             {
                 from.SendLocalizedMessage(1114325); // There is no more room in your chicken coop!
             }
             else
             {
-                /*from.SendLocalizedMessage(1042558);  I charge 30 gold per pet for a real week's stable time.
-										 * I will withdraw it from thy bank account.
-										 * Which animal wouldst thou like to stable here?
-										 */
-
                 from.Target = new StableTarget(this);
                 from.SendLocalizedMessage(1112559); // Which chicken do you wish to stable?
             }
         }
 
-        private int GetCount()
-        {
-            int count = 0;
+        private static readonly Type[] m_ChickenTypes = {
+            typeof(Chicken), typeof(ChickenLizard), typeof(BattleChickenLizard)
+        };
 
-            foreach (List<BaseCreature> bcList in m_Stored.Values)
+        public bool CheckType(Mobile m)
+        {
+            Type type = m.GetType();
+
+            for (int i = 0; i < m_ChickenTypes.Length; i++)
             {
-                if (bcList != null)
-                    count += bcList.Count;
+                if (type == m_ChickenTypes[i])
+                    return true;
             }
 
-            return count;
+            return false;
         }
 
         public void EndStable(Mobile from, BaseCreature pet)
         {
-            if (Deleted || !from.CheckAlive() || !CanUse() || !CheckAccess(from))
+            if (Deleted || !from.CheckAlive() || !CanUse(from) || !CheckAccess(from))
                 return;
 
             if (!pet.Controlled || pet.ControlMaster != from)
@@ -322,9 +278,13 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1042564); // I'm sorry.  Your pet seems to be busy.
             }
-            else if (GetCount() >= MaxStables)
+            else if (m_Stored.Count >= MaxStables)
             {
                 from.SendLocalizedMessage(1114325); // There is no more room in your chicken coop!
+            }
+            else if (!CheckType(pet))
+            {
+                from.SendLocalizedMessage(1112558); // You may only stable chickens in the chicken coop.
             }
             else
             {
@@ -339,29 +299,21 @@ namespace Server.Items
 
                 pet.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully happy
 
-                if (!m_Stored.ContainsKey(from))
-                    m_Stored.Add(from, new List<BaseCreature>());
+                if (!m_Stored.Contains(pet))
+                    m_Stored.Add(pet);
 
-                if (!m_Stored[from].Contains(pet))
-                    m_Stored[from].Add(pet);
-
-                from.SendMessage("Your chicken has been stabled.");
+                from.SendLocalizedMessage(1049677); // Your pet has been stabled.
             }
         }
 
         public void Claim(Mobile from)
         {
-            if (Deleted || !from.CheckAlive() || !m_Stored.ContainsKey(from))
+            if (Deleted || !from.CheckAlive())
                 return;
 
-            bool claimed = false;
-            int stabledCount = 0;
-
-            List<BaseCreature> stabled = m_Stored[from];
-
-            for (int i = 0; i < stabled.Count; ++i)
+            for (int i = 0; i < m_Stored.Count; ++i)
             {
-                BaseCreature pet = stabled[i];
+                BaseCreature pet = m_Stored[i];
 
                 if (pet == null || pet.Deleted)
                 {
@@ -370,12 +322,10 @@ namespace Server.Items
                         pet.IsStabled = false;
                     }
 
-                    stabled.RemoveAt(i);
+                    m_Stored.RemoveAt(i);
                     --i;
                     continue;
                 }
-
-                ++stabledCount;
 
                 if (from.Followers + pet.ControlSlots <= from.FollowersMax)
                 {
@@ -393,24 +343,14 @@ namespace Server.Items
 
                     pet.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully Happy
 
-                    stabled.RemoveAt(i);
+                    m_Stored.RemoveAt(i);
                     --i;
-
-                    claimed = true;
                 }
                 else
                 {
                     from.SendLocalizedMessage(1049612, pet.Name); // ~1_NAME~ remained in the stables because you have too many followers.
                 }
             }
-
-            if (claimed)
-            {
-                from.SendLocalizedMessage(1042559); // Here you go... and good day to you!
-            }
-
-            else if (stabledCount == 0)
-                from.SendLocalizedMessage(502671); // But I have no animals stabled with me at the moment!
         }
 
         public bool CheckAccess(Mobile m)
@@ -420,74 +360,51 @@ namespace Server.Items
             return h != null && h.HasSecureAccess(m, m_Level);
         }
 
-        public bool CanUse()
+        public bool CanUse(Mobile from)
         {
-            return IsLockedDown;
-        }
+            var use = IsLockedDown || IsSecure;
 
-        public override bool HandlesOnSpeech => true;
-
-        public override void OnSpeech(SpeechEventArgs e)
-        {
-            if (CheckAccess(e.Mobile) && IsLockedDown)
+            if (!use)
             {
-                if (!e.Handled && e.HasKeyword(0x0008))
-                {
-                    e.Handled = true;
-                    BeginStable(e.Mobile);
-                }
-                else if (!e.Handled && e.HasKeyword(0x0009))
-                {
-                    e.Handled = true;
-
-                    if (!Insensitive.Equals(e.Speech, "claim"))
-                        BeginClaimList(e.Mobile);
-                    else
-                        Claim(e.Mobile);
-                }
-                else
-                {
-                    base.OnSpeech(e);
-                }
+                from.SendLocalizedMessage(1112573); // This must be locked down or secured in order to use it.
             }
+
+            return use;
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(2); // version
+            writer.Write(3); // version
 
             writer.Write((int)m_Level);
             writer.Write(m_Stored.Count);
-            foreach (KeyValuePair<Mobile, List<BaseCreature>> kvp in m_Stored)
-            {
-                writer.Write(kvp.Key);
-                writer.Write(kvp.Value.Count);
 
-                foreach (BaseCreature bc in kvp.Value)
-                    writer.Write(bc);
+            foreach (var bc in m_Stored)
+            {
+                writer.Write(bc);
             }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             m_Level = (SecureLevel)reader.ReadInt();
 
-            if (version == 1)
-                return;
-
             int c = reader.ReadInt();
+
+            m_Stored = new List<BaseCreature>();
 
             for (int i = 0; i < c; i++)
             {
-                Mobile owner = reader.ReadMobile();
+                if (version < 3)
+                {
+                    reader.ReadMobile();
+                }
+
                 int count = reader.ReadInt();
-                List<BaseCreature> list = new List<BaseCreature>();
 
                 for (int j = 0; j < count; j++)
                 {
@@ -496,12 +413,9 @@ namespace Server.Items
                     if (chicken is BaseCreature bc)
                     {
                         bc.IsStabled = true;
-                        list.Add(bc);
+                        m_Stored.Add(bc);
                     }
                 }
-
-                if (owner != null && list.Count > 0)
-                    m_Stored.Add(owner, list);
             }
         }
     }
