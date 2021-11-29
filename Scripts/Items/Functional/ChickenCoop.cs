@@ -393,20 +393,17 @@ namespace Server.Items
 
             m_Level = (SecureLevel)reader.ReadInt();
 
-            int c = reader.ReadInt();
+            int count = reader.ReadInt();
 
             m_Stored = new List<BaseCreature>();
 
-            for (int i = 0; i < c; i++)
+            for (int i = 0; i < count; i++)
             {
                 if (version < 3)
                 {
                     reader.ReadMobile();
                 }
-
-                int count = reader.ReadInt();
-
-                for (int j = 0; j < count; j++)
+                else
                 {
                     Mobile chicken = reader.ReadMobile();
 
