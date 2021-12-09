@@ -243,7 +243,7 @@ namespace Server.Engines.Quests
                     if (QuestHelper.AnyRewards(m_Quest))
                     {
                         m_Section = Section.Rewards;
-                        SecRewards();
+                        SecCompleteRewards();
                     }
                     else
                         m_Quest.GiveRewards();
@@ -734,7 +734,7 @@ namespace Server.Engines.Quests
                     if (QuestHelper.AnyRewards(m_Quest))
                     {
                         m_Section = Section.Rewards;
-                        SecRewards();
+                        SecCompleteRewards();
                     }
                     else
                         m_Quest.GiveRewards();
