@@ -1634,6 +1634,13 @@ namespace Server.Mobiles
                         if (ValidateBought(buyer, item))
                         {
                             totalCost += cost;
+
+                            DecayingItemSocket socket = item.GetSocket<DecayingItemSocket>();
+
+                            if (socket != null)
+                            {
+                                socket.Remove();
+                            }
                         }
                         else
                         {
@@ -2159,8 +2166,10 @@ namespace Server.Mobiles
                                 }
                                 else
                                 {
+                                    //Say("Item Added to BuyPack"); // Debug message
                                     resp.Item.SetLastMoved();
                                     cont.DropItem(resp.Item);
+                                    resp.Item.AttachSocket(new DecayingItemSocket(300, true));
                                 }
                             }
                         }
