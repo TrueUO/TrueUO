@@ -155,7 +155,7 @@ namespace Server.Items
                         }
                         else
                         {
-                            bool okay = item.IsChildOf(@from.Backpack);
+                            bool okay = item.IsChildOf(from.Backpack);
 
                             if (!okay)
                             {
