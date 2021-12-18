@@ -136,7 +136,6 @@ namespace Server.SkillHandlers
         private static readonly bool RegionTracking = Config.Get("Tracking.RegionTracking", false);
         private static readonly bool CustomTargetNumbers = Config.Get("Tracking.CustomTargetNumbers", false);
         private static readonly bool NotifyPlayer = Config.Get("Tracking.NotifyPlayer", false);
-        private static readonly bool FamousTracker = Config.Get("Tracking.FamousTracker", false);
 
         private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>
         {
@@ -543,13 +542,6 @@ namespace Server.SkillHandlers
         // Tracking players uses tracking and detect hidden vs. hiding and stealth 
         private static bool CheckDifficulty(Mobile from, Mobile m)
         {
-            if (!m.Player && (IsAnimal(m) || IsMonster(m)))
-            {
-                int fame = FamousTracker ? Math.Min(m.Fame, 18000) - from.Fame : Math.Min(m.Fame, 18000);
-
-                return from.Skills[SkillName.Tracking].Fixed > fame / 18 - 100 + Utility.Random(200);
-            }
-
             if (!m.Player && IsHumanNPC(m))
             {
                 return true;
