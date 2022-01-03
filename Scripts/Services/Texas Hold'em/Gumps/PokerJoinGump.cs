@@ -7,7 +7,7 @@ namespace Server.Poker
 {
 	public class PokerJoinGump : Gump
 	{
-		private PokerGame m_Game;
+		private readonly PokerGame m_Game;
 
 		public PokerJoinGump(Mobile from, PokerGame game)
 			: base(50, 50)

@@ -437,7 +437,6 @@ namespace Server.Poker
 
             //special case, if the straight is 5, 4, 3, 2, 
 			//check for the ace which should be the first card in sortedCards
-
             if (sequenceCardCount == 4 && straightCards[straightCards.Count - 1].Rank == Rank.Two && sortedCards[0].Rank == Rank.Ace)
             {
                 straightCards.Add(sortedCards[0]);

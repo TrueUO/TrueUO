@@ -5,20 +5,17 @@ namespace Server.Poker
 {
 	public class PokerTableGump : Gump
 	{
-		private const int RED = 38;
-		private const int BLACK = 0;
-		private const int CARD_X = 300;
+        private const int CARD_X = 300;
 		private const int CARD_Y = 270;
 
-		private const int COLOR_WHITE = 0xFFFFFF;
-		private const int COLOR_YELLOW = 0xFFFF00;
+        private const int COLOR_YELLOW = 0xFFFF00;
 		private const int COLOR_GOLD = 0xFFD700;
 		private const int COLOR_BLACK = 0x111111;
 		private const int COLOR_GREEN = 0x00FF00;
 		private const int COLOR_OFF_WHITE = 0xFFFACD;
 
-		private PokerGame m_Game;
-		private PokerPlayer m_Player;
+		private readonly PokerGame m_Game;
+		private readonly PokerPlayer m_Player;
 
 		public PokerTableGump(PokerGame game, PokerPlayer player)
 			: base(0, 0)

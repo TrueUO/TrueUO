@@ -137,30 +137,31 @@ namespace Server.Poker
 
 		[Constructable]
 		public PokerDealer()
-			: this( 10 )
+			: this(10)
 		{
 		}
 
 		[Constructable]
-		public PokerDealer( int maxPlayers )
+		public PokerDealer(int maxPlayers)
 		{
 			Blessed = true;
 			Frozen = true;
+
 			InitStats(100, 100, 100);
 
 			Title = "the poker dealer";
 			Hue = Utility.RandomSkinHue();
 			NameHue = 0x35;
 
-			if ( Female = Utility.RandomBool() )
+			if (Female = Utility.RandomBool())
 			{
 				Body = 0x191;
-				Name = NameList.RandomName( "female" );
+				Name = NameList.RandomName("female");
 			}
 			else
 			{
 				Body = 0x190;
-				Name = NameList.RandomName( "male" );
+				Name = NameList.RandomName("male");
 			}
 
 			Dress();
@@ -175,18 +176,9 @@ namespace Server.Poker
 		private void Dress()
 		{
 			AddItem(new FancyShirt(0));
-
-			Item pants = new LongPants();
-			pants.Hue = 1;
-			AddItem(pants);
-
-			Item shoes = new Shoes();
-			shoes.Hue = 1;
-			AddItem(shoes);
-
-			Item sash = new BodySash();
-			sash.Hue = 1;
-			AddItem(sash);
+            AddItem(new LongPants(1));
+            AddItem(new Shoes(1));
+            AddItem(new BodySash(1));
 
 			Utility.AssignRandomHair(this);
 		}
@@ -253,8 +245,7 @@ namespace Server.Poker
 			}
 			else if (m_Game.Players.Count < m_MaxPlayers)
 			{
-				//TODO: Send player the poker join gump
-				from.CloseGump(typeof( PokerJoinGump));
+                from.CloseGump(typeof( PokerJoinGump));
 				from.SendGump(new PokerJoinGump(from, m_Game));
 			}
 		}
@@ -366,7 +357,7 @@ namespace Server.Poker
 			{
 				if (m is PokerDealer dealer)
 				{
-					Point3D seat = new Point3D( x, y, z );
+					Point3D seat = new Point3D(x, y, z);
 
 					if (dealer.AddPokerSeat(from, seat) != -1)
 					{
@@ -483,9 +474,9 @@ namespace Server.Poker
 
 		public class JackpotInfo
 		{
-			private List<PokerPlayer> m_Winners;
-			private ResultEntry m_Hand;
-			private DateTime m_Date;
+			private readonly List<PokerPlayer> m_Winners;
+			private readonly ResultEntry m_Hand;
+			private readonly DateTime m_Date;
 			
 			public List<PokerPlayer> Winners => m_Winners;
             public ResultEntry Hand => m_Hand;
