@@ -21,6 +21,7 @@ using Server.Items;
 using Server.Misc;
 using Server.Multis;
 using Server.Network;
+using Server.Poker;
 using Server.Regions;
 using Server.Services.Virtues;
 using Server.SkillHandlers;
@@ -206,6 +207,10 @@ namespace Server.Mobiles
         private PlayerFlag m_Flags;
         private ExtendedPlayerFlag m_ExtendedFlags;
         private int m_Profession;
+
+        #region Poker System
+        public PokerGame PokerGame { get; set; }
+        #endregion
 
         private int m_NonAutoreinsuredItems;
         // number of items that could not be automaitically reinsured because gold in bank was not enough
@@ -3269,6 +3274,14 @@ namespace Server.Mobiles
             {
                 return !Alive || !bc.Alive || IsDeadBondedPet || bc.IsDeadBondedPet || Hidden && IsStaff();
             }
+
+            #region Poker System
+            if (PokerGame != null && !HasGump(typeof(PokerLeaveGump)))
+            {
+                SendGump(new PokerLeaveGump(this, PokerGame));
+                return false;
+            }
+            #endregion
 
             return base.OnMoveOver(m);
         }
