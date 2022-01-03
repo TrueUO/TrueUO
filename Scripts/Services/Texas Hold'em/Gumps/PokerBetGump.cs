@@ -7,15 +7,11 @@ namespace Server.Poker
 	public class PokerBetGump : Gump
 	{
 		private const int COLOR_WHITE = 0xFFFFFF;
-		private const int COLOR_YELLOW = 0xFFFF00;
-		private const int COLOR_GOLD = 0xFFD700;
-		private const int COLOR_BLACK = 0x000001;
-		private const int COLOR_GREEN = 0x00FF00;
-		private const int COLOR_OFFWHITE = 0xFFFACD;
+        private const int COLOR_GREEN = 0x00FF00;
 
-		private bool m_CanCall;
-		private PokerGame m_Game;
-		private PokerPlayer m_Player;
+        private readonly bool m_CanCall;
+		private readonly PokerGame m_Game;
+		private readonly PokerPlayer m_Player;
 
 		public PokerBetGump(PokerGame game, PokerPlayer player, bool canCall)
 			: base(460, 400)

@@ -7,7 +7,7 @@ namespace Server.Poker
 {
 	public class PokerJoinGump : Gump
 	{
-		private PokerGame m_Game;
+		private readonly PokerGame m_Game;
 
 		public PokerJoinGump(Mobile from, PokerGame game)
 			: base(50, 50)
@@ -23,7 +23,7 @@ namespace Server.Poker
 
             AddBackground(0, 0, 385, 393, 9270);
 			AddImageTiled( 18, 15, 350, 320, 9274);
-			//this.AddAlphaRegion( 23, 19, 340, 310 );
+			
             AddLabel(125, 10, 28, "The Shard's Texas Hold-em");
 			AddLabel(133, 25, 28, " Join Poker Table");
 			AddImageTiled(42, 47, 301, 3, 96);

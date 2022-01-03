@@ -5,7 +5,7 @@ namespace Server.Poker
 {
 	public class PokerLeaveGump : Gump
 	{
-		private PokerGame m_Game;
+		private readonly PokerGame m_Game;
 
 		public PokerLeaveGump(Mobile from, PokerGame game)
 			: base(50, 50)
@@ -20,7 +20,6 @@ namespace Server.Poker
 			AddPage(0);
 
 			AddImageTiled(18, 15, 350, 180, 9274);
-			//this.AddAlphaRegion( 23, 20, 340, 170 );
             AddBackground(0, 0, 390, 200, 9270);
 			AddLabel(133, 25, 28, "Leave Poker Table");
 			AddImageTiled(42, 47, 301, 3, 96);
@@ -50,32 +49,29 @@ namespace Server.Poker
 
             PokerPlayer player = m_Game.GetPlayer(from);
 
-			if (player != null)
+			if (player != null && info.ButtonID == 1)
 			{
-				if (info.ButtonID == 1)
-				{
-					if (m_Game.State == PokerGameState.Inactive)
-					{
-						if (m_Game.Players.Contains(player))
-                        {
-                            m_Game.RemovePlayer(player);
-                        }
-
-                        return;
-					}
-
-
-					if (player.RequestLeave)
+                if (m_Game.State == PokerGameState.Inactive)
+                {
+                    if (m_Game.Players.Contains(player))
                     {
-                        from.SendMessage(0x22, "You have already submitted a request to leave.");
+                        m_Game.RemovePlayer(player);
                     }
-                    else
-					{
-						from.SendMessage(0x22, "You have submitted a request to leave the table.");
-						player.RequestLeave = true;
-					}
-				}
-			}
+
+                    return;
+                }
+
+
+                if (player.RequestLeave)
+                {
+                    from.SendMessage(0x22, "You have already submitted a request to leave.");
+                }
+                else
+                {
+                    from.SendMessage(0x22, "You have submitted a request to leave the table.");
+                    player.RequestLeave = true;
+                }
+            }
 		}
 	}
 }
