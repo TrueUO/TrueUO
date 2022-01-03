@@ -3275,14 +3275,6 @@ namespace Server.Mobiles
                 return !Alive || !bc.Alive || IsDeadBondedPet || bc.IsDeadBondedPet || Hidden && IsStaff();
             }
 
-            #region Poker System
-            if (PokerGame != null && !HasGump(typeof(PokerLeaveGump)))
-            {
-                SendGump(new PokerLeaveGump(this, PokerGame));
-                return false;
-            }
-            #endregion
-
             return base.OnMoveOver(m);
         }
 
@@ -4855,6 +4847,14 @@ namespace Server.Mobiles
             {
                 Waypoints.UpdateToParty(this);
             }
+
+            #region Poker System
+            if (PokerGame != null && !HasGump(typeof(PokerLeaveGump)))
+            {
+                SendGump(new PokerLeaveGump(this, PokerGame));
+                return false;
+            }
+            #endregion
 
             if (IsStaff())
             {

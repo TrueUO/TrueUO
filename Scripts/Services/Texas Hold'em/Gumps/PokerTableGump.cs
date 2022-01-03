@@ -5,17 +5,21 @@ namespace Server.Poker
 {
 	public class PokerTableGump : Gump
 	{
-        private const int CARD_X = 300;
+		private const int RED = 38;
+		private const int BLACK = 0;
+		private const int CARD_X = 300;
 		private const int CARD_Y = 270;
 
-        private const int COLOR_YELLOW = 0xFFFF00;
+		private const int COLOR_WHITE = 0xFFFFFF;
+		private const int COLOR_YELLOW = 0xFFFF00;
 		private const int COLOR_GOLD = 0xFFD700;
 		private const int COLOR_BLACK = 0x111111;
 		private const int COLOR_GREEN = 0x00FF00;
 		private const int COLOR_OFF_WHITE = 0xFFFACD;
+        private const int COLOR_PINK = 0xFF0099;
 
-		private readonly PokerGame m_Game;
-		private readonly PokerPlayer m_Player;
+		private PokerGame m_Game;
+		private PokerPlayer m_Player;
 
 		public PokerTableGump(PokerGame game, PokerPlayer player)
 			: base(0, 0)
@@ -82,15 +86,15 @@ namespace Server.Poker
 				int x = centerX + (int)xdist;
 				int y = CARD_Y + (int)ydist;
 
-				AddBackground(x, y, 101, 45, 9200);
+				AddBackground(x, y, 101, 65, 9270); //This is the gump that shows your name and gold left.
 
 				if (current.HasBlindBet || current.HasDealerButton)
                 {
-                    AddHtml(x, y - 15, 101, 45, Color(Center(current.HasBigBlind ? "(Big Blind)" : current.HasSmallBlind ? "(Small Blind)" : "(Dealer Button)"), COLOR_YELLOW), false, false);
+                    AddHtml(x, y - 15, 101, 45, Color(Center(current.HasBigBlind ? "(Big Blind)" : current.HasSmallBlind ? "(Small Blind)" : "(Dealer Button)"), COLOR_GREEN), false, false); 
                 }
 
-                AddHtml(x, y + 5, 101, 45, Color(Center(current.Mobile.Name), m_Game.Players.Peek() == current ? COLOR_GREEN : !m_Game.Players.Round.Contains(current) ? COLOR_BLACK : COLOR_OFF_WHITE), false, false);
-				AddHtml(x + 2, y + 24, 101, 45, Color(Center("(" + current.Gold.ToString("#,###") + ")"), COLOR_GOLD), false, false );
+                AddHtml(x, y + 5, 101, 45, Color(Center(current.Mobile.Name), m_Game.Players.Peek() == current ? COLOR_GREEN : !m_Game.Players.Round.Contains(current) ? COLOR_OFF_WHITE : COLOR_PINK), false, false);
+				AddHtml(x + 2, y + 24, 101, 45, Color(Center("(" + current.Gold.ToString("#,###") + ")"), COLOR_GOLD), false, false);
 
 				--counter;
 			}
@@ -113,12 +117,12 @@ namespace Server.Poker
 
 		private string Center(string text)
 		{
-			return $"<CENTER>{text}</CENTER>";
+			return string.Format("<CENTER>{0}</CENTER>", text);
 		}
 
 		private string Color(string text, int color)
 		{
-			return $"<BASEFONT COLOR=#{color:X6}>{text}</BASEFONT>";
+			return string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, text);
 		}
 	}
 }

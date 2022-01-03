@@ -39,23 +39,23 @@ namespace Server.Poker
 			switch (entry.Rank)
 			{
 				case HandRank.None:
-					return $"high card {entry.BestCards[0].RankString}";
+					return string.Format("high card {0}", entry.BestCards[0].RankString);
 				case HandRank.OnePair:
-					return $"a pair of {entry.BestCards[0].RankString}s";
+					return string.Format("a pair of {0}s", entry.BestCards[0].RankString);
 				case HandRank.TwoPairs:
-					return $"two pairs: {entry.BestCards[0].RankString}s and {entry.BestCards[2].RankString}s";
+					return string.Format("two pairs: {0}s and {1}s", entry.BestCards[0].RankString, entry.BestCards[2].RankString);
 				case HandRank.ThreeOfAKind:
-					return $"three {entry.BestCards[0].RankString}s";
+					return string.Format("three {0}s", entry.BestCards[0].RankString);
 				case HandRank.Straight:
-					return $"a straight: high {entry.BestCards[0].RankString} to low {entry.BestCards[4].RankString}";
+					return string.Format("a straight: high {0} to low {1}", entry.BestCards[0].RankString, entry.BestCards[4].RankString);
 				case HandRank.Flush:
-					return $"a flush: high card {entry.BestCards[0].RankString}";
+					return string.Format("a flush: high card {0}", entry.BestCards[0].RankString);
 				case HandRank.FullHouse:
-					return $"a full house: 3 {entry.BestCards[0].RankString}s and 2 {entry.BestCards[3].RankString}s";
+					return string.Format("a full house: 3 {0}s and 2 {1}s", entry.BestCards[0].RankString, entry.BestCards[3].RankString);
 				case HandRank.FourOfAKind:
-					return $"four {entry.BestCards[0].RankString}s";
+					return string.Format("four {0}s", entry.BestCards[0].RankString);
 				case HandRank.StraightFlush:
-					return $"a straight flush: {entry.BestCards[0].Name} to {entry.BestCards[4].Name}";
+					return string.Format("a straight flush: {0} to {1}", entry.BestCards[0].Name, entry.BestCards[4].Name);
 				case HandRank.RoyalFlush:
 					return "a royal flush";
 			}
@@ -73,11 +73,11 @@ namespace Server.Poker
             return false;
 		}
 
-		/*public static int GetKicker(List<ResultEntry> entries)
+		/*public static int GetKicker( List<ResultEntry> entries )
 		{
 			int startIndex = 0;
 
-			switch (entries[0].Rank)
+			switch ( entries[0].Rank )
 			{
 				case HandRank.None: startIndex = 1; break;
 				case HandRank.OnePair: startIndex = 2; break;
@@ -86,10 +86,10 @@ namespace Server.Poker
 				case HandRank.TwoPairs: return 4;
 			}
 
-			for (int i = startIndex; i < 4; ++i)
+			for ( int i = startIndex; i < 4; ++i )
 			{
-				foreach (ResultEntry entry in entries)
-					if (entry.BestCards[i].Rank != entries[0].BestCards[i].Rank)
+				foreach ( ResultEntry entry in entries )
+					if ( entry.BestCards[i].Rank != entries[0].BestCards[i].Rank )
 						startIndex = i;
 			}
 
@@ -135,7 +135,7 @@ namespace Server.Poker
 		{
 			bestCards = new List<Card>();
 
-			if (HasRoyalFlush(sortedCards, out bestCards))
+			if ( HasRoyalFlush(sortedCards, out bestCards))
 			{
 				return HandRank.RoyalFlush;
 			}
@@ -197,6 +197,7 @@ namespace Server.Poker
 				if (!excludeCards.Contains(card))
 				{
 					++cardsAdded;
+
 					targetCards.Add(card);
 
 					if (cardsAdded == numberOfCardsToAdd)
@@ -230,7 +231,7 @@ namespace Server.Poker
 			{
 				for (int i = 0; i < 5; ++i)
 				{
-					royalFlushCards.Add(flushCards[i]);
+					royalFlushCards.Add( flushCards[i] );
 				}
 
 				return true;
@@ -298,7 +299,6 @@ namespace Server.Poker
             }
 
             List<Card> threeCards = new List<Card>();
-
 			//check for 3 of a kind
 			if (!Has3OfAKind(sortedCards, out threeCards))
             {
@@ -312,7 +312,6 @@ namespace Server.Poker
 
             //check for a pair, excluding the 3 cards
 			List<Card> remainingCards = new List<Card>();
-
 			foreach (Card card in sortedCards)
             {
                 if (!fullHouseCards.Contains(card))
@@ -322,7 +321,6 @@ namespace Server.Poker
             }
 
             List<Card> twoCards = new List<Card>();
-
 			if (Has1Pair(remainingCards, out twoCards))
 			{
 				foreach (Card card in twoCards)
@@ -439,7 +437,7 @@ namespace Server.Poker
 			//check for the ace which should be the first card in sortedCards
             if (sequenceCardCount == 4 && straightCards[straightCards.Count - 1].Rank == Rank.Two && sortedCards[0].Rank == Rank.Ace)
             {
-                straightCards.Add(sortedCards[0]);
+                straightCards.Add( sortedCards[0] );
 
                 return true;
             }

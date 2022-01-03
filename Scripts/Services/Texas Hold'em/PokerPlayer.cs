@@ -22,27 +22,18 @@ namespace Server.Poker
 		private PlayerAction m_Action;
 
 		public int Gold { get => m_Gold; set => m_Gold = value; }
-
 		public int Bet { get => m_Bet; set => m_Bet = value; }
-
 		public int RoundGold { get => m_RoundGold; set => m_RoundGold = value; }
-
 		public int RoundBet { get => m_RoundBet; set => m_RoundBet = value; }
 
 		public bool RequestLeave { get => m_RequestLeave; set => m_RequestLeave = value; }
-
 		public bool IsAllIn { get => m_IsAllIn; set => m_IsAllIn = value; }
-
 		public bool Forced { get => m_Forced; set => m_Forced = value; }
-
 		public bool LonePlayer { get => m_LonePlayer; set => m_LonePlayer = value; }
 
 		public Mobile Mobile { get => m_Mobile; set => m_Mobile = value; }
-
 		public PokerGame Game { get => m_Game; set => m_Game = value; }
-
 		public Point3D Seat { get => m_Seat; set => m_Seat = value; }
-
 		public DateTime BetStart { get => m_BetStart; set => m_BetStart = value; }
 
 		public List<Card> HoleCards => m_HoleCards;
@@ -105,23 +96,25 @@ namespace Server.Poker
 
 		public HandRank GetBestHand(List<Card> communityCards, out List<Card> bestCards)
 		{
-			return HandRanker.GetBestHand(GetAllCards( communityCards ), out bestCards);
+			return HandRanker.GetBestHand(GetAllCards(communityCards), out bestCards);
 		}
 
 		public List<Card> GetAllCards(List<Card> communityCards)
 		{
 			List<Card> hand = new List<Card>(communityCards);
+
 			hand.AddRange(m_HoleCards);
 			hand.Sort();
+
 			return hand;
 		}
 
 		public void CloseAllGumps()
 		{
-			CloseGump( typeof(PokerTableGump));
-			CloseGump( typeof(PokerLeaveGump));
-			CloseGump( typeof(PokerJoinGump));
-			CloseGump( typeof(PokerBetGump));
+			CloseGump(typeof(PokerTableGump));
+			CloseGump(typeof(PokerLeaveGump));
+			CloseGump(typeof(PokerJoinGump));
+			CloseGump(typeof(PokerBetGump));
 		}
 
 		public void CloseGump(Type type)
@@ -166,7 +159,7 @@ namespace Server.Poker
 
 		public bool IsOnline()
 		{
-			if (m_Mobile?.NetState?.Socket != null && m_Mobile.NetState.Socket.Connected)
+			if (m_Mobile != null && m_Mobile.NetState != null && m_Mobile.NetState.Socket != null && m_Mobile.NetState.Socket.Connected)
             {
                 return true;
             }

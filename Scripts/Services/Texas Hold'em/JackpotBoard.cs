@@ -1,15 +1,17 @@
+using System;
 using System.Text;
+
 using Server.Poker;
 using Server.Network;
 
 namespace Server.Items
 {
-	[Flipable(0x1E5E, 0x1E5F)]
+	[Flipable( 0x1E5E, 0x1E5F )]
 	public class JackpotBoard : Item
 	{
 		[Constructable]
 		public JackpotBoard()
-			: base(0x1E5E)
+			: base( 0x1E5E )
 		{
 			Movable = false;
 			Name = "Poker Jackpot";
@@ -24,7 +26,7 @@ namespace Server.Items
                 {
                     if (PokerDealer.JackpotWinners.Winners.Count > 1)
 					{
-						StringBuilder sb = new StringBuilder($"The jackpot is {PokerDealer.Jackpot.ToString("#,###")} gold. ");
+						StringBuilder sb = new StringBuilder(string.Format("The jackpot is {0} gold. ", PokerDealer.Jackpot.ToString("#,###")));
 
 						sb.Append("It is currently split by: ");
 
@@ -53,15 +55,17 @@ namespace Server.Items
                             }
                         }
 
-						sb.Append($" leading with {HandRanker.RankString(PokerDealer.JackpotWinners.Hand)}");
+						sb.Append(string.Format(" leading with {0}", HandRanker.RankString(PokerDealer.JackpotWinners.Hand)));
 
 						DisplayMessage(from, sb.ToString());
+
 						return;
 					}
 
                     if (PokerDealer.JackpotWinners.Winners[0] != null && PokerDealer.JackpotWinners.Winners[0].Mobile != null)
                     {
-                        DisplayMessage(from, $"The jackpot is {PokerDealer.Jackpot.ToString("#,###")} gold. {PokerDealer.JackpotWinners.Winners[0].Mobile.Name} leads with {HandRanker.RankString(PokerDealer.JackpotWinners.Hand)}");
+                        DisplayMessage(from, string.Format("The jackpot is {0} gold. {1} leads with {2}", PokerDealer.Jackpot.ToString("#,###"), PokerDealer.JackpotWinners.Winners[0].Mobile.Name, HandRanker.RankString(PokerDealer.JackpotWinners.Hand)));
+
                         return;
                     }
                 }
@@ -80,17 +84,17 @@ namespace Server.Items
 		}
 
 		public JackpotBoard(Serial serial)
-			: base(serial)
+			: base( serial )
 		{
 		}
 
-		public override void Serialize(GenericWriter writer)
-		{
-			base.Serialize(writer);
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
             writer.Write(0);
-		}
+        }
 
-		public override void Deserialize(GenericReader reader)
+        public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadInt();

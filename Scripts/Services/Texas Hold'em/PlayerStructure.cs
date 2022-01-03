@@ -10,9 +10,7 @@ namespace Server.Poker
 		private PokerGame m_Game;
 
 		public List<PokerPlayer> Players { get => m_Players; set => m_Players = value; }
-
 		public List<PokerPlayer> Round { get => m_Round; set => m_Round = value; }
-
 		public List<PokerPlayer> Turn { get => m_Turn; set => m_Turn = value; }
 
 		public PokerGame Game => m_Game;
@@ -34,11 +32,13 @@ namespace Server.Poker
 
 		public void Push(PokerPlayer player)
 		{
-			if(!m_Turn.Contains(player))
+			if (!m_Turn.Contains(player))
             {
                 m_Turn.Add(player);
             }
-        }
+
+            ;
+		}
 
 		public PokerPlayer Peek()
 		{
@@ -79,7 +79,7 @@ namespace Server.Poker
                 return m_Round.IndexOf(dealer) == m_Round.Count - 1 ? m_Round[0] : m_Round[m_Round.IndexOf(dealer) + 1];
 			}
 
-			return m_Round.IndexOf(Peek()) == m_Round.Count - 1 ? m_Round[0] : m_Round[m_Round.IndexOf(Peek()) + 1];
+			return m_Round.IndexOf(Peek() ) == m_Round.Count - 1 ? m_Round[0] : m_Round[m_Round.IndexOf(Peek()) + 1];
 		}
 
 		public bool Contains(PokerPlayer player) { return m_Players.Contains(player); }

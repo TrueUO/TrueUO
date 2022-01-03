@@ -10,8 +10,8 @@ namespace Server.Poker
 	{
 		public static void Initialize()
 		{
-			CommandSystem.Register("AddPokerSeat", AccessLevel.Administrator, AddPokerSeat_OnCommand);
-			CommandSystem.Register("PokerKick", AccessLevel.Seer, PokerKick_OnCommand);
+			CommandSystem.Register( "AddPokerSeat", AccessLevel.Administrator, AddPokerSeat_OnCommand );
+			CommandSystem.Register( "PokerKick", AccessLevel.Seer, PokerKick_OnCommand );
 
 			EventSink.Disconnected += EventSink_Disconnected;
 		}
@@ -33,35 +33,34 @@ namespace Server.Poker
 		private static int m_Jackpot;
 		public static int Jackpot { get => m_Jackpot; set => m_Jackpot = value; }
 
-		[CommandProperty( AccessLevel.Seer )]
+		[CommandProperty(AccessLevel.Seer)]
 		public bool TournamentMode { get => m_TournamentMode; set => m_TournamentMode = value; }
 
-		[CommandProperty( AccessLevel.Administrator )]
+		[CommandProperty(AccessLevel.Administrator)]
 		public bool ClearSeats { get => false; set => m_Seats.Clear(); }
 
-		[CommandProperty( AccessLevel.Administrator )]
+		[CommandProperty(AccessLevel.Administrator)]
 		public int RakeMax { get => m_RakeMax; set => m_RakeMax = value; }
 
-		[CommandProperty( AccessLevel.Seer )]
+		[CommandProperty(AccessLevel.Seer)]
 		public int MinBuyIn { get => m_MinBuyIn; set => m_MinBuyIn = value; }
 
-		[CommandProperty( AccessLevel.Seer )]
+		[CommandProperty(AccessLevel.Seer)]
 		public int MaxBuyIn { get => m_MaxBuyIn; set => m_MaxBuyIn = value; }
 
-		[CommandProperty( AccessLevel.Seer )]
+		[CommandProperty(AccessLevel.Seer)]
 		public int SmallBlind { get => m_SmallBlind; set => m_SmallBlind = value; }
 
-		[CommandProperty( AccessLevel.Seer )]
-		public int BigBlind { get => m_BigBlind; set => m_BigBlind = value;
-        }
+		[CommandProperty(AccessLevel.Seer)]
+		public int BigBlind { get => m_BigBlind; set => m_BigBlind = value; }
 
-		[CommandProperty( AccessLevel.Administrator )]
+		[CommandProperty(AccessLevel.Administrator)]
 		public Point3D ExitLocation { get => m_ExitLocation; set => m_ExitLocation = value; }
 
-		[CommandProperty( AccessLevel.Administrator )]
+		[CommandProperty(AccessLevel.Administrator)]
 		public Map ExitMap { get => m_ExitMap; set => m_ExitMap = value; }
 
-		[CommandProperty( AccessLevel.Administrator )]
+		[CommandProperty(AccessLevel.Administrator)]
 		public double Rake
 		{
 			get => m_Rake;
@@ -122,10 +121,10 @@ namespace Server.Poker
                     }
                 }
 
-                for ( int i = 0; i < toRemove.Count; ++i )
+                for (int i = 0; i < toRemove.Count; ++i)
 				{
 					toRemove[i].Mobile.SendMessage(0x22, "The poker dealer has been set to inactive by a game master, and you are now being removed from the poker game and being refunded the money that you currently have.");
-					m_Game.RemovePlayer( toRemove[i] );
+					m_Game.RemovePlayer(toRemove[i]);
 				}
 
 				m_Active = value;
@@ -133,6 +132,7 @@ namespace Server.Poker
 		}
 
 		public PokerGame Game { get => m_Game; set => m_Game = value; }
+
 		public List<Point3D> Seats { get => m_Seats; set => m_Seats = value; }
 
 		[Constructable]
@@ -146,7 +146,6 @@ namespace Server.Poker
 		{
 			Blessed = true;
 			Frozen = true;
-
 			InitStats(100, 100, 100);
 
 			Title = "the poker dealer";
@@ -184,6 +183,7 @@ namespace Server.Poker
 		}
 
 		private static JackpotInfo m_JackpotWinners;
+
 		public static JackpotInfo JackpotWinners { get => m_JackpotWinners; set => m_JackpotWinners = value; }
 
 		public static void AwardJackpot()
@@ -201,8 +201,8 @@ namespace Server.Poker
 				{
 					if (m != null && m.Mobile != null && m.Mobile.BankBox != null)
 					{
-						m.Mobile.BankBox.DropItem(new BankCheck(award));
-						World.Broadcast(1161, true, "{0} has won the poker jackpot of {1} gold with {2}", m.Mobile.Name, award.ToString( "#,###"), HandRanker.RankString(m_JackpotWinners.Hand));
+						m.Mobile.BankBox.DropItem( new BankCheck(award));
+						World.Broadcast(1161, true, "{0} has won the poker jackpot of {1} gold with {2}", m.Mobile.Name, award.ToString("#,###"), HandRanker.RankString(m_JackpotWinners.Hand));
 					}
 				}
 
@@ -235,17 +235,17 @@ namespace Server.Poker
             }
             else if (m_Game.GetIndexFor(from) != -1)
             {
-                return; //TODO: Grab more chips from the player's bankbox
+                return; //TODO: Grab more chips from the player's bank box
             }
             else if (m_Game.Players.Count >= m_MaxPlayers)
 			{
 				from.SendMessage(0x22, "This table is full");
-
 				base.OnDoubleClick(from);
 			}
 			else if (m_Game.Players.Count < m_MaxPlayers)
 			{
-                from.CloseGump(typeof( PokerJoinGump));
+				//TODO: Send player the poker join gump
+				from.CloseGump(typeof(PokerJoinGump));
 				from.SendGump(new PokerJoinGump(from, m_Game));
 			}
 		}
@@ -262,11 +262,10 @@ namespace Server.Poker
                 }
             }
 
-            for ( int i = 0; i < toRemove.Count; ++i )
+            for (int i = 0; i < toRemove.Count; ++i)
 			{
 				toRemove[i].Mobile.SendMessage(0x22, "The poker dealer has been deleted, and you are now being removed from the poker game and being refunded the money that you currently have.");
-
-				m_Game.RemovePlayer( toRemove[i] );
+				m_Game.RemovePlayer(toRemove[i]);
 			}
 
 			base.OnDelete();
@@ -281,7 +280,7 @@ namespace Server.Poker
                 return;
             }
 
-            foreach (Mobile m in from.GetMobilesInRange( 0 ))
+            foreach (Mobile m in from.GetMobilesInRange(0))
 			{
 				if (m is PlayerMobile pm)
 				{
@@ -308,7 +307,7 @@ namespace Server.Poker
 		{
 			Mobile from = e.Mobile;
 
-			if ( from == null )
+			if (from == null)
             {
                 return;
             }
@@ -349,11 +348,11 @@ namespace Server.Poker
 				y = Convert.ToInt32(argLines[1]);
 				z = Convert.ToInt32(argLines[2]);
 			}
-			catch {from.SendMessage( 0x22, "Usage: [AddPokerSeat <x> <y> <z>" ); return;}
+			catch { from.SendMessage(0x22, "Usage: [AddPokerSeat <x> <y> <z>"); return; }
 
 			bool success = false;
 
-			foreach (Mobile m in from.GetMobilesInRange(5))
+			foreach (Mobile m in from.GetMobilesInRange(0))
 			{
 				if (m is PokerDealer dealer)
 				{
@@ -374,7 +373,7 @@ namespace Server.Poker
 
 			if (!success)
             {
-                from.SendMessage(0x22, "No poker dealers were found in range. (Stand within 5 tiles of the dealer)");
+                from.SendMessage(0x22, "No poker dealers were found in range. (Try standing on top of the dealer)");
             }
         }
 
@@ -411,11 +410,11 @@ namespace Server.Poker
 		}
 
 		public PokerDealer(Serial serial)
-			: base(serial)
+			: base( serial )
 		{
 		}
 
-		public override void Serialize(GenericWriter writer)
+		public override void Serialize( GenericWriter writer )
 		{
 			base.Serialize(writer);
             writer.Write(0); //version
@@ -439,12 +438,12 @@ namespace Server.Poker
             }
         }
 
-		public override void Deserialize(GenericReader reader)
+		public override void Deserialize( GenericReader reader )
 		{
-			base.Deserialize(reader);
+			base.Deserialize( reader );
             int version = reader.ReadInt();
 
-			switch (version)
+			switch ( version )
 			{
 				case 0:
 					m_Active = reader.ReadBool();
@@ -459,7 +458,7 @@ namespace Server.Poker
 					m_MaxPlayers = reader.ReadInt();
 
 					int count = reader.ReadInt();
-                    m_Seats = new List<Point3D>();
+					m_Seats = new List<Point3D>();
 
 					for (int i = 0; i < count; ++i)
                     {
@@ -469,14 +468,14 @@ namespace Server.Poker
                     break;
 			}
 
-			m_Game = new PokerGame( this );
+			m_Game = new PokerGame(this);
 		}
 
 		public class JackpotInfo
 		{
-			private readonly List<PokerPlayer> m_Winners;
-			private readonly ResultEntry m_Hand;
-			private readonly DateTime m_Date;
+			private List<PokerPlayer> m_Winners;
+			private ResultEntry m_Hand;
+			private DateTime m_Date;
 			
 			public List<PokerPlayer> Winners => m_Winners;
             public ResultEntry Hand => m_Hand;

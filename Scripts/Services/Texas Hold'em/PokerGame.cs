@@ -35,14 +35,17 @@ namespace Server.Poker
                 foreach (PokerPlayer player in toRemove)
 				{
 					player.SendMessage(0x22, "The server has crashed, and you are now being removed from the poker game and being refunded the money that you currently have.");
+
 					game.RemovePlayer(player);
 				}
 			}
 		}
 
 		private bool m_NeedsGumpUpdate;
+
 		private int m_CommunityGold;
 		private int m_CurrentBet;
+
 		private Deck m_Deck;
 		private PokerGameState m_State;
 		private PokerDealer m_Dealer;
@@ -56,23 +59,16 @@ namespace Server.Poker
 		public bool NeedsGumpUpdate { get => m_NeedsGumpUpdate; set => m_NeedsGumpUpdate = value; }
 
 		public int CommunityGold { get => m_CommunityGold; set => m_CommunityGold = value; }
-
 		public int CurrentBet { get => m_CurrentBet; set => m_CurrentBet = value; }
 
 		public Deck Deck { get => m_Deck; set => m_Deck = value; }
-
 		public PokerGameState State { get => m_State; set => m_State = value; }
-
 		public PokerDealer Dealer { get => m_Dealer; set => m_Dealer = value; }
-
 		public PokerPlayer DealerButton => m_DealerButton;
         public PokerPlayer SmallBlind => m_SmallBlind;
         public PokerPlayer BigBlind => m_BigBlind;
-
         public List<Card> CommunityCards { get => m_CommunityCards; set => m_CommunityCards = value; }
-
 		public PokerGameTimer Timer { get => m_Timer; set => m_Timer = value; }
-
 		public PlayerStructure Players => m_Players;
 
         public bool IsBettingRound => (int)m_State % 2 == 0;
@@ -117,7 +113,7 @@ namespace Server.Poker
 					case PlayerAction.None: break;
 					case PlayerAction.Bet:
 						{
-							PokerMessage(player.Mobile, $"I bet {player.Bet}.");
+							PokerMessage(player.Mobile, string.Format("I bet {0}.", player.Bet));
 							m_CurrentBet = player.Bet;
 							player.RoundBet = player.Bet;
 							player.Gold -= player.Bet;
@@ -129,11 +125,9 @@ namespace Server.Poker
 						}
 					case PlayerAction.Raise:
 						{
-							PokerMessage(player.Mobile, $"I raise by {player.Bet}.");
+							PokerMessage(player.Mobile, string.Format("I raise by {0}.", player.Bet));
 							m_CurrentBet += player.Bet;
-
 							int diff = m_CurrentBet - player.RoundBet;
-
 							player.Gold -= diff;
 							player.RoundGold += diff;
 							player.RoundBet += diff;
@@ -148,7 +142,6 @@ namespace Server.Poker
 							PokerMessage(player.Mobile, "I call.");
 
 							int diff = m_CurrentBet - player.RoundBet; //how much they owe in the pot
-
 							player.Bet = diff;
 							player.Gold -= diff;
 							player.RoundGold += diff;
@@ -175,7 +168,7 @@ namespace Server.Poker
                                 m_Players.Round.Remove(player);
                             }
 
-                            if (m_Players.Turn.Contains(player))
+                            if ( m_Players.Turn.Contains(player))
                             {
                                 m_Players.Turn.Remove(player);
                             }
@@ -222,8 +215,9 @@ namespace Server.Poker
 
 									PokerPlayer prev = m_Players.Prev();
 
-									if (prev.Action == PlayerAction.Check || prev.Action == PlayerAction.Bet && prev.Bet < player.Bet || prev.Action == PlayerAction.AllIn && prev.Bet < player.Bet
-                                         || prev.Action == PlayerAction.Call && prev.Bet < player.Bet || prev.Action == PlayerAction.Raise && prev.Bet < player.Bet)
+									if (prev.Action == PlayerAction.Check || prev.Action == PlayerAction.Bet && prev.Bet < player.Bet ||
+										prev.Action == PlayerAction.AllIn && prev.Bet < player.Bet || prev.Action == PlayerAction.Call && prev.Bet < player.Bet ||
+										prev.Action == PlayerAction.Raise && prev.Bet < player.Bet)
                                     {
                                         resetTurns = true;
                                     }
@@ -397,12 +391,14 @@ namespace Server.Poker
 
 			if (m_BigBlind != null)
 			{
-                m_BigBlind.SetBBAction();
+				//m_Players.Push(m_BigBlind);
+				m_BigBlind.SetBBAction();
 				m_CurrentBet = m_Dealer.BigBlind;
 			}
 			else
 			{
-                m_SmallBlind.SetBBAction();
+				//m_Players.Push(m_SmallBlind);
+				m_SmallBlind.SetBBAction();
 				m_CurrentBet = m_Dealer.BigBlind;
 			}
 
@@ -422,7 +418,7 @@ namespace Server.Poker
 
 			foreach (PokerPlayer player in m_Players.Players)
 			{
-				player.CloseGump(typeof( PokerTableGump));
+				player.CloseGump(typeof(PokerTableGump));
 				player.SendGump(new PokerTableGump(this, player));
 			}
 
@@ -457,7 +453,6 @@ namespace Server.Poker
 				m_Players.Push(nextTurn);
 				nextTurn.BetStart = DateTime.Now;
 				nextTurn.Action = PlayerAction.Fold;
-
 				return nextTurn;
 			}
 
@@ -466,7 +461,6 @@ namespace Server.Poker
 				m_Players.Push(nextTurn);
 				nextTurn.BetStart = DateTime.Now;
 				nextTurn.Action = PlayerAction.AllIn;
-
 				return nextTurn;
 			}
 
@@ -475,7 +469,6 @@ namespace Server.Poker
 				m_Players.Push(nextTurn);
 				nextTurn.BetStart = DateTime.Now;
 				nextTurn.Action = PlayerAction.Check;
-
 				return nextTurn;
 			}
 
@@ -502,7 +495,7 @@ namespace Server.Poker
 			entry.Rank = nextTurn.GetBestHand(m_CommunityCards, out bestCards);
 			entry.BestCards = bestCards;
 
-			nextTurn.SendMessage(0x22, $"You have {HandRanker.RankString(entry)}.");
+			nextTurn.SendMessage(0x22, string.Format("You have {0}.", HandRanker.RankString(entry)));
 			nextTurn.CloseGump(typeof(PokerBetGump));
 			nextTurn.SendGump(new PokerBetGump(this, nextTurn, canCall));
 
@@ -520,15 +513,15 @@ namespace Server.Poker
 				ResultEntry entry = new ResultEntry(m_Players.Round[i]);
 				List<Card> bestCards = new List<Card>();
 
-				entry.Rank = HandRanker.GetBestHand(entry.Player.GetAllCards( m_CommunityCards ), out bestCards);
+				entry.Rank = HandRanker.GetBestHand(entry.Player.GetAllCards(m_CommunityCards), out bestCards);
 				entry.BestCards = bestCards;
 
 				results.Add(entry);
 
-				/*if (!silent)
+				/*if ( !silent )
 				{
 					//Check if kickers needed
-					PokerMessage(entry.Player.Mobile, String.Format( "I have {0}.", HandRanker.RankString(entry)));
+					PokerMessage( entry.Player.Mobile, String.Format( "I have {0}.", HandRanker.RankString( entry ) ) );
 				}*/
 			}
 
@@ -543,7 +536,7 @@ namespace Server.Poker
 
 			for (int i = 0; i < results.Count; ++i)
             {
-                if (HandRanker.IsBetterThan( results[i], results[0] ) == RankResult.Same)
+                if (HandRanker.IsBetterThan(results[i], results[0]) == RankResult.Same)
                 {
                     winners.Add(results[i].Player);
                 }
@@ -570,7 +563,6 @@ namespace Server.Poker
 						else
 						{
 							PokerDealer.JackpotWinners = new PokerDealer.JackpotInfo(winners, results[i], DateTime.Now);
-
 							break;
 						}
 					}
@@ -580,8 +572,20 @@ namespace Server.Poker
 
 				foreach (ResultEntry entry in results)
 				{
-                    PokerMessage(entry.Player.Mobile, $"I have {HandRanker.RankString(entry)}.");
-                }
+					//if ( !winners.Contains( entry.Player ) )
+					PokerMessage( entry.Player.Mobile, string.Format("I have {0}.", HandRanker.RankString(entry)));
+					/*else
+					{
+						if ( !HandRanker.UsesKicker( entry.Rank ) )
+							PokerMessage( entry.Player, String.Format( "I have {0}.", HandRanker.RankString( entry ) ) );
+						else //Hand rank uses a kicker
+						{
+							switch ( entry.Rank )
+							{
+							}
+						}
+					}*/
+				}
 			}
 
 			return winners;
@@ -589,13 +593,14 @@ namespace Server.Poker
 
 		public void AwardPotToWinners(List<PokerPlayer> winners, bool silent)
 		{
-			// Casino Rake - Will take a percentage of each pot awarded and place it towards the casino jackpot for the highest ranked hand.
+			//** Casino Rake - Will take a percentage of each pot awarded and place it towards
+			//**				the casino jackpot for the highest ranked hand.
 
 			if (!silent) //Only rake pots that have made it past the showdown.
 			{
 				int rake = Math.Min((int)(m_CommunityGold * m_Dealer.Rake), m_Dealer.RakeMax);
 
-				if (rake > 0 )
+				if (rake > 0)
 				{
 					m_CommunityGold -= rake;
 					PokerDealer.Jackpot += rake;
@@ -620,7 +625,7 @@ namespace Server.Poker
 				{
 					player.Gold += diff;
 					m_CommunityGold -= diff;
-					PokerMessage(m_Dealer, $"{diff}gp has been returned to {player.Mobile.Name}.");
+					PokerMessage(m_Dealer, string.Format("{0}gp has been returned to {1}.", diff, player.Mobile.Name));
 				}
 			}
 
@@ -629,7 +634,7 @@ namespace Server.Poker
 			foreach (PokerPlayer player in winners)
 			{
 				player.Gold += splitPot;
-				PokerMessage(m_Dealer, $"{player.Mobile.Name} has won {splitPot}gp.");
+				PokerMessage(m_Dealer, string.Format("{0} has won {1}gp.", player.Mobile.Name, splitPot));
 			}
 
 			m_CommunityGold = 0;
@@ -664,8 +669,7 @@ namespace Server.Poker
 			else if (!IsBettingRound)
 			{
 				int numberOfCards = 0;
-
-				string round = string.Empty;
+				string round = String.Empty;
 
 				switch (m_State)
 				{
@@ -683,7 +687,6 @@ namespace Server.Poker
 					for (int i = 0; i < numberOfCards; ++i)
 					{
 						Card popped = m_Deck.Pop();
-
 						if (i == 2 || numberOfCards == 1)
                         {
                             sb.Append(popped.Name + ".");
@@ -698,7 +701,8 @@ namespace Server.Poker
 
 					PokerMessage(m_Dealer, sb.ToString());
 					m_Players.Turn.Clear();
-                    m_NeedsGumpUpdate = true;
+					//AssignNextTurn();
+					m_NeedsGumpUpdate = true;
 				}
 			}
 			else
@@ -712,7 +716,9 @@ namespace Server.Poker
 						case PokerGameState.PreRiver: m_State = PokerGameState.River; break;
 						case PokerGameState.PreShowdown: m_State = PokerGameState.Showdown; break;
 					}
-                }
+
+					//m_Players.Turn.Clear();
+				}
 				else if (m_Players.Turn.Count == 0 && m_State != PokerGameState.PreFlop) //We need to initiate betting for this round
 				{
 					ResetPlayerActions();
@@ -819,8 +825,8 @@ namespace Server.Poker
             {
                 from.SendMessage(0x22, "Sorry, that table is full");
             }
-            /* else if (TournamentSystem.TournamentCore.SignedUpTeam( from ) != null || TournamentSystem.TournamentCore.FindTeam( from ) != null)
-				from.SendMessage(0x22, "You may not join a poker game while signed up for a tournament."); */
+            /*else if ( TournamentSystem.TournamentCore.SignedUpTeam( from ) != null || TournamentSystem.TournamentCore.FindTeam( from ) != null )
+				from.SendMessage( 0x22, "You may not join a poker game while signed up for a tournament." );*/
 			else if (Banker.Withdraw(from, player.Gold))
 			{
 				Point3D seat = Point3D.Zero;
@@ -836,7 +842,7 @@ namespace Server.Poker
 
                 if (seat == Point3D.Zero)
 				{
-					from.SendMessage(0x22, "Sorry, that table is full");
+					from.SendMessage(0x22, "Sorry, that table is full.");
 					return;
 				}
 
@@ -846,12 +852,11 @@ namespace Server.Poker
 				m_Players.Players.Add(player);
 
 				((PlayerMobile)from).PokerGame = this;
-
 				from.SendMessage(0x22, "You have been seated at the table");
 
 				if (m_Players.Count == 1 && !GameBackup.PokerGames.Contains(this))
                 {
-                    GameBackup.PokerGames.Add( this);
+                    GameBackup.PokerGames.Add(this);
                 }
                 else if (m_State == PokerGameState.Inactive && m_Players.Count > 1 && !m_Dealer.TournamentMode)
                 {
@@ -883,7 +888,7 @@ namespace Server.Poker
 
 				if (m_Players.Peek() == player) //It is currently their turn, fold them.
 				{
-					player.CloseGump(typeof(PokerBetGump));
+					player.CloseGump(typeof( PokerBetGump));
 					m_Timer.m_LastPlayer = null;
 					player.Action = PlayerAction.Fold;
 				}
@@ -913,13 +918,13 @@ namespace Server.Poker
 				{
 					if (from.BankBox == null) //Should NEVER happen, but JUST IN CASE!
 					{
-						Utility.PushColor( ConsoleColor.Red );
+						Utility.PushColor(ConsoleColor.Red);
 						Console.WriteLine("WARNING: Player \"{0}\" with account \"{1}\" had null bank box while trying to deposit {2} gold. Player will NOT receive their gold.", from.Name, from.Account == null ? "(-null-)" : from.Account.Username, player.Gold);
 						Utility.PopColor();
 
 						try
 						{
-							using ( System.IO.StreamWriter op = new System.IO.StreamWriter( "poker_error.log", true ) )
+							using (System.IO.StreamWriter op = new System.IO.StreamWriter("poker_error.log", true))
                             {
                                 op.WriteLine("WARNING: Player \"{0}\" with account \"{1}\" had null bank box while poker script was trying to deposit {2} gold. Player will NOT receive their gold.", from.Name, from.Account == null ? "(-null-)" : from.Account.Username, player.Gold);
                             }
@@ -955,7 +960,6 @@ namespace Server.Poker
 		public PokerPlayer Player => m_Player;
 
         public List<Card> BestCards { get => m_BestCards; set => m_BestCards = value; }
-
 		public HandRank Rank { get => m_Rank; set => m_Rank = value; }
 
 		public ResultEntry(PokerPlayer player)
@@ -990,6 +994,7 @@ namespace Server.Poker
 	{
 		PokerGame m_Game;
 		PokerGameState m_LastState;
+
 		public PokerPlayer m_LastPlayer;
 		public bool hasWarned;
 
@@ -1010,7 +1015,7 @@ namespace Server.Poker
 
             for (int i = 0; i < m_Game.Players.Count; ++i)
             {
-                if (!m_Game.Players.Round.Contains(m_Game.Players[i]) && m_Game.Players[i].RequestLeave)
+                if (!m_Game.Players.Round.Contains( m_Game.Players[i] ) && m_Game.Players[i].RequestLeave)
                 {
                     m_Game.RemovePlayer(m_Game.Players[i]);
                 }
@@ -1038,18 +1043,17 @@ namespace Server.Poker
 			{
 				if (m_LastPlayer == null)
                 {
-                    m_LastPlayer = m_Game.Players.Peek();
+                    m_LastPlayer = m_Game.Players.Peek(); //Changed timer from 25.0 and 30.0 to 45.0 and 60.0
                 }
 
-                if (m_LastPlayer.BetStart.AddSeconds(25.0) <= DateTime.Now && !hasWarned)
+                if (m_LastPlayer.BetStart.AddSeconds(45.0) <= DateTime.Now /*&& m_LastPlayer.Mobile.HasGump(typeof( PokerBetGump))*/ && !hasWarned)
 				{
-					m_LastPlayer.SendMessage(0x22, "You have 5 seconds left to make a choice. (You will automatically fold if no choice is made)");
+					m_LastPlayer.SendMessage(0x22, "You have 15 seconds left to make a choice. (You will automatically fold if no choice is made)");
 					hasWarned = true;
 				}
-				else if (m_LastPlayer.BetStart.AddSeconds(30.0) <= DateTime.Now)
+				else if (m_LastPlayer.BetStart.AddSeconds(60.0) <= DateTime.Now /*&& m_LastPlayer.Mobile.HasGump(typeof(PokerBetGump))*/)
 				{
 					PokerPlayer temp = m_LastPlayer;
-
 					m_LastPlayer = null;
 
 					temp.CloseGump(typeof(PokerBetGump));

@@ -29,11 +29,11 @@ namespace Server.Poker
             Shuffle(5);
 		}
 
-		public Card Pop() { m_UsedCards.Add(m_Deck.Peek()); return m_Deck.Pop(); }
+		public Card Pop() { m_UsedCards.Add( m_Deck.Peek() ); return m_Deck.Pop(); }
 
 		public Card Peek() { return m_Deck.Peek(); }
 
-		public void Shuffle( int count )
+		public void Shuffle(int count)
 		{
 			List<Card> deck = new List<Card>(m_Deck.ToArray());
 

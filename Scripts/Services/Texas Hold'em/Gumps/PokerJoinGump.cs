@@ -7,7 +7,7 @@ namespace Server.Poker
 {
 	public class PokerJoinGump : Gump
 	{
-		private readonly PokerGame m_Game;
+		private PokerGame m_Game;
 
 		public PokerJoinGump(Mobile from, PokerGame game)
 			: base(50, 50)
@@ -21,17 +21,19 @@ namespace Server.Poker
 
 			AddPage(0);
 
-			AddImageTiled(18, 15, 350, 320, 9274);
-			AddAlphaRegion(23, 19, 340, 310);
-			AddLabel(133, 25, 1149, "Join Poker Table");
+            AddBackground(0, 0, 385, 393, 9270);
+			AddImageTiled( 18, 15, 350, 320, 9274);
+			//this.AddAlphaRegion( 23, 19, 340, 310 );
+            AddLabel(125, 10, 28, "The Shard's Texas Hold-em");
+			AddLabel(133, 25, 28, " Join Poker Table");
 			AddImageTiled(42, 47, 301, 3, 96);
-			AddLabel(65, 62, 154, "You are about to join a game of Poker.");
-			AddImage(33, 38, 95);
-			AddImage(342, 38, 97);
-			AddLabel(52, 80, 154, "All bets involve real gold and no refunds will be");
-			AddLabel(54, 98, 154, "given. If you feel uncomfortable losing gold or");
-			AddLabel(46, 116, 154, "are unfamiliar with the rules of Texas Hold'em, you");
-			AddLabel(100, 134, 154, "are advised against proceeding.");
+			AddLabel(65, 62, 68, "You are about to join a game of Poker.");
+			AddImage(33, 38, 95, 68);
+			AddImage(342, 38, 97, 68);
+			AddLabel(52, 80, 68, "All bets involve real gold and no refunds will be");
+			AddLabel(54, 98, 68, "given. If you feel uncomfortable losing gold or");
+			AddLabel(40, 116, 68, "are unfamiliar with the rules of Texas Hold'em, you");
+			AddLabel(100, 134, 68, "are advised against proceeding.");
 
 			AddLabel(122, 161, 1149, "Small Blind:");
 			AddLabel(129, 181, 1149, "Big Blind:");
@@ -46,16 +48,16 @@ namespace Server.Poker
 			AddLabel(200, 221, 148, m_Game.Dealer.MaxBuyIn.ToString("#,###") + "gp");
 
 			int balance = Banker.GetBalance(from);
-			int balancehue = 31;
+			int balanceHue = 28;
 			int layout = 0;
 
 			if (balance >= m_Game.Dealer.MinBuyIn)
 			{
-				balancehue = 266;
+				balanceHue = 266;
 				layout = 1;
 			}
 
-			AddLabel(200, 241, balancehue, balance.ToString("#,###") + "gp");
+			AddLabel(200, 241, balanceHue, balance.ToString("#,###") + "gp");
 
 			if (layout == 0)
 			{
@@ -66,7 +68,7 @@ namespace Server.Poker
 			{
 				AddImageTiled(200, 261, 80, 19, 0xBBC);
 				AddAlphaRegion(200, 261, 80, 19);
-				AddTextEntry(203, 261, 77, 19, 1149, (int)Handlers.txtBuyInAmount, m_Game.Dealer.MinBuyIn.ToString());
+				AddTextEntry(203, 261, 77, 19, 68, (int)Handlers.txtBuyInAmount, m_Game.Dealer.MinBuyIn.ToString());
 				AddButton(123, 292, 247, 248, (int)Handlers.btnOkay, GumpButtonType.Reply, 0);
 				AddButton(200, 292, 242, 241, (int)Handlers.btnCancel, GumpButtonType.Reply, 0);
 			}
@@ -106,7 +108,7 @@ namespace Server.Poker
 						PokerPlayer player = new PokerPlayer(from);
 
 						player.Gold = buyInAmount;
-						m_Game.AddPlayer(player);
+						m_Game.AddPlayer( player );
 					}
 					else
                     {

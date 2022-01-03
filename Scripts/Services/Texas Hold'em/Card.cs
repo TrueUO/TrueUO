@@ -7,13 +7,13 @@ namespace Server.Poker
 		public const int Red = 0x26;
 		public const int Black = 0x00;
 
-		private readonly Suit m_Suit;
-		private readonly Rank m_Rank;
+		private Suit m_Suit;
+		private Rank m_Rank;
 
 		public Suit Suit => m_Suit;
         public Rank Rank => m_Rank;
 
-        public string Name => $"{m_Rank} of {m_Suit}".ToLower();
+        public string Name => string.Format("{0} of {1}", m_Rank, m_Suit).ToLower();
         public string RankString => m_Rank.ToString().ToLower();
 
         public Card(Suit suit, Rank rank)
@@ -61,7 +61,7 @@ namespace Server.Poker
 
 		public override string ToString()
 		{
-			return $"{m_Rank} of {m_Suit}";
+			return string.Format("{0} of {1}", m_Rank, m_Suit);
 		}
 
 		#region IComparable Members
@@ -69,12 +69,12 @@ namespace Server.Poker
 		{
 			if (obj is Card card)
 			{
-                if ( m_Rank < card.Rank )
+                if (m_Rank < card.Rank)
                 {
                     return 1;
                 }
 
-                if ( m_Rank > card.Rank )
+                if (m_Rank > card.Rank)
                 {
                     return -1;
                 }
