@@ -7,8 +7,8 @@ namespace Server.Poker
 		public const int Red = 0x26;
 		public const int Black = 0x00;
 
-		private Suit m_Suit;
-		private Rank m_Rank;
+		private readonly Suit m_Suit;
+		private readonly Rank m_Rank;
 
 		public Suit Suit => m_Suit;
         public Rank Rank => m_Rank;

@@ -7,15 +7,11 @@ namespace Server.Poker
 	public class PokerBetGump : Gump
 	{
 		private const int COLOR_WHITE = 0xFFFFFF;
-		private const int COLOR_YELLOW = 0xFFFF00;
-		private const int COLOR_GOLD = 0xFFD700;
-		private const int COLOR_BLACK = 0x000001;
-		private const int COLOR_GREEN = 0x00FF00;
-		private const int COLOR_OFFWHITE = 0xFFFACD;
+        private const int COLOR_GREEN = 0x00FF00;
 
-		private bool m_CanCall;
-		private PokerGame m_Game;
-		private PokerPlayer m_Player;
+        private readonly bool m_CanCall;
+		private readonly PokerGame m_Game;
+		private readonly PokerPlayer m_Player;
 
 		public PokerBetGump(PokerGame game, PokerPlayer player, bool canCall)
 			: base(460, 400)
@@ -34,6 +30,7 @@ namespace Server.Poker
 			AddImageTiled(2, 2, 166, 161, 3604);
 			AddImageTiled(4, 4, 162, 157, 3504);
 			AddImageTiled(6, 6, 158, 153, 3604);
+
 			AddAlphaRegion(6, 6, 158, 153);
 
 			AddRadio(14, 10, 9727, 9730, true, canCall ? (int)Buttons.Call : (int)Buttons.Check);
@@ -43,20 +40,21 @@ namespace Server.Poker
 
 			AddHtml(45, 14, 60, 45, Color(canCall ? "Call" : "Check", COLOR_WHITE), false, false);
 
-			if ( canCall )
+			if (canCall)
             {
-                AddHtml(75, 14, 60, 22, Color( Center( m_Game.CurrentBet - player.RoundBet >= player.Gold ? "all-in" : String.Format("{0}", (m_Game.CurrentBet - m_Player.RoundBet).ToString("#,###"))), COLOR_GREEN), false, false );
+                AddHtml(75, 14, 60, 22, Color(Center(m_Game.CurrentBet - player.RoundBet >= player.Gold ? "all-in" : String.Format("{0}", (m_Game.CurrentBet - m_Player.RoundBet).ToString("#,###"))), COLOR_GREEN), false, false);
             }
 
             AddHtml(45, 44, 60, 45, Color("Fold", COLOR_WHITE), false, false);
 			AddHtml(45, 74, 60, 45, Color("All In", COLOR_WHITE), false, false);
 			AddHtml(45, 104, 60, 45, Color(canCall ? "Raise" : "Bet", COLOR_WHITE), false, false);
-			AddTextEntry(85, 104, 60, 22, 455, (int)Buttons.txtBet, game.Dealer.BigBlind.ToString());
+
+			AddTextEntry(85, 104, 60, 22, 455, (int)Buttons.TxtBet, game.Dealer.BigBlind.ToString());
 
 			AddButton(95, 132, 247, 248, (int)Buttons.Okay, GumpButtonType.Reply, 0);
 		}
 
-		public enum Buttons
+        public enum Buttons
 		{
 			None,
 			Check,
@@ -65,7 +63,7 @@ namespace Server.Poker
 			Bet,
 			Raise,
 			AllIn,
-			txtBet,
+			TxtBet,
 			Okay
 		}
 
@@ -121,9 +119,9 @@ namespace Server.Poker
 				{
 					int bet = 0;
 
-					TextRelay relay = info.GetTextEntry((int)Buttons.txtBet);
+					TextRelay relay = info.GetTextEntry((int)Buttons.TxtBet);
 
-					try { bet = Convert.ToInt32( info.GetTextEntry((int)Buttons.txtBet).Text); }
+					try { bet = Convert.ToInt32( info.GetTextEntry((int)Buttons.TxtBet).Text); }
 					catch { }
 
 					if (bet < m_Game.Dealer.BigBlind)
@@ -154,16 +152,16 @@ namespace Server.Poker
 				{
 					int bet = 0;
 
-					TextRelay relay = info.GetTextEntry((int)Buttons.txtBet);
+					TextRelay relay = info.GetTextEntry((int)Buttons.TxtBet);
 
-					try { bet = Convert.ToInt32( info.GetTextEntry((int)Buttons.txtBet).Text); }
+					try { bet = Convert.ToInt32( info.GetTextEntry((int)Buttons.TxtBet).Text); }
 					catch { }
 
 					if (bet < 100)
 					{
 						from.SendMessage(0x22, "If you are going to raise a bet, it needs to be by at least 100gp.");
 
-						from.CloseGump(typeof( PokerBetGump));
+						from.CloseGump(typeof(PokerBetGump));
 						from.SendGump(new PokerBetGump(m_Game, m_Player, m_CanCall));
 					}
 					else if (bet + m_Game.CurrentBet > m_Player.Gold)
