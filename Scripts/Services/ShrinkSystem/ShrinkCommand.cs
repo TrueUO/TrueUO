@@ -11,7 +11,7 @@ namespace Server.Services.ShrinkSystem
 	{
         public static void Initialize()
 		{
-			CommandHandlers.Register( "Shrink", AccessLevel.GameMaster, Shrink_OnCommand );
+			CommandHandlers.Register("Shrink", AccessLevel.GameMaster, Shrink_OnCommand);
         }
 
         [Usage("Shrink")]
