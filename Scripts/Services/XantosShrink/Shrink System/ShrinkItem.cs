@@ -265,6 +265,19 @@ namespace Xanthos.ShrinkSystem
             }
         }
 
+        public static string GetFriendlyClassName( string typeName )
+        {
+            for ( int index = 1; index < typeName.Length; index++ )
+            {
+                if (char.IsUpper(typeName, index))
+                {
+                    typeName.Insert( index++, " " );
+                }
+            }
+
+            return typeName;
+        }
+
 		private void PreloadProperties()
 		{
 			if (null == m_Pet)
@@ -276,7 +289,7 @@ namespace Xanthos.ShrinkSystem
 			m_Name = m_Pet.Name;
 			
 			m_Gender = m_Pet.Female ? "Female" : "Male";
-			m_Breed = Utilities.Misc.GetFriendlyClassName(m_Pet.GetType().Name);
+			m_Breed = GetFriendlyClassName(m_Pet.GetType().Name);
 			m_RawStr = m_Pet.RawStr;
 			m_RawDex = m_Pet.RawDex;
 			m_RawInt = m_Pet.RawInt;
