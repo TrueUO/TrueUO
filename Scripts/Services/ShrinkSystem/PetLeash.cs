@@ -61,7 +61,7 @@ namespace Server.Services.ShrinkSystem
             }
             else if (isStaff || from.Skills[ SkillName.AnimalTaming ].Value >= ShrinkItem.TamingRequired)
             {
-                from.Target = new ShrinkTarget(from, this, isStaff);
+                from.Target = new ShrinkTarget(from, this);
             }
             else
             {

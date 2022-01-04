@@ -18,7 +18,7 @@ namespace Server.Services.ShrinkSystem
 		{
             if (e.Mobile is PlayerMobile from)
             {
-                from.Target = new ShrinkTarget(from, null, true);
+                from.Target = new ShrinkTarget(from, null);
             }
         }
     }
@@ -26,18 +26,16 @@ namespace Server.Services.ShrinkSystem
 	public class ShrinkTarget : Target
 	{
 		private IShrinkTool m_ShrinkTool;
-		private bool m_StaffCommand;
 
-		public ShrinkTarget(Mobile from, IShrinkTool shrinkTool, bool staffCommand)
+        public ShrinkTarget(Mobile from, IShrinkTool shrinkTool)
             : base(10, false, TargetFlags.None)
 		{
 			m_ShrinkTool = shrinkTool;
-			m_StaffCommand = staffCommand;
 
-			from.SendMessage("Target the pet you wish to shrink.");
+            from.SendMessage("Target the pet you wish to shrink.");
 		}
 
-		protected override void OnTarget( Mobile from, object target )
+		protected override void OnTarget(Mobile from, object target)
 		{
 			BaseCreature pet = target as BaseCreature;
 
@@ -65,7 +63,7 @@ namespace Server.Services.ShrinkSystem
             {
                 from.SendMessage("You cannot shrink a summoned creature!");
             }
-            else if (!m_StaffCommand && pet.Combatant != null && pet.InRange(pet.Combatant, 12) && pet.Map == pet.Combatant.Map)
+            else if (pet.Combatant != null && pet.InRange(pet.Combatant, 12) && pet.Map == pet.Combatant.Map)
             {
                 from.SendMessage("Your pet is fighting; you cannot shrink it yet.");
             }
@@ -73,15 +71,15 @@ namespace Server.Services.ShrinkSystem
             {
                 from.SendMessage("You cannot shrink your pet while it is polymorphed.");
             }
-            else if (!m_StaffCommand && pet.Controlled == false)
+            else if (pet.Controlled == false)
             {
                 from.SendMessage("You cannot not shrink wild creatures.");
             }
-            else if (!m_StaffCommand && pet.ControlMaster != from)
+            else if (pet.ControlMaster != from)
             {
                 from.SendMessage("That is not your pet.");
             }
-            else if (!m_StaffCommand && ShrinkItem.IsPackAnimal(pet) && null != pet.Backpack && pet.Backpack.Items.Count > 0)
+            else if (ShrinkItem.IsPackAnimal(pet) && null != pet.Backpack && pet.Backpack.Items.Count > 0)
             {
                 from.SendMessage("You must unload this pet's pack before it can be shrunk.");
             }
@@ -104,14 +102,15 @@ namespace Server.Services.ShrinkSystem
 					pet.Delta(MobileDelta.Noto);
 				}
 
-				IEntity p1 = new Entity( Serial.Zero, new Point3D( from.X, from.Y, from.Z ), from.Map );
-				IEntity p2 = new Entity( Serial.Zero, new Point3D( from.X, from.Y, from.Z + 50 ), from.Map );
+				IEntity p1 = new Entity(Serial.Zero, new Point3D(from.X, from.Y, from.Z), from.Map);
+				IEntity p2 = new Entity(Serial.Zero, new Point3D(from.X, from.Y, from.Z + 50 ), from.Map);
 
-				Effects.SendMovingParticles(p2, p1, ShrinkTable.Lookup( pet ), 1, 0, true, false, 0, 3, 1153, 1, 0, EffectLayer.Head, 0x100);
+                Effects.SendMovingParticles(p2, p1, ShrinkTable.Lookup(pet), 1, 0, true, false, 0, 3, 1153, 1, 0, EffectLayer.Head, 0x100);
+
 				from.PlaySound(492);
 				from.AddToBackpack(new ShrinkItem(pet));
 
-				if (!m_StaffCommand && null != m_ShrinkTool && m_ShrinkTool.ShrinkCharges > 0)
+				if (m_ShrinkTool != null && m_ShrinkTool.ShrinkCharges > 0)
                 {
                     m_ShrinkTool.ShrinkCharges--;
                 }
