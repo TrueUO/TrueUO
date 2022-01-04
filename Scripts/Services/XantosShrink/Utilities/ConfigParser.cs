@@ -1,15 +1,3 @@
-#region AuthorHeader
-//
-//	ConfigParser version 1.2 - utilities version 2.0, by Xanthos
-//
-//	Provides for parsing of xml files containing values to be used to set C# variables during
-//	initialization of a module.  This code will throw exceptions if the data does not match
-//	the expected type or number of elements (in the case of arrays) so that the problem can
-//	be corrected to avoid potentially catastrophic runtime errors.
-//	If the config file does not exist or cannot be read it will simply output an error to the
-//	console and continue.  In other words - it's ok not to provide a config file.
-//
-#endregion AuthorHeader
 #undef HALT_ON_ERRORS
 using System;
 using System.Xml;
@@ -65,15 +53,17 @@ namespace Xanthos.Utilities
             return element;
 		}
 
-		public static Element GetConfig( Element element, string tag )
+		public static Element GetConfig(Element element, string tag)
 		{
-			if ( element.ChildElements.Count > 0 ) 
+			if (element.ChildElements.Count > 0) 
 			{
-				foreach( Element child in element.ChildElements ) 
+				foreach(Element child in element.ChildElements) 
 				{
-					if ( child.TagName == tag )
-						return child;
-				}
+					if (child.TagName == tag)
+                    {
+                        return child;
+                    }
+                }
 			}
 			return null;
 		}
@@ -92,18 +82,19 @@ namespace Xanthos.Utilities
 			m_RootElement = null;
 		}
 
-		public Element Parse( XmlTextReader reader ) 
+		public Element Parse(XmlTextReader reader) 
 		{
 			Element element = null;
 
-			while ( !reader.EOF )
+			while (!reader.EOF)
 			{
 				reader.Read();            
 				switch ( reader.NodeType )
 				{
 					case XmlNodeType.Element :					
 						element = new Element( reader.LocalName );
-						m_CurrentElement = element;                  
+						m_CurrentElement = element;
+                        
 						if ( m_Elements.Count == 0 ) 
 						{
 							m_RootElement = element;
@@ -115,10 +106,12 @@ namespace Xanthos.Utilities
 							parent.ChildElements.Add( element );
 
 							if ( reader.IsEmptyElement )
-								break;
-							else 
-								m_Elements.Push( element );
-						}
+                            {
+                                break;
+                            }
+
+                            m_Elements.Push( element );
+                        }
 						if ( reader.HasAttributes ) 
 						{
 							while( reader.MoveToNextAttribute() ) 
@@ -128,8 +121,11 @@ namespace Xanthos.Utilities
 						}
 						break;
 					case XmlNodeType.Attribute :
-						element.setAttribute( reader.Name, reader.Value );
-						break;
+                        if (element != null)
+                        {
+                            element.setAttribute(reader.Name, reader.Value);
+                        }
+                        break;
 					case XmlNodeType.EndElement :
 						m_Elements.Pop();
 						break;
@@ -159,11 +155,9 @@ namespace Xanthos.Utilities
 			List.Add( element );
 		}
 
-		public Element this[ int index ]
-		{
-			get { return (Element)List[index]; }
-		}
-	}
+		public Element this[int index] => (Element)List[index];
+
+    }
 
 	public class Element 
 	{
@@ -172,7 +166,7 @@ namespace Xanthos.Utilities
 		private StringDictionary m_Attributes;
 		private Elements m_ChildElements;
 
-		public Element( String tagName ) 
+		public Element(string tagName) 
 		{
 			m_TagName = tagName;
 			m_Attributes = new StringDictionary();
@@ -180,34 +174,20 @@ namespace Xanthos.Utilities
 			m_Text = "";
 		}
 
-		public String TagName 
+		public string TagName { get => m_TagName; set => m_TagName = value; }
+
+		public string Text { get => m_Text; set => m_Text = value; }
+
+		public Elements ChildElements => m_ChildElements;
+
+        public StringDictionary Attributes => m_Attributes;
+
+        public string Attribute(string name) 
 		{
-			get { return m_TagName; }
-			set { m_TagName = value; }
+			return m_Attributes[name];
 		}
 
-		public string Text 
-		{
-			get { return m_Text; }
-			set { m_Text = value; }
-		}
-
-		public Elements ChildElements 
-		{
-			get { return m_ChildElements; }
-		}
-
-		public StringDictionary Attributes 
-		{
-			get { return m_Attributes; }
-		}
-
-		public String Attribute( String name ) 
-		{
-			return (String)m_Attributes[name];
-		}
-
-		public void setAttribute( String name, String value ) 
+		public void setAttribute(string name, string value) 
 		{
 			m_Attributes.Add( name, value );
 		}
