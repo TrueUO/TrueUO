@@ -17,49 +17,41 @@ namespace Server.Poker
 		}
 
 		private double m_Rake;
-		private int m_RakeMax;
-		private int m_MinBuyIn;
-		private int m_MaxBuyIn;
-		private int m_SmallBlind;
-		private int m_BigBlind;
-		private int m_MaxPlayers;
+        private int m_MaxPlayers;
 		private bool m_Active;
-		private bool m_TournamentMode;
-		private PokerGame m_Game;
+        private PokerGame m_Game;
 		private List<Point3D> m_Seats;
-		private Point3D m_ExitLocation;
-		private Map m_ExitMap;
 
         public static int Jackpot { get; set; }
 
         [CommandProperty(AccessLevel.Seer)]
-		public bool TournamentMode { get => m_TournamentMode; set => m_TournamentMode = value; }
+		public bool TournamentMode { get; set; }
 
-		[CommandProperty(AccessLevel.Administrator)]
+        [CommandProperty(AccessLevel.Administrator)]
 		public bool ClearSeats { get => false; set => m_Seats.Clear(); }
 
 		[CommandProperty(AccessLevel.Administrator)]
-		public int RakeMax { get => m_RakeMax; set => m_RakeMax = value; }
+		public int RakeMax { get; set; }
 
-		[CommandProperty(AccessLevel.Seer)]
-		public int MinBuyIn { get => m_MinBuyIn; set => m_MinBuyIn = value; }
+        [CommandProperty(AccessLevel.Seer)]
+		public int MinBuyIn { get; set; }
 
-		[CommandProperty(AccessLevel.Seer)]
-		public int MaxBuyIn { get => m_MaxBuyIn; set => m_MaxBuyIn = value; }
+        [CommandProperty(AccessLevel.Seer)]
+		public int MaxBuyIn { get; set; }
 
-		[CommandProperty(AccessLevel.Seer)]
-		public int SmallBlind { get => m_SmallBlind; set => m_SmallBlind = value; }
+        [CommandProperty(AccessLevel.Seer)]
+		public int SmallBlind { get; set; }
 
-		[CommandProperty(AccessLevel.Seer)]
-		public int BigBlind { get => m_BigBlind; set => m_BigBlind = value; }
+        [CommandProperty(AccessLevel.Seer)]
+		public int BigBlind { get; set; }
 
-		[CommandProperty(AccessLevel.Administrator)]
-		public Point3D ExitLocation { get => m_ExitLocation; set => m_ExitLocation = value; }
+        [CommandProperty(AccessLevel.Administrator)]
+		public Point3D ExitLocation { get; set; }
 
-		[CommandProperty(AccessLevel.Administrator)]
-		public Map ExitMap { get => m_ExitMap; set => m_ExitMap = value; }
+        [CommandProperty(AccessLevel.Administrator)]
+		public Map ExitMap { get; set; }
 
-		[CommandProperty(AccessLevel.Administrator)]
+        [CommandProperty(AccessLevel.Administrator)]
 		public double Rake
 		{
 			get => m_Rake;
@@ -167,7 +159,7 @@ namespace Server.Poker
 			MaxPlayers = maxPlayers;
 			m_Seats = new List<Point3D>();
 			m_Rake = 0.10;		//10% rake default
-			m_RakeMax = 5000;	//5k maximum rake default
+			RakeMax = 5000;	//5k maximum rake default
 			m_Game = new PokerGame(this);
 		}
 
@@ -220,11 +212,11 @@ namespace Server.Poker
             {
                 from.PrivateOverheadMessage(Network.MessageType.Regular, 0x22, true, "I am too far away to do that", from.NetState);
             }
-            else if (m_MinBuyIn == 0 || m_MaxBuyIn == 0)
+            else if (MinBuyIn == 0 || MaxBuyIn == 0)
             {
                 from.SendMessage(0x9A, "This table is inactive");
             }
-            else if (m_MinBuyIn > m_MaxBuyIn)
+            else if (MinBuyIn > MaxBuyIn)
             {
                 from.SendMessage(0x9A, "This table is inactive");
             }
@@ -405,7 +397,7 @@ namespace Server.Poker
 		{
 			double amount = gold * m_Rake;
 
-			return (int)(amount > m_RakeMax ? m_RakeMax : amount);
+			return (int)(amount > RakeMax ? RakeMax : amount);
 		}
 
 		public PokerDealer(Serial serial)
@@ -419,14 +411,14 @@ namespace Server.Poker
             writer.Write(0); //version
 
 			writer.Write(m_Active);
-			writer.Write(m_SmallBlind);
-			writer.Write(m_BigBlind);
-			writer.Write(m_MinBuyIn);
-			writer.Write(m_MaxBuyIn);
-			writer.Write(m_ExitLocation);
-			writer.Write(m_ExitMap);
+			writer.Write(SmallBlind);
+			writer.Write(BigBlind);
+			writer.Write(MinBuyIn);
+			writer.Write(MaxBuyIn);
+			writer.Write(ExitLocation);
+			writer.Write(ExitMap);
 			writer.Write(m_Rake);
-			writer.Write(m_RakeMax);
+			writer.Write(RakeMax);
 			writer.Write(m_MaxPlayers);
 
 			writer.Write(m_Seats.Count);
@@ -446,14 +438,14 @@ namespace Server.Poker
 			{
 				case 0:
 					m_Active = reader.ReadBool();
-					m_SmallBlind = reader.ReadInt();
-					m_BigBlind = reader.ReadInt();
-					m_MinBuyIn = reader.ReadInt();
-					m_MaxBuyIn = reader.ReadInt();
-					m_ExitLocation = reader.ReadPoint3D();
-					m_ExitMap = reader.ReadMap();
+					SmallBlind = reader.ReadInt();
+					BigBlind = reader.ReadInt();
+					MinBuyIn = reader.ReadInt();
+					MaxBuyIn = reader.ReadInt();
+					ExitLocation = reader.ReadPoint3D();
+					ExitMap = reader.ReadMap();
 					m_Rake = reader.ReadDouble();
-					m_RakeMax = reader.ReadInt();
+					RakeMax = reader.ReadInt();
 					m_MaxPlayers = reader.ReadInt();
 
 					int count = reader.ReadInt();

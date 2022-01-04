@@ -81,9 +81,9 @@ namespace Server.Poker
 			txtBuyInAmount
 		}
 
-		public override void OnResponse(NetState state, RelayInfo info)
+		public override void OnResponse(NetState sender, RelayInfo info)
 		{
-			Mobile from = state.Mobile;
+			Mobile from = sender.Mobile;
 
 			int buyInAmount = 0;
 
