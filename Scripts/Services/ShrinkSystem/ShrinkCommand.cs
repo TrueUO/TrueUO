@@ -25,21 +25,21 @@ namespace Server.Services.ShrinkSystem
 
 	public class ShrinkTarget : Target
 	{
-		private IShrinkTool m_ShrinkTool;
+		private readonly IShrinkTool _ShrinkTool;
 
         public ShrinkTarget(Mobile from, IShrinkTool shrinkTool)
             : base(10, false, TargetFlags.None)
 		{
-			m_ShrinkTool = shrinkTool;
+			_ShrinkTool = shrinkTool;
 
             from.SendMessage("Target the pet you wish to shrink.");
 		}
 
-		protected override void OnTarget(Mobile from, object target)
+		protected override void OnTarget(Mobile from, object targeted)
 		{
-			BaseCreature pet = target as BaseCreature;
+			BaseCreature pet = targeted as BaseCreature;
 
-			if (target is PlayerMobile || target is Item)
+			if (targeted is PlayerMobile || targeted is Item)
             {
                 from.SendMessage("You cannot shrink that.");
             }
@@ -50,10 +50,6 @@ namespace Server.Services.ShrinkSystem
             else if (pet == null)
             {
                 from.SendMessage("That is not a pet!");
-            }
-            else if ((pet.BodyValue == 400 || pet.BodyValue == 401) && pet.Controlled == false)
-            {
-                from.SendMessage( "That person gives you a dirty look!" );
             }
             else if (pet.IsDeadPet)
             {
@@ -110,9 +106,9 @@ namespace Server.Services.ShrinkSystem
 				from.PlaySound(492);
 				from.AddToBackpack(new ShrinkItem(pet));
 
-				if (m_ShrinkTool != null && m_ShrinkTool.ShrinkCharges > 0)
+				if (_ShrinkTool != null && _ShrinkTool.ShrinkCharges > 0)
                 {
-                    m_ShrinkTool.ShrinkCharges--;
+                    _ShrinkTool.ShrinkCharges--;
                 }
             }
 		}

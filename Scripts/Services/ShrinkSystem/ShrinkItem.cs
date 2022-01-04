@@ -47,8 +47,6 @@ namespace Server.Services.ShrinkSystem
 		private double m_Swords;
 		private double m_Parry;
 
-        private bool m_IgnoreLockDown;	// Is only ever changed by staff
-
         public enum BlessStatus
         {
             All,		// All shrink items are blessed
@@ -83,12 +81,6 @@ namespace Server.Services.ShrinkSystem
 		}
 
 		[CommandProperty( AccessLevel.GameMaster )]
-		public bool IgnoreLockDown
-		{
-			get => m_IgnoreLockDown; set { m_IgnoreLockDown = value; InvalidateProperties(); }
-		}
-
-		[CommandProperty( AccessLevel.GameMaster )]
 		public bool Locked
 		{
 			get => m_Locked; set { m_Locked = value; InvalidateProperties(); }
@@ -111,20 +103,19 @@ namespace Server.Services.ShrinkSystem
 		{
 		}
 
-		public ShrinkItem(Serial serial)
-            : base(serial)
-		{
-		}
-
 		public ShrinkItem(BaseCreature pet)
             : this()
 		{
 			ShrinkPet(pet);
 			IsStatuette = PetAsStatuette;
-			m_IgnoreLockDown = false; // This is only used to allow GMs to bypass the lockdown, one pet at a time.
-			Weight = 10;
+            Weight = 10;
             Hue = m_Pet.Hue;
 		}
+
+        public ShrinkItem(Serial serial)
+            : base(serial)
+        {
+        }
 
 		public override void OnDoubleClick(Mobile from)
 		{
@@ -274,19 +265,6 @@ namespace Server.Services.ShrinkSystem
             }
         }
 
-        public static string GetFriendlyClassName(string typeName)
-        {
-            for (int index = 1; index < typeName.Length; index++)
-            {
-                if (char.IsUpper(typeName, index))
-                {
-                    typeName.Insert(index++, " ");
-                }
-            }
-
-            return typeName;
-        }
-
 		private void PreloadProperties()
 		{
 			if (null == m_Pet)
@@ -298,7 +276,7 @@ namespace Server.Services.ShrinkSystem
 			m_Name = m_Pet.Name;
 			
 			m_Gender = m_Pet.Female ? "Female" : "Male";
-			m_Breed = GetFriendlyClassName(m_Pet.GetType().Name);
+			m_Breed = m_Pet.GetType().Name;
 			m_RawStr = m_Pet.RawStr;
 			m_RawDex = m_Pet.RawDex;
 			m_RawInt = m_Pet.RawInt;
