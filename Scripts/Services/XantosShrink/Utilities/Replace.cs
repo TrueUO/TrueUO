@@ -1,22 +1,10 @@
-#region AuthorHeader
-//
-//	Replace version 1.0 - utilities version 2.0, by Xanthos
-//
-//
-#endregion AuthorHeader                                                                                                                                                                                                                                                               
 using System;
 using System.Collections;
 using System.Reflection;
 using Server;
-using Server.Network;
-using Server.Prompts;
 using Server.Items;
-using Server.Mobiles;
 using Server.Targeting;
-using System.IO;
-using System.Xml;
 using Server.Commands;
-using Server.Commands.Generic;
 
 namespace Xanthos.Utilities
 {
@@ -28,8 +16,7 @@ namespace Xanthos.Utilities
 		public static void Initialize()
 		{
 			CommandHandlers.Register( "ReplaceItem", AccessLevel.GameMaster, new CommandEventHandler( ReplaceItem_OnCommand ) );
-//			CommandHandlers.Register( "UpgradeShrinkSystem", AccessLevel.GameMaster, new CommandEventHandler( UpgradeShrinkSystem ) );
-		}
+        }
 
 		public PickReplacementTarget( object o, bool copyDeep ) : base( -1, false, TargetFlags.None )
 		{
@@ -48,15 +35,6 @@ namespace Xanthos.Utilities
 
 			e.Mobile.Target = new ReplaceItemTarget( copyDeep );
 			e.Mobile.SendMessage( "Choose an Item to replace." );
-		}
-
-		[Usage( "UpdateShrinkSystem" )]
-		[Description( "Updates the Items in the shrink system." )]
-		public static void UpgradeShrinkSystem( CommandEventArgs e )
-		{
-//			ReplaceType( "Xanthos.ShrinkSystem.PetLeash", "Xanthos.Evo.PetLeash", false );
-//			ReplaceType( "Xanthos.ShrinkSystem.HitchingPost", "Xanthos.Evo.HitchingPost", false );
-//			ReplaceType( "Xanthos.ShrinkSystem.ShrinkItem", "Xanthos.Evo.ShrinkItem", true );
 		}
 
 		protected override void OnTarget( Mobile from, object replacement )

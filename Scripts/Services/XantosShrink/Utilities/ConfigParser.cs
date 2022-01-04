@@ -12,9 +12,7 @@
 #endregion AuthorHeader
 #undef HALT_ON_ERRORS
 using System;
-using System.IO;  
 using System.Xml;
-using System.Text;
 using System.Collections;
 using System.Collections.Specialized;
 using Server;
@@ -23,17 +21,19 @@ namespace Xanthos.Utilities
 {
 	public class ConfigParser
 	{
-		public static Element GetConfig( string filename, string tag )
+		public static Element GetConfig(string filename, string tag)
 		{
-			Element element = GetConfig( filename );
+			Element element = GetConfig(filename);
 
-			if ( element != null )
-				element = GetConfig( element, tag );
+			if (element != null)
+            {
+                element = GetConfig(element, tag);
+            }
 
-			return element;
+            return element;
 		}
 
-		public static Element GetConfig( string filename )
+		public static Element GetConfig(string filename)
 		{
 			XmlTextReader reader = null;
 			Element element = null;
@@ -57,10 +57,12 @@ namespace Xanthos.Utilities
 				Console.WriteLine( "Xanthos.Utilities.ConfigParser failed." );
 			}
 
-			if ( null != reader )
-				reader.Close();
+			if (reader != null)
+            {
+                reader.Close();
+            }
 
-			return element;
+            return element;
 		}
 
 		public static Element GetConfig( Element element, string tag )

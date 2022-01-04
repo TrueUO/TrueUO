@@ -1,16 +1,7 @@
-#region AuthorHeader
-//
-//	Misc version 2.0 - utilities version 2.0, by Xanthos
-//
-//
-#endregion AuthorHeader
 using System;
 using System.Reflection;
 using System.Security;
 using Server;
-using Server.Items;
-using Server.Mobiles;
-using Server.Targeting;
 using Server.Commands;
 
 namespace Xanthos.Utilities
@@ -24,40 +15,6 @@ namespace Xanthos.Utilities
 		public static int kGreenHue = 0x40;
 		public static int kRedHue = 0x20;
 
-		public static bool IsArtifact( Item item )
-		{
-			if ( null == item )
-				return false;
-		
-			Type t = item.GetType();
-			PropertyInfo prop = null;
-
-			try { prop = t.GetProperty( "ArtifactRarity" ); }
-			catch {}
-
-			if ( null == prop || (int)(prop.GetValue( item, null )) <= 0 )
-				return false;			
-
-			return true;
-		}
-
-		public static bool IsPlayerConstructed( Item item )
-		{
-			if ( null == item )
-				return false;
-		
-			Type t = item.GetType();
-			PropertyInfo prop = null;
-
-			try { prop = t.GetProperty( "PlayerConstructed" ); }
-			catch {}
-
-			if ( null == prop || true != (bool)(prop.GetValue( item, null )))
-				return false;			
-
-			return true;
-		}
-
 		//
 		// Puts spaces before type name inner-caps
 		//
@@ -65,7 +22,7 @@ namespace Xanthos.Utilities
 		{
 			for ( int index = 1; index < typeName.Length; index++ )
 			{
-				if ( char.IsUpper( typeName, index ) )
+				if (char.IsUpper(typeName, index))
 				{
 					typeName.Insert( index++, " " );
 				}
