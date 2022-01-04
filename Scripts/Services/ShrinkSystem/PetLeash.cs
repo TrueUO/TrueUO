@@ -1,6 +1,4 @@
-using Server;
-
-namespace Xanthos.ShrinkSystem
+namespace Server.Services.ShrinkSystem
 {
     public interface IShrinkTool
     {

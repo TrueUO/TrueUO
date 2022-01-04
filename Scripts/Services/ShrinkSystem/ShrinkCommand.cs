@@ -1,10 +1,9 @@
-using Server;
 using Server.Mobiles;
 using Server.Commands;
 using Server.Targeting;
 using Server.Regions;
 
-namespace Xanthos.ShrinkSystem
+namespace Server.Services.ShrinkSystem
 {
 	public class ShrinkCommands
 	{

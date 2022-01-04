@@ -1,10 +1,9 @@
 using System;
-using Server;
 using Server.Mobiles;
 using System.Collections.Generic;
 using Server.ContextMenus;
 
-namespace Xanthos.ShrinkSystem
+namespace Server.Services.ShrinkSystem
 {
     public interface IShrinkItem
     {
