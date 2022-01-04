@@ -19,8 +19,6 @@ namespace Server.Poker
 		private double m_Rake;
         private int m_MaxPlayers;
 		private bool m_Active;
-        private PokerGame m_Game;
-		private List<Point3D> m_Seats;
 
         public static int Jackpot { get; set; }
 
@@ -28,7 +26,7 @@ namespace Server.Poker
 		public bool TournamentMode { get; set; }
 
         [CommandProperty(AccessLevel.Administrator)]
-		public bool ClearSeats { get => false; set => m_Seats.Clear(); }
+		public bool ClearSeats { get => false; set => Seats.Clear(); }
 
 		[CommandProperty(AccessLevel.Administrator)]
 		public int RakeMax { get; set; }
@@ -103,7 +101,7 @@ namespace Server.Poker
 
 				if (!value)
                 {
-                    foreach (PokerPlayer player in m_Game.Players.Players)
+                    foreach (PokerPlayer player in Game.Players.Players)
                     {
                         if (player.Mobile != null)
                         {
@@ -115,18 +113,18 @@ namespace Server.Poker
                 for (int i = 0; i < toRemove.Count; ++i)
 				{
 					toRemove[i].Mobile.SendMessage(0x22, "The poker dealer has been set to inactive by a game master, and you are now being removed from the poker game and being refunded the money that you currently have.");
-					m_Game.RemovePlayer(toRemove[i]);
+					Game.RemovePlayer(toRemove[i]);
 				}
 
 				m_Active = value;
 			}
 		}
 
-		public PokerGame Game { get => m_Game; set => m_Game = value; }
+		public PokerGame Game { get; set; }
 
-		public List<Point3D> Seats { get => m_Seats; set => m_Seats = value; }
+        public List<Point3D> Seats { get; set; }
 
-		[Constructable]
+        [Constructable]
 		public PokerDealer()
 			: this(10)
 		{
@@ -157,11 +155,16 @@ namespace Server.Poker
 			Dress();
 
 			MaxPlayers = maxPlayers;
-			m_Seats = new List<Point3D>();
+			Seats = new List<Point3D>();
 			m_Rake = 0.10;		//10% rake default
 			RakeMax = 5000;	//5k maximum rake default
-			m_Game = new PokerGame(this);
+			Game = new PokerGame(this);
 		}
+
+        public PokerDealer(Serial serial)
+            : base( serial )
+        {
+        }
 
 		private void Dress()
 		{
@@ -220,24 +223,24 @@ namespace Server.Poker
             {
                 from.SendMessage(0x9A, "This table is inactive");
             }
-            else if (m_Seats.Count < m_MaxPlayers)
+            else if (Seats.Count < m_MaxPlayers)
             {
                 from.SendMessage(0x9A, "This table is inactive");
             }
-            else if (m_Game.GetIndexFor(from) != -1)
+            else if (Game.GetIndexFor(from) != -1)
             {
                 return; //TODO: Grab more chips from the player's bank box
             }
-            else if (m_Game.Players.Count >= m_MaxPlayers)
+            else if (Game.Players.Count >= m_MaxPlayers)
 			{
 				from.SendMessage(0x22, "This table is full");
 				base.OnDoubleClick(from);
 			}
-			else if (m_Game.Players.Count < m_MaxPlayers)
+			else if (Game.Players.Count < m_MaxPlayers)
 			{
 				//TODO: Send player the poker join gump
 				from.CloseGump(typeof(PokerJoinGump));
-				from.SendGump(new PokerJoinGump(from, m_Game));
+				from.SendGump(new PokerJoinGump(from, Game));
 			}
 		}
 
@@ -245,7 +248,7 @@ namespace Server.Poker
 		{
 			List<PokerPlayer> toRemove = new List<PokerPlayer>();
 
-			foreach (PokerPlayer player in m_Game.Players.Players)
+			foreach (PokerPlayer player in Game.Players.Players)
             {
                 if (player.Mobile != null)
                 {
@@ -256,7 +259,7 @@ namespace Server.Poker
             for (int i = 0; i < toRemove.Count; ++i)
 			{
 				toRemove[i].Mobile.SendMessage(0x22, "The poker dealer has been deleted, and you are now being removed from the poker game and being refunded the money that you currently have.");
-				m_Game.RemovePlayer(toRemove[i]);
+				Game.RemovePlayer(toRemove[i]);
 			}
 
 			base.OnDelete();
@@ -370,21 +373,21 @@ namespace Server.Poker
 
 		public int AddPokerSeat(Mobile from, Point3D seat)
 		{
-			if (m_Seats.Count >= m_MaxPlayers)
+			if (Seats.Count >= m_MaxPlayers)
             {
                 return -1;
             }
 
-            m_Seats.Add(seat);
+            Seats.Add(seat);
 
 			return 0;
 		}
 
 		public bool SeatTaken(Point3D seat)
 		{
-			for (int i = 0; i < m_Game.Players.Count; ++i)
+			for (int i = 0; i < Game.Players.Count; ++i)
             {
-                if (m_Game.Players[i].Seat == seat)
+                if (Game.Players[i].Seat == seat)
                 {
                     return true;
                 }
@@ -398,11 +401,6 @@ namespace Server.Poker
 			double amount = gold * m_Rake;
 
 			return (int)(amount > RakeMax ? RakeMax : amount);
-		}
-
-		public PokerDealer(Serial serial)
-			: base( serial )
-		{
 		}
 
 		public override void Serialize( GenericWriter writer )
@@ -421,11 +419,11 @@ namespace Server.Poker
 			writer.Write(RakeMax);
 			writer.Write(m_MaxPlayers);
 
-			writer.Write(m_Seats.Count);
+			writer.Write(Seats.Count);
 
-			for (int i = 0; i < m_Seats.Count; ++i)
+			for (int i = 0; i < Seats.Count; ++i)
             {
-                writer.Write(m_Seats[i]);
+                writer.Write(Seats[i]);
             }
         }
 
@@ -449,24 +447,24 @@ namespace Server.Poker
 					m_MaxPlayers = reader.ReadInt();
 
 					int count = reader.ReadInt();
-					m_Seats = new List<Point3D>();
+					Seats = new List<Point3D>();
 
 					for (int i = 0; i < count; ++i)
                     {
-                        m_Seats.Add(reader.ReadPoint3D());
+                        Seats.Add(reader.ReadPoint3D());
                     }
 
                     break;
 			}
 
-			m_Game = new PokerGame(this);
+			Game = new PokerGame(this);
 		}
 
 		public class JackpotInfo
 		{
-			private List<PokerPlayer> m_Winners;
-			private ResultEntry m_Hand;
-			private DateTime m_Date;
+			private readonly List<PokerPlayer> m_Winners;
+			private readonly ResultEntry m_Hand;
+			private readonly DateTime m_Date;
 			
 			public List<PokerPlayer> Winners => m_Winners;
             public ResultEntry Hand => m_Hand;
