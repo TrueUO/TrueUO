@@ -297,32 +297,7 @@ namespace Server.Services.ShrinkSystem
 			m_PropsLoaded = true;
 		}
 
-        private static readonly Type[] _PackAnimals =
-        {
-            typeof(PackHorse), typeof(PackLlama), typeof(Beetle)
-        };
-
-		public static bool IsPackAnimal(BaseCreature pet)
-		{
-			if (pet == null || pet.Deleted)
-            {
-                return false;
-            }
-
-            Type breed = pet.GetType();
-
-			foreach (Type packBreed in _PackAnimals)
-            {
-                if (breed == packBreed)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-		}
-
-		public override void Serialize(GenericWriter writer)
+        public override void Serialize(GenericWriter writer)
 		{
 			base.Serialize(writer);
             writer.Write(0); // version

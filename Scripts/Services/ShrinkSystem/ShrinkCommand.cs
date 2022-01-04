@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Server.Mobiles;
 using Server.Commands;
 using Server.Targeting;
@@ -37,35 +39,9 @@ namespace Server.Services.ShrinkSystem
 
 		protected override void OnTarget(Mobile from, object targeted)
 		{
-			BaseCreature pet = targeted as BaseCreature;
-
-			if (targeted is PlayerMobile || targeted is Item)
-            {
-                from.SendMessage("You cannot shrink that.");
-            }
-            else if (Spells.SpellHelper.CheckCombat(from))
-            {
-                from.SendMessage("You cannot shrink your pet while you are fighting.");
-            }
-            else if (pet == null)
+            if (!(targeted is BaseCreature pet)) // null check
             {
                 from.SendMessage("That is not a pet!");
-            }
-            else if (pet.IsDeadPet)
-            {
-                from.SendMessage("You cannot shrink the dead!");
-            }
-            else if (pet.Summoned)
-            {
-                from.SendMessage("You cannot shrink a summoned creature!");
-            }
-            else if (pet.Combatant != null && pet.InRange(pet.Combatant, 12) && pet.Map == pet.Combatant.Map)
-            {
-                from.SendMessage("Your pet is fighting; you cannot shrink it yet.");
-            }
-            else if (pet.BodyMod != 0)
-            {
-                from.SendMessage("You cannot shrink your pet while it is polymorphed.");
             }
             else if (pet.Controlled == false)
             {
@@ -75,7 +51,19 @@ namespace Server.Services.ShrinkSystem
             {
                 from.SendMessage("That is not your pet.");
             }
-            else if (ShrinkItem.IsPackAnimal(pet) && null != pet.Backpack && pet.Backpack.Items.Count > 0)
+            else if (pet.IsDeadPet)
+            {
+                from.SendMessage("You cannot shrink the dead!");
+            }
+            else if (pet.Summoned || pet.Allured || pet is BaseTalismanSummon)
+            {
+                from.SendMessage("You cannot shrink a summoned creature!");
+            }
+            else if (pet.Combatant != null && pet.InRange(pet.Combatant, 12) && pet.Map == pet.Combatant.Map || Spells.SpellHelper.CheckCombat(from))
+            {
+                from.SendMessage("You or your pet are engaged in combat; you cannot shrink it yet.");
+            }
+            else if (IsPackAnimal(pet) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
             {
                 from.SendMessage("You must unload this pet's pack before it can be shrunk.");
             }
@@ -112,5 +100,20 @@ namespace Server.Services.ShrinkSystem
                 }
             }
 		}
+
+        private static readonly Type[] _PackAnimals =
+        {
+            typeof(PackHorse), typeof(PackLlama), typeof(Beetle)
+        };
+
+        private static bool IsPackAnimal(BaseCreature pet)
+        {
+            if (pet == null || pet.Deleted)
+            {
+                return false;
+            }
+
+            return _PackAnimals.Any();
+        }
 	}
 }
