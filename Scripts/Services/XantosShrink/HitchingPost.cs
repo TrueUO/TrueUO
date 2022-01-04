@@ -1,6 +1,5 @@
 using Server;
 using Server.Items;
-using Xanthos.Interfaces;
 
 namespace Xanthos.ShrinkSystem
 {

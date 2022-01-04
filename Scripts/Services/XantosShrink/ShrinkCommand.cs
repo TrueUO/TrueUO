@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Commands;
 using Server.Targeting;
 using Server.Regions;
-using Xanthos.Interfaces;
 
 namespace Xanthos.ShrinkSystem
 {

@@ -1,8 +1,12 @@
 using Server;
-using Xanthos.Interfaces;
 
 namespace Xanthos.ShrinkSystem
 {
+    public interface IShrinkTool
+    {
+        int ShrinkCharges { get; set; }
+    }
+
 	public class PetLeash : Item, IShrinkTool
 	{	
 		private int m_Charges = -1; // set to -1 for infinite uses

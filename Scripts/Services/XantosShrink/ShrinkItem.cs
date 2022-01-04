@@ -3,10 +3,14 @@ using Server;
 using Server.Mobiles;
 using System.Collections.Generic;
 using Server.ContextMenus;
-using Xanthos.Interfaces;
 
 namespace Xanthos.ShrinkSystem
 {
+    public interface IShrinkItem
+    {
+        BaseCreature ShrunkenPet { get; }
+    }
+
 	public class ShrinkItem : Item, IShrinkItem
 	{
 		// Persisted
