@@ -6,37 +6,34 @@ namespace Server.Poker
 {
 	public class PokerPlayer
 	{
-		private int m_Gold;
-		private int m_Bet;
-		private int m_RoundGold;
-		private int m_RoundBet;
-		private bool m_RequestLeave;
-		private bool m_IsAllIn;
-		private bool m_Forced;
-		private bool m_LonePlayer;
-		private Mobile m_Mobile;
-		private PokerGame m_Game;
-		private Point3D m_Seat;
-		private DateTime m_BetStart;
-		private List<Card> m_HoleCards;
+        private List<Card> m_HoleCards;
 		private PlayerAction m_Action;
 
-		public int Gold { get => m_Gold; set => m_Gold = value; }
-		public int Bet { get => m_Bet; set => m_Bet = value; }
-		public int RoundGold { get => m_RoundGold; set => m_RoundGold = value; }
-		public int RoundBet { get => m_RoundBet; set => m_RoundBet = value; }
+		public int Gold { get; set; }
 
-		public bool RequestLeave { get => m_RequestLeave; set => m_RequestLeave = value; }
-		public bool IsAllIn { get => m_IsAllIn; set => m_IsAllIn = value; }
-		public bool Forced { get => m_Forced; set => m_Forced = value; }
-		public bool LonePlayer { get => m_LonePlayer; set => m_LonePlayer = value; }
+        public int Bet { get; set; }
 
-		public Mobile Mobile { get => m_Mobile; set => m_Mobile = value; }
-		public PokerGame Game { get => m_Game; set => m_Game = value; }
-		public Point3D Seat { get => m_Seat; set => m_Seat = value; }
-		public DateTime BetStart { get => m_BetStart; set => m_BetStart = value; }
+        public int RoundGold { get; set; }
 
-		public List<Card> HoleCards => m_HoleCards;
+        public int RoundBet { get; set; }
+
+        public bool RequestLeave { get; set; }
+
+        public bool IsAllIn { get; set; }
+
+        public bool Forced { get; set; }
+
+        public bool LonePlayer { get; set; }
+
+        public Mobile Mobile { get; set; }
+
+        public PokerGame Game { get; set; }
+
+        public Point3D Seat { get; set; }
+
+        public DateTime BetStart { get; set; }
+
+        public List<Card> HoleCards => m_HoleCards;
 
         public PlayerAction Action
 		{
@@ -49,9 +46,9 @@ namespace Server.Poker
 				{
 					case PlayerAction.None: break;
 					default:
-						if (m_Game != null)
+						if (Game != null)
                         {
-                            m_Game.PokerGame_PlayerMadeDecision(this);
+                            Game.PokerGame_PlayerMadeDecision(this);
                         }
 
                         break;
@@ -59,29 +56,29 @@ namespace Server.Poker
 			}
 		}
 
-		public bool HasDealerButton => m_Game.DealerButton == this;
-        public bool HasSmallBlind => m_Game.SmallBlind == this;
-        public bool HasBigBlind => m_Game.BigBlind == this;
-        public bool HasBlindBet => m_Game.SmallBlind == this || m_Game.BigBlind == this;
+		public bool HasDealerButton => Game.DealerButton == this;
+        public bool HasSmallBlind => Game.SmallBlind == this;
+        public bool HasBigBlind => Game.BigBlind == this;
+        public bool HasBlindBet => Game.SmallBlind == this || Game.BigBlind == this;
 
         public PokerPlayer(Mobile from)
 		{
-			m_Mobile = from;
+			Mobile = from;
 			m_HoleCards = new List<Card>();
 		}
 
 		public void ClearGame()
 		{
-			m_Bet = 0;
-			m_RoundGold = 0;
-			m_RoundBet = 0;
+			Bet = 0;
+			RoundGold = 0;
+			RoundBet = 0;
 			m_HoleCards.Clear();
-			m_Game = null;
+			Game = null;
 			CloseAllGumps();
 			m_Action = PlayerAction.None;
-			m_IsAllIn = false;
-			m_Forced = false;
-			m_LonePlayer = false;
+			IsAllIn = false;
+			Forced = false;
+			LonePlayer = false;
 		}
 
 		public void AddCard(Card card)
@@ -119,47 +116,47 @@ namespace Server.Poker
 
 		public void CloseGump(Type type)
 		{
-			if (m_Mobile != null)
+			if (Mobile != null)
             {
-                m_Mobile.CloseGump(type);
+                Mobile.CloseGump(type);
             }
         }
 
 		public void SendGump(Gump toSend)
 		{
-			if (m_Mobile != null)
+			if (Mobile != null)
             {
-                m_Mobile.SendGump(toSend);
+                Mobile.SendGump(toSend);
             }
         }
 
 		public void SendMessage(string message)
 		{
-			if (m_Mobile != null)
+			if (Mobile != null)
             {
-                m_Mobile.SendMessage(message);
+                Mobile.SendMessage(message);
             }
         }
 
 		public void SendMessage(int hue, string message)
 		{
-			if (m_Mobile != null)
+			if (Mobile != null)
             {
-                m_Mobile.SendMessage(hue, message);
+                Mobile.SendMessage(hue, message);
             }
         }
 
 		public void TeleportToSeat()
 		{
-			if (m_Mobile != null && m_Seat != Point3D.Zero)
+			if (Mobile != null && Seat != Point3D.Zero)
             {
-                m_Mobile.Location = m_Seat;
+                Mobile.Location = Seat;
             }
         }
 
 		public bool IsOnline()
 		{
-			if (m_Mobile != null && m_Mobile.NetState != null && m_Mobile.NetState.Socket != null && m_Mobile.NetState.Socket.Connected)
+			if (Mobile != null && Mobile.NetState != null && Mobile.NetState.Socket != null && Mobile.NetState.Socket.Connected)
             {
                 return true;
             }

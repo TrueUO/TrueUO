@@ -61,6 +61,7 @@ namespace Server.Poker
         public PokerPlayer DealerButton => m_DealerButton;
         public PokerPlayer SmallBlind => m_SmallBlind;
         public PokerPlayer BigBlind => m_BigBlind;
+
         public List<Card> CommunityCards { get; set; }
 
         public PokerGameTimer Timer { get; set; }
@@ -950,15 +951,13 @@ namespace Server.Poker
 	public class ResultEntry : IComparable
 	{
 		private PokerPlayer m_Player;
-		private List<Card> m_BestCards;
-		private HandRank m_Rank;
+        public PokerPlayer Player => m_Player;
 
-		public PokerPlayer Player => m_Player;
+        public List<Card> BestCards { get; set; }
 
-        public List<Card> BestCards { get => m_BestCards; set => m_BestCards = value; }
-		public HandRank Rank { get => m_Rank; set => m_Rank = value; }
+        public HandRank Rank { get; set; }
 
-		public ResultEntry(PokerPlayer player)
+        public ResultEntry(PokerPlayer player)
 		{
 			m_Player = player;
 		}
