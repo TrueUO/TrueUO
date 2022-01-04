@@ -35,7 +35,7 @@ namespace Xanthos.ShrinkSystem
 			Weight = 1.0;
 			Movable = true;
 			Name = "Pet Leash";
-			LootType = ShrinkConfig.BlessedLeash ? LootType.Blessed : LootType.Regular;
+			LootType = LootType.Blessed;
 		}
 
 		public PetLeash(Serial serial)
@@ -49,7 +49,7 @@ namespace Xanthos.ShrinkSystem
 
 			if (m_Charges >= 0)
             {
-                list.Add( 1060658, "Charges\t{0}", m_Charges.ToString());
+                list.Add(1060658, "Charges\t{0}", m_Charges.ToString());
             }
         }
 
@@ -61,13 +61,13 @@ namespace Xanthos.ShrinkSystem
             {
                 from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
             }
-            else if (isStaff || from.Skills[ SkillName.AnimalTaming ].Value >= ShrinkConfig.TamingRequired)
+            else if (isStaff || from.Skills[ SkillName.AnimalTaming ].Value >= ShrinkItem.TamingRequired)
             {
                 from.Target = new ShrinkTarget(from, this, isStaff);
             }
             else
             {
-                from.SendMessage("You must have at least " + ShrinkConfig.TamingRequired + " animal taming to use a pet leash.");
+                from.SendMessage("You must have at least " + ShrinkItem.TamingRequired + " animal taming to use a pet leash.");
             }
         }
 

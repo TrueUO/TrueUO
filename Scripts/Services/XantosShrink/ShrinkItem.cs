@@ -13,6 +13,12 @@ namespace Xanthos.ShrinkSystem
 
 	public class ShrinkItem : Item, IShrinkItem
 	{
+        // Settings
+        public static bool ShowPetDetails = true;		// Show stats and skills on the properties of the shrunken pet
+        public static bool AllowLocking = false;		// Allow players to lock the shrunken pet or not
+        public static double TamingRequired = 0;		// set to zero for no skill requirement to use shrink tools
+        public static bool PetAsStatuette = true;		// Deed or statuette form
+
 		// Persisted
 		private bool m_IsStatuette;
 		private bool m_Locked;
@@ -43,6 +49,15 @@ namespace Xanthos.ShrinkSystem
 		private double m_Parry;
 
         private bool m_IgnoreLockDown;	// Is only ever changed by staff
+
+        public enum BlessStatus
+        {
+            All,		// All shrink items are blessed
+            BondedOnly,	// Only shrink items for bonded pets are blessed
+            None		// No shrink items are blessed
+        }
+
+        public static BlessStatus LootStatus = BlessStatus.None;	// How the shruken pet should be as loot
 
 		[CommandProperty( AccessLevel.GameMaster )]
 		public bool IsStatuette
@@ -105,9 +120,9 @@ namespace Xanthos.ShrinkSystem
 		public ShrinkItem(BaseCreature pet) : this()
 		{
 			ShrinkPet(pet);
-			IsStatuette = ShrinkConfig.PetAsStatuette;
+			IsStatuette = PetAsStatuette;
 			m_IgnoreLockDown = false; // This is only used to allow GMs to bypass the lockdown, one pet at a time.
-			Weight = ShrinkConfig.ShrunkenWeight;
+			Weight = 10;
             Hue = m_Pet.Hue;
 		}
 
@@ -160,7 +175,7 @@ namespace Xanthos.ShrinkSystem
 			m_Pet = pet;
 			m_Owner = pet.ControlMaster;
 				
-			if (ShrinkConfig.LootStatus == ShrinkConfig.BlessStatus.All || m_Pet.IsBonded && ShrinkConfig.LootStatus == ShrinkConfig.BlessStatus.BondedOnly)
+			if (LootStatus == BlessStatus.All || m_Pet.IsBonded && LootStatus == BlessStatus.BondedOnly)
             {
                 LootType = LootType.Blessed;
             }
@@ -213,7 +228,7 @@ namespace Xanthos.ShrinkSystem
 		{
 			base.GetContextMenuEntries(from, list);
 
-			if (( ShrinkConfig.AllowLocking || m_Locked ) && from.Alive && m_Owner == from )
+			if ((AllowLocking || m_Locked) && from.Alive && m_Owner == from)
 			{
 				if (m_Locked == false)
                 {
@@ -221,7 +236,7 @@ namespace Xanthos.ShrinkSystem
                 }
                 else
                 {
-                    list.Add(new UnLockShrinkItem( from, this));
+                    list.Add(new UnLockShrinkItem(from, this));
                 }
             }
 		}
@@ -240,17 +255,17 @@ namespace Xanthos.ShrinkSystem
                 PreloadProperties();
             }
 
-            if (m_IsBonded && ShrinkConfig.BlessStatus.None == ShrinkConfig.LootStatus)	// Only show bonded when the item is not blessed
+            if (m_IsBonded && BlessStatus.None == LootStatus)	// Only show bonded when the item is not blessed
             {
                 list.Add(1049608);
             }
 
-            if (ShrinkConfig.AllowLocking || m_Locked)	// Only show lock status when locking enabled or already locked
+            if (AllowLocking || m_Locked)	// Only show lock status when locking enabled or already locked
             {
                 list.Add(1049644, m_Locked ? "Locked" : "Unlocked");
             }
 
-            if (ShrinkConfig.ShowPetDetails)
+            if (ShowPetDetails)
 			{
 				list.Add(1060663, "Name\t{0} Breed: {1} Gender: {2}", m_Name, m_Breed, m_Gender);
 				list.Add(1061640, null == m_Owner ? "nobody (WILD)" : m_Owner.Name); // Owner: ~1_OWNER~
@@ -314,6 +329,11 @@ namespace Xanthos.ShrinkSystem
 			m_PropsLoaded = true;
 		}
 
+        public static Type[] PackAnimals =
+        {
+            typeof(PackHorse), typeof(PackLlama), typeof(Beetle)
+        };
+
 		public static bool IsPackAnimal(BaseCreature pet)
 		{
 			if (pet == null || pet.Deleted)
@@ -323,7 +343,7 @@ namespace Xanthos.ShrinkSystem
 
             Type breed = pet.GetType();
 
-			foreach (Type packBreed in ShrinkConfig.PackAnimals)
+			foreach (Type packBreed in PackAnimals)
             {
                 if (breed == packBreed)
                 {
