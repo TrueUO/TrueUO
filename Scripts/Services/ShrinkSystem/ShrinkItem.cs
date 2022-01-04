@@ -26,8 +26,7 @@ namespace Server.Services.ShrinkSystem
 		// Not persisted; lazy loaded.
 		private bool m_PropsLoaded;
 		private string m_Breed;
-		private string m_Gender;
-		private bool m_IsBonded;
+        private bool m_IsBonded;
 		private string m_Name;
 		private int m_RawStr;
 		private int m_RawDex;
@@ -247,8 +246,8 @@ namespace Server.Services.ShrinkSystem
 
             if (ShowPetDetails)
 			{
-				list.Add(1060663, "Name\t{0} Breed: {1} Gender: {2}", m_Name, m_Breed, m_Gender);
-				list.Add(1061640, null == m_Owner ? "nobody (WILD)" : m_Owner.Name); // Owner: ~1_OWNER~
+				list.Add(1060663, "Name\t{0} Breed: {1}", m_Name, m_Breed);
+				list.Add(1061640, m_Owner == null ? "nobody (WILD)" : m_Owner.Name); // Owner: ~1_OWNER~
 				list.Add(1060659, "Stats\tStrength {0}, Dexterity {1}, Intelligence {2}", m_RawStr, m_RawDex, m_RawInt);
 				list.Add(1060660, "Combat Skills\tWrestling {0}, Tactics {1}, Anatomy {2}, Poisoning {3}", m_Wrestling, m_Tactics, m_Anatomy, m_Poisoning);
 				list.Add(1060661, "Magic Skills\tMagery {0}, Eval Intel {1}, Magic Resist {2}, Meditation {3}", m_Magery, m_EvalInt, m_MagicResist, m_Meditation);
@@ -266,19 +265,19 @@ namespace Server.Services.ShrinkSystem
 
 		private void PreloadProperties()
 		{
-			if (null == m_Pet)
+			if (m_Pet == null)
             {
                 return;
             }
 
             m_IsBonded = m_Pet.IsBonded;
 			m_Name = m_Pet.Name;
-			
-			m_Gender = m_Pet.Female ? "Female" : "Male";
-			m_Breed = m_Pet.GetType().Name;
+            m_Breed = m_Pet.GetType().Name;
+
 			m_RawStr = m_Pet.RawStr;
 			m_RawDex = m_Pet.RawDex;
 			m_RawInt = m_Pet.RawInt;
+
 			m_Wrestling = m_Pet.Skills[SkillName.Wrestling].Base;
 			m_Tactics = m_Pet.Skills[SkillName.Tactics].Base;
 			m_Anatomy = m_Pet.Skills[SkillName.Anatomy].Base;
