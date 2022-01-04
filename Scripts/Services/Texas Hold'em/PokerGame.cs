@@ -41,15 +41,10 @@ namespace Server.Poker
 			}
 		}
 
-        private Deck m_Deck;
-		private PokerGameState m_State;
-		private PokerDealer m_Dealer;
-		private PokerPlayer m_DealerButton;
+        private PokerPlayer m_DealerButton;
 		private PokerPlayer m_SmallBlind;
 		private PokerPlayer m_BigBlind;
-		private List<Card> m_CommunityCards;
-		private PokerGameTimer m_Timer;
-		private PlayerStructure m_Players;
+        private PlayerStructure m_Players;
 
 		public bool NeedsGumpUpdate { get; set; }
 
@@ -57,26 +52,31 @@ namespace Server.Poker
 
         public int CurrentBet { get; set; }
 
-        public Deck Deck { get => m_Deck; set => m_Deck = value; }
-		public PokerGameState State { get => m_State; set => m_State = value; }
-		public PokerDealer Dealer { get => m_Dealer; set => m_Dealer = value; }
-		public PokerPlayer DealerButton => m_DealerButton;
+        public Deck Deck { get; set; }
+
+        public PokerGameState State { get; set; }
+
+        public PokerDealer Dealer { get; set; }
+
+        public PokerPlayer DealerButton => m_DealerButton;
         public PokerPlayer SmallBlind => m_SmallBlind;
         public PokerPlayer BigBlind => m_BigBlind;
-        public List<Card> CommunityCards { get => m_CommunityCards; set => m_CommunityCards = value; }
-		public PokerGameTimer Timer { get => m_Timer; set => m_Timer = value; }
-		public PlayerStructure Players => m_Players;
+        public List<Card> CommunityCards { get; set; }
 
-        public bool IsBettingRound => (int)m_State % 2 == 0;
+        public PokerGameTimer Timer { get; set; }
+
+        public PlayerStructure Players => m_Players;
+
+        public bool IsBettingRound => (int)State % 2 == 0;
 
         public PokerGame(PokerDealer dealer)
 		{
-			m_Dealer = dealer;
+			Dealer = dealer;
 			NeedsGumpUpdate = false;
-			m_CommunityCards = new List<Card>();
-			m_State = PokerGameState.Inactive;
-			m_Deck = new Deck();
-			m_Timer = new PokerGameTimer(this);
+			CommunityCards = new List<Card>();
+			State = PokerGameState.Inactive;
+			Deck = new Deck();
+			Timer = new PokerGameTimer(this);
 			m_Players = new PlayerStructure(this);
 		}
 
@@ -237,12 +237,12 @@ namespace Server.Poker
 					m_Players.Push(player);
 				}
 
-				m_Timer.m_LastPlayer = null;
-				m_Timer.hasWarned = false;
+				Timer.m_LastPlayer = null;
+				Timer.hasWarned = false;
 
 				if (m_Players.Turn.Count == m_Players.Round.Count)
                 {
-                    m_State = (PokerGameState)((int)m_State + 1);
+                    State = (PokerGameState)((int)State + 1);
                 }
                 else
                 {
@@ -281,7 +281,7 @@ namespace Server.Poker
 				player.ClearGame();
 				player.Game = this;
 
-				if (player.Gold >= m_Dealer.BigBlind && player.IsOnline())
+				if (player.Gold >= Dealer.BigBlind && player.IsOnline())
                 {
                     m_Players.Round.Add(player);
                 }
@@ -365,37 +365,37 @@ namespace Server.Poker
                 }
             }
 
-			m_CommunityCards.Clear();
-			m_Deck = new Deck();
+			CommunityCards.Clear();
+			Deck = new Deck();
 
-			m_State = PokerGameState.DealHoleCards;
+			State = PokerGameState.DealHoleCards;
 
 			if (m_BigBlind != null)
 			{
-				m_BigBlind.Gold -= m_Dealer.BigBlind;
-				CommunityGold += m_Dealer.BigBlind;
-				m_BigBlind.RoundGold = m_Dealer.BigBlind;
-				m_BigBlind.RoundBet = m_Dealer.BigBlind;
-				m_BigBlind.Bet = m_Dealer.BigBlind;
+				m_BigBlind.Gold -= Dealer.BigBlind;
+				CommunityGold += Dealer.BigBlind;
+				m_BigBlind.RoundGold = Dealer.BigBlind;
+				m_BigBlind.RoundBet = Dealer.BigBlind;
+				m_BigBlind.Bet = Dealer.BigBlind;
 			}
 
-			m_SmallBlind.Gold -= m_BigBlind == null ? m_Dealer.BigBlind : m_Dealer.SmallBlind;
-			CommunityGold += m_BigBlind == null ? m_Dealer.BigBlind : m_Dealer.SmallBlind;
-			m_SmallBlind.RoundGold = m_BigBlind == null ? m_Dealer.BigBlind : m_Dealer.SmallBlind;
-			m_SmallBlind.RoundBet = m_BigBlind == null ? m_Dealer.BigBlind : m_Dealer.SmallBlind;
-			m_SmallBlind.Bet = m_BigBlind == null ? m_Dealer.BigBlind : m_Dealer.SmallBlind;
+			m_SmallBlind.Gold -= m_BigBlind == null ? Dealer.BigBlind : Dealer.SmallBlind;
+			CommunityGold += m_BigBlind == null ? Dealer.BigBlind : Dealer.SmallBlind;
+			m_SmallBlind.RoundGold = m_BigBlind == null ? Dealer.BigBlind : Dealer.SmallBlind;
+			m_SmallBlind.RoundBet = m_BigBlind == null ? Dealer.BigBlind : Dealer.SmallBlind;
+			m_SmallBlind.Bet = m_BigBlind == null ? Dealer.BigBlind : Dealer.SmallBlind;
 
 			if (m_BigBlind != null)
 			{
 				//m_Players.Push(m_BigBlind);
 				m_BigBlind.SetBBAction();
-				CurrentBet = m_Dealer.BigBlind;
+				CurrentBet = Dealer.BigBlind;
 			}
 			else
 			{
 				//m_Players.Push(m_SmallBlind);
 				m_SmallBlind.SetBBAction();
-				CurrentBet = m_Dealer.BigBlind;
+				CurrentBet = Dealer.BigBlind;
 			}
 
 			if (m_Players.Next() == null)
@@ -404,13 +404,13 @@ namespace Server.Poker
             }
 
             NeedsGumpUpdate = true;
-			m_Timer = new PokerGameTimer(this);
-			m_Timer.Start();
+			Timer = new PokerGameTimer(this);
+			Timer.Start();
 		}
 
 		public void End()
 		{
-			m_State = PokerGameState.Inactive;
+			State = PokerGameState.Inactive;
 
 			foreach (PokerPlayer player in m_Players.Players)
 			{
@@ -418,9 +418,9 @@ namespace Server.Poker
 				player.SendGump(new PokerTableGump(this, player));
 			}
 
-			if (m_Timer.Running)
+			if (Timer.Running)
             {
-                m_Timer.Stop();
+                Timer.Stop();
             }
         }
 
@@ -430,7 +430,7 @@ namespace Server.Poker
             {
                 foreach (PokerPlayer player in m_Players.Round)
                 {
-                    player.AddCard(m_Deck.Pop());
+                    player.AddCard(Deck.Pop());
                 }
             }
         }
@@ -477,7 +477,7 @@ namespace Server.Poker
                 canCall = true;
             }
 
-            if (currentTurn == null && m_State == PokerGameState.PreFlop)
+            if (currentTurn == null && State == PokerGameState.PreFlop)
             {
                 canCall = true;
             }
@@ -488,7 +488,7 @@ namespace Server.Poker
 			ResultEntry entry = new ResultEntry(nextTurn);
 			List<Card> bestCards;
 
-			entry.Rank = nextTurn.GetBestHand(m_CommunityCards, out bestCards);
+			entry.Rank = nextTurn.GetBestHand(CommunityCards, out bestCards);
 			entry.BestCards = bestCards;
 
 			nextTurn.SendMessage(0x22, string.Format("You have {0}.", HandRanker.RankString(entry)));
@@ -509,7 +509,7 @@ namespace Server.Poker
 				ResultEntry entry = new ResultEntry(m_Players.Round[i]);
 				List<Card> bestCards = new List<Card>();
 
-				entry.Rank = HandRanker.GetBestHand(entry.Player.GetAllCards(m_CommunityCards), out bestCards);
+				entry.Rank = HandRanker.GetBestHand(entry.Player.GetAllCards(CommunityCards), out bestCards);
 				entry.BestCards = bestCards;
 
 				results.Add(entry);
@@ -594,7 +594,7 @@ namespace Server.Poker
 
 			if (!silent) //Only rake pots that have made it past the showdown.
 			{
-				int rake = Math.Min((int)(CommunityGold * m_Dealer.Rake), m_Dealer.RakeMax);
+				int rake = Math.Min((int)(CommunityGold * Dealer.Rake), Dealer.RakeMax);
 
 				if (rake > 0)
 				{
@@ -621,7 +621,7 @@ namespace Server.Poker
 				{
 					player.Gold += diff;
 					CommunityGold -= diff;
-					PokerMessage(m_Dealer, string.Format("{0}gp has been returned to {1}.", diff, player.Mobile.Name));
+					PokerMessage(Dealer, string.Format("{0}gp has been returned to {1}.", diff, player.Mobile.Name));
 				}
 			}
 
@@ -630,7 +630,7 @@ namespace Server.Poker
 			foreach (PokerPlayer player in winners)
 			{
 				player.Gold += splitPot;
-				PokerMessage(m_Dealer, string.Format("{0} has won {1}gp.", player.Mobile.Name, splitPot));
+				PokerMessage(Dealer, string.Format("{0} has won {1}gp.", player.Mobile.Name, splitPot));
 			}
 
 			CommunityGold = 0;
@@ -652,14 +652,14 @@ namespace Server.Poker
 
 		public void DoRoundAction() //Happens once State is changed (once per state)
 		{
-			if (m_State == PokerGameState.Showdown)
+			if (State == PokerGameState.Showdown)
             {
                 DoShowdown(false);
             }
-            else if (m_State == PokerGameState.DealHoleCards)
+            else if (State == PokerGameState.DealHoleCards)
 			{
 				DealHoleCards();
-				m_State = PokerGameState.PreFlop;
+				State = PokerGameState.PreFlop;
 				NeedsGumpUpdate = true;
 			}
 			else if (!IsBettingRound)
@@ -667,11 +667,11 @@ namespace Server.Poker
 				int numberOfCards = 0;
 				string round = String.Empty;
 
-				switch (m_State)
+				switch (State)
 				{
-					case PokerGameState.Flop: numberOfCards += 3; round = "flop"; m_State = PokerGameState.PreTurn; break;
-					case PokerGameState.Turn: ++numberOfCards; round = "turn"; m_State = PokerGameState.PreRiver; break;
-					case PokerGameState.River: ++numberOfCards; round = "river"; m_State = PokerGameState.PreShowdown; break;
+					case PokerGameState.Flop: numberOfCards += 3; round = "flop"; State = PokerGameState.PreTurn; break;
+					case PokerGameState.Turn: ++numberOfCards; round = "turn"; State = PokerGameState.PreRiver; break;
+					case PokerGameState.River: ++numberOfCards; round = "river"; State = PokerGameState.PreShowdown; break;
 				}
 
 				if (numberOfCards != 0) //Pop the appropriate number of cards from the top of the deck
@@ -682,7 +682,7 @@ namespace Server.Poker
 
 					for (int i = 0; i < numberOfCards; ++i)
 					{
-						Card popped = m_Deck.Pop();
+						Card popped = Deck.Pop();
 						if (i == 2 || numberOfCards == 1)
                         {
                             sb.Append(popped.Name + ".");
@@ -692,10 +692,10 @@ namespace Server.Poker
                             sb.Append(popped.Name + ", ");
                         }
 
-                        m_CommunityCards.Add(popped);
+                        CommunityCards.Add(popped);
 					}
 
-					PokerMessage(m_Dealer, sb.ToString());
+					PokerMessage(Dealer, sb.ToString());
 					m_Players.Turn.Clear();
 					//AssignNextTurn();
 					NeedsGumpUpdate = true;
@@ -705,23 +705,23 @@ namespace Server.Poker
 			{
 				if (m_Players.Turn.Count == m_Players.Round.Count)
 				{
-					switch (m_State)
+					switch (State)
 					{
-						case PokerGameState.PreFlop: m_State = PokerGameState.Flop; break;
-						case PokerGameState.PreTurn: m_State = PokerGameState.Turn; break;
-						case PokerGameState.PreRiver: m_State = PokerGameState.River; break;
-						case PokerGameState.PreShowdown: m_State = PokerGameState.Showdown; break;
+						case PokerGameState.PreFlop: State = PokerGameState.Flop; break;
+						case PokerGameState.PreTurn: State = PokerGameState.Turn; break;
+						case PokerGameState.PreRiver: State = PokerGameState.River; break;
+						case PokerGameState.PreShowdown: State = PokerGameState.Showdown; break;
 					}
 
 					//m_Players.Turn.Clear();
 				}
-				else if (m_Players.Turn.Count == 0 && m_State != PokerGameState.PreFlop) //We need to initiate betting for this round
+				else if (m_Players.Turn.Count == 0 && State != PokerGameState.PreFlop) //We need to initiate betting for this round
 				{
 					ResetPlayerActions();
 					CheckLonePlayer();
 					AssignNextTurn();
 				}
-				else if (m_Players.Turn.Count == 0 && m_State == PokerGameState.PreFlop)
+				else if (m_Players.Turn.Count == 0 && State == PokerGameState.PreFlop)
 				{
 					CheckLonePlayer();
 					AssignNextTurn();
@@ -809,7 +809,7 @@ namespace Server.Poker
                 return;
             }
 
-            if (!m_Dealer.InRange(from.Location, 8))
+            if (!Dealer.InRange(from.Location, 8))
             {
                 from.PrivateOverheadMessage(Network.MessageType.Regular, 0x22, true, "I am too far away to do that", from.NetState);
             }
@@ -817,7 +817,7 @@ namespace Server.Poker
             {
                 from.SendMessage(0x22, "You are already seated at this table");
             }
-            else if (m_Players.Count >= m_Dealer.MaxPlayers)
+            else if (m_Players.Count >= Dealer.MaxPlayers)
             {
                 from.SendMessage(0x22, "Sorry, that table is full");
             }
@@ -827,9 +827,9 @@ namespace Server.Poker
 			{
 				Point3D seat = Point3D.Zero;
 
-				foreach (Point3D seats in m_Dealer.Seats)
+				foreach (Point3D seats in Dealer.Seats)
                 {
-                    if (!m_Dealer.SeatTaken(seats))
+                    if (!Dealer.SeatTaken(seats))
                     {
                         seat = seats;
                         break;
@@ -854,13 +854,13 @@ namespace Server.Poker
                 {
                     GameBackup.PokerGames.Add(this);
                 }
-                else if (m_State == PokerGameState.Inactive && m_Players.Count > 1 && !m_Dealer.TournamentMode)
+                else if (State == PokerGameState.Inactive && m_Players.Count > 1 && !Dealer.TournamentMode)
                 {
                     Begin();
                 }
-                else if (m_State == PokerGameState.Inactive && m_Players.Count >= m_Dealer.MaxPlayers && m_Dealer.TournamentMode)
+                else if (State == PokerGameState.Inactive && m_Players.Count >= Dealer.MaxPlayers && Dealer.TournamentMode)
 				{
-					m_Dealer.TournamentMode = false;
+					Dealer.TournamentMode = false;
 					Begin();
 				}
 
@@ -885,7 +885,7 @@ namespace Server.Poker
 				if (m_Players.Peek() == player) //It is currently their turn, fold them.
 				{
 					player.CloseGump(typeof( PokerBetGump));
-					m_Timer.m_LastPlayer = null;
+					Timer.m_LastPlayer = null;
 					player.Action = PlayerAction.Fold;
 				}
 
@@ -938,8 +938,8 @@ namespace Server.Poker
 
 				player.CloseAllGumps();
 				((PlayerMobile)from).PokerGame = null;
-				from.Location = m_Dealer.ExitLocation;
-				from.Map = m_Dealer.ExitMap;
+				from.Location = Dealer.ExitLocation;
+				from.Map = Dealer.ExitMap;
 				from.SendMessage(0x22, "You have left the table");
 
 				NeedsGumpUpdate = true;
