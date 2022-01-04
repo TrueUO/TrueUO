@@ -7,16 +7,10 @@ namespace Server.Services.ShrinkSystem
 {
 	public class ShrinkCommands
 	{
-		private static bool m_LockDown; // TODO: need to persist this.
-
-		public static void Initialize()
+        public static void Initialize()
 		{
 			CommandHandlers.Register( "Shrink", AccessLevel.GameMaster, Shrink_OnCommand );
-			CommandHandlers.Register( "ShrinkLockDown", AccessLevel.Administrator, ShrinkLockDown_OnCommand );
-			CommandHandlers.Register( "ShrinkRelease", AccessLevel.Administrator, ShrinkRelease_OnCommand );
-		}
-
-		public static bool LockDown => m_LockDown;
+        }
 
         [Usage("Shrink")]
 		[Description("Shrinks a creature.")]
@@ -27,41 +21,7 @@ namespace Server.Services.ShrinkSystem
                 from.Target = new ShrinkTarget(from, null, true);
             }
         }
-
-		[Usage("ShrinkLockDown")]
-		[Description("Disables all shrinkitems in the world.")]
-		private static void ShrinkLockDown_OnCommand(CommandEventArgs e)
-		{
-            if (e.Mobile is PlayerMobile from)
-            {
-                SetLockDown( from, true);
-            }
-        }
-
-		[Usage("ShrinkRelease")]
-		[Description("Re-enables all disabled shrink items in the world.")]
-		private static void ShrinkRelease_OnCommand(CommandEventArgs e)
-		{
-            if (e.Mobile is PlayerMobile from)
-            {
-                SetLockDown(from, false);
-            }
-        }
-
-		private static void SetLockDown(Mobile from, bool lockDown)
-		{
-			if ( m_LockDown = lockDown )
-			{
-				World.Broadcast(0x35, true, "A server wide shrinkitem lockout has initiated.");
-				World.Broadcast(0x35, true, "All shrunken pets have will remain shruken until further notice.");
-			}
-			else
-			{
-				World.Broadcast(0x35, true, "The server wide shrinkitem lockout has been lifted.");
-				World.Broadcast(0x35, true, "You may once again unshrink shrunken pets.");
-			}
-		}
-	}
+    }
 
 	public class ShrinkTarget : Target
 	{
@@ -81,19 +41,11 @@ namespace Server.Services.ShrinkSystem
 		{
 			BaseCreature pet = target as BaseCreature;
 
-			if (target == from)
+			if (target is PlayerMobile || target is Item)
             {
-                from.SendMessage("You cannot shrink yourself!");
+                from.SendMessage("You cannot shrink that.");
             }
-            else if (target is Item)
-            {
-                from.SendMessage("You cannot shrink that!");
-            }
-            else if (target is PlayerMobile)
-            {
-                from.SendMessage("That person gives you a dirty look!");
-            }
-            else if (Server.Spells.SpellHelper.CheckCombat(from))
+            else if (Spells.SpellHelper.CheckCombat(from))
             {
                 from.SendMessage("You cannot shrink your pet while you are fighting.");
             }

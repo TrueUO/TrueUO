@@ -116,7 +116,8 @@ namespace Server.Services.ShrinkSystem
 		{
 		}
 
-		public ShrinkItem(BaseCreature pet) : this()
+		public ShrinkItem(BaseCreature pet)
+            : this()
 		{
 			ShrinkPet(pet);
 			IsStatuette = PetAsStatuette;
@@ -151,13 +152,9 @@ namespace Server.Services.ShrinkSystem
             {
                 from.SendMessage("You have to many followers to claim this pet.");
             }
-            else if (Server.Spells.SpellHelper.CheckCombat(from))
+            else if (Spells.SpellHelper.CheckCombat(from))
             {
                 from.SendMessage("You cannot reclaim your pet while your fighting.");
-            }
-            else if (ShrinkCommands.LockDown && !m_IgnoreLockDown)
-            {
-                from.SendMessage(54, "The server is on a shrink item lockdown. You cannot un-shrink your pet at this time.");
             }
             else if (!m_Pet.CanBeControlledBy(from))
             {
@@ -203,13 +200,7 @@ namespace Server.Services.ShrinkSystem
             }
 
             m_Pet = null;
-			Delete();
-		}
 
-		// Summoning ball was used so dispose of the shrink item
-		public void OnPetSummoned()
-		{
-			m_Pet = null;
 			Delete();
 		}
 
@@ -283,13 +274,13 @@ namespace Server.Services.ShrinkSystem
             }
         }
 
-        public static string GetFriendlyClassName( string typeName )
+        public static string GetFriendlyClassName(string typeName)
         {
-            for ( int index = 1; index < typeName.Length; index++ )
+            for (int index = 1; index < typeName.Length; index++)
             {
                 if (char.IsUpper(typeName, index))
                 {
-                    typeName.Insert( index++, " " );
+                    typeName.Insert(index++, " ");
                 }
             }
 
@@ -328,7 +319,7 @@ namespace Server.Services.ShrinkSystem
 			m_PropsLoaded = true;
 		}
 
-        public static Type[] PackAnimals =
+        private static readonly Type[] _PackAnimals =
         {
             typeof(PackHorse), typeof(PackLlama), typeof(Beetle)
         };
@@ -342,7 +333,7 @@ namespace Server.Services.ShrinkSystem
 
             Type breed = pet.GetType();
 
-			foreach (Type packBreed in PackAnimals)
+			foreach (Type packBreed in _PackAnimals)
             {
                 if (breed == packBreed)
                 {
@@ -383,8 +374,8 @@ namespace Server.Services.ShrinkSystem
 
 	public class LockShrinkItem : ContextMenuEntry
 	{
-		private Mobile m_From;
-		private ShrinkItem m_ShrinkItem;
+		private readonly Mobile m_From;
+		private readonly ShrinkItem m_ShrinkItem;
 
 		public LockShrinkItem(Mobile from, ShrinkItem shrink)
             : base(2029, 5)
@@ -416,7 +407,8 @@ namespace Server.Services.ShrinkSystem
 		public override void OnClick()
 		{
 			m_ShrinkItem.Locked = false;
-			m_From.SendMessage( 38, "You have unlocked this shrunken pet, now anyone can reclaim it as theirs." );
+
+			m_From.SendMessage(38, "You have unlocked this shrunken pet, now anyone can reclaim it as theirs.");
 		}
 	}
 }
