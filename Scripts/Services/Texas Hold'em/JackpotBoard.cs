@@ -1,22 +1,25 @@
-using System;
 using System.Text;
-
 using Server.Poker;
 using Server.Network;
 
 namespace Server.Items
 {
-	[Flipable( 0x1E5E, 0x1E5F )]
+	[Flipable(0x1E5E, 0x1E5F)]
 	public class JackpotBoard : Item
 	{
 		[Constructable]
 		public JackpotBoard()
-			: base( 0x1E5E )
+			: base(0x1E5E)
 		{
 			Movable = false;
 			Name = "Poker Jackpot";
 			Hue = 1161;
 		}
+
+        public JackpotBoard(Serial serial)
+            : base( serial )
+        {
+        }
 
 		public override void OnDoubleClick(Mobile from)
 		{
@@ -81,11 +84,6 @@ namespace Server.Items
 		private void DisplayMessage(Mobile from, string text)
 		{
 			from.NetState.Send(new AsciiMessage(Serial, ItemID, MessageType.Regular, Hue, 3, Name, text));
-		}
-
-		public JackpotBoard(Serial serial)
-			: base( serial )
-		{
 		}
 
         public override void Serialize(GenericWriter writer)

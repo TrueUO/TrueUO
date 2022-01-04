@@ -4,55 +4,50 @@ namespace Server.Poker
 {
 	public class PlayerStructure
 	{
-		private List<PokerPlayer> m_Players;
-		private List<PokerPlayer> m_Round;
-		private List<PokerPlayer> m_Turn;
-		private PokerGame m_Game;
+        private readonly PokerGame m_Game;
 
-		public List<PokerPlayer> Players { get => m_Players; set => m_Players = value; }
-		public List<PokerPlayer> Round { get => m_Round; set => m_Round = value; }
-		public List<PokerPlayer> Turn { get => m_Turn; set => m_Turn = value; }
+		public List<PokerPlayer> Players { get; set; }
+        public List<PokerPlayer> Round { get; set; }
+        public List<PokerPlayer> Turn { get; set; }
 
-		public PokerGame Game => m_Game;
+        public PokerGame Game => m_Game;
 
-        public int Count => m_Players.Count;
+        public int Count => Players.Count;
 
         public PokerPlayer this[int index]
         {
-			get => m_Players[index]; set => m_Players[index] = value;
+			get => Players[index]; set => Players[index] = value;
         }
 
 		public PlayerStructure(PokerGame game)
 		{
-			m_Players = new List<PokerPlayer>();
-			m_Round = new List<PokerPlayer>();
-			m_Turn = new List<PokerPlayer>();
+			Players = new List<PokerPlayer>();
+			Round = new List<PokerPlayer>();
+			Turn = new List<PokerPlayer>();
 			m_Game = game;
 		}
 
 		public void Push(PokerPlayer player)
 		{
-			if (!m_Turn.Contains(player))
+			if (!Turn.Contains(player))
             {
-                m_Turn.Add(player);
+                Turn.Add(player);
             }
-
-            ;
-		}
+        }
 
 		public PokerPlayer Peek()
 		{
-			return m_Turn.Count > 0 ? m_Turn[m_Turn.Count - 1] : null;
+			return Turn.Count > 0 ? Turn[Turn.Count - 1] : null;
 		}
 
 		public PokerPlayer Prev()
 		{
-			return m_Turn.Count > 1 ? m_Turn[m_Turn.Count - 2] : null;
+			return Turn.Count > 1 ? Turn[Turn.Count - 2] : null;
 		}
 
 		public PokerPlayer Next()
 		{
-			if (m_Round.Count == 1 || m_Turn.Count == m_Round.Count)
+			if (Round.Count == 1 || Turn.Count == Round.Count)
             {
                 return null;
             }
@@ -65,7 +60,7 @@ namespace Server.Poker
 
 					if (blind != null)
                     {
-                        return m_Round.IndexOf(blind) == m_Round.Count - 1 ? m_Round[0] : m_Round[m_Round.IndexOf(blind) + 1];
+                        return Round.IndexOf(blind) == Round.Count - 1 ? Round[0] : Round[Round.IndexOf(blind) + 1];
                     }
                 }
 
@@ -76,18 +71,18 @@ namespace Server.Poker
                     return null;
                 }
 
-                return m_Round.IndexOf(dealer) == m_Round.Count - 1 ? m_Round[0] : m_Round[m_Round.IndexOf(dealer) + 1];
+                return Round.IndexOf(dealer) == Round.Count - 1 ? Round[0] : Round[Round.IndexOf(dealer) + 1];
 			}
 
-			return m_Round.IndexOf(Peek() ) == m_Round.Count - 1 ? m_Round[0] : m_Round[m_Round.IndexOf(Peek()) + 1];
+			return Round.IndexOf(Peek() ) == Round.Count - 1 ? Round[0] : Round[Round.IndexOf(Peek()) + 1];
 		}
 
-		public bool Contains(PokerPlayer player) { return m_Players.Contains(player); }
+		public bool Contains(PokerPlayer player) { return Players.Contains(player); }
 
 		public void Clear()
 		{
-			m_Turn.Clear();
-			m_Round.Clear();
+			Turn.Clear();
+			Round.Clear();
 		}
 	}
 }

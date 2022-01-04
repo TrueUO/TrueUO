@@ -30,10 +30,9 @@ namespace Server.Poker
 		private Point3D m_ExitLocation;
 		private Map m_ExitMap;
 
-		private static int m_Jackpot;
-		public static int Jackpot { get => m_Jackpot; set => m_Jackpot = value; }
+        public static int Jackpot { get; set; }
 
-		[CommandProperty(AccessLevel.Seer)]
+        [CommandProperty(AccessLevel.Seer)]
 		public bool TournamentMode { get => m_TournamentMode; set => m_TournamentMode = value; }
 
 		[CommandProperty(AccessLevel.Administrator)]
@@ -190,7 +189,7 @@ namespace Server.Poker
 		{
 			if (m_JackpotWinners != null && m_JackpotWinners.Winners != null && m_JackpotWinners.Winners.Count > 0)
 			{
-				int award = m_Jackpot / m_JackpotWinners.Winners.Count;
+				int award = Jackpot / m_JackpotWinners.Winners.Count;
 
 				if (award <= 0)
                 {
@@ -206,7 +205,7 @@ namespace Server.Poker
 					}
 				}
 
-				m_Jackpot = 0;
+				Jackpot = 0;
 				m_JackpotWinners = null;
 			}
 		}

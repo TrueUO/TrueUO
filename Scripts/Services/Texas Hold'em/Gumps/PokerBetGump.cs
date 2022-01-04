@@ -26,11 +26,6 @@ namespace Server.Poker
 			Resizable = false;
 			AddPage( 0 );
 
-			//this.AddImageTiled( 0, 0, 170, 165, 2624 );
-			//this.AddImageTiled( 2, 2, 166, 161, 3604 );
-			//this.AddImageTiled( 4, 4, 162, 157, 3504 );
-			//this.AddImageTiled( 6, 6, 158, 153, 3604 );
-			//this.AddAlphaRegion( 6, 6, 158, 153 );
             AddBackground(0, 0, 160, 155, 9270);
 
 			AddRadio(14, 10, 9727, 9730, true, canCall ? (int)Buttons.Call : (int)Buttons.Check);
