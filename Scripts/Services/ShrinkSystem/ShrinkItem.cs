@@ -15,11 +15,9 @@ namespace Server.Services.ShrinkSystem
         public static bool ShowPetDetails = true;		// Show stats and skills on the properties of the shrunken pet
         public static bool AllowLocking = false;		// Allow players to lock the shrunken pet or not
         public static double TamingRequired = 0;		// set to zero for no skill requirement to use shrink tools
-        public static bool PetAsStatuette = true;		// Deed or statuette form
 
-		// Persisted
-		private bool m_IsStatuette;
-		private bool m_Locked;
+        // Persisted
+        private bool m_Locked;
 		private Mobile m_Owner;
 		private BaseCreature m_Pet;
 
@@ -45,40 +43,15 @@ namespace Server.Services.ShrinkSystem
 		private double m_Swords;
 		private double m_Parry;
 
-        public enum BlessStatus
+        private enum BlessStatus
         {
             All,		// All shrink items are blessed
             BondedOnly,	// Only shrink items for bonded pets are blessed
             None		// No shrink items are blessed
         }
+        private const BlessStatus _LootStatus = BlessStatus.BondedOnly;
 
-        public static BlessStatus LootStatus = BlessStatus.None;	// How the shruken pet should be as loot
-
-		[CommandProperty( AccessLevel.GameMaster )]
-		public bool IsStatuette
-		{
-			get => m_IsStatuette;
-            set
-			{
-				if (ShrunkenPet == null)
-				{
-					ItemID = 0xFAA;
-					Name = "unlinked shrink item!";
-				}
-				else if (m_IsStatuette == value)
-				{
-					ItemID = ShrinkTable.Lookup(m_Pet);
-					Name = "a shrunken pet";
-				}
-				else
-				{
-					ItemID = 0x14EF;
-					Name = "a pet deed";
-				}
-			}
-		}
-
-		[CommandProperty( AccessLevel.GameMaster )]
+        [CommandProperty( AccessLevel.GameMaster )]
 		public bool Locked
 		{
 			get => m_Locked; set { m_Locked = value; InvalidateProperties(); }
@@ -96,19 +69,15 @@ namespace Server.Services.ShrinkSystem
 			get => m_Pet; set { m_Pet = value; InvalidateProperties(); }
 		}
 
-		public ShrinkItem()
-            : base()
-		{
-		}
-
 		public ShrinkItem(BaseCreature pet)
-            : this()
+            : base(ShrinkTable.Lookup(pet))
 		{
 			ShrinkPet(pet);
-			IsStatuette = PetAsStatuette;
-            Weight = 10;
+
+            Name = "a shrunken pet";
             Hue = m_Pet.Hue;
-		}
+            Weight = 10;
+        }
 
         public ShrinkItem(Serial serial)
             : base(serial)
@@ -160,7 +129,7 @@ namespace Server.Services.ShrinkSystem
 			m_Pet = pet;
 			m_Owner = pet.ControlMaster;
 				
-			if (LootStatus == BlessStatus.All || m_Pet.IsBonded && LootStatus == BlessStatus.BondedOnly)
+			if (_LootStatus == BlessStatus.All || m_Pet.IsBonded && _LootStatus == BlessStatus.BondedOnly)
             {
                 LootType = LootType.Blessed;
             }
@@ -234,7 +203,7 @@ namespace Server.Services.ShrinkSystem
                 PreloadProperties();
             }
 
-            if (m_IsBonded && BlessStatus.None == LootStatus)	// Only show bonded when the item is not blessed
+            if (m_IsBonded && BlessStatus.None == _LootStatus)	// Only show bonded when the item is not blessed
             {
                 list.Add(1049608);
             }
@@ -300,7 +269,6 @@ namespace Server.Services.ShrinkSystem
 			base.Serialize(writer);
             writer.Write(0); // version
 
-			writer.Write(m_IsStatuette);
 			writer.Write(m_Locked);
 			writer.Write((Mobile)m_Owner);
 			writer.Write((Mobile)m_Pet);
@@ -311,7 +279,6 @@ namespace Server.Services.ShrinkSystem
 			base.Deserialize(reader);
             reader.ReadInt();
 
-            m_IsStatuette = reader.ReadBool();
             m_Locked = reader.ReadBool();
             m_Owner = (PlayerMobile)reader.ReadMobile();
             m_Pet = (BaseCreature)reader.ReadMobile();
