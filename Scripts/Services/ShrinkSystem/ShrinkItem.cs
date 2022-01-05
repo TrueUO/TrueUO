@@ -11,7 +11,7 @@ namespace Server.Services.ShrinkSystem
 	public class ShrinkItem : Item, IShrinkItem
 	{
         // Settings
-        public static double TamingRequired = 0; // set to zero for no skill requirement to use shrink tools
+        public const double TamingRequired = 0; // set to zero for no skill requirement to use Pet Leash.
 
         // Persisted
         private Mobile m_Owner;

@@ -18,7 +18,7 @@ namespace Server.Services.ShrinkSystem
 			get => m_Charges;
             set
 			{
-				if (0 == m_Charges || 0 == (m_Charges = value))
+				if (m_Charges == 0 || (m_Charges = value) == 0)
                 {
                     Delete();
                 }
