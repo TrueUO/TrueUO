@@ -1,3 +1,4 @@
+using Server.Engines.Despise;
 using Server.Mobiles;
 using Server.Targeting;
 
@@ -94,51 +95,46 @@ namespace Server.Services.ShrinkSystem
             from.SendMessage("Target the pet you wish to shrink.");
 		}
 
-		protected override void OnTarget(Mobile from, object targeted)
-		{
-            if (!(targeted is BaseCreature pet)) // null check
+        protected override void OnTarget(Mobile from, object targeted)
+        {
+            if (targeted is BaseCreature pet && pet.ControlMaster == from)
             {
-                from.SendMessage("That is not a pet!");
+                if (pet.IsDeadPet)
+                {
+                    from.SendMessage("You cannot shrink the dead!");
+                }
+                else if (pet.Summoned || pet.Allured || pet is BaseTalismanSummon || pet is DespiseCreature)
+                {
+                    from.SendMessage("You cannot shrink a summoned creature!");
+                }
+                else if (pet.Combatant != null && pet.InRange(pet.Combatant, 12) && pet.Map == pet.Combatant.Map || Spells.SpellHelper.CheckCombat(from))
+                {
+                    from.SendMessage("You or your pet are engaged in combat; you cannot shrink it yet.");
+                }
+                else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
+                {
+                    from.SendLocalizedMessage(1042563); // You need to unload your pet.
+                }
+                else
+                {
+                    IEntity p1 = new Entity(Serial.Zero, new Point3D(from.X, from.Y, from.Z), from.Map);
+                    IEntity p2 = new Entity(Serial.Zero, new Point3D(from.X, from.Y, from.Z + 50 ), from.Map);
+
+                    Effects.SendMovingParticles(p2, p1, ShrinkTable.Lookup(pet), 1, 0, true, false, 0, 3, 1153, 1, 0, EffectLayer.Head, 0x100);
+
+                    from.PlaySound(492);
+                    from.AddToBackpack(new ShrinkItem(pet));
+
+                    if (_ShrinkTool != null && _ShrinkTool.ShrinkCharges > 0)
+                    {
+                        _ShrinkTool.ShrinkCharges--;
+                    }
+                }
             }
-            else if (!pet.Controlled)
-            {
-                from.SendMessage("You cannot not shrink wild creatures.");
-            }
-            else if (pet.ControlMaster != from)
+            else
             {
                 from.SendLocalizedMessage(1042562); // You do not own that pet!
             }
-            else if (pet.IsDeadPet)
-            {
-                from.SendMessage("You cannot shrink the dead!");
-            }
-            else if (pet.Summoned || pet.Allured || pet is BaseTalismanSummon)
-            {
-                from.SendMessage("You cannot shrink a summoned creature!");
-            }
-            else if (pet.Combatant != null && pet.InRange(pet.Combatant, 12) && pet.Map == pet.Combatant.Map || Spells.SpellHelper.CheckCombat(from))
-            {
-                from.SendMessage("You or your pet are engaged in combat; you cannot shrink it yet.");
-            }
-            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
-            {
-                from.SendLocalizedMessage(1042563); // You need to unload your pet.
-            }
-            else
-			{
-                IEntity p1 = new Entity(Serial.Zero, new Point3D(from.X, from.Y, from.Z), from.Map);
-				IEntity p2 = new Entity(Serial.Zero, new Point3D(from.X, from.Y, from.Z + 50 ), from.Map);
-
-                Effects.SendMovingParticles(p2, p1, ShrinkTable.Lookup(pet), 1, 0, true, false, 0, 3, 1153, 1, 0, EffectLayer.Head, 0x100);
-
-				from.PlaySound(492);
-				from.AddToBackpack(new ShrinkItem(pet));
-
-				if (_ShrinkTool != null && _ShrinkTool.ShrinkCharges > 0)
-                {
-                    _ShrinkTool.ShrinkCharges--;
-                }
-            }
-		}
+        }
     }
 }
