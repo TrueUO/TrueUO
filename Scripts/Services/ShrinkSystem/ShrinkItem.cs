@@ -1,6 +1,7 @@
-using Server.Mobiles;
 using System.Collections.Generic;
 using Server.ContextMenus;
+using Server.Mobiles;
+using Server.Spells;
 
 namespace Server.Services.ShrinkSystem
 {
@@ -22,8 +23,7 @@ namespace Server.Services.ShrinkSystem
 		private BaseCreature m_Pet;
 
 		// Not persisted; lazy loaded.
-		private bool m_PropsLoaded;
-		private string m_Breed;
+        private string m_Breed;
         private bool m_IsBonded;
 		private string m_Name;
 		private int m_RawStr;
@@ -77,6 +77,8 @@ namespace Server.Services.ShrinkSystem
             Name = "a shrunken pet";
             Hue = m_Pet.Hue;
             Weight = 10;
+
+            LootType = pet.IsBonded ? LootType.Blessed : LootType.Regular;
         }
 
         public ShrinkItem(Serial serial)
@@ -86,11 +88,6 @@ namespace Server.Services.ShrinkSystem
 
 		public override void OnDoubleClick(Mobile from)
 		{
-			if (!m_PropsLoaded)
-            {
-                PreloadProperties();
-            }
-
             if (!IsChildOf(from.Backpack))
             {
                 from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
@@ -110,7 +107,7 @@ namespace Server.Services.ShrinkSystem
             {
                 from.SendMessage("You have to many followers to claim this pet.");
             }
-            else if (Spells.SpellHelper.CheckCombat(from))
+            else if (SpellHelper.CheckCombat(from))
             {
                 from.SendMessage("You cannot reclaim your pet while your fighting.");
             }
@@ -120,7 +117,19 @@ namespace Server.Services.ShrinkSystem
             }
             else
             {
-                UnshrinkPet(from);
+                m_Pet.SetControlMaster(from);
+                m_Pet.IsStabled = false;
+
+                m_Pet.MoveToWorld(from.Location, from.Map);
+
+                if (from != m_Owner)
+                {
+                    m_Pet.IsBonded = false;
+                }
+
+                m_Pet = null;
+
+                Delete();
             }
         }
 
@@ -128,39 +137,16 @@ namespace Server.Services.ShrinkSystem
 		{
 			m_Pet = pet;
 			m_Owner = pet.ControlMaster;
-				
-			if (_LootStatus == BlessStatus.All || m_Pet.IsBonded && _LootStatus == BlessStatus.BondedOnly)
-            {
-                LootType = LootType.Blessed;
-            }
-            else
-            {
-                LootType = LootType.Regular;
-            }
 
+            m_Pet.ControlTarget = null;
+            m_Pet.ControlOrder = OrderType.Stay;
             m_Pet.Internalize();
+
 			m_Pet.SetControlMaster(null);
-			m_Pet.ControlOrder = OrderType.Stay;
-			m_Pet.SummonMaster = null;
-			m_Pet.IsStabled = true;
+            m_Pet.SummonMaster = null;
+            m_Pet.Loyalty = BaseCreature.MaxLoyalty;
+            m_Pet.IsStabled = true;
         }
-
-		private void UnshrinkPet(Mobile from)
-		{
-			m_Pet.SetControlMaster(from);
-			m_Pet.IsStabled = false;
-
-			m_Pet.MoveToWorld(from.Location, from.Map);
-
-			if (from != m_Owner)
-            {
-                m_Pet.IsBonded = false;
-            }
-
-            m_Pet = null;
-
-			Delete();
-		}
 
 		public override void Delete()
 		{
@@ -178,7 +164,7 @@ namespace Server.Services.ShrinkSystem
 
 			if ((AllowLocking || m_Locked) && from.Alive && m_Owner == from)
 			{
-				if (m_Locked == false)
+				if (!m_Locked)
                 {
                     list.Add(new LockShrinkItem(from, this));
                 }
@@ -198,15 +184,27 @@ namespace Server.Services.ShrinkSystem
                 return;
             }
 
-            if (!m_PropsLoaded)
-            {
-                PreloadProperties();
-            }
+            m_IsBonded = m_Pet.IsBonded;
+            m_Name = m_Pet.Name;
+            m_Breed = m_Pet.GetType().Name;
 
-            if (m_IsBonded && BlessStatus.None == _LootStatus)	// Only show bonded when the item is not blessed
-            {
-                list.Add(1049608);
-            }
+            m_RawStr = m_Pet.RawStr;
+            m_RawDex = m_Pet.RawDex;
+            m_RawInt = m_Pet.RawInt;
+
+            m_Wrestling = m_Pet.Skills[SkillName.Wrestling].Base;
+            m_Tactics = m_Pet.Skills[SkillName.Tactics].Base;
+            m_Anatomy = m_Pet.Skills[SkillName.Anatomy].Base;
+            m_Poisoning = m_Pet.Skills[SkillName.Poisoning].Base;
+            m_Magery = m_Pet.Skills[SkillName.Magery].Base;
+            m_EvalInt = m_Pet.Skills[SkillName.EvalInt].Base;
+            m_MagicResist = m_Pet.Skills[SkillName.MagicResist].Base;
+            m_Meditation = m_Pet.Skills[SkillName.Meditation].Base;
+            m_Parry = m_Pet.Skills[SkillName.Parry].Base;
+            m_Archery = m_Pet.Skills[SkillName.Archery].Base;
+            m_Fencing = m_Pet.Skills[SkillName.Fencing].Base;
+            m_Swords = m_Pet.Skills[SkillName.Swords].Base;
+            m_Macing = m_Pet.Skills[SkillName.Macing].Base;
 
             if (AllowLocking || m_Locked)	// Only show lock status when locking enabled or already locked
             {
@@ -216,6 +214,12 @@ namespace Server.Services.ShrinkSystem
             if (ShowPetDetails)
 			{
 				list.Add(1060663, "Name\t{0} Breed: {1}", m_Name, m_Breed);
+
+                if (m_IsBonded)	
+                {
+                    list.Add(1049608);
+                }
+
 				list.Add(1061640, m_Owner == null ? "nobody (WILD)" : m_Owner.Name); // Owner: ~1_OWNER~
 				list.Add(1060659, "Stats\tStrength {0}, Dexterity {1}, Intelligence {2}", m_RawStr, m_RawDex, m_RawInt);
 				list.Add(1060660, "Combat Skills\tWrestling {0}, Tactics {1}, Anatomy {2}, Poisoning {3}", m_Wrestling, m_Tactics, m_Anatomy, m_Poisoning);
@@ -232,46 +236,14 @@ namespace Server.Services.ShrinkSystem
             }
         }
 
-		private void PreloadProperties()
-		{
-			if (m_Pet == null)
-            {
-                return;
-            }
-
-            m_IsBonded = m_Pet.IsBonded;
-			m_Name = m_Pet.Name;
-            m_Breed = m_Pet.GetType().Name;
-
-			m_RawStr = m_Pet.RawStr;
-			m_RawDex = m_Pet.RawDex;
-			m_RawInt = m_Pet.RawInt;
-
-			m_Wrestling = m_Pet.Skills[SkillName.Wrestling].Base;
-			m_Tactics = m_Pet.Skills[SkillName.Tactics].Base;
-			m_Anatomy = m_Pet.Skills[SkillName.Anatomy].Base;
-			m_Poisoning = m_Pet.Skills[SkillName.Poisoning].Base;
-			m_Magery = m_Pet.Skills[SkillName.Magery].Base;
-			m_EvalInt = m_Pet.Skills[SkillName.EvalInt].Base;
-			m_MagicResist = m_Pet.Skills[SkillName.MagicResist].Base;
-			m_Meditation = m_Pet.Skills[SkillName.Meditation].Base;
-			m_Parry = m_Pet.Skills[SkillName.Parry].Base;
-			m_Archery = m_Pet.Skills[SkillName.Archery].Base;
-			m_Fencing = m_Pet.Skills[SkillName.Fencing].Base;
-			m_Swords = m_Pet.Skills[SkillName.Swords].Base;
-			m_Macing = m_Pet.Skills[SkillName.Macing].Base;
-
-			m_PropsLoaded = true;
-		}
-
         public override void Serialize(GenericWriter writer)
 		{
 			base.Serialize(writer);
             writer.Write(0); // version
 
 			writer.Write(m_Locked);
-			writer.Write((Mobile)m_Owner);
-			writer.Write((Mobile)m_Pet);
+			writer.Write(m_Owner);
+			writer.Write(m_Pet);
 		}
 
 		public override void Deserialize(GenericReader reader)

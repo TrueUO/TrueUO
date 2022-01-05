@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Server.Mobiles;
 using Server.Commands;
 using Server.Targeting;
@@ -7,7 +5,7 @@ using Server.Regions;
 
 namespace Server.Services.ShrinkSystem
 {
-	public class ShrinkCommands
+	public static class ShrinkCommands
 	{
         public static void Initialize()
 		{
@@ -43,7 +41,7 @@ namespace Server.Services.ShrinkSystem
             {
                 from.SendMessage("That is not a pet!");
             }
-            else if (pet.Controlled == false)
+            else if (!pet.Controlled)
             {
                 from.SendMessage("You cannot not shrink wild creatures.");
             }
@@ -63,7 +61,7 @@ namespace Server.Services.ShrinkSystem
             {
                 from.SendMessage("You or your pet are engaged in combat; you cannot shrink it yet.");
             }
-            else if (IsPackAnimal(pet) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
+            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
             {
                 from.SendMessage("You must unload this pet's pack before it can be shrunk.");
             }
@@ -100,20 +98,5 @@ namespace Server.Services.ShrinkSystem
                 }
             }
 		}
-
-        private static readonly Type[] _PackAnimals =
-        {
-            typeof(PackHorse), typeof(PackLlama), typeof(Beetle)
-        };
-
-        private static bool IsPackAnimal(BaseCreature pet)
-        {
-            if (pet == null || pet.Deleted)
-            {
-                return false;
-            }
-
-            return _PackAnimals.Any();
-        }
-	}
+    }
 }
