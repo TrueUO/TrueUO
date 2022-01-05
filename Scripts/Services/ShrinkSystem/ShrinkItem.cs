@@ -98,6 +98,7 @@ namespace Server.Services.ShrinkSystem
             m_Pet.SummonMaster = null;
             m_Pet.Loyalty = BaseCreature.MaxLoyalty;
             m_Pet.IsStabled = true;
+            m_Pet.StopDeleteTimer();
         }
 
 		public override void Delete()
