@@ -11,7 +11,7 @@ namespace Server.Services.ShrinkSystem
 	public class ShrinkItem : Item, IShrinkItem
 	{
         // Settings
-        public static double TamingRequired = 0;		// set to zero for no skill requirement to use shrink tools
+        public static double TamingRequired = 0; // set to zero for no skill requirement to use shrink tools
 
         // Persisted
         private Mobile m_Owner;
@@ -35,10 +35,9 @@ namespace Server.Services.ShrinkSystem
 			ShrinkPet(pet);
 
             Name = "a shrunken pet";
-            Hue = m_Pet.Hue;
             Weight = 10;
-
-            LootType = pet.IsBonded ? LootType.Blessed : LootType.Regular;
+            Hue = m_Pet.Hue;
+            LootType = m_Pet.IsBonded ? LootType.Blessed : LootType.Regular;
         }
 
         public ShrinkItem(Serial serial)
@@ -89,7 +88,7 @@ namespace Server.Services.ShrinkSystem
 		private void ShrinkPet(BaseCreature pet)
 		{
 			m_Pet = pet;
-			m_Owner = pet.ControlMaster;
+            m_Owner = pet.ControlMaster;
 
             m_Pet.ControlTarget = null;
             m_Pet.ControlOrder = OrderType.Stay;
