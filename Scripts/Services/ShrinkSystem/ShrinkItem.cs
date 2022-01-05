@@ -10,10 +10,6 @@ namespace Server.Services.ShrinkSystem
 
 	public class ShrinkItem : Item, IShrinkItem
 	{
-        // Settings
-        public const double TamingRequired = 0; // set to zero for no skill requirement to use Pet Leash.
-
-        // Persisted
         private Mobile m_Owner;
 		private BaseCreature m_Pet;
 
@@ -51,13 +47,13 @@ namespace Server.Services.ShrinkSystem
             {
                 from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
             }
-            else if (m_Pet == null || m_Pet.Deleted || ItemID == 0xFAA)
+            else if (m_Pet == null || m_Pet.Deleted)
             {
-                from.SendMessage("Due to unforeseen circumstances your pet is lost forever.");
+                from.SendMessage("A pet does not seem to be linked to this statue. Please page a Game Master for assistance.");
             }
             else if (from.Followers + m_Pet.ControlSlots > from.FollowersMax)
             {
-                from.SendMessage("You have to many followers to claim this pet.");
+                from.SendLocalizedMessage(1049645); // You have too many followers to summon that creature.
             }
             else if (SpellHelper.CheckCombat(from))
             {

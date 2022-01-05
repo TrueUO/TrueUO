@@ -33,11 +33,10 @@ namespace Server.Services.ShrinkSystem
 		public PetLeash()
             : base(0x1374)
 		{
+            Name = "Pet Leash";
+            LootType = LootType.Blessed;
 			Weight = 1.0;
-			Movable = true;
-			Name = "Pet Leash";
-			LootType = LootType.Blessed;
-		}
+        }
 
 		public PetLeash(Serial serial)
             : base(serial)
@@ -56,19 +55,13 @@ namespace Server.Services.ShrinkSystem
 
 		public override void OnDoubleClick(Mobile from)
 		{
-			bool isStaff = from.AccessLevel != AccessLevel.Player;
-
-			if (!IsChildOf(from.Backpack))
+            if (!IsChildOf(from.Backpack))
             {
                 from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
             }
-            else if (isStaff || from.Skills[ SkillName.AnimalTaming ].Value >= ShrinkItem.TamingRequired)
-            {
-                from.Target = new ShrinkTarget(from, this);
-            }
             else
             {
-                from.SendMessage("You must have at least " + ShrinkItem.TamingRequired + " animal taming to use a pet leash.");
+                from.Target = new ShrinkTarget(from, this);
             }
         }
 
@@ -113,7 +106,7 @@ namespace Server.Services.ShrinkSystem
             }
             else if (pet.ControlMaster != from)
             {
-                from.SendMessage("That is not your pet.");
+                from.SendLocalizedMessage(1042562); // You do not own that pet!
             }
             else if (pet.IsDeadPet)
             {
@@ -129,7 +122,7 @@ namespace Server.Services.ShrinkSystem
             }
             else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
             {
-                from.SendMessage("You must unload this pet's pack before it can be shrunk.");
+                from.SendLocalizedMessage(1042563); // You need to unload your pet.
             }
             else
 			{
