@@ -13,7 +13,6 @@ namespace Server.Services.ShrinkSystem
 	public class ShrinkItem : Item, IShrinkItem
 	{
         // Settings
-        public static bool ShowPetDetails = true;		// Show stats and skills on the properties of the shrunken pet
         public static bool AllowLocking = false;		// Allow players to lock the shrunken pet or not
         public static double TamingRequired = 0;		// set to zero for no skill requirement to use shrink tools
 
@@ -37,19 +36,6 @@ namespace Server.Services.ShrinkSystem
 		private double m_EvalInt;
 		private double m_MagicResist;
 		private double m_Meditation;
-		private double m_Archery;
-		private double m_Fencing;
-		private double m_Macing;
-		private double m_Swords;
-		private double m_Parry;
-
-        private enum BlessStatus
-        {
-            All,		// All shrink items are blessed
-            BondedOnly,	// Only shrink items for bonded pets are blessed
-            None		// No shrink items are blessed
-        }
-        private const BlessStatus _LootStatus = BlessStatus.BondedOnly;
 
         [CommandProperty( AccessLevel.GameMaster )]
 		public bool Locked
@@ -187,11 +173,9 @@ namespace Server.Services.ShrinkSystem
             m_IsBonded = m_Pet.IsBonded;
             m_Name = m_Pet.Name;
             m_Breed = m_Pet.GetType().Name;
-
             m_RawStr = m_Pet.RawStr;
             m_RawDex = m_Pet.RawDex;
             m_RawInt = m_Pet.RawInt;
-
             m_Wrestling = m_Pet.Skills[SkillName.Wrestling].Base;
             m_Tactics = m_Pet.Skills[SkillName.Tactics].Base;
             m_Anatomy = m_Pet.Skills[SkillName.Anatomy].Base;
@@ -200,40 +184,23 @@ namespace Server.Services.ShrinkSystem
             m_EvalInt = m_Pet.Skills[SkillName.EvalInt].Base;
             m_MagicResist = m_Pet.Skills[SkillName.MagicResist].Base;
             m_Meditation = m_Pet.Skills[SkillName.Meditation].Base;
-            m_Parry = m_Pet.Skills[SkillName.Parry].Base;
-            m_Archery = m_Pet.Skills[SkillName.Archery].Base;
-            m_Fencing = m_Pet.Skills[SkillName.Fencing].Base;
-            m_Swords = m_Pet.Skills[SkillName.Swords].Base;
-            m_Macing = m_Pet.Skills[SkillName.Macing].Base;
-
+            
             if (AllowLocking || m_Locked)	// Only show lock status when locking enabled or already locked
             {
                 list.Add(1049644, m_Locked ? "Locked" : "Unlocked");
             }
 
-            if (ShowPetDetails)
-			{
-				list.Add(1060663, "Name\t{0} Breed: {1}", m_Name, m_Breed);
+            list.Add(1060663, "Name\t{0} Breed: {1}", m_Name, m_Breed);
 
-                if (m_IsBonded)	
-                {
-                    list.Add(1049608);
-                }
-
-				list.Add(1061640, m_Owner == null ? "nobody (WILD)" : m_Owner.Name); // Owner: ~1_OWNER~
-				list.Add(1060659, "Stats\tStrength {0}, Dexterity {1}, Intelligence {2}", m_RawStr, m_RawDex, m_RawInt);
-				list.Add(1060660, "Combat Skills\tWrestling {0}, Tactics {1}, Anatomy {2}, Poisoning {3}", m_Wrestling, m_Tactics, m_Anatomy, m_Poisoning);
-				list.Add(1060661, "Magic Skills\tMagery {0}, Eval Intel {1}, Magic Resist {2}, Meditation {3}", m_Magery, m_EvalInt, m_MagicResist, m_Meditation);
-
-				if (!(0 == m_Parry && 0 == m_Archery))
-                {
-                    list.Add(1060661, "Weapon Skills\tArchery {0}, Fencing {1}, Macing {2}, Parry {3}, Swords {4}", m_Archery, m_Fencing, m_Macing, m_Parry, m_Swords );
-                }
-            }
-			else
+            if (m_IsBonded)
             {
-                list.Add( 1060663, "Name\t{0}", m_Name );
+                list.Add(1049608);
             }
+
+            list.Add(1061640, m_Owner == null ? "nobody (WILD)" : m_Owner.Name); // Owner: ~1_OWNER~
+            list.Add(1060659, "Stats\tStrength {0}, Dexterity {1}, Intelligence {2}", m_RawStr, m_RawDex, m_RawInt);
+            list.Add(1060660, "Combat Skills\tWrestling {0}, Tactics {1}, Anatomy {2}, Poisoning {3}", m_Wrestling, m_Tactics, m_Anatomy, m_Poisoning);
+            list.Add(1060661, "Magic Skills\tMagery {0}, Eval Intel {1}, Magic Resist {2}, Meditation {3}", m_Magery, m_EvalInt, m_MagicResist, m_Meditation);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -264,41 +231,39 @@ namespace Server.Services.ShrinkSystem
 
 	public class LockShrinkItem : ContextMenuEntry
 	{
-		private readonly Mobile m_From;
-		private readonly ShrinkItem m_ShrinkItem;
+		private readonly Mobile _From;
+		private readonly ShrinkItem _ShrinkItem;
 
 		public LockShrinkItem(Mobile from, ShrinkItem shrink)
             : base(2029, 5)
 		{
-			m_From = from;
-			m_ShrinkItem = shrink;
+			_From = from;
+			_ShrinkItem = shrink;
 		}
 
 		public override void OnClick()
 		{
-			m_ShrinkItem.Locked = true;
-
-			m_From.SendMessage(38, "You have locked this shrunken pet so only you can reclaim it.");
+			_ShrinkItem.Locked = true;
+            _From.SendMessage(38, "You have locked this shrunken pet so only you can reclaim it.");
 		}
 	}
 
 	public class UnLockShrinkItem : ContextMenuEntry
 	{
-		private Mobile m_From;
-		private ShrinkItem m_ShrinkItem;
+		private Mobile _From;
+		private ShrinkItem _ShrinkItem;
 
 		public UnLockShrinkItem(Mobile from, ShrinkItem shrink)
             : base(2033, 5)
 		{
-			m_From = from;
-			m_ShrinkItem = shrink;
+			_From = from;
+			_ShrinkItem = shrink;
 		}
 
 		public override void OnClick()
 		{
-			m_ShrinkItem.Locked = false;
-
-			m_From.SendMessage(38, "You have unlocked this shrunken pet, now anyone can reclaim it as theirs.");
+			_ShrinkItem.Locked = false;
+            _From.SendMessage(38, "You have unlocked this shrunken pet, now anyone can reclaim it as theirs.");
 		}
 	}
 }
