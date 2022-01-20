@@ -202,7 +202,7 @@ namespace Server.Items
                 {
                     User.SendLocalizedMessage(1076766); // That is too far away.
                 }
-                else if (!Moonstone.IsLockedDown|| !Moonstone.IsSecure)
+                else if (!Moonstone.IsLockedDown)
                 {
                     User.SendLocalizedMessage(502692); // This must be in a house and be locked down to work.
                 }
