@@ -2783,25 +2783,18 @@ namespace Server.Mobiles
 
             if (m_Mobile.NextReacquireTime > Core.TickCount)
             {
-                //TODO - Do not push this message
-                m_Mobile.Say("Ill fight you in " + ((m_Mobile.NextReacquireTime - Core.TickCount) / 1000) + " seconds");
                 m_Mobile.FocusMob = null;
                 return false;
             }
 
             if (m_Mobile.NextReacquireTime < Core.TickCount - (int)m_Mobile.ReacquireDelay.TotalMilliseconds)
             {
-                //TODO - Do not push this message
-                m_Mobile.Say("Not seen you in " + ((m_Mobile.NextReacquireTime - Core.TickCount) / 1000) + " seconds");
                 m_Mobile.NextReacquireTime = Core.TickCount + (int)m_Mobile.ReacquireDelay.TotalMilliseconds;
                 m_Mobile.FocusMob = null;
                 return false;
             }
 
             m_Mobile.NextReacquireTime = Core.TickCount + (int)m_Mobile.ReacquireDelay.TotalMilliseconds;
-
-            //TODO - Do not push this message
-            m_Mobile.Say("Fight time");
 
             m_Mobile.DebugSay("Acquiring...");
 
