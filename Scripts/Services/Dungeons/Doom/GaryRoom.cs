@@ -171,6 +171,7 @@ namespace Server.Engines.Doom
                             if (Spawn is Dragon)
                             {
                                 Spawn.Body = 155;
+                                Spawn.Tamable = false;
                                 Spawn.CorpseNameOverride = "a rotting corpse";
                             }
 
