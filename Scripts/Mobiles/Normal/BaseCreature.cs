@@ -4533,7 +4533,12 @@ namespace Server.Mobiles
                     }
                 }
             }
-            else if (ReacquireOnMovement)
+            else if (ReacquireOnMovement &&
+                Combatant == null
+                && !m.Hidden
+                && m.Alive
+                && (m is PlayerMobile || (m is BaseCreature bc && (bc.Controlled || bc.Summoned)))
+                && InLOS(m))
             {
                 ForceReacquire();
             }
