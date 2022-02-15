@@ -4537,7 +4537,7 @@ namespace Server.Mobiles
                 Combatant == null
                 && !m.Hidden
                 && m.Alive
-                && (m is PlayerMobile || (m is BaseCreature bc && (bc.Controlled || bc.Summoned)))
+                && (m.IsPlayer() || (m is BaseCreature bc && (bc.Controlled || bc.Summoned)))
                 && InLOS(m))
             {
                 ForceReacquire();
