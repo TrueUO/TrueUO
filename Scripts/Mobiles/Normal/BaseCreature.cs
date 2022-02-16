@@ -4537,10 +4537,16 @@ namespace Server.Mobiles
                 Combatant == null
                 && !m.Hidden
                 && m.Alive
-                && ((m.IsPlayer() && m is PlayerMobile) || (m is BaseCreature bc && (bc.Controlled || bc.Summoned)))
+               && ((m.IsPlayer() && m is PlayerMobile) || (m is BaseCreature bc && (bc.Controlled || bc.Summoned)))
                 && InLOS(m))
             {
-                ForceReacquire();
+                Direction targetDirection = this.GetDirectionTo(m);
+
+                if ((this.Direction & targetDirection) == targetDirection && m.InRange(this.Location, 4))
+                {
+                    ForceReacquire();
+                }
+
             }
 
             SpecialAbility.CheckApproachTrigger(this, m, oldLocation);
