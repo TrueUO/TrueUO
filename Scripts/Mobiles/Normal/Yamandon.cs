@@ -48,7 +48,6 @@ namespace Server.Mobiles
         {
         }
 
-        public override bool ReacquireOnMovement => true;
         public override Poison PoisonImmune => Poison.Lethal;
         public override Poison HitPoison => Utility.RandomBool() ? Poison.Deadly : Poison.Lethal;
         public override int TreasureMapLevel => 5;
