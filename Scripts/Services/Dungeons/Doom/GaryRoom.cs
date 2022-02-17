@@ -64,7 +64,7 @@ namespace Server.Engines.Doom
         {
             typeof(BoneDemon), typeof(SkeletalKnight), typeof(SkeletalMage), typeof(DarkGuardian), typeof(Devourer),
             typeof(FleshGolem), typeof(Gibberling), typeof(AncientLich), typeof(Lich), typeof(LichLord),
-            typeof(Mummy), typeof(PatchworkSkeleton), typeof(Ravager), typeof(RestlessSoul), typeof(Dragon),
+            typeof(Mummy), typeof(PatchworkSkeleton), typeof(Ravager), typeof(RestlessSoul), typeof(RottingCorpse),
             typeof(SkeletalDragon), typeof(VampireBat), typeof(WailingBanshee), typeof(WandererOfTheVoid)
         };
 
@@ -168,10 +168,9 @@ namespace Server.Engines.Doom
                         {
                             Spawn.Kills = 100;
 
-                            if (Spawn is Dragon)
+                            if (Spawn is RottingCorpse)
                             {
-                                Spawn.Body = 155;
-                                Spawn.CorpseNameOverride = "a rotting corpse";
+                                Spawn.SetSpecialAbility(SpecialAbility.DragonBreath);
                             }
 
                             Spawn.MoveToWorld(_SpawnLoc, Map.Malas);

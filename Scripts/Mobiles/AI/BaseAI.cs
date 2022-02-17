@@ -2787,6 +2787,13 @@ namespace Server.Mobiles
                 return false;
             }
 
+            if (m_Mobile.NextReacquireTime < Core.TickCount - (int)m_Mobile.ReacquireDelay.TotalMilliseconds)
+            {
+                m_Mobile.NextReacquireTime = Core.TickCount + (int)m_Mobile.ReacquireDelay.TotalMilliseconds;
+                m_Mobile.FocusMob = null;
+                return false;
+            }
+
             m_Mobile.NextReacquireTime = Core.TickCount + (int)m_Mobile.ReacquireDelay.TotalMilliseconds;
 
             m_Mobile.DebugSay("Acquiring...");
