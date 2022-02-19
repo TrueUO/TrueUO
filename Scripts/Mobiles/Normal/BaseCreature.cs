@@ -40,25 +40,25 @@ namespace Server.Mobiles
         Evil, // Only attack aggressor -or- negative karma
         Good // Only attack aggressor -or- positive karma
     }
-
+    [Flags]
     public enum OrderType
     {
-        None, //When no order, let's roam
-        Come, //"(All/Name) come"  Summons all or one pet to your location.
-        Drop, //"(Name) drop"  Drops its loot to the ground (if it carries any).
-        Follow, //"(Name) follow"  Follows targeted being.
-                //"(All/Name) follow me"  Makes all or one pet follow you.
-        Friend, //"(Name) friend"  Allows targeted player to confirm resurrection.
-        Unfriend, // Remove a friend
-        Guard, //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
-               //"(All/Name) guard me"  Makes all or one pet guard you.
-        Attack, //"(All/Name) kill",
-                //"(All/Name) attack"  All or the specified pet(s) currently under your control attack the target.
-        Patrol, //"(Name) patrol"  Roves between two or more guarded targets.
-        Release, //"(Name) release"  Releases pet back into the wild (removes "tame" status).
-        Stay, //"(All/Name) stay" All or the specified pet(s) will stop and stay in current spot.
-        Stop, //"(All/Name) stop Cancels any current orders to attack, guard or follow.
-        Transfer //"(Name) transfer" Transfers complete ownership to targeted player.
+        None = 0, //When no order, let's roam
+        Come = 1, //"(All/Name) come"  Summons all or one pet to your location.
+        Drop = 2, //"(Name) drop"  Drops its loot to the ground (if it carries any).
+        Follow = 4, //"(Name) follow"  Follows targeted being.
+                    //"(All/Name) follow me"  Makes all or one pet follow you.
+        Friend = 8, //"(Name) friend"  Allows targeted player to confirm resurrection.
+        Unfriend = 16, // Remove a friend
+        Guard = 32, //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
+                    //"(All/Name) guard me"  Makes all or one pet guard you.
+        Attack = 64, //"(All/Name) kill",
+                     //"(All/Name) attack"  All or the specified pet(s) currently under your control attack the target.
+        Patrol = 128, //"(Name) patrol"  Roves between two or more guarded targets.
+        Release = 256, //"(Name) release"  Releases pet back into the wild (removes "tame" status).
+        Stay = 512, //"(All/Name) stay" All or the specified pet(s) will stop and stay in current spot.
+        Stop = 1024, //"(All/Name) stop Cancels any current orders to attack, guard or follow.
+        Transfer = 2048 //"(Name) transfer" Transfers complete ownership to targeted player.
     }
 
     [Flags]
@@ -2543,7 +2543,7 @@ namespace Server.Mobiles
                 if (m_bSummoned)
                 {
                     m_SummonEnd = reader.ReadDeltaTime();
-                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete()); 
+                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete());
                 }
 
                 m_iControlSlots = reader.ReadInt();
@@ -2829,8 +2829,8 @@ namespace Server.Mobiles
         private static readonly Type[] m_Meat =
         {
             typeof(Bacon), typeof(CookedBird), typeof(Sausage), typeof(Ham), typeof(Ribs), typeof(LambLeg), typeof(ChickenLeg),
-            typeof(RawBird), typeof(RawRibs), typeof(RawLambLeg), typeof(RawChickenLeg), 
-			typeof(Head), typeof(LeftArm), typeof(LeftLeg), typeof(Torso), typeof(RightArm), typeof(RightLeg)
+            typeof(RawBird), typeof(RawRibs), typeof(RawLambLeg), typeof(RawChickenLeg),
+            typeof(Head), typeof(LeftArm), typeof(LeftLeg), typeof(Torso), typeof(RightArm), typeof(RightLeg)
         };
 
         private static readonly Type[] m_FruitsAndVegies =
@@ -3023,7 +3023,7 @@ namespace Server.Mobiles
             {
                 canDrop = true;
             }
-            
+
             if (!canDrop && !from.InRange(Location, 2) && base.OnDragDrop(from, dropped))
             {
                 return true;
@@ -3411,10 +3411,22 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public IDamageable ControlTarget { get => m_ControlTarget; set => m_ControlTarget = value; }
+        public IDamageable ControlTarget
+        {
+            get =>
+                m_ControlTarget;
+            set =>
+                m_ControlTarget = value;
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D ControlDest { get => m_ControlDest; set => m_ControlDest = value; }
+
+        private void StopControlOrder(OrderType stopType)
+        {
+            if (m_ControlOrder.HasFlag(stopType))
+                m_ControlOrder ^= stopType;
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual OrderType ControlOrder
@@ -3422,7 +3434,75 @@ namespace Server.Mobiles
             get => m_ControlOrder;
             set
             {
-                m_ControlOrder = value;
+
+                if (value == OrderType.None) //Turn off everything
+                {
+                    m_ControlOrder = OrderType.None;
+                }
+                else if (value == OrderType.Come) //Keep current actions
+                {
+                    m_ControlOrder |= OrderType.Come;
+                }
+                else if (value == OrderType.Follow)
+                {
+                    StopControlOrder(OrderType.Come);
+                    StopControlOrder(OrderType.Attack);
+                    StopControlOrder(OrderType.Stay);
+                    StopControlOrder(OrderType.Patrol);
+                    StopControlOrder(OrderType.Stop);
+
+                    m_ControlOrder |= OrderType.Follow;
+                }
+                else if (value == OrderType.Friend)
+                {
+                    m_ControlOrder |= OrderType.Friend;
+                }
+                else if (value == OrderType.Unfriend)
+                {
+                    m_ControlOrder |= OrderType.Unfriend;
+                }
+                else if (value == OrderType.Guard)
+                {
+                    m_ControlOrder |= OrderType.Guard;
+                }
+
+                else if (value == OrderType.Attack)
+                {
+                    StopControlOrder(OrderType.Come);
+                    StopControlOrder(OrderType.Stop);
+
+                    m_ControlOrder |= OrderType.Attack;
+                }
+                else if (value == OrderType.Patrol)
+                {
+                    m_ControlOrder |= OrderType.Patrol;
+                }
+                else if (value == OrderType.Release)
+                {
+                    m_ControlOrder = OrderType.Release;
+                }
+                else if (value == OrderType.Stay)
+                {
+                    StopControlOrder(OrderType.Come);
+                    StopControlOrder(OrderType.Attack);
+                    StopControlOrder(OrderType.Follow);
+                    StopControlOrder(OrderType.Patrol);
+                    StopControlOrder(OrderType.Stop);
+
+                    m_ControlOrder |= OrderType.Stay;
+                }
+                else if (value == OrderType.Stop)
+                {
+                    m_ControlOrder = OrderType.Stop;
+                }
+                else if (value == OrderType.Transfer)
+                {
+                    m_ControlOrder = OrderType.Transfer;
+                }
+                else
+                {
+                    m_ControlOrder = value;
+                }
 
                 if (m_Allured && m_ControlOrder != OrderType.None)
                 {
@@ -5161,9 +5241,20 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            if (m_ControlOrder == OrderType.Guard)
+            if (Controlled && ControlMaster is PlayerMobile)
             {
-                list.Add(1080078); // guarding
+                if (m_ControlOrder.HasFlag(OrderType.Guard))
+                {
+                    list.Add(1080078); // guarding
+                }
+                if (m_ControlOrder.HasFlag(OrderType.Follow))
+                {
+                    list.Add(3000054); // Now Following
+                }
+                else
+                {
+                    list.Add(3000055); // Not Following
+                }
             }
 
             if (IsGolem)
@@ -5356,7 +5447,7 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual bool IsAggressiveMonster => IsMonster && ( m_FightMode == FightMode.Closest || m_FightMode == FightMode.Strongest || m_FightMode == FightMode.Weakest || m_FightMode == FightMode.Good);
+        public virtual bool IsAggressiveMonster => IsMonster && (m_FightMode == FightMode.Closest || m_FightMode == FightMode.Strongest || m_FightMode == FightMode.Weakest || m_FightMode == FightMode.Good);
 
         public List<DamageStore> LootingRights { get; set; }
 
@@ -7003,7 +7094,9 @@ namespace Server.Mobiles
                 {
                     if (!onlyBonded || pet.IsBonded)
                     {
-                        if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
+                        if (pet.ControlOrder.HasFlag(OrderType.Guard) ||
+                            pet.ControlOrder.HasFlag(OrderType.Follow) ||
+                            pet.ControlOrder.HasFlag(OrderType.Come))
                         {
                             move.Add(pet);
                         }
