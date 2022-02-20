@@ -5247,14 +5247,6 @@ namespace Server.Mobiles
                 {
                     list.Add(1080078); // guarding
                 }
-                if (m_ControlOrder.HasFlag(OrderType.Follow))
-                {
-                    list.Add(3000054); // Now Following
-                }
-                else
-                {
-                    list.Add(3000055); // Not Following
-                }
             }
 
             if (IsGolem)
