@@ -3434,6 +3434,7 @@ namespace Server.Mobiles
             get => m_ControlOrder;
             set
             {
+                bool newCommand = true;
 
                 if (value == OrderType.None) //Turn off everything
                 {
@@ -3502,6 +3503,7 @@ namespace Server.Mobiles
                 else
                 {
                     m_ControlOrder = value;
+                    newCommand = false;
                 }
 
                 if (m_Allured && m_ControlOrder != OrderType.None)
@@ -3509,9 +3511,10 @@ namespace Server.Mobiles
                     Say(1079120); // Very well.
                 }
 
-                if (m_AI != null)
+                if (m_AI != null && newCommand)
                 {
-                    m_AI.OnCurrentOrderChanged();
+                    m_AI.OnCurrentOrderChanged(value);
+                    Say(value);
                 }
 
                 InvalidateProperties();

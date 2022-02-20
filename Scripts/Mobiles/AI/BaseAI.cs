@@ -1230,14 +1230,14 @@ namespace Server.Mobiles
         }
 
 
-        public virtual void OnCurrentOrderChanged()
+        public virtual void OnCurrentOrderChanged(OrderType newState)
         {
             if (m_Mobile.Deleted || m_Mobile.ControlMaster == null || m_Mobile.ControlMaster.Deleted)
             {
                 return;
             }
 
-            switch (m_Mobile.ControlOrder)
+            switch (newState)
             {
                 case OrderType.None:
 
@@ -1735,8 +1735,8 @@ namespace Server.Mobiles
 
                 m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
 
-                // Guard isnt follow
-                //WalkMobileRange(controlMaster, 1, false, 0, 1);
+                if(m_Mobile.ControlOrder == OrderType.Guard) //If only guarding, then do the random wander
+                    WalkRandomInHome(3, 2, 1);
             }
 
             return true;
