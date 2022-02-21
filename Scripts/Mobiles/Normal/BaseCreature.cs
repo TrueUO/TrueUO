@@ -6073,7 +6073,7 @@ namespace Server.Mobiles
                 ControlMaster = m;
                 Controlled = true;
                 ControlTarget = null;
-                AddControlOrder(OrderType.Come);
+                AddControlOrder(OrderType.Follow);
                 Guild = null;
 
                 UpdateMasteryInfo();

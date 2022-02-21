@@ -1486,9 +1486,11 @@ namespace Server.Mobiles
             {
                 m_Mobile.DebugSay("Praise the shepherd!");
             }
-            else if (m_Mobile.ControlTarget != null && !m_Mobile.ControlTarget.Deleted && m_Mobile.ControlTarget != m_Mobile)
+            else if ((m_Mobile.ControlTarget != null && !m_Mobile.ControlTarget.Deleted && m_Mobile.ControlTarget != m_Mobile)
+                || (m_Mobile.IsNecroFamiliar && m_Mobile.SummonMaster != null && !m_Mobile.SummonMaster.Deleted && m_Mobile.SummonMaster != m_Mobile))
             {
-                int iCurrDist = (int)m_Mobile.GetDistanceToSqrt(m_Mobile.ControlTarget);
+                IDamageable leader = m_Mobile.IsNecroFamiliar ? m_Mobile.SummonMaster : m_Mobile.ControlTarget;
+                int iCurrDist = (int)m_Mobile.GetDistanceToSqrt(leader);
 
                 if (iCurrDist > m_Mobile.RangePerception * 5)
                 {
@@ -1505,12 +1507,12 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    m_Mobile.DebugSay("My master told me to follow: {0}", m_Mobile.ControlTarget.Name);
+                    m_Mobile.DebugSay("My master told me to follow: {0}", leader.Name);
 
                     // Not exactly OSI style, but better than nothing.
                     bool bRun = iCurrDist > 5;
 
-                    if (WalkMobileRange(m_Mobile.ControlTarget, 1, bRun, 0, 1))
+                    if (WalkMobileRange(leader, 1, bRun, 0, 1))
                     {
                         if (m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive && (!(m_Mobile.Combatant is Mobile) || !((Mobile)m_Mobile.Combatant).IsDeadBondedPet))
                         {

@@ -21,9 +21,6 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public override IDamageable Combatant { get => null; set { } }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public override OrderType ControlOrder { get => OrderType.Follow; set { } }
-
         public BaseFamiliar()
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, -1, -1)
         { }

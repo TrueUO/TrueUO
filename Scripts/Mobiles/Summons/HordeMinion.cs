@@ -16,13 +16,6 @@ namespace Server.Mobiles
         public override bool DisplayWeight => true;
         public override bool CanAutoStable => Backpack == null || Backpack.Items.Count == 0;
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public override OrderType ControlOrder
-        {
-            get { return OrderType.Follow; }
-            set { }
-        }
-
         public HordeMinionFamiliar()
         {
             Name = "a horde minion";
@@ -50,6 +43,7 @@ namespace Server.Mobiles
             SetSkill(SkillName.Tactics, 50.0);
 
             ControlSlots = 1;
+            AddControlOrder(OrderType.Follow);
 
             Container pack = Backpack;
 
