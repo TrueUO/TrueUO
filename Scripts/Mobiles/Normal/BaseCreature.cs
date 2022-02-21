@@ -5275,11 +5275,9 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            if (Controlled && ControlMaster is PlayerMobile && m_HasControlOrder(OrderType.Guard))
+            if (Controlled && ControlMaster is PlayerMobile && HasControlOrder(OrderType.Guard))
             {
-
                 list.Add(1080078); // guarding
-
             }
 
             if (IsGolem)

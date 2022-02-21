@@ -45,7 +45,7 @@ namespace Server
 
         public static bool InActivePVPCombat(BaseCreature bc)
         {
-            return bc.Combatant != null && bc.ControlOrder != OrderType.Follow && bc.Combatant is PlayerMobile;
+            return bc.Combatant != null && !bc.HasControlOrder(OrderType.Follow) && bc.Combatant is PlayerMobile;
         }
 
         public static double TransformMoveDelay(BaseCreature bc, double delay)
