@@ -36,7 +36,7 @@ namespace Server.Engines.Despise
                     {
                         if (m_Creature.Combatant != null)
                         {
-                            if (m_Creature.ControlOrder == OrderType.Follow)
+                            if (m_Creature.ControlOrder.HasFlag(OrderType.Follow))
                             {
                                 m_Creature.ControlOrder = OrderType.Attack;
                                 Action = ActionType.Combat;
@@ -86,7 +86,7 @@ namespace Server.Engines.Despise
                     {
                         if (m_Creature.Combatant != null)
                         {
-                            if (m_Creature.ControlOrder == OrderType.Follow)
+                            if (m_Creature.ControlOrder.HasFlag(OrderType.Follow))
                             {
                                 m_Creature.ControlOrder = OrderType.Attack;
                                 Action = ActionType.Combat;
@@ -266,7 +266,7 @@ namespace Server.Engines.Despise
                     {
                         if (m_Creature.Combatant != null)
                         {
-                            if (m_Creature.ControlOrder == OrderType.Follow)
+                            if (m_Creature.ControlOrder.HasFlag(OrderType.Follow))
                             {
                                 m_Creature.ControlOrder = OrderType.Attack;
                                 Action = ActionType.Combat;
@@ -316,7 +316,7 @@ namespace Server.Engines.Despise
                     {
                         if (m_Creature.Combatant != null)
                         {
-                            if (m_Creature.ControlOrder == OrderType.Follow)
+                            if (m_Creature.ControlOrder.HasFlag(OrderType.Follow))
                             {
                                 m_Creature.ControlOrder = OrderType.Attack;
                                 Action = ActionType.Combat;

@@ -128,7 +128,7 @@ namespace Server.Mobiles
                 m_AI = ai;
                 m_Order = order;
 
-                if (mobile.IsDeadPet && (order == OrderType.Guard || order == OrderType.Attack || order == OrderType.Transfer || order == OrderType.Drop))
+                if (mobile.IsDeadPet && (order.HasFlag(OrderType.Guard) || order.HasFlag(OrderType.Attack) || order.HasFlag(OrderType.Transfer) || order.HasFlag(OrderType.Drop)))
                 {
                     Enabled = false;
                 }
@@ -143,7 +143,7 @@ namespace Server.Mobiles
                         m_From.RevealingAction();
                     }
 
-                    if (m_Mobile.IsDeadPet && (m_Order == OrderType.Guard || m_Order == OrderType.Attack || m_Order == OrderType.Transfer || m_Order == OrderType.Drop))
+                    if (m_Mobile.IsDeadPet && (m_Order.HasFlag(OrderType.Guard) || m_Order.HasFlag(OrderType.Attack) || m_Order.HasFlag(OrderType.Transfer) || m_Order.HasFlag(OrderType.Drop)))
                     {
                         return;
                     }
@@ -168,11 +168,11 @@ namespace Server.Mobiles
                         case OrderType.Friend:
                         case OrderType.Unfriend:
                             {
-                                if (m_Order == OrderType.Transfer && m_From.HasTrade)
+                                if (m_Order.HasFlag(OrderType.Transfer) && m_From.HasTrade)
                                 {
                                     m_From.SendLocalizedMessage(1010507); // You cannot transfer a pet with a trade pending
                                 }
-                                else if (m_Order == OrderType.Friend && m_From.HasTrade)
+                                else if (m_Order.HasFlag(OrderType.Friend) && m_From.HasTrade)
                                 {
                                     m_From.SendLocalizedMessage(1070947); // You cannot friend a pet with a trade pending
                                 }
@@ -283,15 +283,15 @@ namespace Server.Mobiles
 
             if (from.Target == null)
             {
-                if (order == OrderType.Transfer)
+                if (order.HasFlag(OrderType.Transfer))
                 {
                     from.SendLocalizedMessage(502038); // Click on the person to transfer ownership to.
                 }
-                else if (order == OrderType.Friend)
+                else if (order.HasFlag(OrderType.Friend))
                 {
                     from.SendLocalizedMessage(502020); // Click on the player whom you wish to make a co-owner.
                 }
-                else if (order == OrderType.Unfriend)
+                else if (order.HasFlag(OrderType.Unfriend))
                 {
                     from.SendLocalizedMessage(1070948); // Click on the player whom you wish to remove as a co-owner.
                 }
@@ -324,7 +324,7 @@ namespace Server.Mobiles
                 return;
             }
 
-            if (order == OrderType.Attack && target is BaseCreature bc)
+            if (order.HasFlag(OrderType.Attack) && target is BaseCreature bc)
             {
                 if (bc.IsScaryToPets && m_Mobile.IsScaredOfScaryThings)
                 {
@@ -889,7 +889,7 @@ namespace Server.Mobiles
 
         public virtual void OnAggressiveAction(Mobile aggressor)
         {
-            if (m_Mobile.Controlled && m_Mobile.ControlOrder == OrderType.Attack)
+            if (m_Mobile.Controlled && m_Mobile.ControlOrder.HasFlag(OrderType.Attack))
             {
                 return;
             }

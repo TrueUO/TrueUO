@@ -15,7 +15,7 @@ namespace Server.Targets
         private readonly BaseCreature m_Mobile;
 
         public AIControlMobileTarget(BaseAI ai, OrderType order)
-            : base(-1, false, (order == OrderType.Attack ? TargetFlags.Harmful : TargetFlags.None))
+            : base(-1, false, (order.HasFlag(OrderType.Attack) ? TargetFlags.Harmful : TargetFlags.None))
         {
             m_List = new List<BaseAI>();
             m_Order = order;
@@ -39,7 +39,7 @@ namespace Server.Targets
                 for (int i = 0; i < m_List.Count; ++i)
                     m_List[i].EndPickTarget(from, damageable, m_Order);
             }
-            else if (o is MoonglowDonationBox box && m_Order == OrderType.Transfer && from is PlayerMobile pm)
+            else if (o is MoonglowDonationBox box && m_Order.HasFlag(OrderType.Transfer) && from is PlayerMobile pm)
             {
                 pm.SendGump(new ConfirmTransferPetGump(box, pm.Location, m_Mobile));
             }

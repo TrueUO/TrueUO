@@ -56,7 +56,7 @@ namespace Server.Items
             {
                 if (m is BaseCreature pet && !(pet is DespiseCreature) && pet.Controlled && pet.ControlMaster == master)
                 {
-                    if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
+                    if (pet.ControlOrder.HasFlag(OrderType.Guard) || pet.ControlOrder.HasFlag(OrderType.Follow) || pet.ControlOrder.HasFlag(OrderType.Come))
                     {
                         move.Add(pet);
                     }
