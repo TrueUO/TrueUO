@@ -48,7 +48,6 @@ namespace Server.Mobiles
         {
         }
 
-        public override bool ReacquireOnMovement => !Controlled;
         public override bool AutoDispel => !Controlled;
         public override int TreasureMapLevel => 4;
         public override int Meat => 19;
@@ -60,6 +59,7 @@ namespace Server.Mobiles
         public override FoodType FavoriteFood => FoodType.Meat;
         public override bool CanAngerOnTame => true;
         public override bool CanFly => true;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 2);
