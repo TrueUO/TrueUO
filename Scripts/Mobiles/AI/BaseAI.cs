@@ -1160,9 +1160,10 @@ namespace Server.Mobiles
             }
             bool result = false;
 
-            if (m_Mobile.ControlOrder == OrderType.None)
+            if (m_Mobile.ControlOrder == OrderType.Roam ||
+                    (m_Mobile.ControlOrder == (OrderType.Guard | OrderType.Roam) && m_Mobile.Combatant == null))
             {
-                result = DoOrderNone();
+                result = DoOrderRoam();
                 return result;
             }
 
@@ -1198,7 +1199,6 @@ namespace Server.Mobiles
                 result = DoOrderStop();
                 return result;
             }
-
             if (m_Mobile.ControlOrder.HasFlag(OrderType.Guard))
             {
                 result = DoOrderGuard();
@@ -1239,7 +1239,7 @@ namespace Server.Mobiles
 
             switch (newState)
             {
-                case OrderType.None:
+                case OrderType.Roam:
 
                     m_Mobile.Home = m_Mobile.Location;
                     m_Mobile.CurrentSpeed = m_Mobile.PassiveSpeed;
@@ -1270,8 +1270,6 @@ namespace Server.Mobiles
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     m_Mobile.Warmode = true;
-                    m_Mobile.Combatant = null;
-                    m_Mobile.ControlTarget = null;
                     string petname = $"{m_Mobile.Name}";
                     m_Mobile.ControlMaster.SendLocalizedMessage(1049671, petname); //~1_PETNAME~ is now guarding you.
                     break;
@@ -1333,9 +1331,10 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual bool DoOrderNone()
+        public virtual bool DoOrderRoam()
         {
             m_Mobile.DebugSay("I have no order");
+            m_Mobile.Home = m_Mobile.Location;
 
             WalkRandomInHome(3, 2, 1);
 
@@ -1529,7 +1528,7 @@ namespace Server.Mobiles
             {
                 m_Mobile.DebugSay("I have nobody to follow");
                 m_Mobile.ControlTarget = null;
-                m_Mobile.ControlOrder = OrderType.None;
+                m_Mobile.ControlOrder = OrderType.Roam;
             }
 
             return true;
@@ -1734,9 +1733,6 @@ namespace Server.Mobiles
                 m_Mobile.Warmode = false;
 
                 m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
-
-                if(m_Mobile.ControlOrder == OrderType.Guard) //If only guarding, then do the random wander
-                    WalkRandomInHome(3, 2, 1);
             }
 
             return true;
@@ -1890,6 +1886,7 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderStop()
         {
+            m_Mobile.ControlOrder ^= OrderType.Stop;
             if (m_Mobile.ControlMaster == null || m_Mobile.ControlMaster.Deleted)
             {
                 return true;
@@ -2081,6 +2078,8 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderTransfer()
         {
+            m_Mobile.ControlOrder ^= OrderType.Transfer;
+
             if (m_Mobile.IsDeadPet)
             {
                 return true;

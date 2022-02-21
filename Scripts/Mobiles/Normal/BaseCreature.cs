@@ -43,22 +43,23 @@ namespace Server.Mobiles
     [Flags]
     public enum OrderType
     {
-        None = 0, //When no order, let's roam
-        Come = 1, //"(All/Name) come"  Summons all or one pet to your location.
-        Drop = 2, //"(Name) drop"  Drops its loot to the ground (if it carries any).
-        Follow = 4, //"(Name) follow"  Follows targeted being.
+        None = 0, //Defaults back to Roam (because 0 is always an active flag)
+        Roam = 1, //When no order, let's roam
+        Come = 2, //"(All/Name) come"  Summons all or one pet to your location.
+        Drop = 4, //"(Name) drop"  Drops its loot to the ground (if it carries any).
+        Follow = 8, //"(Name) follow"  Follows targeted being.
                     //"(All/Name) follow me"  Makes all or one pet follow you.
-        Friend = 8, //"(Name) friend"  Allows targeted player to confirm resurrection.
-        Unfriend = 16, // Remove a friend
-        Guard = 32, //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
+        Friend = 16, //"(Name) friend"  Allows targeted player to confirm resurrection.
+        Unfriend = 32, // Remove a friend
+        Guard = 64, //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
                     //"(All/Name) guard me"  Makes all or one pet guard you.
-        Attack = 64, //"(All/Name) kill",
-                     //"(All/Name) attack"  All or the specified pet(s) currently under your control attack the target.
-        Patrol = 128, //"(Name) patrol"  Roves between two or more guarded targets.
-        Release = 256, //"(Name) release"  Releases pet back into the wild (removes "tame" status).
-        Stay = 512, //"(All/Name) stay" All or the specified pet(s) will stop and stay in current spot.
-        Stop = 1024, //"(All/Name) stop Cancels any current orders to attack, guard or follow.
-        Transfer = 2048 //"(Name) transfer" Transfers complete ownership to targeted player.
+        Attack = 128, //"(All/Name) kill",
+                      //"(All/Name) attack"  All or the specified pet(s) currently under your control attack the target.
+        Patrol = 256, //"(Name) patrol"  Roves between two or more guarded targets.
+        Release = 512, //"(Name) release"  Releases pet back into the wild (removes "tame" status).
+        Stay = 1024, //"(All/Name) stay" All or the specified pet(s) will stop and stay in current spot.
+        Stop = 2048, //"(All/Name) stop Cancels any current orders to attack, guard or follow.
+        Transfer = 4096 //"(Name) transfer" Transfers complete ownership to targeted player.
     }
 
     [Flags]
@@ -2216,7 +2217,7 @@ namespace Server.Mobiles
             m_bControlled = false;
             m_ControlMaster = null;
             m_ControlTarget = null;
-            m_ControlOrder = OrderType.None;
+            m_ControlOrder = OrderType.Roam;
 
             m_bTamable = false;
 
@@ -2555,7 +2556,7 @@ namespace Server.Mobiles
                 m_bControlled = false;
                 m_ControlMaster = null;
                 m_ControlTarget = null;
-                m_ControlOrder = OrderType.None;
+                m_ControlOrder = OrderType.Roam;
             }
 
             if (version >= 3)
@@ -3422,6 +3423,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D ControlDest { get => m_ControlDest; set => m_ControlDest = value; }
 
+
         private void StopControlOrder(OrderType stopType)
         {
             if (m_ControlOrder.HasFlag(stopType))
@@ -3436,9 +3438,9 @@ namespace Server.Mobiles
             {
                 bool newCommand = true;
 
-                if (value == OrderType.None) //Turn off everything
+                if (value == OrderType.Roam) //Turn off everything
                 {
-                    m_ControlOrder = OrderType.None;
+                    m_ControlOrder = OrderType.Roam;
                 }
                 else if (value == OrderType.Come) //Keep current actions
                 {
@@ -3446,6 +3448,7 @@ namespace Server.Mobiles
                 }
                 else if (value == OrderType.Follow)
                 {
+                    StopControlOrder(OrderType.Roam);
                     StopControlOrder(OrderType.Come);
                     StopControlOrder(OrderType.Attack);
                     StopControlOrder(OrderType.Stay);
@@ -3484,6 +3487,7 @@ namespace Server.Mobiles
                 }
                 else if (value == OrderType.Stay)
                 {
+                    StopControlOrder(OrderType.Roam);
                     StopControlOrder(OrderType.Come);
                     StopControlOrder(OrderType.Attack);
                     StopControlOrder(OrderType.Follow);
@@ -3505,8 +3509,10 @@ namespace Server.Mobiles
                     m_ControlOrder = value;
                     newCommand = false;
                 }
+                if (m_ControlOrder == OrderType.None)
+                    m_ControlOrder = OrderType.Roam;
 
-                if (m_Allured && m_ControlOrder != OrderType.None)
+                if (m_Allured && m_ControlOrder != OrderType.Roam)
                 {
                     Say(1079120); // Very well.
                 }
@@ -3514,7 +3520,6 @@ namespace Server.Mobiles
                 if (m_AI != null && newCommand)
                 {
                     m_AI.OnCurrentOrderChanged(value);
-                    Say(value);
                 }
 
                 InvalidateProperties();
@@ -4281,7 +4286,7 @@ namespace Server.Mobiles
 
             if (m_AI != null)
             {
-                if (ct != OrderType.Follow && ct != OrderType.Stop && ct != OrderType.Stay)
+                if (!ct.HasFlag(OrderType.Follow) && !ct.HasFlag(OrderType.Stop) && !ct.HasFlag(OrderType.Stay) || ct.HasFlag(OrderType.Guard))
                 {
                     m_AI.OnAggressiveAction(aggressor);
                 }
@@ -4297,8 +4302,8 @@ namespace Server.Mobiles
             ForceReacquire();
 
             if (aggressor.ChangingCombatant && (m_bControlled || m_bSummoned) &&
-                (ct == OrderType.Come || ct == OrderType.Stay || ct == OrderType.Stop || ct == OrderType.None ||
-                 ct == OrderType.Follow))
+                (ct.HasFlag(OrderType.Come) || ct.HasFlag(OrderType.Stay) || ct.HasFlag(OrderType.Stop) || ct.HasFlag(OrderType.Roam) ||
+                 ct.HasFlag(OrderType.Follow)))
             {
                 ControlTarget = aggressor;
                 ControlOrder = OrderType.Attack;
@@ -5244,13 +5249,13 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            if (Controlled && ControlMaster is PlayerMobile)
+            if (Controlled && ControlMaster is PlayerMobile && m_ControlOrder.HasFlag(OrderType.Guard))
             {
-                if (m_ControlOrder.HasFlag(OrderType.Guard))
-                {
-                    list.Add(1080078); // guarding
-                }
+
+                list.Add(1080078); // guarding
+
             }
+
 
             if (IsGolem)
                 list.Add(1113697); // (Golem)
@@ -6015,7 +6020,7 @@ namespace Server.Mobiles
                 ControlMaster = null;
                 Controlled = false;
                 ControlTarget = null;
-                ControlOrder = OrderType.None;
+                ControlOrder = OrderType.Roam;
                 Guild = null;
 
                 UpdateMasteryInfo();

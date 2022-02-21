@@ -153,7 +153,7 @@ namespace Server.Engines.Quests
             ActiveSpeed = 0.2;
             PassiveSpeed = 1.0;
 
-            ControlOrder = OrderType.None;
+            ControlOrder = OrderType.Roam;
             ControlTarget = null;
 
             CurrentSpeed = 1.0;
