@@ -511,7 +511,7 @@ namespace Server.Engines.Despise
                             m.SendLocalizedMessage(1153280, "You!");
                             orb.Anchor = m;
                             orb.Pet.ControlTarget = m;
-                            orb.Pet.ControlOrder = OrderType.Follow;
+                            orb.Pet.AddControlOrder(OrderType.Follow);
                         }
                     }
                 }

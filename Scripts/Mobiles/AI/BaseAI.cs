@@ -204,7 +204,7 @@ namespace Server.Mobiles
                             {
                                 if (m_Mobile.CheckControlChance(m_From))
                                 {
-                                    m_Mobile.ControlOrder = m_Order;
+                                    m_Mobile.AddControlOrder(m_Order);
                                 }
 
                                 break;
@@ -342,7 +342,7 @@ namespace Server.Mobiles
             if (m_Mobile.CheckControlChance(from))
             {
                 m_Mobile.ControlTarget = target;
-                m_Mobile.ControlOrder = order;
+                m_Mobile.AddControlOrder(order);
             }
         }
 
@@ -544,9 +544,9 @@ namespace Server.Mobiles
 
                                     if (m_Mobile.CheckControlChance(e.Mobile))
                                     {
-                                        if (!m_Mobile.ControlOrder.HasFlag(OrderType.Follow))
+                                        if (!m_Mobile.HasControlOrder(OrderType.Follow))
                                             m_Mobile.ControlTarget = null;
-                                        m_Mobile.ControlOrder = OrderType.Come;
+                                        m_Mobile.AddControlOrder(OrderType.Come);
                                     }
 
                                     return;
@@ -566,8 +566,8 @@ namespace Server.Mobiles
 
                                     if (m_Mobile.CheckControlChance(e.Mobile))
                                     {
-                                        m_Mobile.ControlOrder = OrderType.Guard;
-                                        if (!m_Mobile.ControlOrder.HasFlag(OrderType.Follow))
+                                        m_Mobile.AddControlOrder(OrderType.Guard);
+                                        if (!m_Mobile.HasControlOrder(OrderType.Follow))
                                             m_Mobile.ControlTarget = null;
                                     }
                                     return;
@@ -577,7 +577,7 @@ namespace Server.Mobiles
                                     if (m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = null;
-                                        m_Mobile.ControlOrder = OrderType.Stop;
+                                        m_Mobile.AddControlOrder(OrderType.Stop);
                                     }
                                     return;
                                 }
@@ -597,7 +597,7 @@ namespace Server.Mobiles
                                     if (m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = e.Mobile;
-                                        m_Mobile.ControlOrder = OrderType.Follow;
+                                        m_Mobile.AddControlOrder(OrderType.Follow);
                                     }
                                     return;
                                 }
@@ -606,7 +606,7 @@ namespace Server.Mobiles
                                     if (m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = null;
-                                        m_Mobile.ControlOrder = OrderType.Stay;
+                                        m_Mobile.AddControlOrder(OrderType.Stay);
                                     }
                                     return;
                                 }
@@ -629,9 +629,9 @@ namespace Server.Mobiles
 
                                     if (WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
-                                        if (!m_Mobile.ControlOrder.HasFlag(OrderType.Follow))
+                                        if (!m_Mobile.HasControlOrder(OrderType.Follow))
                                             m_Mobile.ControlTarget = null;
-                                        m_Mobile.ControlOrder = OrderType.Come;
+                                        m_Mobile.AddControlOrder(OrderType.Come);
                                     }
 
                                     return;
@@ -645,7 +645,7 @@ namespace Server.Mobiles
 
                                     if (!m_Mobile.IsDeadPet && !m_Mobile.Summoned && WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
-                                        m_Mobile.ControlOrder = OrderType.Drop;
+                                        m_Mobile.AddControlOrder(OrderType.Drop);
                                     }
 
                                     return;
@@ -693,8 +693,8 @@ namespace Server.Mobiles
 
                                     if (!m_Mobile.IsDeadPet && WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
-                                        m_Mobile.ControlOrder = OrderType.Guard;
-                                        if (!m_Mobile.ControlOrder.HasFlag(OrderType.Follow))
+                                        m_Mobile.AddControlOrder(OrderType.Guard);
+                                        if (!m_Mobile.HasControlOrder(OrderType.Follow))
                                             m_Mobile.ControlTarget = null;
                                     }
 
@@ -725,7 +725,7 @@ namespace Server.Mobiles
                                     if (WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = null;
-                                        m_Mobile.ControlOrder = OrderType.Patrol;
+                                        m_Mobile.AddControlOrder(OrderType.Patrol);
                                     }
 
                                     return;
@@ -735,7 +735,7 @@ namespace Server.Mobiles
                                     if (WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = null;
-                                        m_Mobile.ControlOrder = OrderType.Stop;
+                                        m_Mobile.AddControlOrder(OrderType.Stop);
                                     }
 
                                     return;
@@ -745,7 +745,7 @@ namespace Server.Mobiles
                                     if (WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = e.Mobile;
-                                        m_Mobile.ControlOrder = OrderType.Follow;
+                                        m_Mobile.AddControlOrder(OrderType.Follow);
                                     }
 
                                     return;
@@ -766,7 +766,7 @@ namespace Server.Mobiles
                                         else
                                         {
                                             m_Mobile.ControlTarget = null;
-                                            m_Mobile.ControlOrder = OrderType.Release;
+                                            m_Mobile.AddControlOrder(OrderType.Release);
                                         }
                                     }
 
@@ -802,7 +802,7 @@ namespace Server.Mobiles
                                     if (WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = null;
-                                        m_Mobile.ControlOrder = OrderType.Stay;
+                                        m_Mobile.AddControlOrder(OrderType.Stay);
                                     }
 
                                     return;
@@ -889,7 +889,7 @@ namespace Server.Mobiles
 
         public virtual void OnAggressiveAction(Mobile aggressor)
         {
-            if (m_Mobile.Controlled && m_Mobile.ControlOrder.HasFlag(OrderType.Attack))
+            if (m_Mobile.Controlled && m_Mobile.HasControlOrder(OrderType.Attack))
             {
                 return;
             }
@@ -1167,61 +1167,61 @@ namespace Server.Mobiles
                 return result;
             }
 
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Drop))
+            if (m_Mobile.HasControlOrder(OrderType.Drop))
             {
                 result = DoOrderDrop();
             }
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Friend))
+            if (m_Mobile.HasControlOrder(OrderType.Friend))
             {
                 result = DoOrderFriend();
             }
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Unfriend))
+            if (m_Mobile.HasControlOrder(OrderType.Unfriend))
             {
                 result = DoOrderUnfriend();
             }
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Release))
+            if (m_Mobile.HasControlOrder(OrderType.Release))
             {
                 result = DoOrderRelease();
             }
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Transfer))
+            if (m_Mobile.HasControlOrder(OrderType.Transfer))
             {
                 result = DoOrderTransfer();
             }
 
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Come))
+            if (m_Mobile.HasControlOrder(OrderType.Come))
             {
                 result = DoOrderCome();
                 return result;
             }
 
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Stop))
+            if (m_Mobile.HasControlOrder(OrderType.Stop))
             {
                 result = DoOrderStop();
                 return result;
             }
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Guard))
+            if (m_Mobile.HasControlOrder(OrderType.Guard))
             {
                 result = DoOrderGuard();
             }
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Attack))
+            if (m_Mobile.HasControlOrder(OrderType.Attack))
             {
                 result = DoOrderAttack();
             }
 
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Patrol))
+            if (m_Mobile.HasControlOrder(OrderType.Patrol))
             {
                 result = DoOrderPatrol();
             }
 
 
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Stay))
+            if (m_Mobile.HasControlOrder(OrderType.Stay))
             {
                 result = DoOrderStay();
             }
 
-            if (m_Mobile.ControlOrder.HasFlag(OrderType.Follow) &&
-                    ((m_Mobile.ControlOrder.HasFlag(OrderType.Guard) && m_Mobile.Combatant == null)
-                    ^ !m_Mobile.ControlOrder.HasFlag(OrderType.Guard)))
+            if (m_Mobile.HasControlOrder(OrderType.Follow) &&
+                    ((m_Mobile.HasControlOrder(OrderType.Guard) && m_Mobile.Combatant == null)
+                    ^ !m_Mobile.HasControlOrder(OrderType.Guard)))
             {
                 result = DoOrderFollow();
             }
@@ -1359,9 +1359,9 @@ namespace Server.Mobiles
                 if (iCurrDist > m_Mobile.RangePerception)
                 {
                     m_Mobile.DebugSay("I have lost my master. I stay here");
-                    if (!m_Mobile.ControlOrder.HasFlag(OrderType.Guard | OrderType.Follow))
+                    if (!m_Mobile.HasControlOrder(OrderType.Guard | OrderType.Follow))
                         m_Mobile.ControlTarget = null;
-                    m_Mobile.ControlOrder ^= OrderType.Come;
+                    m_Mobile.AddControlOrder(OrderType.Come);
                 }
                 else
                 {
@@ -1383,7 +1383,8 @@ namespace Server.Mobiles
                     }
                     if (iCurrDist <= 1)
                     {
-                        m_Mobile.ControlOrder ^= OrderType.Come;
+                        m_Mobile.RemoveControlOrder(OrderType.Come);
+
                     }
                 }
             }
@@ -1393,7 +1394,7 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderDrop()
         {
-            m_Mobile.ControlOrder ^= OrderType.Drop;
+            m_Mobile.RemoveControlOrder(OrderType.Drop);
 
             if (m_Mobile.IsDeadPet || !m_Mobile.IsBonded)
             {
@@ -1528,7 +1529,7 @@ namespace Server.Mobiles
             {
                 m_Mobile.DebugSay("I have nobody to follow");
                 m_Mobile.ControlTarget = null;
-                m_Mobile.ControlOrder = OrderType.Roam;
+                m_Mobile.AddControlOrder(OrderType.Roam);
             }
 
             return true;
@@ -1536,7 +1537,7 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderFriend()
         {
-            m_Mobile.ControlOrder ^= OrderType.Friend;
+            m_Mobile.RemoveControlOrder(OrderType.Friend);
 
             Mobile from = m_Mobile.ControlMaster;
             Mobile to = m_Mobile.ControlTarget as Mobile;
@@ -1593,7 +1594,7 @@ namespace Server.Mobiles
                             m_Mobile.AddPetFriend(to);
 
                             m_Mobile.ControlTarget = to;
-                            m_Mobile.ControlOrder = OrderType.Follow;
+                            m_Mobile.AddControlOrder(OrderType.Follow);
 
                             return true;
                         }
@@ -1602,14 +1603,14 @@ namespace Server.Mobiles
             }
 
             m_Mobile.ControlTarget = from;
-            m_Mobile.ControlOrder = OrderType.Follow;
+            m_Mobile.AddControlOrder(OrderType.Follow);
 
             return true;
         }
 
         public virtual bool DoOrderUnfriend()
         {
-            m_Mobile.ControlOrder ^= OrderType.Unfriend;
+            m_Mobile.RemoveControlOrder(OrderType.Unfriend);
 
             Mobile from = m_Mobile.ControlMaster;
             Mobile to = m_Mobile.ControlTarget as Mobile;
@@ -1636,7 +1637,7 @@ namespace Server.Mobiles
             }
 
             m_Mobile.ControlTarget = from;
-            m_Mobile.ControlOrder = OrderType.Follow;
+            m_Mobile.AddControlOrder(OrderType.Follow);
 
             return true;
         }
@@ -1755,7 +1756,7 @@ namespace Server.Mobiles
                 m_Mobile.DebugSay("I think he might be dead. He's not anywhere around here at least. That's cool. I'm glad he's dead.");
 
                 m_Mobile.ControlTarget = m_Mobile.ControlMaster;
-                m_Mobile.ControlOrder ^= OrderType.Attack;
+                m_Mobile.RemoveControlOrder(OrderType.Attack);
 
                 if (m_Mobile.FightMode == FightMode.Closest || m_Mobile.FightMode == FightMode.Aggressor)
                 {
@@ -1790,7 +1791,7 @@ namespace Server.Mobiles
                     if (newCombatant != null)
                     {
                         m_Mobile.ControlTarget = newCombatant;
-                        m_Mobile.ControlOrder = OrderType.Attack;
+                        m_Mobile.AddControlOrder(OrderType.Attack);
                         m_Mobile.Combatant = newCombatant;
                         m_Mobile.DebugSay("But -that- is not dead. Here we go again...");
                         Think();
@@ -1818,7 +1819,7 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderRelease()
         {
-            m_Mobile.ControlOrder ^= OrderType.Release;
+            m_Mobile.RemoveControlOrder(OrderType.Release);
 
             m_Mobile.DebugSay("I have been released");
 
@@ -1886,7 +1887,9 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderStop()
         {
-            m_Mobile.ControlOrder ^= OrderType.Stop;
+            m_Mobile.RemoveControlOrder(OrderType.Stop);
+            m_Mobile.AddControlOrder(OrderType.Roam);
+
             if (m_Mobile.ControlMaster == null || m_Mobile.ControlMaster.Deleted)
             {
                 return true;
@@ -2059,7 +2062,7 @@ namespace Server.Mobiles
                         }
 
                         m_Creature.ControlTarget = to;
-                        m_Creature.ControlOrder = OrderType.Follow;
+                        m_Creature.AddControlOrder(OrderType.Follow);
 
                         m_Creature.BondingBegin = DateTime.MinValue;
                         m_Creature.OwnerAbandonTime = DateTime.MinValue;
@@ -2078,7 +2081,7 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderTransfer()
         {
-            m_Mobile.ControlOrder ^= OrderType.Transfer;
+            m_Mobile.RemoveControlOrder(OrderType.Transfer);
 
             if (m_Mobile.IsDeadPet)
             {
@@ -2154,7 +2157,7 @@ namespace Server.Mobiles
             }
 
             m_Mobile.ControlTarget = null;
-            m_Mobile.ControlOrder = OrderType.Stay;
+            m_Mobile.AddControlOrder(OrderType.Stay);
 
             return true;
         }

@@ -2556,7 +2556,7 @@ namespace Server.Mobiles
                 m_bControlled = false;
                 m_ControlMaster = null;
                 m_ControlTarget = null;
-                m_ControlOrder = OrderType.Roam;
+                AddControlOrder(OrderType.Roam);
             }
 
             if (version >= 3)
@@ -3423,103 +3423,111 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D ControlDest { get => m_ControlDest; set => m_ControlDest = value; }
 
-
-        private void StopControlOrder(OrderType stopType)
+        public void AddControlOrder(OrderType value)
         {
-            if (m_ControlOrder.HasFlag(stopType))
-                m_ControlOrder ^= stopType;
+            if (!HasControlOrder(value))
+                m_ControlOrder ^= value;
+            bool newCommand = true;
+
+            //Complete Override Commands
+            if (value == OrderType.Roam) //Turn off everything
+            {
+                m_ControlOrder = OrderType.Roam;
+            }
+            else if (value == OrderType.Stop)
+            {
+                m_ControlOrder = OrderType.Stop;
+            }
+            //Temporary Commands
+            else if (value == OrderType.Release)
+            {
+                m_ControlOrder |= OrderType.Release;
+            }
+            else if (value == OrderType.Transfer)
+            {
+                m_ControlOrder |= OrderType.Transfer;
+            }
+            else if (value == OrderType.Friend)
+            {
+                m_ControlOrder |= OrderType.Friend;
+            }
+            else if (value == OrderType.Unfriend)
+            {
+                m_ControlOrder |= OrderType.Unfriend;
+            }
+            //Additional Commands
+            else if (value == OrderType.Come) //Keep current actions
+            {
+                m_ControlOrder |= OrderType.Come;
+            }
+            else if (value == OrderType.Follow)
+            {
+                RemoveControlOrder(OrderType.Roam);
+                RemoveControlOrder(OrderType.Come);
+                RemoveControlOrder(OrderType.Stay);
+                RemoveControlOrder(OrderType.Patrol);
+
+                m_ControlOrder |= OrderType.Follow;
+            }
+
+            else if (value == OrderType.Guard)
+            {
+                m_ControlOrder |= OrderType.Guard;
+            }
+
+            else if (value == OrderType.Attack)
+            {
+                RemoveControlOrder(OrderType.Come);
+
+                m_ControlOrder |= OrderType.Attack;
+            }
+            else if (value == OrderType.Patrol)
+            {
+                m_ControlOrder |= OrderType.Patrol;
+            }
+
+            else if (value == OrderType.Stay)
+            {
+                RemoveControlOrder(OrderType.Roam);
+                RemoveControlOrder(OrderType.Come);
+                RemoveControlOrder(OrderType.Follow);
+                RemoveControlOrder(OrderType.Patrol);
+
+                m_ControlOrder |= OrderType.Stay;
+            }
+            else
+            {
+                m_ControlOrder = value;
+                newCommand = false;
+            }
+            if (m_ControlOrder == OrderType.None)
+                m_ControlOrder = OrderType.Roam;
+            if (m_Allured && m_ControlOrder != OrderType.Roam)
+            {
+                Say(1079120); // Very well.
+            }
+
+            if (m_AI != null && newCommand)
+            {
+                m_AI.OnCurrentOrderChanged(value);
+            }
+
+            InvalidateProperties();
+
+            if (m_ControlMaster != null)
+            {
+                m_ControlMaster.InvalidateProperties();
+            }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public virtual OrderType ControlOrder
+        public void RemoveControlOrder(OrderType removeOrder)
         {
-            get => m_ControlOrder;
-            set
+            if (HasControlOrder(removeOrder))
             {
-                bool newCommand = true;
-
-                if (value == OrderType.Roam) //Turn off everything
+                m_ControlOrder ^= removeOrder;
+                if (m_AI != null)
                 {
-                    m_ControlOrder = OrderType.Roam;
-                }
-                else if (value == OrderType.Come) //Keep current actions
-                {
-                    m_ControlOrder |= OrderType.Come;
-                }
-                else if (value == OrderType.Follow)
-                {
-                    StopControlOrder(OrderType.Roam);
-                    StopControlOrder(OrderType.Come);
-                    StopControlOrder(OrderType.Attack);
-                    StopControlOrder(OrderType.Stay);
-                    StopControlOrder(OrderType.Patrol);
-                    StopControlOrder(OrderType.Stop);
-
-                    m_ControlOrder |= OrderType.Follow;
-                }
-                else if (value == OrderType.Friend)
-                {
-                    m_ControlOrder |= OrderType.Friend;
-                }
-                else if (value == OrderType.Unfriend)
-                {
-                    m_ControlOrder |= OrderType.Unfriend;
-                }
-                else if (value == OrderType.Guard)
-                {
-                    m_ControlOrder |= OrderType.Guard;
-                }
-
-                else if (value == OrderType.Attack)
-                {
-                    StopControlOrder(OrderType.Come);
-                    StopControlOrder(OrderType.Stop);
-
-                    m_ControlOrder |= OrderType.Attack;
-                }
-                else if (value == OrderType.Patrol)
-                {
-                    m_ControlOrder |= OrderType.Patrol;
-                }
-                else if (value == OrderType.Release)
-                {
-                    m_ControlOrder = OrderType.Release;
-                }
-                else if (value == OrderType.Stay)
-                {
-                    StopControlOrder(OrderType.Roam);
-                    StopControlOrder(OrderType.Come);
-                    StopControlOrder(OrderType.Attack);
-                    StopControlOrder(OrderType.Follow);
-                    StopControlOrder(OrderType.Patrol);
-                    StopControlOrder(OrderType.Stop);
-
-                    m_ControlOrder |= OrderType.Stay;
-                }
-                else if (value == OrderType.Stop)
-                {
-                    m_ControlOrder = OrderType.Stop;
-                }
-                else if (value == OrderType.Transfer)
-                {
-                    m_ControlOrder = OrderType.Transfer;
-                }
-                else
-                {
-                    m_ControlOrder = value;
-                    newCommand = false;
-                }
-                if (m_ControlOrder == OrderType.None)
-                    m_ControlOrder = OrderType.Roam;
-
-                if (m_Allured && m_ControlOrder != OrderType.Roam)
-                {
-                    Say(1079120); // Very well.
-                }
-
-                if (m_AI != null && newCommand)
-                {
-                    m_AI.OnCurrentOrderChanged(value);
+                    m_AI.OnCurrentOrderChanged(removeOrder);
                 }
 
                 InvalidateProperties();
@@ -3529,6 +3537,24 @@ namespace Server.Mobiles
                     m_ControlMaster.InvalidateProperties();
                 }
             }
+        }
+
+        public bool IsControlOrder(OrderType checkOrder)
+        {
+            return m_ControlOrder.Equals(checkOrder);
+        }
+
+        public bool HasControlOrder(OrderType checkOrder)
+        {
+            return m_ControlOrder.HasFlag(checkOrder);
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public virtual OrderType ControlOrder
+        {
+            get => m_ControlOrder;
+            set => m_ControlOrder = value;
+
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -4306,7 +4332,7 @@ namespace Server.Mobiles
                  ct.HasFlag(OrderType.Follow)))
             {
                 ControlTarget = aggressor;
-                ControlOrder = OrderType.Attack;
+                AddControlOrder(OrderType.Attack);
             }
             else if (Combatant == null && !m_bBardPacified)
             {
@@ -5249,13 +5275,12 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            if (Controlled && ControlMaster is PlayerMobile && m_ControlOrder.HasFlag(OrderType.Guard))
+            if (Controlled && ControlMaster is PlayerMobile && m_HasControlOrder(OrderType.Guard))
             {
 
                 list.Add(1080078); // guarding
 
             }
-
 
             if (IsGolem)
                 list.Add(1113697); // (Golem)
@@ -5698,7 +5723,7 @@ namespace Server.Mobiles
 
                 IsDeadPet = true;
                 ControlTarget = ControlMaster;
-                ControlOrder = OrderType.Follow;
+                AddControlOrder(OrderType.Follow);
 
                 ProcessDeltaQueue();
                 SendIncomingPacket();
@@ -6020,7 +6045,7 @@ namespace Server.Mobiles
                 ControlMaster = null;
                 Controlled = false;
                 ControlTarget = null;
-                ControlOrder = OrderType.Roam;
+                AddControlOrder(OrderType.Roam);
                 Guild = null;
 
                 UpdateMasteryInfo();
@@ -6050,7 +6075,7 @@ namespace Server.Mobiles
                 ControlMaster = m;
                 Controlled = true;
                 ControlTarget = null;
-                ControlOrder = OrderType.Come;
+                AddControlOrder(OrderType.Come);
                 Guild = null;
 
                 UpdateMasteryInfo();
@@ -7094,9 +7119,9 @@ namespace Server.Mobiles
                 {
                     if (!onlyBonded || pet.IsBonded)
                     {
-                        if (pet.ControlOrder.HasFlag(OrderType.Guard) ||
-                            pet.ControlOrder.HasFlag(OrderType.Follow) ||
-                            pet.ControlOrder.HasFlag(OrderType.Come))
+                        if (pet.HasControlOrder(OrderType.Guard) ||
+                            pet.HasControlOrder(OrderType.Follow) ||
+                            pet.HasControlOrder(OrderType.Come))
                         {
                             move.Add(pet);
                         }

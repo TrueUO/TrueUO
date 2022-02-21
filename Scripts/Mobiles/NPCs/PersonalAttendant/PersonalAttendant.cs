@@ -72,7 +72,7 @@ namespace Server.Mobiles
 
         public virtual void CommandFollow(Mobile by)
         {
-            ControlOrder = OrderType.Follow;
+            AddControlOrder(OrderType.Follow);
             ControlTarget = by;
 
             if (m_Timer != null)
@@ -84,7 +84,7 @@ namespace Server.Mobiles
 
         public virtual void CommandStop(Mobile by)
         {
-            ControlOrder = OrderType.Stay;
+            AddControlOrder(OrderType.Stay);
             ControlTarget = null;
 
             if (m_Timer != null)
@@ -156,7 +156,7 @@ namespace Server.Mobiles
 
             TimeSpan delay = TimeSpan.FromSeconds(2);
 
-            if (ControlOrder.HasFlag(OrderType.Stay))
+            if (HasControlOrder(OrderType.Stay))
             {
                 delay = TimeSpan.FromSeconds(5);
             }
@@ -188,7 +188,7 @@ namespace Server.Mobiles
                     {
                         if ((m.NetState == null || !m.Alive) && !m_Attendant.InGreetingMode(m))
                             m_Attendant.Dismiss(m);
-                        else if (m_Attendant.ControlOrder.HasFlag(OrderType.Follow) && !m.InRange(m_Attendant.Location, 12))
+                        else if (m_Attendant.HasControlOrder(OrderType.Follow) && !m.InRange(m_Attendant.Location, 12))
                             DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(CatchUp), m.Location);
                     }
                 }
@@ -198,7 +198,7 @@ namespace Server.Mobiles
             {
                 if (m_Attendant != null && !m_Attendant.Deleted)
                 {
-                    m_Attendant.ControlOrder = OrderType.Follow;
+                    m_Attendant.AddControlOrder(OrderType.Follow);
                     m_Attendant.ControlTarget = m_Attendant.ControlMaster;
 
                     if (obj is Point3D point3D && m_Attendant.ControlMaster != null)

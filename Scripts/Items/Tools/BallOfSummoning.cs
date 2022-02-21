@@ -212,7 +212,7 @@ namespace Server.Items
                     pet.SummonMaster = from;
 
                 pet.ControlTarget = from;
-                pet.ControlOrder = OrderType.Follow;
+                pet.AddControlOrder(OrderType.Follow);
 
                 pet.IsStabled = false;
                 pet.StabledBy = null;

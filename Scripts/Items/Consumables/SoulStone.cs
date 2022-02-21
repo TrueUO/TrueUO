@@ -445,7 +445,7 @@ namespace Server.Items
                         if (follower is BaseCreature bc && bc.CheckControlChance(owner))
                         {
                             bc.ControlTarget = null;
-                            bc.ControlOrder = OrderType.Roam;
+                            bc.AddControlOrder(OrderType.Roam);
 
                             if (bc is BaseMount mount && mount.Rider == from)
                             {

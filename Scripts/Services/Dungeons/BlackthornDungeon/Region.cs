@@ -201,7 +201,7 @@ namespace Server.Engines.Blackthorn
             else
             {
                 pet.ControlTarget = null;
-                pet.ControlOrder = OrderType.Stay;
+                pet.AddControlOrder(OrderType.Stay);
                 pet.Internalize();
 
                 pet.SetControlMaster(null);

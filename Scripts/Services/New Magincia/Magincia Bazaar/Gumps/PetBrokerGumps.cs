@@ -593,7 +593,7 @@ namespace Server.Engines.NewMagincia
                         pet.Blessed = true;
                         pet.SetControlMaster(m_Broker);
                         pet.ControlTarget = m_Broker;
-                        pet.ControlOrder = OrderType.Roam;
+                        pet.AddControlOrder(OrderType.Roam);
                         pet.MoveToWorld(m_Broker.Location, m_Broker.Map);
                         pet.IsStabled = false;
                         pet.Home = pet.Location;

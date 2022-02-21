@@ -87,7 +87,7 @@ namespace Server.Engines.NewMagincia
                     if (from.Stabled.Count < AnimalTrainer.GetMaxStabled(from))
                     {
                         bc.Blessed = false;
-                        bc.ControlOrder = OrderType.Stay;
+                        bc.AddControlOrder(OrderType.Stay);
                         bc.Internalize();
                         bc.IsStabled = true;
                         bc.Loyalty = MaxLoyalty; // Wonderfully happy

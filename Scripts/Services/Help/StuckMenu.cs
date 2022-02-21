@@ -290,7 +290,7 @@ namespace Server.Menus.Questions
 
                 foreach (var m in fromMap.GetMobilesInRange(fromLoc, 3))
                 {
-                    if (m is BaseCreature bc && (bc.Controlled && bc.ControlMaster == m_Mobile && bc.ControlOrder.HasFlag(OrderType.Guard) || bc.ControlOrder.HasFlag(OrderType.Follow) || bc.ControlOrder.HasFlag(OrderType.Come)))
+                    if (m is BaseCreature bc && (bc.Controlled && bc.ControlMaster == m_Mobile && bc.HasControlOrder(OrderType.Guard) || bc.HasControlOrder(OrderType.Follow) || bc.HasControlOrder(OrderType.Come)))
                     {
                         move.Add(bc);
                     }

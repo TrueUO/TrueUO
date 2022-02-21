@@ -293,7 +293,7 @@ namespace Server.Items
             else if (from.Backpack != null && from.Backpack.ConsumeTotal(typeof(Gold), 30) || Banker.Withdraw(from, 30))
             {
                 pet.ControlTarget = null;
-                pet.ControlOrder = OrderType.Stay;
+                pet.AddControlOrder(OrderType.Stay);
                 pet.Internalize();
 
                 pet.SetControlMaster(null);
@@ -350,7 +350,7 @@ namespace Server.Items
                             pet.SummonMaster = from;
 
                         pet.ControlTarget = from;
-                        pet.ControlOrder = OrderType.Follow;
+                        pet.AddControlOrder(OrderType.Follow);
 
                         pet.MoveToWorld(from.Location, from.Map);
 
@@ -426,7 +426,7 @@ namespace Server.Items
                     pet.SummonMaster = from;
 
                 pet.ControlTarget = from;
-                pet.ControlOrder = OrderType.Follow;
+                pet.AddControlOrder(OrderType.Follow);
 
                 pet.MoveToWorld(from.Location, from.Map);
 

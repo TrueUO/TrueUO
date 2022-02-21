@@ -214,7 +214,7 @@ namespace Server.Mobiles
                 }
 
                 if (SmartAI && spell == null && !m_Mobile.InRange(c.Location, 3) && UsesMagery && c is Mobile &&
-                    !m_Mobile.DisallowAllMoves && CheckCanCastMagery(3) && m_Mobile.ControlOrder.HasFlag(OrderType.Attack) &&
+                    !m_Mobile.DisallowAllMoves && CheckCanCastMagery(3) && m_Mobile.HasControlOrder(OrderType.Attack) &&
                     m_Mobile.InRange(c.Location, 10) && 0.6 > Utility.RandomDouble())
                 {
                     spell = new TeleportSpell(m_Mobile, null);

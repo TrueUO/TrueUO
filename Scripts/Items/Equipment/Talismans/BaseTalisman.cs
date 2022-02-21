@@ -630,7 +630,7 @@ namespace Server.Items
                         Effects.SendLocationParticles(EffectItem.Create(mob.Location, mob.Map, EffectItem.DefaultDuration), 0x3728, 1, 10, 0x26B6);
 
                         mob.Summoned = false;
-                        mob.ControlOrder = OrderType.Friend;
+                        mob.AddControlOrder(OrderType.Friend);
 
                         m_Creature = mob;
                     }

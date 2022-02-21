@@ -194,7 +194,7 @@ namespace Server.Engines.NewMagincia
                 return;
 
             m_Pet.ControlTarget = null;
-            m_Pet.ControlOrder = OrderType.Stay;
+            m_Pet.AddControlOrder(OrderType.Stay);
             m_Pet.Internalize();
 
             m_Pet.SetControlMaster(null);

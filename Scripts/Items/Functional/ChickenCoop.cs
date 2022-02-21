@@ -203,7 +203,7 @@ namespace Server.Items
                     pet.SummonMaster = from;
 
                 pet.ControlTarget = from;
-                pet.ControlOrder = OrderType.Follow;
+                pet.AddControlOrder(OrderType.Follow);
 
                 pet.MoveToWorld(from.Location, from.Map);
 
@@ -294,7 +294,7 @@ namespace Server.Items
             else
             {
                 pet.ControlTarget = null;
-                pet.ControlOrder = OrderType.Stay;
+                pet.AddControlOrder(OrderType.Stay);
                 pet.Internalize();
 
                 pet.SetControlMaster(null);
