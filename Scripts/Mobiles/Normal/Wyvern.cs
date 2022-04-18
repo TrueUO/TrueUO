@@ -44,7 +44,6 @@ namespace Server.Mobiles
         {
         }
 
-        public override bool ReacquireOnMovement => true;
         public override Poison PoisonImmune => Poison.Deadly;
         public override Poison HitPoison => Poison.Deadly;
         public override int TreasureMapLevel => 2;
@@ -52,6 +51,7 @@ namespace Server.Mobiles
         public override int Hides => 20;
         public override HideType HideType => HideType.Horned;
         public override bool CanFly => true;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Average);
