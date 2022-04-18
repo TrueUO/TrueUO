@@ -54,7 +54,6 @@ namespace Server.Mobiles
         }
 
         public override bool CanAngerOnTame => true;
-        public override bool ReacquireOnMovement => !Controlled;
         public override bool AutoDispel => !Controlled;
         public override Poison PoisonImmune => Poison.Deadly;
         public override Poison HitPoison => Poison.Deadly;

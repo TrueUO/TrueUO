@@ -51,8 +51,6 @@ namespace Server.Mobiles
         {
         }
 
-        public override bool ReacquireOnMovement => !Controlled;
-
         public override double BonusPetDamageScalar => Controlled ? 1.0 : 3.0;
         public override bool AutoDispel => !Controlled;
         public override HideType HideType => HideType.Barbed;
