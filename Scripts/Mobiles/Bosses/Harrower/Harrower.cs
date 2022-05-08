@@ -1,6 +1,5 @@
 using Server.Engines.CannedEvil;
 using Server.Items;
-using Server.Services.Virtues;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -244,11 +243,15 @@ namespace Server.Mobiles
                 DamageStore ds = rights[i];
 
                 if (ds.m_HasRight)
+                {
                     toGive.Add(ds.m_Mobile);
+                }
             }
 
             if (toGive.Count == 0)
+            {
                 return;
+            }
 
             // Randomize
             for (int i = 0; i < toGive.Count; ++i)
@@ -265,38 +268,6 @@ namespace Server.Mobiles
 
                 m.SendLocalizedMessage(1049524); // You have received a scroll of power!
                 m.AddToBackpack(new StatCapScroll(m_StatCap + RandomStatScrollLevel()));
-
-                if (m is PlayerMobile pm)
-                {
-                    for (int j = 0; j < pm.JusticeProtectors.Count; ++j)
-                    {
-                        Mobile prot = pm.JusticeProtectors[j];
-
-                        if (prot.Map != pm.Map || prot.Murderer || prot.Criminal || !JusticeVirtue.CheckMapRegion(pm, prot))
-                            continue;
-
-                        int chance = 0;
-
-                        switch (VirtueHelper.GetLevel(prot, VirtueName.Justice))
-                        {
-                            case VirtueLevel.Seeker:
-                                chance = 60;
-                                break;
-                            case VirtueLevel.Follower:
-                                chance = 80;
-                                break;
-                            case VirtueLevel.Knight:
-                                chance = 100;
-                                break;
-                        }
-
-                        if (chance > Utility.Random(100))
-                        {
-                            prot.SendLocalizedMessage(1049368); // You have been rewarded for your dedication to Justice!
-                            prot.AddToBackpack(new StatCapScroll(m_StatCap + RandomStatScrollLevel()));
-                        }
-                    }
-                }
             }
         }
 

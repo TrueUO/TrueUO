@@ -4,7 +4,6 @@ using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
-using Server.Services.Virtues;
 using Server.SkillHandlers;
 using Server.Spells;
 using Server.Spells.Bushido;
@@ -270,21 +269,27 @@ namespace Server
 
             //SHould this go in after or before dragon barding absorb?
             if (ignoreArmor)
+            {
                 DamageEaterContext.CheckDamage(m, totalDamage, 0, 0, 0, 0, 0, 100);
+            }
             else
+            {
                 DamageEaterContext.CheckDamage(m, totalDamage, phys, fire, cold, pois, nrgy, direct);
+            }
 
             if (fire > 0 && totalDamage > 0)
+            {
                 SwarmContext.CheckRemove(m);
-
-            SpiritualityVirtue.GetDamageReduction(m, ref totalDamage);
+            }
 
             BestialSetHelper.OnDamage(m, from, ref totalDamage);
 
             EpiphanyHelper.OnHit(m, totalDamage);
 
             if (type == DamageType.Spell && m != null && Feint.Registry.ContainsKey(m) && Feint.Registry[m].Enemy == from)
+            {
                 totalDamage -= (int)(damage * ((double)Feint.Registry[m].DamageReduction / 100));
+            }
 
             if (m.Hidden && type >= DamageType.Spell)
             {

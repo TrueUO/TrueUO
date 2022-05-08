@@ -6,7 +6,6 @@ using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
 using Server.Regions;
-using Server.Services.Virtues;
 using Server.Targeting;
 using System;
 using System.Collections;
@@ -57,7 +56,6 @@ namespace Server.Mobiles
         public virtual bool IsActiveVendor => true;
         public virtual bool IsActiveBuyer => IsActiveVendor && !Siege.SiegeShard; // response to vendor SELL
         public virtual bool IsActiveSeller => IsActiveVendor; // repsonse to vendor BUY
-        public virtual bool HasHonestyDiscount => true;
 
         public virtual NpcGuild NpcGuild => NpcGuild.None;
 
@@ -982,27 +980,6 @@ namespace Server.Mobiles
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            #region Honesty Item Check
-            HonestyItemSocket honestySocket = dropped.GetSocket<HonestyItemSocket>();
-
-            if (honestySocket != null)
-            {
-                bool gainedPath = false;
-
-                if (honestySocket.HonestyOwner == this)
-                {
-                    VirtueHelper.Award(from, VirtueName.Honesty, 120, ref gainedPath);
-                    from.SendMessage(gainedPath ? "You have gained a path in Honesty!" : "You have gained in Honesty.");
-                    SayTo(from, 1074582); //Ah!  You found my property.  Thank you for your honesty in returning it to me.
-                    dropped.Delete();
-                    return true;
-                }
-
-                SayTo(from, 501550, 0x3B2); // I am not interested in this.
-                return false;
-            }
-            #endregion
-
             if (ConvertsMageArmor && dropped is BaseArmor armor && CheckConvertArmor(from, armor))
             {
                 return false;
@@ -1578,30 +1555,6 @@ namespace Server.Mobiles
             bought = buyer.AccessLevel >= AccessLevel.GameMaster;
             cont = buyer.Backpack;
 
-            double discount = 0.0;
-
-            if (HasHonestyDiscount)
-            {
-                double discountPc = 0;
-                switch (VirtueHelper.GetLevel(buyer, VirtueName.Honesty))
-                {
-                    case VirtueLevel.Seeker:
-                        discountPc = .1;
-                        break;
-                    case VirtueLevel.Follower:
-                        discountPc = .2;
-                        break;
-                    case VirtueLevel.Knight:
-                        discountPc = .3; break;
-                    default:
-                        discountPc = 0;
-                        break;
-                }
-
-                discount = totalCost - totalCost * (1.0 - discountPc);
-                totalCost -= discount;
-            }
-
             if (!bought && cont != null && ConsumeGold(cont, totalCost))
             {
                 bought = true;
@@ -1736,11 +1689,6 @@ namespace Server.Mobiles
                         ProcessValidPurchase(amount, gbi, buyer, cont);
                     }
                 }
-            }
-
-            if (discount > 0)
-            {
-                SayTo(buyer, 1151517, discount.ToString(), 0x3B2);
             }
 
             if (fullPurchase)

@@ -565,7 +565,7 @@ namespace Server.Engines.BulkOrders
         {
             typeof(Arrow), typeof(Bolt), typeof(Kindling), typeof(Shaft),
 
-            typeof(EnchantedApple), typeof(TribalPaint), typeof(GrapesOfWrath),
+            typeof(EnchantedApple), typeof(GrapesOfWrath),
             typeof(EggBomb), typeof(CookedBird), typeof(FishSteak), typeof(FriedEggs),
             typeof(LambLeg), typeof(Ribs),
 

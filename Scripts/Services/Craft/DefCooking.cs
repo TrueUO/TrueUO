@@ -167,9 +167,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(SushiPlatter), 1044496, 1030305, 90.0, 120.0, typeof(BaseBeverage), 1046458, 1, 1044253);
             AddRes(index, typeof(RawFishSteak), 1044476, 10, 1044253);
 
-            index = AddCraft(typeof(TribalPaint), 1044496, 1040000, 55.0, 105.0, typeof(SackFlourOpen), 1044468, 1, 1151092);
-            AddRes(index, typeof(TribalBerry), 1046460, 1, 1044253);
-
             index = AddCraft(typeof(EggBomb), 1044496, 1030249, 90.0, 120.0, typeof(Eggs), 1044477, 1, 1044253);
             AddRes(index, typeof(SackFlourOpen), 1044468, 3, 1151092);
 

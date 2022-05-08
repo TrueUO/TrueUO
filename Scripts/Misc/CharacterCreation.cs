@@ -498,7 +498,6 @@ namespace Server.Misc
             bool addSkillItems = true;
             bool elf = m.Race == Race.Elf;
             bool human = m.Race == Race.Human;
-            bool gargoyle = m.Race == Race.Gargoyle;
 
             switch (prof)
             {

@@ -1,9 +1,6 @@
-using Server.Items;
 using Server.Mobiles;
 using Server.Network;
-using Server.Services.Virtues;
 using System;
-using System.Collections.Generic;
 
 namespace Server.Gumps
 {
@@ -21,24 +18,18 @@ namespace Server.Gumps
     {
         private readonly Mobile m_Healer;
         private readonly int m_Price;
-        private readonly bool m_FromSacrifice;
         private readonly double m_HitsScalar;
         private readonly ResurrectMessage m_Msg;
 
         private readonly Action<Mobile> m_Callback;
 
         public ResurrectGump(Mobile owner)
-            : this(owner, owner, ResurrectMessage.Generic, false)
+            : this(owner, owner, ResurrectMessage.Generic)
         {
         }
 
         public ResurrectGump(Mobile owner, double hitsScalar)
-            : this(owner, owner, ResurrectMessage.Generic, false, hitsScalar, null)
-        {
-        }
-
-        public ResurrectGump(Mobile owner, bool fromSacrifice)
-            : this(owner, owner, ResurrectMessage.Generic, fromSacrifice)
+            : this(owner, owner, ResurrectMessage.Generic, hitsScalar, null)
         {
         }
 
@@ -58,15 +49,14 @@ namespace Server.Gumps
         }
 
         public ResurrectGump(Mobile owner, Mobile healer, ResurrectMessage msg, bool fromSacrifice)
-            : this(owner, healer, msg, fromSacrifice, 0.0, null)
+            : this(owner, healer, msg, 0.0, null)
         {
         }
 
-        public ResurrectGump(Mobile owner, Mobile healer, ResurrectMessage msg, bool fromSacrifice, double hitsScalar, Action<Mobile> callback)
+        public ResurrectGump(Mobile owner, Mobile healer, ResurrectMessage msg, double hitsScalar, Action<Mobile> callback)
             : base(100, 0)
         {
             m_Healer = healer;
-            m_FromSacrifice = fromSacrifice;
             m_HitsScalar = hitsScalar;
 
             m_Msg = msg;
@@ -207,50 +197,6 @@ namespace Server.Gumps
 
                 from.Resurrect();
 
-                if (m_Healer != null && from != m_Healer)
-                {
-                    VirtueLevel level = VirtueHelper.GetLevel(m_Healer, VirtueName.Compassion);
-
-                    switch (level)
-                    {
-                        case VirtueLevel.Seeker:
-                            from.Hits = AOS.Scale(from.HitsMax, 20);
-                            break;
-                        case VirtueLevel.Follower:
-                            from.Hits = AOS.Scale(from.HitsMax, 40);
-                            break;
-                        case VirtueLevel.Knight:
-                            from.Hits = AOS.Scale(from.HitsMax, 80);
-                            break;
-                    }
-                }
-
-                if (m_FromSacrifice && from is PlayerMobile mobile)
-                {
-                    mobile.AvailableResurrects -= 1;
-
-                    Container pack = mobile.Backpack;
-                    Container corpse = mobile.Corpse;
-
-                    if (pack != null && corpse != null)
-                    {
-                        List<Item> items = new List<Item>(corpse.Items);
-
-                        for (int i = 0; i < items.Count; ++i)
-                        {
-                            Item item = items[i];
-
-                            if (item.Layer != Layer.Hair && item.Layer != Layer.FacialHair && item.Movable)
-                                pack.DropItem(item);
-                        }
-                    }
-                }
-
-                if (m_Healer != from && m_Healer is PlayerMobile && from is PlayerMobile)
-                {
-                    SpiritualityVirtue.OnHeal(m_Healer, 50);
-                }
-
                 if (from.Fame > 0)
                 {
                     int amount = from.Fame / 10;
@@ -259,10 +205,14 @@ namespace Server.Gumps
                 }
 
                 if (from.Alive && m_HitsScalar > 0)
+                {
                     from.Hits = (int)(from.HitsMax * m_HitsScalar);
+                }
 
                 if (m_Callback != null)
+                {
                     m_Callback(from);
+                }
             }
         }
     }

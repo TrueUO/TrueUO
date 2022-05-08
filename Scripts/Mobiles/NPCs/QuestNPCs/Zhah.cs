@@ -26,12 +26,6 @@ namespace Server.Mobiles
             HairHue = Race.RandomHairHue();
         }
 
-        private void ColorItem(Item item)
-        {
-            item.Hue = 0x4F2;
-            AddItem(item);
-        }
-
         public override void Advertise()
         {
             Say(1150932);

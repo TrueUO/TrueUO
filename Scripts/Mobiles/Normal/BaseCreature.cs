@@ -9,7 +9,6 @@ using Server.Multis;
 using Server.Network;
 using Server.Prompts;
 using Server.Regions;
-using Server.Services.Virtues;
 using Server.SkillHandlers;
 using Server.Spells;
 using Server.Spells.Bushido;
@@ -199,7 +198,7 @@ namespace Server.Mobiles
         }
     }
 
-    public class BaseCreature : Mobile, IHonorTarget, IEngravable
+    public class BaseCreature : Mobile, IEngravable
     {
         public const int MaxLoyalty = 100;
 
@@ -364,18 +363,22 @@ namespace Server.Mobiles
         {
             get
             {
-                int regen = 0;
+                var regen = 0;
 
                 if (IsAnimatedDead)
+                {
                     regen = 4;
+                }
 
                 if (IsParagon)
+                {
                     regen += 40;
-
-                regen += HumilityVirtue.GetRegenBonus(this);
+                }
 
                 if (AbilityProfile != null)
+                {
                     regen += AbilityProfile.RegenHits;
+                }
 
                 return regen;
             }
@@ -1307,11 +1310,6 @@ namespace Server.Mobiles
 
             if (Combatant != m)
             {
-                if (m is PlayerMobile pm && pm.HonorActive)
-                {
-                    return false;
-                }
-
                 if (TransformationSpellHelper.UnderTransformation(m, typeof(EtherealVoyageSpell)))
                 {
                     return false;
@@ -1800,10 +1798,6 @@ namespace Server.Mobiles
             BardPacified = false;
         }
 
-        private HonorContext m_ReceivedHonorContext;
-
-        public HonorContext ReceivedHonorContext { get => m_ReceivedHonorContext; set => m_ReceivedHonorContext = value; }
-
         public virtual void OnBeforeDamage(Mobile from, ref int totalDamage, DamageType type)
         {
             if (type >= DamageType.Spell && RecentSetControl)
@@ -1851,11 +1845,6 @@ namespace Server.Mobiles
             if (speechType != null && !willKill)
             {
                 speechType.OnDamage(this, amount);
-            }
-
-            if (m_ReceivedHonorContext != null)
-            {
-                m_ReceivedHonorContext.OnTargetDamaged(from, amount);
             }
 
             if (from is PlayerMobile pm)
@@ -5284,11 +5273,6 @@ namespace Server.Mobiles
                 speechType.OnDeath(this);
             }
 
-            if (m_ReceivedHonorContext != null)
-            {
-                m_ReceivedHonorContext.OnTargetKilled();
-            }
-
             return base.OnBeforeDeath();
         }
 
@@ -5746,9 +5730,6 @@ namespace Server.Mobiles
                         }
 
                         OnKilledBy(ds.m_Mobile);
-
-                        if (HumilityVirtue.IsInHunt(ds.m_Mobile) && Karma < 0)
-                            HumilityVirtue.RegisterKill(ds.m_Mobile, this, list.Count);
                     }
 
                     for (int i = 0; i < titles.Count; ++i)
@@ -5872,11 +5853,6 @@ namespace Server.Mobiles
 
             SetControlMaster(null);
             SummonMaster = null;
-
-            if (m_ReceivedHonorContext != null)
-            {
-                m_ReceivedHonorContext.Cancel();
-            }
 
             base.OnDelete();
 

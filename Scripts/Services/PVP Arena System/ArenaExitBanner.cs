@@ -25,7 +25,7 @@ namespace Server.Engines.ArenaSystem
         {
             if (m is PlayerMobile && Arena != null && !m.Alive && m.InRange(Location, 2) && !m.HasGump(typeof(ResurrectGump)))
             {
-                m.SendGump(new ResurrectGump(m, null, ResurrectMessage.Generic, false, 0.0, mob =>
+                m.SendGump(new ResurrectGump(m, null, ResurrectMessage.Generic, 0.0, mob =>
                     {
                         Arena.RemovePlayer((PlayerMobile)mob);
 

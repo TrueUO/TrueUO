@@ -5,7 +5,6 @@ using Server.Misc;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Regions;
-using Server.Services.Virtues;
 using Server.Spells.Fifth;
 using Server.Spells.Fourth;
 using Server.Spells.Necromancy;
@@ -1407,11 +1406,6 @@ namespace Server.Spells
                     amount /= 2;
                     target.SendLocalizedMessage(1151178); // The cauterized wound resists some of your healing.
                 }
-
-                int realAmount = Math.Min(amount, target.HitsMax - target.Hits);
-
-                if (realAmount > 0 && target != from)
-                    SpiritualityVirtue.OnHeal(from, realAmount);
             }
 
             target.Heal(amount, from, message);
