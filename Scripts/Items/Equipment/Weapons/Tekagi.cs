@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(GargishTekagi))]
     [Flipable(0x27Ab, 0x27F6)]
     public class Tekagi : BaseKnife
     {

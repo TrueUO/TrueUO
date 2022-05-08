@@ -97,7 +97,7 @@ namespace Server.Items
 
             if (0.1 > Utility.RandomDouble())
             {
-                item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(this), LootPackEntry.IsMondain(this), LootPackEntry.IsStygian(this));
+                item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(this), LootPackEntry.IsMondain(this));
 
                 if (item != null)
                 {

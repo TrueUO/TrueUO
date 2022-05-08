@@ -13,7 +13,6 @@ namespace Server.Items
         void AlterRangedDamage(ref int phys, ref int fire, ref int cold, ref int pois, ref int nrgy, ref int chaos, ref int direct);
     }
 
-    [Alterable(typeof(DefTailoring), typeof(GargishLeatherWingArmor), true)]
     public class BaseQuiver : Container, ICraftable, ISetItem, IVvVItem, IOwnerRestricted, IRangeDamage, IArtifact, ICanBeElfOrHuman
     {
         private bool _VvVItem;
@@ -138,22 +137,6 @@ namespace Server.Items
                 quiver.m_Resistances = new AosElementAttributes(newItem, m_Resistances);
                 quiver.m_SetAttributes = new AosAttributes(newItem, m_SetAttributes);
                 quiver.m_SetSkillBonuses = new AosSkillBonuses(newItem, m_SetSkillBonuses);
-            }
-
-            if (newItem is GargishLeatherWingArmor wing)
-            {
-                int phys, fire, cold, pois, nrgy, chaos, direct;
-                phys = fire = cold = pois = nrgy = chaos = direct = 0;
-
-                AlterRangedDamage(ref phys, ref fire, ref cold, ref pois, ref nrgy, ref chaos, ref direct);
-
-                wing.AosElementDamages.Physical = phys;
-                wing.AosElementDamages.Fire = fire;
-                wing.AosElementDamages.Cold = cold;
-                wing.AosElementDamages.Poison = pois;
-                wing.AosElementDamages.Energy = nrgy;
-                wing.AosElementDamages.Chaos = chaos;
-                wing.AosElementDamages.Direct = direct;
             }
 
             base.OnAfterDuped(newItem);

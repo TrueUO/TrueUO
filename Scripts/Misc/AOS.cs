@@ -448,8 +448,8 @@ namespace Server
                 case 2: return from.GetMaxResistance(ResistanceType.Cold);
                 case 3: return from.GetMaxResistance(ResistanceType.Poison);
                 case 4: return from.GetMaxResistance(ResistanceType.Energy);
-                case 5: return Math.Min(45 + BaseArmor.GetRefinedDefenseChance(from), AosAttributes.GetValue(from, AosAttribute.DefendChance));
-                case 6: return 45 + BaseArmor.GetRefinedDefenseChance(from) + WhiteTigerFormSpell.GetDefenseCap(from);
+                case 5: return Math.Min(45, AosAttributes.GetValue(from, AosAttribute.DefendChance));
+                case 6: return 45 + WhiteTigerFormSpell.GetDefenseCap(from);
                 case 7: return Math.Min(from.Race == Race.Gargoyle ? 50 : 45, AosAttributes.GetValue(from, AosAttribute.AttackChance));
                 case 8: return Math.Min(60, AosAttributes.GetValue(from, AosAttribute.WeaponSpeed));
                 case 9: return Math.Min(100, AosAttributes.GetValue(from, AosAttribute.WeaponDamage));

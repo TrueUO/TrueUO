@@ -67,14 +67,6 @@ namespace Server.Engines.Quests
             HairHue = 0x385;
         }
 
-        public override void InitOutfit()
-        {
-            AddItem(new GargishClothLegs(0x70F));
-            AddItem(new GargishClothKilt(0x742));
-            AddItem(new GargishClothChest(0x4C3));
-            AddItem(new GargishClothArms(0x738));
-        }
-
         private static readonly Type[][] m_PileTypes =
         {
                 new[] {typeof(DullCopperIngot),  typeof(PileofInspectedDullCopperIngots) },

@@ -21,9 +21,8 @@ namespace Server.Mobiles
 
         private readonly Type[] _ArtifactTypes =
         {
-            typeof(Abhorrence),         typeof(CaptainJohnesBlade),             typeof(Craven),
-            typeof(Equivocation),       typeof(GargishCaptainJohnesBlade),      typeof(GargishEquivocation),
-            typeof(GargishPincer),      typeof(Pincer)
+            typeof(Abhorrence), typeof(CaptainJohnesBlade),             
+            typeof(Equivocation), typeof(Pincer)
         };
 
         [CommandProperty(AccessLevel.GameMaster)]

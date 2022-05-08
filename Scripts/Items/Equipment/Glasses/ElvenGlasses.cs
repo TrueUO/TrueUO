@@ -3,7 +3,6 @@ using Server.Misc;
 
 namespace Server.Items
 {
-    [Alterable(typeof(DefTinkering), typeof(GargishGlasses), true)]
     public class ElvenGlasses : BaseArmor, IRepairable, ICanBeElfOrHuman
     {
         public override int LabelNumber => 1032216;  // elven glasses

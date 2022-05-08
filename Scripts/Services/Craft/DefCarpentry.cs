@@ -367,12 +367,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Turquoise), 1026250, 1, 1053098);
             AddRecipe(index, (int)CraftRecipes.HardenedWildStaff);
 
-            index = AddCraft(typeof(SerpentStoneStaff), 1044566, 1095367, 63.8, 113.8, typeof(Board), 1044041, 16, 1044351);
-            AddRes(index, typeof(EcruCitrine), 1026252, 1, 1053098);
-
-            index = AddCraft(typeof(GargishGnarledStaff), 1044566, 1097488, 78.9, 128.9, typeof(Board), 1044041, 16, 1044351);
-            AddRes(index, typeof(EcruCitrine), 1026252, 1, 1053098);
-
             AddCraft(typeof(Club), 1044566, 1025043, 65.0, 90.0, typeof(Board), 1044041, 9, 1044351);
             AddCraft(typeof(BlackStaff), 1044566, 1023568, 81.5, 106.5, typeof(Board), 1044041, 9, 1044351);
 
@@ -461,8 +455,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
             AddRes(index, typeof(Muculent), 1032680, 10, 1053098);
             ForceNonExceptional(index);
-
-            AddCraft(typeof(GargishWoodenShield), 1062760, 1095768, 52.6, 77.6, typeof(Board), 1044041, 9, 1044351);
 
             index = AddCraft(typeof(PirateShield), 1062760, 1159585, 70.0, 90.0, typeof(Board), 1044041, 12, 1044351);
             AddRes(index, typeof(IronIngot), 1044036, 8, 1044037);
@@ -836,7 +828,6 @@ namespace Server.Engines.Craft
             MarkOption = true;
             Repair = true;
             CanEnhance = true;
-            CanAlter = true;
 
             SetSubRes(typeof(Board), 1072643);
 

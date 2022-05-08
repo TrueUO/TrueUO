@@ -1,4 +1,3 @@
-using Server.Items;
 using System;
 
 namespace Server.Engines.Quests
@@ -84,14 +83,6 @@ namespace Server.Engines.Quests
             Body = 666;
             HairItemID = 16987;
             HairHue = 1801;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new Backpack());
-            AddItem(new GargishClothChest());
-            AddItem(new GargishClothKilt());
-            AddItem(new GargishClothLegs(Utility.RandomNeutralHue()));
         }
 
         public override void Serialize(GenericWriter writer)

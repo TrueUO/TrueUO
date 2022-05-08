@@ -1137,7 +1137,7 @@ namespace Server.Items
                 bonus -= info.DefenseChanceMalus;
             }
 
-            int max = 45 + BaseArmor.GetRefinedDefenseChance(defender) + WhiteTigerFormSpell.GetDefenseCap(defender);
+            int max = 45 + WhiteTigerFormSpell.GetDefenseCap(defender);
 
             // Defense Chance Increase = 45%
             if (bonus > max)
@@ -2404,7 +2404,7 @@ namespace Server.Items
             #region Bracers Of Alchemical Devastation
             var arms = attacker.FindItemOnLayer(Layer.Arms);
 
-            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms != null && (arms is BracersofAlchemicalDevastation || arms is GargishBracersofAlchemicalDevastation))
+            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms is BracersofAlchemicalDevastation)
             {
                 DoLightning(attacker, defender);
             }

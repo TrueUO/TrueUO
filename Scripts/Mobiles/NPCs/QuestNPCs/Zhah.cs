@@ -1,5 +1,4 @@
 using Server.Engines.Quests;
-using Server.Items;
 using System;
 
 namespace Server.Mobiles
@@ -25,18 +24,6 @@ namespace Server.Mobiles
 
             HairItemID = 0x42AB; // Get tiare looking kind
             HairHue = Race.RandomHairHue();
-        }
-
-        public override void InitOutfit()
-        {
-            ColorItem(new LeatherTalons()); // Bright Blue
-            ColorItem(new GargishLeatherChest()); // Bright Blue
-            ColorItem(new GargishLeatherLegs()); // Bright Blue
-            ColorItem(new GargishClothWingArmor()); // Bright Blue
-            ColorItem(new GargishLeatherArms()); // Bright Blue
-            ColorItem(new GargishLeatherKilt()); // Bright Blue
-
-            AddItem(new SerpentStoneStaff());
         }
 
         private void ColorItem(Item item)

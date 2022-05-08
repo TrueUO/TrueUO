@@ -105,14 +105,6 @@ namespace Server.Engines.Quests
             HairHue = 0x38A;
         }
 
-        public override void InitOutfit()
-        {
-            AddItem(new GlassStaff());
-            AddItem(new GargishClothChest(0x64F));
-            AddItem(new GargishClothArms(0x64F));
-            AddItem(new GargishClothKilt(0x643));
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

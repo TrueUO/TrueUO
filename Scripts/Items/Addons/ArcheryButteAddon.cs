@@ -59,7 +59,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if ((from.Weapon is Boomerang || from.Weapon is Cyclone || from.Weapon is BaseThrown) && from.InRange(GetWorldLocation(), 1))
+            if (from.Weapon is BaseThrown && from.InRange(GetWorldLocation(), 1))
                 Fire(from);
             if ((m_Arrows > 0 || m_Bolts > 0) && from.InRange(GetWorldLocation(), 1))
                 Gather(from);

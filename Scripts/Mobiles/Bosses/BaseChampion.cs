@@ -321,12 +321,14 @@ namespace Server.Mobiles
                 if (SkullType != ChampionSkullType.None)
                 {
                     if (toGive.Count > 0)
+                    {
                         toGive[Utility.Random(toGive.Count)].AddToBackpack(new ChampionSkull(SkullType));
+                    }
                     else
+                    {
                         c.DropItem(new ChampionSkull(SkullType));
+                    }
                 }
-
-                RefinementComponent.Roll(c, 3, 0.10);
             }
 
             base.OnDeath(c);

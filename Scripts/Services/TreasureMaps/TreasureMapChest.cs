@@ -399,15 +399,6 @@ namespace Server.Items
             {
                 cont.DropItem(special);
             }
-
-            int rolls = 2;
-
-            if (level >= 5)
-            {
-                rolls += level - 2;
-            }
-
-            RefinementComponent.Roll(cont, rolls, 0.10);
         }
 
         public static void GetRandomItemStat(out int min, out int max, double scale = 1.0)

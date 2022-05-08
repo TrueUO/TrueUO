@@ -1,4 +1,3 @@
-using Server.Items;
 using System;
 
 namespace Server.Engines.Quests
@@ -30,14 +29,6 @@ namespace Server.Engines.Quests
             Hue = 0x86E8;
             HairItemID = 0x4258;
             HairHue = 0x31D;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new SerpentStoneStaff());
-            AddItem(new GargishClothChest(1609));
-            AddItem(new GargishClothArms(1651));
-            AddItem(new GargishClothKilt(1649));
         }
 
         public override void Advertise()

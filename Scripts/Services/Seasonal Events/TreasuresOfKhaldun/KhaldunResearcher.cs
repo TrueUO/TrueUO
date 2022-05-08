@@ -71,12 +71,6 @@ namespace Server.Engines.Khaldun
             };
             PackItem(item);
 
-            item = new TalonsOfEscaping
-            {
-                Movable = false
-            };
-            PackItem(item);
-
             item = new BootsOfEscaping
             {
                 Movable = false

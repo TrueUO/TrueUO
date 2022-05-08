@@ -22,12 +22,10 @@ namespace Server.Mobiles
 
         public override VendorShoeType ShoeType => Utility.RandomBool() ? VendorShoeType.Sandals : VendorShoeType.Shoes;
         protected override List<SBInfo> SBInfos => m_SBInfos;
+
         public override void InitSBInfo()
         {
             m_SBInfos.Add(new SBCook());
-
-            if (IsTokunoVendor)
-                m_SBInfos.Add(new SBSECook());
         }
 
         public override void InitOutfit()

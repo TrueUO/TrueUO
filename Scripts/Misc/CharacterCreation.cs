@@ -71,10 +71,6 @@ namespace Server.Misc
                         break;
                 }
             }
-            else if (m.Race == Race.Gargoyle)
-            {
-                EquipItem(new GargishClothChestArmor(hue));
-            }
         }
 
         private static void AddPants(Mobile m, int pantsHue)
@@ -111,10 +107,6 @@ namespace Server.Misc
                             break;
                     }
                 }
-            }
-            else if (m.Race == Race.Gargoyle)
-            {
-                EquipItem(new GargishClothKiltArmor(hue));
             }
         }
 
@@ -516,10 +508,6 @@ namespace Server.Misc
                             EquipItem(new LeafChest());
                         else if (human)
                             EquipItem(new LeatherChest());
-                        else if (gargoyle)
-                        {
-                            EquipItem(new GargishLeatherChest());
-                        }
 
                         break;
                     }
@@ -552,14 +540,6 @@ namespace Server.Misc
                             EquipItem(NecroHue(new Skirt()));
                             EquipItem(new Sandals(0x8FD));
                         }
-                        else if (gargoyle)
-                        {
-                            EquipItem(new GlassSword());
-                            EquipItem(NecroHue(new GargishLeatherChest()));
-                            EquipItem(NecroHue(new GargishLeatherArms()));
-                            EquipItem(NecroHue(new GargishLeatherLegs()));
-                            EquipItem(NecroHue(new GargishLeatherKilt()));
-                        }
 
                         PackItem(new NecromancerSpellbook((ulong)0x8981)); // animate dead, evil omen, pain spike, summon familiar, wraith form
 
@@ -590,14 +570,6 @@ namespace Server.Misc
                             EquipItem(new Cloak(0xCF));
                             EquipItem(new BodySash(0xCF));
                         }
-                        else if (gargoyle)
-                        {
-                            EquipItem(new DreadSword());
-                            EquipItem(new GargishPlateChest());
-                            EquipItem(new GargishPlateArms());
-                            EquipItem(new GargishPlateLegs());
-                            EquipItem(new GargishPlateKilt());
-                        }
 
                         PackItem(new BookOfChivalry());
 
@@ -618,14 +590,6 @@ namespace Server.Misc
                                 EquipItem(new RavenHelm());
                             else
                                 EquipItem(new LeatherJingasa());
-                        }
-                        else if (gargoyle)
-                        {
-                            EquipItem(new GlassSword());
-                            EquipItem(new GargishPlateChest());
-                            EquipItem(new GargishPlateArms());
-                            EquipItem(new GargishPlateLegs());
-                            EquipItem(new GargishPlateKilt());
                         }
 
                         PackItem(new Scissors());
@@ -651,17 +615,6 @@ namespace Server.Misc
                                 EquipItem(new AssassinSpike());
                             else
                                 EquipItem(new Tekagi());
-                        }
-                        else if (gargoyle)
-                        {
-                            EquipItem(new GargishDagger());
-
-                            int hue = hues[Utility.Random(hues.Length)];
-
-                            EquipItem(new GargishClothChestArmor(hue));
-                            EquipItem(new GargishClothArmsArmor(hue));
-                            EquipItem(new GargishClothLegsArmor(hue));
-                            EquipItem(new GargishClothKiltArmor(hue));
                         }
 
                         PackItem(new SmokeBomb());
@@ -936,21 +889,6 @@ namespace Server.Misc
                                     break;
                             }
                         }
-                        else if (gargoyle)
-                        {
-                            switch (Utility.Random(3))
-                            {
-                                case 0:
-                                    EquipItem(new BloodBlade());
-                                    break;
-                                case 1:
-                                    EquipItem(new GlassSword());
-                                    break;
-                                case 2:
-                                    EquipItem(new DiscMace());
-                                    break;
-                            }
-                        }
 
                         break;
                     }
@@ -960,8 +898,6 @@ namespace Server.Misc
                             EquipItem(new WildStaff());
                         else if (human)
                             EquipItem(new GnarledStaff());
-                        else if (gargoyle)
-                            EquipItem(new SerpentStoneStaff());
 
                         break;
                     }
@@ -1057,8 +993,6 @@ namespace Server.Misc
                             EquipItem(new Leafblade());
                         else if (human)
                             EquipItem(new Kryss());
-                        else if (gargoyle)
-                            EquipItem(new BloodBlade());
 
                         break;
                     }
@@ -1111,8 +1045,6 @@ namespace Server.Misc
                             EquipItem(new WildStaff());
                         else if (human)
                             EquipItem(new GnarledStaff());
-                        else if (gargoyle)
-                            EquipItem(new SerpentStoneStaff());
 
                         break;
                     }
@@ -1123,10 +1055,7 @@ namespace Server.Misc
                     }
                 case SkillName.Lumberjacking:
                     {
-                        if (human || elf)
-                            EquipItem(new Hatchet());
-                        else if (gargoyle)
-                            EquipItem(new DualShortAxes());
+                        EquipItem(new Hatchet());
 
                         break;
                     }
@@ -1136,8 +1065,6 @@ namespace Server.Misc
                             EquipItem(new DiamondMace());
                         else if (human)
                             EquipItem(new Club());
-                        else if (gargoyle)
-                            EquipItem(new DiscMace());
 
                         break;
                     }
@@ -1200,10 +1127,7 @@ namespace Server.Misc
                     }
                 case SkillName.Parry:
                     {
-                        if (human || elf)
-                            EquipItem(new WoodenShield());
-                        else if (gargoyle)
-                            EquipItem(new GargishWoodenShield());
+                        EquipItem(new WoodenShield());
 
                         break;
                     }
@@ -1248,8 +1172,6 @@ namespace Server.Misc
                             EquipItem(new RuneBlade());
                         else if (human)
                             EquipItem(new Katana());
-                        else if (gargoyle)
-                            EquipItem(new GlassSword());
 
                         break;
                     }
@@ -1259,8 +1181,6 @@ namespace Server.Misc
                             EquipItem(new RuneBlade());
                         else if (human)
                             EquipItem(new Katana());
-                        else if (gargoyle)
-                            EquipItem(new GlassSword());
 
                         break;
                     }
@@ -1316,18 +1236,11 @@ namespace Server.Misc
                             EquipItem(new LeafGloves());
                         else if (human)
                             EquipItem(new LeatherGloves());
-                        else if (gargoyle)
-                        {
-                            EquipItem(new GargishLeatherArms());
-                        }
 
                         break;
                     }
                 case SkillName.Throwing:
                     {
-                        if (gargoyle)
-                            EquipItem(new Boomerang());
-
                         break;
                     }
                 case SkillName.Mysticism:

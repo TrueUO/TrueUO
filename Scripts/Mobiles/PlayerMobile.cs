@@ -956,22 +956,9 @@ namespace Server.Mobiles
 
         public override int GetMaxResistance(ResistanceType type)
         {
-            if (IsStaff())
-            {
-                return 100;
-            }
-
             int max = base.GetMaxResistance(type);
-            int refineBonus = BaseArmor.GetRefinedResist(this, type);
 
-            if (refineBonus != 0)
-            {
-                max += refineBonus;
-            }
-            else
-            {
-                max += Spells.Mysticism.StoneFormSpell.GetMaxResistBonus(this);
-            }
+            max += Spells.Mysticism.StoneFormSpell.GetMaxResistBonus(this);
 
             if (Race == Race.Elf && type == ResistanceType.Energy)
             {

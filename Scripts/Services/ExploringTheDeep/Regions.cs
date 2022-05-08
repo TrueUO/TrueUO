@@ -102,7 +102,7 @@ namespace Server.Regions
                 {
                     var i = pm.Items[index];
 
-                    if ((i is CanvassRobe || i is BootsOfBallast || i is NictitatingLens || i is AquaPendant || i is GargishNictitatingLens) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i)
+                    if ((i is CanvassRobe || i is BootsOfBallast || i is NictitatingLens || i is AquaPendant) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i)
                     {
                         equipment++;
                     }

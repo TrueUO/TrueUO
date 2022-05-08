@@ -1,4 +1,3 @@
-using Server.Items;
 using Server.Misc;
 using System;
 
@@ -48,7 +47,7 @@ namespace Server.Mobiles
         }
 
         public override Type[] UniqueSAList => new Type[] { };
-        public override Type[] SharedSAList => new[] { typeof(AxeOfAbandon), typeof(DemonBridleRing), typeof(VoidInfusedKilt) };
+        public override Type[] SharedSAList => new Type[] { };
 
         public override InhumanSpeech SpeechType => InhumanSpeech.Ratman;
         public override bool CanRummageCorpses => true;

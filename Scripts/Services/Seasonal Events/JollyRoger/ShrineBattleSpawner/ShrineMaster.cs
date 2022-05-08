@@ -339,10 +339,8 @@ namespace Server.Engines.JollyRoger
                     break;
                 case MasterTitle.Mystic:
                     SetWearable(new MysticBook((uint)0xFFF));
-                    SetWearable(new GargishFancyRobe());
-                    SetWearable(new GargishEarrings());
-                    SetWearable(new GargishClothWingArmor());
-                    SetWearable(new LeatherTalons());
+                    SetWearable(new Robe());
+                    SetWearable(new Sandals());
                     break;
                 case MasterTitle.Sampire:
                     SetWearable(new DoubleAxe(), 1858);
