@@ -5,7 +5,7 @@ using System;
 namespace Server.Mobiles
 {
     [CorpseName("a solen warrior corpse")]
-    public class BlackSolenWarrior : BaseCreature, IBlackSolen
+    public class BlackSolenWarrior : BaseCreature
     {
         private bool m_BurstSac;
         [Constructable]
@@ -47,7 +47,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 4));
             AddLoot(LootPack.LootItem<ZoogiFungus>(0.05 > Utility.RandomDouble() ? 13 : 3));
-            AddLoot(LootPack.LootItemCallback(SolenHelper.PackPicnicBasket, 1.0, 1, false, false));
             AddLoot(LootPack.LootItem<BraceletOfBinding>(5.0));
         }
 
@@ -129,20 +128,8 @@ namespace Server.Mobiles
             return 0xE4;
         }
 
-        public override bool IsEnemy(Mobile m)
-        {
-            if (SolenHelper.CheckBlackFriendship(m))
-            {
-                return false;
-            }
-
-            return base.IsEnemy(m);
-        }
-
         public override void OnDamage(int amount, Mobile from, bool willKill)
         {
-            SolenHelper.OnBlackDamage(from);
-
             if (!willKill)
             {
                 if (!BurstSac)

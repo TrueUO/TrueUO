@@ -105,13 +105,6 @@ namespace Server.Mobiles
         BardsGuild,
         BlacksmithsGuild
     }
-
-    public enum SolenFriendship
-    {
-        None,
-        Red,
-        Black
-    }
     #endregion
 
     public partial class PlayerMobile : Mobile
@@ -4152,11 +4145,6 @@ namespace Server.Mobiles
                         goto case 18;
                     }
                 case 18:
-                    {
-                        m_SolenFriendship = (SolenFriendship)reader.ReadEncodedInt();
-
-                        goto case 17;
-                    }
                 case 17: 
                 case 16:
                     {
@@ -4437,8 +4425,6 @@ namespace Server.Mobiles
 
             writer.WriteEncodedInt(m_GuildRank.Rank);
             writer.Write(m_LastOnline);
-
-            writer.WriteEncodedInt((int)m_SolenFriendship);
 
             QuestSerializer.Serialize(m_Quest, writer);
 
@@ -4737,14 +4723,10 @@ namespace Server.Mobiles
         #region Quests
         private QuestSystem m_Quest;
         private List<QuestRestartInfo> m_DoneQuests;
-        private SolenFriendship m_SolenFriendship;
 
         public QuestSystem Quest { get => m_Quest; set => m_Quest = value; }
 
         public List<QuestRestartInfo> DoneQuests { get => m_DoneQuests; set => m_DoneQuests = value; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public SolenFriendship SolenFriendship { get => m_SolenFriendship; set => m_SolenFriendship = value; }
         #endregion
 
         #region Mondain's Legacy

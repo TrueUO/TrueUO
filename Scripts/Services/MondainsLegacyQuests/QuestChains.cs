@@ -15,16 +15,15 @@ namespace Server.Engines.Quests
         DoughtyWarriors = 5,
         HonorOfDeBoors = 6,
         LaifemTheWeaver = 7,
-        CloakOfHumility = 8,
-        ValleyOfOne = 9,
-        MyrmidexAlliance = 10,
-        EodonianAlliance = 11,
-        FlintTheQuartermaster = 12,
-        AnimalTraining = 13,
-        PaladinsOfTrinsic = 14,
-        RightingWrong = 15,
-        Ritual = 16,
-        Ritual2 = 17
+        ValleyOfOne = 8,
+        MyrmidexAlliance = 9,
+        EodonianAlliance = 10,
+        FlintTheQuartermaster = 11,
+        AnimalTraining = 12,
+        PaladinsOfTrinsic = 13,
+        RightingWrong = 14,
+        Ritual = 15,
+        Ritual2 = 16
     }
 
     public class BaseChain
@@ -33,7 +32,7 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[18][];
+            Chains = new Type[17][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
@@ -44,7 +43,6 @@ namespace Server.Engines.Quests
             Chains[(int)QuestChain.DoughtyWarriors] = new[] { typeof(DoughtyWarriorsQuest), typeof(DoughtyWarriors2Quest), typeof(DoughtyWarriors3Quest) };
             Chains[(int)QuestChain.HonorOfDeBoors] = new[] { typeof(HonorOfDeBoorsQuest), typeof(JackTheVillainQuest), typeof(SavedHonorQuest) };
             Chains[(int)QuestChain.LaifemTheWeaver] = new[] { typeof(ShearingKnowledgeQuest), typeof(WeavingFriendshipsQuest), typeof(NewSpinQuest)};
-            Chains[(int)QuestChain.CloakOfHumility] = new[] { typeof(TheQuestionsQuest), typeof(CommunityServiceMuseumQuest), typeof(CommunityServiceZooQuest), typeof(CommunityServiceLibraryQuest), typeof(WhosMostHumbleQuest) };
             Chains[(int)QuestChain.ValleyOfOne] = new[] { typeof(TimeIsOfTheEssenceQuest), typeof(UnitingTheTribesQuest) };
             Chains[(int)QuestChain.MyrmidexAlliance] = new[] { typeof(TheZealotryOfZipactriotlQuest), typeof(DestructionOfZipactriotlQuest) };
             Chains[(int)QuestChain.EodonianAlliance] = new[] { typeof(ExterminatingTheInfestationQuest), typeof(InsecticideAndRegicideQuest) };

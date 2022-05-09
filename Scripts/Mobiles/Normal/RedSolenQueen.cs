@@ -5,7 +5,7 @@ using System;
 namespace Server.Mobiles
 {
     [CorpseName("a solen queen corpse")]
-    public class RedSolenQueen : BaseCreature, IRedSolen
+    public class RedSolenQueen : BaseCreature
     {
         private bool m_BurstSac;
         private static bool m_Laid;
@@ -47,7 +47,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.LootItem<ZoogiFungus>(0.05 > Utility.RandomDouble() ? 25 : 5));
-            AddLoot(LootPack.LootItemCallback(SolenHelper.PackPicnicBasket, 1.0, 1, false, false));
             AddLoot(LootPack.LootItem<BallOfSummoning>(5.0));
         }
 
@@ -159,20 +158,8 @@ namespace Server.Mobiles
             }
         }
 
-        public override bool IsEnemy(Mobile m)
-        {
-            if (SolenHelper.CheckRedFriendship(m))
-            {
-                return false;
-            }
-
-            return base.IsEnemy(m);
-        }
-
         public override void OnDamage(int amount, Mobile from, bool willKill)
         {
-            SolenHelper.OnRedDamage(from);
-
             if (!willKill)
             {
                 if (!BurstSac)

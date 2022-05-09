@@ -2636,10 +2636,6 @@
       <go x="320" y="408" z="32" />
       <smartNoHousing active="true" />
     </region>
-	<region type="TokunoDocksRegion" priority="50" name="Tokuno Docks">
-      <rect x="650" y="1350" width="100" height="50" />
-      <go x="713" y="1360" z="26" />
-    </region>
   </Facet>
   <Facet name="TerMur">
     <region name="World" priority="1">

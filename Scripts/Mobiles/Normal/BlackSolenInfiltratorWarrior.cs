@@ -3,7 +3,7 @@ using Server.Items;
 namespace Server.Mobiles
 {
     [CorpseName("a solen infiltrator corpse")]
-    public class BlackSolenInfiltratorWarrior : BaseCreature, IBlackSolen
+    public class BlackSolenInfiltratorWarrior : BaseCreature
     {
         [Constructable]
         public BlackSolenInfiltratorWarrior()
@@ -44,7 +44,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Average, 2);
             AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 4));
             AddLoot(LootPack.LootItem<ZoogiFungus>(0.05 > Utility.RandomDouble() ? 16 : 4));
-            AddLoot(LootPack.LootItemCallback(SolenHelper.PackPicnicBasket, 1.0, 1, false, false));
         }
 
         public BlackSolenInfiltratorWarrior(Serial serial)
@@ -75,23 +74,6 @@ namespace Server.Mobiles
         public override int GetDeathSound()
         {
             return 0xE4;
-        }
-
-        public override bool IsEnemy(Mobile m)
-        {
-            if (SolenHelper.CheckBlackFriendship(m))
-            {
-                return false;
-            }
-
-            return base.IsEnemy(m);
-        }
-
-        public override void OnDamage(int amount, Mobile from, bool willKill)
-        {
-            SolenHelper.OnBlackDamage(from);
-
-            base.OnDamage(amount, from, willKill);
         }
 
         public override void Serialize(GenericWriter writer)
