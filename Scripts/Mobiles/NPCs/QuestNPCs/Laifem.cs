@@ -196,7 +196,7 @@ namespace Server.Engines.Quests
             Female = true;
             CantWalk = true;
 
-            Race = Race.Gargoyle;
+            Race = Race.Human;
             HairItemID = Race.RandomHair(true);
             Hue = Race.RandomSkinHue();
             HairHue = Race.RandomHairHue();

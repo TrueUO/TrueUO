@@ -162,30 +162,12 @@ namespace Server.Engines.Harvest
                     else
                     {
                         int amount = def.ConsumedPerHarvest;
-                        int feluccaAmount = def.ConsumedPerFeluccaHarvest;
-
-                        if (item is BaseGranite)
-                            feluccaAmount = 3;
-
+                        
                         Caddellite.OnHarvest(from, tool, this, item);
 
-                        //The whole harvest system is kludgy and I'm sure this is just adding to it.
                         if (item.Stackable)
                         {
-                            int racialAmount = (int)Math.Ceiling(amount * 1.1);
-                            int feluccaRacialAmount = (int)Math.Ceiling(feluccaAmount * 1.1);
-
-                            bool eligableForRacialBonus = def.RaceBonus && from.Race == Race.Human;
-                            bool inFelucca = map == Map.Felucca && !Siege.SiegeShard;
-
-                            if (eligableForRacialBonus && inFelucca && bank.Current >= feluccaRacialAmount && 0.1 > Utility.RandomDouble())
-                                item.Amount = feluccaRacialAmount;
-                            else if (inFelucca && bank.Current >= feluccaAmount)
-                                item.Amount = feluccaAmount;
-                            else if (eligableForRacialBonus && bank.Current >= racialAmount && 0.1 > Utility.RandomDouble())
-                                item.Amount = racialAmount;
-                            else
-                                item.Amount = amount;
+                            item.Amount = amount;
 
                             // Void Pool Rewards
                             item.Amount += WoodsmansTalisman.CheckHarvest(from, type, this);
@@ -193,7 +175,7 @@ namespace Server.Engines.Harvest
 
                         if (from.AccessLevel == AccessLevel.Player)
                         {
-                            bank.Consume(amount, from);
+                            bank.Consume(amount);
                         }
 
                         if (Give(from, item, def.PlaceAtFeetIfFull))
@@ -330,7 +312,9 @@ namespace Server.Engines.Harvest
                 Item check = atFeet[i];
 
                 if (check.StackWith(m, item, false))
+                {
                     return true;
+                }
             }
 
             ColUtility.Free(atFeet);
@@ -347,22 +331,26 @@ namespace Server.Engines.Harvest
         public virtual Type GetResourceType(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestResource resource)
         {
             if (resource.Types.Length > 0)
+            {
                 return resource.Types[Utility.Random(resource.Types.Length)];
+            }
 
             return null;
         }
 
         public virtual HarvestResource MutateResource(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestVein vein, HarvestResource primary, HarvestResource fallback)
         {
-            bool racialBonus = def.RaceBonus && from.Race == Race.Elf;
-
-            if (vein.ChanceToFallback > Utility.RandomDouble() + (racialBonus ? .20 : 0))
+            if (vein.ChanceToFallback > Utility.RandomDouble())
+            {
                 return fallback;
+            }
 
             double skillValue = from.Skills[def.Skill].Value;
 
             if (fallback != null && (skillValue < primary.ReqSkill || skillValue < primary.MinSkill))
+            {
                 return fallback;
+            }
 
             return primary;
         }

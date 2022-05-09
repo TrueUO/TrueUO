@@ -209,7 +209,7 @@ namespace Server.Mobiles
                                 item.Amount = amount;
                         }
 
-                        bank.Consume(item.Amount, this);
+                        bank.Consume(item.Amount);
 
                         item.MoveToWorld(loc, map);
 

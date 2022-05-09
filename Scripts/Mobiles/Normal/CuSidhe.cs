@@ -101,24 +101,6 @@ namespace Server.Mobiles
             }
         }
 
-        public override void OnDoubleClick(Mobile from)
-        {
-            if (from.Race != Race.Elf && from == ControlMaster && from.IsPlayer())
-            {
-                Item pads = from.FindItemOnLayer(Layer.Shoes);
-
-                if (pads is PadsOfTheCuSidhe)
-                    from.SendLocalizedMessage(1071981); // Your boots allow you to mount the Cu Sidhe.
-                else
-                {
-                    from.SendLocalizedMessage(1072203); // Only Elves may use 
-                    return;
-                }
-            }
-
-            base.OnDoubleClick(from);
-        }
-
         public override int GetIdleSound()
         {
             return 0x577;

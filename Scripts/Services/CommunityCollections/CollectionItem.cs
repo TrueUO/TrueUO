@@ -15,16 +15,14 @@ namespace Server
         private readonly TextDefinition m_Tooltip;
         private readonly int m_Hue;
         private readonly double m_Points;
-        private readonly bool m_QuestItem;
 
-        public CollectionItem(Type type, int itemID, TextDefinition tooltip, int hue, double points, bool questitem = false)
+        public CollectionItem(Type type, int itemID, TextDefinition tooltip, int hue, double points)
         {
             m_Type = type;
             m_ItemID = itemID;
             m_Tooltip = tooltip;
             m_Hue = hue;
             m_Points = points;
-            m_QuestItem = questitem;
 
             Rectangle2D rec;
 

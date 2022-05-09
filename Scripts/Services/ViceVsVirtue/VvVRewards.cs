@@ -56,7 +56,6 @@ namespace Server.Engines.VvV
             Rewards.Add(new CollectionItem(typeof(ShameTileDeed), 5360, 1155522, 0, 10000)); // Shame Tile
             Rewards.Add(new CollectionItem(typeof(WrongTileDeed), 5360, 1155523, 0, 10000)); // Wrong Tile
 
-            Rewards.Add(new CollectionItem(typeof(MorphEarrings), 4231, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(MaceAndShieldGlasses), 12216, 0, 477, 500));
             Rewards.Add(new CollectionItem(typeof(InquisitorsResolution), 5140, 0, 1266, 500));
             Rewards.Add(new CollectionItem(typeof(OrnamentOfTheMagician), 4230, 0, 1364, 500));

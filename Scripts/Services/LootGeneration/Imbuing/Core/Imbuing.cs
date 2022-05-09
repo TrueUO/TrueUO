@@ -264,21 +264,10 @@ namespace Server.SkillHandlers
             double a, b, c, w;
             double i = item is BaseJewel ? 0.9162 : 1.0;
 
-            // - Racial Bonus - SA ONLY -
-            if (from.Race == Race.Gargoyle)
-            {
-                a = 1362.281555;
-                b = 66.32801518;
-                c = 235.2223147;
-                w = -1481.037561;
-            }
-            else
-            {
-                a = 1554.96118;
-                b = 53.81743328;
-                c = 230.0038452;
-                w = -1664.857794;
-            }
+            a = 1554.96118;
+            b = 53.81743328;
+            c = 230.0038452;
+            w = -1664.857794;
 
             return Math.Max(0, Math.Round(Math.Floor(20 * skill + 10 * a * Math.Pow(e, b / (resultWeight + c)) + 10 * w - 2400) / 1000 * i + bonus, 3) * 100);
         }

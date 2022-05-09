@@ -403,9 +403,6 @@ namespace Server.Engines.Craft
             SetDisplayID(index, 1663);
             AddCreateItem(index, CraftableMetalHouseDoor.Create);
 
-            index = AddCraft(typeof(WallSafeDeed), 1044050, 1155860, 0.0, 0.0, typeof(IronIngot), 1044036, 20, 1044253);
-            ForceNonExceptional(index);
-
             index = AddCraft(typeof(CraftableMetalHouseDoor), 1044050, 1156352, 85.0, 135.0, typeof(IronIngot), 1044036, 50, 1044253);
             SetData(index, DoorType.LeftMetalDoor_E_In);
             SetDisplayID(index, 1660);

@@ -64,14 +64,6 @@ namespace Server.Engines.Points
                 AwardPoints(from, Entries[type].Item1, true);
         }
 
-        public override void OnPlayerAdded(PlayerMobile pm)
-        {
-            if (pm.Race == Race.Gargoyle)
-            {
-                AwardPoints(pm, 2000, false, false);
-            }
-        }
-
         public bool IsNoble(Mobile from)
         {
             return GetLoyalty(from as PlayerMobile) >= QueensLoyaltyRating.Noble;

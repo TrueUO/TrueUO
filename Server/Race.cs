@@ -15,10 +15,8 @@ namespace Server
 		public static Race[] Races => m_Races;
 
 		public static Race Human => m_Races[0];
-		public static Race Elf => m_Races[1];
-		public static Race Gargoyle => m_Races[2];
 
-		private static readonly List<Race> m_AllRaces = new List<Race>();
+        private static readonly List<Race> m_AllRaces = new List<Race>();
 
 		public static List<Race> AllRaces => m_AllRaces;
 

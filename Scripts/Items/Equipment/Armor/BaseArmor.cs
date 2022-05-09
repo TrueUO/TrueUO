@@ -1936,15 +1936,6 @@ namespace Server.Items
 
             AddDamageTypeProperty(list);
 
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
-            }
-
             if (this is SurgeShield && ((SurgeShield) this).Surge > SurgeType.None)
             {
                 list.Add(1116176 + (int) ((SurgeShield) this).Surge);

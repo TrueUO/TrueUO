@@ -32,16 +32,9 @@ namespace Server.Items
 
             int count = 0;
 
-            if (!Siege.SiegeShard)
-            {
-                count += MoonGen(PMList.Trammel);
-            }
-
+            count += MoonGen(PMList.Trammel);
             count += MoonGen(PMList.Felucca);
             count += MoonGen(PMList.Ilshenar);
-            count += MoonGen(PMList.Malas);
-            count += MoonGen(PMList.Tokuno);
-            count += MoonGen(PMList.TerMur);
 
             World.Broadcast(0x35, true, "{0} moongates generated.", count);
         }
@@ -353,43 +346,12 @@ namespace Server.Items
 				new PMEntry(new Point3D(1721, 218, 96), 1019000) // Chaos
 			});
 
-        public static readonly PMList Malas = new PMList(
-            1060643,
-            1062039,
-            Map.Malas,
-            new[]
-            {
-                new PMEntry(new Point3D(1015, 527, -65), 1060641), // Luna
-				new PMEntry(new Point3D(1997, 1386, -85), 1060642) // Umbra
-			});
-
-        public static readonly PMList Tokuno = new PMList(
-            1063258,
-            1063415,
-            Map.Tokuno,
-            new[]
-            {
-                new PMEntry(new Point3D(1169, 998, 41), 1063412), // Isamu-Jima
-				new PMEntry(new Point3D(802, 1204, 25), 1063413), // Makoto-Jima
-				new PMEntry(new Point3D(270, 628, 15), 1063414) // Homare-Jima
-			});
-
-        public static readonly PMList TerMur = new PMList(
-            1113602,
-            1113604,
-            Map.TerMur,
-            new[]
-            {
-                new PMEntry(new Point3D(850, 3525, -38), 1113603), // Royal City
-				new PMEntry(new Point3D(719, 1863, 40), 1156262) // Valley of Eodon
-            });
-
-        public static readonly PMList[] Lists = { Trammel, Felucca, Ilshenar, Malas, Tokuno, TerMur };
-        public static readonly PMList[] ListsYoung = { Trammel, Ilshenar, Malas, Tokuno, TerMur };
+        public static readonly PMList[] Lists = { Trammel, Felucca, Ilshenar };
+        public static readonly PMList[] ListsYoung = { Trammel, Ilshenar };
         public static readonly PMList[] RedLists = { Felucca };
         public static readonly PMList[] SigilLists = { Felucca };
 
-        public static readonly PMList[] AllLists = { Trammel, Felucca, Ilshenar, Malas, Tokuno, TerMur };
+        public static readonly PMList[] AllLists = { Trammel, Felucca, Ilshenar };
 
         public static PMList GetList(Map map)
         {
@@ -411,21 +373,6 @@ namespace Server.Items
             if (map == Map.Ilshenar)
             {
                 return Ilshenar;
-            }
-
-            if (map == Map.Malas)
-            {
-                return Malas;
-            }
-
-            if (map == Map.Tokuno)
-            {
-                return Tokuno;
-            }
-
-            if (map == Map.TerMur)
-            {
-                return TerMur;
             }
 
             return null;

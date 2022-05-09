@@ -1011,7 +1011,7 @@ namespace Server.Engines.Harvest
                         else
                         {
                             if (from.AccessLevel == AccessLevel.Player)
-                                bank.Consume(Convert.ToInt32(map != null && map.Rules == MapRules.FeluccaRules ? Math.Ceiling(item.Amount / 2.0) : item.Amount), from);
+                                bank.Consume(Convert.ToInt32(map != null && map.Rules == MapRules.FeluccaRules ? Math.Ceiling(item.Amount / 2.0) : item.Amount));
 
                             if (Give(from, item, true))
                             {

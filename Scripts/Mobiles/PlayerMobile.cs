@@ -130,65 +130,6 @@ namespace Server.Mobiles
         }
         #endregion
 
-        #region Stygian Abyss
-        public override void ToggleFlying()
-        {
-            if (Race != Race.Gargoyle)
-                return;
-
-            if (Frozen)
-            {
-                SendLocalizedMessage(1060170); // You cannot use this ability while frozen.
-                return;
-            }
-
-            if (!Flying)
-            {
-                if (BeginAction(typeof(FlySpell)))
-                {
-                    if (Spell is Spell flySpell)
-                    {
-                        flySpell.Disturb(DisturbType.Unspecified, false, false);
-                    }
-
-                    Spell spell = new FlySpell(this);
-                    spell.Cast();
-
-                    Timer.DelayCall(TimeSpan.FromSeconds(3), () => EndAction(typeof(FlySpell)));
-                }
-                else
-                {
-                    LocalOverheadMessage(MessageType.Regular, 0x3B2, 1075124); // You must wait before casting that spell again.
-                }
-            }
-            else if (IsValidLandLocation(Location, Map))
-            {
-                if (BeginAction(typeof(FlySpell)))
-                {
-                    if (Spell is Spell flySpell)
-                        flySpell.Disturb(DisturbType.Unspecified, false, false);
-
-                    Animate(AnimationType.Land, 0);
-                    Flying = false;
-                    BuffInfo.RemoveBuff(this, BuffIcon.Fly);
-
-                    Timer.DelayCall(TimeSpan.FromSeconds(3), () => EndAction(typeof(FlySpell)));
-                }
-                else
-                {
-                    LocalOverheadMessage(MessageType.Regular, 0x3B2, 1075124); // You must wait before casting that spell again.
-                }
-            }
-            else
-                LocalOverheadMessage(MessageType.Regular, 0x3B2, 1113081); // You may not land here.
-        }
-
-        public static bool IsValidLandLocation(Point3D p, Map map)
-        {
-            return map.CanFit(p.X, p.Y, p.Z, 16, false, false);
-        }
-        #endregion
-
         private DesignContext m_DesignContext;
 
         private NpcGuild m_NpcGuild;
@@ -940,11 +881,6 @@ namespace Server.Mobiles
 
             max += Spells.Mysticism.StoneFormSpell.GetMaxResistBonus(this);
 
-            if (Race == Race.Elf && type == ResistanceType.Energy)
-            {
-                max += 5; //Intended to go after the 60 max from curse
-            }
-
             if (type != ResistanceType.Physical && 60 < max && CurseSpell.UnderEffect(this))
             {
                 max -= 10;
@@ -1030,22 +966,11 @@ namespace Server.Mobiles
 
         protected override void OnRaceChange(Race oldRace)
         {
-            if (oldRace == Race.Gargoyle && Flying)
-            {
-                Flying = false;
-                SendSpeedControl(SpeedControlType.Disable);
-                BuffInfo.RemoveBuff(this, BuffIcon.Fly);
-            }
-            else if (oldRace != Race.Gargoyle && Race == Race.Gargoyle && Mounted)
-            {
-                Mount.Rider = null;
-            }
-
             ValidateEquipment();
             UpdateResistances();
         }
 
-        public override int MaxWeight => (Race == Race.Human ? 100 : 40) + (int)(3.5 * Str);
+        public override int MaxWeight => 40 + (int)(3.5 * Str);
 
         private int m_LastGlobalLight = -1, m_LastPersonalLight = -1;
 
@@ -1059,9 +984,7 @@ namespace Server.Mobiles
         {
             global = LightCycle.ComputeLevelFor(this);
 
-            bool racialNightSight = Race == Race.Elf;
-
-            if (LightLevel < 21 && (AosAttributes.GetValue(this, AosAttribute.NightSight) > 0 || racialNightSight))
+            if (LightLevel < 21 && AosAttributes.GetValue(this, AosAttribute.NightSight) > 0)
             {
                 personal = 21;
             }
@@ -1863,7 +1786,7 @@ namespace Server.Mobiles
         public override int StamMax => base.StamMax + AosAttributes.GetValue(this, AosAttribute.BonusStam);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public override int ManaMax => base.ManaMax + AosAttributes.GetValue(this, AosAttribute.BonusMana) + (Race == Race.Elf ? 20 : 0) + MasteryInfo.IntuitionBonus(this) + UraliTranceTonic.GetManaBuff(this);
+        public override int ManaMax => base.ManaMax + AosAttributes.GetValue(this, AosAttribute.BonusMana) + MasteryInfo.IntuitionBonus(this) + UraliTranceTonic.GetManaBuff(this);
         #endregion
 
         #region Stat Getters/Setters
@@ -1982,55 +1905,6 @@ namespace Server.Mobiles
             int endY = startY + foundation.Components.Height - 2;
 
             return newX >= startX && newY >= startY && newX < endX && newY < endY && Map == foundation.Map;
-        }
-
-        public override void OnHitsChange(int oldValue)
-        {
-            if (Race == Race.Gargoyle)
-            {
-                if (Hits <= HitsMax / 2)
-                {
-                    BuffInfo.AddBuff(this, new BuffInfo(BuffIcon.Berserk, 1080449, 1115021, $"{GetRacialBerserkBuff(false)}\t{GetRacialBerserkBuff(true)}", false));
-                    Delta(MobileDelta.WeaponDamage);
-                }
-                else if (oldValue < Hits && Hits > HitsMax / 2)
-                {
-                    BuffInfo.RemoveBuff(this, BuffIcon.Berserk);
-                    Delta(MobileDelta.WeaponDamage);
-                }
-            }
-
-            base.OnHitsChange(oldValue);
-        }
-
-        /// <summary>
-        /// Returns Racial Berserk value, for spell or melee
-        /// </summary>
-        /// <param name="spell">true for spell damage, false for damage increase (melee)</param>
-        /// <returns></returns>
-        public virtual int GetRacialBerserkBuff(bool spell)
-        {
-            if (Race != Race.Gargoyle || Hits > HitsMax / 2)
-            {
-                return 0;
-            }
-
-            double perc = Hits / (double)HitsMax * 100;
-
-            int value = 0;
-
-            perc = (100 - perc) / 20;
-
-            if (perc > 4)
-                value += spell ? 12 : 60;
-            else if (perc >= 3)
-                value += spell ? 9 : 45;
-            else if (perc >= 2)
-                value += spell ? 6 : 30;
-            else if (perc >= 1)
-                value += spell ? 3 : 15;
-
-            return value;
         }
 
         public override void OnHeal(ref int amount, Mobile from)
@@ -3346,36 +3220,6 @@ namespace Server.Mobiles
 
                 ScrollOfAlacrity.StartTimer(this);
             }
-        }
-
-        public override double RacialSkillBonus
-        {
-            get
-            {
-                if (Race == Race.Human)
-                {
-                    return 20.0;
-                }
-
-                return 0;
-            }
-        }
-
-        public override double GetRacialSkillBonus(SkillName skill)
-        {
-            if (Race == Race.Human)
-                return 20.0;
-
-            if (Race == Race.Gargoyle)
-            {
-                if (skill == SkillName.Imbuing)
-                    return 30.0;
-
-                if (skill == SkillName.Throwing)
-                    return 20.0;
-            }
-
-            return RacialSkillBonus;
         }
 
         public override void OnWarmodeChanged()

@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class CharacterReincarnationToken : PromotionalToken
     {
@@ -20,7 +20,6 @@
 
             bag.DropItem(new GenderChangeToken());
             bag.DropItem(new NameChangeToken());
-            bag.DropItem(new RaceChangeToken());
 
             return bag;
         }

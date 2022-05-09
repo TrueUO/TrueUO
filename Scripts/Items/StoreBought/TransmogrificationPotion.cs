@@ -315,7 +315,7 @@ namespace Server.Items
                         {
                             message = 1159518; // You may not set the source and destination objects to the same object!
                         }
-                        else if (RaceDefinitions.GetRequiredRace(Potion.Destination.Item) != RaceDefinitions.GetRequiredRace(Potion.Source.Item))
+                        else if (RaceDefinitions.GetRequiredRace() != RaceDefinitions.GetRequiredRace())
                         {
                             message = 1159560; // You may not set the source and destination objects to objects of different race requirements.
                         }

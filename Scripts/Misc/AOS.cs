@@ -152,8 +152,10 @@ namespace Server
             bool ranged = type == DamageType.Ranged;
             BaseQuiver quiver = null;
 
-            if (ranged && from.Race != Race.Gargoyle)
+            if (ranged)
+            {
                 quiver = from.FindItemOnLayer(Layer.Cloak) as BaseQuiver;
+            }
 
             int totalDamage;
 
@@ -455,7 +457,7 @@ namespace Server
                 case 4: return from.GetMaxResistance(ResistanceType.Energy);
                 case 5: return Math.Min(45, AosAttributes.GetValue(from, AosAttribute.DefendChance));
                 case 6: return 45 + WhiteTigerFormSpell.GetDefenseCap(from);
-                case 7: return Math.Min(from.Race == Race.Gargoyle ? 50 : 45, AosAttributes.GetValue(from, AosAttribute.AttackChance));
+                case 7: return Math.Min(45, AosAttributes.GetValue(from, AosAttribute.AttackChance));
                 case 8: return Math.Min(60, AosAttributes.GetValue(from, AosAttribute.WeaponSpeed));
                 case 9: return Math.Min(100, AosAttributes.GetValue(from, AosAttribute.WeaponDamage));
                 case 10: return Math.Min(100, AosAttributes.GetValue(from, AosAttribute.LowerRegCost));
@@ -630,41 +632,45 @@ namespace Server
                     value -= discordanceEffect * 2;
 
                 if (Block.IsBlocking(m))
-                    value -= 30;
-
-                if (m is PlayerMobile pm && pm.Race == Race.Gargoyle)
                 {
-                    value += pm.GetRacialBerserkBuff(false);
+                    value -= 30;
                 }
 
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.WeaponDam))
+                {
                     value += 5;
+                }
             }
             else if (attribute == AosAttribute.SpellDamage)
             {
                 if (BaseMagicalFood.IsUnderInfluence(m, MagicalFood.GrapesOfWrath))
+                {
                     value += 15;
+                }
 
                 if (PsychicAttack.Registry.ContainsKey(m))
+                {
                     value -= PsychicAttack.Registry[m].SpellDamageMalus;
+                }
 
                 TransformContext context = TransformationSpellHelper.GetContext(m);
 
                 if (context != null && context.Spell is ReaperFormSpell spell)
+                {
                     value += spell.SpellDamageBonus;
+                }
 
                 value += ArcaneEmpowermentSpell.GetSpellBonus(m, true);
 
-                if (m is PlayerMobile mobile && mobile.Race == Race.Gargoyle)
+                if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.GuildOfArcaneArts))
                 {
-                    value += mobile.GetRacialBerserkBuff(true);
+                    value += 5;
                 }
 
-                if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.GuildOfArcaneArts))
-                    value += 5;
-
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.SpellDamage))
+                {
                     value += 5;
+                }
             }
             else if (attribute == AosAttribute.CastSpeed)
             {
@@ -754,16 +760,19 @@ namespace Server
                     value += move.GetAccuracyBonus(m);
 
                 if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.WarriorsGuild))
+                {
                     value += 5;
+                }
 
                 if (Spells.Mysticism.SleepSpell.IsUnderSleepEffects(m))
+                {
                     value -= 45;
-
-                if (m.Race == Race.Gargoyle)
-                    value += 5;  //Gargoyles get a +5 HCI
+                }
 
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.HitChance))
+                {
                     value += 8;
+                }
             }
             else if (attribute == AosAttribute.DefendChance)
             {
@@ -1785,16 +1794,7 @@ namespace Server
         ResonancePoison = 0x00000100,
         ResonanceEnergy = 0x00000200,
         ResonanceKinetic = 0x00000400,
-        /*Soul Charge is wrong. 
-         * Do not use these types. 
-         * Use AosArmorAttribute type only.
-         * Fill these in with any new attributes.*/
-        SoulChargeFire = 0x00000800,
-        SoulChargeCold = 0x00001000,
-        SoulChargePoison = 0x00002000,
-        SoulChargeEnergy = 0x00004000,
-        SoulChargeKinetic = 0x00008000,
-        CastingFocus = 0x00010000
+        CastingFocus = 0x00000800
     }
 
     public sealed class SAAbsorptionAttributes : BaseAttributes
@@ -1914,48 +1914,6 @@ namespace Server
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResonanceKinetic { get => this[SAAbsorptionAttribute.ResonanceKinetic]; set => this[SAAbsorptionAttribute.ResonanceKinetic] = value; }
-
-        // NEED TO DELETE ALL OF THESE EVENTUALLY
-        public int SoulChargeFire
-        {
-            get => this[SAAbsorptionAttribute.SoulChargeFire];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargeFire] = value;
-            }
-        }
-        public int SoulChargeCold
-        {
-            get => this[SAAbsorptionAttribute.SoulChargeCold];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargeCold] = value;
-            }
-        }
-        public int SoulChargePoison
-        {
-            get => this[SAAbsorptionAttribute.SoulChargePoison];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargePoison] = value;
-            }
-        }
-        public int SoulChargeEnergy
-        {
-            get => this[SAAbsorptionAttribute.SoulChargeEnergy];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargeEnergy] = value;
-            }
-        }
-        public int SoulChargeKinetic
-        {
-            get => this[SAAbsorptionAttribute.SoulChargeKinetic];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargeKinetic] = value;
-            }
-        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int CastingFocus { get => this[SAAbsorptionAttribute.CastingFocus]; set => this[SAAbsorptionAttribute.CastingFocus] = value; }

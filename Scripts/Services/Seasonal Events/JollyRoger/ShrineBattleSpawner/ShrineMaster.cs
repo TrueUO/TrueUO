@@ -235,16 +235,7 @@ namespace Server.Engines.JollyRoger
 
         public virtual void SetBody()
         {
-            switch (_Specialty)
-            {
-                default:
-                    if (0.75 > Utility.RandomDouble())
-                        Race = Race.Human;
-                    else
-                        Race = Race.Elf; break;
-                case MasterTitle.Mystic: Race = Race.Gargoyle;
-                    break;
-            }
+            Race = Race.Human;
 
             HairItemID = Race.RandomHair(Female);
             HairHue = Race.RandomHairHue();

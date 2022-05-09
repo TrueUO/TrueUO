@@ -3,21 +3,18 @@ using Server.Engines.InstancedPeerless;
 using Server.Items;
 using Server.Mobiles;
 using System;
-using Server.Misc;
 
 namespace Server
 {
     public static class MondainsLegacy
     {
         public static Type[] Artifacts => m_Artifacts;
-        private static readonly Type[] m_Artifacts = new Type[]
+        private static readonly Type[] m_Artifacts =
         {
-            typeof(AegisOfGrace), typeof(BladeDance), typeof(BloodwoodSpirit), typeof(Bonesmasher),
-            typeof(Boomstick), typeof(BrightsightLenses), typeof(FeyLeggings), typeof(FleshRipper),
-            typeof(HelmOfSwiftness), typeof(PadsOfTheCuSidhe), typeof(QuiverOfRage), typeof(QuiverOfElements),
-            typeof(RaedsGlory), typeof(RighteousAnger), typeof(RobeOfTheEclipse), typeof(RobeOfTheEquinox),
-            typeof(SoulSeeker), typeof(TalonBite), typeof(TotemOfVoid), typeof(WildfireBow),
-            typeof(Windsong)
+            typeof(BladeDance), typeof(BloodwoodSpirit), typeof(Bonesmasher), typeof(Boomstick),
+            typeof(BrightsightLenses), typeof(FleshRipper), typeof(QuiverOfRage), typeof(QuiverOfElements),
+            typeof(RaedsGlory), typeof(RighteousAnger), typeof(RobeOfTheEclipse), typeof(SoulSeeker),
+            typeof(TalonBite), typeof(TotemOfVoid), typeof(WildfireBow), typeof(Windsong)
         };
 
         public static void Initialize()
@@ -26,8 +23,6 @@ namespace Server
 
             CommandSystem.Register("DecorateML", AccessLevel.Administrator, DecorateML_OnCommand);
             CommandSystem.Register("DecorateMLDelete", AccessLevel.Administrator, DecorateMLDelete_OnCommand);
-
-            LoadSettings();
         }
 
         public static bool FindItem(int x, int y, int z, Map map, int itemID)
@@ -55,21 +50,6 @@ namespace Server
 
             eable.Free();
             return false;
-        }
-
-        public static void LoadSettings()
-        {
-            if (!FindItem(new Point3D(1431, 1696, 0), Map.Trammel, 0x307F))
-            {
-                ArcaneCircleAddon addon = new ArcaneCircleAddon();
-                addon.MoveToWorld(new Point3D(1431, 1696, 0), Map.Trammel);
-            }
-
-            if (!FindItem(new Point3D(1431, 1696, 0), Map.Felucca, 0x307F))
-            {
-                ArcaneCircleAddon addon = new ArcaneCircleAddon();
-                addon.MoveToWorld(new Point3D(1431, 1696, 0), Map.Felucca);
-            }
         }
 
         public static void OnKilledBy(OnKilledByEventArgs e)
@@ -120,11 +100,6 @@ namespace Server
         public static void DropPeerlessMinor(Container peerlessCorpse)
         {
             Item item = Activator.CreateInstance(m_Artifacts[Utility.Random(m_Artifacts.Length)]) as Item;
-
-            if (item is ICanBeElfOrHuman canBeElfOrHuman)
-            {
-                canBeElfOrHuman.ElfOnly = false;
-            }
 
             peerlessCorpse.DropItem(item);
         }

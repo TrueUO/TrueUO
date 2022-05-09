@@ -29,7 +29,7 @@ namespace Server.Engines.Quests.RitualQuest
         public override void InitBody()
         {
             InitStats(100, 100, 25);
-            Race = Race.Gargoyle;
+            Race = Race.Human;
 
             CantWalk = true;
 
@@ -85,7 +85,7 @@ namespace Server.Engines.Quests.RitualQuest
         public override void InitBody()
         {
             InitStats(100, 100, 25);
-            Race = Race.Gargoyle;
+            Race = Race.Human;
 
             CantWalk = true;
 
