@@ -626,10 +626,8 @@ namespace Server.Engines.Points
             Entries[typeof(Flowstone)] = 250.0;
             Entries[typeof(GlacialStaff)] = 500.0;
             Entries[typeof(GrapeVine)] = 500.0;
-            Entries[typeof(GrobusFur)] = 20.0;
             Entries[typeof(HorseShoes)] = 200.0;
 
-            Entries[typeof(JocklesQuicksword)] = 2.0;
             Entries[typeof(MangledHeadOfDreadhorn)] = 1000.0;
             Entries[typeof(MedusaBlood)] = 1000.0;
             Entries[typeof(MedusaDarkScales)] = 200.0;
@@ -643,7 +641,6 @@ namespace Server.Engines.Points
             Entries[typeof(SwampTile)] = 5000.0;
             Entries[typeof(TastyTreat)] = 100.0;
             Entries[typeof(TatteredAncientScroll)] = 200.0;
-            Entries[typeof(ThorvaldsMedallion)] = 250.0;
             Entries[typeof(TribalBerry)] = 10.0;
             Entries[typeof(TunicOfGuarding)] = 2.0;
             Entries[typeof(UndeadGargHorn)] = 1000.0;
@@ -663,7 +660,6 @@ namespace Server.Engines.Points
             Entries[typeof(WhiteClothDyeTub)] = 300.0;
             Entries[typeof(Lodestone)] = 75.0;
             Entries[typeof(FeyWings)] = 75.0;
-            Entries[typeof(StoutWhip)] = 3.0;
             Entries[typeof(PlantClippings)] = 1.0;
             Entries[typeof(BasketOfRolls)] = 5.0;
             Entries[typeof(Yeast)] = 10.0;

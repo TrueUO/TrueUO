@@ -94,16 +94,6 @@ namespace Server.Items
             Rewards.Add(new CollectionItem(typeof(Multis.BritannianShipDeed), 0x14F4, 1150017, 0x0, 10000000));
         }
 
-        public override bool CanDonate(PlayerMobile player)
-        {
-            bool can = player.LibraryFriend;
-
-            if (!can)
-                player.SendLocalizedMessage(1074273); // You must speak with Librarian Verity before you can donate to this collection. 
-
-            return can;
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

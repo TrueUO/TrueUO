@@ -97,16 +97,6 @@ namespace Server.Items
             Rewards.Add(new CollectionItem(typeof(WizardsCrystalGlasses), 0x2FB8, 1073374, 0x2B0, 800000.0));
         }
 
-        public override bool CanDonate(PlayerMobile player)
-        {
-            bool can = player.LibraryFriend;
-
-            if (!can)
-                player.SendLocalizedMessage(1074273); // You must speak with Librarian Verity before you can donate to this collection. 
-
-            return can;
-        }
-
         public override void IncreaseTier()
         {
             base.IncreaseTier();

@@ -56,7 +56,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.UltraRich, 4);
             AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 2));
-            AddLoot(LootPack.LootItem<AbscessTail>());
         }
 
         public override void OnDeath(Container c)

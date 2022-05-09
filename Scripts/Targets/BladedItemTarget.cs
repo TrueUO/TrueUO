@@ -1,6 +1,4 @@
 using Server.Engines.Harvest;
-using Server.Engines.Quests;
-using Server.Engines.Quests.Hag;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
@@ -68,39 +66,6 @@ namespace Server.Targets
                 {
                     mobile.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 500450, from.NetState); // You can only skin dead creatures.
                     return;
-                }
-
-                if (targeted is StaticTarget sTarget)
-                {
-                    int itemID = sTarget.ItemID;
-
-                    if (itemID == 0xD15 || itemID == 0xD16) // red mushroom
-                    {
-                        PlayerMobile player = from as PlayerMobile;
-
-                        if (player != null)
-                        {
-                            QuestSystem qs = player.Quest;
-
-                            if (qs is WitchApprenticeQuest)
-                            {
-                                FindIngredientObjective obj = qs.FindObjective(typeof(FindIngredientObjective)) as FindIngredientObjective;
-
-                                if (obj != null && !obj.Completed && obj.Ingredient == Ingredient.RedMushrooms)
-                                {
-                                    player.SendLocalizedMessage(1055036); // You slice a red cap mushroom from its stem.
-                                    obj.Complete();
-
-                                    if (Siege.SiegeShard && m_Item is IUsesRemaining)
-                                    {
-                                        Siege.CheckUsesRemaining(from, m_Item);
-                                    }
-
-                                    return;
-                                }
-                            }
-                        }
-                    }
                 }
 
                 HarvestSystem system = Lumberjacking.System;

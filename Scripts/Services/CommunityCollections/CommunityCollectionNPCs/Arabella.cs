@@ -92,16 +92,6 @@ namespace Server.Items
             Rewards.Add(new CollectionItem(typeof(FoldedSteelGlasses), 0x2FB8, 1073380, 0x47E, 800000.0));
         }
 
-        public override bool CanDonate(PlayerMobile player)
-        {
-            bool can = player.LibraryFriend;
-
-            if (!can)
-                player.SendLocalizedMessage(1074273); // You must speak with Librarian Verity before you can donate to this collection. 
-
-            return can;
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

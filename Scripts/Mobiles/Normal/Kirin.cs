@@ -1,4 +1,3 @@
-using Server.Items;
 using Server.Network;
 using System;
 
@@ -99,14 +98,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.LowScrolls);
             AddLoot(LootPack.Potions);
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (!Controlled && Utility.RandomDouble() < 0.3)
-                c.DropItem(new KirinBrains());
         }
 
         public override void Serialize(GenericWriter writer)

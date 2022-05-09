@@ -100,7 +100,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.LootGold(50, 150));
-            AddLoot(LootPack.LootItem<SeveredElfEars>(75.0, 1));
         }
 
         public override void Serialize(GenericWriter writer)

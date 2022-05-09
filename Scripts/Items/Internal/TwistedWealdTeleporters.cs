@@ -1,6 +1,3 @@
-using Server.Engines.Quests;
-using Server.Mobiles;
-
 namespace Server.Items
 {
     public class TwistedWealdTele : Teleporter
@@ -14,21 +11,6 @@ namespace Server.Items
         public TwistedWealdTele(Serial serial)
             : base(serial)
         {
-        }
-
-        public override bool OnMoveOver(Mobile m)
-        {
-            if (m is PlayerMobile player)
-            {
-                if (QuestHelper.GetQuest(player, typeof(DreadhornQuest)) != null)
-                {
-                    return base.OnMoveOver(player);
-                }
-
-                player.SendLocalizedMessage(1074274); // You dance in the fairy ring, but nothing happens.
-            }
-
-            return true;
         }
 
         public override void Serialize(GenericWriter writer)

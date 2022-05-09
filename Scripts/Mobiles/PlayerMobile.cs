@@ -74,10 +74,9 @@ namespace Server.Mobiles
         ToggleCutClippings = 0x01000000,
         ToggleCutReeds = 0x02000000,
         MechanicalLife = 0x04000000,
-        Unused = 0x08000000,
-        ToggleCutTopiaries = 0x10000000,
-        HasValiantStatReward = 0x20000000,
-        RefuseTrades = 0x40000000
+        ToggleCutTopiaries = 0x08000000,
+        HasValiantStatReward = 0x10000000,
+        RefuseTrades = 0x20000000
     }
 
     [Flags]
@@ -590,17 +589,6 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime NextGemOfSalvationUse { get; set; }
-
-        #region Mondain's Legacy
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Bedlam { get => GetFlag(PlayerFlag.Bedlam); set => SetFlag(PlayerFlag.Bedlam, value); }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool LibraryFriend { get => GetFlag(PlayerFlag.LibraryFriend); set => SetFlag(PlayerFlag.LibraryFriend, value); }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Spellweaving { get => GetFlag(PlayerFlag.Spellweaving); set => SetFlag(PlayerFlag.Spellweaving, value); }
-        #endregion
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan DisguiseTimeLeft => DisguiseTimers.TimeRemaining(this);

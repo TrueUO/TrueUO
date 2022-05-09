@@ -1,6 +1,4 @@
-using Server.Engines.Quests;
 using Server.Mobiles;
-using System;
 
 namespace Server.Items
 {
@@ -22,20 +20,12 @@ namespace Server.Items
 
         public override bool ForceShowProperties => true;
 
-        public virtual Type Quest => typeof(MistakenIdentityQuest);
         public override void OnDoubleClick(Mobile from)
         {
             if (from is PlayerMobile player)
             {
-                if (player.Bedlam)
-                {
-                    BaseCreature.TeleportPets(player, new Point3D(121, 1682, 0), Map);
-                    player.MoveToWorld(new Point3D(121, 1682, 0), Map);
-                }
-                else
-                {
-                    player.SendLocalizedMessage(1074276); // You press and push on the iron maiden, but nothing happens.
-                }
+                BaseCreature.TeleportPets(player, new Point3D(121, 1682, 0), Map);
+                player.MoveToWorld(new Point3D(121, 1682, 0), Map);
             }
         }
 

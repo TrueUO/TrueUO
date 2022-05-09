@@ -87,14 +87,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich, 4);
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (Utility.RandomDouble() < 0.3)
-                c.DropItem(new TigerClawSectBadge());
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

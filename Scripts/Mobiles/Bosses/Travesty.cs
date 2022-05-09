@@ -102,7 +102,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<EyeOfTheTravesty>());
-            AddLoot(LootPack.LootItem<OrdersFromMinax>());
 
             AddLoot(LootPack.RandomLootItem(new[] { typeof(TravestysSushiPreparations), typeof(TravestysFineTeakwoodTray), typeof(TravestysCollectionOfShells) }));
 

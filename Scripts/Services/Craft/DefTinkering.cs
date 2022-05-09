@@ -499,10 +499,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(VoidEssence), 1112327, 3, 502910);
             ForceNonExceptional(index);
 
-            index = AddCraft(typeof(HitchingRope), 1044051, 1071124, 60.0, 120.0, typeof(Rope), 1020934, 1, 1044253);
-            AddSkill(index, SkillName.AnimalLore, 15.0, 100.0);
-            AddRes(index, typeof(ResolvesBridle), 1074761, 1, 1044253);
-
             index = AddCraft(typeof(HitchingPost), 1044051, 1071127, 90.0, 160.0, typeof(IronIngot), 1044036, 50, 1044253);
             AddRes(index, typeof(AnimalPheromone), 1071200, 1, 1044253);
             AddRes(index, typeof(HitchingRope), 1071124, 2, 1044253);
