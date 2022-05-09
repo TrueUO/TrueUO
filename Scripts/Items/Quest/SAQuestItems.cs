@@ -173,42 +173,6 @@ namespace Server.Items
         }
     }
 
-    public class ClawSlasherVeils : Item
-    {
-        [Constructable]
-        public ClawSlasherVeils()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public ClawSlasherVeils(int amount)
-            : base(0x2DB8)
-        {
-            Stackable = true;
-            Amount = amount;
-        }
-
-        public ClawSlasherVeils(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1031704;// Claw of Slasher of Veils
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class CongealedSlugAcid : Item
     {
         [Constructable]
@@ -245,7 +209,6 @@ namespace Server.Items
         }
     }
 
-    [TypeAlias("Server.Items.EnchantEssence")]
     public class EnchantedEssence : Item, ICommodity
     {
         [Constructable]
@@ -478,40 +441,6 @@ namespace Server.Items
         }
     }
 
-    public class PileInspectedIngots : Item
-    {
-        [Constructable]
-        public PileInspectedIngots()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public PileInspectedIngots(int amount)
-            : base(0x1BEA)
-        {
-            Stackable = true;
-            Amount = amount;
-        }
-
-        public PileInspectedIngots(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class RelicFragment : Item, ICommodity
     {
         [Constructable]
@@ -726,45 +655,6 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1112903;// Undamaged Undead Gargoyle Horns
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class UndeadGargMedallion : Item
-    {
-        [Constructable]
-        public UndeadGargMedallion()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public UndeadGargMedallion(int amount)
-            : base(0x1088)
-        {
-            Stackable = true;
-            Amount = amount;
-
-            Hue = 2207;
-            LootType = LootType.Blessed;
-        }
-
-        public UndeadGargMedallion(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1112907;// Undead Gargoyle Medallion
 
         public override void Serialize(GenericWriter writer)
         {

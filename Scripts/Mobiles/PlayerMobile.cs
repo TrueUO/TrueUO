@@ -43,7 +43,6 @@ using RankDefinition = Server.Guilds.RankDefinition;
 
 namespace Server.Mobiles
 {
-
     #region Enums
     [Flags]
     public enum PlayerFlag
@@ -57,26 +56,23 @@ namespace Server.Mobiles
         KarmaLocked = 0x00000020,
         AutoRenewInsurance = 0x00000040,
         UseOwnFilter = 0x00000080,
-        PublicMyRunUO = 0x00000100,
+        UNUSED = 0x00000100,
         PagingSquelched = 0x00000200,
         Young = 0x00000400,
         AcceptGuildInvites = 0x00000800,
         DisplayChampionTitle = 0x00001000,
         HasStatReward = 0x00002000,
-        Bedlam = 0x00010000,
-        LibraryFriend = 0x00020000,
-        Spellweaving = 0x00040000,
-        GemMining = 0x00080000,
-        ToggleMiningGem = 0x00100000,
-        BasketWeaving = 0x00200000,
-        AbyssEntry = 0x00400000,
-        ToggleClippings = 0x00800000,
-        ToggleCutClippings = 0x01000000,
-        ToggleCutReeds = 0x02000000,
-        MechanicalLife = 0x04000000,
-        ToggleCutTopiaries = 0x08000000,
-        HasValiantStatReward = 0x10000000,
-        RefuseTrades = 0x20000000
+        GemMining = 0x00004000,
+        ToggleMiningGem = 0x00008000,
+        BasketWeaving = 0x00010000,
+        AbyssEntry = 0x00020000,
+        ToggleClippings = 0x00040000,
+        ToggleCutClippings = 0x00080000,
+        ToggleCutReeds = 0x00100000,
+        MechanicalLife = 0x00200000,
+        ToggleCutTopiaries = 0x00400000,
+        HasValiantStatReward = 0x00800000,
+        RefuseTrades = 0x01000000
     }
 
     [Flags]

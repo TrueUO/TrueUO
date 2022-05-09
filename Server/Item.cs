@@ -1179,7 +1179,12 @@ namespace Server
 					list.Add(1050039, "{0}\t{1}", m_Amount, Name); // ~1_NUMBER~ ~2_ITEMNAME~
 				}
 			}
-		}
+
+            if (Stackable)
+            {
+                list.Add("(stackable)");
+            }
+        }
 
 		/// <summary>
 		///     Overridable. Adds the loot type of this item to the given <see cref="ObjectPropertyList" />. By default, this will be either 'blessed', 'cursed', or 'insured'.

@@ -11,19 +11,18 @@ namespace Server.Engines.Quests
         Aemaeth = 1,
         CovetousGhost = 2,
         HonestBeggar = 3,
-        UnfadingMemories = 4,
-        DoughtyWarriors = 5,
-        HonorOfDeBoors = 6,
-        LaifemTheWeaver = 7,
-        ValleyOfOne = 8,
-        MyrmidexAlliance = 9,
-        EodonianAlliance = 10,
-        FlintTheQuartermaster = 11,
-        AnimalTraining = 12,
-        PaladinsOfTrinsic = 13,
-        RightingWrong = 14,
-        Ritual = 15,
-        Ritual2 = 16
+        DoughtyWarriors = 4,
+        HonorOfDeBoors = 5,
+        LaifemTheWeaver = 6,
+        ValleyOfOne = 7,
+        MyrmidexAlliance = 8,
+        EodonianAlliance = 9,
+        FlintTheQuartermaster = 10,
+        AnimalTraining = 11,
+        PaladinsOfTrinsic = 12,
+        RightingWrong = 13,
+        Ritual = 14,
+        Ritual2 = 15
     }
 
     public class BaseChain
@@ -32,14 +31,13 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[17][];
+            Chains = new Type[16][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
             Chains[(int)QuestChain.Aemaeth] = new[] { typeof(AemaethOneQuest), typeof(AemaethTwoQuest) };
             Chains[(int)QuestChain.CovetousGhost] = new[] { typeof(GhostOfCovetousQuest), typeof(SaveHisDadQuest), typeof(FathersGratitudeQuest) };
             Chains[(int)QuestChain.HonestBeggar] = new[] { typeof(HonestBeggarQuest), typeof(ReginasThanksQuest) };
-            Chains[(int)QuestChain.UnfadingMemories] = new[] { typeof(UnfadingMemoriesOneQuest), typeof(UnfadingMemoriesTwoQuest), typeof(UnfadingMemoriesThreeQuest) };
             Chains[(int)QuestChain.DoughtyWarriors] = new[] { typeof(DoughtyWarriorsQuest), typeof(DoughtyWarriors2Quest), typeof(DoughtyWarriors3Quest) };
             Chains[(int)QuestChain.HonorOfDeBoors] = new[] { typeof(HonorOfDeBoorsQuest), typeof(JackTheVillainQuest), typeof(SavedHonorQuest) };
             Chains[(int)QuestChain.LaifemTheWeaver] = new[] { typeof(ShearingKnowledgeQuest), typeof(WeavingFriendshipsQuest), typeof(NewSpinQuest)};

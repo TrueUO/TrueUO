@@ -56,9 +56,15 @@ namespace Server.Items
         public override void AddNameProperty(ObjectPropertyList list)
         {
             if (Amount > 1)
+            {
                 list.Add(1050039, "{0}\t#{1}", Amount, 1027154); // ~1_NUMBER~ ~2_ITEMNAME~
+            }
             else
+            {
                 list.Add(1027154); // ingots
+            }
+
+            list.Add("(stackable)");
         }
 
         public override void GetProperties(ObjectPropertyList list)
