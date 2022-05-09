@@ -259,23 +259,6 @@ namespace Server.Items
 
             BaseCreature.TeleportPets(m, p, map);
 
-            if (m is PlayerMobile)
-            {
-                Timer.DelayCall(TimeSpan.FromSeconds(1.0), () =>
-                    {
-                        ExploringTheDeepQuest spell = QuestHelper.GetQuest<ExploringTheDeepQuest>((PlayerMobile)m);
-
-                        if (spell != null)
-                        {
-                            spell.CompleteQuest();
-                        }
-                        else if (((PlayerMobile)m).AddRewardTitle(1154505))
-                        {
-                            ((PlayerMobile)m).SendLocalizedMessage(1155605, "#1154505");  //Thou hath been bestowed the title ~1_TITLE~!
-                        }
-                    });
-            }
-
             bool sendEffect = !m.Hidden || m.IsPlayer();
 
             if (m_SourceEffect && sendEffect)

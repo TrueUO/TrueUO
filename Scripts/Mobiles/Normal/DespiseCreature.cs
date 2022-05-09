@@ -17,7 +17,6 @@ namespace Server.Engines.Despise
 {
     public class DespiseCreature : BaseCreature
     {
-        private WispOrb m_Orb;
         private int m_Power;
         private int m_MaxPower;
         private int m_Progress;
@@ -34,9 +33,6 @@ namespace Server.Engines.Despise
                 return Alignment.Neutral;
             }
         }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public WispOrb Orb { get => m_Orb; set => m_Orb = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxPower { get => m_MaxPower; set => m_MaxPower = value; }
@@ -58,9 +54,6 @@ namespace Server.Engines.Despise
                     IncreasePower();
                     InvalidateProperties();
                 }
-
-                if (m_Orb != null)
-                    m_Orb.InvalidateProperties();
             }
         }
 
@@ -80,15 +73,8 @@ namespace Server.Engines.Despise
 
                     m_Progress = 0;
                 }
-
-                if (m_Orb != null)
-                    m_Orb.InvalidateProperties();
             }
         }
-
-        public virtual int TightLeashLength => 1;
-        public virtual int ShortLeashLength => 1;
-        public virtual int LongLeashLength => 10;
 
         public virtual int StatRatio => Utility.RandomMinMax(35, 60);
 
@@ -142,7 +128,7 @@ namespace Server.Engines.Despise
         {
             get
             {
-                if (!Controlled || m_Orb == null || m_Orb.Aggression == Aggression.Defensive)
+                if (!Controlled)
                 {
                     return TimeSpan.FromSeconds(10.0);
                 }
@@ -233,14 +219,6 @@ namespace Server.Engines.Despise
             list.Add(1153297, string.Format("{0}\t#{1}", m_Power.ToString(), GetPowerLabel(m_Power))); // Power Level: ~1_LEVEL~: ~2_VAL~
         }
 
-        public override void OnCombatantChange()
-        {
-            base.OnCombatantChange();
-
-            if (m_Orb != null)
-                m_Orb.InvalidateHue();
-        }
-
         public override void OnKarmaChange(int oldValue)
         {
             if (oldValue < 0 && Karma > 0 || oldValue > 0 && Karma < 0)
@@ -251,68 +229,6 @@ namespace Server.Engines.Despise
                     case Alignment.Evil: FightMode = FightMode.Good; break;
                     default: FightMode = FightMode.Aggressor; break;
                 }
-            }
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (m_Orb != null)
-            {
-                Unlink(false);
-            }
-        }
-
-        public override void Delete()
-        {
-            base.Delete();
-
-            if (m_Orb != null && !m_Orb.Deleted)
-                m_Orb.Pet = null;
-        }
-
-        public int GetLeashLength()
-        {
-            if (m_Orb == null)
-                return RangePerception;
-
-            switch (m_Orb.LeashLength)
-            {
-                default:
-                case LeashLength.Short: return ShortLeashLength;
-                case LeashLength.Long: return LongLeashLength;
-            }
-        }
-
-        public void Link(WispOrb orb)
-        {
-            m_Orb = orb;
-            RangeHome = 2;
-            m_Orb.InvalidateHue();
-        }
-
-        public void Unlink(bool message = true)
-        {
-            RangeHome = 10;
-            SetControlMaster(null);
-
-            if (Alive && message)
-            {
-                if (m_Orb != null && m_Orb.Owner != null)
-                {
-                    m_Orb.Owner.SendLocalizedMessage(1153335, Name); // You have released control of ~1_NAME~.
-                    NonlocalOverheadMessage(MessageType.Regular, 0x59, 1153296, Name); // * This creature is no longer influenced by a Wisp Orb *
-                }
-            }
-
-            if (m_Orb != null)
-            {
-                m_Orb.Conscripted = false;
-                m_Orb.OnUnlinkPet();
-                m_Orb.InvalidateHue();
-
-                m_Orb = null;
             }
         }
 
@@ -407,7 +323,6 @@ namespace Server.Engines.Despise
             base.Serialize(writer);
             writer.Write(0);
 
-            writer.Write(m_Orb);
             writer.Write(m_Power);
             writer.Write(m_MaxPower);
             writer.Write(m_Progress);
@@ -418,7 +333,6 @@ namespace Server.Engines.Despise
             base.Deserialize(reader);
             reader.ReadInt();
 
-            m_Orb = reader.ReadItem() as WispOrb;
             m_Power = reader.ReadInt();
             m_MaxPower = reader.ReadInt();
             m_Progress = reader.ReadInt();

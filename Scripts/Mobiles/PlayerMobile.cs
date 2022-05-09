@@ -2111,10 +2111,6 @@ namespace Server.Mobiles
                     list.Add(new CallbackEntry(1114299, OpenItemInsuranceMenu));
                     list.Add(new CallbackEntry(6201, ToggleItemInsurance));
                 }
-                else if (Siege.SiegeShard)
-                {
-                    list.Add(new CallbackEntry(3006168, SiegeBlessItem));
-                }
 
                 if (Alive)
                 {
@@ -2356,43 +2352,6 @@ namespace Server.Mobiles
             SendLocalizedMessage(1060881, "", 0x23); // You have selected to automatically reinsure all insured items upon death
             AutoRenewInsurance = true;
         }
-
-        #region Siege Bless Item
-        private Item _BlessedItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Item BlessedItem { get => _BlessedItem; set => _BlessedItem = value; }
-
-        private void SiegeBlessItem()
-        {
-            if (_BlessedItem != null && _BlessedItem.Deleted)
-                _BlessedItem = null;
-
-            BeginTarget(2, false, TargetFlags.None, (from, targeted) =>
-            {
-                Siege.TryBlessItem(this, targeted);
-            });
-        }
-
-        public override bool Drop(Point3D loc)
-        {
-            if (!Siege.SiegeShard || _BlessedItem == null)
-                return base.Drop(loc);
-
-            Item item = Holding;
-            bool drop = base.Drop(loc);
-
-            if (item != null && drop && item.Parent == null && _BlessedItem != null && _BlessedItem == item)
-            {
-                _BlessedItem = null;
-                item.LootType = LootType.Regular;
-
-                SendLocalizedMessage(1075292, item.Name != null ? item.Name : "#" + item.LabelNumber); // ~1_NAME~ has been unblessed.
-            }
-
-            return drop;
-        }
-        #endregion
 
         private class CancelRenewInventoryInsuranceGump : Gump
         {
@@ -2907,11 +2866,6 @@ namespace Server.Mobiles
             Mobile to, Item item, SecureTradeContainer cont, bool message, bool checkItems, int plusItems, int plusWeight)
         {
             int msgNum = 0;
-
-            if (_BlessedItem != null && _BlessedItem == item)
-            {
-                msgNum = 1075282; // You cannot trade a blessed item.
-            }
 
             if (msgNum == 0 && cont == null)
             {
@@ -3855,10 +3809,10 @@ namespace Server.Mobiles
 
             switch (version)
             {
-                case 42: // upgraded quest serialization
-                case 41: // removed PeacedUntil - no need to serialize this
-                case 40: // Version 40, moved gauntlet points, virtua artys and TOT convert to PointsSystem
-                case 39: // Version 39, removed ML quest save/load
+                case 42: 
+                case 41: 
+                case 40: 
+                case 39: 
                 case 38:
                     NextGemOfSalvationUse = reader.ReadDateTime();
                     goto case 37;
@@ -3868,20 +3822,13 @@ namespace Server.Mobiles
                 case 36:
                     RewardStableSlots = reader.ReadInt();
                     goto case 35;
-                case 35: // Siege Blessed Item
-                    _BlessedItem = reader.ReadItem();
-                    goto case 34;
-                // Version 34 - new BOD System
+                case 35: 
                 case 34:
                 case 33:
-                    {
-                        ExploringTheDeepQuest = (ExploringTheDeepQuestChain)reader.ReadInt();
-                        goto case 31;
-                    }
                 case 32:
                 case 31:
                     {
-                        DisplayGuildTitle = version > 31 && reader.ReadBool();
+                        DisplayGuildTitle = reader.ReadBool();
                         m_FameKarmaTitle = reader.ReadString();
                         m_PaperdollSkillTitle = reader.ReadString();
                         m_OverheadTitle = reader.ReadString();
@@ -4153,19 +4100,6 @@ namespace Server.Mobiles
             {
                 AddBuff(new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));
             }
-
-            if (_BlessedItem != null)
-            {
-                Timer.DelayCall(
-                b =>
-                {
-                    if (_BlessedItem == b && b.RootParent != this)
-                    {
-                        _BlessedItem = null;
-                    }
-                },
-                _BlessedItem);
-            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -4177,19 +4111,8 @@ namespace Server.Mobiles
             writer.Write(42); // version
 
             writer.Write(NextGemOfSalvationUse);
-
             writer.Write((int)m_ExtendedFlags);
-
             writer.Write(RewardStableSlots);
-
-            if (_BlessedItem != null && _BlessedItem.RootParent != this)
-            {
-                _BlessedItem = null;
-            }
-
-            writer.Write(_BlessedItem);
-
-            writer.Write((int)ExploringTheDeepQuest);
 
             // Version 31/32 Titles
             writer.Write(DisplayGuildTitle);
@@ -5736,9 +5659,6 @@ namespace Server.Mobiles
             }
         }
         #endregion
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public ExploringTheDeepQuestChain ExploringTheDeepQuest { get; set; }
 
         public void AutoStablePets()
         {
