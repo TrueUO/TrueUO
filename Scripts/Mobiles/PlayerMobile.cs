@@ -3195,7 +3195,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            if (!item.Deleted && (item.LootType == LootType.Blessed || item.Insured))
+            if (!item.Deleted && !item.Stackable) // This is needed to pull non-stackable items out of containers when a player dies.
             {
                 if (Backpack != item.Parent)
                 {
@@ -3284,63 +3284,46 @@ namespace Server.Mobiles
             return base.OnBeforeDeath();
         }
 
-        private bool CheckInsuranceOnDeath(Item item)
+        private static bool KeepOnDeath(Item item)
         {
-            if (Young)
-                return false;
-
-            if (InsuranceEnabled && item.Insured)
+            if (item is Container && !(item is BaseQuiver) || item is BagOfSending || item is KeyRing || item is MountItem)
             {
-                int insuredAmount = GetInsuranceCost(item);
-
-                if (AutoRenewInsurance)
-                {
-                    int cost = m_InsuranceAward == null ? insuredAmount : insuredAmount / 2;
-
-                    if (Banker.Withdraw(this, cost))
-                    {
-                        m_InsuranceCost += cost;
-                        item.PayedInsurance = true;
-                        SendLocalizedMessage(1060398, cost.ToString()); // ~1_AMOUNT~ gold has been withdrawn from your bank box.
-                    }
-                    else
-                    {
-                        SendLocalizedMessage(1061079, "", 0x23); // You lack the funds to purchase the insurance
-                        item.PayedInsurance = false;
-                        item.Insured = false;
-                        m_NonAutoreinsuredItems++;
-                    }
-                }
-                else
-                {
-                    item.PayedInsurance = false;
-                    item.Insured = false;
-                }
-
-                if (m_InsuranceAward != null)
-                {
-                    if (Banker.Deposit(m_InsuranceAward, insuredAmount / 2) && m_InsuranceAward is PlayerMobile pm)
-                    {
-                        pm.m_InsuranceBonus += insuredAmount / 2;
-                    }
-                }
-
-                return true;
+                return false;
             }
 
-            return false;
+            if (item is PotionKeg || item is VvVSigil)
+            {
+                return false;
+            }
+
+            if (item is BaseBalmOrLotion || item is GemOfSalvation || item is SeedOfLife || item is ManaDraught)
+            {
+                return false;
+            }
+
+            if (item.Stackable)
+            {
+                return false;
+            }
+
+            if (item.LootType == LootType.Cursed)
+            {
+                return false;
+            }
+
+            if (item.ItemID == 0x204E) // death shroud
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public override DeathMoveResult GetParentMoveResultFor(Item item)
         {
-            if (CheckInsuranceOnDeath(item) && !Young)
-            {
-                return DeathMoveResult.MoveToBackpack;
-            }
-
             DeathMoveResult res = base.GetParentMoveResultFor(item);
 
-            if (res == DeathMoveResult.MoveToCorpse && item.Movable && Young)
+            if (res == DeathMoveResult.MoveToCorpse && item.Movable && KeepOnDeath(item)) // Items that drop to the corpse on player death handled here.
             {
                 res = DeathMoveResult.MoveToBackpack;
             }
@@ -3350,14 +3333,9 @@ namespace Server.Mobiles
 
         public override DeathMoveResult GetInventoryMoveResultFor(Item item)
         {
-            if (CheckInsuranceOnDeath(item) && !Young)
-            {
-                return DeathMoveResult.MoveToBackpack;
-            }
-
             DeathMoveResult res = base.GetInventoryMoveResultFor(item);
 
-            if (res == DeathMoveResult.MoveToCorpse && item.Movable && Young)
+            if (res == DeathMoveResult.MoveToCorpse && item.Movable && KeepOnDeath(item)) // Items that drop to the corpse on player death handled here.
             {
                 res = DeathMoveResult.MoveToBackpack;
             }
