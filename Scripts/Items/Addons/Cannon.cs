@@ -1,5 +1,4 @@
 using Server.Engines.Quests.Haven;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Network;
 using Server.Targeting;
@@ -20,15 +19,13 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1076157;// Decorative Cannon
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             if (Addon is CannonAddon addon)
             {
-                if (addon.IsRewardItem)
-                    list.Add(1076223); // 7th Year Veteran Reward
-
                 list.Add(1076207, addon.Charges.ToString()); // Remaining Charges: ~1_val~
             }
         }
@@ -57,7 +54,6 @@ namespace Server.Items
 
         private CannonDirection m_CannonDirection;
         private int m_Charges;
-        private bool m_IsRewardItem;
 
         [Constructable]
         public CannonAddon(CannonDirection direction)
@@ -113,7 +109,6 @@ namespace Server.Items
                 CannonDeed deed = new CannonDeed
                 {
                     Charges = m_Charges,
-                    IsRewardItem = m_IsRewardItem
                 };
 
                 return deed;
@@ -129,19 +124,6 @@ namespace Server.Items
             set
             {
                 m_Charges = value;
-
-                foreach (AddonComponent c in Components)
-                    c.InvalidateProperties();
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
 
                 foreach (AddonComponent c in Components)
                     c.InvalidateProperties();
@@ -224,23 +206,19 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write((int)m_CannonDirection);
             writer.Write(m_Charges);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_CannonDirection = (CannonDirection)reader.ReadInt();
             m_Charges = reader.ReadInt();
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalTarget : Target
@@ -358,11 +336,11 @@ namespace Server.Items
         }
     }
 
-    public class CannonDeed : BaseAddonDeed, IRewardItem, IRewardOption
+    public class CannonDeed : BaseAddonDeed, IRewardOption
     {
         private CannonDirection m_Direction;
         private int m_Charges;
-        private bool m_IsRewardItem;
+        
         [Constructable]
         public CannonDeed()
         {
@@ -382,7 +360,6 @@ namespace Server.Items
                 CannonAddon addon = new CannonAddon(m_Direction)
                 {
                     Charges = m_Charges,
-                    IsRewardItem = m_IsRewardItem
                 };
 
                 return addon;
@@ -400,39 +377,24 @@ namespace Server.Items
             }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076223); // 7th Year Veteran Reward
 
             list.Add(1076207, m_Charges.ToString()); // Remaining Charges: ~1_val~
         }
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 from.CloseGump(typeof(RewardOptionGump));
                 from.SendGump(new RewardOptionGump(this));
             }
             else
+            {
                 from.SendLocalizedMessage(1042038); // You must have the object in your backpack to use it.          	
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -441,7 +403,6 @@ namespace Server.Items
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_Charges);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -450,7 +411,6 @@ namespace Server.Items
             reader.ReadEncodedInt();
 
             m_Charges = reader.ReadInt();
-            m_IsRewardItem = reader.ReadBool();
         }
 
         public void GetOptions(RewardOptionList list)

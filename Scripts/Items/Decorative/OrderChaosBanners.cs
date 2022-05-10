@@ -1,19 +1,8 @@
-using Server.Engines.VeteranRewards;
-
 namespace Server.Items
 {
     [Flipable(0x42CD, 0x42CE)]
-    public class OrderBanner : Item, IRewardItem
+    public class OrderBanner : Item
     {
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get { return m_IsRewardItem; }
-            set { m_IsRewardItem = value; }
-        }
-
         [Constructable]
         public OrderBanner()
             : base(0x42CD)
@@ -27,31 +16,22 @@ namespace Server.Items
         {
         }
 
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            int version = reader.ReadInt();
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
             writer.Write(0); // version
         }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
     }
 
     [Flipable(0x42CB, 0x42CC)]
-    public class ChaosBanner : Item, IRewardItem
+    public class ChaosBanner : Item
     {
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get { return m_IsRewardItem; }
-            set { m_IsRewardItem = value; }
-        }
-
         [Constructable]
         public ChaosBanner()
             : base(0x42CB)
@@ -65,16 +45,16 @@ namespace Server.Items
         {
         }
 
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            int version = reader.ReadInt();
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
             writer.Write(0); // version
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
         }
     }
 }

@@ -1,5 +1,4 @@
 using Server.ContextMenus;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
@@ -153,9 +152,8 @@ namespace Server.Items
         }
     }
 
-    public class AnkhOfSacrificeAddon : BaseAddon, IRewardItem
+    public class AnkhOfSacrificeAddon : BaseAddon
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public AnkhOfSacrificeAddon(bool east)
         {
@@ -190,63 +188,40 @@ namespace Server.Items
         {
             get
             {
-                AnkhOfSacrificeDeed deed = new AnkhOfSacrificeDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                AnkhOfSacrificeDeed deed = new AnkhOfSacrificeDeed();
 
                 return deed;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
             if (!m.Alive && Utility.InRange(Location, m.Location, 1) && !Utility.InRange(Location, oldLocation, 1))
+            {
                 AnkhOfSacrificeComponent.Resurrect(m as PlayerMobile, this);
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
     }
 
-    public class AnkhOfSacrificeDeed : BaseAddonDeed, IRewardItem, IRewardOption
+    public class AnkhOfSacrificeDeed : BaseAddonDeed, IRewardOption
     {
         private bool m_East;
-        private bool m_IsRewardItem;
+        
         [Constructable]
         public AnkhOfSacrificeDeed()
-            : this(false)
         {
-        }
-
-        [Constructable]
-        public AnkhOfSacrificeDeed(bool isRewardItem)
-        {
-            m_IsRewardItem = isRewardItem;
         }
 
         public AnkhOfSacrificeDeed(Serial serial)
@@ -260,62 +235,35 @@ namespace Server.Items
         {
             get
             {
-                AnkhOfSacrificeAddon addon = new AnkhOfSacrificeAddon(m_East)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                AnkhOfSacrificeAddon addon = new AnkhOfSacrificeAddon(m_East);
 
                 return addon;
             }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 from.CloseGump(typeof(RewardOptionGump));
                 from.SendGump(new RewardOptionGump(this));
             }
             else
+            {
                 from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.   
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1080457); // 10th Year Veteran Reward
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         public void GetOptions(RewardOptionList list)

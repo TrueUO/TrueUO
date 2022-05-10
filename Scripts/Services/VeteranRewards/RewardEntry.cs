@@ -51,9 +51,6 @@ namespace Server.Engines.VeteranRewards
             {
                 Item item = Activator.CreateInstance(m_ItemType, m_Args) as Item;
 
-                if (item is IRewardItem)
-                    ((IRewardItem)item).IsRewardItem = true;
-
                 return item;
             }
             catch (Exception e)

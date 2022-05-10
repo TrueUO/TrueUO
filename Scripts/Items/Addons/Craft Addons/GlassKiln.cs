@@ -1,5 +1,4 @@
 using Server.Engines.Craft;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 
 namespace Server.Items
@@ -8,17 +7,11 @@ namespace Server.Items
     {
         public override CraftSystem CraftSystem => DefGlassblowing.CraftSystem;
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
-
         public override BaseAddonDeed Deed
         {
             get
             {
-                GlassKilnDeed deed = new GlassKilnDeed(Tools.Count > 0 ? Tools[0].UsesRemaining : 0)
-                {
-                    IsRewardItem = IsRewardItem
-                };
+                GlassKilnDeed deed = new GlassKilnDeed(Tools.Count > 0 ? Tools[0].UsesRemaining : 0);
 
                 return deed;
             }
@@ -49,20 +42,16 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
-
-            writer.Write(IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            IsRewardItem = reader.ReadBool();
+            reader.ReadInt();
         }
     }
 
-    public class GlassKilnDeed : CraftAddonDeed, IRewardItem, IRewardOption
+    public class GlassKilnDeed : CraftAddonDeed, IRewardOption
     {
         public override int LabelNumber => 1159420;  // Glass Kiln
 
@@ -70,29 +59,13 @@ namespace Server.Items
         {
             get
             {
-                GlassKilnAddon addon = new GlassKilnAddon(_Direction, UsesRemaining)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                GlassKilnAddon addon = new GlassKilnAddon(_Direction, UsesRemaining);
 
                 return addon;
             }
         }
 
         private DirectionType _Direction;
-
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
 
         [Constructable]
         public GlassKilnDeed()
@@ -109,14 +82,6 @@ namespace Server.Items
         public GlassKilnDeed(Serial serial)
             : base(serial)
         {
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076223); // 7th Year Veteran Reward
         }
 
         public void GetOptions(RewardOptionList list)
@@ -150,16 +115,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadInt();
         }
     }
 }

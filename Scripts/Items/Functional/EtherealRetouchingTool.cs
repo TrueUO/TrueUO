@@ -1,14 +1,11 @@
-using Server.Engines.VeteranRewards;
 using Server.Mobiles;
 using Server.Targeting;
 
 namespace Server.Items
 {
-    public class EtherealRetouchingTool : Item, IRewardItem
+    public class EtherealRetouchingTool : Item
     {
         public override int LabelNumber => 1113814;  // Retouching Tool
-
-        public bool IsRewardItem { get; set; }
 
         [Constructable]
         public EtherealRetouchingTool()
@@ -19,14 +16,6 @@ namespace Server.Items
         public EtherealRetouchingTool(Serial serial)
             : base(serial)
         {
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (IsRewardItem)
-                list.Add(1080458); // 11th Year Veteran Reward
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -68,12 +57,16 @@ namespace Server.Items
                     {
                         from.SendLocalizedMessage(1071117); // You cannot use this item for it.
                     }
-                    else if (RewardSystem.CheckIsUsableBy(from, m_Tool, null))
+                    else 
                     {
                         if (mount.Transparent)
+                        {
                             from.SendLocalizedMessage(1113816); // Your ethereal mount's body has been solidified.
+                        }
                         else
+                        {
                             from.SendLocalizedMessage(1113817); // Your ethereal mount's transparency has been restored.
+                        }
 
                         mount.Transparent = !mount.Transparent;
                         mount.InvalidateProperties();
@@ -94,17 +87,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.WriteEncodedInt(1); // version
-
-            writer.Write(IsRewardItem);
+            writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            IsRewardItem = reader.ReadBool();
         }
     }
 }

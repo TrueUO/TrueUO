@@ -6,11 +6,6 @@ using System.Collections.Generic;
 
 namespace Server.Engines.VeteranRewards
 {
-    public interface IRewardItem
-    {
-        bool IsRewardItem { get; set; }
-    }
-
     public class RewardSystem
     {
         public static bool Enabled = Config.Get("VetRewards.Enabled", true);
@@ -188,112 +183,11 @@ namespace Server.Engines.VeteranRewards
                 max = 2 + level;
         }
 
-        public static bool CheckIsUsableBy(Mobile from, Item item, object[] args)
-        {
-            if (from.AccessLevel > AccessLevel.GameMaster || UseableByAnyone(item.GetType()))
-                return true;
-
-            if (m_Lists == null)
-                SetupRewardTables();
-
-            Type type = item.GetType();
-
-            for (int i = 0; i < m_Lists.Length; ++i)
-            {
-                RewardList list = m_Lists[i];
-                RewardEntry[] entries = list.Entries;
-                TimeSpan ts;
-
-                for (int j = 0; j < entries.Length; ++j)
-                {
-                    if (entries[j].ItemType == type)
-                    {
-                        if (args == null && entries[j].Args.Length == 0)
-                        {
-                            if (i > 0 && !HasAccess(from, list, out ts))
-                            {
-                                from.SendLocalizedMessage(1008126, true, Math.Ceiling(ts.TotalDays / 30.0).ToString()); // Your account is not old enough to use this item. Months until you can use this item : 
-                                return false;
-                            }
-
-                            return true;
-                        }
-
-                        if (args.Length == entries[j].Args.Length)
-                        {
-                            bool match = true;
-
-                            for (int k = 0; match && k < args.Length; ++k)
-                                match = (args[k].Equals(entries[j].Args[k]));
-
-                            if (match)
-                            {
-                                if (i > 0 && !HasAccess(from, list, out ts))
-                                {
-                                    from.SendLocalizedMessage(1008126, true, Math.Ceiling(ts.TotalDays / 30.0).ToString()); // Your account is not old enough to use this item. Months until you can use this item : 
-                                    return false;
-                                }
-
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // no entry?
-            return true;
-        }
-
-        private static bool UseableByAnyone(Type type)
-        {
-            foreach (Type t in _AnyoneTypes)
-            {
-                if (t == type || type.IsSubclassOf(t))
-                    return true;
-            }
-
-            return false;
-        }
-
-        private static readonly Type[] _AnyoneTypes =
-        {
-            typeof(DyeTub), typeof(MonsterStatuette)
-        };
-
         public static int GetRewardYearLabel(Item item, object[] args)
         {
             int level = GetRewardYear(item, args);
 
             return 1076216 + ((level < 10) ? level : (level < 12) ? ((level - 9) + 4240) : ((level - 11) + 37585));
-        }
-
-        public static int GetRewardYearHue(int hue)
-        {
-            if (m_Lists == null)
-                SetupRewardTables();
-
-            for (int i = 0; i < m_Lists.Length; ++i)
-            {
-                RewardList list = m_Lists[i];
-                RewardEntry[] entries = list.Entries;
-
-                for (int j = 0; j < entries.Length; ++j)
-                {
-                    if (entries[j].Args.Length == 0)
-                        continue;
-
-                    if (hue.Equals(entries[j].Args[0]))
-                    {
-                        int level = i + 1;
-
-                        return 1076216 + ((level < 10) ? level : (level < 12) ? ((level - 9) + 4240) : ((level - 11) + 37585));
-                    }
-                }
-            }
-
-            // no entry?
-            return 0;
         }
 
         public static int GetRewardYear(Item item, object[] args)

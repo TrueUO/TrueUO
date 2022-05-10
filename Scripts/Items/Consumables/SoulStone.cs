@@ -1,6 +1,5 @@
 using Server.Accounting;
 using Server.Engines.Craft;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Multis;
@@ -990,7 +989,7 @@ namespace Server.Items
         }
     }
 
-    public class RedSoulstone : SoulStone, IRewardItem
+    public class RedSoulstone : SoulStone
     {
         [Constructable]
         public RedSoulstone()
@@ -1009,48 +1008,16 @@ namespace Server.Items
         {
         }
 
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076217); // 1st Year Veteran Reward
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
-
-            writer.Write(m_IsRewardItem);
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_IsRewardItem = reader.ReadBool();
-                        break;
-                    }
-            }
+            reader.ReadInt();
         }
     }
 

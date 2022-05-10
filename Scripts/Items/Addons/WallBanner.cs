@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Network;
 
@@ -45,10 +44,10 @@ namespace Server.Items
         }
     }
 
-    public class WallBanner : BaseAddon, IRewardItem
+    public class WallBanner : BaseAddon
     {
-        private bool m_IsRewardItem;
         private bool m_East;
+
         [Constructable]
         public WallBanner(int bannerID)
         {
@@ -204,23 +203,9 @@ namespace Server.Items
         {
             get
             {
-                WallBannerDeed deed = new WallBannerDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                WallBannerDeed deed = new WallBannerDeed();
 
                 return deed;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
@@ -228,38 +213,30 @@ namespace Server.Items
         public bool East
         {
             get => m_East;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
+            set => InvalidateProperties();
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_East);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_East = reader.ReadBool();
-            m_IsRewardItem = reader.ReadBool();
         }
     }
 
-    public class WallBannerDeed : BaseAddonDeed, IRewardItem
+    public class WallBannerDeed : BaseAddonDeed
     {
         private int m_BannerID;
-        private bool m_IsRewardItem;
+        
         [Constructable]
         public WallBannerDeed()
         {
@@ -276,46 +253,23 @@ namespace Server.Items
         {
             get
             {
-                WallBanner addon = new WallBanner(m_BannerID)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                WallBanner addon = new WallBanner(m_BannerID);
 
                 return addon;
             }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076225); // 9th Year Veteran Reward
-        }
-
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 from.CloseGump(typeof(InternalGump));
                 from.SendGump(new InternalGump(this));
             }
             else
+            {
                 from.SendLocalizedMessage(1042038); // You must have the object in your backpack to use it.          	
+            }
         }
 
         public void Use(Mobile m, int bannerID)
@@ -328,19 +282,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadEncodedInt();
         }
 
         private class InternalGump : Gump

@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -200,7 +199,7 @@ namespace Server.Items
         }
     }
 
-    public class MonsterStatuette : Item, IRewardItem, IEngravable
+    public class MonsterStatuette : Item, IEngravable
     {
         private MonsterStatuetteType m_Type;
         private bool m_TurnedOn;
@@ -245,9 +244,6 @@ namespace Server.Items
             : base(serial)
         {
         }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool TurnedOn
@@ -346,13 +342,14 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            if (IsRewardItem)
-                list.Add(RewardSystem.GetRewardYearLabel(this, new object[] { m_Type })); // X Year Veteran Reward
-
             if (m_TurnedOn)
+            {
                 list.Add(502695); // turned on
+            }
             else
+            {
                 list.Add(502696); // turned off
+            }
         }
 
         public bool IsOwner(Mobile mob)
@@ -378,33 +375,21 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(m_EngravedText);
-
             writer.WriteEncodedInt((int)m_Type);
             writer.Write(m_TurnedOn);
-            writer.Write(IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 1:
-                    m_EngravedText = reader.ReadString();
-                    goto case 0;
-                case 0:
-                    {
-                        m_Type = (MonsterStatuetteType)reader.ReadEncodedInt();
-                        m_TurnedOn = reader.ReadBool();
-                        IsRewardItem = reader.ReadBool();
-                        break;
-                    }
-            }
+            m_EngravedText = reader.ReadString();
+            m_Type = (MonsterStatuetteType)reader.ReadEncodedInt();
+            m_TurnedOn = reader.ReadBool();
         }
 
         private class OnOffGump : Gump

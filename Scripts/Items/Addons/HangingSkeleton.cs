@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -6,9 +5,8 @@ using Server.Targeting;
 
 namespace Server.Items
 {
-    public class HangingSkeleton : Item, IAddon, IRewardItem
+    public class HangingSkeleton : Item, IAddon
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public HangingSkeleton()
             : this(0x1596)
@@ -33,43 +31,25 @@ namespace Server.Items
         {
             get
             {
-                HangingSkeletonDeed deed = new HangingSkeletonDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                HangingSkeletonDeed deed = new HangingSkeletonDeed();
 
                 return deed;
             }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
+        
         public bool FacingSouth
         {
             get
             {
-                if (ItemID == 0x1A03 || ItemID == 0x1A05 || ItemID == 0x1A09 ||
-                    ItemID == 0x1B1E || ItemID == 0x1B7F)
+                if (ItemID == 0x1A03 || ItemID == 0x1A05 || ItemID == 0x1A09 || ItemID == 0x1B1E || ItemID == 0x1B7F)
+                {
                     return true;
+                }
 
                 return false;
             }
         }
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076220); // 4th Year Veteran Reward
-        }
-
+        
         void IChopable.OnChop(Mobile user)
         {
             OnDoubleClick(user);
@@ -96,19 +76,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadEncodedInt();
         }
 
         public bool CouldFit(IPoint3D p, Map map)
@@ -125,9 +99,8 @@ namespace Server.Items
         }
     }
 
-    public class HangingSkeletonDeed : Item, IRewardItem
+    public class HangingSkeletonDeed : Item
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public HangingSkeletonDeed()
             : base(0x14F0)
@@ -142,16 +115,6 @@ namespace Server.Items
 
         public override int LabelNumber => 1049772;// deed for a hanging skeleton decoration
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
         public static int GetWestItemID(int south)
         {
             switch (south)
@@ -165,19 +128,8 @@ namespace Server.Items
             }
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076220); // 4th Year Veteran Reward
-        }
-
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 BaseHouse house = BaseHouse.FindHouseAt(from);
@@ -188,28 +140,26 @@ namespace Server.Items
                     from.SendGump(new InternalGump(this));
                 }
                 else
+                {
                     from.SendLocalizedMessage(502092); // You must be in your house to do this.
+                }
             }
             else
+            {
                 from.SendLocalizedMessage(1042038); // You must have the object in your backpack to use it.          	
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadEncodedInt();
         }
 
         private class InternalGump : Gump
@@ -319,7 +269,6 @@ namespace Server.Items
 
                                     house.Addons[banner] = from;
 
-                                    banner.IsRewardItem = m_Skeleton.IsRewardItem;
                                     banner.MoveToWorld(p3d, map);
 
                                     m_Skeleton.Delete();
@@ -379,20 +328,26 @@ namespace Server.Items
                 public override void OnResponse(NetState sender, RelayInfo info)
                 {
                     if (m_Skeleton == null || m_Skeleton.Deleted || m_House == null)
+                    {
                         return;
+                    }
 
                     HangingSkeleton banner = null;
 
                     if (info.ButtonID == (int)Buttons.East)
+                    {
                         banner = new HangingSkeleton(GetWestItemID(m_ItemID));
+                    }
+
                     if (info.ButtonID == (int)Buttons.South)
+                    {
                         banner = new HangingSkeleton(m_ItemID);
+                    }
 
                     if (banner != null)
                     {
                         m_House.Addons[banner] = sender.Mobile;
 
-                        banner.IsRewardItem = m_Skeleton.IsRewardItem;
                         banner.MoveToWorld(m_Location, sender.Mobile.Map);
 
                         m_Skeleton.Delete();

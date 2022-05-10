@@ -1,20 +1,16 @@
-#region References
-using Server.Engines.VeteranRewards;
 using Server.Items;
 using Server.Multis;
 using Server.Network;
 using Server.Spells;
 using System;
-#endregion
 
 namespace Server.Mobiles
 {
-    public class EtherealMount : Item, IMount, IMountItem, IRewardItem
+    public class EtherealMount : Item, IMount, IMountItem
     {
         public static readonly int DefaultEtherealHue = 0x4001;
 
         private Mobile m_Rider;
-        private bool m_IsRewardItem;
 
         private bool m_Transparent;
 
@@ -169,11 +165,7 @@ namespace Server.Mobiles
         public int MountedID => Transparent ? TransparentMountedID : NonTransparentMountedID;
         public int MountedHue => Transparent ? TransparentMountedHue : NonTransparentMountedHue;
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get => m_IsRewardItem; set => m_IsRewardItem = value; }
-
         public override double DefaultWeight => 1.0;
-
         public override bool DisplayLootType => true;
         public virtual int FollowerSlots => 1;
 
@@ -260,11 +252,6 @@ namespace Server.Mobiles
         {
             base.GetProperties(list);
 
-            if (m_IsRewardItem)
-            {
-                list.Add(RewardSystem.GetRewardYearLabel(this, new object[] { })); // X Year Veteran Reward
-            }
-
             EtherealRetouchingTool.AddProperty(this, list);
         }
 
@@ -294,12 +281,6 @@ namespace Server.Mobiles
             if (Parent == null)
             {
                 from.SayTo(from, 1010095); // This must be on your person to use.
-                return false;
-            }
-
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-            {
-                // CheckIsUsableBy sends the message
                 return false;
             }
 
@@ -359,7 +340,7 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(7); // version
+            writer.Write(0); // version
 
             writer.Write(m_Transparent);
             writer.Write(m_TransparentMountedID);
@@ -368,8 +349,6 @@ namespace Server.Mobiles
             writer.Write(m_NonTransparentMountedHue);
             writer.Write(m_StatueID);
             writer.Write(m_StatueHue);
-
-            writer.Write(m_IsRewardItem);
             writer.Write(m_Rider);
         }
 
@@ -385,8 +364,6 @@ namespace Server.Mobiles
             m_NonTransparentMountedHue = reader.ReadInt();
             m_StatueID = reader.ReadInt();
             m_StatueHue = reader.ReadInt();
-
-            m_IsRewardItem = reader.ReadBool();
             m_Rider = reader.ReadMobile();
 
             AddFollowers();

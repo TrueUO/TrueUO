@@ -1,5 +1,4 @@
 using Server.ContextMenus;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Network;
 using System.Collections.Generic;
@@ -231,13 +230,10 @@ namespace Server.Items
         }
     }
 
-    public class GardenShedDeed : BaseAddonContainerDeed, IRewardItem
+    public class GardenShedDeed : BaseAddonContainerDeed
     {
         public override BaseAddonContainer Addon => new GardenShedAddon(m_East);
         public override int LabelNumber => 1153491;  // Garden Shed Deed
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
 
         private bool m_East;
 
@@ -261,14 +257,6 @@ namespace Server.Items
                 from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (IsRewardItem)
-                list.Add(1113805); // 15th Year Veteran Reward
-        }
-
         private void SendTarget(Mobile m)
         {
             base.OnDoubleClick(m);
@@ -277,18 +265,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.WriteEncodedInt(1); // version
-
-            writer.Write(IsRewardItem);
+            writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
-
-            if (version > 0)
-                IsRewardItem = reader.ReadBool();
+            reader.ReadEncodedInt();
         }
 
         private class InternalGump : Gump

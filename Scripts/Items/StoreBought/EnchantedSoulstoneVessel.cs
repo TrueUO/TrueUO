@@ -1,10 +1,9 @@
-using Server.Engines.VeteranRewards;
 using Server.Network;
 using System;
 
 namespace Server.Items
 {
-    public class EnchantedSoulstoneVessel : Container, IRewardItem
+    public class EnchantedSoulstoneVessel : Container
     {
         public override int LabelNumber => 1126839; // Enchanted Soulstone Vessel
 
@@ -14,11 +13,6 @@ namespace Server.Items
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Owned { get => m_Owned; set { m_Owned = value; InvalidateProperties(); } }
-
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get => m_IsRewardItem; set { m_IsRewardItem = value; InvalidateProperties(); } }
 
         public override int DefaultMaxItems => 20;
 

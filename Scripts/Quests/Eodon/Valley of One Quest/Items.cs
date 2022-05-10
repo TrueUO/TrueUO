@@ -613,7 +613,6 @@ namespace Server.Items
         [Constructable]
         public PetTigerCubStatuette() : base(MonsterStatuetteType.TigerCub)
         {
-            IsRewardItem = false;
         }
 
         public override void OnDoubleClick(Mobile from)
