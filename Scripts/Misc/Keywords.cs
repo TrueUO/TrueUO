@@ -33,15 +33,6 @@ namespace Server.Misc
                             from.SendMessage(0x3B2, "Short Term Murders: {0} Long Term Murders: {1}", from.ShortTermMurders, from.Kills);
                             break;
                         }
-                    case 0x0035: // i renounce my young player status*
-                        {
-                            if (from is PlayerMobile mobile && mobile.Young && !mobile.HasGump(typeof(RenounceYoungGump)))
-                            {
-                                mobile.SendGump(new RenounceYoungGump());
-                            }
-
-                            break;
-                        }
                     case 0x6: // guild
                         {
                             if (from is PlayerMobile mobile && mobile.Guild != null)
