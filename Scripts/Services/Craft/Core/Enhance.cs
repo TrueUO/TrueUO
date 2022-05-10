@@ -68,11 +68,6 @@ namespace Server.Engines.Craft
                 return EnhanceResult.BadItem;
             }
 
-            if (item is IArcaneEquip eq && eq.IsArcane)
-            {
-                return EnhanceResult.BadItem;
-            }
-
             if (item is BaseWeapon bw && Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, bw))
             {
                 return EnhanceResult.Enchanted;

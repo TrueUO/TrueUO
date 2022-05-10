@@ -33,8 +33,6 @@ using Server.Spells.Ninjitsu;
 using Server.Spells.Seventh;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
-using Server.Targeting;
-
 using System;
 using System.Collections.Generic;
 
@@ -2663,13 +2661,6 @@ namespace Server.Mobiles
 
             if (Alive && !wasAlive)
             {
-                Item deathRobe = new DeathRobe();
-
-                if (!EquipItem(deathRobe))
-                {
-                    deathRobe.Delete();
-                }
-
                 if (NetState != null)
                 {
                     Waypoints.RemoveHealers(this, Map);

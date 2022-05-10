@@ -128,72 +128,8 @@ namespace Server.Items
     }
 
     [Flipable]
-    public class ThighBoots : BaseShoes, IArcaneEquip
+    public class ThighBoots : BaseShoes
     {
-        #region Arcane Impl
-        private int m_MaxArcaneCharges, m_CurArcaneCharges;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int MaxArcaneCharges
-        {
-            get => m_MaxArcaneCharges;
-            set
-            {
-                m_MaxArcaneCharges = value;
-                InvalidateProperties();
-                Update();
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int CurArcaneCharges
-        {
-            get => m_CurArcaneCharges;
-            set
-            {
-                m_CurArcaneCharges = value;
-                InvalidateProperties();
-                Update();
-            }
-        }
-
-        public int TempHue { get; set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsArcane => m_MaxArcaneCharges > 0 && m_CurArcaneCharges >= 0;
-
-        public override void AddCraftedProperties(ObjectPropertyList list)
-        {
-            base.AddCraftedProperties(list);
-
-            if (IsArcane)
-                list.Add(1061837, "{0}\t{1}", m_CurArcaneCharges, m_MaxArcaneCharges); // arcane charges: ~1_val~ / ~2_val~
-        }
-
-        public void Update()
-        {
-            if (IsArcane)
-                ItemID = 0x26AF;
-            else if (ItemID == 0x26AF)
-                ItemID = 0x1711;
-
-            if (IsArcane && CurArcaneCharges == 0)
-            {
-                TempHue = Hue;
-                Hue = 0;
-            }
-        }
-
-        public void Flip()
-        {
-            if (ItemID == 0x1711)
-                ItemID = 0x1712;
-            else if (ItemID == 0x1712)
-                ItemID = 0x1711;
-        }
-
-        #endregion
-
         public override CraftResource DefaultResource => CraftResource.RegularLeather;
 
         [Constructable]
@@ -217,50 +153,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2); // version
-
-            if (IsArcane)
-            {
-                writer.Write(true);
-                writer.Write(TempHue);
-                writer.Write(m_CurArcaneCharges);
-                writer.Write(m_MaxArcaneCharges);
-            }
-            else
-            {
-                writer.Write(false);
-            }
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 2:
-                    {
-                        if (reader.ReadBool())
-                        {
-                            TempHue = reader.ReadInt();
-                            m_CurArcaneCharges = reader.ReadInt();
-                            m_MaxArcaneCharges = reader.ReadInt();
-                        }
-
-                        break;
-                    }
-                case 1:
-                    {
-                        if (reader.ReadBool())
-                        {
-                            m_CurArcaneCharges = reader.ReadInt();
-                            m_MaxArcaneCharges = reader.ReadInt();
-                        }
-
-                        break;
-                    }
-            }
+            reader.ReadInt();
         }
     }
 

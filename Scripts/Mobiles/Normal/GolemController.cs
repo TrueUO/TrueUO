@@ -64,11 +64,6 @@ namespace Server.Mobiles
 
         public void AddArcane(Item item)
         {
-            if (item is IArcaneEquip eq)
-            {
-                eq.CurArcaneCharges = eq.MaxArcaneCharges = 20;
-            }
-
             item.Hue = 2117;
             item.Movable = false;
 

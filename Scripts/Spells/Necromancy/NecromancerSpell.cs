@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Spells.Necromancy
 {
     public abstract class NecromancerSpell : Spell
@@ -36,10 +34,9 @@ namespace Server.Spells.Necromancy
         public override bool ConsumeReagents()
         {
             if (base.ConsumeReagents())
+            {
                 return true;
-
-            if (ArcaneGem.ConsumeCharges(Caster, 1))
-                return true;
+            }
 
             return false;
         }

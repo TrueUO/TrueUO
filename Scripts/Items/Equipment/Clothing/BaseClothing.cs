@@ -7,14 +7,6 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public interface IArcaneEquip
-    {
-        bool IsArcane { get; }
-        int CurArcaneCharges { get; set; }
-        int MaxArcaneCharges { get; set; }
-        int TempHue { get; set; }
-    }
-
     public abstract class BaseClothing : Item, IDyable, IScissorable, ICraftable, IWearableDurability, IResource, ISetItem, IVvVItem, IOwnerRestricted, IArtifact, ICombatEquipment, IEngravable, IQuality
     {
         private string m_EngravedText;
