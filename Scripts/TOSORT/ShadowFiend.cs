@@ -55,16 +55,6 @@ namespace Server.Mobiles
             m_Timer.Start();
         }
 
-        public override void OnBeforeDamage(Mobile from, ref int totalDamage, DamageType type)
-        {
-            if (Region.IsPartOf("Khaldun") && IsChampionSpawn && !Caddellite.CheckDamage(from, type))
-            {
-                totalDamage = 0;
-            }
-
-            base.OnBeforeDamage(from, ref totalDamage, type);
-        }
-
         public ShadowFiend(Serial serial)
             : base(serial)
         {
@@ -72,6 +62,7 @@ namespace Server.Mobiles
 
         public override bool DeleteCorpseOnDeath => true;
         public override bool CanRummageCorpses => true;
+
         public override int GetIdleSound()
         {
             return 0x37A;

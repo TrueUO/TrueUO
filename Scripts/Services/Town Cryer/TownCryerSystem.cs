@@ -1,7 +1,6 @@
 using Server.Commands;
 using Server.ContextMenus;
 using Server.Engines.CityLoyalty;
-using Server.Engines.Khaldun;
 using Server.Engines.Quests;
 using Server.Guilds;
 using Server.Gumps;
@@ -31,14 +30,11 @@ namespace Server.Services.TownCryer
         private static readonly string PreLoadedPath = "Data/PreLoadedTC.xml";
 
         public static List<TownCryerGreetingEntry> GreetingsEntries { get; private set; }
-        //public static List<TextDefinition> GreetingsEntries { get; private set; }
         public static List<TownCryerNewsEntry> NewsEntries { get; private set; }
         public static List<TownCryerModeratorEntry> ModeratorEntries { get; private set; }
         public static List<TownCryerCityEntry> CityEntries { get; private set; }
         public static List<TownCryerGuildEntry> GuildEntries { get; private set; }
         public static List<PlayerMobile> TownCryerExempt { get; private set; }
-
-        public static Dictionary<Mobile, DateTime> MysteriousPotionEffects { get; private set; }
 
         public static Timer Timer { get; private set; }
         public static bool NewGreeting { get; private set; }
@@ -91,22 +87,9 @@ namespace Server.Services.TownCryer
             {
                 EventSink.Login += OnLogin;
 
-                NewsEntries.Add(new TownCryerNewsEntry(1159346, 1159347, 0x9D3E, null, "https://uo.com/wiki/ultima-online-wiki/combat/jolly-roger/")); // Jolly Roger
-                NewsEntries.Add(new TownCryerNewsEntry(1159262, 1159263, 0x64E, null, "https://uo.com/wiki/ultima-online-wiki/seasonal-events/halloween-treasures-of-the-sea/")); // Forsaken Foes
-                NewsEntries.Add(new TownCryerNewsEntry(1158944, 1158945, 0x9CEA, null, "https://uo.com/wiki/ultima-online-wiki/combat/pvm-player-versus-monster/rising-tide/")); // Rising Tide
-                NewsEntries.Add(new TownCryerNewsEntry(1158552, 1158553, 0x6CE, typeof(GoingGumshoeQuest), null)); // Going Gumshoe
-                NewsEntries.Add(new TownCryerNewsEntry(1158095, 1158097, 0x61E, null, "https://uo.com/")); // Britain Commons
-                NewsEntries.Add(new TownCryerNewsEntry(1158089, 1158091, 0x60F, null, "https://uo.com/wiki/ultima-online-wiki/gameplay/npc-commercial-transactions/clean-up-britannia/")); // Cleanup Britannia
-                NewsEntries.Add(new TownCryerNewsEntry(1158098, 1158100, 0x615, null, "https://uo.com/wiki/ultima-online-wiki/gameplay/crafting/bulk-orders/")); // New Bulk Orders
-                NewsEntries.Add(new TownCryerNewsEntry(1158101, 1158103, 0x616, null, "https://uo.com/wiki/ultima-online-wiki/a-summary-for-returning-players/weapons-armor-and-loot-revamps-2016/")); // 2016 Loot Revamps
                 NewsEntries.Add(new TownCryerNewsEntry(1158083, 1158085, 0x617, typeof(TamingPetQuest), "https://uo.com/wiki/ultima-online-wiki/skills/animal-taming/animal-training/")); // Animal Training
                 NewsEntries.Add(new TownCryerNewsEntry(1158092, 1158094, 0x651, typeof(HuntmastersChallengeQuest), "https://uo.com/wiki/ultima-online-wiki/gameplay/huntmasters-challenge/")); // Huntsmaster Challenge 
-                NewsEntries.Add(new TownCryerNewsEntry(1158104, 1158106, 0x61C, typeof(PaladinsOfTrinsic), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-shame/")); //  New Shame 
-                NewsEntries.Add(new TownCryerNewsEntry(1158107, 1158109, 0x61A, typeof(RightingWrongQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-wrong/")); // New Wrong
-                NewsEntries.Add(new TownCryerNewsEntry(1158113, 1158115, 0x64C, typeof(BuriedRichesQuest), "https://uo.com/wiki/ultima-online-wiki/gameplay/treasure-maps/")); // New TMaps
-                NewsEntries.Add(new TownCryerNewsEntry(1158119, 1158121, 0x64D, typeof(APleaFromMinocQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-covetous/")); // New Covetous
-                NewsEntries.Add(new TownCryerNewsEntry(1158110, 1158112, 0x64E, typeof(AVisitToCastleBlackthornQuest), "https://uo.com/wiki/ultima-online-wiki/items/artifacts-castle-blackthorn/")); // Castle Blackthorn
-                
+
                 // New greeting, resets all TC hiding
                 if (NewGreeting)
                 {
@@ -266,7 +249,7 @@ namespace Server.Services.TownCryer
                 }
             }
 
-            if (any || ModeratorEntries.Count > 0 || CityEntries.Count > 0 || GuildEntries.Count > 0 || MysteriousPotionEffects != null)
+            if (any || ModeratorEntries.Count > 0 || CityEntries.Count > 0 || GuildEntries.Count > 0)
             {
                 if (Timer == null || !Timer.Running)
                 {
@@ -305,28 +288,6 @@ namespace Server.Services.TownCryer
             {
                 if (GuildEntries[i].Expired)
                     GuildEntries.RemoveAt(i);
-            }
-
-            if (MysteriousPotionEffects != null)
-            {
-                List<Mobile> list = new List<Mobile>(MysteriousPotionEffects.Keys);
-
-                for (var index = 0; index < list.Count; index++)
-                {
-                    Mobile m = list[index];
-
-                    if (MysteriousPotionEffects != null && MysteriousPotionEffects.ContainsKey(m) && MysteriousPotionEffects[m] < DateTime.UtcNow)
-                    {
-                        MysteriousPotionEffects.Remove(m);
-
-                        if (MysteriousPotionEffects.Count == 0)
-                        {
-                            MysteriousPotionEffects = null;
-                        }
-                    }
-                }
-
-                ColUtility.Free(list);
             }
 
             CheckTimer();
@@ -376,24 +337,6 @@ namespace Server.Services.TownCryer
                 case City.Vesper: return 1158050;
                 case City.Yew: return 1158051;
             }
-        }
-
-        public static bool UnderMysteriousPotionEffects(Mobile m, bool checkQuest = false)
-        {
-            return MysteriousPotionEffects != null && MysteriousPotionEffects.ContainsKey(m) && MysteriousPotionEffects[m] > DateTime.UtcNow &&
-                   (!checkQuest || m is PlayerMobile mobile && QuestHelper.HasQuest<AForcedSacraficeQuest2>(mobile));
-        }
-
-        public static void AddMysteriousPotionEffects(Mobile m)
-        {
-            if (MysteriousPotionEffects == null)
-            {
-                MysteriousPotionEffects = new Dictionary<Mobile, DateTime>();
-            }
-
-            MysteriousPotionEffects[m] = DateTime.UtcNow + TimeSpan.FromDays(3);
-
-            CheckTimer();
         }
 
         #region Pre-Loaded 
@@ -605,17 +548,6 @@ namespace Server.Services.TownCryer
 
                 e.Serialize(writer);
             }
-
-            writer.Write(MysteriousPotionEffects != null ? MysteriousPotionEffects.Count : 0);
-
-            if (MysteriousPotionEffects != null)
-            {
-                foreach (KeyValuePair<Mobile, DateTime> kvp in MysteriousPotionEffects)
-                {
-                    writer.Write(kvp.Key);
-                    writer.Write(kvp.Value);
-                }
-            }
         }
 
         public static void Load(GenericReader reader)
@@ -684,20 +616,6 @@ namespace Server.Services.TownCryer
                         }
                     }
 
-                    count = reader.ReadInt();
-                    for (int i = 0; i < count; i++)
-                    {
-                        Mobile m = reader.ReadMobile();
-                        DateTime dt = reader.ReadDateTime();
-
-                        if (m != null)
-                        {
-                            if (MysteriousPotionEffects == null)
-                                MysteriousPotionEffects = new Dictionary<Mobile, DateTime>();
-
-                            MysteriousPotionEffects[m] = dt;
-                        }
-                    }
                     break;
             }
 

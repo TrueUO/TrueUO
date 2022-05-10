@@ -1182,7 +1182,6 @@ namespace Server.Engines.Craft
                 m_ResHue = 0;
                 m_ResAmount = 0;
                 m_System = craftSystem;
-                CaddelliteCraft = true;
 
                 if (IsQuantityType(types))
                 {
@@ -1329,8 +1328,6 @@ namespace Server.Engines.Craft
         private int m_ResAmount;
         private CraftSystem m_System;
 
-        public bool CaddelliteCraft { get; private set; }
-
         #region Plant Pigments
         private PlantHue m_PlantHue = PlantHue.None;
         private PlantPigmentHue m_PlantPigmentHue = PlantPigmentHue.None;
@@ -1363,11 +1360,6 @@ namespace Server.Engines.Craft
             {
                 m_ResHue = item.Hue;
                 m_ResAmount = amount;
-            }
-
-            if (CaddelliteCraft && (!item.HasSocket<Caddellite>() || !Khaldun.TreasuresOfKhaldunEvent.Instance.Running))
-            {
-                CaddelliteCraft = false;
             }
         }
 
@@ -1963,19 +1955,18 @@ namespace Server.Engines.Craft
 
                     MutateAction?.Invoke(from, item, tool);
 
-                    if (CaddelliteCraft)
-                    {
-                        Caddellite.TryInfuse(from, item, craftSystem);
-                    }
-
                     if (tool is Item iTool && iTool.Parent is Container cntnr)
                     {
                         if (!cntnr.TryDropItem(from, item, false))
                         {
                             if (cntnr != from.Backpack)
+                            {
                                 from.AddToBackpack(item);
+                            }
                             else
+                            {
                                 item.MoveToWorld(from.Location, from.Map);
+                            }
                         }
                     }
                     else

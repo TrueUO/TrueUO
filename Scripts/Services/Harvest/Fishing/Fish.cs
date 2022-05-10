@@ -20,18 +20,15 @@ namespace Server.Items
         public bool Carve(Mobile from, Item item)
         {
             if (Parent is ShippingCrate crate && !crate.CheckCarve(this))
+            {
                 return false;
+            }
 
             Item newItem = GetCarved;
 
             if (newItem == null)
             {
                 newItem = new RawFishSteak();
-            }
-
-            if (HasSocket<Caddellite>())
-            {
-                newItem.AttachSocket(new Caddellite());
             }
 
             base.ScissorHelper(from, newItem, GetCarvedAmount);

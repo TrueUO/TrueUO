@@ -31,7 +31,6 @@ namespace Server.Engines.Craft
         WallMountedAquarium = 154,
         LargeElegantAquarium = 155,
         KotlBlackRod = 170,
-        KotlAutomaton = 171,
         PirateShield = 172,
 
         // DefBowFletching
@@ -104,7 +103,6 @@ namespace Server.Engines.Craft
         PendantOfTheMagi = 451,
         ResilientBracer = 452,
         ScrappersCompendium = 453,
-        HoveringWisp = 454, // Removed at OSI Publish 103
         KotlPowerCore = 455,
         BraceletOfPrimalConsumption = 456,
         DrSpectorLenses = 457,
@@ -136,19 +134,6 @@ namespace Server.Engines.Craft
         FancyKilt = 564, // DefTailoring
         FloweredDress = 565, // DefTailoring
         EveningGown = 566, // DefTailoring
-        TigerPeltChest = 570, // DefTailoring
-        TigerPeltCollar = 571, // DefTailoring
-        TigerPeltHelm = 572, // DefTailoring
-        TigerPeltLegs = 573, // DefTailoring
-        TigerPeltShorts = 574, // DefTailoring
-        TigerPeltBustier = 575, // DefTailoring
-        TigerPeltLongSkirt = 576, // DefTailoring
-        TigerPeltSkirt = 577, // DefTailoring
-        DragonTurtleHideArms = 580, // DefTailoring
-        DragonTurtleHideChest = 581, // DefTailoring
-        DragonTurtleHideHelm = 582, // DefTailoring
-        DragonTurtleHideLegs = 583, // DefTailoring
-        DragonTurtleHideBustier = 584, // DefTailoring
         CuffsOfTheArchmage = 585, // DefTailoring
         KrampusMinionHat = 586, // DefTailoring
         KrampusMinionBoots = 587, // DefTailoring

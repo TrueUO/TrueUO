@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Targeting;
 using System;
 using System.Collections;
-using Server.Engines.Khaldun;
 
 namespace Server.SkillHandlers
 {
@@ -99,10 +98,6 @@ namespace Server.SkillHandlers
                         target.BeginTimeout(from, TimeSpan.FromMinutes(1.0));
                         SetUser(book, from);
                     }
-                }
-                else if (targeted is MysteriousBook mBook)
-                {
-                    mBook.OnInscribeTarget(from);
                 }
                 else
                 {

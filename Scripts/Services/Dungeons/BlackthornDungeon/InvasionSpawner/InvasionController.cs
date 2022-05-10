@@ -22,7 +22,8 @@ namespace Server.Engines.Blackthorn
 
     public class InvasionController : Item
     {
-        public static bool Enabled = true;
+        public static bool Enabled = false; // Turn On and Off here.
+
         public static int WaveCountMin = 8;
         public static int WaveCountMax = 10;
         public static int MaxWaves = 2;

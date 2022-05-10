@@ -81,6 +81,7 @@ namespace Server.Items
                 item.Delete();
                 return false;
             }
+
             if (from.Skills.Carpentry.Value < skill && from.Skills.Lumberjacking.Value < skill)
             {
                 item.Delete();
@@ -88,19 +89,17 @@ namespace Server.Items
                 return false;
             }
 
-            if (HasSocket<Caddellite>())
-            {
-                item.AttachSocket(new Caddellite());
-            }
-
             base.ScissorHelper(from, item, 1, false);
+
             return true;
         }
 
         public virtual bool Axe(Mobile from, BaseAxe axe)
         {
             if (!TryCreateBoards(from, 0, new Board()))
+            {
                 return false;
+            }
 
             return true;
         }

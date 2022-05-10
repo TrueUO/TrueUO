@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a skeletal corpse")]
@@ -84,16 +82,6 @@ namespace Server.Mobiles
 
             Fame = 3000;
             Karma = -3000;
-        }
-
-        public override void OnBeforeDamage(Mobile from, ref int totalDamage, DamageType type)
-        {
-            if (Region.IsPartOf("Khaldun") && IsChampionSpawn && !Caddellite.CheckDamage(from, type))
-            {
-                totalDamage = 0;
-            }
-
-            base.OnBeforeDamage(from, ref totalDamage, type);
         }
 
         public SkelementalKnight(Serial serial)

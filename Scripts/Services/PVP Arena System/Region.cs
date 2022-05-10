@@ -86,12 +86,6 @@ namespace Server.Engines.ArenaSystem
                     return false;
                 }
 
-                if (!duel.RidingFlyingAllowed && spell is FlySpell)
-                {
-                    m.SendLocalizedMessage(1115997); // The rules prohibit riding a mount or flying.
-                    return false;
-                }
-
                 if (!duel.FieldSpellsAllowed && (spell is FireFieldSpell || spell is ParalyzeFieldSpell || spell is PoisonFieldSpell || spell is EnergyFieldSpell || spell is WallOfStoneSpell))
                 {
                     m.SendLocalizedMessage(1010391); // A magical aura surrounds you and prevents the spell.

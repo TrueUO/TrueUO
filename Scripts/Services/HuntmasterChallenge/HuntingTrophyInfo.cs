@@ -27,7 +27,6 @@ namespace Server.Engines.HuntsmasterChallenge
         Lion,
         WhiteTiger,
         BlackTiger,
-        //Publish 102 added:
         Raptor,
         SeaSerpent,
         Scorpion

@@ -30,10 +30,8 @@ namespace Server
             None = 0x00000000,
             Initial = 0x00000001,
             Sphinx = 0x00000002,
-            IceHoundRemoval = 0x00000004,
             PaladinAndKrakin = 0x00000008,
             TrinsicPaladins = 0x00000010,
-            TramKhaldun = 0x00000020,
             FixAddonDeco = 0x00000040,
             LifeStealers = 0x00000080,
             LootNerf2 = 0x00000100,
@@ -215,12 +213,6 @@ namespace Server
                         VersionFlag |= SpawnerVersion.FixAddonDeco;
                     }
 
-                    if ((VersionFlag & SpawnerVersion.TramKhaldun) == 0)
-                    {
-                        GenerateTramKhaldun();
-                        VersionFlag |= SpawnerVersion.TramKhaldun;
-                    }
-
                     if ((VersionFlag & SpawnerVersion.TrinsicPaladins) == 0)
                     {
                         SpawnTrinsicPaladins();
@@ -231,12 +223,6 @@ namespace Server
                     {
                         RemovePaladinsAndKrakens();
                         VersionFlag |= SpawnerVersion.PaladinAndKrakin;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.IceHoundRemoval) == 0)
-                    {
-                        RemoveIceHounds();
-                        VersionFlag |= SpawnerVersion.IceHoundRemoval;
                     }
 
                     if ((VersionFlag & SpawnerVersion.Sphinx) == 0)
@@ -410,77 +396,6 @@ namespace Server
         }
         #endregion
 
-        #region Tram Khaldun Generation
-        public static void GenerateTramKhaldun()
-        {
-            Region region = null;
-
-            for (var index = 0; index < Region.Regions.Count; index++)
-            {
-                var r = Region.Regions[index];
-
-                if (r.Map == Map.Felucca && r.Name == "Khaldun")
-                {
-                    region = r;
-                    break;
-                }
-            }
-
-            if (region != null)
-            {
-                int spawners = 0;
-                int teleporters = 0;
-
-                foreach (Item item in region.GetEnumeratedItems())
-                {
-                    if (item is XmlSpawner spawner)
-                    {
-                        CopyAndPlaceItem(spawner, spawner.Location, Map.Trammel);
-                        spawners++;
-                    }
-                }
-
-                foreach (Item item in region.GetEnumeratedItems())
-                {
-                    if (item is Teleporter teleporter)
-                    {
-                        CopyAndPlaceItem(teleporter, teleporter.Location, Map.Trammel);
-                        teleporters++;
-                    }
-                }
-
-                ToConsole($"Copied {spawners} khaldun spawners, {teleporters} teleporters and placed in trammel!");
-            }
-            else
-            {
-                ToConsole("No region -Khaldun- Found!", ConsoleColor.Red);
-            }
-
-            Decorate.GenerateFromFile("deco", Path.Combine("Data/Decoration/Trammel", "khaldun.cfg"), Map.Trammel);
-
-            KhaldunEntranceAddon entAddon = new KhaldunEntranceAddon();
-            entAddon.MoveToWorld(new Point3D(6013, 3785, 18), Map.Trammel);
-
-            KhaldunCampAddon campAddon = new KhaldunCampAddon();
-            campAddon.MoveToWorld(new Point3D(6003, 3772, 24), Map.Trammel);
-
-            KhaldunWorkshop workshop = new KhaldunWorkshop();
-            workshop.MoveToWorld(new Point3D(6020, 3747, 18), Map.Trammel);
-
-            Teleporter tele = new Teleporter(new Point3D(5571, 1299, 0), Map.Trammel);
-            tele.MoveToWorld(new Point3D(6011, 3787, 23), Map.Trammel);
-
-            tele = new Teleporter(new Point3D(5571, 1299, 0), Map.Trammel);
-            tele.MoveToWorld(new Point3D(6012, 3787, 23), Map.Trammel);
-
-            tele = new Teleporter(new Point3D(5572, 1299, 0), Map.Trammel);
-            tele.MoveToWorld(new Point3D(6013, 3787, 23), Map.Trammel);
-
-            tele = new Teleporter(new Point3D(5572, 1299, 0), Map.Trammel);
-            tele.MoveToWorld(new Point3D(6014, 3787, 23), Map.Trammel);
-        }
-        #endregion
-
         #region Trinny Paladins
         public static void SpawnTrinsicPaladins()
         {
@@ -495,14 +410,6 @@ namespace Server
             Remove("HirePaladin");
             Remove("Kraken", sp => !Region.Find(sp.Location, sp.Map).IsPartOf("Shame"));
             ToConsole("Paladins and Krakens removed from spawners.");
-        }
-        #endregion
-
-        #region Remove Ice Hounds
-        public static void RemoveIceHounds()
-        {
-            Remove("icehound");
-            ToConsole("Ice Hounds removed from spawners.");
         }
         #endregion
 

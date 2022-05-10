@@ -47,8 +47,6 @@ namespace Server.Items
             Attributes.BonusMana = 15;
             Attributes.EnhancePotions = 35;
             Attributes.LowerManaCost = 10;
-
-            AttachSocket(new Caddellite());
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -140,7 +138,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
 
             writer.Write(m_Charges);
             writer.Write(ChargeTime);
@@ -149,17 +147,14 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Charges = reader.ReadInt();
             ChargeTime = reader.ReadInt();
 
             if (Parent != null && Parent is Mobile && ChargeTime > 0)
-                m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), Slice);
-
-            if (version == 0)
             {
-                AttachSocket(new Caddellite());
+                m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), Slice);
             }
         }
     }

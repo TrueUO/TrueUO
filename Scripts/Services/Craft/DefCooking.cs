@@ -308,10 +308,6 @@ namespace Server.Engines.Craft
             AddRecipe(index, (int)CraftRecipes.BlackrockStew);
             ForceNonExceptional(index);
 
-            index = AddCraft(typeof(KhaldunTastyTreat), 1044498, 1158680, 60.0, 100.0, typeof(RawFishSteak), 1044476, 40, 1044253);
-            SetUseAllRes(index, true);
-            SetNeedHeat(index, true);
-
             index = AddCraft(typeof(Hamburger), 1044498, 1125202, 45.0, 95.0, typeof(BreadLoaf), 1024155, 1, 1044253);
             AddRes(index, typeof(RawRibs), 1044485, 1, 1044253);
             AddRes(index, typeof(Lettuce), 1023184, 1, 1044253);

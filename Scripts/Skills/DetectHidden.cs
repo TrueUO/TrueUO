@@ -106,23 +106,18 @@ namespace Server.SkillHandlers
 
                     foreach (Item item in itemsInRange)
                     {
-                        if (item is LibraryBookcase && Engines.Khaldun.GoingGumshoeQuest3.CheckBookcase(src, item))
+                        IRevealableItem dItem = item as IRevealableItem;
+
+                        if (dItem == null || item.Visible && dItem.CheckWhenHidden)
                         {
-                            foundAnyone = true;
+                            continue;
                         }
-                        else
+
+                        if (dItem.CheckReveal(src))
                         {
-                            IRevealableItem dItem = item as IRevealableItem;
+                            dItem.OnRevealed(src);
 
-                            if (dItem == null || item.Visible && dItem.CheckWhenHidden)
-                                continue;
-
-                            if (dItem.CheckReveal(src))
-                            {
-                                dItem.OnRevealed(src);
-
-                                foundAnyone = true;
-                            }
+                            foundAnyone = true;
                         }
                     }
 
@@ -139,17 +134,23 @@ namespace Server.SkillHandlers
         public static void DoPassiveDetect(Mobile src)
         {
             if (src == null || src.Map == null || src.Location == Point3D.Zero || src.IsStaff())
+            {
                 return;
+            }
 
             double ss = src.Skills[SkillName.DetectHidden].Value;
 
             if (ss <= 0)
+            {
                 return;
+            }
 
             IPooledEnumerable eable = src.Map.GetMobilesInRange(src.Location, 4);
 
             if (eable == null)
+            {
                 return;
+            }
 
             foreach (Mobile m in eable)
             {

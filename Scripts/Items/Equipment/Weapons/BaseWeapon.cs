@@ -851,11 +851,6 @@ namespace Server.Items
                     }
                 }
 
-                if (HasSocket<Caddellite>())
-                {
-                    Caddellite.UpdateBuff(from);
-                }
-
                 if (ExtendedWeaponAttributes.Focus > 0)
                 {
                     Focus.UpdateBuff(from);
@@ -903,11 +898,6 @@ namespace Server.Items
                 if (IsSetItem && m_SetEquipped)
                 {
                     SetHelper.RemoveSetBonus(m, SetID, this);
-                }
-
-                if (HasSocket<Caddellite>())
-                {
-                    Caddellite.UpdateBuff(m);
                 }
 
                 if (SearingWeapon)
@@ -4392,11 +4382,6 @@ namespace Server.Items
                 }
             }
             #endregion
-
-            if (HasSocket<Caddellite>())
-            {
-                list.Add(1158662); // Caddellite Infused
-            }
 
             double focusBonus = 1;
             int enchantBonus = 0;
