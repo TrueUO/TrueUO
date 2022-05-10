@@ -388,7 +388,7 @@ namespace Server.Engines.Craft
             new[] {typeof(CheeseWheel), typeof(CheeseWedge)},
             new[] {typeof(Pumpkin), typeof(SmallPumpkin)},
             new[] {typeof(WoodenBowlOfPeas), typeof(PewterBowlOfPeas)},
-            new[] { typeof( BrokenCrystals ), typeof( ShatteredCrystals ), typeof( ScatteredCrystals ), typeof( CrushedCrystals ), typeof( JaggedCrystals ), typeof( AncientPotteryFragments ) },
+            new[] { typeof( BrokenCrystals ), typeof( ShatteredCrystals ), typeof( ScatteredCrystals ), typeof( CrushedCrystals ), typeof( JaggedCrystals ) },
             new[] { typeof( MedusaDarkScales ), typeof( MedusaLightScales ), typeof( RedScales ), typeof( BlueScales ), typeof( BlackScales ), typeof( YellowScales ), typeof( GreenScales ), typeof( WhiteScales ) },
             new[] { typeof(Sausage), typeof(CookableSausage) },
             new[] { typeof(Lettuce), typeof(FarmableLettuce) },

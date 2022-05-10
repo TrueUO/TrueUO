@@ -105,35 +105,6 @@ namespace Server.Items
         }
     }
 
-    public class AncientPotteryFragments : Item
-    {
-        [Constructable]
-        public AncientPotteryFragments()
-            : base(0x2243)
-        {
-            Hue = 2108;
-        }
-
-        public AncientPotteryFragments(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1112990;// Ancient Pottery fragments
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class BouraPelt : Item, ICommodity
     {
         [Constructable]
@@ -550,50 +521,6 @@ namespace Server.Items
         }
     }
 
-    public class TatteredAncientScroll : Item
-    {
-        [Constructable]
-        public TatteredAncientScroll()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public TatteredAncientScroll(int amount)
-            : base(0x1700)
-        {
-        }
-
-        public TatteredAncientScroll(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1112991;// Tattered Remnants of an Ancient Scroll
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-
-            writer.Write(1); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0 && ItemID != 0x1437)
-                ItemID = 0x1437;
-
-            if (version == 0 && Stackable)
-            {
-                Stackable = false;
-                Amount = 1;
-            }
-        }
-    }
-
     public class UndamagedIronBeetleScale : Item, ICommodity
     {
         [Constructable]
@@ -655,44 +582,6 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1112903;// Undamaged Undead Gargoyle Horns
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class UntranslatedAncientTome : Item
-    {
-        [Constructable]
-        public UntranslatedAncientTome()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public UntranslatedAncientTome(int amount)
-            : base(0x0FF2)
-        {
-            Stackable = true;
-            Amount = amount;
-
-            Hue = 2405;
-        }
-
-        public UntranslatedAncientTome(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1112992;// Untranslated Ancient Tome
 
         public override void Serialize(GenericWriter writer)
         {

@@ -70,25 +70,12 @@ namespace Server.Mobiles
                         break;
                 }
             }
-
-            if (Utility.RandomDouble() < 0.25)
-            {
-                switch (Utility.Random(2))
-                {
-                    case 0:
-                        c.DropItem(new AncientPotteryFragments());
-                        break;
-                    case 1:
-                        c.DropItem(new TatteredAncientScroll());
-                        break;
-                }
-            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)

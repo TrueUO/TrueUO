@@ -67,7 +67,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Gems);
             AddLoot(LootPack.LootItem<DaemonBone>(5, true));
             AddLoot(LootPack.LootItem<FertileDirt>(1, 4, true));
-            AddLoot(LootPack.LootItem<AncientPotteryFragments>(10.0));
         }
 
         public override int GetIdleSound()

@@ -35,6 +35,11 @@ namespace Server.Items
             Hue = 1910;
         }
 
+        public Meteorite(Serial serial)
+            : base(serial)
+        {
+        }
+
         public void TryPolish(Mobile from)
         {
             if (0.75 > Utility.RandomDouble())
@@ -58,11 +63,6 @@ namespace Server.Items
         {
             Hue = 1910;
             ItemID = Utility.Random(0x1364, 3);
-        }
-
-        public Meteorite(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

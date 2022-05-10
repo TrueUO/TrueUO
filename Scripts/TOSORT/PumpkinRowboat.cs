@@ -75,12 +75,12 @@ namespace Server.Multis
             base.Delete();
         }
 
-        public override void SetFacingComponents(Direction facing, Direction old, bool ignore)
+        public override void SetFacingComponents(Direction newDirection, Direction oldDirection, bool ignoreLastFacing)
         {
             if (Rudder == null || Rudder.Handle == null)
                 return;
 
-            switch (facing)
+            switch (newDirection)
             {
                 case Direction.North:
                     {
@@ -95,8 +95,8 @@ namespace Server.Multis
                     }
             }
 
-            Line.SetFacing(facing);
-            Rudder.Handle.SetFacing(facing);
+            Line.SetFacing(newDirection);
+            Rudder.Handle.SetFacing(newDirection);
         }
 
         public override void OnLocationChange(Point3D old)
@@ -237,6 +237,11 @@ namespace Server.Multis
             SetFacing(d);
         }
 
+        public MooringBlock(Serial serial)
+            : base(serial)
+        {
+        }
+
         public void SetFacing(Direction dir)
         {
             switch (dir)
@@ -250,11 +255,6 @@ namespace Server.Multis
                     ItemID = 42087;
                     break;
             }
-        }
-
-        public MooringBlock(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

@@ -6,14 +6,13 @@ namespace Server.Engines.Quests
     {
         None = 0,
 
-        Aemaeth = 1,
-        CovetousGhost = 2,
-        HonorOfDeBoors = 3,
-        LaifemTheWeaver = 4,
-        ValleyOfOne = 5,
-        MyrmidexAlliance = 6,
-        EodonianAlliance = 7,
-        FlintTheQuartermaster = 8,
+        CovetousGhost = 1,
+        HonorOfDeBoors = 2,
+        LaifemTheWeaver = 3,
+        ValleyOfOne = 4,
+        MyrmidexAlliance = 5,
+        EodonianAlliance = 6,
+        FlintTheQuartermaster = 7
     }
 
     public class BaseChain
@@ -22,11 +21,10 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[9][];
+            Chains = new Type[8][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
-            Chains[(int)QuestChain.Aemaeth] = new[] { typeof(AemaethOneQuest), typeof(AemaethTwoQuest) };
             Chains[(int)QuestChain.CovetousGhost] = new[] { typeof(GhostOfCovetousQuest), typeof(SaveHisDadQuest), typeof(FathersGratitudeQuest) };
             Chains[(int)QuestChain.HonorOfDeBoors] = new[] { typeof(HonorOfDeBoorsQuest), typeof(JackTheVillainQuest), typeof(SavedHonorQuest) };
             Chains[(int)QuestChain.LaifemTheWeaver] = new[] { typeof(ShearingKnowledgeQuest), typeof(WeavingFriendshipsQuest), typeof(NewSpinQuest)};
