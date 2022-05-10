@@ -42,7 +42,6 @@ namespace Server.Items
         public BaseSpecialScrollBook(int id)
             : base(id)
         {
-            LootType = LootType.Blessed;
         }
 
         public override int GetTotal(TotalType type)

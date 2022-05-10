@@ -291,7 +291,6 @@ namespace Server.Engines.VeteranRewards
         [Constructable]
         public GadgetryTableAddonDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public override void GetProperties(ObjectPropertyList list)

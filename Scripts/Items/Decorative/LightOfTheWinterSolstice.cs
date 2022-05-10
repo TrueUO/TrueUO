@@ -12,14 +12,14 @@ namespace Server.Items
             "Krrios",
             "Mark",
             "Merlin",
-            "Merlix", //LordMerlix
+            "Merlix", 
             "Phantom",
             "Phenos",
             "psz",
             "Ryan",
             "Quantos",
-            "Outkast", //TheOutkastDev
-            "V", //Admin_V
+            "Outkast", 
+            "V", 
             "Zippy"
         };
         private string m_Dipper;
@@ -36,7 +36,6 @@ namespace Server.Items
             m_Dipper = dipper;
 
             Weight = 1.0;
-            LootType = LootType.Blessed;
             Light = LightType.Circle300;
             Hue = Utility.RandomDyedHue();
         }

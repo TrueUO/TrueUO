@@ -709,7 +709,6 @@ namespace Server.Mobiles
         public MannequinDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public MannequinDeed(Serial serial)

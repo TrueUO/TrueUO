@@ -14,7 +14,6 @@ namespace Server.Items
         public EtherealRetouchingTool()
             : base(0x42C6)
         {
-            LootType = LootType.Blessed;
         }
 
         public EtherealRetouchingTool(Serial serial)

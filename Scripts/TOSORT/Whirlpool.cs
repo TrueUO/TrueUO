@@ -281,8 +281,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(4); // version
+            writer.Write(0); // version
 
             writer.Write(m_CriminalCheck);
             writer.Write(m_CombatCheck);
@@ -302,45 +301,21 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            m_CriminalCheck = reader.ReadBool();
+            m_CombatCheck = reader.ReadBool();
 
-            switch (version)
-            {
-                case 4:
-                    {
-                        m_CriminalCheck = reader.ReadBool();
-                        goto case 3;
-                    }
-                case 3:
-                    {
-                        m_CombatCheck = reader.ReadBool();
-                        goto case 2;
-                    }
-                case 2:
-                    {
-                        m_SourceEffect = reader.ReadBool();
-                        m_DestEffect = reader.ReadBool();
-                        m_Delay = reader.ReadTimeSpan();
-                        m_SoundID = reader.ReadEncodedInt();
+            m_SourceEffect = reader.ReadBool();
+            m_DestEffect = reader.ReadBool();
+            m_Delay = reader.ReadTimeSpan();
+            m_SoundID = reader.ReadEncodedInt();
 
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        m_Creatures = reader.ReadBool();
+            m_Creatures = reader.ReadBool();
 
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        m_Active = reader.ReadBool();
-                        m_PointDest = reader.ReadPoint3D();
-                        m_MapDest = reader.ReadMap();
-
-                        break;
-                    }
-            }
+            m_Active = reader.ReadBool();
+            m_PointDest = reader.ReadPoint3D();
+            m_MapDest = reader.ReadMap();
         }
     }
 }

@@ -18,7 +18,6 @@ namespace Server.Items
             Hue = 51;
             ItemID = 4023;
             m_UsesRemaining = uses;
-            LootType = LootType.Blessed;
         }
 
         [Constructable]

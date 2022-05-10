@@ -182,7 +182,6 @@ namespace Server.Items
         [Constructable]
         public SpiralStaircaseDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public void GetOptions(RewardOptionList list)

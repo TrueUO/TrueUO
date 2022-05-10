@@ -6,7 +6,6 @@ namespace Server.Items
         public Bleach()
             : base(PigmentType.None)
         {
-            LootType = LootType.Blessed;
         }
 
         public Bleach(Serial serial)

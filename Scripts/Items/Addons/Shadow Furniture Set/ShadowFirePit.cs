@@ -60,7 +60,6 @@ namespace Server.Items
         [Constructable]
         public ShadowFirePitDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1908;
         }
 

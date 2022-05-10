@@ -56,7 +56,6 @@ namespace Server.Items
         public MetalTubDeed()
             : base()
         {
-            LootType = LootType.Blessed;
         }
 
         public MetalTubDeed(Serial serial)

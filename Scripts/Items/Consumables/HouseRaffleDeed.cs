@@ -28,7 +28,6 @@ namespace Server.Items
 
             m_AwardedTo = m;
 
-            LootType = LootType.Blessed;
             Hue = 0x501;
         }
 

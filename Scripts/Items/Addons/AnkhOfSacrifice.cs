@@ -246,7 +246,6 @@ namespace Server.Items
         [Constructable]
         public AnkhOfSacrificeDeed(bool isRewardItem)
         {
-            LootType = LootType.Blessed;
             m_IsRewardItem = isRewardItem;
         }
 

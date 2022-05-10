@@ -42,7 +42,6 @@ namespace Server.Items
         [Constructable]
         public RedPlainRugDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public RedPlainRugDeed(Serial serial)

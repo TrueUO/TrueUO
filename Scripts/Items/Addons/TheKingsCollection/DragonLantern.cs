@@ -87,7 +87,6 @@ namespace Server.Items
         public DragonLanternDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public DragonLanternDeed(Serial serial)

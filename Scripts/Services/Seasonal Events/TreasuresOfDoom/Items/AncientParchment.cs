@@ -14,7 +14,6 @@ namespace Server.Items
         public AncientParchment(int amount)
             : base(0x2269)
         {
-            LootType = LootType.Blessed;
             Stackable = true;
             Amount = amount;
         }

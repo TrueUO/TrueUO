@@ -20,8 +20,7 @@ namespace Server.Items
             : base(0x234D)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
-
+            
             m_Petals = 0;
             StartSpawnTimer(TimeSpan.FromMinutes(1.0));
         }

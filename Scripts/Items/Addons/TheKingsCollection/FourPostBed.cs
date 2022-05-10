@@ -59,7 +59,6 @@ namespace Server.Items
         [Constructable]
         public FourPostBedDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public FourPostBedDeed(Serial serial)

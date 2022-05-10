@@ -6,7 +6,6 @@ namespace Server.Items
         public AlchemistsBandage()
             : base(0xE21)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
             Hue = 0x482;
         }

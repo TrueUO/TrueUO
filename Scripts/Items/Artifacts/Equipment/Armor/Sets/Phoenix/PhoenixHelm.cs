@@ -6,7 +6,6 @@ namespace Server.Items
         public PhoenixHelm()
         {
             Hue = 0x8E;
-            LootType = LootType.Blessed;
         }
 
         public PhoenixHelm(Serial serial)

@@ -53,7 +53,6 @@ namespace Server.Items
             }
 
             Hue = RecallRune.CalculateHue(auctionsafe.Map, null, true);
-            LootType = LootType.Blessed;
 
             Width = 400;
             Height = 400;

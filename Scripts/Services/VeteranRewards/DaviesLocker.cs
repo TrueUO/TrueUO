@@ -290,11 +290,13 @@ namespace Server.Engines.VeteranRewards
         public DaviesLockerAddonDeed(List<DaviesLockerEntry> list)
         {
             if (list == null)
+            {
                 Entries = new List<DaviesLockerEntry>();
+            }
             else
+            {
                 Entries = list;
-
-            LootType = LootType.Blessed;
+            }
         }
 
         public override void GetProperties(ObjectPropertyList list)

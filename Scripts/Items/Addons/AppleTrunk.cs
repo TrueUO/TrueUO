@@ -33,7 +33,6 @@ namespace Server.Items
         [Constructable]
         public AppleTrunkDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public AppleTrunkDeed(Serial serial)

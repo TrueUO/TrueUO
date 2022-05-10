@@ -87,7 +87,6 @@ namespace Server.Items
         public BirdLampDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public BirdLampDeed(Serial serial)

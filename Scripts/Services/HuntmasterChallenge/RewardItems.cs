@@ -38,7 +38,6 @@ namespace Server.Items
         [Constructable]
         public RangersGuildSash()
         {
-            LootType = LootType.Blessed;
         }
 
         public RangersGuildSash(Serial serial) : base(serial)

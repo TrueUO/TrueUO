@@ -534,19 +534,14 @@ namespace Server
 		Regular = 0,
 
 		/// <summary>
-		///     Unstealable. Unlootable, unless owned by a murderer.
-		/// </summary>
-		Newbied = 1,
-
-		/// <summary>
 		///     Unstealable. Unlootable, always.
 		/// </summary>
-		Blessed = 2,
+		Blessed = 1,
 
 		/// <summary>
 		///     Stealable. Lootable, always.
 		/// </summary>
-		Cursed = 3
+		Cursed = 2
 	}
 
 	public class BounceInfo
@@ -3400,7 +3395,7 @@ namespace Server
 
 					break;
 				}
-				case 4: // Just removed variables
+				case 4: 
 				case 3:
 				{
 					m_Direction = (Direction)reader.ReadInt();
@@ -3416,7 +3411,7 @@ namespace Server
 				}
 				case 1:
 				{
-					m_LootType = (LootType)reader.ReadByte(); //m_Newbied = reader.ReadBool();
+					m_LootType = (LootType)reader.ReadByte(); 
 
 					goto case 0;
 				}

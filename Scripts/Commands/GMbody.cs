@@ -110,8 +110,7 @@ namespace Server.Commands
 
                         if (from.IsStaff())
                         {
-                            EquipItem(new StaffRing());
-							EquipItem(new AnniversaryRobe());
+                            EquipItem(new AnniversaryRobe());
 
                             PackItem(new GMHidingStone());
                             PackItem(new StaffOrb());

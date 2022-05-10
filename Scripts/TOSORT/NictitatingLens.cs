@@ -4,6 +4,15 @@ namespace Server.Items
 {
     public class NictitatingLens : ElvenGlasses
     {
+        public override int BasePhysicalResistance => 2;
+        public override int BaseFireResistance => 4;
+        public override int BaseColdResistance => 4;
+        public override int BasePoisonResistance => 3;
+        public override int BaseEnergyResistance => 2;
+
+        public override int InitMinHits => 50;
+        public override int InitMaxHits => 60;
+
         public override int LabelNumber => 1154234;  // Nictitating Lens
 
         [Constructable]
@@ -11,7 +20,11 @@ namespace Server.Items
         {
             Hue = 1916;
             Weight = 2.0;
-            LootType = LootType.Blessed;
+        }
+
+        public NictitatingLens(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -26,20 +39,6 @@ namespace Server.Items
             base.GetProperties(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-
-        public override int BasePhysicalResistance => 2;
-        public override int BaseFireResistance => 4;
-        public override int BaseColdResistance => 4;
-        public override int BasePoisonResistance => 3;
-        public override int BaseEnergyResistance => 2;
-        public override int InitMinHits => 50;
-        public override int InitMaxHits => 60;
-
-        public NictitatingLens(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

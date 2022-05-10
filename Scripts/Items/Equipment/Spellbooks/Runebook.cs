@@ -75,7 +75,6 @@ namespace Server.Items
             : base(id)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
             Hue = 0x461;
 
             Layer = Layer.Invalid;

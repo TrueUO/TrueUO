@@ -43,8 +43,6 @@ namespace Server.Items
 
         public BaseDecayingItem(int itemID) : base(itemID)
         {
-            LootType = LootType.Blessed;
-
             if (Lifespan > 0)
             {
                 AttachSocket(new DecayingItemSocket(Lifespan, UseSeconds));

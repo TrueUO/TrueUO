@@ -73,7 +73,6 @@ namespace Server.Items
         [Constructable]
         public BoneThroneDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public BoneThroneDeed(Serial serial)

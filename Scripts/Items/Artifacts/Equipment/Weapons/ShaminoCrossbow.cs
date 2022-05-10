@@ -7,7 +7,6 @@ namespace Server.Items
         public ShaminoCrossbow()
         {
             Hue = 0x504;
-            LootType = LootType.Blessed;
             Attributes.AttackChance = 15;
             Attributes.WeaponDamage = 40;
             WeaponAttributes.SelfRepair = 10;
@@ -19,7 +18,7 @@ namespace Server.Items
         {
         }
 
-        public override int LabelNumber => 1062915;// Shamino’s Best Crossbow
+        public override int LabelNumber => 1062915;// Shaminoâ€™s Best Crossbow
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
         public override void Serialize(GenericWriter writer)

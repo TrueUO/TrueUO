@@ -14,7 +14,6 @@ namespace Server.Items
         public SheetMusicForStones()
             : base(0xEBF)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

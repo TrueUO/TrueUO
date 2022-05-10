@@ -28,7 +28,6 @@ namespace Server.Items
         public EnchantedSoulstoneVessel()
             : base(0xA73F)
         {
-            LootType = LootType.Blessed;
             Weight = 10.0;
         }
 

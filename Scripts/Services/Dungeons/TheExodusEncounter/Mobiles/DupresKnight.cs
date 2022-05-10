@@ -38,56 +38,56 @@ namespace Server.Mobiles
 
             Item longsword = new Longsword
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(longsword);
 
             Item ph = new PlateHelm
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(ph);
 
             Item pa = new PlateArms
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(pa);
 
             Item pg = new PlateGorget
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(pg);
 
             Item pgl = new PlateGloves
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(pgl);
 
             Item pl = new PlateLegs
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(pl);
 
             Item pc = new PlateChest
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(pc);
 
             Item mks = new MetalKiteShield
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x794
             };
             SetWearable(mks);
 
             Item bs = new BodySash(0x794)
             {
-                LootType = LootType.Blessed
+                Movable = false
             }; // dark purple
             SetWearable(bs);
         }

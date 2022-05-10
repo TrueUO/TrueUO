@@ -37,8 +37,6 @@ namespace Server.Items
 
             m_MaxLifeForce = amount;
             m_MaxHealTotal = maxHeal;
-
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

@@ -11,7 +11,6 @@ namespace Server.Items
             : base(id)
         {
             Weight = 10;
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

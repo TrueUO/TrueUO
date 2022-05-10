@@ -33,7 +33,6 @@ namespace Server.Items
             Hue = 2601;
             Weight = 1.0;
             Movable = true;
-            LootType = LootType.Blessed;
         }
 
         public CorruptedCrystalPortal(Serial serial)

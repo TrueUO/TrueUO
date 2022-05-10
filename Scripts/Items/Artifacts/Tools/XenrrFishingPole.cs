@@ -58,8 +58,6 @@ namespace Server.Items
         [Constructable]
         public XenrrFishingPole()
         {
-            LootType = LootType.Blessed;
-
             Attributes.SpellChanneling = 1;
             Attributes.CastSpeed = -1;
         }

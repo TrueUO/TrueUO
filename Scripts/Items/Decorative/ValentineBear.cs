@@ -29,7 +29,6 @@ namespace Server.Items
             : base(Utility.RandomList(0x48E0, 0x48E2))
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
 
             Lines = new string[3];
             m_OwnerName = owner.Name;

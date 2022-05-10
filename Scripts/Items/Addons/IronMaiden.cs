@@ -108,7 +108,6 @@ namespace Server.Items
         [Constructable]
         public IronMaidenDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public IronMaidenDeed(Serial serial)

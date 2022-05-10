@@ -325,8 +325,6 @@ namespace Server.Items
             Attributes.BonusInt = 8;
             Attributes.LowerManaCost = 15;
             Attributes.SpellDamage = 15;
-
-            LootType = LootType.Blessed;
         }
 
         public TomeOfLostKnowledge(Serial serial)

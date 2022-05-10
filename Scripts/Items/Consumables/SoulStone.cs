@@ -118,7 +118,6 @@ namespace Server.Items
             : base(inactiveItemID)
         {
             Light = LightType.Circle300;
-            LootType = LootType.Blessed;
 
             m_InactiveItemID = inactiveItemID;
             m_ActiveItemID = activeItemID;

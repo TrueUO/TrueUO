@@ -8,7 +8,6 @@ namespace Server.Items
         {
             Weight = 2.0;
             Hue = 105;
-            LootType = LootType.Blessed;
         }
 
         public TigerClawKey(Serial serial)

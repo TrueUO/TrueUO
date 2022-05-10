@@ -7,7 +7,6 @@ namespace Server.Items
         public QuagmireStatue()
             : base(0x2614)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

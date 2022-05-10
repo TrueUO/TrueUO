@@ -8,7 +8,6 @@ namespace Server.Items
         public ArielHavenWritofMembership()
             : base(0x14ED)
         {
-            LootType = LootType.Blessed;
         }
 
         public ArielHavenWritofMembership(Serial serial)

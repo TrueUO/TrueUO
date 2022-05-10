@@ -7,7 +7,6 @@ namespace Server.Items
         public HolySword()
         {
             Hue = 0x482;
-            LootType = LootType.Blessed;
             Slayer = SlayerName.Silver;
             Attributes.WeaponDamage = 40;
             WeaponAttributes.SelfRepair = 10;

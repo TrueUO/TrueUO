@@ -13,7 +13,6 @@ namespace Server.Items
         public Banner(int itemID)
             : base(itemID)
         {
-            LootType = LootType.Blessed;
             Movable = false;
         }
 
@@ -127,7 +126,6 @@ namespace Server.Items
         public BannerDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

@@ -8,7 +8,6 @@ namespace Server.Items
         [Constructable]
         public FurnitureDyeTub()
         {
-            LootType = LootType.Blessed;
         }
 
         public FurnitureDyeTub(Serial serial)

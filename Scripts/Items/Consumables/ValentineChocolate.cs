@@ -37,7 +37,6 @@ namespace Server.Items
             : base(2538)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
 
             switch (Utility.Random(3))
             {

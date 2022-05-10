@@ -16,8 +16,6 @@ namespace Server.Items
         public KotlAutomatonHead()
             : base(0x9DB1)
         {
-            LootType = LootType.Blessed;
-
             Resource = CraftResource.Iron;
         }
 

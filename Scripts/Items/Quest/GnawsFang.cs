@@ -7,8 +7,7 @@ namespace Server.Items
             : base(0x10E8)
         {
             Weight = 1;
-            Hue = 0x174; // TODO check
-            LootType = LootType.Blessed;
+            Hue = 0x174; 
         }
 
         public GnawsFang(Serial serial)

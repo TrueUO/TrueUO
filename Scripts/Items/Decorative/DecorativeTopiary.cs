@@ -7,7 +7,6 @@ namespace Server.Items
             : base(0x2378)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeTopiary(Serial serial)

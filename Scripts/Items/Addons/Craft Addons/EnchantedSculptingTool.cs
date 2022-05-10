@@ -104,7 +104,6 @@ namespace Server.Items
         public EnchantedSculptingToolDeed(int uses)
             : base(uses)
         {
-            LootType = LootType.Blessed;
         }
 
         public EnchantedSculptingToolDeed(Serial serial)

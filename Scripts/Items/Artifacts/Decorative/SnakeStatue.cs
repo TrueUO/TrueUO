@@ -7,7 +7,6 @@ namespace Server.Items
         public SnakeStatue()
             : base(0x25C2)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

@@ -113,7 +113,6 @@ namespace Server.Items
         [Constructable]
         public RaisedGardenDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public RaisedGardenDeed(Serial serial)

@@ -18,8 +18,7 @@ namespace Server.Items
         public UndeadWeddingHat(int hue)
             : base(0x9F47, hue)
         {
-			LootType = LootType.Blessed;
-			Weight = 3.0;
+            Weight = 3.0;
         }
 
         private bool EnMask(Mobile from)

@@ -95,7 +95,6 @@ namespace Server.Items
         [Constructable]
         public MinotaurStatueDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public MinotaurStatueDeed(Serial serial)

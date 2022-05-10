@@ -14,7 +14,6 @@ namespace Server.Items
         {
             Hue = 0x488;
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public HolidayTreeDeed(Serial serial)

@@ -29,7 +29,6 @@ namespace Server.Items
         public PetWhistle()
             : base(0xA4E7)
         {
-            LootType = LootType.Blessed;
         }
 
         public PetWhistle(Serial serial)

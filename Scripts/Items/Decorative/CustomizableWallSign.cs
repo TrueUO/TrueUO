@@ -16,7 +16,6 @@ namespace Server.Items
             : base(0x4B20)
         {
             Lines = new string[3];
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

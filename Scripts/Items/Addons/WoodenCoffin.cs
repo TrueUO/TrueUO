@@ -77,7 +77,6 @@ namespace Server.Items
         [Constructable]
         public WoodenCoffinDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public WoodenCoffinDeed(Serial serial)

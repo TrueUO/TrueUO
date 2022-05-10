@@ -12,7 +12,6 @@ namespace Server.Items
             : base(0xE26)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public SpecialHairDye(Serial serial)

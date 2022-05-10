@@ -84,7 +84,6 @@ namespace Server.Items
 
         public ParrotPerchAddonDeed(PetParrot parrot)
         {
-            LootType = LootType.Blessed;
             m_Parrot = parrot;
         }
 

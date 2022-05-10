@@ -224,7 +224,6 @@ namespace Server.Items
             : base(itemID)
         {
             Weight = 10.0;
-            LootType = LootType.Blessed;
             _Instances.Add(this);
         }
 

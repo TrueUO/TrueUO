@@ -6,7 +6,6 @@ namespace Server.Items
         public DreadSpiderSilk()
             : base(0xDF8)
         {
-            LootType = LootType.Blessed;
             Weight = 4.0;
             Hue = 0x481;
         }

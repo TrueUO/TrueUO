@@ -95,7 +95,6 @@ namespace Server.Items
             : base(0x1956)
         {
             Hue = 700;
-            LootType = LootType.Blessed;
         }
 
         public override int ComputeItemID()

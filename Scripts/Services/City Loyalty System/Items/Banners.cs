@@ -76,8 +76,6 @@ namespace Server.Engines.CityLoyalty
         public CityBannerDeed(City city)
         {
             City = city;
-
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

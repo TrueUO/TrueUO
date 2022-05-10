@@ -112,7 +112,6 @@ namespace Server.Items
         [Constructable]
         public KoiPondDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public KoiPondDeed(Serial serial)

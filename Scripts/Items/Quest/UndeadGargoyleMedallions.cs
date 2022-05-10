@@ -8,7 +8,6 @@ namespace Server.Items
         public UndeadGargoyleMedallions()
             : base(0x1088)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
             Hue = 0x47F;
         }

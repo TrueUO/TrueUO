@@ -9,7 +9,6 @@ namespace Server.Items
             : base(0xA004)
         {
             Weight = 10.0;
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile m)
@@ -48,7 +47,6 @@ namespace Server.Items
             : base(0xA05C)
         {
             Weight = 20.0;
-            LootType = LootType.Blessed;
         }
 
         public ValentinesChair(Serial serial)

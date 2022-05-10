@@ -164,7 +164,6 @@ namespace Server.Items
             : base(itemID)
         {
             Stackable = false;
-            LootType = LootType.Blessed;
         }
 
         public CandyCane(Serial serial)
@@ -204,7 +203,6 @@ namespace Server.Items
             : base(Utility.RandomBool() ? 0x2be1 : 0x2be2)
         {
             Stackable = false;
-            LootType = LootType.Blessed;
         }
 
         public GingerBreadCookie(Serial serial)

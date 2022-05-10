@@ -10,7 +10,11 @@ namespace Server.Items
         public AquaPendant()
         {
             Hue = 1916;
-            LootType = LootType.Blessed;
+        }
+
+        public AquaPendant(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -25,11 +29,6 @@ namespace Server.Items
             base.GetProperties(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public AquaPendant(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

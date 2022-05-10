@@ -10,7 +10,6 @@ namespace Server.Engines.Quests.Doom
         {
             Weight = 1.0;
             Hue = 0x8A5;
-            LootType = LootType.Blessed;
         }
 
         public GoldenSkull(Serial serial)

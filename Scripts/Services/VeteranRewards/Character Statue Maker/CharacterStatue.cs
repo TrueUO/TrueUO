@@ -434,7 +434,6 @@ namespace Server.Mobiles
                 m_IsRewardItem = statue.IsRewardItem;
             }
 
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

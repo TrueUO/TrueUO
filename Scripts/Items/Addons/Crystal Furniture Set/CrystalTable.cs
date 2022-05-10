@@ -53,7 +53,6 @@ namespace Server.Items
         [Constructable]
         public CrystalTableDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1173;
         }
 

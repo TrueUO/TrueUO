@@ -48,7 +48,7 @@ namespace Server.Misc
             PackItem(new Gold(1000)); // Starting gold can be customized here
         }
 
-        private static void AddShirt(Mobile m, int shirtHue)
+        private static void AddShirt(int shirtHue)
         {
             int hue = Utility.ClipDyedHue(shirtHue & 0x3FFF);
 
@@ -201,7 +201,7 @@ namespace Server.Misc
 
             if (args.Profession <= 3)
             {
-                AddShirt(newChar, args.ShirtHue);
+                AddShirt(args.ShirtHue);
                 AddPants(newChar, args.PantsHue);
                 AddShoes();
             }
@@ -559,7 +559,7 @@ namespace Server.Misc
                         skill.BaseFixedPoint = snv.Value * 10;
 
                         if (addSkillItems)
-                            AddSkillItems(snv.Name, m);
+                            AddSkillItems(snv.Name);
                     }
                 }
             }
@@ -704,7 +704,7 @@ namespace Server.Misc
             return item;
         }
 
-        private static void AddSkillItems(SkillName skill, Mobile m)
+        private static void AddSkillItems(SkillName skill)
         {
             switch (skill)
             {

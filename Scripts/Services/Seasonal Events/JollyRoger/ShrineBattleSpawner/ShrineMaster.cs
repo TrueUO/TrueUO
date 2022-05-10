@@ -366,19 +366,19 @@ namespace Server.Engines.JollyRoger
                 case MasterTitle.Swordsman:
                     item = new PaladinSword
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     SetWearable(item);
 
                     item = new Daisho
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     PackItem(item);
 
                     item = new Wakizashi
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     PackItem(item);
 
@@ -394,19 +394,19 @@ namespace Server.Engines.JollyRoger
                 case MasterTitle.Fencer:
                     item = new Lajatang
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     SetWearable(item);
 
                     item = new Sai
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     PackItem(item);
 
                     item = new Tekagi
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     PackItem(item);
 

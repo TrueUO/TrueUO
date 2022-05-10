@@ -14,7 +14,6 @@ namespace Server.Mobiles
         public CapybaraStatue()
             : base(0xA57B)
         {
-            LootType = LootType.Blessed;
         }
 
         public CapybaraStatue(Serial serial)

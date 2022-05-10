@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class EarringBoxSet : RedVelvetGiftBox
     {
@@ -50,7 +50,6 @@
             Resistances[element] = 2;
 
             m_Attribute = element;
-            LootType = LootType.Blessed;
 
             Hue = GetItemData(m_Attribute, false);
         }

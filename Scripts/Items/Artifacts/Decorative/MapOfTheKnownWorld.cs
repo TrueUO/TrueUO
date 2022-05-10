@@ -21,7 +21,6 @@ namespace Server.Items
         public MapOfTheKnownWorld() : base(0x3BB6)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)

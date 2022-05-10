@@ -156,7 +156,7 @@ namespace Server.SkillHandlers
                 {
                     m_Thief.SendLocalizedMessage(502710); // You can't steal that!
                 }
-                else if ((toSteal.LootType == LootType.Newbied || toSteal.CheckBlessed(root)) && !ItemFlags.GetStealable(toSteal))
+                else if (toSteal.CheckBlessed(root) && !ItemFlags.GetStealable(toSteal))
                 {
                     m_Thief.SendLocalizedMessage(502710); // You can't steal that!
                 }
@@ -301,7 +301,7 @@ namespace Server.SkillHandlers
             {
                 var house = BaseHouse.FindHouseAt(stolen);
 
-                if (house != null && (root is Item rootItem))
+                if (house != null && root is Item rootItem)
                 {
                     SecureInfo secure = house.GetSecureInfoFor(rootItem);
 

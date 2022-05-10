@@ -36,7 +36,6 @@ namespace Server.Items
         public JacobsPickaxe()
             : base()
         {
-            LootType = LootType.Blessed;
             SkillBonuses.SetValues(0, SkillName.Mining, 10.0);
             UsesRemaining = 20;
 

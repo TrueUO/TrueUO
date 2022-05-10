@@ -1,4 +1,4 @@
-﻿using Server.Engines.VeteranRewards;
+using Server.Engines.VeteranRewards;
 
 namespace Server.Items
 {
@@ -20,7 +20,6 @@ namespace Server.Items
         {
             Name = "Order Banner";
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public OrderBanner(Serial serial)
@@ -59,7 +58,6 @@ namespace Server.Items
         {
             Name = "Chaos Banner";
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public ChaosBanner(Serial serial)

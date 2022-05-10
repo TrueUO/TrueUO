@@ -9,7 +9,6 @@ namespace Server.Items
         public BagOfJewels()
             : base(0xE76)
         {
-            LootType = LootType.Blessed;
             Weight = 2.0;
             Hue = 155;
         }

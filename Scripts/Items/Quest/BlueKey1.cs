@@ -7,8 +7,7 @@ namespace Server.Items
             : base(0x1012)
         {
             Weight = 1.0;
-            Hue = 0x5D; // TODO check
-            LootType = LootType.Blessed;
+            Hue = 0x5D; 
             Movable = false;
         }
 

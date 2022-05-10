@@ -19,7 +19,6 @@ namespace Server.Items
         public HABPromotionalToken(string account)
             : base(0x2AAA)
         {
-            LootType = LootType.Blessed;
             Light = LightType.Circle300;
             Weight = 5.0;
 

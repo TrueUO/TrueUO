@@ -60,7 +60,7 @@ namespace Server.Mobiles
 
         private void AddImmovableItem(Item item)
         {
-            item.LootType = LootType.Blessed;
+            item.Movable = false;
             SetWearable(item);
         }
 

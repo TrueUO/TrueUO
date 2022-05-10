@@ -53,13 +53,13 @@ namespace Server.Mobiles
 
             Item item = new HoodedShroudOfShadows(2702)
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(item);
 
             item = new Spellbook
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(item);
         }

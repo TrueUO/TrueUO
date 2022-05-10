@@ -6,7 +6,6 @@ namespace Server.Items
 
         public CraftAddonDeed(int uses)
         {
-            LootType = LootType.Blessed;
             UsesRemaining = uses;
         }
 

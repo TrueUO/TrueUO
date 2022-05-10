@@ -93,7 +93,6 @@ namespace Server.Multis
             UsesCharges = !vetReward;
             Movable = true;
             Weight = 1.0;
-            LootType = LootType.Blessed;
 
             if (vetReward)
             {

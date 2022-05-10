@@ -27,9 +27,6 @@ namespace Server.Items
         [Constructable]
         public UndertakersStaff()
         {
-            if (!Siege.SiegeShard)
-                LootType = LootType.Blessed;
-
             Charges = 100;
             SummonAll = true;
         }

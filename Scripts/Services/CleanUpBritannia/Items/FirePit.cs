@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class FirePitAddon : BaseAddon
     {
@@ -38,7 +38,6 @@
         [Constructable]
         public FirePitDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public FirePitDeed(Serial serial)

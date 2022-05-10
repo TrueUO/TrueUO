@@ -10,8 +10,12 @@ namespace Server.Items
         public CanvassRobe()
         {
             Hue = 2720;
-            LootType = LootType.Blessed;
             StrRequirement = 10;
+        }
+
+        public CanvassRobe(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -26,11 +30,6 @@ namespace Server.Items
             base.GetProperties(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public CanvassRobe(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

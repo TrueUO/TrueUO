@@ -45,7 +45,6 @@ namespace Server.Items
         [Constructable]
         public AlchemistsBookshelfDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

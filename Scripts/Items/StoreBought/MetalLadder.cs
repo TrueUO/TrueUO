@@ -95,7 +95,6 @@ namespace Server.Items
         [Constructable]
         public MetalLadderDeed()
         {
-			LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

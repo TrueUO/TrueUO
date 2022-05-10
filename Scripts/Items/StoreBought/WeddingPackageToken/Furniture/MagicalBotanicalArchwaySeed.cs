@@ -11,7 +11,6 @@ namespace Server.Items
         public MagicalBotanicalArchwaySeed()
             : base(0x0DCF)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

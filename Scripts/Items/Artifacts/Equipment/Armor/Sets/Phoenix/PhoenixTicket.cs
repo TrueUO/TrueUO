@@ -6,7 +6,6 @@ namespace Server.Items
         [Constructable]
         public PhoenixTicket() : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public PhoenixTicket(Serial serial) : base(serial)
@@ -47,7 +46,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

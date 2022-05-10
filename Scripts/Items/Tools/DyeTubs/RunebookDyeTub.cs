@@ -6,7 +6,6 @@ namespace Server.Items
         [Constructable]
         public RunebookDyeTub()
         {
-            LootType = LootType.Blessed;
         }
 
         public RunebookDyeTub(Serial serial)

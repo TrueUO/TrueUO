@@ -304,7 +304,6 @@ namespace Server.Items
         {
             _List = list;
             Hue = (int)hue;
-            LootType = LootType.Blessed;
         }
 
         public override void GetProperties(ObjectPropertyList list)

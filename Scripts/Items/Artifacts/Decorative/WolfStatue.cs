@@ -7,7 +7,6 @@ namespace Server.Items
         public WolfStatue()
             : base(0x25D3)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

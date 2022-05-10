@@ -446,7 +446,9 @@ namespace Server.Items
         public static void DoWrath(Item source, int mindmg, int maxdmg, int range)
         {
             if (source.Deleted)
+            {
                 return;
+            }
 
             Map map = source.Map;
 
@@ -459,7 +461,9 @@ namespace Server.Items
                         double dist = Math.Sqrt(x * x + y * y);
 
                         if (dist <= range)
+                        {
                             new BarrelPoisonWrathTimer(map, source.X + x, source.Y + y, mindmg, maxdmg, source).Start();
+                        }
                     }
                 }
             }
@@ -494,17 +498,23 @@ namespace Server.Items
                 canFit = n_Map.CanFit(n_X, n_Y, z + i, 6, false, false);
 
                 if (canFit)
+                {
                     z += i;
+                }
             }
 
             if (!canFit)
+            {
                 return;
+            }
 
             Item g = n_SourceItem;
 
             //Poisonous Vapor
             if (g == null || g.Deleted)
+            {
                 return;
+            }
 
             Effects.SendLocationParticles(EffectItem.Create(g.Location, g.Map, EffectItem.DefaultDuration), 0x376A, 9, 10, 5040);
             Effects.PlaySound(g, g.Map, 0x474);
@@ -514,21 +524,21 @@ namespace Server.Items
         public virtual void DoDamage(Item g, int mindmg, int maxdmg)
         {
             if (g == null || g.Deleted)
+            {
                 return;
+            }
 
             IPooledEnumerable eable = g.GetMobilesInRange(4);
+
             foreach (Mobile m in eable)
             {
-                if (m != null)
+                if (m != null && m.Alive && m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
                 {
-                    if (m.Alive && m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
-                    {
-                        m.DoHarmful(m);
-                        m.Damage(Utility.RandomMinMax(mindmg, maxdmg), m);
-                        m.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1154446); // *Poisonous gas escapes from the ruptured barrel enveloping you in a noxious cloud!*
-                        m.ApplyPoison(m, Poison.Deadly);
-                        m.PlaySound(0x474);
-                    }
+                    m.DoHarmful(m);
+                    m.Damage(Utility.RandomMinMax(mindmg, maxdmg), m);
+                    m.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1154446); // *Poisonous gas escapes from the ruptured barrel enveloping you in a noxious cloud!*
+                    m.ApplyPoison(m, Poison.Deadly);
+                    m.PlaySound(0x474);
                 }
             }
 

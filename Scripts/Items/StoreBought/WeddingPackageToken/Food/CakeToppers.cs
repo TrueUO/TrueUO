@@ -9,7 +9,6 @@ namespace Server.Items
         public MaleTopper()
             : base(0x9EC1)
         {
-			LootType = LootType.Blessed;
         }
 
         public MaleTopper(Serial serial)
@@ -39,7 +38,6 @@ namespace Server.Items
         public FemaleTopper()
             : base(0x9EC3)
         {
-			LootType = LootType.Blessed;
         }
 
         public FemaleTopper(Serial serial)

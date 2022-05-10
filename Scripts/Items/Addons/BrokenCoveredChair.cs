@@ -63,7 +63,6 @@ namespace Server.Items
         [Constructable]
         public BrokenCoveredChairDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public BrokenCoveredChairDeed(Serial serial)

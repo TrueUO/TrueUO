@@ -13,7 +13,6 @@ namespace Server.Mobiles
         public WindrunnerStatue()
             : base(0x9ED5)
         {
-            LootType = LootType.Blessed;
         }
         public WindrunnerStatue(Serial serial)
             : base(serial)

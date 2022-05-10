@@ -107,12 +107,14 @@ namespace Server.Items
         [Constructable]
         public JollyHolidayTreeDeed(string name)
         {
-            LootType = LootType.Blessed;
-
             if (name == null)
+            {
                 _DisplayName = _Names[Utility.Random(_Names.Length)];
+            }
             else
+            {
                 _DisplayName = name;
+            }
         }
 
         public static string[] _Names =

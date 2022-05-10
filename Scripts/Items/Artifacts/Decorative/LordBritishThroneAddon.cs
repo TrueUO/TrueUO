@@ -36,7 +36,6 @@ namespace Server.Items
         [Constructable]
         public LordBritishThroneDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public LordBritishThroneDeed(Serial serial)

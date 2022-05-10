@@ -49,7 +49,6 @@ namespace Server.Items
         {
             var map = item.Map;
 
-            LootType = LootType.Blessed;
             Hue = RecallRune.CalculateHue(map, null, true);
 
             SearchItem = item.Item;

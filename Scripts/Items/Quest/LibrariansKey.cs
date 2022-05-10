@@ -7,7 +7,6 @@ namespace Server.Items
             : base(0xFF3)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public LibrariansKey(Serial serial)

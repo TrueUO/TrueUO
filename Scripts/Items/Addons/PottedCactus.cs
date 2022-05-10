@@ -68,7 +68,6 @@ namespace Server.Items
         public PottedCactusDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

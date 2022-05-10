@@ -101,7 +101,6 @@ namespace Server.Items
         [Constructable]
         public FieldGardenBedDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public FieldGardenBedDeed(Serial serial)

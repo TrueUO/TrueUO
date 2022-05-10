@@ -106,7 +106,6 @@ namespace Server.Engines.Quests
         public EgwexemWrit()
             : base(0x14EF)
         {
-            LootType = LootType.Blessed;
             Hue = 556;
         }
 

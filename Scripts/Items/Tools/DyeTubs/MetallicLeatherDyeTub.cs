@@ -7,7 +7,6 @@ namespace Server.Items
         [Constructable]
         public MetallicLeatherDyeTub()
         {
-            LootType = LootType.Blessed;
         }
 
         public MetallicLeatherDyeTub(Serial serial)

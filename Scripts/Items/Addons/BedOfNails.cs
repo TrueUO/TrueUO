@@ -161,7 +161,6 @@ namespace Server.Items
         [Constructable]
         public BedOfNailsDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public BedOfNailsDeed(Serial serial)

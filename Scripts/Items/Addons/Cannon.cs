@@ -12,7 +12,6 @@ namespace Server.Items
         public CannonAddonComponent(int itemID)
             : base(itemID)
         {
-            LootType = LootType.Blessed;
         }
 
         public CannonAddonComponent(Serial serial)
@@ -367,7 +366,6 @@ namespace Server.Items
         [Constructable]
         public CannonDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public CannonDeed(Serial serial)

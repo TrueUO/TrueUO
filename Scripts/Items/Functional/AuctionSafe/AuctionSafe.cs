@@ -250,7 +250,6 @@ namespace Server.Engines.Auction
         [Constructable]
         public AuctionSafeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

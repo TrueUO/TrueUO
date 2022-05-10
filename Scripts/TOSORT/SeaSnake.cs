@@ -38,6 +38,11 @@ namespace Server.Mobiles
             Karma = -7000;
         }
 
+        public SeaSnake(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Average);
@@ -48,11 +53,6 @@ namespace Server.Mobiles
         public override int Meat => 1;
         public override Poison PoisonImmune => Poison.Deadly;
         public override Poison HitPoison => Poison.Deadly;
-
-        public SeaSnake(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

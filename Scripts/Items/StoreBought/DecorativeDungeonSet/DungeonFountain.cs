@@ -47,7 +47,6 @@ namespace Server.Items
         public DungeonFountainDeed()
             : base()
         {
-            LootType = LootType.Blessed;
         }
 
         public DungeonFountainDeed(Serial serial)

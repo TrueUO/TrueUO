@@ -83,7 +83,6 @@ namespace Server.Items
         [Constructable]
         public WoodStoveDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public WoodStoveDeed(Serial serial)

@@ -15,7 +15,6 @@ namespace Server.Items
         public BasketOfHerbs()
             : base(0x194F)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

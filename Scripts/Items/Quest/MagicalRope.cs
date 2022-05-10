@@ -6,7 +6,6 @@ namespace Server.Items
         public MagicalRope()
             : base(0x20D)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 

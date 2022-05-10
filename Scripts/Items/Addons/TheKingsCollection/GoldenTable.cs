@@ -62,7 +62,6 @@ namespace Server.Items
         [Constructable]
         public GoldenTableDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public GoldenTableDeed(Serial serial)

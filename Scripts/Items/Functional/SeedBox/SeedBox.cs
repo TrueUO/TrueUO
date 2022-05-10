@@ -60,7 +60,6 @@ namespace Server.Engines.Plants
             : base(19288)
         {
             Entries = new List<SeedEntry>();
-            LootType = LootType.Blessed;
         }
 
         public override int GetTotal(TotalType type)

@@ -215,8 +215,6 @@ namespace Server.Items
         public MonsterStatuette(MonsterStatuetteType type)
             : base(MonsterStatuetteInfo.GetInfo(type).ItemID)
         {
-            LootType = LootType.Blessed;
-
             m_Type = type;
 
             if (m_Type == MonsterStatuetteType.Slime)

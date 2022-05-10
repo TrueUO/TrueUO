@@ -10,8 +10,12 @@ namespace Server.Items
         public BootsOfBallast()
         {
             Hue = 2969;
-            LootType = LootType.Blessed;
             StrRequirement = 10;
+        }
+
+        public BootsOfBallast(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -26,11 +30,6 @@ namespace Server.Items
             base.GetProperties(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public BootsOfBallast(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

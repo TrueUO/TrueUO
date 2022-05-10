@@ -7,7 +7,6 @@ namespace Server.Items
         public BakeKitsuneStatue()
             : base(0x2763)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

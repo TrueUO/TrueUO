@@ -37,68 +37,68 @@ namespace Server.Mobiles
 
             Item cutlass = new Cutlass
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(cutlass);
 
             Item ph = new PlateHelm
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x8A5 // gold
             };
             SetWearable(ph);
 
             Item pa = new PlateArms
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x8A5 // gold
             };
             SetWearable(pa);
 
             Item pg = new PlateGorget
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x8A5 // gold
             };
             SetWearable(pg);
 
             Item pgl = new PlateGloves
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x8A5 // gold
             };
             SetWearable(pgl);
 
             Item pl = new PlateLegs
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x8A5 // gold
             };
             SetWearable(pl);
 
             Item pc = new PlateChest
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x8A5 // gold
             };
             SetWearable(pc);
 
             Item mks = new MetalKiteShield
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x776
             };
             SetWearable(mks);
 
             Item bs = new BodySash(0x486)
             {
-                LootType = LootType.Blessed
+                Movable = false
             }; // dark purple
             SetWearable(bs);
 
             Item cloak = new Cloak(0x486)
             {
-                LootType = LootType.Blessed
+                Movable = false
             }; // dark purple
             SetWearable(cloak);
         }

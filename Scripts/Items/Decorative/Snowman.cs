@@ -28,7 +28,6 @@ namespace Server.Items
         {
             Weight = 10.0;
             Hue = hue;
-            LootType = LootType.Blessed;
 
             m_Title = title;
         }

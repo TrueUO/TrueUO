@@ -12,7 +12,6 @@ namespace Server.Items
         public MongbatDartboard()
             : base(0x1950)
         {
-            LootType = LootType.Blessed;
             Weight = 8.0;
         }
 

@@ -146,7 +146,6 @@ namespace Server.Items
         [Constructable]
         public GuillotineDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public GuillotineDeed(Serial serial)

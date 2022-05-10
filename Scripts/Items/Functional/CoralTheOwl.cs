@@ -16,7 +16,6 @@ namespace Server.Items
         [Constructable]
         public CoralTheOwl() : base(0x9A9B)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void GetProperties(ObjectPropertyList list)

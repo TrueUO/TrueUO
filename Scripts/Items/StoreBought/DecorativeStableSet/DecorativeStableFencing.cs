@@ -52,7 +52,6 @@ namespace Server.Items
         public DecorativeStableFencing(FencingType type)
             : base(IDs[(int)type][1])
         {
-            LootType = LootType.Blessed;
             _Type = type;
         }
 

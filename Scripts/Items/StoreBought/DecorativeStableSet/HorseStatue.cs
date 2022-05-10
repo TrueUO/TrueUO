@@ -9,7 +9,6 @@ namespace Server.Items
         public HorseStatue()
             : base(MonsterStatuetteType.Horse)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

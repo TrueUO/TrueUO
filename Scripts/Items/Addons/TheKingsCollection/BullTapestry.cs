@@ -58,7 +58,6 @@ namespace Server.Items
         [Constructable]
         public BullTapestryDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public BullTapestryDeed(Serial serial)

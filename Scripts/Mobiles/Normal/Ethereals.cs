@@ -222,7 +222,6 @@ namespace Server.Mobiles
         {
             m_Rider = null;
             Layer = Layer.Invalid;
-            LootType = LootType.Blessed;
 
             m_Transparent = true;
             m_TransparentMountedID = transMountedID;

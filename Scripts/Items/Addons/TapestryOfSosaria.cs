@@ -15,7 +15,6 @@ namespace Server.Items
             : base(0x234E)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public TapestryOfSosaria(Serial serial)

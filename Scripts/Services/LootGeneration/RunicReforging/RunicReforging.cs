@@ -114,8 +114,6 @@ namespace Server.Items
                     goodtogo = false;
                 else if (item is IResource resource && !CraftResources.IsStandard(resource.Resource))
                     goodtogo = false;
-                else if (item.LootType == LootType.Blessed || item.LootType == LootType.Newbied)
-                    goodtogo = false;
                 else if (item is BaseWeapon baseWeapon && Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, baseWeapon))
                     goodtogo = false;
                 else if (item is BaseWeapon weapon1 && weapon1.FocusWeilder != null)

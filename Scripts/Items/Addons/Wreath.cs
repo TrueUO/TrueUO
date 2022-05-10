@@ -183,7 +183,6 @@ namespace Server.Items
         {
             Weight = 1.0;
             Hue = hue;
-            LootType = LootType.Blessed;
         }
 
         public WreathDeed(Serial serial)

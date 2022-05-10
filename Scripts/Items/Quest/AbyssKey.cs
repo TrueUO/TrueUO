@@ -10,8 +10,6 @@ namespace Server.Items
         public AbyssKey(int itemID)
             : base(itemID)
         {
-            LootType = LootType.Blessed;
-
             if (Lifespan > 0)
             {
                 m_Lifespan = Lifespan;

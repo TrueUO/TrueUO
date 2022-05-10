@@ -8,7 +8,6 @@ namespace Server.Items
         public AntiqueDocumentsKit()
             : base(0x1EBB)
         {
-            LootType = LootType.Blessed;
         }
 
         public AntiqueDocumentsKit(Serial serial)

@@ -85,12 +85,6 @@ namespace Server.Mobiles
             set { }
         }
 
-        private void AddImmovableItem(Item item)
-        {
-            item.LootType = LootType.Blessed;
-            SetWearable(item);
-        }
-
         public BaseEodonTribesman(AIType ai, EodonTribe type) : base(ai, FightMode.Closest, 10, 1, .2, .4)
         {
             TribeType = type;
@@ -418,7 +412,7 @@ namespace Server.Mobiles
 
             if (weapon != null)
             {
-                weapon.LootType = LootType.Blessed;
+                weapon.Movable = false;
                 SetWearable(weapon);
             }
         }
@@ -589,7 +583,7 @@ namespace Server.Mobiles
                     break;
             }
 
-            weapon.LootType = LootType.Blessed;
+            weapon.Movable = false;
             SetWearable(weapon);
         }
 
@@ -761,7 +755,7 @@ namespace Server.Mobiles
 
             if (weapon != null)
             {
-                weapon.LootType = LootType.Blessed;
+                weapon.Movable = false;
                 SetWearable(weapon);
             }
         }

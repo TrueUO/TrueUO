@@ -56,7 +56,6 @@ namespace Server.Items
         {
             Weight = 1.0;
             Hue = 0x34;
-            LootType = LootType.Blessed;
 
             m_Worth = worth;
         }
@@ -79,7 +78,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Worth);
@@ -88,18 +86,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            LootType = LootType.Blessed;
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_Worth = reader.ReadInt();
-                        break;
-                    }
-            }
+            m_Worth = reader.ReadInt();
         }
 
         public override void GetProperties(ObjectPropertyList list)

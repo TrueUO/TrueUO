@@ -21,7 +21,6 @@ namespace Server.Items
         public ChickenStatue()
             : base(0xA513)
         {
-            LootType = LootType.Blessed;
             Weight = 1;
             NextResourceCount = DateTime.UtcNow + TimeSpan.FromDays(1);
         }

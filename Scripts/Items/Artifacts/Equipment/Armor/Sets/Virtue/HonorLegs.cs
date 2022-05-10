@@ -8,7 +8,6 @@ namespace Server.Items
         public HonorLegs()
             : base(0x2B06)
         {
-            LootType = LootType.Blessed;
             Weight = 9.0;
             SetHue = 0;
             Hue = 0x226;

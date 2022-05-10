@@ -8,7 +8,6 @@ namespace Server.Items
         [Constructable]
         public DeBoorShield()
         {
-            LootType = LootType.Blessed;
         }
 
         public DeBoorShield(Serial serial)

@@ -37,7 +37,6 @@ namespace Server.Items
         public MysticalPolymorphTotem()
             : base(0xA276)
         {
-            LootType = LootType.Blessed;
         }
 
         public MysticalPolymorphTotem(Serial serial)

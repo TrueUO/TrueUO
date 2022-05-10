@@ -37,50 +37,50 @@ namespace Server.Mobiles
 
             Item vikingsword = new VikingSword
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(vikingsword);
 
             Item cc = new ChainChest
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(cc);
 
             Item cl = new ChainLegs
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(cl);
 
             Item ch = new CloseHelm
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(ch);
 
             Item boots = new Boots(1)
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(boots);
 
             Item pgl = new PlateGloves
             {
-                LootType = LootType.Blessed
+                Movable = false
             };
             SetWearable(pgl);
 
             Item mks = new MetalKiteShield
             {
-                LootType = LootType.Blessed,
+                Movable = false,
                 Hue = 0x776
             };
             SetWearable(mks);
 
             Item bs = new BodySash(0x794)
             {
-                LootType = LootType.Blessed
+                Movable = false
             }; // dark purple
             SetWearable(bs);
         }

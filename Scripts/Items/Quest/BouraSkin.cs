@@ -8,7 +8,6 @@ namespace Server.Items
         public BouraSkin()
             : base(0x11F4)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
             Hue = 0x292;
         }

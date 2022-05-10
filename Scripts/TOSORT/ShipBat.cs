@@ -33,6 +33,11 @@ namespace Server.Mobiles
             Karma = -1000;
         }
 
+        public ShipBat(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Poor);
@@ -41,10 +46,6 @@ namespace Server.Mobiles
         public override int GetIdleSound()
         {
             return 0x29B;
-        }
-
-        public ShipBat(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

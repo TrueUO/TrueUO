@@ -32,7 +32,6 @@ namespace Server.Items
             _Automaton = automaton;
 
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public override void AddNameProperty(ObjectPropertyList list)

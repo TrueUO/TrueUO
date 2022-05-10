@@ -244,7 +244,6 @@ namespace Server.Items
         [Constructable]
         public GardenShedDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public GardenShedDeed(Serial serial) : base(serial)

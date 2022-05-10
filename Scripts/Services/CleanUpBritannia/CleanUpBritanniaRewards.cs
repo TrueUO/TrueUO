@@ -13,12 +13,7 @@ namespace Server.Engines.CleanUpBritannia
             Rewards = new List<CollectionItem>();
 
             Rewards.Add(new CollectionItem(typeof(Mailbox), 0x4142, 1113927, 0, 1000));
-            Rewards.Add(new CollectionItem(typeof(HumansAndElvesRobe), 0x1F03, 1151202, 0, 1000));
-            Rewards.Add(new CollectionItem(typeof(GargoylesAreOurFriendsRobe), 0x1F03, 1151203, 0, 1000));
-            Rewards.Add(new CollectionItem(typeof(WeArePiratesRobe), 0x1F03, 1151204, 0, 1000));
-            Rewards.Add(new CollectionItem(typeof(FollowerOfBaneRobe), 0x1F03, 1151205, 0, 1000));
-            Rewards.Add(new CollectionItem(typeof(QueenDawnForeverRobe), 0x1F03, 1151206, 0, 1000));
-
+            
             Rewards.Add(new CollectionItem(typeof(LillyPad), 0xDBC, 1023516, 0, 5000));
             Rewards.Add(new CollectionItem(typeof(LillyPads), 0xDBE, 1023518, 0, 5000));
             Rewards.Add(new CollectionItem(typeof(Mushrooms1), 0x0D0F, 1023340, 0, 5000));

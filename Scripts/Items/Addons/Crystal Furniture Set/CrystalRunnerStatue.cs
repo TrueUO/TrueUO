@@ -51,7 +51,6 @@ namespace Server.Items
         [Constructable]
         public CrystalRunnerStatueDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1173;
         }
 

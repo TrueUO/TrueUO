@@ -47,7 +47,6 @@ namespace Server.Items
         {
             m_Level = SecureLevel.CoOwners;
             m_Charges = 50;
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

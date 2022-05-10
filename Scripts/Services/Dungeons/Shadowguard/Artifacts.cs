@@ -47,7 +47,6 @@ namespace Server.Items
         [Constructable]
         public AnonsSpellbook()
         {
-            LootType = LootType.Blessed;
             SkillBonuses.SetValues(0, SkillName.Magery, 15.0);
             Attributes.BonusInt = 8;
             Attributes.SpellDamage = 15;

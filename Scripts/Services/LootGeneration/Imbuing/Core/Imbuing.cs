@@ -76,10 +76,6 @@ namespace Server.SkillHandlers
             {
                 from.SendLocalizedMessage(1159565); // You cannot imbue this transmogrified item.
             }
-            else if (item.LootType == LootType.Blessed || item.LootType == LootType.Newbied)
-            {
-                from.SendLocalizedMessage(1080438);  // You cannot imbue a blessed item.
-            }
             else if (item is BaseWeapon weapon && Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, weapon))
             {
                 from.SendLocalizedMessage(1080130);  // You cannot imbue an item that is currently enchanted.
@@ -143,11 +139,6 @@ namespace Server.SkillHandlers
             {
                 if (message)
                     from.SendLocalizedMessage(1080424);  // The item must be in your backpack to magically unravel it.
-            }
-            else if (item.LootType == LootType.Blessed || item.LootType == LootType.Newbied)
-            {
-                if (message)
-                    from.SendLocalizedMessage(1080421);  // You cannot unravel the magic of a blessed item.
             }
             else if (!(item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat))
             {

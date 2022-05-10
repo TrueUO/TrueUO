@@ -111,7 +111,6 @@ namespace Server.Items
         [Constructable]
         public CreepyPortraitDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public CreepyPortraitDeed(Serial serial)

@@ -34,7 +34,6 @@ namespace Server.Items
         {
             Weight = 10.0;
             Light = LightType.Circle150;
-            LootType = LootType.Blessed;
         }
 
         public CrystalBallOfKnowledge(Serial serial)

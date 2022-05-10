@@ -65,7 +65,7 @@ namespace Server.Mobiles
                     CastSpeed = 1
                 },
 
-                LootType = LootType.Blessed
+                Movable = false
             };
 
             AddItem(bow);

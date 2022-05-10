@@ -1,4 +1,4 @@
-﻿using Server.Mobiles;
+using Server.Mobiles;
 using Server.Network;
 using System;
 
@@ -13,7 +13,6 @@ namespace Server.Items
         public SherryTheMouseStatue()
             : base(0x20D0)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

@@ -59,7 +59,6 @@ namespace Server.Items
         [Constructable]
         public OrnateBedDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public OrnateBedDeed(Serial serial)

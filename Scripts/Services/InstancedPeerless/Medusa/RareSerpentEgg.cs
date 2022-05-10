@@ -9,7 +9,6 @@ namespace Server.Items
             : base(0x41BF)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
             Hue = Utility.RandomList(0x21, 0x4AC, 0x41C, 0xA21);
         }
 

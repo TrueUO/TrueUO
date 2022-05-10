@@ -137,8 +137,6 @@ namespace Server.Mobiles
                 return;
             }
 
-            var count = Altar == null ? 0 : Altar.Helpers.Count;
-
             foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(this, Location, Map, 20))
             {
                 if (target is Mobile m)

@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class HolidayBell : Item
     {
@@ -45,7 +45,6 @@
         {
             m_Maker = maker;
 
-            LootType = LootType.Blessed;
             Hue = m_Hues[Utility.Random(m_Hues.Length)];
             SoundID = 0x0F5 + Utility.Random(14);
         }

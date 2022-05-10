@@ -1,6 +1,3 @@
-// By Neon
-// Improved By Dddie
-
 using Server.Network;
 
 namespace Server.Items
@@ -13,7 +10,6 @@ namespace Server.Items
             Name = "a crystal ball";
             Weight = 10;
             Stackable = false;
-            LootType = LootType.Blessed;
             Light = LightType.Circle150;
         }
 

@@ -18,7 +18,6 @@ namespace Server.Items
         public Grinder()
             : base(0x9A97)
         {
-            LootType = LootType.Blessed;
         }
 
         public Grinder(Serial serial)

@@ -218,7 +218,6 @@ namespace Server.Items
         [Constructable]
         public AnvilofArtifactsDeed(int uses)
         {
-            LootType = LootType.Blessed;
             UsesRemaining = uses;
         }
 

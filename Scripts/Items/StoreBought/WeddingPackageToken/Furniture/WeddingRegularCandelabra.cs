@@ -15,7 +15,6 @@ namespace Server.Items
         {
             Duration = TimeSpan.Zero; // Never burnt out
             Light = LightType.Circle225;
-            LootType = LootType.Blessed;
         }
 
         public virtual bool Dye(Mobile from, DyeTub sender)

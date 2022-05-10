@@ -13,7 +13,6 @@ namespace Server.Items
             : base(0x1f19)
         {
             Hue = 1154;
-            LootType = LootType.Blessed;
             Weight = 1;
         }
 

@@ -20,7 +20,6 @@ namespace Server.Items
             : base(itemid)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeGuildstone(Serial serial)

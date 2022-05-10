@@ -14,10 +14,10 @@ namespace Server.Engines.Quests
         public BaseQuestItem(int itemID)
             : base(itemID)
         {
-            LootType = LootType.Blessed;
-
             if (Lifespan > 0)
+            {
                 StartTimer();
+            }
         }
 
         public BaseQuestItem(Serial serial)

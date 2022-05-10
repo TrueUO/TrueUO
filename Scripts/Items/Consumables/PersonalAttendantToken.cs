@@ -9,7 +9,6 @@ namespace Server.Items
         public PersonalAttendantToken()
             : base(0x2AAA)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 

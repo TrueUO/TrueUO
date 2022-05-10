@@ -224,7 +224,6 @@ namespace Server.Items
         [Constructable]
         public TreeStumpDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public TreeStumpDeed(Serial serial)

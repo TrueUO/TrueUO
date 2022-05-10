@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace Server.Engines.BulkOrders
 {
-    [TypeAlias("Scripts.Engines.BulkOrders.SmallBOD")]
     public abstract class SmallBOD : Item, IBOD
     {
         public abstract BODType BODType { get; }
@@ -23,9 +22,8 @@ namespace Server.Engines.BulkOrders
             : base(0x2258)
         {
             Weight = 1.0;
-            Hue = hue; // Blacksmith: 0x44E; Tailoring: 0x483
-            LootType = LootType.Blessed;
-
+            Hue = hue; 
+            
             m_AmountMax = amountMax;
             m_Type = type;
             m_Number = number;
@@ -39,7 +37,6 @@ namespace Server.Engines.BulkOrders
             : base(0x2258)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public SmallBOD(Serial serial)

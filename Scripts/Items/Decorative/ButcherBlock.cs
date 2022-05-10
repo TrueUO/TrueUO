@@ -8,7 +8,6 @@ namespace Server.Items
         public ButcherBlock()
             : base(0xA2A3)
         {
-            LootType = LootType.Blessed;
         }
 
         public ButcherBlock(Serial serial)

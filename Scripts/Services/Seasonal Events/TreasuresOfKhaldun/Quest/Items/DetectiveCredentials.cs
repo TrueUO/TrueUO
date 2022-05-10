@@ -9,7 +9,6 @@ namespace Server.Items
             : base(0x1088)
         {
             Hue = 1176;
-            LootType = LootType.Blessed;
         }
 
         public DetectiveCredentials(Serial serial)

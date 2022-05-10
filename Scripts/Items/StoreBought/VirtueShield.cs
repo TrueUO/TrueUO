@@ -19,8 +19,6 @@ namespace Server.Items
         {
             Attributes.SpellChanneling = 1;
             Attributes.DefendChance = 10;
-
-            LootType = LootType.Blessed;
         }
 
         public override bool OnEquip(Mobile from)

@@ -10,7 +10,6 @@ namespace Server.Items
         public CarvedWoodenScreen()
             : base(0x1945)
         {
-            LootType = LootType.Blessed;
             Weight = 6.0;
         }
 

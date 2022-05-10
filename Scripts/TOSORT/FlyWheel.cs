@@ -9,8 +9,12 @@ namespace Server.Items
             : base(0x46FE)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
             Hue = 1901;
+        }
+
+        public FlyWheel(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -21,11 +25,6 @@ namespace Server.Items
         }
 
         public override int Lifespan => 18000;
-
-        public FlyWheel(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

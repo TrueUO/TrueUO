@@ -131,7 +131,7 @@ namespace Server.Engines.Points
                 points = GetPointsForEquipment(item);
             }
 
-            if (item.LootType != LootType.Blessed && points < 100 && item is IShipwreckedItem shipItem && shipItem.IsShipwreckedItem)
+            if (points < 100 && item is IShipwreckedItem shipItem && shipItem.IsShipwreckedItem)
             {
                 points = 100;
             }
@@ -637,7 +637,6 @@ namespace Server.Engines.Points
             Entries[typeof(TastyTreat)] = 100.0;
             Entries[typeof(TatteredAncientScroll)] = 200.0;
             Entries[typeof(TribalBerry)] = 10.0;
-            Entries[typeof(TunicOfGuarding)] = 2.0;
             Entries[typeof(UndeadGargHorn)] = 1000.0;
             Entries[typeof(UntranslatedAncientTome)] = 200.0;
             Entries[typeof(WallBlood)] = 5000.0;

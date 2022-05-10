@@ -10,7 +10,6 @@ namespace Server.Items
         public CandlewoodTorch()
             : base(0xF6B)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
             Attributes.SpellChanneling = 1;
             Attributes.CastSpeed = -1;
@@ -62,19 +61,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.WriteEncodedInt(1); // version
+            writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
-
-            if (version < 1)
-            {
-                LootType = LootType.Blessed;
-                Weight = 1.0;
-            }
+            reader.ReadEncodedInt();
         }
     }
 }

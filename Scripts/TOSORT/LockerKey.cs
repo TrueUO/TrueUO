@@ -26,9 +26,13 @@ namespace Server.Items
             : base(0x410B)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
             Hue = 1359;
             m_Type = type;
+        }
+
+        public LockerKey(Serial serial)
+            : base(serial)
+        {
         }
 
         public override int Lifespan => 300;
@@ -88,11 +92,6 @@ namespace Server.Items
                     from.SendLocalizedMessage(501666); // You can't unlock that!
                 }
             }
-        }
-
-        public LockerKey(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void GetProperties(ObjectPropertyList list)

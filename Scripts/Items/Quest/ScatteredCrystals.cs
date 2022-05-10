@@ -6,7 +6,6 @@ namespace Server.Items
         public ScatteredCrystals()
             : base(0x2248)
         {
-            LootType = LootType.Blessed;
             Weight = 1;
             Hue = 0x47E;
         }

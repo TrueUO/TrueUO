@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class DraconicOrb : PeerlessKey
     {
@@ -9,7 +9,6 @@
             : base(0x573E)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
             Hue = 0x80F;
         }
 

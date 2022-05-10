@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Server.Engines.BulkOrders
 {
-    [TypeAlias("Scripts.Engines.BulkOrders.LargeBOD")]
     public abstract class LargeBOD : Item, IBOD
     {
         public abstract BODType BODType { get; }
@@ -18,8 +17,7 @@ namespace Server.Engines.BulkOrders
             : base(0x2258)
         {
             Weight = 1.0;
-            Hue = hue; // Blacksmith: 0x44E; Tailoring: 0x483
-            LootType = LootType.Blessed;
+            Hue = hue; 
 
             m_AmountMax = amountMax;
             m_RequireExceptional = requireExeptional;
@@ -31,7 +29,6 @@ namespace Server.Engines.BulkOrders
             : base(0x2258)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public LargeBOD(Serial serial)

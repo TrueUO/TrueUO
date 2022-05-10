@@ -127,7 +127,6 @@ namespace Server.Items
         [Constructable]
         public CustomizableSquaredDoorMatDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

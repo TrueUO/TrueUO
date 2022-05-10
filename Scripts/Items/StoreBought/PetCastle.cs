@@ -564,7 +564,6 @@ namespace Server.Items
         public PetCastleDeed(int uses)
         {
             _UsesRemaining = uses;
-            LootType = LootType.Blessed;
         }
 
         public PetCastleDeed(Serial serial)

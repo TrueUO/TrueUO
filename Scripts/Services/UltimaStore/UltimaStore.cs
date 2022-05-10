@@ -574,7 +574,6 @@ namespace Server.Engines.UOStore
             LampPost2 item = new LampPost2
             {
                 Movable = true,
-                LootType = LootType.Blessed
             };
 
             return item;

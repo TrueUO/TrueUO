@@ -82,7 +82,6 @@ namespace Server.Items
         [Constructable]
         public DecorativeMagesRugAddonDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public DecorativeMagesRugAddonDeed(Serial serial)

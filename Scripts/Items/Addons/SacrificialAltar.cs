@@ -261,7 +261,6 @@ namespace Server.Items
         [Constructable]
         public SacrificialAltarDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public SacrificialAltarDeed(Serial serial)

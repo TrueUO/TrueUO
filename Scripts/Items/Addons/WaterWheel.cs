@@ -94,7 +94,6 @@ namespace Server.Items
         [Constructable]
         public WaterWheelDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public WaterWheelDeed(Serial serial)

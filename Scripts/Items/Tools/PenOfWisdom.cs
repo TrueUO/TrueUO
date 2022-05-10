@@ -28,7 +28,6 @@ namespace Server.Items
         public PenOfWisdom(int uses)
             : base(0x0FC0)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
             m_UsesRemaining = uses;
             Hue = 1260;

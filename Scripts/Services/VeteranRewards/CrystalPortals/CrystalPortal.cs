@@ -32,7 +32,6 @@ namespace Server.Items
         {
             Weight = 5.0;
             Movable = true;
-            LootType = LootType.Blessed;
         }
 
         public CrystalPortal(Serial serial)

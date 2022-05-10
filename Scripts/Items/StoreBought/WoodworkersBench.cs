@@ -183,7 +183,6 @@ namespace Server.Items
         public WoodworkersBenchDeed()
             : base()
         {
-            LootType = LootType.Blessed;
         }
 
         public WoodworkersBenchDeed(Serial serial)

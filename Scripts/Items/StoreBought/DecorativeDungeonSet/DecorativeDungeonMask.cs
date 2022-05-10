@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0xA4EF)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeDungeonMask(Serial serial)

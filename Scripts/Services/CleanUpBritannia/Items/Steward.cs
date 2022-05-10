@@ -765,7 +765,6 @@ namespace Server.Mobiles
         public StewardDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public StewardDeed(Serial serial)

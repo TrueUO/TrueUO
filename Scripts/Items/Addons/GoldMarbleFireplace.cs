@@ -103,7 +103,6 @@ namespace Server.Items
         [Constructable]
         public GoldMarbleFireplaceDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public GoldMarbleFireplaceDeed(Serial serial)

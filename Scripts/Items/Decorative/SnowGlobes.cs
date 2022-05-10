@@ -71,7 +71,6 @@ namespace Server.Items
         public SnowGlobe()
             : base(0xE2F)
         {
-            LootType = LootType.Blessed;
             Light = LightType.Circle150;
         }
 

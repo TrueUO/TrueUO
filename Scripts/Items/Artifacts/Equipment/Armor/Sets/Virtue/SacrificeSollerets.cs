@@ -9,7 +9,6 @@ namespace Server.Items
         public SacrificeSollerets()
             : base(0x2B13, Layer.Shoes)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
             Hue = 0x226;
 

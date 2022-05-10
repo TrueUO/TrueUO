@@ -9,7 +9,6 @@ namespace Server.Engines.Quests.Doom
             Weight = 1.0;
             Hue = 0x835;
             Layer = Layer.OneHanded;
-            LootType = LootType.Blessed;
         }
 
         public GrandGrimoire(Serial serial)

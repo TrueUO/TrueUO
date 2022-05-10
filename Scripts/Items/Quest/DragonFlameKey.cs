@@ -8,7 +8,6 @@ namespace Server.Items
         {
             Weight = 2.0;
             Hue = 42;
-            LootType = LootType.Blessed;
         }
 
         public DragonFlameKey(Serial serial)

@@ -7,7 +7,6 @@ namespace Server.Items
         public HallowedSpellbook()
             : base(0x3FFFFFFFF)
         {
-            LootType = LootType.Blessed;
             Slayer = SlayerName.Silver;
         }
 

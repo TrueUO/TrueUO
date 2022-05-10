@@ -19,7 +19,6 @@ namespace Server.Items
         public PeerlessKey(int itemID)
             : base(itemID)
         {
-            LootType = LootType.Blessed;
         }
 
         public PeerlessKey(Serial serial)

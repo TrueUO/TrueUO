@@ -251,7 +251,6 @@ namespace Server.Items
         public EnormousVenusFlytrapAddonDeed(int hue)
         {
             Hue = hue;
-            LootType = LootType.Blessed;
         }
 
         public EnormousVenusFlytrapAddonDeed(Serial serial)

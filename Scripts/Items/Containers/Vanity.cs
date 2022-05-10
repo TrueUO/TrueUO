@@ -50,7 +50,6 @@ namespace Server.Items
         public VanityDeed()
             : base()
         {
-            LootType = LootType.Blessed;
         }
 
         public VanityDeed(Serial serial)
