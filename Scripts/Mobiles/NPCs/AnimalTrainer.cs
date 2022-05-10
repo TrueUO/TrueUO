@@ -1,5 +1,4 @@
 using Server.ContextMenus;
-using Server.Engines.Quests;
 using Server.Gumps;
 using Server.Items;
 using Server.Network;
@@ -59,87 +58,6 @@ namespace Server.Mobiles
             }
 
             base.AddCustomContextEntries(from, list);
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            list.Add(1072269); // Quest Giver
-        }
-
-        private DateTime _NextTalk;
-
-        public override void OnMovement(Mobile m, Point3D oldLocation)
-        {
-            if (m.Alive && !m.Hidden && m is PlayerMobile && InLOS(m) && InRange(m, 8) && !InRange(oldLocation, 8) && DateTime.UtcNow >= _NextTalk)
-            {
-                if (Utility.Random(100) < 50)
-                        Say(1157526); // Such an exciting time to be an Animal Trainer! New taming techniques have been discovered!
-
-                _NextTalk = DateTime.UtcNow + TimeSpan.FromSeconds(15);
-            }
-        }
-
-        private readonly Type[] _Quests = { typeof(TamingPetQuest), typeof(UsingAnimalLoreQuest), typeof(LeadingIntoBattleQuest), typeof(TeachingSomethingNewQuest) };
-
-        public override void OnDoubleClick(Mobile m)
-        {
-            if (m is PlayerMobile mobile && mobile.InRange(Location, 5))
-            {
-                CheckQuest(mobile);
-            }
-        }
-
-        public bool CheckQuest(PlayerMobile player)
-        {
-            for (int i = 0; i < _Quests.Length; i++)
-            {
-                BaseQuest quest = null;
-
-                for (var index = 0; index < player.Quests.Count; index++)
-                {
-                    var q = player.Quests[index];
-
-                    if (q.GetType() == _Quests[i])
-                    {
-                        quest = q;
-                        break;
-                    }
-                }
-
-                if (quest != null)
-                {
-                    if (quest.Completed)
-                    {
-                        if (quest.GetType() != typeof(TeachingSomethingNewQuest))
-                        {
-                            quest.GiveRewards();
-                        }
-                        else
-                        {
-                            player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.Complete, false, true));
-                        }
-
-                        return true;
-                    }
-
-                    player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.InProgress, false));
-                    quest.InProgress();
-
-                    return false;
-                }
-            }
-
-            BaseQuest questt = new TamingPetQuest
-            {
-                Owner = player,
-                Quester = this
-            };
-            player.CloseGump(typeof(MondainQuestGump));
-            player.SendGump(new MondainQuestGump(questt));
-
-            return true;
         }
 
         public static int GetMaxStabled(Mobile from)

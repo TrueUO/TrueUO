@@ -45,7 +45,6 @@ namespace Server.Engines.Points
         GauntletPoints,
         TOT,
         VAS,
-        FellowshipData,
         JollyRogerData
     }
 
@@ -415,7 +414,6 @@ namespace Server.Engines.Points
         public static DoomGauntlet DoomGauntlet { get; set; }
         public static TreasuresOfTokuno TreasuresOfTokuno { get; set; }
         public static VirtueArtifactsSystem VirtueArtifacts { get; set; }
-        public static FellowshipData FellowshipData { get; set; }
         public static JollyRogerData JollyRogerData { get; set; }
 
         public static void Configure()
@@ -444,7 +442,6 @@ namespace Server.Engines.Points
             DoomGauntlet = new DoomGauntlet();
             TreasuresOfTokuno = new TreasuresOfTokuno();
             VirtueArtifacts = new VirtueArtifactsSystem();
-            FellowshipData = new FellowshipData();
             JollyRogerData = new JollyRogerData();
         }
 
