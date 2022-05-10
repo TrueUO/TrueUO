@@ -25,16 +25,6 @@ namespace Server.Mobiles.MannequinProperty
         }
     }
 
-    public class PrizedProperty : NegativeAttr
-    {
-        public override Catalog Catalog => Catalog.None;
-        public override int LabelNumber => 1154910;  // Prized
-        public override bool IsSpriteGraph => true;
-        public override int SpriteW => 30;
-        public override int SpriteH => 210;
-        public override NegativeAttribute Attribute => NegativeAttribute.Prized;
-    }
-
     public class AntiqueProperty : NegativeAttr
     {
         public override Catalog Catalog => Catalog.None;

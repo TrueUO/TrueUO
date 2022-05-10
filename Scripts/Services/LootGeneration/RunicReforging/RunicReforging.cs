@@ -2381,13 +2381,12 @@ namespace Server.Items
                         if (0.95 >= chance)
                             return 0;
 
-                        switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                        switch (Utility.Random(item is BaseJewel ? 2 : 4))
                         {
-                            case 0: neg.Prized = 1; break;
-                            case 1: neg.Antique = 1; break;
-                            case 2: item.LootType = LootType.Cursed; break;
-                            case 3: neg.Unwieldly = 1; break;
-                            case 4: neg.Massive = 1; break;
+                            case 0: neg.Antique = 1; break;
+                            case 1: item.LootType = LootType.Cursed; break;
+                            case 2: neg.Unwieldly = 1; break;
+                            case 3: neg.Massive = 1; break;
                         }
 
                         return 100;
@@ -2401,21 +2400,14 @@ namespace Server.Items
 
                         if (0.75 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                            switch (Utility.Random(item is BaseJewel ? 2 : 4))
                             {
-                                case 0: neg.Prized = 1; break;
-                                case 1: neg.Antique = 1; break;
-                                case 2: item.LootType = LootType.Cursed; break;
-                                case 3: neg.Unwieldly = 1; break;
-                                case 4: neg.Massive = 1; break;
+                                case 0: neg.Antique = 1; break;
+                                case 1: item.LootType = LootType.Cursed; break;
+                                case 2: neg.Unwieldly = 1; break;
+                                case 3: neg.Massive = 1; break;
                             }
 
-                            return 100;
-                        }
-
-                        if (0.5 > chance)
-                        {
-                            neg.Prized = 1;
                             return 100;
                         }
 
@@ -2439,21 +2431,14 @@ namespace Server.Items
 
                         chance = Utility.RandomDouble();
 
-                        if (0.4 > chance)
-                        {
-                            neg.Prized = 1;
-                            return 100;
-                        }
-
                         if (0.6 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                            switch (Utility.Random(item is BaseJewel ? 2 : 4))
                             {
-                                case 0: neg.Prized = 1; break;
-                                case 1: neg.Antique = 1; break;
-                                case 2: item.LootType = LootType.Cursed; break;
-                                case 3: neg.Unwieldly = 1; break;
-                                case 4: neg.Massive = 1; break;
+                                case 0: neg.Antique = 1; break;
+                                case 1: item.LootType = LootType.Cursed; break;
+                                case 2: neg.Unwieldly = 1; break;
+                                case 3: neg.Massive = 1; break;
                             }
 
                             return 100;
@@ -2494,7 +2479,7 @@ namespace Server.Items
                             return 150;
                         }
 
-                        neg.Prized = 1;
+                        neg.Brittle = 1;
                         return 100;
                     }
                 case ItemPower.MajorArtifact:
