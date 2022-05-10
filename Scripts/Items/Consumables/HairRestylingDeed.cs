@@ -54,7 +54,6 @@ namespace Server.Items
             readonly int[][] LayoutArray =
             {
                 new int[] { 0 },
-                /* padding: its more efficient than code to ++ the index/buttonid */
                 new int[] { 425, 280, 342, 295, 000, 000, 310, 292 },
                 new int[] { 235, 060, 150, 075, 168, 020, 118, 073 },
                 new int[] { 235, 115, 150, 130, 168, 070, 118, 128 },

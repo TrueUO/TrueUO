@@ -5,15 +5,6 @@ namespace Server.Items
         public override int LabelNumber => 1125986;  // jack o' lantern helm
         public override bool IsArtifact => true;
 
-        [Constructable]
-        public JackOLanternHelm()
-            : base(0xA3EA)
-        {
-            Weight = 3.0;
-            Layer = Layer.Helm;
-            Light = LightType.Circle300;
-        }
-
         public override int BasePhysicalResistance => 12;
         public override int BaseFireResistance => 14;
         public override int BaseColdResistance => 4;
@@ -24,12 +15,21 @@ namespace Server.Items
         public override int InitMaxHits => 255;
         public override int StrReq => 10;
 
-        public override ArmorMaterialType MaterialType => ArmorMaterialType.Plate;
+        [Constructable]
+        public JackOLanternHelm()
+            : base(0xA3EA)
+        {
+            Weight = 3.0;
+            Layer = Layer.Helm;
+            Light = LightType.Circle300;
+        }
 
         public JackOLanternHelm(Serial serial)
             : base(serial)
         {
         }
+
+        public override ArmorMaterialType MaterialType => ArmorMaterialType.Plate;
 
         public override void Serialize(GenericWriter writer)
         {

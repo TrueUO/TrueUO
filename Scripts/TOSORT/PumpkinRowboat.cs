@@ -59,6 +59,11 @@ namespace Server.Multis
             Rudder.Handle = new PumpkinRudderHandle(Rudder, d);
         }
 
+        public PumpkinRowBoat(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void Delete()
         {
             if (Line != null)
@@ -172,11 +177,6 @@ namespace Server.Multis
         public override bool HasAccess(Mobile from)
         {
             return true;
-        }
-
-        public PumpkinRowBoat(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

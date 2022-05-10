@@ -9,6 +9,15 @@ namespace Server.Items
         public override bool IsArtifact => true;
         public override int LabelNumber => 1158701;  // Mask of Khal Ankur
 
+        public override int BasePhysicalResistance => 15;
+        public override int BaseFireResistance => 15;
+        public override int BaseColdResistance => 15;
+        public override int BasePoisonResistance => 15;
+        public override int BaseEnergyResistance => 15;
+
+        public override int InitMinHits => 255;
+        public override int InitMaxHits => 255;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int ChargeTime { get; set; }
 
@@ -49,6 +58,11 @@ namespace Server.Items
             Attributes.LowerManaCost = 10;
         }
 
+        public MaskOfKhalAnkur(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (Parent != from)
@@ -82,26 +96,12 @@ namespace Server.Items
                 StopTimer();
         }
 
-        public override int BasePhysicalResistance => 15;
-        public override int BaseFireResistance => 15;
-        public override int BaseColdResistance => 15;
-        public override int BasePoisonResistance => 15;
-        public override int BaseEnergyResistance => 15;
-
-        public override int InitMinHits => 255;
-        public override int InitMaxHits => 255;
-
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1158732, Charges.ToString()); // Meteor Breath Charges: ~1_VAL~
             list.Add(1158662); // Caddellite Infused
-        }
-
-        public MaskOfKhalAnkur(Serial serial)
-            : base(serial)
-        {
         }
 
         private Timer m_Timer;
@@ -152,7 +152,7 @@ namespace Server.Items
             m_Charges = reader.ReadInt();
             ChargeTime = reader.ReadInt();
 
-            if (Parent != null && Parent is Mobile && ChargeTime > 0)
+            if (Parent is Mobile && ChargeTime > 0)
             {
                 m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), Slice);
             }

@@ -15,6 +15,11 @@ namespace Server.Items
             Weight = 1.0;
         }
 
+        public ExplodingJackOLantern(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!IsChildOf(from.Backpack))
@@ -60,11 +65,6 @@ namespace Server.Items
                     m.PlaySound(519);
                 }
             }
-        }
-
-        public ExplodingJackOLantern(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
