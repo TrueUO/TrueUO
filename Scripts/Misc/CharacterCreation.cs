@@ -150,24 +150,19 @@ namespace Server.Misc
 
             newChar.Hunger = 20;
 
-            bool young = false;
-
             if (newChar is PlayerMobile pm)
             {
-                pm.AutoRenewInsurance = true;
-
                 double skillcap = Config.Get("PlayerCaps.SkillCap", 1000.0d) / 10;
 
                 if (skillcap != 100.0)
                 {
                     for (int i = 0; i < Enum.GetNames(typeof(SkillName)).Length; ++i)
+                    {
                         pm.Skills[i].Cap = skillcap;
+                    }
                 }
 
                 pm.Profession = args.Profession;
-
-                if (pm.IsPlayer() && pm.Account.Young && !Siege.SiegeShard)
-                    young = pm.Young = true;
             }
 
             SetName(newChar, args.Name);
@@ -212,16 +207,8 @@ namespace Server.Misc
             }
 
             if (TestCenter.Enabled)
-                TestCenter.FillBankbox(newChar);
-
-            if (young)
             {
-                NewPlayerTicket ticket = new NewPlayerTicket
-                {
-                    Owner = newChar
-                };
-
-                newChar.BankBox.DropItem(ticket);
+                TestCenter.FillBankbox(newChar);
             }
 
             CityInfo city = args.City;

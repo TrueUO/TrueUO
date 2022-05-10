@@ -1,7 +1,5 @@
-#region References
 using Server.Accounting;
 using Server.Services.TownCryer;
-#endregion
 
 namespace Server
 {
@@ -17,7 +15,6 @@ namespace Server
 
             TownCryerSystem.Enabled = true;
 
-            Mobile.InsuranceEnabled = !Siege.SiegeShard;
             Mobile.VisibleDamageType = VisibleDamageType.Related;
 
             AOS.DisableStatInfluences();
