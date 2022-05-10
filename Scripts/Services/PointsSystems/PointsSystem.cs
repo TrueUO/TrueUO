@@ -1,7 +1,6 @@
 using Server.Engines.ArenaSystem;
 using Server.Engines.CityLoyalty;
 using Server.Engines.SorcerersDungeon;
-using Server.Engines.Fellowship;
 using Server.Engines.JollyRoger;
 using Server.Engines.VvV;
 using Server.Misc;

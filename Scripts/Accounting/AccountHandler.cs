@@ -1,6 +1,5 @@
 using Server.Accounting;
 using Server.Commands;
-using Server.Engines.Help;
 using Server.Network;
 using Server.Regions;
 using System;
@@ -156,28 +155,6 @@ namespace Server.Misc
                 {
                     acct.SetPassword(pass);
                     from.SendMessage("The password to your account has changed.");
-                }
-                else
-                {
-                    PageEntry entry = PageQueue.GetEntry(from);
-
-                    if (entry != null)
-                    {
-                        if (entry.Message.StartsWith("[Automated: Change Password]"))
-                            from.SendMessage("You already have a password change request in the help system queue.");
-                        else
-                            from.SendMessage("Your IP address does not match that which created this account.");
-                    }
-                    else if (PageQueue.CheckAllowedToPage(from))
-                    {
-                        from.SendMessage("Your IP address does not match that which created this account.  A page has been entered into the help system on your behalf.");
-
-                        from.SendLocalizedMessage(501234, "", 0x35); /* The next available Counselor/Game Master will respond as soon as possible.
-                        * Please check your Journal for messages every few minutes.
-                        */
-
-                        PageQueue.Enqueue(new PageEntry(from, string.Format("[Automated: Change Password]<br>Desired password: {0}<br>Current IP address: {1}<br>Account IP address: {2}", pass, ipAddress, accessList[0]), PageType.Account));
-                    }
                 }
             }
             catch (Exception ex)

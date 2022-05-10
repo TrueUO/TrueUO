@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Mobiles;
 
 namespace Server.Items

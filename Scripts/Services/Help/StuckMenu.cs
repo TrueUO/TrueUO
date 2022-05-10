@@ -5,6 +5,7 @@ using Server.Network;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
+using Server.Regions;
 
 namespace Server.Menus.Questions
 {
@@ -316,6 +317,11 @@ namespace Server.Menus.Questions
                     Stop();
 					m_Mobile.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
 				}
+                else if (m_Mobile.Region.IsPartOf<DungeonRegion>() && m_Mobile.Map == Map.Felucca && m_Mobile.Alive)
+                {
+                    m_Mobile.Frozen = false;
+                    Stop();
+                }
                 else
                 {
                     m_Mobile.Frozen = false;
@@ -335,9 +341,6 @@ namespace Server.Menus.Questions
                         destMap = m_Mobile.LogoutMap == Map.Felucca ? Map.Felucca : Map.Trammel;
                     else
                         destMap = m_Mobile.Murderer ? Map.Felucca : Map.Trammel;
-
-                    if (destMap == Map.Trammel && Siege.SiegeShard)
-                        destMap = Map.Felucca;
 
                     if (m_Mobile.Map != Map.Internal)
                     {
