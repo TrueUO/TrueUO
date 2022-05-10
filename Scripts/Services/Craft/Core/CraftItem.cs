@@ -423,9 +423,7 @@ namespace Server.Engines.Craft
 
         private static readonly Type[] m_MarkableTable =
         {
-            typeof(BaseBracelet), typeof(BaseRing),
-            typeof(BaseContainer), typeof(CraftableFurniture),
-
+            typeof(BaseBracelet), typeof(BaseRing), typeof(BaseContainer), typeof(CraftableFurniture),
             typeof(BaseArmor), typeof(BaseWeapon), typeof(BaseClothing), typeof(BaseInstrument), typeof(BaseTool),
             typeof(BaseHarvestTool), typeof(BaseQuiver), typeof(DragonBardingDeed), typeof(Fukiya), typeof(FukiyaDarts),
             typeof(Shuriken), typeof(Spellbook), typeof(Runebook), typeof(ShortMusicStandLeft), typeof(ShortMusicStandRight),
@@ -435,11 +433,8 @@ namespace Server.Engines.Craft
             typeof(BambooChair), typeof(WoodenChair), typeof(FancyWoodenChairCushion), typeof(WoodenChairCushion),
             typeof(Nightstand), typeof(LargeTable), typeof(WritingTable), typeof(YewWoodTable), typeof(PlainLowTable),
             typeof(ElegantLowTable), typeof(DressformFront), typeof(DressformSide), typeof(BasePlayerBB), typeof(BarrelStaves),
-            typeof(BarrelLid), typeof(Clippers), typeof(Scissors),
-
-            typeof(KeyRing), typeof(Key), typeof(Globe), typeof(Spyglass), typeof(Lantern), typeof(Candelabra), typeof(Scales), typeof(BroadcastCrystal), typeof(TerMurStyleCandelabra),
-            typeof(BaseUtensil), typeof(BaseBeverage),
-
+            typeof(BarrelLid), typeof(Clippers), typeof(Scissors), typeof(KeyRing), typeof(Key), typeof(Globe), typeof(Spyglass),
+            typeof(Lantern), typeof(Candelabra), typeof(Scales), typeof(TerMurStyleCandelabra), typeof(BaseUtensil), typeof(BaseBeverage),
             typeof(FruitBowl), typeof(SackFlour), typeof(Dough), typeof(SweetDough), typeof(CocoaButter), typeof(CocoaLiquor),
             typeof(Food)
         };

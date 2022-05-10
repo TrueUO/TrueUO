@@ -86,7 +86,7 @@ namespace Server.Regions
             return false;
         }
 
-        public override bool CheckTravel(Mobile m, Point3D newLocation, Spells.TravelCheckType travelType)
+        public override bool CheckTravel(Mobile m, Point3D p, Spells.TravelCheckType type)
         {
             return false;
         }

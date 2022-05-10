@@ -79,8 +79,6 @@ namespace Server.Mobiles
                 Add(new GenericBuyInfo(typeof(Backgammon), 2, 20, 0xE1C, 0));
                 Add(new GenericBuyInfo(typeof(Engines.Mahjong.MahjongGame), 6, 20, 0xFAA, 0));
                 Add(new GenericBuyInfo(typeof(Dices), 2, 20, 0xFA7, 0));
-                Add(new GenericBuyInfo(typeof(SmallBagBall), 3, 20, 0x2256, 0));
-                Add(new GenericBuyInfo(typeof(LargeBagBall), 3, 20, 0x2257, 0));
                 Add(new GenericBuyInfo("1079931", typeof(SalvageBag), 1255, 20, 0xE76, Utility.RandomBlueHue()));
                 Add(new GenericBuyInfo("1114770", typeof(SkinTingeingTincture), 1255, 20, 0xEFF, 90));
             }

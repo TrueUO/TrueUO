@@ -22,15 +22,20 @@ namespace Server.Items
             Attributes.WeaponDamage = 75;
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public SterlingSilverRing(Serial serial)
+            : base(serial)
         {
-            if (IsChildOf(m.Backpack) && m is PlayerMobile mobile && !HasSkillBonus)
+        }
+
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (IsChildOf(from.Backpack) && from is PlayerMobile mobile && !HasSkillBonus)
             {
                 BaseGump.SendGump(new ApplySkillBonusGump(mobile, SkillBonuses, Skills, 20, 1));
             }
             else
             {
-                base.OnDoubleClick(m);
+                base.OnDoubleClick(from);
             }
         }
 
@@ -54,28 +59,16 @@ namespace Server.Items
             SkillName.Wrestling
         };
 
-        public SterlingSilverRing(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version < 1)
-            {
-                SkillBonuses.SetValues(0, SkillName.Meditation, 20);
-                SkillBonuses.Skill_2_Value = 0;
-                SkillBonuses.Skill_3_Value = 0;
-            }
+            reader.ReadInt();
         }
     }
 }

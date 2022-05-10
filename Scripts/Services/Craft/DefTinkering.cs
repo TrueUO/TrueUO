@@ -58,21 +58,14 @@ namespace Server.Engines.Craft
 
         private static readonly Type[] m_TinkerColorables =
         {
-            typeof(ForkLeft), typeof(ForkRight),
-            typeof(SpoonLeft), typeof(SpoonRight),
-            typeof(KnifeLeft), typeof(KnifeRight),
-            typeof(Plate),
-            typeof(Goblet), typeof(PewterMug),
-            typeof(KeyRing),
-            typeof(Candelabra), typeof(Scales),
-            typeof(Key), typeof(Globe),
-            typeof(Spyglass), typeof(Lantern),
-            typeof(HeatingStand), typeof(BroadcastCrystal), typeof(TerMurStyleCandelabra),
-            typeof(GorgonLense), typeof(MedusaLightScales), typeof(MedusaDarkScales), typeof(RedScales),
-            typeof(BlueScales), typeof(BlackScales), typeof(GreenScales), typeof(YellowScales), typeof(WhiteScales),
-            typeof(PlantPigment), typeof(SoftenedReeds), typeof(DryReeds), typeof(PlantClippings),
-
-            typeof(KotlAutomatonHead)
+            typeof(ForkLeft), typeof(ForkRight), typeof(SpoonLeft), typeof(SpoonRight),
+            typeof(KnifeLeft), typeof(KnifeRight), typeof(Plate), typeof(Goblet),
+            typeof(PewterMug), typeof(KeyRing), typeof(Candelabra), typeof(Scales),
+            typeof(Key), typeof(Globe), typeof(Spyglass), typeof(Lantern),
+            typeof(HeatingStand), typeof(TerMurStyleCandelabra), typeof(GorgonLense), typeof(MedusaLightScales),
+            typeof(MedusaDarkScales), typeof(RedScales), typeof(BlueScales), typeof(BlackScales),
+            typeof(GreenScales), typeof(YellowScales), typeof(WhiteScales), typeof(PlantPigment),
+            typeof(SoftenedReeds), typeof(DryReeds), typeof(PlantClippings), typeof(KotlAutomatonHead)
         };
 
         public override bool RetainsColorFrom(CraftItem item, Type type)
@@ -167,15 +160,9 @@ namespace Server.Engines.Craft
             AddJewelrySet(GemType.Tourmaline, typeof(Tourmaline));
             AddJewelrySet(GemType.Amber, typeof(Amber));
             AddJewelrySet(GemType.Diamond, typeof(Diamond));
-
-            index = AddCraft(typeof(KrampusMinionEarrings), 1044049, 1125645, 100.0, 500.0, typeof(IronIngot), 1044036, 3, 1044037);
-            AddRecipe(index, (int)CraftRecipes.KrampusMinionEarrings);
             #endregion
 
             #region Wooden Items
-            index = AddCraft(typeof(Nunchaku), 1044042, 1030158, 70.0, 120.0, typeof(IronIngot), 1044036, 3, 1044037);
-            AddRes(index, typeof(Board), 1044041, 8, 1044351);
-
             AddCraft(typeof(JointingPlane), 1044042, 1024144, 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
             AddCraft(typeof(MouldingPlane), 1044042, 1024140, 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
             AddCraft(typeof(SmoothingPlane), 1044042, 1024146, 0.0, 50.0, typeof(Board), 1044041, 4, 1044351);
@@ -341,11 +328,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(FancyWindChimes), 1044050, 1030291, 80.0, 130.0, typeof(IronIngot), 1044036, 15, 1044037);
 
             AddCraft(typeof(TerMurStyleCandelabra), 1044050, 1095313, 55.0, 105.0, typeof(IronIngot), 1044036, 4, 1044037);
-
-            index = AddCraft(typeof(BroadcastCrystal), 1044050, 1153097, 80.0, 130.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(Emerald), 1062601, 10, 1044240);
-            AddRes(index, typeof(Ruby), 1062603, 10, 1044240);
-            AddRes(index, typeof(CopperWire), 1026265, 1, 1150700);
 
             index = AddCraft(typeof(GorgonLense), 1044050, 1112625, 90.0, 120.0, typeof(MedusaDarkScales), 1112626, 2, 1053097);
             AddRes(index, typeof(CrystalDust), 1112328, 3, 1044253);

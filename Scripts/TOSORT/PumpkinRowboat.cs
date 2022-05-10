@@ -277,6 +277,11 @@ namespace Server.Multis
         {
         }
 
+        public PumpkinRudder(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void SetFacing(Direction dir)
         {
             switch (dir)
@@ -297,11 +302,6 @@ namespace Server.Multis
                     ItemID = 42058;
                     break;
             }
-        }
-
-        public PumpkinRudder(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -335,6 +335,11 @@ namespace Server.Multis
         {
         }
 
+        public PumpkinRudderHandle(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void SetFacing(Direction dir)
         {
             if (Rudder == null)
@@ -362,11 +367,6 @@ namespace Server.Multis
                         break;
                 }
             }
-        }
-
-        public PumpkinRudderHandle(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

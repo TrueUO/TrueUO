@@ -240,8 +240,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(SmokeBomb), 1116353, 1030248, 90.0, 120.0, typeof(Eggs), 1044477, 1, 1044253);
             AddRes(index, typeof(Ginseng), 1044356, 3, 1044364);
 
-            AddCraft(typeof(HoveringWisp), 1116353, 1072881, 75.0, 125.0, typeof(CapturedEssence), 1032686, 4, 1044253);
-
             index = AddCraft(typeof(NaturalDye), 1116353, 1112136, 75.0, 100.0, typeof(PlantPigment), 1112132, 1, 1044253);
             AddRes(index, typeof(ColorFixative), 1112135, 1, 1044253);
             SetItemHue(index, 2101);
