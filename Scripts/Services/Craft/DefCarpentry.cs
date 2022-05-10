@@ -193,14 +193,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(SmallPieceofBlackrock), 1150016, 10, 1044253);
             AddRes(index, typeof(NexusCore), 1153501, 1, 1044253);
 
-            index = AddCraft(typeof(CraftableHouseItem), 1044294, 1155849, 42.1, 77.7, typeof(Board), 1044041, 5, 1044351);
-            SetData(index, CraftableItemType.DarkWoodenSignHanger);
-            SetDisplayID(index, 2967);
-
-            index = AddCraft(typeof(CraftableHouseItem), 1044294, 1155850, 42.1, 77.7, typeof(Board), 1044041, 5, 1044351);
-            SetData(index, CraftableItemType.LightWoodenSignHanger);
-            SetDisplayID(index, 2969);
-
             // Furniture
             AddCraft(typeof(FootStool), 1044291, 1022910, 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
             AddCraft(typeof(Stool), 1044291, 1022602, 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
