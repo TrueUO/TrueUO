@@ -491,7 +491,6 @@ namespace Server.Items
                         Potion.Source.Item.ItemID = Potion.Destination.Item.ItemID;
                         Potion.Source.Item.Hue = Potion.Destination.Item.Hue;
                         Potion.Source.Item.LootType = Potion.Destination.Item.LootType;
-                        Potion.Source.Item.Insured = Potion.Destination.Item.Insured;                        
 
                         Potion.Destination.Item.Delete();
                         Potion.Delete();

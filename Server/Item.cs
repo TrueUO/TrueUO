@@ -833,9 +833,7 @@ namespace Server
 			Deleted = 0x04,
 			Stackable = 0x08,
 			InQueue = 0x10,
-			Insured = 0x20,
-			PayedInsurance = 0x40,
-			QuestItem = 0x80
+            QuestItem = 0x20
 		}
 
 		private class CompactInfo
@@ -1187,7 +1185,7 @@ namespace Server
         }
 
 		/// <summary>
-		///     Overridable. Adds the loot type of this item to the given <see cref="ObjectPropertyList" />. By default, this will be either 'blessed', 'cursed', or 'insured'.
+		///     Overridable. Adds the loot type of this item to the given <see cref="ObjectPropertyList" />. By default, this will be either 'blessed' or 'cursed'.
 		/// </summary>
 		public virtual void AddLootTypeProperty(ObjectPropertyList list)
 		{
@@ -1201,11 +1199,7 @@ namespace Server
 				{
 					list.Add(1049643); // cursed
 				}
-				else if (Insured)
-				{
-					list.Add(1061682); // <b>insured</b>
-				}
-			}
+            }
 		}
 
 		/// <summary>
@@ -2453,13 +2447,12 @@ namespace Server
 			LocationShortXY = 0x00040000,
 			LocationByteXY = 0x00080000,
 			ImplFlags = 0x00100000,
-			InsuredFor = 0x00200000,
-			BlessedFor = 0x00400000,
-			HeldBy = 0x00800000,
-			IntWeight = 0x01000000,
-			SavedFlags = 0x02000000,
-			NullWeight = 0x04000000,
-			Light = 0x08000000
+            BlessedFor = 0x00200000,
+			HeldBy = 0x00400000,
+			IntWeight = 0x00800000,
+			SavedFlags = 0x01000000,
+			NullWeight = 0x02000000,
+			Light = 0x04000000
 		}
 
 		private static void SetSaveFlag(ref SaveFlag flags, SaveFlag toSet, bool setIf)
@@ -2634,8 +2627,7 @@ namespace Server
 				}
 			}
 
-			ImplFlag implFlags = m_Flags & (ImplFlag.Visible | ImplFlag.Movable | ImplFlag.Stackable | ImplFlag.Insured |
-										ImplFlag.PayedInsurance | ImplFlag.QuestItem);
+			ImplFlag implFlags = m_Flags & (ImplFlag.Visible | ImplFlag.Movable | ImplFlag.Stackable | ImplFlag.QuestItem);
 
 			if (implFlags != (ImplFlag.Visible | ImplFlag.Movable))
 			{
@@ -2789,11 +2781,6 @@ namespace Server
 			if (GetSaveFlag(flags, SaveFlag.ImplFlags))
 			{
 				writer.WriteEncodedInt((int)implFlags);
-			}
-
-			if (GetSaveFlag(flags, SaveFlag.InsuredFor))
-			{
-				writer.Write((Mobile)null);
 			}
 
 			if (GetSaveFlag(flags, SaveFlag.BlessedFor))
@@ -3231,13 +3218,7 @@ namespace Server
 						m_Flags = (ImplFlag)reader.ReadEncodedInt();
 					}
 
-					if (GetSaveFlag(flags, SaveFlag.InsuredFor))
-					{
-						/*m_InsuredFor = */
-						reader.ReadMobile();
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.BlessedFor))
+                    if (GetSaveFlag(flags, SaveFlag.BlessedFor))
 					{
 						AcquireCompactInfo().m_BlessedFor = reader.ReadMobile();
 					}
@@ -5762,18 +5743,6 @@ namespace Server
 				Delta(ItemDelta.Update);
 			}
 		}
-
-		public bool Insured
-		{
-			get => GetFlag(ImplFlag.Insured);
-			set
-			{
-				SetFlag(ImplFlag.Insured, value);
-				InvalidateProperties();
-			}
-		}
-
-		public bool PayedInsurance { get => GetFlag(ImplFlag.PayedInsurance); set => SetFlag(ImplFlag.PayedInsurance, value); }
 
 		public Mobile BlessedFor
 		{
