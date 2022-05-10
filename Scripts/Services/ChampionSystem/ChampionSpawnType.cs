@@ -16,8 +16,7 @@ namespace Server.Engines.CannedEvil
         Corrupt,
         Terror,
         Infuse,
-        DragonTurtle,
-        Khaldun
+        DragonTurtle
     }
 
     public class ChampionSpawnInfo
@@ -124,14 +123,6 @@ namespace Server.Engines.CannedEvil
 				new[]{ typeof( SilverbackGorilla ), typeof( WildTiger ) }, 
 				new[]{ typeof( GreaterPhoenix  ), typeof( Infernus ) }, 
 				new[]{ typeof( Dimetrosaur ), typeof( Allosaurus ) }											   
-			} ),
-
-            new ChampionSpawnInfo( "Khaldun", typeof( KhalAnkur ), new[]{ "Banisher", "Enforcer", "Eradicator" } , new[] // Khal Ankur
-            {																					                        
-				new[]{ typeof( SkelementalKnight ), typeof( KhaldunBlood ) },							
-				new[]{ typeof( SkelementalMage ), typeof( Viscera ) },											   
-				new[]{ typeof( CultistAmbusher  ), typeof( ShadowFiend ) },										
-				new[]{ typeof( KhalAnkurWarriors ) }											                    
 			} )
         };
 
