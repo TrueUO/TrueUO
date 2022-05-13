@@ -81,13 +81,9 @@ namespace Server.Mobiles
         ThievesGuild,
         RangersGuild,
         HealersGuild,
-        MinersGuild,
         MerchantsGuild,
-        TinkersGuild,
-        TailorsGuild,
         FishermensGuild,
-        BardsGuild,
-        BlacksmithsGuild
+        BardsGuild
     }
     #endregion
 

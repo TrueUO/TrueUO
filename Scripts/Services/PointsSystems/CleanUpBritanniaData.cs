@@ -428,7 +428,6 @@ namespace Server.Engines.Points
             Entries[typeof(BrightsightLenses)] = 100.0;
             Entries[typeof(FleshRipper)] = 100.0;
             Entries[typeof(QuiverOfRage)] = 100.0;
-            Entries[typeof(QuiverOfElements)] = 100.0;
             Entries[typeof(RaedsGlory)] = 100.0;
             Entries[typeof(RighteousAnger)] = 100.0;
             Entries[typeof(RobeOfTheEclipse)] = 100.0;

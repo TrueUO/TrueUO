@@ -969,8 +969,7 @@ namespace Server.Items
             2,
             new[]
             {
-                typeof(Blacksmith),
-                typeof(BlacksmithGuildmaster)
+                typeof(Blacksmith)
             },
             new[]
             {
@@ -1051,8 +1050,7 @@ namespace Server.Items
             new[]
             {
                 typeof(Tailor),
-                typeof(Weaver),
-                typeof(TailorGuildmaster)
+                typeof(Weaver)
             },
             new[]
             {
@@ -1491,8 +1489,7 @@ namespace Server.Items
             1,
             new[]
             {
-                typeof(Tinker),
-                typeof(TinkerGuildmaster)
+                typeof(Tinker)
             },
             new[]
             {

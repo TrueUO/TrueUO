@@ -1,5 +1,4 @@
 using Server.ContextMenus;
-using Server.Engines.Quests;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Multis;
@@ -8,79 +7,6 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class MyrmidexRewardBag : Backpack
-    {
-        public MyrmidexRewardBag()
-        {
-            Hue = BaseReward.RewardBagHue();
-
-            switch (Utility.Random(4))
-            {
-                default:
-                case 0: DropItem(new RecipeScroll(Utility.RandomMinMax(900, 905))); break;
-                case 1: DropItem(new EodonTribeRewardTitleToken()); break;
-                case 2: DropItem(new RecipeScroll(455)); break;
-                case 3: DropItem(new MoonstoneCrystal()); break;
-            }
-        }
-
-        public MyrmidexRewardBag(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class EodonianRewardBag : Backpack
-    {
-        public EodonianRewardBag()
-        {
-            Hue = BaseReward.RewardBagHue();
-
-            switch (Utility.Random(4))
-            {
-                default:
-                case 0: DropItem(new MonsterStatuette(MonsterStatuetteType.SakkhranBirdOfPrey)); break;
-                case 1: DropItem(new EodonTribeRewardTitleToken()); break;
-                case 2: DropItem(new RecipeScroll(1000)); break;
-                case 3:
-                    if (0.5 > Utility.RandomDouble())
-                        DropItem(new RawMoonstoneLargeAddonDeed());
-                    else
-                        DropItem(new RawMoonstoneSmallAddonDeed());
-                    break;
-            }
-        }
-
-        public EodonianRewardBag(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class MoonstoneCrystal : Item, ISecurable
     {
         public static Dictionary<int, Point3D> Locations { get; set; }
@@ -254,7 +180,6 @@ namespace Server.Items
         }
     }
 
-    [TypeAlias("Server.Items.KotlPowerCoil")]
     public class KotlPowerCore : Item
     {
         public override int LabelNumber => 1124179;  // Kotl Power Core

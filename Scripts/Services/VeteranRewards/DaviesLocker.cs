@@ -381,8 +381,6 @@ namespace Server.Engines.VeteranRewards
         public Point3D Location { get; }
         public int Level { get; }
 
-        public bool QuestItem { get; set; }
-
         public DaviesLockerEntry(Map map, Point3D location, int level)
         {
             Map = map;
@@ -396,9 +394,6 @@ namespace Server.Engines.VeteranRewards
 
             switch (v)
             {
-                case 1:
-                    QuestItem = reader.ReadBool();
-                    goto case 0;
                 case 0:
                     Map = reader.ReadMap();
                     Location = reader.ReadPoint3D();
@@ -409,9 +404,7 @@ namespace Server.Engines.VeteranRewards
 
         public virtual void Serialize(GenericWriter writer)
         {
-            writer.Write(1);
-
-            writer.Write(QuestItem);
+            writer.Write(0);
 
             writer.Write(Map);
             writer.Write(Location);
@@ -431,9 +424,6 @@ namespace Server.Engines.VeteranRewards
             Opened = false;
             IsAncient = false;
             MessageIndex = -1;
-
-            if (mib is SaltySeaMIB)
-                QuestItem = true;
         }
 
         public SOSEntry(SOS sos)
@@ -442,9 +432,6 @@ namespace Server.Engines.VeteranRewards
             Opened = true;
             IsAncient = sos.IsAncient;
             MessageIndex = sos.MessageIndex;
-
-            if (sos is SaltySeaSOS)
-                QuestItem = true;
         }
 
         public SOSEntry(GenericReader reader)
@@ -484,9 +471,6 @@ namespace Server.Engines.VeteranRewards
             Decoder = map.Decoder;
             NextReset = map.NextReset;
             Package = map.Package;
-
-            if (map is HiddenTreasuresTreasureMap)
-                QuestItem = true;
         }
 
         public TreasureMapEntry(GenericReader reader) : base(reader)
@@ -779,32 +763,16 @@ namespace Server.Engines.VeteranRewards
 
             if (entry.Opened)
             {
-                SOS sos;
-
-                if (entry.QuestItem)
+                var sos = new SOS(entry.Map, entry.Level)
                 {
-                    sos = new SaltySeaSOS(entry.Map, entry.Level);
-                }
-                else
-                {
-                    sos = new SOS(entry.Map, entry.Level);
-                }
+                    MessageIndex = entry.MessageIndex,
+                    TargetLocation = entry.Location
+                };
 
-                sos.MessageIndex = entry.MessageIndex;
-                sos.TargetLocation = entry.Location;
                 return sos;
             }
 
-            MessageInABottle mib;
-
-            if (entry.QuestItem)
-            {
-                mib = new SaltySeaMIB(entry.Map, entry.Level);
-            }
-            else
-            {
-                mib = new MessageInABottle(entry.Map, entry.Level);
-            }
+            var mib = new MessageInABottle(entry.Map, entry.Level);
 
             return mib;
         }
@@ -816,22 +784,13 @@ namespace Server.Engines.VeteranRewards
                 return null;
             }
 
-            TreasureMap map;
-
-            if (entry.QuestItem)
+            var map = new TreasureMap
             {
-                map = new HiddenTreasuresTreasureMap(entry.Level, entry.Map, new Point2D(entry.Location.X, entry.Location.Y));
-            }
-            else
-            {
-                map = new TreasureMap
-                {
-                    Facet = entry.Map,
-                    Level = entry.Level,
-                    Package = entry.Package,
-                    ChestLocation = new Point2D(entry.Location.X, entry.Location.Y)
-                };
-            }
+                Facet = entry.Map,
+                Level = entry.Level,
+                Package = entry.Package,
+                ChestLocation = new Point2D(entry.Location.X, entry.Location.Y)
+            };
 
             bool eodon = map.TreasureFacet == TreasureFacet.Eodon;
 

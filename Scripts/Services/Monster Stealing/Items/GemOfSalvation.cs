@@ -38,9 +38,13 @@ namespace Server.Items
                             TimeSpan left = pm.NextGemOfSalvationUse - DateTime.UtcNow;
 
                             if (left >= TimeSpan.FromMinutes(1.0))
+                            {
                                 pm.SendLocalizedMessage(1095131, ((left.Hours * 60) + left.Minutes).ToString()); // Your spirit lacks cohesion. You must wait ~1_minutes~ minutes before invoking the power of a Gem of Salvation.
+                            }
                             else
+                            {
                                 pm.SendLocalizedMessage(1095130, left.Seconds.ToString()); // Your spirit lacks cohesion. You must wait ~1_seconds~ seconds before invoking the power of a Gem of Salvation.
+                            }
                         }
                         else
                         {
@@ -66,7 +70,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 

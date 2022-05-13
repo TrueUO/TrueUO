@@ -2,7 +2,6 @@ using Server.Multis;
 
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.PumpkinDeed")]
     public class PumpkinCannonDeed : ShipCannonDeed
     {
         public override CannonPower CannonType => CannonPower.Pumpkin;

@@ -459,13 +459,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(CopperWire), 1026265, 1, 1044253);
             ForceNonExceptional(index);
 
-            index = AddCraft(typeof(KotlAutomatonHead), 1044051, 1156998, 100.0, 580.0, typeof(IronIngot), 1044036, 300, 1044037);
-            SetMinSkillOffset(index, 25.0);
-            AddRes(index, typeof(AutomatonActuator), 1156997, 1, 1156999);
-            AddRes(index, typeof(StasisChamberPowerCore), 1156623, 1, 1157000);
-            AddRes(index, typeof(InoperativeAutomatonHead), 1157002, 1, 1157001);
-            AddRecipe(index, (int)CraftRecipes.KotlAutomatonHead);
-
             index = AddCraft(typeof(PersonalTelescope), 1044051, 1125284, 95.0, 196.0, typeof(IronIngot), 1044036, 25, 1044037);
             AddRes(index, typeof(WorkableGlass), 1154170, 1, 1154171);
             AddRes(index, typeof(SextantParts), 1044175, 1, 1044253);

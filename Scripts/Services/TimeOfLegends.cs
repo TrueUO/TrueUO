@@ -43,8 +43,7 @@ namespace Server
             Decorate.Generate("tol", "Data/Decoration/TimeOfLegends/Felucca", Map.Felucca);
 
             ShadowguardController.SetupShadowguard(e.Mobile);
-            Engines.MyrmidexInvasion.GenerateMyrmidexQuest.Generate();
-
+            
             MacawSpawner.Generate();
 
             CommandSystem.Handle(e.Mobile, CommandSystem.Prefix + "XmlLoad Spawns/Eodon.xml");

@@ -36,7 +36,7 @@ namespace Server.Engines.CreatureStealing
             {
                 int chance = GetStealingChance(thief, bc, stealing);
 
-                if ((Utility.Random(100) + 1) <= chance)
+                if (Utility.Random(100) + 1 <= chance)
                 {
                     thief.SendLocalizedMessage(1094947);//You successfully steal a special item from the creature!
 
@@ -59,7 +59,9 @@ namespace Server.Engines.CreatureStealing
         public static void HandleSmugglersEdgeSteal(BaseCreature from, PlayerMobile thief)
         {
             if (from.HasBeenStolen || !CheckLocation(thief, from))
+            {
                 return;
+            }
 
             if (0.05 > Utility.RandomDouble())
             {
@@ -74,11 +76,17 @@ namespace Server.Engines.CreatureStealing
                     int chance = GetStealingChance(thief, from, tempSkill);
 
                     if (realSkill <= 109.9)
+                    {
                         chance += 1;
+                    }
                     else if (realSkill <= 114.9)
+                    {
                         chance += 2;
+                    }
                     else if (realSkill >= 115.0)
+                    {
                         chance += 3;
+                    }
 
                     if (chance >= Utility.Random(100))
                     {
@@ -168,7 +176,7 @@ namespace Server.Engines.CreatureStealing
             {
                 if (toSteal.Stackable && toSteal.Amount > 1)
                 {
-                    int maxAmount = (int)((skill / 10.0) / toSteal.Weight);
+                    int maxAmount = (int)(skill / 10.0 / toSteal.Weight);
 
                     if (maxAmount < 1)
                     {
@@ -186,7 +194,7 @@ namespace Server.Engines.CreatureStealing
                         int pileWeight = (int)Math.Ceiling(toSteal.Weight * toSteal.Amount);
                         pileWeight *= 10;
 
-                        double chance = (skill - (pileWeight - 22.5)) / ((pileWeight + 27.5) - (pileWeight - 22.5));
+                        double chance = (skill - (pileWeight - 22.5)) / (pileWeight + 27.5 - (pileWeight - 22.5));
 
                         if (chance >= Utility.RandomDouble())
                         {
@@ -198,7 +206,7 @@ namespace Server.Engines.CreatureStealing
                         int pileWeight = (int)Math.Ceiling(toSteal.Weight * amount);
                         pileWeight *= 10;
 
-                        double chance = (skill - (pileWeight - 22.5)) / ((pileWeight + 27.5) - (pileWeight - 22.5));
+                        double chance = (skill - (pileWeight - 22.5)) / (pileWeight + 27.5 - (pileWeight - 22.5));
 
                         if (chance >= Utility.RandomDouble())
                         {
@@ -216,7 +224,7 @@ namespace Server.Engines.CreatureStealing
                     int iw = (int)Math.Ceiling(w);
                     iw *= 10;
 
-                    double chance = (skill - (iw - 22.5)) / ((iw + 27.5) - (iw - 22.5));
+                    double chance = (skill - (iw - 22.5)) / (iw + 27.5 - (iw - 22.5));
 
                     if (chance >= Utility.RandomDouble())
                     {

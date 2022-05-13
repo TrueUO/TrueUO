@@ -12,7 +12,7 @@ namespace Server
         private static readonly Type[] m_Artifacts =
         {
             typeof(BladeDance), typeof(BloodwoodSpirit), typeof(Bonesmasher), typeof(Boomstick),
-            typeof(BrightsightLenses), typeof(FleshRipper), typeof(QuiverOfRage), typeof(QuiverOfElements),
+            typeof(BrightsightLenses), typeof(FleshRipper), typeof(QuiverOfRage), 
             typeof(RaedsGlory), typeof(RighteousAnger), typeof(RobeOfTheEclipse), typeof(SoulSeeker),
             typeof(TalonBite), typeof(TotemOfVoid), typeof(WildfireBow), typeof(Windsong)
         };

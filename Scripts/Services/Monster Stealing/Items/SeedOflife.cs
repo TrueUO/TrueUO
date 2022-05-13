@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    [TypeAlias("drNO.ThieveItems.SeedOflife")]
     public class SeedOfLife : Item
     {
         private static readonly Dictionary<PlayerMobile, DateTime> SeedUsageList = new Dictionary<PlayerMobile, DateTime>();
@@ -58,14 +57,14 @@ namespace Server.Items
             if (SeedUsageList.ContainsKey(pm))
             {
                 if (SeedUsageList[pm] + Cooldown >= DateTime.Now)
+                {
                     return false;
-                else
-                    return true;
-            }
-            else
-            {
+                }
+
                 return true;
             }
+
+            return true;
         }
 
         private void OnUsed(PlayerMobile by)
@@ -115,15 +114,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

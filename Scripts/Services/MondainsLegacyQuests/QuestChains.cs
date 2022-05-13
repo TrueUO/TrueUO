@@ -8,10 +8,7 @@ namespace Server.Engines.Quests
 
         CovetousGhost = 1,
         HonorOfDeBoors = 2,
-        ValleyOfOne = 3,
-        MyrmidexAlliance = 4,
-        EodonianAlliance = 5,
-        FlintTheQuartermaster = 6
+        FlintTheQuartermaster = 3
     }
 
     public class BaseChain
@@ -20,15 +17,12 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[7][];
+            Chains = new Type[4][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
             Chains[(int)QuestChain.CovetousGhost] = new[] { typeof(GhostOfCovetousQuest), typeof(SaveHisDadQuest), typeof(FathersGratitudeQuest) };
             Chains[(int)QuestChain.HonorOfDeBoors] = new[] { typeof(HonorOfDeBoorsQuest), typeof(JackTheVillainQuest), typeof(SavedHonorQuest) };
-            Chains[(int)QuestChain.ValleyOfOne] = new[] { typeof(TimeIsOfTheEssenceQuest), typeof(UnitingTheTribesQuest) };
-            Chains[(int)QuestChain.MyrmidexAlliance] = new[] { typeof(TheZealotryOfZipactriotlQuest), typeof(DestructionOfZipactriotlQuest) };
-            Chains[(int)QuestChain.EodonianAlliance] = new[] { typeof(ExterminatingTheInfestationQuest), typeof(InsecticideAndRegicideQuest) };
             Chains[(int)QuestChain.FlintTheQuartermaster] = new[] { typeof(ThievesBeAfootQuest), typeof(BibliophileQuest) };
         }
 

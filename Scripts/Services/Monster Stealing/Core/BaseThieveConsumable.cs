@@ -129,10 +129,8 @@ namespace Server.Items
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         public static bool IsUnderThieveConsumableEffect(PlayerMobile pm, ThieveConsumableEffect eff)
@@ -151,10 +149,8 @@ namespace Server.Items
             {
                 return EffectTable[pm].Effect;
             }
-            else
-            {
-                return ThieveConsumableEffect.None;
-            }
+
+            return ThieveConsumableEffect.None;
         }
 
         public BaseThieveConsumable(Serial serial)
@@ -166,7 +162,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write((int)m_EffectType);
@@ -176,8 +171,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_EffectType = (ThieveConsumableEffect)reader.ReadInt();
             m_EffectDuration = reader.ReadTimeSpan();

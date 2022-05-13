@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Items;
 using Server.Targeting;
 
@@ -20,17 +19,6 @@ namespace Server.Engines.Harvest
 
         protected override void OnTarget(Mobile from, object targeted)
         {
-            if (m_System is Mining)
-            {
-                if (targeted is LandTarget landTarget && landTarget.TileID >= 113 && landTarget.TileID <= 120)
-                {
-                    if (TheGreatVolcanoQuest.OnHarvest(from, m_Tool))
-                    {
-                        return;
-                    }
-                }
-            }
-
             if (m_System is Lumberjacking && targeted is IChopable chopable)
             {
                 chopable.OnChop(from);
@@ -40,9 +28,13 @@ namespace Server.Engines.Harvest
                 Item item = (Item)obj;
 
                 if (!item.IsChildOf(from.Backpack))
+                {
                     from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+                }
                 else if (obj.Axe(from, axe))
+                {
                     from.PlaySound(0x13E);
+                }
             }
             else if (m_System is Lumberjacking && targeted is ICarvable carvable)
                 carvable.Carve(from, m_Tool);
