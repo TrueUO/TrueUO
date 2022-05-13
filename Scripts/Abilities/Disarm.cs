@@ -1,4 +1,3 @@
-using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 
@@ -66,17 +65,6 @@ namespace Server.Items
                 BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.NoRearm, 1075637, BlockEquipDuration, defender));
 
                 BaseWeapon.BlockEquip(defender, BlockEquipDuration);
-
-                if (defender is BritannianInfantry)
-                {
-                    Timer.DelayCall(BlockEquipDuration + TimeSpan.FromSeconds(Utility.RandomMinMax(3, 10)), () =>
-                    {
-                        if (toDisarm != null && !toDisarm.Deleted && toDisarm.IsChildOf(defender.Backpack))
-                        {
-                            defender.EquipItem(toDisarm);
-                        }
-                    });
-                }
 
                 AddImmunity(defender, attacker.Weapon is Fists ? TimeSpan.FromSeconds(10) : TimeSpan.FromSeconds(15));
             }

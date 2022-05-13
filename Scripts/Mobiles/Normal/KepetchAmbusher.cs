@@ -3,11 +3,10 @@ using Server.Items;
 namespace Server.Mobiles
 {
     [CorpseName("a kepetch corpse")]
-    public class KepetchAmbusher : BaseCreature, ICarvable
+    public class KepetchAmbusher : BaseCreature
     {
         public override bool CanStealth => true;  //Stays Hidden until Combatant in range.
-        public bool GatheredFur { get; set; }
-
+        
         [Constructable]
         public KepetchAmbusher()
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
@@ -44,30 +43,6 @@ namespace Server.Mobiles
             Karma = -2500;
         }
 
-        public bool Carve(Mobile from, Item item)
-        {
-            if (!GatheredFur)
-            {
-                Fur fur = new Fur(FurType, Fur);
-
-                if (from.Backpack == null || !from.Backpack.TryDropItem(from, fur, false))
-                {
-                    from.SendLocalizedMessage(1112359); // You would not be able to place the gathered kepetch fur in your backpack!
-                    fur.Delete();
-                }
-                else
-                {
-                    from.SendLocalizedMessage(1112360); // You place the gathered kepetch fur into your backpack.
-                    GatheredFur = true;
-                    return true;
-                }
-            }
-            else
-                from.SendLocalizedMessage(1112358); // The Kepetch nimbly escapes your attempts to shear its mane.
-
-            return false;
-        }
-
         public KepetchAmbusher(Serial serial)
             : base(serial)
         {
@@ -95,9 +70,6 @@ namespace Server.Mobiles
         public override FoodType FavoriteFood => FoodType.FruitsAndVegies | FoodType.GrainsAndHay;
 
         public override int DragonBlood => 8;
-
-        public override int Fur => GatheredFur ? 0 : 15;
-        public override FurType FurType => FurType.Brown;
 
         public override void GenerateLoot()
         {
@@ -161,6 +133,7 @@ namespace Server.Mobiles
                 {
                     HideSelf();
                 }
+
                 base.OnThink();
             }
         }
@@ -169,8 +142,7 @@ namespace Server.Mobiles
         {
             if (Core.TickCount >= NextSkillTime)
             {
-                Effects.SendLocationParticles(
-                    EffectItem.Create(Location, Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
+                Effects.SendLocationParticles(EffectItem.Create(Location, Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
 
                 PlaySound(0x22F);
                 Hidden = true;
@@ -182,20 +154,13 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(2);
-            writer.Write(GatheredFur);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 1)
-                reader.ReadDeltaTime();
-            else
-                GatheredFur = reader.ReadBool();
+            reader.ReadInt();
         }
     }
 }

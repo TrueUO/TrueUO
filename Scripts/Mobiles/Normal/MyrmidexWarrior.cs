@@ -1,6 +1,3 @@
-using Server.Engines.MyrmidexInvasion;
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a myrmidex corpse")]
@@ -14,7 +11,6 @@ namespace Server.Mobiles
 
             Body = 1403;
             BaseSoundID = 959;
-            //Hue = 2676;
 
             SetStr(500, 600);
             SetDex(82, 95);
@@ -48,33 +44,11 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
-            AddLoot(LootPack.LootItemCallback(TryDropMoonstone, 0.25, Utility.RandomMinMax(1, 5), false, false));
-        }
-
-        public static Item TryDropMoonstone(IEntity e)
-        {
-            if (Region.Find(e.Location, e.Map).IsPartOf("MyrmidexBattleground"))
-            {
-                return new MoonstoneCrystalShard();
-            }
-
-            return null;
         }
 
         public override Poison HitPoison => Poison.Deadly;
         public override Poison PoisonImmune => Poison.Deadly;
         public override int TreasureMapLevel => 2;
-
-        public override bool IsEnemy(Mobile m)
-        {
-            if (MyrmidexInvasionSystem.Active && MyrmidexInvasionSystem.IsAlliedWithEodonTribes(m))
-                return true;
-
-            if (MyrmidexInvasionSystem.Active && MyrmidexInvasionSystem.IsAlliedWithMyrmidex(m))
-                return false;
-
-            return base.IsEnemy(m);
-        }
 
         public MyrmidexWarrior(Serial serial)
             : base(serial)

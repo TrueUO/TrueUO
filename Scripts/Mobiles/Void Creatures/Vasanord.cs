@@ -50,7 +50,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.UltraRich, 2);
             AddLoot(LootPack.LootItem<DaemonBone>(30, true));
-            AddLoot(LootPack.LootItem<TaintedSeeds>(60.0, 2));
         }
 
         public override Poison PoisonImmune => Poison.Lethal;

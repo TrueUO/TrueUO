@@ -52,7 +52,7 @@ namespace Server.Engines.Quests
 
         private int m_MaxTram;
         private int m_MaxFel;
-        private int m_MaxTokuno;
+        
         private TimeSpan m_SpawnTime;
         private bool m_Active;
 
@@ -69,9 +69,6 @@ namespace Server.Engines.Quests
         public int aFelJhelomCount => m_ActiveZones[SpawnZone.FelJhelom].Count;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int aTokunoPirateCount => m_ActiveZones[SpawnZone.TokunoPirate].Count;
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public int aTramMerch1Count => m_ActiveZones[SpawnZone.TramMerch1].Count;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -84,16 +81,10 @@ namespace Server.Engines.Quests
         public int aFelMerch2Count => m_ActiveZones[SpawnZone.FelMerch2].Count;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int aTokunoMerchCount => m_ActiveZones[SpawnZone.TokunoMerch].Count;
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public int MaxTram { get => m_MaxTram; set => m_MaxTram = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxFel { get => m_MaxFel; set => m_MaxFel = value; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int MaxTokuno { get => m_MaxTokuno; set => m_MaxTokuno = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan SpawnTime
@@ -187,7 +178,6 @@ namespace Server.Engines.Quests
 
             m_MaxTram = 1;
             m_MaxFel = 1;
-            m_MaxTokuno = 1;
 
             Active = true;
             m_Instance = this;
@@ -264,10 +254,6 @@ namespace Server.Engines.Quests
                         if (m_ActiveZones[zone].Count < m_MaxFel)
                             SpawnPirateAndGalleon(zone, Map.Felucca);
                         break;
-                    case SpawnZone.TokunoPirate:
-                        if (m_ActiveZones[zone].Count < m_MaxTokuno)
-                            SpawnPirateAndGalleon(zone, Map.Tokuno);
-                        break;
                     case SpawnZone.TramMerch1:
                         if (m_ActiveZones[zone].Count < m_MaxTram)
                             SpawnMerchantAndGalleon(zone, Map.Trammel);
@@ -283,10 +269,6 @@ namespace Server.Engines.Quests
                     case SpawnZone.FelMerch2:
                         if (m_ActiveZones[zone].Count < m_MaxFel)
                             SpawnMerchantAndGalleon(zone, Map.Felucca);
-                        break;
-                    case SpawnZone.TokunoMerch:
-                        if (m_ActiveZones[zone].Count < m_MaxTokuno)
-                            SpawnMerchantAndGalleon(zone, Map.Tokuno);
                         break;
                 }
             }
@@ -708,7 +690,6 @@ namespace Server.Engines.Quests
 
             writer.Write(m_MaxFel);
             writer.Write(m_MaxTram);
-            writer.Write(m_MaxTokuno);
             writer.Write(m_SpawnTime);
             writer.Write(m_Active);
 
@@ -739,7 +720,6 @@ namespace Server.Engines.Quests
 
             m_MaxFel = reader.ReadInt();
             m_MaxTram = reader.ReadInt();
-            m_MaxTokuno = reader.ReadInt();
             m_SpawnTime = reader.ReadTimeSpan();
             m_Active = reader.ReadBool();
 
@@ -771,7 +751,6 @@ namespace Server.Engines.Quests
             {
                 m_MaxTram = 1;
                 m_MaxFel = 1;
-                m_MaxTokuno = 1;
 
                 RemoveSpawns();
             }
@@ -823,35 +802,6 @@ namespace Server.Engines.Quests
                 e.Mobile.AddToBackpack(mapitem);
             }
 
-            for (int i = 0; i < SpawnDefinition.PirateTokunoCourses.Length; i++)
-            {
-                mapitem = new MapItem();
-                mapitem.SetDisplay(5, 5, 1448 - 32, 1448 - 10, 400, 400);
-
-                for (int j = 0; j < SpawnDefinition.PirateTokunoCourses[i].Length; j++)
-                {
-                    Point2D pnt = SpawnDefinition.PirateTokunoCourses[i][j];
-                    mapitem.AddWorldPin(pnt.X, pnt.Y);
-                }
-
-                mapitem.Name = string.Format("Pirate - tokuno {0}", i + 1);
-                e.Mobile.AddToBackpack(mapitem);
-            }
-
-            for (int i = 0; i < SpawnDefinition.MerchantTokunoCourses.Length; i++)
-            {
-                mapitem = new MapItem();
-                mapitem.SetDisplay(5, 5, 1448 - 32, 1448 - 10, 400, 400);
-
-                for (int j = 0; j < SpawnDefinition.PirateTokunoCourses[i].Length; j++)
-                {
-                    Point2D pnt = SpawnDefinition.PirateTokunoCourses[i][j];
-                    mapitem.AddWorldPin(pnt.X, pnt.Y);
-                }
-
-                mapitem.Name = string.Format("Merchant - tokuno {0}", i + 1);
-                e.Mobile.AddToBackpack(mapitem);
-            }
             for (int i = 0; i < SpawnDefinition.MerchantTramFelCourses1.Length; i++)
             {
                 mapitem = new MapItem();
@@ -866,6 +816,7 @@ namespace Server.Engines.Quests
                 mapitem.Name = string.Format("Merchant - tram/fel(a) {0}", i + 1);
                 e.Mobile.AddToBackpack(mapitem);
             }
+
             for (int i = 0; i < SpawnDefinition.MerchantTramFelCourses2.Length; i++)
             {
                 mapitem = new MapItem();
@@ -892,14 +843,12 @@ namespace Server.Engines.Quests
         FelJhelom,
         TramMoonglow,
         FelMoonglow,
-        TokunoPirate,
 
         //merchants
         TramMerch1,
         TramMerch2,
         FelMerch1,
-        FelMerch2,
-        TokunoMerch
+        FelMerch2
     }
 
     public class SpawnDefinition
@@ -936,13 +885,11 @@ namespace Server.Engines.Quests
             new SpawnDefinition(new Rectangle2D(1500, 3600, 180, 400), m_PirateTramFelCoursesJhelom, SpawnZone.FelJhelom, Map.Felucca);
             new SpawnDefinition(new Rectangle2D(4570, 630, 400, 100), m_PirateTramFelCoursesMoonglow, SpawnZone.TramMoonglow, Map.Trammel);
             new SpawnDefinition(new Rectangle2D(4570, 630, 400, 100), m_PirateTramFelCoursesMoonglow, SpawnZone.FelMoonglow, Map.Felucca);
-            new SpawnDefinition(new Rectangle2D(1022, 1182, 350, 200), m_PirateTokunoCourses, SpawnZone.TokunoPirate, Map.Tokuno);
 
             new SpawnDefinition(new Rectangle2D(1780, 1650, 300, 200), m_MerchantTramFelCourses1, SpawnZone.TramMerch1, Map.Trammel);
             new SpawnDefinition(new Rectangle2D(1780, 1650, 300, 200), m_MerchantTramFelCourses1, SpawnZone.FelMerch1, Map.Felucca);
             new SpawnDefinition(new Rectangle2D(3780, 2300, 100, 200), m_MerchantTramFelCourses2, SpawnZone.TramMerch2, Map.Trammel);
             new SpawnDefinition(new Rectangle2D(3780, 2300, 100, 200), m_MerchantTramFelCourses2, SpawnZone.FelMerch2, Map.Felucca);
-            new SpawnDefinition(new Rectangle2D(425, 1335, 160, 80), m_MerchantTokunoCourses, SpawnZone.TokunoMerch, Map.Tokuno);
         }
 
         public static Point2D[][] PirateTramFelCoursesJhelom => m_PirateTramFelCoursesJhelom;
@@ -964,22 +911,6 @@ namespace Server.Engines.Quests
             new[]{ new Point2D(4265, 145), new Point2D(5015, 153), new Point2D(5001, 669), new Point2D(4950, 720), new Point2D(4573, 663) },
             new[]{ new Point2D(4265, 145), new Point2D(3709, 107), new Point2D(3703, 773), new Point2D(4131, 913), new Point2D(4533, 713) },
             new[]{ new Point2D(5043, 155), new Point2D(4447, 231), new Point2D(4531, 609) }
-        };
-
-        public static Point2D[][] PirateTokunoCourses => m_PirateTokunoCourses;
-        private static readonly Point2D[][] m_PirateTokunoCourses =
-        {
-            new[]{ new Point2D(1324, 1178), new Point2D(1358, 1334), new Point2D(1032, 1358), new Point2D(1070, 1240) },
-            new[]{ new Point2D(1370, 1074), new Point2D(1422, 962), new Point2D(1416, 620), new Point2D(1422, 1310) },
-            new[]{ new Point2D(1032, 1104), new Point2D(982, 1078), new Point2D(942, 914), new Point2D(942, 1086), new Point2D(982, 1078), new Point2D(1134, 1202) },
-            new[]{ new Point2D(1320, 1378), new Point2D(1050, 1204), new Point2D(1356, 1088), new Point2D(1244, 1300) }
-        };
-
-        public static Point2D[][] MerchantTokunoCourses => m_MerchantTokunoCourses;
-        private static readonly Point2D[][] m_MerchantTokunoCourses =
-        {
-            new[]{ new Point2D(460, 1408), new Point2D(878, 1408), new Point2D(500, 1408) },
-            new[]{ new Point2D(460, 1408), new Point2D(460, 768), new Point2D(460, 1350) }
         };
 
         public static Point2D[][] MerchantTramFelCourses1 => m_MerchantTramFelCourses1;

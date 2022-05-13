@@ -144,42 +144,6 @@ namespace Server.Items
         }
     }
 
-    public class CongealedSlugAcid : Item
-    {
-        [Constructable]
-        public CongealedSlugAcid()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public CongealedSlugAcid(int amount)
-            : base(0x5742)
-        {
-            Stackable = true;
-            Amount = amount;
-        }
-
-        public CongealedSlugAcid(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1112901;// Congealed Slug Acid
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class EnchantedEssence : Item, ICommodity
     {
         [Constructable]
@@ -218,43 +182,6 @@ namespace Server.Items
         }
     }
 
-    public class FairyDragonWing : Item
-    {
-        [Constructable]
-        public FairyDragonWing()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public FairyDragonWing(int amount)
-            : base(0x1084)
-        {
-            Hue = 1111;
-
-            Stackable = true;
-            Amount = amount;
-        }
-
-        public FairyDragonWing(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1112899;// Fairy Dragon Wing
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class LeatherWolfSkin : Item
     {
         [Constructable]
@@ -279,24 +206,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1112906;// leather wolf skin
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                ItemID = 0xDF8;
-                Hue = 248;
-            }
+            reader.ReadInt();
         }
     }
 
@@ -450,41 +370,6 @@ namespace Server.Items
         }
     }
 
-    public class SearedFireAntGoo : Item
-    {
-        [Constructable]
-        public SearedFireAntGoo()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public SearedFireAntGoo(int amount)
-            : base(0x122E)
-        {
-            Hue = 1359;
-        }
-
-        public SearedFireAntGoo(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1112902;// Seared Fire Ant Goo
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class StygianDragonHead : Item
     {
         [Constructable]
@@ -507,81 +392,6 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1031700;// Stygian Dragon Head
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class UndamagedIronBeetleScale : Item, ICommodity
-    {
-        [Constructable]
-        public UndamagedIronBeetleScale()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public UndamagedIronBeetleScale(int amount)
-            : base(0x26B3)
-        {
-            Stackable = true;
-            Amount = amount;
-        }
-
-        public UndamagedIronBeetleScale(Serial serial)
-            : base(serial)
-        {
-        }
-
-        TextDefinition ICommodity.Description => LabelNumber;
-        bool ICommodity.IsDeedable => true;
-
-        public override int LabelNumber => 1112905;// Undamaged Iron Beetle Scale
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class UndeadGargHorn : Item
-    {
-        [Constructable]
-        public UndeadGargHorn()
-            : this(1)
-        {
-        }
-
-        [Constructable]
-        public UndeadGargHorn(int amount)
-            : base(0x315C)
-        {
-            Stackable = true;
-            Amount = amount;
-        }
-
-        public UndeadGargHorn(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1112903;// Undamaged Undead Gargoyle Horns
 
         public override void Serialize(GenericWriter writer)
         {

@@ -41,19 +41,7 @@ namespace Server.Engines.TreasuresOfKotlCity
             {
                 item = new TreasuresOfKotlRewardDeed(citem.Tooltip);
             }
-            else if (citem.Type == typeof(TribalBanner))
-            {
-                switch (index)
-                {
-                    case 10: item = new TribalBanner(EodonTribe.Urali); break;
-                    case 11: item = new TribalBanner(EodonTribe.Barrab); break;
-                    case 12: item = new TribalBanner(EodonTribe.Sakkhra); break;
-                    case 13: item = new TribalBanner(EodonTribe.Barako); break;
-                    case 14: item = new TribalBanner(EodonTribe.Kurak); break;
-                    case 15: item = new TribalBanner(EodonTribe.Jukari); break;
-                }
-            }
-
+            
             if (item != null)
             {
                 if (User.Backpack == null || !User.Backpack.TryDropItem(User, item, false))

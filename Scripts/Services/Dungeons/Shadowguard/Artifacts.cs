@@ -108,40 +108,6 @@ namespace Server.Items
         }
     }
 
-    public class BalakaisShamanStaffGargoyle : BaseWand
-    {
-        public override int LabelNumber => 1156125;
-        public override bool IsArtifact => true;
-
-        public override int InitMinHits => 255;
-        public override int InitMaxHits => 255;
-
-        [Constructable]
-        public BalakaisShamanStaffGargoyle() : base(WandEffect.None, 0, 0)
-        {
-            SkillBonuses.SetValues(0, SkillName.Meditation, 10.0);
-            WeaponAttributes.MageWeapon = 30;
-            Attributes.SpellChanneling = 1;
-            Attributes.EnhancePotions = 25;
-        }
-
-        public BalakaisShamanStaffGargoyle(Serial serial) : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class EnchantressCameo : BaseTalisman
     {
         public override int LabelNumber => 1156301;
@@ -165,50 +131,6 @@ namespace Server.Items
         }
 
         public EnchantressCameo(Serial serial) : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class GrugorsShield : WoodenShield
-    {
-        public override int LabelNumber => 1156129;
-
-        public override bool IsArtifact => true;
-
-        public override int InitMinHits => 255;
-        public override int InitMaxHits => 255;
-
-        [Constructable]
-        public GrugorsShield()
-        {
-            SkillBonuses.SetValues(0, SkillName.Parry, 10.0);
-            Attributes.BonusStr = 10;
-            Attributes.BonusStam = 10;
-            Attributes.RegenHits = 5;
-            Attributes.WeaponSpeed = 10;
-
-            SetProtection(typeof(BaseEodonTribesman), new TextDefinition(1156291), 60);
-
-            PhysicalBonus = 4;
-            FireBonus = 4;
-            ColdBonus = 4;
-            PoisonBonus = 4;
-            EnergyBonus = 3;
-        }
-
-        public GrugorsShield(Serial serial) : base(serial)
         {
         }
 
@@ -572,25 +494,24 @@ namespace Server.Items
         {
             Hue = 2955;
 
-            switch (Utility.Random(15))
+            switch (Utility.Random(16))
             {
-                case 0: SetProtection(typeof(BaseEodonTribesman), new TextDefinition(1156291), 40); break;
-                case 1: SetProtection(typeof(MyrmidexLarvae), new TextDefinition(1156276), 40); break;
-                case 2: SetProtection(typeof(SilverbackGorilla), new TextDefinition(1156292), 40); break;
-                case 3: SetProtection(typeof(Infernus), new TextDefinition(1156278), 40); break;
-                case 4: SetProtection(typeof(Dimetrosaur), new TextDefinition(1156279), 40); break;
-                case 5: SetProtection(typeof(Allosaurus), new TextDefinition(1156280), 40); break;
-                case 6: SetProtection(typeof(Gallusaurus), new TextDefinition(1156281), 40); break;
-                case 7: SetProtection(typeof(Archaeosaurus), new TextDefinition(1156282), 40); break;
-                case 8: SetProtection(typeof(Najasaurus), new TextDefinition(1156283), 40); break;
-                case 9: SetProtection(typeof(Anchisaur), new TextDefinition(1156284), 40); break;
-                case 10: SetProtection(typeof(DragonTurtleHatchling), new TextDefinition(1156285), 40); break;
-                case 11: SetProtection(typeof(WildTiger), new TextDefinition(1156286), 40); break;
-                case 12: SetProtection(typeof(Saurosaurus), new TextDefinition(1156289), 40); break;
-                case 13: SetProtection(typeof(GreaterPhoenix), new TextDefinition(1156293), 40); break;
-                case 14: SetProtection(typeof(DragonTurtle), new TextDefinition(1156238), 40); break;
-                case 15: SetProtection(typeof(MyrmidexDrone), new TextDefinition(1156134), 40); break;
-                case 16: SetProtection(typeof(MyrmidexWarrior), new TextDefinition(1156135), 40); break;
+                case 0: SetProtection(typeof(MyrmidexLarvae), new TextDefinition(1156276), 40); break;
+                case 1: SetProtection(typeof(SilverbackGorilla), new TextDefinition(1156292), 40); break;
+                case 2: SetProtection(typeof(Infernus), new TextDefinition(1156278), 40); break;
+                case 3: SetProtection(typeof(Dimetrosaur), new TextDefinition(1156279), 40); break;
+                case 4: SetProtection(typeof(Allosaurus), new TextDefinition(1156280), 40); break;
+                case 5: SetProtection(typeof(Gallusaurus), new TextDefinition(1156281), 40); break;
+                case 6: SetProtection(typeof(Archaeosaurus), new TextDefinition(1156282), 40); break;
+                case 7: SetProtection(typeof(Najasaurus), new TextDefinition(1156283), 40); break;
+                case 8: SetProtection(typeof(Anchisaur), new TextDefinition(1156284), 40); break;
+                case 9: SetProtection(typeof(DragonTurtleHatchling), new TextDefinition(1156285), 40); break;
+                case 10: SetProtection(typeof(WildTiger), new TextDefinition(1156286), 40); break;
+                case 11: SetProtection(typeof(Saurosaurus), new TextDefinition(1156289), 40); break;
+                case 12: SetProtection(typeof(GreaterPhoenix), new TextDefinition(1156293), 40); break;
+                case 13: SetProtection(typeof(DragonTurtle), new TextDefinition(1156238), 40); break;
+                case 14: SetProtection(typeof(MyrmidexDrone), new TextDefinition(1156134), 40); break;
+                case 15: SetProtection(typeof(MyrmidexWarrior), new TextDefinition(1156135), 40); break;
             }
         }
 

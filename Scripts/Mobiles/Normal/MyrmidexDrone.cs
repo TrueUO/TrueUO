@@ -1,6 +1,3 @@
-using Server.Engines.MyrmidexInvasion;
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a myrmidex corpse")]
@@ -45,34 +42,12 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.LootGold(50, 70));
-            AddLoot(LootPack.LootItemCallback(TryDropEggsac, 25.0, Utility.RandomMinMax(1, 5), false, false));
-        }
-
-        private Item TryDropEggsac(IEntity e)
-        {
-            if (Region.Find(e.Location, e.Map).IsPartOf("MyrmidexBattleground"))
-            {
-                return new MyrmidexEggsac();
-            }
-
-            return null;
         }
 
         public override int Meat => 4;
         public override Poison HitPoison => Poison.Regular;
         public override Poison PoisonImmune => Poison.Regular;
         public override int TreasureMapLevel => 1;
-
-        public override bool IsEnemy(Mobile m)
-        {
-            if (MyrmidexInvasionSystem.Active && MyrmidexInvasionSystem.IsAlliedWithEodonTribes(m))
-                return true;
-
-            if (MyrmidexInvasionSystem.Active && MyrmidexInvasionSystem.IsAlliedWithMyrmidex(m))
-                return false;
-
-            return base.IsEnemy(m);
-        }
 
         public MyrmidexDrone(Serial serial)
             : base(serial)

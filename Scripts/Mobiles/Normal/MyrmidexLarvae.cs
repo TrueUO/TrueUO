@@ -1,5 +1,3 @@
-using Server.Engines.MyrmidexInvasion;
-
 namespace Server.Mobiles
 {
     [CorpseName("a myrmidex corpse")]
@@ -47,17 +45,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.LootGold(20, 40));
-        }
-
-        public override bool IsEnemy(Mobile m)
-        {
-            if (MyrmidexInvasionSystem.Active && MyrmidexInvasionSystem.IsAlliedWithEodonTribes(m))
-                return true;
-
-            if (MyrmidexInvasionSystem.Active && MyrmidexInvasionSystem.IsAlliedWithMyrmidex(m))
-                return false;
-
-            return base.IsEnemy(m);
         }
 
         public MyrmidexLarvae(Serial serial) : base(serial)

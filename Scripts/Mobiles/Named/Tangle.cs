@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a tangle corpse")]
@@ -50,7 +48,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.UltraRich, 3);
             AddLoot(LootPack.ArcanistScrolls, 1, 3);
-            AddLoot(LootPack.LootItem<TaintedSeeds>(30.0));
         }
 
         public override void Serialize(GenericWriter writer)

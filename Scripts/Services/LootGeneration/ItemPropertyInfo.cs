@@ -468,7 +468,6 @@ namespace Server.Items
             Register(128, new ItemPropertyInfo(SlayerName.Dinosaur, 1156240, 130, 0, 1, 1));
             Register(129, new ItemPropertyInfo(SlayerName.Myrmidex, 1156241, 130, 0, 1, 1));
             Register(130, new ItemPropertyInfo(SlayerName.Eodon, 1156126, 130, 0, 1, 1));
-            Register(131, new ItemPropertyInfo(SlayerName.EodonTribe, 1156347, 130, 0, 1, 1));
 
             // Talisman Slayers, non-Imbuable, non-Loot
             Register(135, new ItemPropertyInfo(TalismanSlayerName.Bear, 1072504, 130, 0, 1, 1));

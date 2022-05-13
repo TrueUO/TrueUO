@@ -219,8 +219,6 @@ namespace Server.Engines.Points
             Entries[typeof(SpinedLeather)] = 0.50;
             Entries[typeof(HornedLeather)] = 1.0;
             Entries[typeof(BarbedLeather)] = 2.0;
-            Entries[typeof(Fur)] = 0.10;
-
 
             //BOD Rewards
             Entries[typeof(Sandals)] = 2.0;
@@ -614,7 +612,6 @@ namespace Server.Engines.Points
             Entries[typeof(DeadWood)] = 1.0;
             Entries[typeof(DustyPillow)] = 250.0;
             Entries[typeof(EndlessDecanter)] = 10.0;
-            Entries[typeof(EternallyCorruptTree)] = 1000.0;
             Entries[typeof(ExcellentIronMaiden)] = 50.0;
             Entries[typeof(ExecutionersCap)] = 1.0;
             Entries[typeof(Flowstone)] = 250.0;
@@ -635,7 +632,6 @@ namespace Server.Engines.Points
             Entries[typeof(SwampTile)] = 5000.0;
             Entries[typeof(TastyTreat)] = 100.0;
             Entries[typeof(TribalBerry)] = 10.0;
-            Entries[typeof(UndeadGargHorn)] = 1000.0;
             Entries[typeof(WallBlood)] = 5000.0;
             Entries[typeof(Whip)] = 200.0;
             Entries[typeof(BalmOfSwiftness)] = 100.0;

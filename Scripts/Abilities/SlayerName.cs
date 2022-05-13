@@ -32,7 +32,6 @@ namespace Server.Items
         Fey,
         Dinosaur,
         Myrmidex,
-        Eodon,
-        EodonTribe
+        Eodon
     }
 }
