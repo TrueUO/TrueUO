@@ -52,6 +52,10 @@ namespace Server.Items
             Weight = 10;
         }
 
+        public MoonstoneCrystal(Serial serial) : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.InRange(GetWorldLocation(), 2))
@@ -159,10 +163,6 @@ namespace Server.Items
             }
         }
 
-        public MoonstoneCrystal(Serial serial) : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -190,45 +190,6 @@ namespace Server.Items
         }
 
         public KotlPowerCore(Serial serial) : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    [Flipable(40253, 40252)]
-    public class EodonianWallMap : Item
-    {
-        public override int LabelNumber => 1156690;  // Wall Map of Eodon
-
-        [Constructable]
-        public EodonianWallMap()
-            : base(40253)
-        {
-        }
-
-        public override void OnDoubleClick(Mobile from)
-        {
-            if (from.InRange(GetWorldLocation(), 5))
-            {
-                Gump g = new Gump(0, 0);
-                g.AddImage(0, 0, 49999);
-
-                from.SendGump(g);
-            }
-        }
-
-        public EodonianWallMap(Serial serial) : base(serial)
         {
         }
 
