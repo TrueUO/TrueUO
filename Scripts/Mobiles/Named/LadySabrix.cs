@@ -54,7 +54,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.ArcanistScrolls);
             AddLoot(LootPack.LootItem<SabrixsEye>(20.0));
             AddLoot(LootPack.LootItem<ParrotItem>(10.0));
-            AddLoot(LootPack.RandomLootItem(new System.Type[] { typeof(PaladinArms), typeof(HunterLegs) }, 25.0, 1, false, false));
         }
 
         public override void Serialize(GenericWriter writer)

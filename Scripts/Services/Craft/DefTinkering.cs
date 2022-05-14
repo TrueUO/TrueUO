@@ -498,10 +498,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Sapphire), 1062602, 20, 1044240);
             AddRes(index, typeof(DarkSapphire), 1032690, 10, 1044240);
 
-            index = AddCraft(typeof(WhitePearlBracelet), 1073107, 1073456, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
-            AddRes(index, typeof(Tourmaline), 1062606, 20, 1044240);
-            AddRes(index, typeof(WhitePearl), 1032694, 10, 1044240);
-
             index = AddCraft(typeof(EcruCitrineRing), 1073107, 1073457, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
             AddRes(index, typeof(Citrine), 1062604, 20, 1044240);
             AddRes(index, typeof(EcruCitrine), 1032693, 10, 1044240);

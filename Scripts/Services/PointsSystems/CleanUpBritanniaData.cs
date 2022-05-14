@@ -606,7 +606,6 @@ namespace Server.Engines.Points
             Entries[typeof(ClockworkAssembly)] = 50.0;
             Entries[typeof(ConjurersTrinket)] = 10000.0;
 
-            Entries[typeof(CorgulsHandbookOnMysticism)] = 250.0;
             Entries[typeof(CrownOfArcaneTemperament)] = 5000.0;
             Entries[typeof(DeadWood)] = 1.0;
             Entries[typeof(DustyPillow)] = 250.0;

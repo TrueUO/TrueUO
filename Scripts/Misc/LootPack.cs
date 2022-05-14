@@ -959,21 +959,21 @@ namespace Server
 
                 if (Type == typeof(BaseRanged))
                 {
-                    item = Loot.RandomRangedWeapon(inTokuno, isMondain);
+                    item = Loot.RandomRangedWeapon();
                 }
                 else if (Type == typeof(BaseWeapon))
                 {
-                    item = Loot.RandomWeapon(inTokuno, isMondain);
+                    item = Loot.RandomWeapon();
                 }
                 else if (Type == typeof(BaseArmor))
                 {
                     if (0.80 > Utility.RandomDouble())
                     {
-                        item = Loot.RandomArmor(inTokuno, isMondain);
+                        item = Loot.RandomArmor();
                     }
                     else
                     {
-                        item = Loot.RandomHat(inTokuno);
+                        item = Loot.RandomHat();
                     }
                 }
                 else if (Type == typeof(BaseShield))

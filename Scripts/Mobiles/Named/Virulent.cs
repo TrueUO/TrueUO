@@ -66,35 +66,22 @@ namespace Server.Mobiles
         {
             base.OnDeath(c);
 
-            if (Utility.RandomDouble() < 0.025)
-            {
-                switch (Utility.Random(2))
-                {
-                    case 0:
-                        c.DropItem(new HunterLegs());
-                        break;
-                    case 1:
-                        c.DropItem(new MalekisHonor());
-                        break;
-                }
-            }
-
             if (Utility.RandomDouble() < 0.1)
+            {
                 c.DropItem(new ParrotItem());
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

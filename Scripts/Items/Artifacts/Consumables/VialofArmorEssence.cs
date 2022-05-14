@@ -106,7 +106,9 @@ namespace Server.Items
             BaseCreature bc = (BaseCreature)obj;
 
             if (m_Table.ContainsKey(bc))
+            {
                 m_Table.Remove(bc);
+            }
 
             bc.TempDamageAbsorb = 0;
         }
@@ -114,18 +116,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-                reader.ReadBool();
+            reader.ReadInt();
         }
     }
 }

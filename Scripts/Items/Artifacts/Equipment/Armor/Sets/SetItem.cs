@@ -10,9 +10,7 @@ namespace Server
         Assassin,
         Darkwood,
         Grizzle,
-        Hunter,
         Juggernaut,
-        Mage,
         Marksman,
         Myrmidon,
         Necromancer,
@@ -25,9 +23,7 @@ namespace Server
         Fisherman,
         Luck2,
         Bestial,
-        Virtuoso,
-        Aloron,
-        Darden
+        Virtuoso
     }
 
     public interface ISetItem
@@ -334,15 +330,11 @@ namespace Server
 
                 if (mItem is ISetItem item)
                 {
-                    if (item.SetID == SetItem.Aloron && item.SetEquipped)
-                    {
-                        return SlayerName.Dinosaur;
-                    }
-
+                    /*
                     if (item.SetID == SetItem.Darden && item.SetEquipped)
                     {
                         return SlayerName.Myrmidex;
-                    }
+                    }*/ // Save as an example for later.
                 }
             }
 
@@ -352,14 +344,20 @@ namespace Server
         public static bool ResistsBonusPerPiece(ISetItem item)
         {
             if (item.SetPhysicalBonus == 0 && item.SetFireBonus == 0 && item.SetColdBonus == 0 && item.SetPoisonBonus == 0 && item.SetEnergyBonus == 0)
+            {
                 return true;
+            }
 
             switch (item.SetID)
             {
-                default: return false;
+                default:
+                {
+                    return false;
+                }
                 case SetItem.Virtue:
-                case SetItem.Aloron:
-                case SetItem.Darden: return true;
+                {
+                    return true;
+                }
             }
         }
 
