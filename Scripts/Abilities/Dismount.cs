@@ -18,7 +18,7 @@ namespace Server.Items
             if (!base.Validate(from))
                 return false;
 
-            if ((from.Mounted || from.Flying) && !(from.Weapon is Lance) && !(from.Weapon is GargishLance))
+            if ((from.Mounted || from.Flying) && !(from.Weapon is Lance))
             {
                 from.SendLocalizedMessage(1061283); // You cannot perform that attack while mounted or flying!
                 return false;
@@ -113,9 +113,11 @@ namespace Server.Items
         private static bool CheckMountedNoLance(Mobile attacker, Mobile defender)
         {
             if (!attacker.Mounted && !attacker.Flying)
+            {
                 return false;
+            }
 
-            if ((attacker.Weapon is Lance || attacker.Weapon is GargishLance) && (defender.Weapon is Lance || defender.Weapon is GargishLance))
+            if (attacker.Weapon is Lance && defender.Weapon is Lance)
             {
                 return false;
             }

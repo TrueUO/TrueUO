@@ -25,7 +25,6 @@ namespace Server.Items
         public HolidayGiftToken2018(HolidayGift2018 gift)
             : base(0xA094)
         {
-            LootType = LootType.Blessed;
             Light = LightType.Circle300;
             Weight = 1.0;
             Gift = gift;

@@ -54,7 +54,6 @@ namespace Server.Items
         [Constructable]
         public HearthOfHomeFireDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public HearthOfHomeFireDeed(Serial serial)

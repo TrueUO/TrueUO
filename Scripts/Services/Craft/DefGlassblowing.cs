@@ -136,11 +136,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(EtherealSoulbinder), 1044050, 1159167, 100.0, 190.0, typeof(Sand), 1044625, 20, 1044627);
             AddRes(index, typeof(EtherealSand), 1125984, 5, 1159169);
 
-            //Glass Weapons
-            AddCraft(typeof(GlassSword), 1111745, 1022316, 55.0, 105.0, typeof(Sand), 1044625, 14, 1044627);
-
-            AddCraft(typeof(GlassStaff), 1111745, 1095368, 53.6, 103.6, typeof(Sand), 1044625, 10, 1044627);
-
             Repair = true;
             MarkOption = true;
         }

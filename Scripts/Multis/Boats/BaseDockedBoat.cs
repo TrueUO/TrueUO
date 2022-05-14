@@ -33,7 +33,6 @@ namespace Server.Multis
             : base(0x14F4)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
 
             MultiID = id;
             Offset = offset;

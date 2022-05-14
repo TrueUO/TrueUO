@@ -41,19 +41,6 @@ namespace Server.Mobiles
         {
         }
 
-        public override bool OnDragDrop(Mobile from, Item dropped)
-        {
-            if (from.InRange(Location, 2) && from.Race == Race.Gargoyle && dropped.GetType() == typeof(ExodusSacrificalDagger))
-            {
-                dropped.Delete();
-                from.AddToBackpack(new ExodusSacrificalGargishDagger());
-
-                return true;
-            }
-
-            return base.OnDragDrop(from, dropped);
-        }
-
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
             base.GetContextMenuEntries(from, list);

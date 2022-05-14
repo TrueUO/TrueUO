@@ -201,7 +201,7 @@ namespace Server.Mobiles
 
             Female = true;
             Body = 0x25E;
-            Race = Race.Elf;
+            Race = Race.Human;
             HairItemID = 0x2FD0;
             Hue = 35356;
         }

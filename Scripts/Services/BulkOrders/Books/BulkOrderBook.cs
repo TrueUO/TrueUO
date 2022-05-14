@@ -21,7 +21,6 @@ namespace Server.Engines.BulkOrders
             : base(0x2259)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
 
             m_Entries = new ArrayList();
             m_Filter = new BOBFilter();

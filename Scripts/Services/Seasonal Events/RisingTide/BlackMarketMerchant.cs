@@ -35,7 +35,6 @@ namespace Server.Engines.RisingTide
             PackItem(new Orchid1());
             PackItem(new Orchid2());
             PackItem(new Orchid3());
-            PackItem(new GargishFellowshipMedallion());
             PackItem(new FellowshipMedallion());
             PackItem(new QuartermasterRewardDeed());
             PackItem(new SailingMasterRewardDeed());

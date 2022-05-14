@@ -250,7 +250,7 @@ namespace Server.Multis
 
                     foreach (Item item in eable)
                     {
-                        if (item.RootParent == null && item.Movable && item.LootType != LootType.Blessed)
+                        if (item.RootParent == null && item.Movable)
                         {
                             list.Add(item);
                         }
@@ -536,8 +536,10 @@ namespace Server.Multis
             {
                 foreach (Item item in Addons.Keys)
                 {
-                    if (item is BaseAddonContainer || item is RaisedGardenAddon || item is WallSafe)
+                    if (item is BaseAddonContainer || item is RaisedGardenAddon)
+                    {
                         return true;
+                    }
                 }
 
                 return false;

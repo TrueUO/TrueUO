@@ -4,7 +4,6 @@ using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
-using Server.Services.Virtues;
 using Server.SkillHandlers;
 using Server.Spells;
 using Server.Spells.Bushido;
@@ -153,8 +152,10 @@ namespace Server
             bool ranged = type == DamageType.Ranged;
             BaseQuiver quiver = null;
 
-            if (ranged && from.Race != Race.Gargoyle)
+            if (ranged)
+            {
                 quiver = from.FindItemOnLayer(Layer.Cloak) as BaseQuiver;
+            }
 
             int totalDamage;
 
@@ -270,21 +271,27 @@ namespace Server
 
             //SHould this go in after or before dragon barding absorb?
             if (ignoreArmor)
+            {
                 DamageEaterContext.CheckDamage(m, totalDamage, 0, 0, 0, 0, 0, 100);
+            }
             else
+            {
                 DamageEaterContext.CheckDamage(m, totalDamage, phys, fire, cold, pois, nrgy, direct);
+            }
 
             if (fire > 0 && totalDamage > 0)
+            {
                 SwarmContext.CheckRemove(m);
-
-            SpiritualityVirtue.GetDamageReduction(m, ref totalDamage);
+            }
 
             BestialSetHelper.OnDamage(m, from, ref totalDamage);
 
             EpiphanyHelper.OnHit(m, totalDamage);
 
             if (type == DamageType.Spell && m != null && Feint.Registry.ContainsKey(m) && Feint.Registry[m].Enemy == from)
+            {
                 totalDamage -= (int)(damage * ((double)Feint.Registry[m].DamageReduction / 100));
+            }
 
             if (m.Hidden && type >= DamageType.Spell)
             {
@@ -448,9 +455,9 @@ namespace Server
                 case 2: return from.GetMaxResistance(ResistanceType.Cold);
                 case 3: return from.GetMaxResistance(ResistanceType.Poison);
                 case 4: return from.GetMaxResistance(ResistanceType.Energy);
-                case 5: return Math.Min(45 + BaseArmor.GetRefinedDefenseChance(from), AosAttributes.GetValue(from, AosAttribute.DefendChance));
-                case 6: return 45 + BaseArmor.GetRefinedDefenseChance(from) + WhiteTigerFormSpell.GetDefenseCap(from);
-                case 7: return Math.Min(from.Race == Race.Gargoyle ? 50 : 45, AosAttributes.GetValue(from, AosAttribute.AttackChance));
+                case 5: return Math.Min(45, AosAttributes.GetValue(from, AosAttribute.DefendChance));
+                case 6: return 45 + WhiteTigerFormSpell.GetDefenseCap(from);
+                case 7: return Math.Min(45, AosAttributes.GetValue(from, AosAttribute.AttackChance));
                 case 8: return Math.Min(60, AosAttributes.GetValue(from, AosAttribute.WeaponSpeed));
                 case 9: return Math.Min(100, AosAttributes.GetValue(from, AosAttribute.WeaponDamage));
                 case 10: return Math.Min(100, AosAttributes.GetValue(from, AosAttribute.LowerRegCost));
@@ -625,41 +632,45 @@ namespace Server
                     value -= discordanceEffect * 2;
 
                 if (Block.IsBlocking(m))
-                    value -= 30;
-
-                if (m is PlayerMobile pm && pm.Race == Race.Gargoyle)
                 {
-                    value += pm.GetRacialBerserkBuff(false);
+                    value -= 30;
                 }
 
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.WeaponDam))
+                {
                     value += 5;
+                }
             }
             else if (attribute == AosAttribute.SpellDamage)
             {
                 if (BaseMagicalFood.IsUnderInfluence(m, MagicalFood.GrapesOfWrath))
+                {
                     value += 15;
+                }
 
                 if (PsychicAttack.Registry.ContainsKey(m))
+                {
                     value -= PsychicAttack.Registry[m].SpellDamageMalus;
+                }
 
                 TransformContext context = TransformationSpellHelper.GetContext(m);
 
                 if (context != null && context.Spell is ReaperFormSpell spell)
+                {
                     value += spell.SpellDamageBonus;
+                }
 
                 value += ArcaneEmpowermentSpell.GetSpellBonus(m, true);
 
-                if (m is PlayerMobile mobile && mobile.Race == Race.Gargoyle)
+                if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.GuildOfArcaneArts))
                 {
-                    value += mobile.GetRacialBerserkBuff(true);
+                    value += 5;
                 }
 
-                if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.GuildOfArcaneArts))
-                    value += 5;
-
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.SpellDamage))
+                {
                     value += 5;
+                }
             }
             else if (attribute == AosAttribute.CastSpeed)
             {
@@ -749,16 +760,19 @@ namespace Server
                     value += move.GetAccuracyBonus(m);
 
                 if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.WarriorsGuild))
+                {
                     value += 5;
+                }
 
                 if (Spells.Mysticism.SleepSpell.IsUnderSleepEffects(m))
+                {
                     value -= 45;
-
-                if (m.Race == Race.Gargoyle)
-                    value += 5;  //Gargoyles get a +5 HCI
+                }
 
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.HitChance))
+                {
                     value += 8;
+                }
             }
             else if (attribute == AosAttribute.DefendChance)
             {
@@ -1780,16 +1794,7 @@ namespace Server
         ResonancePoison = 0x00000100,
         ResonanceEnergy = 0x00000200,
         ResonanceKinetic = 0x00000400,
-        /*Soul Charge is wrong. 
-         * Do not use these types. 
-         * Use AosArmorAttribute type only.
-         * Fill these in with any new attributes.*/
-        SoulChargeFire = 0x00000800,
-        SoulChargeCold = 0x00001000,
-        SoulChargePoison = 0x00002000,
-        SoulChargeEnergy = 0x00004000,
-        SoulChargeKinetic = 0x00008000,
-        CastingFocus = 0x00010000
+        CastingFocus = 0x00000800
     }
 
     public sealed class SAAbsorptionAttributes : BaseAttributes
@@ -1910,48 +1915,6 @@ namespace Server
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResonanceKinetic { get => this[SAAbsorptionAttribute.ResonanceKinetic]; set => this[SAAbsorptionAttribute.ResonanceKinetic] = value; }
 
-        // NEED TO DELETE ALL OF THESE EVENTUALLY
-        public int SoulChargeFire
-        {
-            get => this[SAAbsorptionAttribute.SoulChargeFire];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargeFire] = value;
-            }
-        }
-        public int SoulChargeCold
-        {
-            get => this[SAAbsorptionAttribute.SoulChargeCold];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargeCold] = value;
-            }
-        }
-        public int SoulChargePoison
-        {
-            get => this[SAAbsorptionAttribute.SoulChargePoison];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargePoison] = value;
-            }
-        }
-        public int SoulChargeEnergy
-        {
-            get => this[SAAbsorptionAttribute.SoulChargeEnergy];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargeEnergy] = value;
-            }
-        }
-        public int SoulChargeKinetic
-        {
-            get => this[SAAbsorptionAttribute.SoulChargeKinetic];
-            set
-            {
-                //this[SAAbsorptionAttribute.SoulChargeKinetic] = value;
-            }
-        }
-
         [CommandProperty(AccessLevel.GameMaster)]
         public int CastingFocus { get => this[SAAbsorptionAttribute.CastingFocus]; set => this[SAAbsorptionAttribute.CastingFocus] = value; }
     }
@@ -2018,11 +1981,10 @@ namespace Server
     public enum NegativeAttribute
     {
         Brittle = 0x00000001,
-        Prized = 0x00000002,
-        Massive = 0x00000004,
-        Unwieldly = 0x00000008,
-        Antique = 0x00000010,
-        NoRepair = 0x00000020
+        Massive = 0x00000002,
+        Unwieldly = 0x00000004,
+        Antique = 0x00000008,
+        NoRepair = 0x00000010
     }
 
     public sealed class NegativeAttributes : BaseAttributes
@@ -2050,9 +2012,6 @@ namespace Server
             if (Brittle > 0 || item is BaseWeapon weapon && weapon.Attributes.Brittle > 0 || item is BaseArmor armor && armor.Attributes.Brittle > 0 ||
                 item is BaseJewel jewel && jewel.Attributes.Brittle > 0 || item is BaseClothing clothing && clothing.Attributes.Brittle > 0)
                 list.Add(1116209);
-
-            if (Prized > 0)
-                list.Add(1154910);
 
             if (Antique > 0)
                 list.Add(1076187);
@@ -2136,9 +2095,6 @@ namespace Server
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Brittle { get => this[NegativeAttribute.Brittle]; set => this[NegativeAttribute.Brittle] = value; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int Prized { get => this[NegativeAttribute.Prized]; set => this[NegativeAttribute.Prized] = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Massive { get => this[NegativeAttribute.Massive]; set => this[NegativeAttribute.Massive] = value; }

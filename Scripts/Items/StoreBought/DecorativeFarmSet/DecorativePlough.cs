@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0xA31F)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativePlough(Serial serial)

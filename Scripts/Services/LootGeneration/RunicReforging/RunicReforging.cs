@@ -114,8 +114,6 @@ namespace Server.Items
                     goodtogo = false;
                 else if (item is IResource resource && !CraftResources.IsStandard(resource.Resource))
                     goodtogo = false;
-                else if (item.LootType == LootType.Blessed || item.LootType == LootType.Newbied)
-                    goodtogo = false;
                 else if (item is BaseWeapon baseWeapon && Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, baseWeapon))
                     goodtogo = false;
                 else if (item is BaseWeapon weapon1 && weapon1.FocusWeilder != null)
@@ -1127,10 +1125,6 @@ namespace Server.Items
             m_AllowableTable[typeof(Cleaver)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(SkinningKnife)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(ButcherKnife)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(GargishNecklace)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(GargishEarrings)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(GargishAmulet)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(GargishStoneAmulet)] = DefMasonry.CraftSystem;
             m_AllowableTable[typeof(BarbedWhip)] = DefTailoring.CraftSystem;
             m_AllowableTable[typeof(SpikedWhip)] = DefTailoring.CraftSystem;
             m_AllowableTable[typeof(BladedWhip)] = DefTailoring.CraftSystem;
@@ -1632,9 +1626,6 @@ namespace Server.Items
                 found = false;
                 sk = possibleSkills[Utility.Random(possibleSkills.Length)];
 
-                if ((item is GargishRing || item is GargishBracelet) && sk == SkillName.Archery)
-                    sk = SkillName.Throwing;
-
                 for (int i = 0; !found && i < 5; ++i)
                     found = skillbonuses.GetValues(i, out check, out bonus) && check == sk;
             } while (found);
@@ -1778,7 +1769,7 @@ namespace Server.Items
         #region Random Item Generation
         public static Item GenerateRandomItem(IEntity e)
         {
-            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(e), LootPackEntry.IsMondain(e), LootPackEntry.IsStygian(e));
+            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(e), LootPackEntry.IsMondain(e));
 
             if (item != null)
                 GenerateRandomItem(item, null, Utility.RandomMinMax(100, 700), 0, ReforgedPrefix.None, ReforgedSuffix.None);
@@ -1832,7 +1823,7 @@ namespace Server.Items
 
         public static Item GenerateRandomItem(Mobile killer, BaseCreature creature)
         {
-            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(killer), LootPackEntry.IsMondain(killer), LootPackEntry.IsStygian(killer));
+            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(killer), LootPackEntry.IsMondain(killer));
 
             if (item != null)
                 GenerateRandomItem(item, killer, Math.Max(100, GetDifficultyFor(creature)), LootPack.GetLuckChance(GetLuckForKiller(creature)), ReforgedPrefix.None, ReforgedSuffix.None);
@@ -2388,13 +2379,12 @@ namespace Server.Items
                         if (0.95 >= chance)
                             return 0;
 
-                        switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                        switch (Utility.Random(item is BaseJewel ? 2 : 4))
                         {
-                            case 0: neg.Prized = 1; break;
-                            case 1: neg.Antique = 1; break;
-                            case 2: item.LootType = LootType.Cursed; break;
-                            case 3: neg.Unwieldly = 1; break;
-                            case 4: neg.Massive = 1; break;
+                            case 0: neg.Antique = 1; break;
+                            case 1: item.LootType = LootType.Cursed; break;
+                            case 2: neg.Unwieldly = 1; break;
+                            case 3: neg.Massive = 1; break;
                         }
 
                         return 100;
@@ -2408,21 +2398,14 @@ namespace Server.Items
 
                         if (0.75 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                            switch (Utility.Random(item is BaseJewel ? 2 : 4))
                             {
-                                case 0: neg.Prized = 1; break;
-                                case 1: neg.Antique = 1; break;
-                                case 2: item.LootType = LootType.Cursed; break;
-                                case 3: neg.Unwieldly = 1; break;
-                                case 4: neg.Massive = 1; break;
+                                case 0: neg.Antique = 1; break;
+                                case 1: item.LootType = LootType.Cursed; break;
+                                case 2: neg.Unwieldly = 1; break;
+                                case 3: neg.Massive = 1; break;
                             }
 
-                            return 100;
-                        }
-
-                        if (0.5 > chance)
-                        {
-                            neg.Prized = 1;
                             return 100;
                         }
 
@@ -2446,21 +2429,14 @@ namespace Server.Items
 
                         chance = Utility.RandomDouble();
 
-                        if (0.4 > chance)
-                        {
-                            neg.Prized = 1;
-                            return 100;
-                        }
-
                         if (0.6 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                            switch (Utility.Random(item is BaseJewel ? 2 : 4))
                             {
-                                case 0: neg.Prized = 1; break;
-                                case 1: neg.Antique = 1; break;
-                                case 2: item.LootType = LootType.Cursed; break;
-                                case 3: neg.Unwieldly = 1; break;
-                                case 4: neg.Massive = 1; break;
+                                case 0: neg.Antique = 1; break;
+                                case 1: item.LootType = LootType.Cursed; break;
+                                case 2: neg.Unwieldly = 1; break;
+                                case 3: neg.Massive = 1; break;
                             }
 
                             return 100;
@@ -2501,7 +2477,7 @@ namespace Server.Items
                             return 150;
                         }
 
-                        neg.Prized = 1;
+                        neg.Brittle = 1;
                         return 100;
                     }
                 case ItemPower.MajorArtifact:
@@ -2739,9 +2715,6 @@ namespace Server.Items
 
             if (item is Glasses glasses)
                 return glasses.WeaponAttributes;
-
-            if (item is GargishGlasses gargishGlasses)
-                return gargishGlasses.WeaponAttributes;
 
             if (item is ElvenGlasses elvenGlasses)
                 return elvenGlasses.WeaponAttributes;

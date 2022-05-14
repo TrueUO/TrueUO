@@ -22,7 +22,6 @@ namespace Server.Items
         public CowStatue()
             : base(0xA50F)
         {
-            LootType = LootType.Blessed;
             Weight = 1;
             NextResourceCount = DateTime.UtcNow + TimeSpan.FromDays(1);
         }

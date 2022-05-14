@@ -166,56 +166,6 @@ namespace Server.Items
         }
     }
 
-    public class GargishClothKilt : BaseClothing
-    {
-        [Constructable]
-        public GargishClothKilt()
-            : this(0)
-        {
-        }
-
-        [Constructable]
-        public GargishClothKilt(int hue)
-            : base(0x0408, Layer.Gloves, hue)
-        {
-            Weight = 2.0;
-        }
-
-        public GargishClothKilt(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void OnAdded(object parent)
-        {
-            base.OnAdded(parent);
-
-            if (parent is Mobile mobile)
-            {
-                if (mobile.Female)
-                {
-                    ItemID = 0x0407;
-                }
-                else
-                {
-                    ItemID = 0x0408;
-                }
-            }
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class GuildedKilt : BaseOuterLegs
     {
         public override int LabelNumber => 1109619;  // Guilded Kilt

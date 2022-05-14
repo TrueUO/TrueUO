@@ -11,7 +11,6 @@ namespace Server.Items
             : base(0xA588)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeMagicBookStand(Serial serial)

@@ -51,7 +51,6 @@ namespace Server.Items
         [Constructable]
         public CrystalThroneDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1173;
         }
 

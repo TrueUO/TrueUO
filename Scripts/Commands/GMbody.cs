@@ -1,5 +1,4 @@
 using Server.Items;
-using Server.Mobiles;
 using Server.Targeting;
 using System.Collections;
 
@@ -111,11 +110,9 @@ namespace Server.Commands
 
                         if (from.IsStaff())
                         {
-                            EquipItem(new StaffRing());
-							EquipItem(new AnniversaryRobe());
+                            EquipItem(new AnniversaryRobe());
 
                             PackItem(new GMHidingStone());
-                            PackItem(new GMEthereal());
                             PackItem(new StaffOrb());
 
                             from.RawStr = 100;

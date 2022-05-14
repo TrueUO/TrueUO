@@ -129,7 +129,6 @@ namespace Server.Items
         [Constructable]
         public CurtainsDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public CurtainsDeed(Serial serial)

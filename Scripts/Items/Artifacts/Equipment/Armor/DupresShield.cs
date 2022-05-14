@@ -11,7 +11,6 @@ namespace Server.Items
         public DupresShield()
             : base(0x2B01)
         {
-            LootType = LootType.Blessed;
             Weight = 6.0;
             Attributes.BonusHits = 5;
             Attributes.RegenHits = 1;

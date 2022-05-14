@@ -3,7 +3,6 @@ using Server.ContextMenus;
 using Server.Engines.Craft;
 using Server.Mobiles;
 using Server.Network;
-using Server.Services.Virtues;
 using Server.Spells;
 using Server.Spells.Bushido;
 using Server.Spells.Chivalry;
@@ -186,7 +185,6 @@ namespace Server.Items
 
         public virtual bool CanFortify => !IsImbued && NegativeAttributes.Antique < 4;
         public virtual bool CanRepair => m_NegativeAttributes.NoRepair == 0;
-        public virtual bool CanAlter => true;
 
         public override int PhysicalResistance => m_AosWeaponAttributes.ResistPhysicalBonus;
         public override int FireResistance => m_AosWeaponAttributes.ResistFireBonus;
@@ -204,49 +202,6 @@ namespace Server.Items
                 return 50;
             }
         }
-
-        #region Personal Bless Deed
-        private Mobile m_BlessedBy;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile BlessedBy
-        {
-            get => m_BlessedBy;
-            set
-            {
-                m_BlessedBy = value;
-                InvalidateProperties();
-            }
-        }
-
-        private class UnBlessEntry : ContextMenuEntry
-        {
-            private readonly Mobile m_From;
-            private readonly BaseWeapon m_Weapon; // BaseArmor, BaseWeapon or BaseClothing
-
-            public UnBlessEntry(Mobile from, BaseWeapon weapon)
-                : base(6208, -1)
-            {
-                m_From = from;
-                m_Weapon = weapon;
-            }
-
-            public override void OnClick()
-            {
-                m_Weapon.BlessedFor = null;
-                m_Weapon.BlessedBy = null;
-
-                Container pack = m_From.Backpack;
-
-                if (pack != null)
-                {
-                    pack.DropItem(new PersonalBlessDeed(m_From));
-                    m_From.SendLocalizedMessage(1062200); // A personal bless deed has been placed in your backpack.
-                }
-            }
-        }
-        #endregion
-
         #endregion
 
         #region Getters & Setters
@@ -608,11 +563,6 @@ namespace Server.Items
             {
                 list.Add(new SearingWeapon.ToggleExtinguishEntry(from, this));
             }
-
-            if (BlessedFor == from && BlessedBy == from && RootParent == from)
-            {
-                list.Add(new UnBlessEntry(from, this));
-            }
         }
 
         public override void OnAfterDuped(Item newItem)
@@ -825,13 +775,6 @@ namespace Server.Items
             if (!from.CanBeginAction(typeof(BaseWeapon)))
             {
                 from.SendLocalizedMessage(3000201); // You must wait to perform another action.
-                return false;
-            }
-
-            if (BlessedBy != null && BlessedBy != from)
-            {
-                from.SendLocalizedMessage(1075277); // That item is blessed by another player.
-
                 return false;
             }
 
@@ -1123,8 +1066,8 @@ namespace Server.Items
                 bonus = Math.Max(bonus, 45);
             }
 
-            //SA Gargoyle cap is 50, else 45
-            bonus = Math.Min(attacker.Race == Race.Gargoyle ? 50 : 45, bonus);
+            //SA cap is 45
+            bonus = Math.Min(45, bonus);
 
             var ourValue = (atkValue + 20.0) * (100 + bonus);
 
@@ -1137,7 +1080,7 @@ namespace Server.Items
                 bonus -= info.DefenseChanceMalus;
             }
 
-            int max = 45 + BaseArmor.GetRefinedDefenseChance(defender) + WhiteTigerFormSpell.GetDefenseCap(defender);
+            int max = 45 + WhiteTigerFormSpell.GetDefenseCap(defender);
 
             // Defense Chance Increase = 45%
             if (bonus > max)
@@ -1994,19 +1937,6 @@ namespace Server.Items
                 percentageBonus += 25;
             }
 
-            if (attacker is PlayerMobile pmAttacker && !(defender is PlayerMobile))
-            {
-                if (pmAttacker.HonorActive && pmAttacker.InRange(defender, 1))
-                {
-                    percentageBonus += 25;
-                }
-
-                if (pmAttacker.SentHonorContext != null && pmAttacker.SentHonorContext.Target == defender)
-                {
-                    percentageBonus += pmAttacker.SentHonorContext.PerfectionDamageBonus;
-                }
-            }
-
             percentageBonus -= Block.GetMeleeReduction(defender);
 
             percentageBonus += BattleLust.GetBonus(attacker, defender);
@@ -2404,7 +2334,7 @@ namespace Server.Items
             #region Bracers Of Alchemical Devastation
             var arms = attacker.FindItemOnLayer(Layer.Arms);
 
-            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms != null && (arms is BracersofAlchemicalDevastation || arms is GargishBracersofAlchemicalDevastation))
+            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms is BracersofAlchemicalDevastation)
             {
                 DoLightning(attacker, defender);
             }
@@ -2430,11 +2360,6 @@ namespace Server.Items
             if (move != null)
             {
                 move.OnHit(attacker, defender, damage);
-            }
-
-            if (defender is IHonorTarget target && target.ReceivedHonorContext != null)
-            {
-                target.ReceivedHonorContext.OnTargetHit(attacker);
             }
 
             if (!ranged)
@@ -3012,11 +2937,6 @@ namespace Server.Items
                 move.OnMiss(attacker, defender);
             }
 
-            if (defender is IHonorTarget target && target.ReceivedHonorContext != null)
-            {
-                target.ReceivedHonorContext.OnTargetMissed(attacker);
-            }
-
             SkillMasterySpell.OnMiss(attacker, defender);
         }
 
@@ -3191,12 +3111,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(20); // version
-
-            // Version 20 - Removes all era checks and old code
-            // Version 19 - Removes m_SearingWeapon as its handled as a socket now
-            // Version 18 - removed VvV Item (handled in VvV System) and BlockRepair (Handled as negative attribute)
 
             writer.Write(m_UsesRemaining);
             writer.Write(m_ShowUsesRemaining);
@@ -3204,26 +3119,15 @@ namespace Server.Items
             writer.Write(_Owner);
             writer.Write(_OwnerName);
 
-            // Version 15 converts old leech to new leech
-
-            //Version 14
             writer.Write(m_IsImbued);
 
-            //version 13, converted SaveFlags to long, added negative attributes
-
-            //version 12
-            #region Runic Reforging
             writer.Write((int)m_ReforgedPrefix);
             writer.Write((int)m_ReforgedSuffix);
             writer.Write((int)m_ItemPower);
-            #endregion
 
             writer.Write(m_DImodded);
 
-            // Version 11
             writer.Write(m_TimesImbued);
-            // Version 10
-            writer.Write(m_BlessedBy); // Bless Deed
 
             #region Veteran Rewards
             writer.Write(m_EngravedText);
@@ -3577,8 +3481,8 @@ namespace Server.Items
 
             switch (version)
             {
-                case 20: // Removed Eras
-                case 19: // Removed SearingWeapon
+                case 20: 
+                case 19: 
                 case 18:
                 case 17:
                     {
@@ -3588,9 +3492,6 @@ namespace Server.Items
                     }
                 case 16:
                     {
-                        if (version == 17)
-                            reader.ReadBool();
-
                         _Owner = reader.ReadMobile();
                         _OwnerName = reader.ReadString();
                         goto case 15;
@@ -3604,46 +3505,22 @@ namespace Server.Items
                 case 13:
                 case 12:
                     {
-                        #region Runic Reforging
                         m_ReforgedPrefix = (ReforgedPrefix)reader.ReadInt();
                         m_ReforgedSuffix = (ReforgedSuffix)reader.ReadInt();
                         m_ItemPower = (ItemPower)reader.ReadInt();
 
-                        if (version < 18 && reader.ReadBool())
-                        {
-                            Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
-                            {
-                                m_NegativeAttributes.NoRepair = 1;
-                            });
-                        }
-                        #endregion
-
-                        #region Stygian Abyss
                         m_DImodded = reader.ReadBool();
 
-                        if (version == 18)
-                        {
-                            if (reader.ReadBool())
-                            {
-                                Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
-                                {
-                                    AttachSocket(new SearingWeapon(this));
-                                });
-                            }
-                        }
                         goto case 11;
                     }
                 case 11:
                     {
                         m_TimesImbued = reader.ReadInt();
 
-                        #endregion
-
                         goto case 10;
                     }
                 case 10:
                     {
-                        m_BlessedBy = reader.ReadMobile();
                         m_EngravedText = reader.ReadString();
                         m_Slayer3 = (TalismanSlayerName)reader.ReadInt();
 
@@ -4462,15 +4339,6 @@ namespace Server.Items
             if (m_AosSkillBonuses != null)
             {
                 m_AosSkillBonuses.GetProperties(list);
-            }
-
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
             }
 
             if (ArtifactRarity > 0)

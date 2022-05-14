@@ -8,7 +8,6 @@ namespace Server.Items
         public CollectionStatuette(int itemID)
             : base(itemID)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

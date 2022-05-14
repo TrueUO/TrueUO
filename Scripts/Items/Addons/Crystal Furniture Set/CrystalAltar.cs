@@ -42,7 +42,6 @@ namespace Server.Items
         [Constructable]
         public CrystalAltarDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1173;
         }
 

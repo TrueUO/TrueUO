@@ -129,7 +129,6 @@ namespace Server.Items
         public DecorativeShieldDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

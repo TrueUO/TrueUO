@@ -3768,7 +3768,7 @@ namespace Server
 					continue;
 				}
 
-				if ((item.Insured || item.LootType == LootType.Blessed) && item.Parent == this && item.Layer != Layer.Mount)
+				if (item.Parent == this && item.Layer != Layer.Mount)
 				{
 					equip.Add(item);
 				}
@@ -4061,8 +4061,6 @@ namespace Server
 		{
 			return true;
 		}
-
-		public static bool InsuranceEnabled { get; set; }
 
 		public virtual void Use(Item item)
 		{

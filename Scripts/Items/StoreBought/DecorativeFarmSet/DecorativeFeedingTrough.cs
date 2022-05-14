@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0xA2FE)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeFeedingTrough(Serial serial)

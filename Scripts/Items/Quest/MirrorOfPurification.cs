@@ -6,7 +6,6 @@ namespace Server.Items
         public MirrorOfPurification()
             : base(0x1008)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
             Hue = 0x530;
         }

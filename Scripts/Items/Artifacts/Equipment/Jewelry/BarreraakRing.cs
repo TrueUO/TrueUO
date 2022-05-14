@@ -9,8 +9,6 @@ namespace Server.Items
         [Constructable]
         public BarreraaksRing()
         {
-            //TODO: Get Hue
-            LootType = LootType.Blessed;
         }
 
         public override bool CanEquip(Mobile from)

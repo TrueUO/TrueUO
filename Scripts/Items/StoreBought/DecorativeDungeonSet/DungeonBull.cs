@@ -63,7 +63,6 @@ namespace Server.Items
         public DungeonBullDeed()
             : base()
         {
-            LootType = LootType.Blessed;
         }
 
         public DungeonBullDeed(Serial serial)

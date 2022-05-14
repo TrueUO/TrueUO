@@ -105,7 +105,6 @@ namespace Server.Items
         [Constructable]
         public DragonHeadAddonDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

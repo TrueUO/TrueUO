@@ -1,4 +1,4 @@
-﻿using Server.Gumps;
+using Server.Gumps;
 
 namespace Server.Items
 {
@@ -64,7 +64,6 @@ namespace Server.Items
         [Constructable]
         public SpiritualityVirtueTileDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

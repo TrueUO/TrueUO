@@ -143,7 +143,7 @@ namespace Server.Mobiles
                     {
                         if (spawn.Combatant != null)
                         {
-                            if (!(spawn.Combatant is PlayerMobile) || !((PlayerMobile)spawn.Combatant).HonorActive)
+                            if (!(spawn.Combatant is PlayerMobile))
                                 spawn.Combatant = com;
                         }
                         else

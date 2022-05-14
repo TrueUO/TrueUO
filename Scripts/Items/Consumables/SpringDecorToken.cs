@@ -10,7 +10,6 @@ namespace Server.Items
         public SpringDecorToken()
             : base(0x2AAA)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 

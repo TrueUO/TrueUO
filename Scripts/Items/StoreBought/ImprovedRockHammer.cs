@@ -18,7 +18,6 @@ namespace Server.Items
             : base(uses, 0x9E7E)
         {
             Hue = 2721;
-            LootType = LootType.Blessed;
         }
 
         public ImprovedRockHammer(Serial serial)

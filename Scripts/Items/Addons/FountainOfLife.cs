@@ -277,7 +277,6 @@ namespace Server.Items
         [Constructable]
         public FountainOfLifeDeed(int charges)
         {
-            LootType = LootType.Blessed;
             m_Charges = charges;
         }
 

@@ -11,7 +11,6 @@ namespace Server.Items
         public BaseStatuette(int itemID)
             : base(itemID)
         {
-            LootType = LootType.Blessed;
         }
 
         public BaseStatuette(Serial serial)

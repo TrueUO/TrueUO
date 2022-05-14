@@ -13,8 +13,7 @@ namespace Server.Items
         public WeddingDress(int hue)
             : base(0x9EF0, hue)
         {
-			LootType = LootType.Blessed;
-			Weight = 2.0;
+            Weight = 2.0;
         }
 
         public override bool AllowMaleWearer => false;

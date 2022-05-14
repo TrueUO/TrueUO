@@ -60,7 +60,6 @@ namespace Server.Items
         public FallenLogDeed()
             : base()
         {
-            LootType = LootType.Blessed;
         }
 
         public FallenLogDeed(Serial serial)

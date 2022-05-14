@@ -145,11 +145,8 @@ namespace Server.Engines.Despise
         {
             typeof(CompassionsEye),
             typeof(UnicornManeWovenSandals),
-            typeof(UnicornManeWovenTalons),
             typeof(DespicableQuiver),
-            typeof(UnforgivenVeil),
-            typeof(HailstormHuman),
-            typeof(HailstormGargoyle)
+            typeof(HailstormHuman)
         };
 
         public DespiseBoss(Serial serial) : base(serial)

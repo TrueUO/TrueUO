@@ -7,7 +7,6 @@ namespace Server.Items
         public ChangelingStatue()
             : base(0x2D8A)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

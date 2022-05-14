@@ -130,19 +130,21 @@ namespace Server.Engines.HuntsmasterChallenge
         private void CheckItems()
         {
             if (Backpack == null)
+            {
                 AddItem(new Backpack());
+            }
 
             Item i = Backpack.FindItemByType(typeof(HuntmastersRewardTitleDeed));
             if (i == null)
+            {
                 Backpack.DropItem(new HuntmastersRewardTitleDeed());
+            }
 
             i = Backpack.FindItemByType(typeof(RangersGuildSash));
             if (i == null)
+            {
                 Backpack.DropItem(new RangersGuildSash());
-
-            i = Backpack.FindItemByType(typeof(GargishRangersGuildSash));
-            if (i == null)
-                Backpack.DropItem(new GargishRangersGuildSash());
+            }
         }
 
         public HuntMaster(Serial serial) : base(serial)

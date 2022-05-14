@@ -103,7 +103,6 @@ namespace Server.Items
         [Constructable]
         public BlueMarbleFireplaceDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public BlueMarbleFireplaceDeed(Serial serial)

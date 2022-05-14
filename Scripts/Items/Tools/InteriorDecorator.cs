@@ -24,7 +24,6 @@ namespace Server.Items
             : base(0xFC1)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public InteriorDecorator(Serial serial)

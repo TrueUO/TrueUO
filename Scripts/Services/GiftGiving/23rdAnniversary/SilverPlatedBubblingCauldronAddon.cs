@@ -75,7 +75,6 @@ namespace Server.Items
         public SilverPlatedBubblingCauldronDeed(int hue)
         {
             Hue = hue;
-            LootType = LootType.Blessed;
         }
 
         public SilverPlatedBubblingCauldronDeed(Serial serial)

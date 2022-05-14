@@ -23,7 +23,6 @@ namespace Server.Items
             : base(0xA323)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public MagicMilkPail(Serial serial)

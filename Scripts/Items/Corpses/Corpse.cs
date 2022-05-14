@@ -1058,11 +1058,6 @@ namespace Server.Items
                             continue;
                         }
 
-                        if (from.FindItemOnLayer(Layer.OuterTorso) is DeathRobe robe)
-                        {
-                            robe.Delete();
-                        }
-
                         if (m_EquipItems.Contains(item) && from.EquipItem(item))
                         {
                             gathered = true;

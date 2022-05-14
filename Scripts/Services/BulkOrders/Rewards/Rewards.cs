@@ -74,7 +74,7 @@ namespace Server.Engines.BulkOrders
         public int RewardType { get; set; }
 
         public BODCollectionItem(int itemID, TextDefinition tooltip, int hue, double points, ConstructCallback constructor, int type = 0)
-            : base(null, itemID, tooltip, hue, points, false)
+            : base(null, itemID, tooltip, hue, points)
         {
             Constructor = constructor;
             RewardType = type;
@@ -640,7 +640,6 @@ namespace Server.Engines.BulkOrders
                 RewardCollection.Add(new BODCollectionItem(0x14F0, 1157112, 0, 400, Tapestry));
                 RewardCollection.Add(new BODCollectionItem(0x14F0, 1157113, 0, 450, BearRug));
                 RewardCollection.Add(new BODCollectionItem(0x14F0, 1157119, 0x481, 500, PowerScroll, 10));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157114, 0, 550, ClothingBlessDeed));
                 RewardCollection.Add(new BODCollectionItem(0x14F0, 1157120, 0x481, 575, PowerScroll, 15));
                 RewardCollection.Add(new BODCollectionItem(0xF9D, 1157116, CraftResources.GetHue(CraftResource.HornedLeather), 600, RunicKit, 2));
                 RewardCollection.Add(new BODCollectionItem(0x14F0, 1157121, 0x481, 650, PowerScroll, 20));
@@ -660,7 +659,6 @@ namespace Server.Engines.BulkOrders
                     new RewardGroup(400, new RewardItem(2, PowerScroll, 5), new RewardItem(3, Tapestry)),
                     new RewardGroup(450, new RewardItem(1, BearRug)),
                     new RewardGroup(500, new RewardItem(1, PowerScroll, 10)),
-                    new RewardGroup(550, new RewardItem(1, ClothingBlessDeed)),
                     new RewardGroup(575, new RewardItem(1, PowerScroll, 15)),
                     new RewardGroup(600, new RewardItem(1, RunicKit, 2)),
                     new RewardGroup(650, new RewardItem(1, PowerScroll, 20)),
@@ -678,7 +676,6 @@ namespace Server.Engines.BulkOrders
         private static readonly ConstructCallback Tapestry = CreateTapestry;
         private static readonly ConstructCallback PowerScroll = CreatePowerScroll;
         private static readonly ConstructCallback BearRug = CreateBearRug;
-        private static readonly ConstructCallback ClothingBlessDeed = CreateCBD;
         private static readonly ConstructCallback CraftsmanTalisman = CreateCraftsmanTalisman;
 
         private static Item CreateSewingKit(int type)
@@ -789,11 +786,6 @@ namespace Server.Engines.BulkOrders
                 return new PowerScroll(SkillName.Tailoring, 100 + type);
 
             throw new InvalidOperationException();
-        }
-
-        private static Item CreateCBD(int type)
-        {
-            return new ClothingBlessDeed();
         }
 
         private static Item CreateCraftsmanTalisman(int type)
@@ -1500,7 +1492,7 @@ namespace Server.Engines.BulkOrders
             new RewardType(250, typeof(UnbakedFruitPie), typeof(UnbakedPeachCobbler), typeof(UnbakedApplePie), typeof(UnbakedPumpkinPie)),
             new RewardType(300, typeof(CookedBird), typeof(FishSteak), typeof(FriedEggs), typeof(LambLeg), typeof(Ribs)),
             new RewardType(350, typeof(Cookies), typeof(Cake), typeof(Muffins), typeof(ThreeTieredCake)),
-            new RewardType(400, typeof(EnchantedApple), typeof(TribalPaint), typeof(GrapesOfWrath), typeof(EggBomb)),
+            new RewardType(400, typeof(EnchantedApple), typeof(GrapesOfWrath), typeof(EggBomb)),
             new RewardType(450, typeof(MisoSoup), typeof(WhiteMisoSoup), typeof(RedMisoSoup), typeof(AwaseMisoSoup)),
             new RewardType(500, typeof(WasabiClumps), typeof(SushiRolls), typeof(SushiPlatter), typeof(GreenTea))
         };

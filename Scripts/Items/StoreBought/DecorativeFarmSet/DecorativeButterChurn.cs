@@ -9,7 +9,6 @@ namespace Server.Items
             : base(0xA2FD)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeButterChurn(Serial serial)

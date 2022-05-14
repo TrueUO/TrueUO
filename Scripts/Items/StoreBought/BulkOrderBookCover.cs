@@ -120,7 +120,6 @@ namespace Server.Items
         {
             UsesRemaining = uses;
 
-            LootType = LootType.Blessed;
             CoverType = type;
         }
 

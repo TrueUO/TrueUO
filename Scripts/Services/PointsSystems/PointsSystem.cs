@@ -18,7 +18,6 @@ namespace Server.Engines.Points
 
         QueensLoyalty,
         VoidPool,
-        DespiseCrystals,
         ShameCrystals,
         CasinoData,
         CityTrading,
@@ -404,7 +403,6 @@ namespace Server.Engines.Points
 
         public static QueensLoyalty QueensLoyalty { get; set; }
         public static VoidPool VoidPool { get; set; }
-        public static DespiseCrystals DespiseCrystals { get; set; }
         public static ShameCrystals ShameCrystals { get; set; }
         public static CasinoData CasinoData { get; set; }
         public static BlackthornData Blackthorn { get; set; }
@@ -433,7 +431,6 @@ namespace Server.Engines.Points
 
             QueensLoyalty = new QueensLoyalty();
             VoidPool = new VoidPool();
-            DespiseCrystals = new DespiseCrystals();
             ShameCrystals = new ShameCrystals();
             CasinoData = new CasinoData();
             Blackthorn = new BlackthornData();

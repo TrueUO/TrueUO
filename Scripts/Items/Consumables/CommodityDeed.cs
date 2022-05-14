@@ -137,7 +137,6 @@ namespace Server.Items
         {
             Weight = 1.0;
             Hue = 0x47;
-            LootType = LootType.Blessed;
 
             Commodity = commodity;
         }

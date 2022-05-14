@@ -41,23 +41,8 @@ namespace Server.Items
             Donations.Add(new CollectionItem(typeof(MouldingPlane), 0x102C, 1075060, 0x0, 4));
             Donations.Add(new CollectionItem(typeof(SmoothingPlane), 0x1032, 1075061, 0x0, 4));
 
-            int[] hues = new int[] { 0x581, 0x278, 0x318, 0x2FF };
-            Rewards.Add(new CollectionItem(typeof(ShepherdsCrookOfHumility), 0xE81, 1075791, 902, 5000.0, true));
-            Rewards.Add(new CollectionHuedItem(typeof(OdricsRobe), 0x1F03, 1073250, 0x581, 100000.0, hues));
-
-            hues = new int[] { 0x229, 0x18E, 0x215, 0xF5 };
-            Rewards.Add(new CollectionHuedItem(typeof(MalabellesDress), 0x1516, 1073251, 0x229, 100000.0, hues));
-
-            hues = new int[] { 0x281, 0x173, 0x581, 0x300 };
-            Rewards.Add(new CollectionHuedItem(typeof(BaronLenshiresCloak), 0x1515, 1073252, 0x281, 100000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(Adranath), 0x1541, 1073253, 0x555, 100000.0, hues));
+            // REWARDS
             Rewards.Add(new CollectionTitle(1073235, 1073637, 100000.0)); // Vesper Museum Contributor
-
-            hues = new int[] { 0x2A, 0x27D, 0xF7, 0x236 };
-            Rewards.Add(new CollectionHuedItem(typeof(VesperCollectionRing), 0x108A, 1073234, 0x2A, 200000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(VesperCollectionNecklace), 0x1088, 1073234, 0x2A, 200000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(VesperCollectionBracelet), 0x1086, 1073234, 0x2A, 200000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(VesperCollectionEarrings), 0x1087, 1073234, 0x2A, 200000.0, hues));
             Rewards.Add(new CollectionTitle(1073236, 1073638, 200000.0)); // Distinguished Vesper Museum Contributor
             Rewards.Add(new CollectionItem(typeof(LordBritishThroneDeed), 0x1F23, 1073243, 0x0, 350000.0));
             Rewards.Add(new CollectionItem(typeof(TrollStatuette), 0x20E9, 1073242, 0x0, 350000.0));
@@ -72,11 +57,6 @@ namespace Server.Items
             Rewards.Add(new CollectionItem(typeof(SolenQueenStatuette), 0x2602, 1075022, 0x0, 350000.0));
             Rewards.Add(new CollectionTitle(1073237, 1073639, 350000.0)); // Honored Vesper Museum Contributor
             Rewards.Add(new CollectionItem(typeof(MinaxsArmor), 0x1C02, 1073257, 0x281, 550000.0));
-
-            hues = new int[] { 0x281, 0x173, 0x581, 0x300 };
-            Rewards.Add(new CollectionHuedItem(typeof(GypsyHeaddress), 0x1544, 1073254, 0x453, 550000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(NystulsWizardsHat), 0x1718, 1073255, 0x453, 550000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(JesterHatOfChuckles), 0x171C, 1073256, 0x453, 550000.0, hues));
             Rewards.Add(new CollectionItem(typeof(KeeoneansChainMail), 0x13BF, 1073264, 0x84E, 550000.0));
             Rewards.Add(new CollectionTitle(1073238, 1073640, 550000.0)); // Prominent Vesper Museum Contributor	
             Rewards.Add(new CollectionItem(typeof(ClaininsSpellbook), 0xEFA, 1073262, 0x84D, 800000.0));

@@ -67,7 +67,6 @@ namespace Server.Items
         public OrigamiButterfly()
             : base(0x2838)
         {
-            LootType = LootType.Blessed;
         }
 
         public OrigamiButterfly(Serial serial)
@@ -97,7 +96,6 @@ namespace Server.Items
         public OrigamiSwan()
             : base(0x2839)
         {
-            LootType = LootType.Blessed;
         }
 
         public OrigamiSwan(Serial serial)
@@ -127,7 +125,6 @@ namespace Server.Items
         public OrigamiFrog()
             : base(0x283A)
         {
-            LootType = LootType.Blessed;
         }
 
         public OrigamiFrog(Serial serial)
@@ -157,7 +154,6 @@ namespace Server.Items
         public OrigamiShape()
             : base(0x283B)
         {
-            LootType = LootType.Blessed;
         }
 
         public OrigamiShape(Serial serial)
@@ -187,7 +183,6 @@ namespace Server.Items
         public OrigamiSongbird()
             : base(0x283C)
         {
-            LootType = LootType.Blessed;
         }
 
         public OrigamiSongbird(Serial serial)
@@ -217,7 +212,6 @@ namespace Server.Items
         public OrigamiFish()
             : base(0x283D)
         {
-            LootType = LootType.Blessed;
         }
 
         public OrigamiFish(Serial serial)
@@ -252,7 +246,6 @@ namespace Server.Items
 
             Name = "a delicate origami dragon";
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public OrigamiDragon(Serial serial)
@@ -286,7 +279,6 @@ namespace Server.Items
         {
             Name = "a delicate origami bunny";
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public OrigamiBunny(Serial serial)

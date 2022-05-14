@@ -8,7 +8,6 @@ namespace Server.Items
         public HeritageToken()
             : base(0x367A)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 

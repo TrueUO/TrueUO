@@ -45,7 +45,6 @@ namespace Server.Items
         [Constructable]
         public MapleTreeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public MapleTreeDeed(Serial serial)

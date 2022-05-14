@@ -6,7 +6,6 @@ namespace Server.Items
         public ReginasLetter()
             : base(0x14ED)
         {
-            LootType = LootType.Blessed;
             Weight = 1;
         }
 

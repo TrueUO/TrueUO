@@ -139,7 +139,6 @@ namespace Server.Items
         public ShoulderParrot()
             : base(0xA2CA)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void AddNameProperty(ObjectPropertyList list)

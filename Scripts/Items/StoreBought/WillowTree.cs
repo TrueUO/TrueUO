@@ -38,7 +38,6 @@ namespace Server.Items
         [Constructable]
         public WillowTreeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public WillowTreeDeed(Serial serial)

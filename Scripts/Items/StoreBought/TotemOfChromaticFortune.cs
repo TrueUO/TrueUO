@@ -22,7 +22,6 @@ namespace Server.Items
         {
             _Charges = 3;
             Hue = 2721;
-            LootType = LootType.Blessed;
         }
 
         public TotemOfChromaticFortune(Serial serial)

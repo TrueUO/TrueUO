@@ -87,7 +87,6 @@ namespace Server.Items
         public TallLampDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public TallLampDeed(Serial serial)

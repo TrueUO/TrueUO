@@ -19,7 +19,6 @@ namespace Server.Items
         public RunebookStrap()
             : base(0xA721)
         {
-            LootType = LootType.Blessed;
             Weight = 3.0;
         }
 

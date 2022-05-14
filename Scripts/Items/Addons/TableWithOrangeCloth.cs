@@ -34,7 +34,6 @@ namespace Server.Items
         [Constructable]
         public TableWithOrangeClothDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public TableWithOrangeClothDeed(Serial serial)

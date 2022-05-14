@@ -53,7 +53,6 @@ namespace Server.Items
             : base(itemid)
         {
             Weight = 3.0;
-            LootType = LootType.Blessed;
         }
 
         public HousePlacementTool(Serial serial)

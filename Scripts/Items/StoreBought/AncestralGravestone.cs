@@ -13,7 +13,6 @@ namespace Server.Items
         public AncestralGravestone()
             : base(0x1173)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile m)

@@ -58,7 +58,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.MedScrolls, 2);
             AddLoot(LootPack.HighScrolls, 2);
             AddLoot(LootPack.ArcanistScrolls);
-            AddLoot(LootPack.LootItem<ResolvesBridle>());
         }
 
         public override void Serialize(GenericWriter writer)

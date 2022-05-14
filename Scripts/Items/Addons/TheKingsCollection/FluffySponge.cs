@@ -37,7 +37,6 @@ namespace Server.Items
         [Constructable]
         public FluffySpongeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public FluffySpongeDeed(Serial serial)

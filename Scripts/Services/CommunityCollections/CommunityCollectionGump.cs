@@ -1,5 +1,4 @@
 using Server.Accounting;
-using Server.Engines.Quests;
 using Server.Items;
 using Server.Mobiles;
 using Server.Prompts;
@@ -219,12 +218,6 @@ namespace Server.Gumps
             while (offset + next < 300 && m_Index < m_Collection.Rewards.Count)
             {
                 CollectionItem item = m_Collection.Rewards[m_Index];
-
-                if (item.QuestItem && SkipQuestReward(m_Owner, item))
-                {
-                    m_Index++;
-                    continue;
-                }
 
                 int height = Math.Max(item.Height, 20);
 
@@ -555,32 +548,6 @@ namespace Server.Gumps
                 if (from.InRange(m_Location, 2))
                     from.SendGump(new CommunityCollectionGump((PlayerMobile)from, m_Collection, m_Location));
             }
-        }
-
-        private bool SkipQuestReward(PlayerMobile pm, CollectionItem item)
-        {
-            if (pm.Quests != null)
-            {
-                for (var index = 0; index < pm.Quests.Count; index++)
-                {
-                    BaseQuest q = pm.Quests[index];
-
-                    if (!q.Completed)
-                    {
-                        for (var i = 0; i < q.Objectives.Count; i++)
-                        {
-                            BaseObjective obj = q.Objectives[i];
-
-                            if (obj is CollectionsObtainObjective objective && item.Type == objective.Obtain)
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return true;
         }
 
         public static bool CheckType(Item item, Type type, bool checkDerives)

@@ -70,8 +70,6 @@ namespace Server.Mobiles
         {
             base.OnDeath(c);
 
-            c.DropItem(new CoilsFang());
-
             if (Utility.RandomDouble() < 0.025)
             {
                 switch (Utility.Random(5))

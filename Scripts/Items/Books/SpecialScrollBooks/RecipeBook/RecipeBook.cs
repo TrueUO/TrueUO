@@ -248,7 +248,6 @@ namespace Server.Items
             : base(0xA266)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
             LoadDefinitions();
             Filter = new RecipeScrollFilter();
             Level = SecureLevel.CoOwners;

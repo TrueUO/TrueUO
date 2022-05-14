@@ -50,7 +50,7 @@ namespace Server.Engines.Khaldun
         {
             AddItem(new Backpack());
 
-            DeathRobe robe = new DeathRobe
+            Robe robe = new Robe
             {
                 ItemID = 9863
             };

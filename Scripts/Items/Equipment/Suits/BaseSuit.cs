@@ -9,7 +9,6 @@ namespace Server.Items
             Hue = hue;
             Weight = 1.0;
             Movable = false;
-            LootType = LootType.Newbied;
             Layer = Layer.OuterTorso;
 
             m_AccessLevel = level;

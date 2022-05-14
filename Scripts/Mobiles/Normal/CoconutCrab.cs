@@ -13,7 +13,6 @@ namespace Server.Mobiles
         public CoconutCrabStatue()
             : base(0xA335)
         {
-            LootType = LootType.Blessed;
         }
         public CoconutCrabStatue(Serial serial)
             : base(serial)

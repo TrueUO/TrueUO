@@ -58,7 +58,6 @@ namespace Server.Items
         [Constructable]
         public EmbroideredTapestryDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public EmbroideredTapestryDeed(Serial serial)

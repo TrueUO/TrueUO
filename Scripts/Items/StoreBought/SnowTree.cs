@@ -87,7 +87,6 @@ namespace Server.Items
         [Constructable]
         public SnowTreeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public void GetOptions(RewardOptionList list)

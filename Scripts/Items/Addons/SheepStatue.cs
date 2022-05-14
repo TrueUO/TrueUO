@@ -220,7 +220,6 @@ namespace Server.Items
         [Constructable]
         public SheepStatueDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public SheepStatueDeed(Serial serial)

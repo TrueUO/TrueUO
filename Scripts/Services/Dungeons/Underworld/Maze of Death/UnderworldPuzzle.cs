@@ -22,7 +22,6 @@ namespace Server.Items
         public UnderworldPuzzleItem()
             : base(0x2AAA)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
             Hue = 0x281;
 

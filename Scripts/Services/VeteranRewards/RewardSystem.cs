@@ -360,13 +360,6 @@ namespace Server.Engines.VeteranRewards
                     new RewardEntry(specialDyeTubs, 1006013, typeof(FurnitureDyeTub)),
                     new RewardEntry(specialDyeTubs, 1006047, typeof(SpecialDyeTub)),
 
-                    new RewardEntry(cloaksAndRobes, 1006009, typeof(RewardCloak), ClothRewardHue.Bronze, 1041286),
-                    new RewardEntry(cloaksAndRobes, 1080366, typeof(RewardDress), ClothRewardHue.Bronze, 1080366),
-                    new RewardEntry(cloaksAndRobes, 1006010, typeof(RewardRobe), ClothRewardHue.Bronze, 1041287),                    
-                    new RewardEntry(cloaksAndRobes, 1006011, typeof(RewardCloak), ClothRewardHue.Copper, 1041288),
-                    new RewardEntry(cloaksAndRobes, 1080367, typeof(RewardDress), ClothRewardHue.Copper, 1080367),
-                    new RewardEntry(cloaksAndRobes, 1006012, typeof(RewardRobe), ClothRewardHue.Copper, 1041289),                    
-
                     new RewardEntry(monsterStatues, 1006024, typeof(MonsterStatuette), MonsterStatuetteType.Crocodile),
                     new RewardEntry(monsterStatues, 1006025, typeof(MonsterStatuette), MonsterStatuetteType.Daemon),
                     new RewardEntry(monsterStatues, 1006026, typeof(MonsterStatuette), MonsterStatuetteType.Dragon),
@@ -404,13 +397,6 @@ namespace Server.Engines.VeteranRewards
                 {
                     new RewardEntry(specialDyeTubs, 1006052, typeof(LeatherDyeTub)),
 
-                    new RewardEntry(cloaksAndRobes, 1006014, typeof(RewardCloak), ClothRewardHue.Agapite, 1041290),
-                    new RewardEntry(cloaksAndRobes, 1080369, typeof(RewardDress), ClothRewardHue.Agapite, 1080369),
-                    new RewardEntry(cloaksAndRobes, 1006015, typeof(RewardRobe), ClothRewardHue.Agapite, 1041291),                    
-                    new RewardEntry(cloaksAndRobes, 1006016, typeof(RewardCloak), ClothRewardHue.Golden, 1041292),
-                    new RewardEntry(cloaksAndRobes, 1080368, typeof(RewardDress), ClothRewardHue.Golden, 1080368),
-                    new RewardEntry(cloaksAndRobes, 1006017, typeof(RewardRobe), ClothRewardHue.Golden, 1041293),                    
-
                     new RewardEntry(monsterStatues, 1155747, typeof(MonsterStatuette), MonsterStatuetteType.CrystalElemental),
                     new RewardEntry(monsterStatues, 1157078, typeof(MonsterStatuette), MonsterStatuetteType.TRex),
                     new RewardEntry(monsterStatues, 1158877, typeof(MonsterStatuette), MonsterStatuetteType.KhalAnkur),
@@ -422,13 +408,6 @@ namespace Server.Engines.VeteranRewards
                 }),
                 new RewardList(RewardInterval, 3, new RewardEntry[]
                 {
-                    new RewardEntry(cloaksAndRobes, 1006020, typeof(RewardCloak), ClothRewardHue.Verite, 1041294),
-                    new RewardEntry(cloaksAndRobes, 1080370, typeof(RewardDress), ClothRewardHue.Verite, 1080370),
-                    new RewardEntry(cloaksAndRobes, 1006021, typeof(RewardRobe), ClothRewardHue.Verite, 1041295),                    
-                    new RewardEntry(cloaksAndRobes, 1006022, typeof(RewardCloak), ClothRewardHue.Valorite, 1041296),
-                    new RewardEntry(cloaksAndRobes, 1080371, typeof(RewardDress), ClothRewardHue.Valorite, 1080371),
-                    new RewardEntry(cloaksAndRobes, 1006023, typeof(RewardRobe), ClothRewardHue.Valorite, 1041297),
-
                     new RewardEntry(monsterStatues, 1006038, typeof(MonsterStatuette), MonsterStatuetteType.Cow),
                     new RewardEntry(monsterStatues, 1006039, typeof(MonsterStatuette), MonsterStatuetteType.Zombie),
                     new RewardEntry(monsterStatues, 1006040, typeof(MonsterStatuette), MonsterStatuetteType.Llama),
@@ -445,16 +424,6 @@ namespace Server.Engines.VeteranRewards
                 new RewardList(RewardInterval, 4, new RewardEntry[]
                 {
                     new RewardEntry(specialDyeTubs, 1049740, typeof(RunebookDyeTub)),
-
-                    new RewardEntry(cloaksAndRobes, 1049725, typeof(RewardCloak), ClothRewardHue.DarkGray, 1049757),
-                    new RewardEntry(cloaksAndRobes, 1080374, typeof(RewardDress), ClothRewardHue.DarkGray, 1080374),
-                    new RewardEntry(cloaksAndRobes, 1049726, typeof(RewardRobe), ClothRewardHue.DarkGray, 1049756),                    
-                    new RewardEntry(cloaksAndRobes, 1049727, typeof(RewardCloak), ClothRewardHue.IceGreen, 1049759),
-                    new RewardEntry(cloaksAndRobes, 1080372, typeof(RewardDress), ClothRewardHue.IceGreen, 1080372),
-                    new RewardEntry(cloaksAndRobes, 1049728, typeof(RewardRobe), ClothRewardHue.IceGreen, 1049758),                    
-                    new RewardEntry(cloaksAndRobes, 1049729, typeof(RewardCloak), ClothRewardHue.IceBlue, 1049761),
-                    new RewardEntry(cloaksAndRobes, 1080373, typeof(RewardDress), ClothRewardHue.IceBlue, 1080373),
-                    new RewardEntry(cloaksAndRobes, 1049730, typeof(RewardRobe), ClothRewardHue.IceBlue, 1049760),                    
 
                     new RewardEntry(monsterStatues, 1049742, typeof(MonsterStatuette), MonsterStatuetteType.Ophidian),
                     new RewardEntry(monsterStatues, 1049743, typeof(MonsterStatuette), MonsterStatuetteType.Reaper),
@@ -480,16 +449,6 @@ namespace Server.Engines.VeteranRewards
                     new RewardEntry(specialDyeTubs, 1049741, typeof(StatuetteDyeTub)),
                     new RewardEntry(specialDyeTubs, 1153495, typeof(MetallicLeatherDyeTub)),
                     new RewardEntry(specialDyeTubs, 1150067, typeof(MetallicDyeTub)),
-
-                    new RewardEntry(cloaksAndRobes, 1049731, typeof(RewardCloak), ClothRewardHue.JetBlack, 1049763),
-                    new RewardEntry(cloaksAndRobes, 1080377, typeof(RewardDress), ClothRewardHue.JetBlack, 1080377),
-                    new RewardEntry(cloaksAndRobes, 1049732, typeof(RewardRobe), ClothRewardHue.JetBlack, 1049762),                    
-                    new RewardEntry(cloaksAndRobes, 1049733, typeof(RewardCloak), ClothRewardHue.IceWhite, 1049765),
-                    new RewardEntry(cloaksAndRobes, 1080376, typeof(RewardDress), ClothRewardHue.IceWhite, 1080376),
-                    new RewardEntry(cloaksAndRobes, 1049734, typeof(RewardRobe), ClothRewardHue.IceWhite, 1049764),                    
-                    new RewardEntry(cloaksAndRobes, 1049735, typeof(RewardCloak), ClothRewardHue.Fire, 1049767),
-                    new RewardEntry(cloaksAndRobes, 1080375, typeof(RewardDress), ClothRewardHue.Fire, 1080375),
-                    new RewardEntry(cloaksAndRobes, 1049736, typeof(RewardRobe), ClothRewardHue.Fire, 1049766),                    
 
                     new RewardEntry(monsterStatues, 1049768, typeof(MonsterStatuette), MonsterStatuetteType.Gazer),
                     new RewardEntry(monsterStatues, 1049769, typeof(MonsterStatuette), MonsterStatuetteType.FireElemental),
@@ -541,13 +500,6 @@ namespace Server.Engines.VeteranRewards
                     new RewardEntry(monsterStatues, 1080520, typeof(MonsterStatuette), MonsterStatuetteType.Harrower),
                     new RewardEntry(monsterStatues, 1080521, typeof(MonsterStatuette), MonsterStatuetteType.Efreet),
 
-                    new RewardEntry(cloaksAndRobes, 1080382, typeof(RewardCloak), ClothRewardHue.Pink, 1080382),
-                    new RewardEntry(cloaksAndRobes, 1080378, typeof(RewardDress), ClothRewardHue.Pink, 1080378),
-                    new RewardEntry(cloaksAndRobes, 1080380, typeof(RewardRobe), ClothRewardHue.Pink, 1080380),                    
-                    new RewardEntry(cloaksAndRobes, 1080383, typeof(RewardCloak), ClothRewardHue.Crimson, 1080383),
-                    new RewardEntry(cloaksAndRobes, 1080379, typeof(RewardDress), ClothRewardHue.Crimson, 1080379),
-                    new RewardEntry(cloaksAndRobes, 1080381, typeof(RewardRobe), ClothRewardHue.Crimson, 1080381),                    
-
                     new RewardEntry(etherealSteeds, 1080386, typeof(EtherealCuSidhe)),
 
                     new RewardEntry(houseAddOns,    1080548, typeof(MiningCartDeed)),
@@ -562,10 +514,6 @@ namespace Server.Engines.VeteranRewards
                 {
                     new RewardEntry(etherealSteeds, 1113908, typeof(EtherealReptalon)),
 
-                    new RewardEntry(cloaksAndRobes, 1113902, typeof(RewardCloak), ClothRewardHue.GreenForest, 1113902),
-                    new RewardEntry(cloaksAndRobes, 1113903, typeof(RewardDress), ClothRewardHue.GreenForest, 1113903),
-                    new RewardEntry(cloaksAndRobes, 1113904, typeof(RewardRobe), ClothRewardHue.GreenForest, 1113904),
-
                     new RewardEntry(monsterStatues, 1113800, typeof(MonsterStatuette), MonsterStatuetteType.TerathanMatriarch),
                     new RewardEntry(monsterStatues, 1153593, typeof(MonsterStatuette), MonsterStatuetteType.Navrey),
 
@@ -574,10 +522,6 @@ namespace Server.Engines.VeteranRewards
                 new RewardList(RewardInterval, 12, new RewardEntry[]
                 {
                     new RewardEntry(etherealSteeds, 1113813, typeof(EtherealHiryu)),
-
-                    new RewardEntry(cloaksAndRobes, 1113910, typeof(RewardCloak), ClothRewardHue.RoyalBlue, 1113910),
-                    new RewardEntry(cloaksAndRobes, 1113911, typeof(RewardDress), ClothRewardHue.RoyalBlue, 1113911),
-                    new RewardEntry(cloaksAndRobes, 1113912, typeof(RewardRobe), ClothRewardHue.RoyalBlue, 1113912),
 
                     new RewardEntry(monsterStatues, 1113801, typeof(MonsterStatuette), MonsterStatuetteType.FireAnt),
 

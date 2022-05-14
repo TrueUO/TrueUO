@@ -8,12 +8,7 @@ namespace Server
     {
         public static int GetLuckChance(Mobile killer, Mobile victim)
         {
-            int luck = killer is PlayerMobile mobile ? mobile.RealLuck : killer.Luck;
-
-            if (killer is PlayerMobile pmKiller && pmKiller.SentHonorContext != null && pmKiller.SentHonorContext.Target == victim)
-            {
-                luck += pmKiller.SentHonorContext.PerfectionLuckBonus;
-            }
+            var luck = killer is PlayerMobile mobile ? mobile.RealLuck : killer.Luck;
 
             if (luck < 0)
             {
@@ -964,17 +959,17 @@ namespace Server
 
                 if (Type == typeof(BaseRanged))
                 {
-                    item = Loot.RandomRangedWeapon(inTokuno, isMondain, isStygian);
+                    item = Loot.RandomRangedWeapon(inTokuno, isMondain);
                 }
                 else if (Type == typeof(BaseWeapon))
                 {
-                    item = Loot.RandomWeapon(inTokuno, isMondain, isStygian);
+                    item = Loot.RandomWeapon(inTokuno, isMondain);
                 }
                 else if (Type == typeof(BaseArmor))
                 {
                     if (0.80 > Utility.RandomDouble())
                     {
-                        item = Loot.RandomArmor(inTokuno, isMondain, isStygian);
+                        item = Loot.RandomArmor(inTokuno, isMondain);
                     }
                     else
                     {
@@ -983,11 +978,11 @@ namespace Server
                 }
                 else if (Type == typeof(BaseShield))
                 {
-                    item = Loot.RandomShield(isStygian);
+                    item = Loot.RandomShield();
                 }
                 else if (Type == typeof(BaseJewel))
                 {
-                    item = Loot.RandomJewelry(isStygian);
+                    item = Loot.RandomJewelry();
                 }
                 else if (Type == typeof(BaseInstrument))
                 {

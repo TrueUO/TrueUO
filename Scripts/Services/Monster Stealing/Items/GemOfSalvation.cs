@@ -5,7 +5,6 @@ using System;
 
 namespace Server.Items
 {
-    [TypeAlias("drNO.ThieveItems.GemOfSalvation")]
     public class GemOfSalvation : Item
     {
         public override int LabelNumber => 1094939;  // Gem of Salvation
@@ -15,7 +14,6 @@ namespace Server.Items
             : base(0x1F13)
         {
             Hue = 286;
-            LootType = LootType.Blessed;
         }
 
         public static void Initialize()

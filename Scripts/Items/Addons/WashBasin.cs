@@ -131,7 +131,6 @@ namespace Server.Items
         [Constructable]
         public WashBasinDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public WashBasinDeed(Serial serial)

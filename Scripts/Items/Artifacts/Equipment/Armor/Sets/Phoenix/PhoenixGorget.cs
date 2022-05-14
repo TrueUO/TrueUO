@@ -6,7 +6,6 @@ namespace Server.Items
         public PhoenixGorget()
         {
             Hue = 0x8E;
-            LootType = LootType.Blessed;
         }
 
         public PhoenixGorget(Serial serial)

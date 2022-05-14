@@ -101,7 +101,6 @@ namespace Server.Items
         [Constructable]
         public ClawFootTubDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public ClawFootTubDeed(Serial serial)

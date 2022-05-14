@@ -23,8 +23,6 @@ namespace Server.Items
 
             m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), Slice);
             m_Timer.Start();
-
-            LootType = LootType.Blessed;
         }
 
         public override void GetProperties(ObjectPropertyList list)

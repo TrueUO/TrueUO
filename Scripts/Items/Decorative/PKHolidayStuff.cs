@@ -9,7 +9,6 @@ namespace Server.Items
             : base(0x19b9)
         {
             Stackable = false;
-            LootType = LootType.Blessed;
             Hue = 0x965;
         }
 
@@ -43,7 +42,6 @@ namespace Server.Items
         {
             Hue = m_CardHues[Utility.Random(m_CardHues.Length)];
             Stackable = false;
-            LootType = LootType.Blessed;
             Movable = true;
         }
 
@@ -72,7 +70,6 @@ namespace Server.Items
             : base(0x1044)
         {
             Stackable = false;
-            LootType = LootType.Blessed;
         }
 
         public Spam(Serial serial)

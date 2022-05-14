@@ -53,7 +53,6 @@ namespace Server.Items
         [Constructable]
         public ShadowAltarDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1908;
         }
 

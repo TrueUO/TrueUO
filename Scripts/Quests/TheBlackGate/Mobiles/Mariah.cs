@@ -57,7 +57,6 @@ namespace Server.Engines.Quests
 
         public TheHonestyInInsanityQuest()
         {
-            AddObjective(new ObtainObjective(typeof(CompassionSage), "Compassion Sage", 1, 0x1844, 0, 66));
             AddObjective(new ObtainObjective(typeof(RawGinseng), "Raw Ginseng", 1, 0x18EB));
 
             AddReward(new BaseReward(typeof(Illumination), "An Illumination", 0x1C13, 2747));

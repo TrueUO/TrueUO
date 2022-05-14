@@ -9,7 +9,6 @@ namespace Server.Items
             : base(0xA4EC)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeDungeonStool(Serial serial)
@@ -26,7 +25,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

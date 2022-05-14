@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a Grobu corpse")]
@@ -54,7 +52,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.FilthyRich, 2);
             AddLoot(LootPack.ArcanistScrolls);
-            AddLoot(LootPack.LootItem<GrobusFur>());
         }
 
         public override void Serialize(GenericWriter writer)

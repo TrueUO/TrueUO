@@ -133,7 +133,6 @@ namespace Server.Items
         public SnowStatueDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public SnowStatueDeed(Serial serial)

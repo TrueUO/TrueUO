@@ -37,7 +37,6 @@ namespace Server.Items
         [Constructable]
         public CactusSpongeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public CactusSpongeDeed(Serial serial)

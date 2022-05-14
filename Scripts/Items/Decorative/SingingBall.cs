@@ -37,7 +37,6 @@ namespace Server.Items
             : base(ItemId)
         {
             Weight = 10.0;
-            LootType = LootType.Blessed;
 
             Light = LightType.Circle300;
         }

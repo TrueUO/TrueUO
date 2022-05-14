@@ -8,7 +8,6 @@ namespace Server.Items
         {
             Weight = 1;
             Hue = 0x214;
-            LootType = LootType.Blessed;
         }
 
         public ThornyBriar(Serial serial)

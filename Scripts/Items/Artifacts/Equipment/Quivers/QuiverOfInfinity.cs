@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class QuiverOfInfinity : BaseQuiver
     {
@@ -7,7 +7,6 @@
         public QuiverOfInfinity()
             : base(0x2B02)
         {
-            LootType = LootType.Blessed;
             Weight = 8.0;
             WeightReduction = 30;
             LowerAmmoCost = 20;

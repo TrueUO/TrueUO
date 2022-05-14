@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class ChaosTileAddon : BaseAddon
     {
@@ -41,7 +41,6 @@
         [Constructable]
         public ChaosTileDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public ChaosTileDeed(Serial serial)

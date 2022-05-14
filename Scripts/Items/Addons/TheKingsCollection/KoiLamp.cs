@@ -87,7 +87,6 @@ namespace Server.Items
         public KoiLampDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public KoiLampDeed(Serial serial)

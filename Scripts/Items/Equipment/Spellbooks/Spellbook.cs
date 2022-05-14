@@ -102,7 +102,6 @@ namespace Server.Items
 
             Weight = 3.0;
             Layer = Layer.OneHanded;
-            LootType = LootType.Blessed;
 
             Content = content;
         }

@@ -24,7 +24,6 @@ namespace Server.Items
         public StaffOrb()
             : base(0x0E2F)
         {
-            LootType = LootType.Blessed;
             Weight = 0;
             Name = "Unassigned Staff Orb";
         }
@@ -33,7 +32,6 @@ namespace Server.Items
         public StaffOrb(Mobile player)
             : base(0x0E2F)
         {
-            LootType = LootType.Blessed;
             Weight = 0;
             m_Owner = player;
             Name = player.Name + "'s Staff Orb";

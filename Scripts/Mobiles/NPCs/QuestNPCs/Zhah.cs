@@ -1,5 +1,4 @@
 using Server.Engines.Quests;
-using Server.Items;
 using System;
 
 namespace Server.Mobiles
@@ -16,7 +15,7 @@ namespace Server.Mobiles
         public override void InitBody()
         {
             Female = true;
-            Race = Race.Gargoyle;
+            Race = Race.Human;
             Body = 667;
 
             InitStats(100, 100, 25);
@@ -25,24 +24,6 @@ namespace Server.Mobiles
 
             HairItemID = 0x42AB; // Get tiare looking kind
             HairHue = Race.RandomHairHue();
-        }
-
-        public override void InitOutfit()
-        {
-            ColorItem(new LeatherTalons()); // Bright Blue
-            ColorItem(new GargishLeatherChest()); // Bright Blue
-            ColorItem(new GargishLeatherLegs()); // Bright Blue
-            ColorItem(new GargishClothWingArmor()); // Bright Blue
-            ColorItem(new GargishLeatherArms()); // Bright Blue
-            ColorItem(new GargishLeatherKilt()); // Bright Blue
-
-            AddItem(new SerpentStoneStaff());
-        }
-
-        private void ColorItem(Item item)
-        {
-            item.Hue = 0x4F2;
-            AddItem(item);
         }
 
         public override void Advertise()

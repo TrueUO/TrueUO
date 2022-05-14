@@ -31,7 +31,6 @@ namespace Server.Items
         {
             Account = account;
 
-            LootType = LootType.Blessed;
             Light = LightType.Circle300;
             Weight = 5.0;
         }

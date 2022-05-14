@@ -52,7 +52,7 @@ namespace Server.Items
 
             if (m is PlayerMobile)
             {
-                malus = 45 + BaseArmor.GetRefinedDefenseChance(m);
+                malus = 45;
                 malus = malus - (int)(malus * .35);
             }
             else

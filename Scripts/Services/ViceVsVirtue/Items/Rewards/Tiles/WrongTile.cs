@@ -57,7 +57,6 @@ namespace Server.Engines.VvV
         [Constructable]
         public WrongTileDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

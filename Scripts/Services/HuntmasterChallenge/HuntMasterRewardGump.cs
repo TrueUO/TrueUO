@@ -101,13 +101,11 @@ namespace Server.Engines.HuntsmasterChallenge
             new CollectionItem(typeof(FishBushel), 0xA7AC, 1159779, 0, 1.0),
             new CollectionItem(typeof(CrabLobsterBushel), 0xA7AE, 1159780, 0, 1.0),
             new CollectionItem(typeof(HarvestersAxe), 0x1443, 1158774, 0, 1.0),
-            new CollectionItem(typeof(GargishHarvestersAxe), 0x48B2, 1158774, 0, 1.0),
             new CollectionItem(typeof(RecipeScroll), 0x2831, 1159204, 0, 1.0), // grilled serpent steak recipe
             new CollectionItem(typeof(RecipeScroll), 0x2831, 1159205, 0, 1.0), // BBQ Dino Ribs Recipe
             new CollectionItem(typeof(RecipeScroll), 0x2831, 1159206, 0, 1.0), // Waku Chicken Recipe
             new CollectionItem(typeof(BakeKitsuneHat), 0xA42B, 1126051, 0, 1.0),
-            new CollectionItem(typeof(HuntmastersRewardTitleDeed), 0x14EF, 0, 0, 1.0),            
-            new CollectionItem(typeof(GargishRangersGuildSash), 0x46B5, 0, 0, 1.0),
+            new CollectionItem(typeof(HuntmastersRewardTitleDeed), 0x14EF, 0, 0, 1.0),
             new CollectionItem(typeof(RangersGuildSash), 0x1541, 0, 0, 1.0)
         };
     }

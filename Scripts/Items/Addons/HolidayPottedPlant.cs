@@ -45,7 +45,6 @@ namespace Server.Items
         public PottedPlantDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public PottedPlantDeed(Serial serial)

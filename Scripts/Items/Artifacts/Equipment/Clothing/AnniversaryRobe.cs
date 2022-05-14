@@ -14,7 +14,6 @@ namespace Server.Items
         [Constructable]
         public AnniversaryRobe(int hue) : base(0x4B9D, hue)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

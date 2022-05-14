@@ -62,7 +62,6 @@ namespace Server.Items
         [Constructable]
         public MonasteryBellDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public MonasteryBellDeed(Serial serial)

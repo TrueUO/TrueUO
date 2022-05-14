@@ -20,7 +20,6 @@ namespace Server.Items
         {
             DoomEvent = doom;
             Hue = 2676;
-            LootType = LootType.Blessed;
         }
 
         public bool Carve(Mobile from, Item item)

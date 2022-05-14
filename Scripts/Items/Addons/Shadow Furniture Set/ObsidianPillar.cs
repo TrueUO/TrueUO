@@ -37,7 +37,6 @@ namespace Server.Items
         [Constructable]
         public ObsidianPillarDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1908;
         }
 

@@ -44,14 +44,6 @@ namespace Server.Mobiles
             return true;
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (Utility.RandomDouble() <= 0.25)
-                c.AddItem(Loot.Construct(typeof(MapFragment)));
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

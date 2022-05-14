@@ -14,7 +14,6 @@ namespace Server.Items
         public MasterKey(int itemID)
             : base(itemID)
         {
-            LootType = LootType.Blessed;
         }
 
         public MasterKey(Serial serial) : base(serial)

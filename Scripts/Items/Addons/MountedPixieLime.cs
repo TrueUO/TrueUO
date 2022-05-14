@@ -72,7 +72,6 @@ namespace Server.Items
         [Constructable]
         public MountedPixieLimeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public MountedPixieLimeDeed(Serial serial)

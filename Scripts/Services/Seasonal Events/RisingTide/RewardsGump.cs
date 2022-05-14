@@ -76,7 +76,6 @@ namespace Server.Engines.RisingTide
                 new CollectionItem(typeof(Orchid1), 0xA648, 0, 0, 15000),
                 new CollectionItem(typeof(Orchid2), 0xA647, 0, 0, 15000),
                 new CollectionItem(typeof(Orchid3), 0xA646, 0, 0, 15000),
-                new CollectionItem(typeof(GargishFellowshipMedallion), 0xA42A, 0, 0, 10000),
                 new CollectionItem(typeof(FellowshipMedallion), 0xA429, 0, 0, 10000),
                 new CollectionItem(typeof(SailingMasterRewardDeed), 0x14EF, 0, 0, 20000),
                 new CollectionItem(typeof(BotswainRewardDeed), 0x14EF, 0, 0, 15000),

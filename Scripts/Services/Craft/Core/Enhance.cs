@@ -31,7 +31,6 @@ namespace Server.Engines.Craft
             _SpecialTable = new Dictionary<Type, CraftSystem>();
 
             _SpecialTable[typeof(ClockworkLeggings)] = DefBlacksmithy.CraftSystem;
-            _SpecialTable[typeof(GargishClockworkLeggings)] = DefBlacksmithy.CraftSystem;
             _SpecialTable[typeof(JukaBow)] = DefBowFletching.CraftSystem;
         }
 
@@ -56,9 +55,6 @@ namespace Server.Engines.Craft
             if (item == null)
                 return EnhanceResult.BadItem;
 
-            if (item is GargishNecklace || item is GargishEarrings)
-                return EnhanceResult.BadItem;
-
             if (!item.IsChildOf(from.Backpack))
                 return EnhanceResult.NotInBackpack;
 
@@ -68,11 +64,6 @@ namespace Server.Engines.Craft
             IResource ires = item as IResource;
 
             if (!CanEnhance(item) || ires == null)
-            {
-                return EnhanceResult.BadItem;
-            }
-
-            if (item is IArcaneEquip eq && eq.IsArcane)
             {
                 return EnhanceResult.BadItem;
             }

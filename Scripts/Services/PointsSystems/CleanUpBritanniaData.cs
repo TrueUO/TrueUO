@@ -131,7 +131,7 @@ namespace Server.Engines.Points
                 points = GetPointsForEquipment(item);
             }
 
-            if (item.LootType != LootType.Blessed && points < 100 && item is IShipwreckedItem shipItem && shipItem.IsShipwreckedItem)
+            if (points < 100 && item is IShipwreckedItem shipItem && shipItem.IsShipwreckedItem)
             {
                 points = 100;
             }
@@ -421,22 +421,17 @@ namespace Server.Engines.Points
             Entries[typeof(SurgeShield)] = 100.0;
             Entries[typeof(HeartOfTheLion)] = 100.0;
             Entries[typeof(ShieldOfInvulnerability)] = 100.0;
-            Entries[typeof(AegisOfGrace)] = 100.0;
             Entries[typeof(BladeDance)] = 100.0;
             Entries[typeof(BloodwoodSpirit)] = 100.0;
             Entries[typeof(Bonesmasher)] = 100.0;
             Entries[typeof(Boomstick)] = 100.0;
             Entries[typeof(BrightsightLenses)] = 100.0;
-            Entries[typeof(FeyLeggings)] = 100.0;
             Entries[typeof(FleshRipper)] = 100.0;
-            Entries[typeof(HelmOfSwiftness)] = 100.0;
-            Entries[typeof(PadsOfTheCuSidhe)] = 100.0;
             Entries[typeof(QuiverOfRage)] = 100.0;
             Entries[typeof(QuiverOfElements)] = 100.0;
             Entries[typeof(RaedsGlory)] = 100.0;
             Entries[typeof(RighteousAnger)] = 100.0;
             Entries[typeof(RobeOfTheEclipse)] = 100.0;
-            Entries[typeof(RobeOfTheEquinox)] = 100.0;
             Entries[typeof(SoulSeeker)] = 100.0;
             Entries[typeof(TalonBite)] = 100.0;
             Entries[typeof(TotemOfVoid)] = 100.0;
@@ -480,67 +475,38 @@ namespace Server.Engines.Points
             Entries[typeof(TomeOfEnlightenment)] = 100.0;
 
             //Stygian Abyss Artifacts
-            Entries[typeof(AbyssalBlade)] = 5000.0;
             Entries[typeof(AnimatedLegsoftheInsaneTinker)] = 5000.0;
             Entries[typeof(AxeOfAbandon)] = 5000.0;
-            Entries[typeof(AxesOfFury)] = 5000.0;
-            Entries[typeof(BansheesCall)] = 5000.0;
             Entries[typeof(BasiliskHideBreastplate)] = 5000.0;
-            Entries[typeof(BladeOfBattle)] = 5000.0;
             Entries[typeof(BouraTailShield)] = 5000.0;
-            Entries[typeof(BreastplateOfTheBerserker)] = 5000.0;
             Entries[typeof(BurningAmber)] = 5000.0;
-            Entries[typeof(CastOffZombieSkin)] = 5000.0;
             Entries[typeof(CavalrysFolly)] = 5000.0;
-            Entries[typeof(ChannelersDefender)] = 5000.0;
             Entries[typeof(ClawsOfTheBerserker)] = 5000.0;
-            Entries[typeof(DeathsHead)] = 5000.0;
             Entries[typeof(DefenderOfTheMagus)] = 5000.0;
             Entries[typeof(DemonBridleRing)] = 5000.0;
             Entries[typeof(DemonHuntersStandard)] = 5000.0;
-            Entries[typeof(DragonHideShield)] = 5000.0;
-            Entries[typeof(DragonJadeEarrings)] = 5000.0;
             Entries[typeof(DraconisWrath)] = 5000.0;
             Entries[typeof(EternalGuardianStaff)] = 5000.0;
             Entries[typeof(FallenMysticsSpellbook)] = 5000.0;
-            Entries[typeof(GiantSteps)] = 5000.0;
             Entries[typeof(IronwoodCompositeBow)] = 5000.0;
             Entries[typeof(JadeWarAxe)] = 5000.0;
-            Entries[typeof(LegacyOfDespair)] = 5000.0;
             Entries[typeof(Lavaliere)] = 5000.0;
-            Entries[typeof(LifeSyphon)] = 5000.0;
             Entries[typeof(Mangler)] = 5000.0;
-            Entries[typeof(MantleOfTheFallen)] = 5000.0;
             Entries[typeof(MysticsGarb)] = 5000.0;
             Entries[typeof(NightEyes)] = 5000.0;
-            Entries[typeof(ObsidianEarrings)] = 5000.0;
-            Entries[typeof(PetrifiedSnake)] = 5000.0;
-            Entries[typeof(PillarOfStrength)] = 5000.0;
             Entries[typeof(ProtectoroftheBattleMage)] = 5000.0;
-            Entries[typeof(RaptorClaw)] = 5000.0;
             Entries[typeof(ResonantStaffofEnlightenment)] = 5000.0;
             Entries[typeof(ShroudOfTheCondemned)] = 500.0;
-            Entries[typeof(GargishSignOfOrder)] = 5000.0;
             Entries[typeof(HumanSignOfOrder)] = 5000.0;
-            Entries[typeof(GargishSignOfChaos)] = 5000.0;
             Entries[typeof(HumanSignOfChaos)] = 5000.0;
             Entries[typeof(Slither)] = 5000.0;
-            Entries[typeof(SpinedBloodwormBracers)] = 5000.0;
             Entries[typeof(StandardOfChaos)] = 5000.0;
-            Entries[typeof(StandardOfChaosG)] = 5000.0;
-            Entries[typeof(StaffOfShatteredDreams)] = 5000.0;
-            Entries[typeof(StoneDragonsTooth)] = 5000.0;
-            Entries[typeof(StoneSlithClaw)] = 5000.0;
-            Entries[typeof(StormCaller)] = 5000.0;
-            Entries[typeof(SwordOfShatteredHopes)] = 5000.0;
-            Entries[typeof(SummonersKilt)] = 5000.0;
             Entries[typeof(Tangle1)] = 5000.0;
             Entries[typeof(TheImpalersPick)] = 5000.0;
             Entries[typeof(TorcOfTheGuardians)] = 5000.0;
             Entries[typeof(TokenOfHolyFavor)] = 5000.0;
             Entries[typeof(VampiricEssence)] = 5000.0;
             Entries[typeof(Venom)] = 5000.0;
-            Entries[typeof(VoidInfusedKilt)] = 5000.0;
             Entries[typeof(WallOfHungryMouths)] = 5000.0;
 
             //Tokuno Major Artifacts
@@ -619,8 +585,6 @@ namespace Server.Engines.Points
             Entries[typeof(Asclepius)] = 5000.0;
             Entries[typeof(BracersofAlchemicalDevastation)] = 5000.0;
 
-            Entries[typeof(GargishAsclepius)] = 5000.0;
-            Entries[typeof(GargishBracersofAlchemicalDevastation)] = 5000.0;
             Entries[typeof(HygieiasAmulet)] = 5000.0;
             Entries[typeof(ScrollofValiantCommendation)] = 5000.0;
 
@@ -657,16 +621,13 @@ namespace Server.Engines.Points
             Entries[typeof(Flowstone)] = 250.0;
             Entries[typeof(GlacialStaff)] = 500.0;
             Entries[typeof(GrapeVine)] = 500.0;
-            Entries[typeof(GrobusFur)] = 20.0;
             Entries[typeof(HorseShoes)] = 200.0;
 
-            Entries[typeof(JocklesQuicksword)] = 2.0;
             Entries[typeof(MangledHeadOfDreadhorn)] = 1000.0;
             Entries[typeof(MedusaBlood)] = 1000.0;
             Entries[typeof(MedusaDarkScales)] = 200.0;
             Entries[typeof(MedusaLightScales)] = 200.0;
             Entries[typeof(ContestMiniHouseDeed)] = 6500.0;
-            Entries[typeof(MysticsGuard)] = 2500.0;
             Entries[typeof(PowerCrystal)] = 100.0;
             Entries[typeof(PristineDreadHorn)] = 1000.0;
             Entries[typeof(ProspectorsTool)] = 3.0;
@@ -675,9 +636,7 @@ namespace Server.Engines.Points
             Entries[typeof(SwampTile)] = 5000.0;
             Entries[typeof(TastyTreat)] = 100.0;
             Entries[typeof(TatteredAncientScroll)] = 200.0;
-            Entries[typeof(ThorvaldsMedallion)] = 250.0;
             Entries[typeof(TribalBerry)] = 10.0;
-            Entries[typeof(TunicOfGuarding)] = 2.0;
             Entries[typeof(UndeadGargHorn)] = 1000.0;
             Entries[typeof(UntranslatedAncientTome)] = 200.0;
             Entries[typeof(WallBlood)] = 5000.0;
@@ -695,7 +654,6 @@ namespace Server.Engines.Points
             Entries[typeof(WhiteClothDyeTub)] = 300.0;
             Entries[typeof(Lodestone)] = 75.0;
             Entries[typeof(FeyWings)] = 75.0;
-            Entries[typeof(StoutWhip)] = 3.0;
             Entries[typeof(PlantClippings)] = 1.0;
             Entries[typeof(BasketOfRolls)] = 5.0;
             Entries[typeof(Yeast)] = 10.0;

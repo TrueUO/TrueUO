@@ -11,7 +11,6 @@ namespace Server.Items
             : base(0xA586)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeMageThrone(Serial serial)

@@ -37,7 +37,6 @@ namespace Server.Items
         [Constructable]
         public ShelfSpongeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public ShelfSpongeDeed(Serial serial)

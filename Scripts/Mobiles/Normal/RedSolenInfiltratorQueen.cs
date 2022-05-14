@@ -3,7 +3,7 @@ using Server.Items;
 namespace Server.Mobiles
 {
     [CorpseName("a solen infiltrator corpse")]
-    public class RedSolenInfiltratorQueen : BaseCreature, IRedSolen
+    public class RedSolenInfiltratorQueen : BaseCreature
     {
         [Constructable]
         public RedSolenInfiltratorQueen()
@@ -42,7 +42,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.LootItem<ZoogiFungus>(0.05 > Utility.RandomDouble() ? 16 : 4));
-            AddLoot(LootPack.LootItemCallback(SolenHelper.PackPicnicBasket, 1.0, 1, false, false));
         }
 
         public RedSolenInfiltratorQueen(Serial serial)
@@ -73,23 +72,6 @@ namespace Server.Mobiles
         public override int GetDeathSound()
         {
             return 0x25B;
-        }
-
-        public override bool IsEnemy(Mobile m)
-        {
-            if (SolenHelper.CheckRedFriendship(m))
-            {
-                return false;
-            }
-
-            return base.IsEnemy(m);
-        }
-
-        public override void OnDamage(int amount, Mobile from, bool willKill)
-        {
-            SolenHelper.OnRedDamage(from);
-
-            base.OnDamage(amount, from, willKill);
         }
 
         public override void Serialize(GenericWriter writer)

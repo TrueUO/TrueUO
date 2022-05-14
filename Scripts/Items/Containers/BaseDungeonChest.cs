@@ -19,9 +19,9 @@ namespace Server.Items
             Key key = (Key)FindItemByType(typeof(Key));
 
             if (key != null)
+            {
                 key.Delete();
-
-            RefinementComponent.Roll(this, 1, 0.08);
+            }
         }
 
         public BaseDungeonChest(Serial serial) : base(serial)

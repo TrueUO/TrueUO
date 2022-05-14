@@ -10,7 +10,6 @@ namespace Server.Items
         public SherryTheMouseQuotes()
             : base(0xFBD)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 
@@ -58,7 +57,6 @@ namespace Server.Items
         public WyrdBeastmasterQuotes()
             : base(0xFBD)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 
@@ -106,7 +104,6 @@ namespace Server.Items
         public MercenaryJustinQuotes()
             : base(0xFBD)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 
@@ -154,7 +151,6 @@ namespace Server.Items
         public HeigelOfMoonglowQuotes()
             : base(0xFBD)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 
@@ -202,7 +198,6 @@ namespace Server.Items
         public TraderHoraceQuotes()
             : base(0xFBD)
         {
-            LootType = LootType.Blessed;
             Weight = 5.0;
         }
 

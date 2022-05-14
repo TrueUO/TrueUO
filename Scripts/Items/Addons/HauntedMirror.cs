@@ -81,13 +81,11 @@ namespace Server.Items
         }
     }
 
-    [TypeAlias("Server.Items.HaunterMirrorDeed")]
     public class HauntedMirrorDeed : BaseAddonDeed
     {
         [Constructable]
         public HauntedMirrorDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public HauntedMirrorDeed(Serial serial)

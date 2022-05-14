@@ -11,7 +11,6 @@ namespace Server.Items
             : base(0x4BC6)
         {
             Hue = 1286;
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

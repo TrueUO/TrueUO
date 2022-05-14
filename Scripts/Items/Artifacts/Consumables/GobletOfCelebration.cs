@@ -41,7 +41,6 @@ namespace Server.Items
         public GobletOfCelebration()
             : base(0x99A)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
             Hue = 19;
 

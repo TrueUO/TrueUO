@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a gaman corpse")]
@@ -72,14 +70,6 @@ namespace Server.Mobiles
         public override int GetDeathSound()
         {
             return 0x4F5;
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (!Controlled)
-                c.AddItem(Loot.Construct(typeof(GamanHorns)));
         }
 
         public override void Serialize(GenericWriter writer)

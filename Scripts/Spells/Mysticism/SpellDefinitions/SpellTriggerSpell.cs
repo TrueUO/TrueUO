@@ -199,7 +199,6 @@ namespace Server.Spells.Mysticism
             : base(spellDef.SpellId, 0x4079, 1)
         {
             m_SpellDef = spellDef;
-            LootType = LootType.Blessed;
         }
 
         public override bool DropToWorld(Mobile from, Point3D p)

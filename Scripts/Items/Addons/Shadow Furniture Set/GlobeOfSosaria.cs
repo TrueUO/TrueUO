@@ -40,7 +40,6 @@ namespace Server.Items
         [Constructable]
         public GlobeOfSosariaDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1908;
         }
 

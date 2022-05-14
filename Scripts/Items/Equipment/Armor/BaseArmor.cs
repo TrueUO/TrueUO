@@ -1,4 +1,3 @@
-using Server.ContextMenus;
 using Server.Engines.Craft;
 using Server.Network;
 using Server.Misc;
@@ -6,7 +5,6 @@ using AMA = Server.Items.ArmorMeditationAllowance;
 using AMT = Server.Items.ArmorMaterialType;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Server.Items
@@ -137,58 +135,6 @@ namespace Server.Items
             base.OnAfterDuped(newItem);
         }
 
-        #region Personal Bless Deed
-        private Mobile m_BlessedBy;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile BlessedBy
-        {
-            get => m_BlessedBy;
-            set
-            {
-                m_BlessedBy = value;
-                InvalidateProperties();
-            }
-        }
-
-        public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
-        {
-            base.GetContextMenuEntries(from, list);
-
-            if (BlessedFor == from && BlessedBy == from && RootParent == from)
-            {
-                list.Add(new UnBlessEntry(from, this));
-            }
-        }
-
-        private class UnBlessEntry : ContextMenuEntry
-        {
-            private readonly Mobile m_From;
-            private readonly BaseArmor m_Item;
-
-            public UnBlessEntry(Mobile from, BaseArmor item)
-                : base(6208, -1)
-            {
-                m_From = from;
-                m_Item = item;
-            }
-
-            public override void OnClick()
-            {
-                m_Item.BlessedFor = null;
-                m_Item.BlessedBy = null;
-
-                Container pack = m_From.Backpack;
-
-                if (pack != null)
-                {
-                    pack.DropItem(new PersonalBlessDeed(m_From));
-                    m_From.SendLocalizedMessage(1062200); // A personal bless deed has been placed in your backpack.
-                }
-            }
-        }
-        #endregion
-
         [CommandProperty(AccessLevel.GameMaster)]
         public AMA MeditationAllowance
         {
@@ -292,141 +238,31 @@ namespace Server.Items
         public double ArmorRatingScaled => ArmorRating * ArmorScalar;
 
         #region Publish 81 Armor Refinement
-        private int m_RefinedPhysical;
-        private int m_RefinedFire;
-        private int m_RefinedCold;
-        private int m_RefinedPoison;
-        private int m_RefinedEnergy;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int RefinedPhysical { get => m_RefinedPhysical; set { m_RefinedPhysical = value; InvalidateProperties(); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int RefinedFire { get => m_RefinedFire; set { m_RefinedFire = value; InvalidateProperties(); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int RefinedCold { get => m_RefinedCold; set { m_RefinedCold = value; InvalidateProperties(); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int RefinedPoison { get => m_RefinedPoison; set { m_RefinedPoison = value; InvalidateProperties(); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int RefinedEnergy { get => m_RefinedEnergy; set { m_RefinedEnergy = value; InvalidateProperties(); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int RefinedDefenseChance => -(m_RefinedPhysical + m_RefinedFire + m_RefinedCold + m_RefinedPoison + m_RefinedEnergy);
-
-        public static int GetRefinedResist(Mobile from, ResistanceType attr)
-        {
-            int value = 0;
-
-            for (var index = 0; index < from.Items.Count; index++)
-            {
-                Item item = from.Items[index];
-
-                if (item is BaseArmor armor)
-                {
-                    switch (attr)
-                    {
-                        case ResistanceType.Physical:
-                            value += armor.m_RefinedPhysical;
-                            break;
-                        case ResistanceType.Fire:
-                            value += armor.m_RefinedFire;
-                            break;
-                        case ResistanceType.Cold:
-                            value += armor.m_RefinedCold;
-                            break;
-                        case ResistanceType.Poison:
-                            value += armor.m_RefinedPoison;
-                            break;
-                        case ResistanceType.Energy:
-                            value += armor.m_RefinedEnergy;
-                            break;
-                    }
-                }
-            }
-
-            return value;
-        }
-
-        public static int GetRefinedDefenseChance(Mobile from)
-        {
-            int value = 0;
-
-            for (var index = 0; index < from.Items.Count; index++)
-            {
-                Item item = from.Items[index];
-
-                if (item is BaseArmor armor)
-                {
-                    value += armor.RefinedDefenseChance;
-                }
-            }
-
-            return value;
-        }
-
-        public static bool HasRefinedResist(Mobile from)
-        {
-            for (var index = 0; index < from.Items.Count; index++)
-            {
-                Item item = from.Items[index];
-
-                if (item is BaseArmor armor && (armor.m_RefinedPhysical > 0 || armor.m_RefinedFire > 0 || armor.m_RefinedCold > 0 || armor.m_RefinedPoison > 0 || armor.m_RefinedEnergy > 0))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public override void AddResistanceProperties(ObjectPropertyList list)
         {
-            if (PhysicalResistance != 0 || m_RefinedPhysical != 0)
+            if (PhysicalResistance != 0)
             {
-                if (m_RefinedPhysical != 0)
-                    list.Add(1153735, string.Format("{0}\t{1}\t{2}", PhysicalResistance.ToString(), "", m_RefinedPhysical.ToString()));// physical resist ~1_val~% / ~2_symb~~3_val~% Max
-                else
-                    list.Add(1060448, PhysicalResistance.ToString()); // physical resist ~1_val~%
+                list.Add(1060448, PhysicalResistance.ToString()); // physical resist ~1_val~%
             }
 
-            if (FireResistance != 0 || m_RefinedFire != 0)
+            if (FireResistance != 0)
             {
-                if (m_RefinedFire != 0)
-                    list.Add(1153737, string.Format("{0}\t{1}\t{2}", FireResistance.ToString(), "", m_RefinedFire.ToString()));// physical resist ~1_val~% / ~2_symb~~3_val~% Max
-                else
-                    list.Add(1060447, FireResistance.ToString()); // physical resist ~1_val~%
+                list.Add(1060447, FireResistance.ToString()); // physical resist ~1_val~%
             }
 
-            if (ColdResistance != 0 || m_RefinedCold != 0)
+            if (ColdResistance != 0)
             {
-                if (m_RefinedCold != 0)
-                    list.Add(1153739, string.Format("{0}\t{1}\t{2}", ColdResistance.ToString(), "", m_RefinedCold.ToString()));// physical resist ~1_val~% / ~2_symb~~3_val~% Max
-                else
-                    list.Add(1060445, ColdResistance.ToString()); // physical resist ~1_val~%
+                list.Add(1060445, ColdResistance.ToString()); // physical resist ~1_val~%
             }
 
-            if (PoisonResistance != 0 || m_RefinedPoison != 0)
+            if (PoisonResistance != 0)
             {
-                if (m_RefinedPoison != 0)
-                    list.Add(1153736, string.Format("{0}\t{1}\t{2}", PoisonResistance.ToString(), "", m_RefinedPoison.ToString()));// physical resist ~1_val~% / ~2_symb~~3_val~% Max
-                else
-                    list.Add(1060449, PoisonResistance.ToString()); // physical resist ~1_val~%
+                list.Add(1060449, PoisonResistance.ToString()); // physical resist ~1_val~%
             }
 
-            if (EnergyResistance != 0 || m_RefinedEnergy != 0)
+            if (EnergyResistance != 0)
             {
-                if (m_RefinedEnergy != 0)
-                    list.Add(1153738, string.Format("{0}\t{1}\t{2}", EnergyResistance.ToString(), "", m_RefinedEnergy.ToString()));// physical resist ~1_val~% / ~2_symb~~3_val~% Max
-                else
-                    list.Add(1060446, EnergyResistance.ToString()); // physical resist ~1_val~%
-            }
-
-            if (RefinedDefenseChance != 0)
-            {
-                list.Add(1153733, string.Format("{0}\t{1}", "", RefinedDefenseChance.ToString()));
+                list.Add(1060446, EnergyResistance.ToString()); // physical resist ~1_val~%
             }
         }
 
@@ -971,8 +807,10 @@ namespace Server.Items
         {
             int bonus = 0;
 
-            if (m_Quality == ItemQuality.Exceptional && !(this is GargishLeatherWingArmor))
+            if (m_Quality == ItemQuality.Exceptional)
+            {
                 bonus += 20;
+            }
 
             bonus += m_AosArmorAttributes.DurabilityBonus;
 
@@ -1227,33 +1065,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(16); // version
-
-            // Version 16 - Removed Pre-AOS Armor Properties
-            // Version 14 - removed VvV Item (handled in VvV System) and BlockRepair (Handled as negative attribute)
 
             writer.Write(_Owner);
             writer.Write(_OwnerName);
 
-            //Version 11
-            writer.Write(m_RefinedPhysical);
-            writer.Write(m_RefinedFire);
-            writer.Write(m_RefinedCold);
-            writer.Write(m_RefinedPoison);
-            writer.Write(m_RefinedEnergy);
-
-            //Version 10
             writer.Write(m_IsImbued);
-
-            // Version 9
-            #region Runic Reforging
             writer.Write((int)m_ReforgedPrefix);
             writer.Write((int)m_ReforgedSuffix);
             writer.Write((int)m_ItemPower);
-            #endregion
 
-            #region Stygian Abyss
             writer.Write(m_GorgonLenseCharges);
             writer.Write((int)m_GorgonLenseType);
 
@@ -1262,13 +1083,7 @@ namespace Server.Items
             writer.Write(m_ColdNonImbuing);
             writer.Write(m_PoisonNonImbuing);
             writer.Write(m_EnergyNonImbuing);
-
-            // Version 8
             writer.Write(m_TimesImbued);
-
-            #endregion
-
-            writer.Write(m_BlessedBy);
 
             SetFlag sflags = SetFlag.None;
 
@@ -1447,20 +1262,12 @@ namespace Server.Items
                 case 13:
                 case 12:
                     {
-                        if (version == 13)
-                            reader.ReadBool();
-
                         _Owner = reader.ReadMobile();
                         _OwnerName = reader.ReadString();
                         goto case 11;
                     }
                 case 11:
                     {
-                        m_RefinedPhysical = reader.ReadInt();
-                        m_RefinedFire = reader.ReadInt();
-                        m_RefinedCold = reader.ReadInt();
-                        m_RefinedPoison = reader.ReadInt();
-                        m_RefinedEnergy = reader.ReadInt();
                         goto case 10;
                     }
                 case 10:
@@ -1470,21 +1277,10 @@ namespace Server.Items
                     }
                 case 9:
                     {
-                        #region Runic Reforging
                         m_ReforgedPrefix = (ReforgedPrefix)reader.ReadInt();
                         m_ReforgedSuffix = (ReforgedSuffix)reader.ReadInt();
                         m_ItemPower = (ItemPower)reader.ReadInt();
 
-                        if (version == 13 && reader.ReadBool())
-                        {
-                            Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
-                            {
-                                m_NegativeAttributes.NoRepair = 1;
-                            });
-                        }
-                        #endregion
-
-                        #region Stygian Abyss
                         m_GorgonLenseCharges = reader.ReadInt();
                         m_GorgonLenseType = (LenseType)reader.ReadInt();
 
@@ -1498,10 +1294,6 @@ namespace Server.Items
                 case 8:
                     {
                         m_TimesImbued = reader.ReadInt();
-
-                        #endregion
-
-                        m_BlessedBy = reader.ReadMobile();
 
                         SetFlag sflags = (SetFlag)reader.ReadEncodedInt();
 
@@ -1810,16 +1602,13 @@ namespace Server.Items
                 if (!AllowFemaleWearer && from.Female)
                 {
                     if (AllowMaleWearer)
+                    {
                         from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1063343); // Only males can wear this.
+                    }
                     else
+                    {
                         from.SendLocalizedMessage(1071936); // You cannot equip that.
-
-                    return false;
-                }
-
-                if (BlessedBy != null && BlessedBy != from)
-                {
-                    from.SendLocalizedMessage(1075277); // That item is blessed by another player.
+                    }
 
                     return false;
                 }
@@ -2146,15 +1935,6 @@ namespace Server.Items
             }
 
             AddDamageTypeProperty(list);
-
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
-            }
 
             if (this is SurgeShield && ((SurgeShield) this).Surge > SurgeType.None)
             {

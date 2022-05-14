@@ -53,7 +53,6 @@ namespace Server.Items
         [Constructable]
         public CrystalBullStatueDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1173;
         }
 

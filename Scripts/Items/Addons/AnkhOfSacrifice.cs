@@ -126,7 +126,7 @@ namespace Server.Items
         private class AnkhResurrectGump : ResurrectGump
         {
             public AnkhResurrectGump(Mobile owner, ResurrectMessage msg)
-                : base(owner, owner, msg, false)
+                : base(owner, owner, msg)
             {
             }
 
@@ -246,7 +246,6 @@ namespace Server.Items
         [Constructable]
         public AnkhOfSacrificeDeed(bool isRewardItem)
         {
-            LootType = LootType.Blessed;
             m_IsRewardItem = isRewardItem;
         }
 

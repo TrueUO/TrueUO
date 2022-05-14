@@ -72,7 +72,6 @@ namespace Server.Items
         [Constructable]
         public FormalDiningTableDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public FormalDiningTableDeed(Serial serial)

@@ -222,7 +222,6 @@ namespace Server.Mobiles
         {
             m_Rider = null;
             Layer = Layer.Invalid;
-            LootType = LootType.Blessed;
 
             m_Transparent = true;
             m_TransparentMountedID = transMountedID;
@@ -292,12 +291,6 @@ namespace Server.Mobiles
 
         public virtual bool Validate(Mobile from)
         {
-            if (from.Race == Race.Gargoyle)
-            {
-                from.SendLocalizedMessage(1112281); // gargs can't mount
-                return false;
-            }
-
             if (Parent == null)
             {
                 from.SayTo(from, 1010095); // This must be on your person to use.

@@ -55,8 +55,6 @@ namespace Server.Items
             Weight = 1.0;
             Hue = 0x48D;
 
-            LootType = LootType.Blessed;
-
             m_UsesRemaining = uses;
         }
 
@@ -247,7 +245,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2); // version
+            writer.Write(0); // version
 
             writer.Write(m_UsesRemaining);
             writer.Write(m_IsRewardItem);
@@ -256,42 +254,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 2:
-                    {
-                        m_UsesRemaining = reader.ReadInt();
-                        m_IsRewardItem = reader.ReadBool();
-                        break;
-                    }
-                case 1:
-                    {
-                        m_UsesRemaining = reader.ReadInt();
-                        break;
-                    }
-                case 0:
-                    {
-                        if (this is WeaponEngravingTool)
-                        {
-                            InheritsItem = true;
-                            m_UsesRemaining = reader.ReadInt();
-                            m_IsRewardItem = reader.ReadBool();
-                        }
-                        else
-                        {
-                            LootType = LootType.Blessed;
-                        }
-                        break;
-                    }
-            }
+            m_UsesRemaining = reader.ReadInt();
+            m_IsRewardItem = reader.ReadBool();
         }
-
-        #region Old Item Serialization Vars
-        /* DO NOT USE! Only used in serialization of Weapon Engraving Tool that originally derived from Item */
-        public bool InheritsItem { get; protected set; }
-        #endregion
 
         private class InternalTarget : Target
         {

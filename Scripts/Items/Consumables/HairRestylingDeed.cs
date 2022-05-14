@@ -11,7 +11,6 @@ namespace Server.Items
             : base(0x14F0)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public HairRestylingDeed(Serial serial)
@@ -55,7 +54,8 @@ namespace Server.Items
             readonly int[][] LayoutArray =
             {
                 new int[] { 0 },
-                /* padding: its more efficient than code to ++ the index/buttonid */ new int[] { 425, 280, 342, 295, 000, 000, 310, 292 },
+                /* padding: its more efficient than code to ++ the index/buttonid */
+                new int[] { 425, 280, 342, 295, 000, 000, 310, 292 },
                 new int[] { 235, 060, 150, 075, 168, 020, 118, 073 },
                 new int[] { 235, 115, 150, 130, 168, 070, 118, 128 },
                 new int[] { 235, 170, 150, 185, 168, 130, 118, 183 },
@@ -83,19 +83,7 @@ namespace Server.Items
                 new int[] { 1011050, 1011050, 0x204A, 0x204A, 0xED29, 0xED29 }, // Topknot
                 new int[] { 1011396, 1011396, 0x2047, 0x2047, 0xed25, 0xc618 }  // Curly
             };
-            readonly int[][] ElvenArray =
-            {
-                new int[] { 0 },
-                new int[] { 1011064, 1011064, 0, 0, 0, 0 }, // bald
-                new int[] { 1074386, 1074386, 0x2fc0, 0x2fc0, 0xedf5, 0xc6e5 }, // long feather
-                new int[] { 1074387, 1074387, 0x2fc1, 0x2fc1, 0xedf6, 0xc6e6 }, // short
-                new int[] { 1074388, 1074388, 0x2fc2, 0x2fc2, 0xedf7, 0xc6e7 }, // mullet
-                new int[] { 1074391, 1074391, 0x2fce, 0x2fce, 0xeddc, 0xc6cc }, // knob
-                new int[] { 1074392, 1074392, 0x2fcf, 0x2fcf, 0xeddd, 0xc6cd }, // braided
-                new int[] { 1074394, 1074394, 0x2fd1, 0x2fd1, 0xeddf, 0xc6cf }, // spiked
-                new int[] { 1074389, 1074385, 0x2fcc, 0x2fbf, 0xedda, 0xc6e4 }, // flower, mid-long
-                new int[] { 1074393, 1074390, 0x2fd0, 0x2fcd, 0xedde, 0xc6cb }  // buns, long
-            };
+            
             public InternalGump(Mobile from, HairRestylingDeed deed)
                 : base(50, 50)
             {
@@ -111,7 +99,7 @@ namespace Server.Items
 
                 AddHtmlLocalized(210, 342, 90, 35, 1011012, false, false);// <CENTER>HAIRSTYLE SELECTION MENU</center>
 
-                int[][] RacialData = from.Race == Race.Human ? HumanArray : ElvenArray;
+                int[][] RacialData = HumanArray;
 
                 for (int i = 1; i < RacialData.Length; i++)
                 {
@@ -136,7 +124,7 @@ namespace Server.Items
                 if (info.ButtonID < 1 || info.ButtonID > 10)
                     return;
 
-                int[][] RacialData = m_From.Race == Race.Human ? HumanArray : ElvenArray;
+                int[][] RacialData = HumanArray;
 
                 if (m_From is PlayerMobile pm)
                 {

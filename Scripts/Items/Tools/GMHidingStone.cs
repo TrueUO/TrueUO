@@ -39,7 +39,6 @@ namespace Server.Items
             Weight = 1.0;
             Hue = 0x0;
             Name = "GM hiding stone";
-            LootType = LootType.Blessed;
             mAppearEffect = StoneEffect.DefaultRunUO;
             mAppearEffectHue = 0;
             mHideEffect = StoneEffect.DefaultRunUO;

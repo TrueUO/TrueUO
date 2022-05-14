@@ -20,14 +20,12 @@ namespace Server.Items
         public MerchantsTrinket()
             : this(false)
         {
-            LootType = LootType.Blessed;
         }
 
         [Constructable]
         public MerchantsTrinket(bool greater)
         {
             Greater = greater;
-            LootType = LootType.Blessed;
 
             UsesRemaining = 90;
         }

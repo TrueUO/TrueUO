@@ -15,9 +15,9 @@ namespace Server.Mobiles
         private DateTime m_NextCarve;
         private DateTime m_GazeDelay;
 
-        public override Type[] UniqueSAList => new[] { typeof(Slither), typeof(IronwoodCompositeBow), typeof(Venom), typeof(PetrifiedSnake), typeof(StoneDragonsTooth), typeof(MedusaFloorTileAddonDeed) };
+        public override Type[] UniqueSAList => new Type[] { };
 
-        public override Type[] SharedSAList => new[] { typeof(SummonersKilt) };
+        public override Type[] SharedSAList => new Type[] { };
 
         [Constructable]
         public Medusa()
@@ -65,7 +65,7 @@ namespace Server.Mobiles
                     CastSpeed = 1
                 },
 
-                LootType = LootType.Blessed
+                Movable = false
             };
 
             AddItem(bow);

@@ -170,7 +170,7 @@ namespace Server.Mobiles
         {
             InitStats(100, 100, 25);
 
-            Race = Race.Elf;
+            Race = Race.Human;
             Female = true;
             Body = 605;
             HairItemID = Race.RandomHair(true);

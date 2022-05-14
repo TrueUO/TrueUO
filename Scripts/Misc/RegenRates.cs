@@ -150,22 +150,29 @@ namespace Server.Misc
             double points = AosAttributes.GetValue(from, AosAttribute.RegenHits);
 
             if (from is BaseCreature creature)
+            {
                 points += creature.DefaultHitsRegen;
-
-            if (from is PlayerMobile && from.Race == Race.Human)	//Is this affected by the cap?
-                points += 2;
+            }
 
             if (points < 0)
+            {
                 points = 0;
+            }
 
             if (from is PlayerMobile)	//does racial bonus go before/after?
+            {
                 points = Math.Min(points, 18);
+            }
 
             if (CheckTransform(from, typeof(HorrificBeastSpell)))
+            {
                 points += 20;
+            }
 
             if (CheckAnimal(from, typeof(Dog)) || CheckAnimal(from, typeof(Cat)))
+            {
                 points += from.Skills[SkillName.Ninjitsu].Fixed / 30;
+            }
 
             // Skill Masteries - goes after cap
             points += RampageSpell.GetBonus(from, RampageSpell.BonusType.HitPointRegen);
@@ -219,15 +226,18 @@ namespace Server.Misc
             double points = AosAttributes.GetValue(from, AosAttribute.RegenMana);
 
             if (from is BaseCreature creature)
+            {
                 points += creature.DefaultManaRegen;
+            }
 
             if (CheckTransform(from, typeof(VampiricEmbraceSpell)))
+            {
                 points += 3;
+            }
             else if (CheckTransform(from, typeof(LichFormSpell)))
+            {
                 points += 13;
-
-            if (from is PlayerMobile && from.Race == Race.Gargoyle)
-                points += 2;
+            }
 
             for (var index = 0; index < ManaBonusHandlers.Count; index++)
             {

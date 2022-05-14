@@ -221,16 +221,13 @@ namespace Server.Misc
         private static bool AllowGain(Mobile from, Skill skill)
         {
             if (Engines.VvV.ViceVsVirtueSystem.InSkillLoss(from))
-                return false;
-
-            if (from is PlayerMobile mobile)
             {
-                if (skill.Info.SkillID == (int)SkillName.Archery && mobile.Race == Race.Gargoyle)
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                if (skill.Info.SkillID == (int)SkillName.Throwing && mobile.Race != Race.Gargoyle)
+            if (from is PlayerMobile)
+            {
+                if (skill.Info.SkillID == (int)SkillName.Throwing)
                 {
                     return false;
                 }

@@ -85,12 +85,6 @@ namespace Server.Mobiles
             set { }
         }
 
-        private void AddImmovableItem(Item item)
-        {
-            item.LootType = LootType.Blessed;
-            SetWearable(item);
-        }
-
         public BaseEodonTribesman(AIType ai, EodonTribe type) : base(ai, FightMode.Closest, 10, 1, .2, .4)
         {
             TribeType = type;
@@ -314,7 +308,7 @@ namespace Server.Mobiles
                 case EodonTribe.Urali:
                     Female = true;
                     Body = 0x25E;
-                    Race = Race.Elf;
+                    Race = Race.Human;
                     HairItemID = 0x2FC1;
                     Hue = 35356;
                     break;
@@ -418,7 +412,7 @@ namespace Server.Mobiles
 
             if (weapon != null)
             {
-                weapon.LootType = LootType.Blessed;
+                weapon.Movable = false;
                 SetWearable(weapon);
             }
         }
@@ -515,7 +509,7 @@ namespace Server.Mobiles
                 case EodonTribe.Urali:
                     Female = false;
                     Body = 0x25D;
-                    Race = Race.Elf;
+                    Race = Race.Human;
                     HairItemID = 0x2FC1;
                     Hue = 35356;
                     break;
@@ -589,7 +583,7 @@ namespace Server.Mobiles
                     break;
             }
 
-            weapon.LootType = LootType.Blessed;
+            weapon.Movable = false;
             SetWearable(weapon);
         }
 
@@ -672,7 +666,7 @@ namespace Server.Mobiles
                 case EodonTribe.Urali:
                     Female = true;
                     Body = 0x25E;
-                    Race = Race.Elf;
+                    Race = Race.Human;
                     HairItemID = 0x2FD0;
                     Hue = 35356;
                     break;
@@ -761,7 +755,7 @@ namespace Server.Mobiles
 
             if (weapon != null)
             {
-                weapon.LootType = LootType.Blessed;
+                weapon.Movable = false;
                 SetWearable(weapon);
             }
         }

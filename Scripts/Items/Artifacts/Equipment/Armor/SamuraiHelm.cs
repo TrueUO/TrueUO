@@ -19,7 +19,6 @@ namespace Server.Items
             : base(0x236C)
         {
             Weight = 5.0;
-            LootType = LootType.Blessed;
             Attributes.DefendChance = 15;
             ArmorAttributes.SelfRepair = 10;
             ArmorAttributes.LowerStatReq = 100;

@@ -11,7 +11,6 @@ namespace Server.Items
         public MagicalCakeBatter()
             : base(0x103F)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

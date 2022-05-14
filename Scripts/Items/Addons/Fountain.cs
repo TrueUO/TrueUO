@@ -33,7 +33,6 @@ namespace Server.Items
         [Constructable]
         public FountainDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public FountainDeed(Serial serial)

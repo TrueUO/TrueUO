@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0x4F7C)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public CupidStatue(Serial serial)

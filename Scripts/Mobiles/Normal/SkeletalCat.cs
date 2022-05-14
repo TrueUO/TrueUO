@@ -13,7 +13,6 @@ namespace Server.Mobiles
         public SkeletalCatStatue()
             : base(0xA138)
         {
-            LootType = LootType.Blessed;
         }
         public SkeletalCatStatue(Serial serial)
             : base(serial)

@@ -8,7 +8,6 @@ namespace Server.Items
         {
             Weight = 2.0;
             Hue = 53;
-            LootType = LootType.Blessed;
         }
 
         public SerpentFangKey(Serial serial)

@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0x9E8D)
         {
             Weight = 5;
-            LootType = LootType.Blessed;
         }
 
         public bool Dye(Mobile from, DyeTub sender)

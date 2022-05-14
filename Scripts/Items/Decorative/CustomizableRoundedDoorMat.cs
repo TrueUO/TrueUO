@@ -22,7 +22,6 @@ namespace Server.Items
             : base(0x4790)
         {
             Lines = new string[3];
-            LootType = LootType.Blessed;
         }
 
         public bool Dye(Mobile from, DyeTub sender)

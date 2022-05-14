@@ -16,7 +16,6 @@ namespace Server.Items
         public MythicCharacterToken()
             : base(0x2AAA)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile m)
@@ -308,13 +307,7 @@ namespace Server.Items
                         return false;
                 }
 
-                if (skill == SkillName.Spellweaving && !User.Spellweaving)
-                    return false;
-
-                if (skill == SkillName.Throwing && User.Race != Race.Gargoyle)
-                    return false;
-
-                if (skill == SkillName.Archery && User.Race == Race.Gargoyle)
+                if (skill == SkillName.Throwing)
                     return false;
 
                 return true;

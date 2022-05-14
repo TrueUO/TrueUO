@@ -47,9 +47,6 @@ namespace Server.Mobiles
             base.OnDeath(c);
 
             c.DropItem(new SerpentFangKey());
-
-            if (Utility.RandomDouble() < 0.5)
-                c.DropItem(new SerpentFangSectBadge());
         }
 
         public override void Serialize(GenericWriter writer)

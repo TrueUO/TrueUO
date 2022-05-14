@@ -34,7 +34,6 @@ namespace Server.Items
         [Constructable]
         public BoneTableDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public BoneTableDeed(Serial serial)

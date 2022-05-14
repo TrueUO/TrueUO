@@ -159,7 +159,7 @@ namespace Server.Engines.CityLoyalty
             {
                 TradeEntry.TradeDetails details = Entry.Details[index];
 
-                if (details.Match(item.GetType()) && !item.Insured)
+                if (details.Match(item.GetType()))
                 {
                     int hasAmount = details.Count(this);
 

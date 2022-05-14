@@ -99,7 +99,6 @@ namespace Server.Items
         public FloweredTrellisDeed(TrellisType type)
         {
             Type = type;
-            LootType = LootType.Blessed;
         }
 
         public FloweredTrellisDeed(Serial serial)

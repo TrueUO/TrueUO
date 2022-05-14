@@ -104,7 +104,6 @@ namespace Server.Items
         public GlassKilnDeed(int uses)
             : base(uses)
         {
-            LootType = LootType.Blessed;
         }
 
         public GlassKilnDeed(Serial serial)

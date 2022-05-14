@@ -113,7 +113,6 @@ namespace Server.Items
         [Constructable]
         public FirePaintingDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public FirePaintingDeed(Serial serial)

@@ -334,7 +334,6 @@ namespace Server.Items
         public RepairBenchDeed(List<RepairBenchDefinition> tools)
         {
             Tools = tools;
-            LootType = LootType.Blessed;
         }
 
         public RepairBenchDeed(Serial serial)

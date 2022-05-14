@@ -13,7 +13,6 @@ namespace Server.Items
         {
             Hue = 0x480;
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public PileOfGlacialSnow(Serial serial)

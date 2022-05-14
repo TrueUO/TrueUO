@@ -18,7 +18,6 @@ namespace Server.Items
         public SpellbookStrap()
             : base(0xA71F)
         {
-            LootType = LootType.Blessed;
             Weight = 3.0;
         }
 

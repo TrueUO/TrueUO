@@ -10,7 +10,6 @@ namespace Server.Items
         public NavigatorsWorldMap()
         {
             ItemID = 0x14EB;
-            LootType = LootType.Blessed;
             Hue = 483;
 
             SetDisplay(0, 0, 5119, 4095, 200, 200);

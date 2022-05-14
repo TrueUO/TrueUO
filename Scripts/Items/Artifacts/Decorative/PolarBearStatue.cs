@@ -7,7 +7,6 @@ namespace Server.Items
         public PolarBearStatue()
             : base(0x20E1)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

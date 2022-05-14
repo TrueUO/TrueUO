@@ -51,7 +51,6 @@ namespace Server.Items
         [Constructable]
         public SpikePostDeed()
         {
-            LootType = LootType.Blessed;
             Hue = 1908;
         }
 

@@ -1,5 +1,4 @@
 using Server.Engines.Quests;
-using Server.Engines.Quests.Collector;
 using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
@@ -159,29 +158,6 @@ namespace Server.Engines.Harvest
         {
             if (from is PlayerMobile player)
             {
-                QuestSystem qs = player.Quest;
-
-                if (qs is CollectorQuest)
-                {
-                    QuestObjective obj = qs.FindObjective(typeof(FishPearlsObjective));
-
-                    if (obj != null && !obj.Completed)
-                    {
-                        if (Utility.RandomDouble() < 0.5)
-                        {
-                            player.SendLocalizedMessage(1055086, "", 0x59); // You pull a shellfish out of the water, and find a rainbow pearl inside of it.
-
-                            obj.CurProgress++;
-                        }
-                        else
-                        {
-                            player.SendLocalizedMessage(1055087, "", 0x2C); // You pull a shellfish out of the water, but it doesn't have a rainbow pearl.
-                        }
-
-                        return true;
-                    }
-                }
-
                 if (from.Region.IsPartOf("Underworld"))
                 {
                     for (var index = 0; index < player.Quests.Count; index++)
@@ -1035,7 +1011,7 @@ namespace Server.Engines.Harvest
                         else
                         {
                             if (from.AccessLevel == AccessLevel.Player)
-                                bank.Consume(Convert.ToInt32(map != null && map.Rules == MapRules.FeluccaRules ? Math.Ceiling(item.Amount / 2.0) : item.Amount), from);
+                                bank.Consume(Convert.ToInt32(map != null && map.Rules == MapRules.FeluccaRules ? Math.Ceiling(item.Amount / 2.0) : item.Amount));
 
                             if (Give(from, item, true))
                             {

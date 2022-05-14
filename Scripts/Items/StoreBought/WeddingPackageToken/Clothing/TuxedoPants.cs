@@ -15,8 +15,7 @@ namespace Server.Items
         public TuxedoPants(int hue)
             : base(0x9EF7, hue)
         {
-			LootType = LootType.Blessed;
-			Weight = 3.0;
+            Weight = 3.0;
         }
 
         public TuxedoPants(Serial serial)

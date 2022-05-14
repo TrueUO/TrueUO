@@ -8,7 +8,6 @@ namespace Server.Items
         public SteamPoweredBeverageMaker()
             : base(0x9A96)
         {
-            LootType = LootType.Blessed;
         }
 
         public SteamPoweredBeverageMaker(Serial serial)

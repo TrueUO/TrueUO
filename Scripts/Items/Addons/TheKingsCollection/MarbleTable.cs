@@ -62,7 +62,6 @@ namespace Server.Items
         [Constructable]
         public MarbleTableDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public MarbleTableDeed(Serial serial)

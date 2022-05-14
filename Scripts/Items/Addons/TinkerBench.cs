@@ -104,7 +104,6 @@ namespace Server.Items
         public TinkerBenchDeed(int uses)
             : base(uses)
         {
-            LootType = LootType.Blessed;
         }
 
         public TinkerBenchDeed(Serial serial)

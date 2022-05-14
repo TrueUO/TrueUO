@@ -83,10 +83,6 @@ namespace Server.Engines.VendorSearching
             new SearchCriteriaCategory(Category.Misc, 6, 1154647, new[] // Miscellaneous
             {
 				new SearchCriterionEntry(Misc.ExcludeFel, 1154646),
-                new SearchCriterionEntry(Misc.GargoyleOnly, 1154648),
-                new SearchCriterionEntry(Misc.NotGargoyleOnly, 1154704),
-                new SearchCriterionEntry(Misc.ElvesOnly, 1154650),
-                new SearchCriterionEntry(Misc.NotElvesOnly, 1154703),
                 new SearchCriterionEntry(Misc.FactionItem, 1154661),
                 new SearchCriterionEntry(Misc.PromotionalToken, 1154682),
                 new SearchCriterionEntry(AosAttribute.NightSight, 1075643),

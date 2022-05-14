@@ -34,7 +34,6 @@ namespace Server.Items
         [Constructable]
         public PeachTrunkDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public PeachTrunkDeed(Serial serial)

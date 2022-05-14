@@ -40,7 +40,6 @@ namespace Server.Items
         public SilverSaplingReplicaDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public SilverSaplingReplicaDeed(Serial serial)

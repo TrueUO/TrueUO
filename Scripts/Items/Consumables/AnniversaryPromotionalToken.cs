@@ -41,11 +41,14 @@ namespace Server.Items
             Type = type;
 
             if (type == AnniversaryType.CrystalItems)
+            {
                 ItemID = 0x3678;
+            }
             else if (type == AnniversaryType.ShadowItems)
+            {
                 ItemID = 0x3679;
+            }
 
-            LootType = LootType.Blessed;
             Light = LightType.Circle300;
             Weight = 5.0;
         }

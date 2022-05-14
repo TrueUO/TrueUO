@@ -58,8 +58,8 @@ namespace Server.Mobiles
         }
 
         public override ChampionSkullType SkullType => ChampionSkullType.None;
-        public override Type[] UniqueList => new[] { typeof(TongueOfTheBeast), typeof(DeathsHead), typeof(WallOfHungryMouths), typeof(AbyssalBlade) };
-        public override Type[] SharedList => new[] { typeof(RoyalGuardInvestigatorsCloak), typeof(DetectiveBoots), typeof(JadeArmband) };
+        public override Type[] UniqueList => new Type[] { };
+        public override Type[] SharedList => new Type[] { };
         public override Type[] DecorativeList => new[] { typeof(MagicalDoor) };
         public override MonsterStatuetteType[] StatueTypes => new[] { MonsterStatuetteType.AbyssalInfernal, MonsterStatuetteType.ArchDemon };
 
@@ -369,7 +369,7 @@ namespace Server.Mobiles
 
                         if (s != null && s.Combatant != null)
                         {
-                            if (!(s.Combatant is PlayerMobile) || !((PlayerMobile)s.Combatant).HonorActive)
+                            if (!(s.Combatant is PlayerMobile))
                             {
                                 s.Combatant = Combatant;
                             }

@@ -154,7 +154,6 @@ namespace Server.Items
         [Constructable]
         public StoneAnkhDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public StoneAnkhDeed(Serial serial)

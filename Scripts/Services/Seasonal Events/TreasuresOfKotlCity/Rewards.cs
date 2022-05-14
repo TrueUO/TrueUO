@@ -30,7 +30,6 @@ namespace Server.Engines.TreasuresOfKotlCity
             Rewards.Add(new CollectionItem(typeof(TribalBanner), 0x9D54, 1124299, 0, 20));
 
             Rewards.Add(new CollectionItem(typeof(KatalkotlsRing), 0x1F09, 1156989, 2591, 50));
-            Rewards.Add(new CollectionItem(typeof(TalonsOfEscaping), 0x41D8, 1155682, 0, 50));
             Rewards.Add(new CollectionItem(typeof(BootsOfEscaping), 0x1711, 1155607, 0, 50));
         }
     }

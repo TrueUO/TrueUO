@@ -63,7 +63,6 @@ namespace Server.Items
         [Constructable]
         public ScarecrowDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public ScarecrowDeed(Serial serial)

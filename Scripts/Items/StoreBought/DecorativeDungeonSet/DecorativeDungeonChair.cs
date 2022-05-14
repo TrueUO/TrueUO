@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0xA4EA)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeDungeonChair(Serial serial)

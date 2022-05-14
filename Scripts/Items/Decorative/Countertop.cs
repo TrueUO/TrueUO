@@ -9,7 +9,6 @@ namespace Server.Items
         public Countertop()
             : base(0xA2DA)
         {
-            LootType = LootType.Blessed;
         }
 
         public Countertop(Serial serial)

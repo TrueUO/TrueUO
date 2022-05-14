@@ -158,14 +158,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(GoldRing), 1044049, 1024234, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
             AddCraft(typeof(GoldBracelet), 1044049, 1024230, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
 
-            index = AddCraft(typeof(GargishNecklace), 1044049, 1095784, 60.0, 110.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishBracelet), 1044049, 1095785, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishRing), 1044049, 1095786, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishEarrings), 1044049, 1095787, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
-
             AddJewelrySet(GemType.StarSapphire, typeof(StarSapphire));
             AddJewelrySet(GemType.Emerald, typeof(Emerald));
             AddJewelrySet(GemType.Sapphire, typeof(Sapphire));
@@ -323,10 +315,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(Goblet), 1044048, 1022458, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(PewterMug), 1044048, 1024097, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(SkinningKnife), 1044048, 1023781, 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
-
-            AddCraft(typeof(GargishCleaver), 1044048, 1097478, 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            AddCraft(typeof(GargishButcherKnife), 1044048, 1097486, 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
             #endregion
 
             #region Misc
@@ -414,9 +402,6 @@ namespace Server.Engines.Craft
             SetData(index, DoorType.RightMetalDoor_E_Out);
             SetDisplayID(index, 1663);
             AddCreateItem(index, CraftableMetalHouseDoor.Create);
-
-            index = AddCraft(typeof(WallSafeDeed), 1044050, 1155860, 0.0, 0.0, typeof(IronIngot), 1044036, 20, 1044253);
-            ForceNonExceptional(index);
 
             index = AddCraft(typeof(CraftableMetalHouseDoor), 1044050, 1156352, 85.0, 135.0, typeof(IronIngot), 1044036, 50, 1044253);
             SetData(index, DoorType.LeftMetalDoor_E_In);
@@ -510,10 +495,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(PowerCrystal), 1112811, 1, 502910);
             AddRes(index, typeof(VoidEssence), 1112327, 3, 502910);
             ForceNonExceptional(index);
-
-            index = AddCraft(typeof(HitchingRope), 1044051, 1071124, 60.0, 120.0, typeof(Rope), 1020934, 1, 1044253);
-            AddSkill(index, SkillName.AnimalLore, 15.0, 100.0);
-            AddRes(index, typeof(ResolvesBridle), 1074761, 1, 1044253);
 
             index = AddCraft(typeof(HitchingPost), 1044051, 1071127, 90.0, 160.0, typeof(IronIngot), 1044036, 50, 1044253);
             AddRes(index, typeof(AnimalPheromone), 1071200, 1, 1044253);
@@ -677,7 +658,6 @@ namespace Server.Engines.Craft
             MarkOption = true;
             Repair = true;
             CanEnhance = true;
-            CanAlter = true;
         }
     }
 

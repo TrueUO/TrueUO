@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0xA300)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeWishingWell(Serial serial)

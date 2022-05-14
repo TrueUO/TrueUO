@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0xA4E5)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public override void OnMovement(Mobile m, Point3D oldLocation)

@@ -5,7 +5,6 @@ namespace Server.Items
         [Constructable]
         public TransparentHeart()
         {
-            LootType = LootType.Blessed;
             Weight = 1;
             Hue = 0x4AB;
         }

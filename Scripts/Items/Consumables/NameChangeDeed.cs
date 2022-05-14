@@ -10,7 +10,6 @@ namespace Server.Items
         public NameChangeDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public NameChangeDeed(Serial serial)

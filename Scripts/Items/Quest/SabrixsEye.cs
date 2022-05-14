@@ -8,7 +8,6 @@ namespace Server.Items
         {
             Weight = 1;
             Hue = 0x480;
-            LootType = LootType.Blessed;
         }
 
         public SabrixsEye(Serial serial)

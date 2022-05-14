@@ -263,7 +263,6 @@ namespace Server.Items
         [Constructable]
         public WallBannerDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public WallBannerDeed(Serial serial)

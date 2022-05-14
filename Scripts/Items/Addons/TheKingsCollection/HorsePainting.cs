@@ -56,7 +56,6 @@ namespace Server.Items
         [Constructable]
         public HorsePaintingDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public HorsePaintingDeed(Serial serial)

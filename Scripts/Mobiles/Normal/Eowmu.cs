@@ -13,7 +13,6 @@ namespace Server.Mobiles
         public EowmuStatue()
             : base(0xA0C0)
         {
-            LootType = LootType.Blessed;
         }
         public EowmuStatue(Serial serial)
             : base(serial)

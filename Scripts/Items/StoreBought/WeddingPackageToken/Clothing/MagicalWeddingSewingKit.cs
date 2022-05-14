@@ -11,7 +11,6 @@ namespace Server.Items
             : base(0x0F9D)
         {
             Weight = 2;
-            LootType = LootType.Blessed;
         }
 
         public void GetOptions(RewardOptionList list)

@@ -145,7 +145,6 @@ namespace Server.Items
         [Constructable]
         public BarrelSpongeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public BarrelSpongeDeed(Serial serial)

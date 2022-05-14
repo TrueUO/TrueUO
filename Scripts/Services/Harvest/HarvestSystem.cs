@@ -1,7 +1,4 @@
-using Server.Engines.Quests;
-using Server.Engines.Quests.Hag;
 using Server.Items;
-using Server.Mobiles;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
@@ -165,30 +162,12 @@ namespace Server.Engines.Harvest
                     else
                     {
                         int amount = def.ConsumedPerHarvest;
-                        int feluccaAmount = def.ConsumedPerFeluccaHarvest;
-
-                        if (item is BaseGranite)
-                            feluccaAmount = 3;
-
+                        
                         Caddellite.OnHarvest(from, tool, this, item);
 
-                        //The whole harvest system is kludgy and I'm sure this is just adding to it.
                         if (item.Stackable)
                         {
-                            int racialAmount = (int)Math.Ceiling(amount * 1.1);
-                            int feluccaRacialAmount = (int)Math.Ceiling(feluccaAmount * 1.1);
-
-                            bool eligableForRacialBonus = def.RaceBonus && from.Race == Race.Human;
-                            bool inFelucca = map == Map.Felucca && !Siege.SiegeShard;
-
-                            if (eligableForRacialBonus && inFelucca && bank.Current >= feluccaRacialAmount && 0.1 > Utility.RandomDouble())
-                                item.Amount = feluccaRacialAmount;
-                            else if (inFelucca && bank.Current >= feluccaAmount)
-                                item.Amount = feluccaAmount;
-                            else if (eligableForRacialBonus && bank.Current >= racialAmount && 0.1 > Utility.RandomDouble())
-                                item.Amount = racialAmount;
-                            else
-                                item.Amount = amount;
+                            item.Amount = amount;
 
                             // Void Pool Rewards
                             item.Amount += WoodsmansTalisman.CheckHarvest(from, type, this);
@@ -196,7 +175,7 @@ namespace Server.Engines.Harvest
 
                         if (from.AccessLevel == AccessLevel.Player)
                         {
-                            bank.Consume(amount, from);
+                            bank.Consume(amount);
                         }
 
                         if (Give(from, item, def.PlaceAtFeetIfFull))
@@ -333,7 +312,9 @@ namespace Server.Engines.Harvest
                 Item check = atFeet[i];
 
                 if (check.StackWith(m, item, false))
+                {
                     return true;
+                }
             }
 
             ColUtility.Free(atFeet);
@@ -350,22 +331,26 @@ namespace Server.Engines.Harvest
         public virtual Type GetResourceType(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestResource resource)
         {
             if (resource.Types.Length > 0)
+            {
                 return resource.Types[Utility.Random(resource.Types.Length)];
+            }
 
             return null;
         }
 
         public virtual HarvestResource MutateResource(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestVein vein, HarvestResource primary, HarvestResource fallback)
         {
-            bool racialBonus = def.RaceBonus && from.Race == Race.Elf;
-
-            if (vein.ChanceToFallback > Utility.RandomDouble() + (racialBonus ? .20 : 0))
+            if (vein.ChanceToFallback > Utility.RandomDouble())
+            {
                 return fallback;
+            }
 
             double skillValue = from.Skills[def.Skill].Value;
 
             if (fallback != null && (skillValue < primary.ReqSkill || skillValue < primary.MinSkill))
+            {
                 return fallback;
+            }
 
             return primary;
         }
@@ -557,23 +542,28 @@ namespace Server.Engines.Harvest
                 {
                     case 0: // ore
                         if (system is Mining miningOreStone)
+                        {
                             def = miningOreStone.OreAndStone;
+                        }
+
                         break;
                     case 1: // sand
                         if (system is Mining miningSand)
+                        {
                             def = miningSand.Sand;
+                        }
+
                         break;
                     case 2: // wood
                         if (system is Lumberjacking lumberjacking)
+                        {
                             def = lumberjacking.Definition;
+                        }
+
                         break;
-                    case 3: // grave
-                        if (TryHarvestGrave(m))
-                            return;
+                    case 3: // unused quest grave
                         break;
-                    case 4: // red shrooms
-                        if (TryHarvestShrooms(m))
-                            return;
+                    case 4: // unused quest red shrooms
                         break;
                 }
 
@@ -629,87 +619,6 @@ namespace Server.Engines.Harvest
 
             return false;
         }
-
-        public static bool TryHarvestGrave(Mobile m)
-        {
-            Map map = m.Map;
-
-            if (map == null)
-                return false;
-
-            for (int x = m.X - 1; x <= m.X + 1; x++)
-            {
-                for (int y = m.Y - 1; y <= m.Y + 1; y++)
-                {
-                    StaticTile[] tiles = map.Tiles.GetStaticTiles(x, y, false);
-
-                    for (var index = 0; index < tiles.Length; index++)
-                    {
-                        StaticTile tile = tiles[index];
-
-                        int itemID = tile.ID;
-
-                        if (itemID == 0xED3 || itemID == 0xEDF || itemID == 0xEE0 || itemID == 0xEE1 || itemID == 0xEE2 || itemID == 0xEE8)
-                        {
-                            if (m is PlayerMobile player)
-                            {
-                                QuestSystem qs = player.Quest;
-
-                                if (qs is WitchApprenticeQuest && qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.Bones)
-                                {
-                                    player.SendLocalizedMessage(1055037); // You finish your grim work, finding some of the specific bones listed in the Hag's recipe.
-                                    obj.Complete();
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public static bool TryHarvestShrooms(Mobile m)
-        {
-            Map map = m.Map;
-
-            if (map == null)
-                return false;
-
-            for (int x = m.X - 1; x <= m.X + 1; x++)
-            {
-                for (int y = m.Y - 1; y <= m.Y + 1; y++)
-                {
-                    StaticTile[] tiles = map.Tiles.GetStaticTiles(x, y, false);
-
-                    for (var index = 0; index < tiles.Length; index++)
-                    {
-                        StaticTile tile = tiles[index];
-
-                        int itemID = tile.ID;
-
-                        if (itemID == 0xD15 || itemID == 0xD16)
-                        {
-                            if (m is PlayerMobile player)
-                            {
-                                QuestSystem qs = player.Quest;
-
-                                if (qs is WitchApprenticeQuest && qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.RedMushrooms)
-                                {
-                                    player.SendLocalizedMessage(1055036); // You slice a red cap mushroom from its stem.
-                                    obj.Complete();
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
         #endregion
     }
 }

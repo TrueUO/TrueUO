@@ -51,7 +51,6 @@ namespace Server.Items
         [Constructable]
         public FifteenthAnniversaryLithographDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public FifteenthAnniversaryLithographDeed(Serial serial)

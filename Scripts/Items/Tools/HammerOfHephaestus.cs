@@ -36,7 +36,6 @@ namespace Server.Items
         public HammerOfHephaestus()
         {
             SkillBonuses.SetValues(0, SkillName.Blacksmith, 10.0);
-            LootType = LootType.Blessed;
             UsesRemaining = 20;
         }
 

@@ -8,7 +8,6 @@ namespace Server.Items
         public LowYewTable()
             : base(0x281A)
         {
-            LootType = LootType.Blessed;
             Hue = 1192;
         }
 

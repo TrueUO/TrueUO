@@ -59,7 +59,6 @@ namespace Server.Items
         [Constructable]
         public WeddingLongBuffetTableDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public WeddingLongBuffetTableDeed(Serial serial)

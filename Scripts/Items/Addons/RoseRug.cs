@@ -341,8 +341,6 @@ namespace Server.Items
             RugType = type;
             NextResourceCount = nextuse;
             ResourceCount = resCount;
-
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile from)

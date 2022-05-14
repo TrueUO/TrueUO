@@ -6,7 +6,6 @@ namespace Server.Items
         public SpiritBottle()
             : base(0xEFB)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

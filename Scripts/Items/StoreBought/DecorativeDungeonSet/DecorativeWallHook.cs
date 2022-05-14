@@ -10,7 +10,6 @@ namespace Server.Items
             : base(0xA4E8)
         {
             Weight = 1;
-            LootType = LootType.Blessed;
         }
 
         public DecorativeWallHook(Serial serial)

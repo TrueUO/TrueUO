@@ -8,7 +8,6 @@ namespace Server.Items
         {
             Weight = 1;
             Hue = 68;
-            LootType = LootType.Blessed;
         }
 
         public EyeOfNavrey(Serial serial)

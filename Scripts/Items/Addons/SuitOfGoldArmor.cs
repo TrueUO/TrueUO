@@ -63,7 +63,6 @@ namespace Server.Items
         [Constructable]
         public SuitOfGoldArmorDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public SuitOfGoldArmorDeed(Serial serial)

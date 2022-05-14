@@ -14,7 +14,6 @@ namespace Server.Items
         public EtherealRetouchingTool()
             : base(0x42C6)
         {
-            LootType = LootType.Blessed;
         }
 
         public EtherealRetouchingTool(Serial serial)
@@ -65,7 +64,7 @@ namespace Server.Items
                     {
                         from.SendLocalizedMessage(1045158); // You must have the item in your backpack to target it.
                     }
-                    else if (mount is GMEthereal || mount is EtherealWarBoar)
+                    else if (mount is EtherealWarBoar)
                     {
                         from.SendLocalizedMessage(1071117); // You cannot use this item for it.
                     }

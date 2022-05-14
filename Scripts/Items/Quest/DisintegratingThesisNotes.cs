@@ -7,7 +7,6 @@ namespace Server.Items
             : base(0xE36)
         {
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public DisintegratingThesisNotes(Serial serial)

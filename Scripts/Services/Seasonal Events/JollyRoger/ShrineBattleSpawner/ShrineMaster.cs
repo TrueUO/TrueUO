@@ -235,16 +235,7 @@ namespace Server.Engines.JollyRoger
 
         public virtual void SetBody()
         {
-            switch (_Specialty)
-            {
-                default:
-                    if (0.75 > Utility.RandomDouble())
-                        Race = Race.Human;
-                    else
-                        Race = Race.Elf; break;
-                case MasterTitle.Mystic: Race = Race.Gargoyle;
-                    break;
-            }
+            Race = Race.Human;
 
             HairItemID = Race.RandomHair(Female);
             HairHue = Race.RandomHairHue();
@@ -339,10 +330,8 @@ namespace Server.Engines.JollyRoger
                     break;
                 case MasterTitle.Mystic:
                     SetWearable(new MysticBook((uint)0xFFF));
-                    SetWearable(new GargishFancyRobe());
-                    SetWearable(new GargishEarrings());
-                    SetWearable(new GargishClothWingArmor());
-                    SetWearable(new LeatherTalons());
+                    SetWearable(new Robe());
+                    SetWearable(new Sandals());
                     break;
                 case MasterTitle.Sampire:
                     SetWearable(new DoubleAxe(), 1858);
@@ -377,19 +366,19 @@ namespace Server.Engines.JollyRoger
                 case MasterTitle.Swordsman:
                     item = new PaladinSword
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     SetWearable(item);
 
                     item = new Daisho
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     PackItem(item);
 
                     item = new Wakizashi
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     PackItem(item);
 
@@ -405,19 +394,19 @@ namespace Server.Engines.JollyRoger
                 case MasterTitle.Fencer:
                     item = new Lajatang
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     SetWearable(item);
 
                     item = new Sai
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     PackItem(item);
 
                     item = new Tekagi
                     {
-                        LootType = LootType.Blessed
+                        Movable = false
                     };
                     PackItem(item);
 

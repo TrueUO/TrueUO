@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("an archmage corpse")]
@@ -38,11 +36,6 @@ namespace Server.Mobiles
 
             AI = AIType.AI_NecroMage;
             SetSpecialAbility(SpecialAbility.LifeLeech);
-        }
-
-        public override void GenerateLoot()
-        {
-            AddLoot(LootPack.LootItem<SeveredHumanEars>(75.0));
         }
 
         public BrigandCannibalMage(Serial serial)

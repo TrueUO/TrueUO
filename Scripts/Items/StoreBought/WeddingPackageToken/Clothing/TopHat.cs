@@ -15,8 +15,7 @@ namespace Server.Items
         public TopHat(int hue)
             : base(0x9EF9, hue)
         {
-			LootType = LootType.Blessed;
-			Weight = 3.0;
+            Weight = 3.0;
         }
 
         public TopHat(Serial serial)

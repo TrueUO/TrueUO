@@ -7,7 +7,6 @@ namespace Server.Items
         public ReptalonStatue()
             : base(0x2D95)
         {
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

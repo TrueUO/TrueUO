@@ -19,7 +19,6 @@ namespace Server.Items
         {
             m_Owner = owner;
 
-            LootType = LootType.Blessed;
             Weight = 1.0;
         }
 

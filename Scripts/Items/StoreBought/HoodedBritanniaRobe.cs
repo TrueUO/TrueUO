@@ -8,7 +8,6 @@ namespace Server.Items
         public HoodedBritanniaRobe(int id)
             : base(id)
         {
-            LootType = LootType.Blessed;
         }
 
         public HoodedBritanniaRobe(Serial serial)

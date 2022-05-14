@@ -142,7 +142,6 @@ namespace Server.Items
         [Constructable]
         public AppleTreeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public AppleTreeDeed(Serial serial)
@@ -203,7 +202,6 @@ namespace Server.Items
         [Constructable]
         public PeachTreeDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public PeachTreeDeed(Serial serial)

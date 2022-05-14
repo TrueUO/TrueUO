@@ -90,7 +90,6 @@ namespace Server.Items
         [Constructable]
         public WallTorchDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public WallTorchDeed(Serial serial)

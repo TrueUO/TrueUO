@@ -89,7 +89,6 @@ namespace Server.Items
         [Constructable]
         public UnsettlingPortraitDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public UnsettlingPortraitDeed(Serial serial)

@@ -30,8 +30,7 @@ namespace Server.Items
         public FelineBlessedStatue()
             : base(0x1947)
         {
-            Weight = 12;            
-            LootType = LootType.Blessed;
+            Weight = 12;
         }
 
         public override int DefaultGumpID => 0x116;

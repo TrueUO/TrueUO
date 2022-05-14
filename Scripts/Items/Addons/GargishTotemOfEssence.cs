@@ -181,7 +181,6 @@ namespace Server.Items
         [Constructable]
         public GargishTotemOfEssenceDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public GargishTotemOfEssenceDeed(Serial serial)

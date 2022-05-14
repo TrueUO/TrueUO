@@ -89,7 +89,6 @@ namespace Server.Items
         public StaghornFernDeed()
             : base(0x14F0)
         {
-            LootType = LootType.Blessed;
         }
 
         public StaghornFernDeed(Serial serial)

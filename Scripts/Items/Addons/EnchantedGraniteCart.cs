@@ -304,7 +304,6 @@ namespace Server.Engines.VeteranRewards
         [Constructable]
         public EnchantedGraniteCartAddonDeed()
         {
-            LootType = LootType.Blessed;
         }
 
         public override void GetProperties(ObjectPropertyList list)

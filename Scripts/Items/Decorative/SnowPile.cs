@@ -11,7 +11,6 @@ namespace Server.Items
         {
             Hue = 0x481;
             Weight = 1.0;
-            LootType = LootType.Blessed;
         }
 
         public SnowPile(Serial serial)
@@ -20,24 +19,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1005578;// a pile of snow
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                Weight = 1.0;
-                LootType = LootType.Blessed;
-            }
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from)

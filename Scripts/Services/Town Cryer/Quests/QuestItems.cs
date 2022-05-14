@@ -25,7 +25,6 @@ namespace Server.Engines.Quests
         [Constructable]
         public RoyalBritannianGuardOrders()
         {
-            LootType = LootType.Blessed;
         }
 
         public RoyalBritannianGuardOrders(Serial serial)
@@ -135,7 +134,6 @@ namespace Server.Engines.Quests
         public TreasureHuntingBook()
             : base(0xFBE)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void OnDoubleClick(Mobile m)
@@ -195,7 +193,6 @@ namespace Server.Engines.Quests
         public BuriedRichesTreasureMap(int level)
             : base(level, Map.Trammel)
         {
-            LootType = LootType.Blessed;
         }
 
         public override void Decode(Mobile from)

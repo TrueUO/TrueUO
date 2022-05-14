@@ -36,12 +36,6 @@ namespace Server.Mobiles
 
             if (Utility.RandomDouble() < 0.05)
                 c.DropItem(new CrushedCrystals());
-
-            if (Utility.RandomDouble() < 0.1)
-                c.DropItem(new IcyHeart());
-
-            if (Utility.RandomDouble() < 0.1)
-                c.DropItem(new LuckyDagger());
         }
 
         public override int TreasureMapLevel => 3;

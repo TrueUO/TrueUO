@@ -11,7 +11,6 @@ namespace Server.Items
             : base(0x4BC6)
         {
             Hue = 2758;
-            LootType = LootType.Blessed;
         }
 
         public Anniversary24GiftToken(Serial serial)

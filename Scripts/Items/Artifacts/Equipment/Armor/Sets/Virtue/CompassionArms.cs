@@ -8,7 +8,6 @@ namespace Server.Items
         public CompassionArms()
             : base(0x2B0A)
         {
-            LootType = LootType.Blessed;
             Weight = 3.0;
             SetHue = 0;
             Hue = 0x226;

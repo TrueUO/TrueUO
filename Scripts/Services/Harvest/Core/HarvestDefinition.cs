@@ -39,7 +39,6 @@ namespace Server.Engines.Harvest
         public HarvestResource[] Resources { get; set; }
         public HarvestVein[] Veins { get; set; }
         public BonusHarvestResource[] BonusResources { get; set; }
-        public bool RaceBonus { get; set; }
         public bool RandomizeVeins { get; set; }
         public Dictionary<Map, Dictionary<Point2D, HarvestBank>> Banks { get; }
 
