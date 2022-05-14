@@ -142,7 +142,7 @@ namespace Server.Misc
             newChar.AccessLevel = args.Account.AccessLevel;
             newChar.Female = args.Female;
 
-            newChar.Race = args.Race; //Sets body
+            newChar.Race = Race.Human; // Sets body
 
             newChar.Hue = args.Hue | 0x8000;
 
@@ -210,7 +210,7 @@ namespace Server.Misc
             }
 
             CityInfo city = args.City;
-            Map map = Siege.SiegeShard && city.Map == Map.Trammel ? Map.Felucca : city.Map;
+            Map map = Map.Felucca;
 
             newChar.MoveToWorld(city.Location, map);
 
