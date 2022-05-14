@@ -6,9 +6,8 @@ namespace Server.Engines.Quests
     {
         None = 0,
 
-        CovetousGhost = 1,
-        HonorOfDeBoors = 2,
-        FlintTheQuartermaster = 3
+        HonorOfDeBoors = 1,
+        FlintTheQuartermaster = 2
     }
 
     public class BaseChain
@@ -17,11 +16,10 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[4][];
+            Chains = new Type[3][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
-            Chains[(int)QuestChain.CovetousGhost] = new[] { typeof(GhostOfCovetousQuest), typeof(SaveHisDadQuest), typeof(FathersGratitudeQuest) };
             Chains[(int)QuestChain.HonorOfDeBoors] = new[] { typeof(HonorOfDeBoorsQuest), typeof(JackTheVillainQuest), typeof(SavedHonorQuest) };
             Chains[(int)QuestChain.FlintTheQuartermaster] = new[] { typeof(ThievesBeAfootQuest), typeof(BibliophileQuest) };
         }
