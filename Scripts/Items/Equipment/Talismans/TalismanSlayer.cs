@@ -72,8 +72,7 @@ namespace Server.Items
 
             m_Table[TalismanSlayerName.Beetle] = new[]
             {
-                typeof(Beetle), typeof(RuneBeetle),
-                typeof(FireBeetle), typeof(DeathwatchBeetle),
+                typeof(Beetle), typeof(RuneBeetle), typeof(DeathwatchBeetle),
                 typeof(DeathwatchBeetleHatchling), typeof(IronBeetle)
             };
 
@@ -103,7 +102,7 @@ namespace Server.Items
 
             m_Table[TalismanSlayerName.Flame] = new[]
             {
-                typeof(FireBeetle), typeof(HellHound),
+                typeof(HellHound),
                 typeof(LavaSerpent), typeof(FireElemental),
                 typeof(FireElementalRenowned), typeof(FlameElemental),
                 typeof(PredatorHellCat), typeof(Phoenix),

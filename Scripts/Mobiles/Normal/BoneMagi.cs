@@ -56,7 +56,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.LowScrolls);
             AddLoot(LootPack.Potions);
             AddLoot(LootPack.MageryRegs, 3);
-            AddLoot(LootPack.NecroRegs, 3, 10);
             AddLoot(LootPack.LootItem<Bone>());
         }
 

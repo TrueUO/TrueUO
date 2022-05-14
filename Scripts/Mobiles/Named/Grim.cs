@@ -43,13 +43,12 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.DragonBreath);
         }
 
-        public override bool GivesMLMinorArtifact => true;
-
         public Grim(Serial serial)
             : base(serial)
         {
         }
 
+        public override bool GivesMLMinorArtifact => true;
         public override bool ReacquireOnMovement => true;
         public override int Meat => 10;
         public override int Hides => 20;
@@ -59,7 +58,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich, 3);
             AddLoot(LootPack.MedScrolls);
             AddLoot(LootPack.HighScrolls, 2);
-            AddLoot(LootPack.ArcanistScrolls);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -71,7 +69,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

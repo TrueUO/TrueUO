@@ -69,6 +69,11 @@ namespace Server.Mobiles
             SetWeaponAbility(WeaponAbility.Dismount);
         }
 
+        public Meraktus(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 5);
@@ -78,7 +83,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.RandomLootItem(new Type[] { typeof(MinotaurHedge), typeof(BonePile), typeof(LightYarn) }, 100.0, 1, false, true));
             AddLoot(LootPack.LootItem<TormentedChains>(50.0, 1));
             AddLoot(LootPack.LootItem<CrimsonCincture>(2.25, 1));
-            AddLoot(LootPack.ArcanistScrolls, 1);
         }
 
         public override int GetAngerSound()
@@ -178,13 +182,10 @@ namespace Server.Mobiles
                 AOS.Damage(m, this, (int)damage, 100, 0, 0, 0, 0);
 
                 if (m.Alive && m.Body.IsHuman && !m.Mounted)
+                {
                     m.Animate(20, 7, 1, true, false, 0); // take hit
+                }
             }
-        }
-
-        public Meraktus(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

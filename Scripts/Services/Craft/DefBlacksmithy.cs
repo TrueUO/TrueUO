@@ -59,6 +59,7 @@ namespace Server.Engines.Craft
 
                 bool isAnvil = type.IsDefined(typeofAnvil, false) || item.ItemID == 4015 || item.ItemID == 4016 ||
                                item.ItemID == 0x2DD5 || item.ItemID == 0x2DD6 || item.ItemID >= 0xA102 && item.ItemID <= 0xA10D;
+
                 bool isForge = type.IsDefined(typeofForge, false) || item.ItemID == 4017 ||
                                item.ItemID >= 6522 && item.ItemID <= 6569 || item.ItemID == 0x2DD8 ||
                                 item.ItemID == 0xA531 || item.ItemID == 0xA535;
@@ -313,12 +314,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(IronIngot), 1044036, 20, 1044037);
 
             AddCraft(typeof(MetalKeg), 1011173, 1150675, 85.0, 100.0, typeof(IronIngot), 1044036, 25, 1044253);
-
-            index = AddCraft(typeof(ExodusSacrificalDagger), 1011173, 1153500, 95.0, 120.0, typeof(IronIngot), 1044036, 12, 1044253);
-            AddRes(index, typeof(BlueDiamond), 1032696, 2, 1044253);
-            AddRes(index, typeof(FireRuby), 1032695, 2, 1044253);
-            AddRes(index, typeof(SmallPieceofBlackrock), 1150016, 10, 1044253);
-            ForceNonExceptional(index);
             #endregion
 
             // Set the overridable material

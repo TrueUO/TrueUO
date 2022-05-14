@@ -63,7 +63,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich, 3);
             AddLoot(LootPack.Gems, 2);
             AddLoot(LootPack.LootItem<Bone>(false, true));
-            AddLoot(LootPack.ArcanistScrolls);
         }
 
         public override void Serialize(GenericWriter writer)

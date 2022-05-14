@@ -308,7 +308,7 @@ namespace Server.Items
 
             for (int i = 0; i < count; i++)
             {
-                cont.DropItemStacked(Loot.RandomPossibleReagent());
+                cont.DropItemStacked(Loot.RandomReagent());
             }
             #endregion
 

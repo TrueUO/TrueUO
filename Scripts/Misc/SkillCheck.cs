@@ -41,19 +41,26 @@ namespace Server.Misc
             Skill skill = from.Skills[skillName];
 
             if (skill == null)
+            {
                 return false;
+            }
 
             double value = skill.Value;
 
-            //TODO: Is there any other place this can go?
             if (skillName == SkillName.Fishing && BaseGalleon.FindGalleonAt(from, from.Map) is TokunoGalleon)
+            {
                 value += 1;
+            }
 
             if (value < minSkill)
+            {
                 return false; // Too difficult
+            }
 
             if (value >= maxSkill)
+            {
                 return true; // No challenge
+            }
 
             double chance = (value - minSkill) / (maxSkill - minSkill);
 
@@ -93,7 +100,9 @@ namespace Server.Misc
         public static bool CheckSkill(Mobile from, SkillName sk, double minSkill, double maxSkill, int amount)
         {
             if (from.Skills.Cap == 0)
+            {
                 return false;
+            }
 
             Skill skill = from.Skills[sk];
             double value = skill.Value;
@@ -130,7 +139,9 @@ namespace Server.Misc
         public static bool CheckSkill(Mobile from, Skill skill, double chance)
         {
             if (from.Skills.Cap == 0)
+            {
                 return false;
+            }
 
             bool success = Utility.Random(100) <= (int)(chance * 100);
             double gc = GetGainChance(from, skill, chance, success);
@@ -173,12 +184,7 @@ namespace Server.Misc
             return gc;
         }
 
-        public static bool Mobile_SkillCheckTarget(
-            Mobile from,
-            SkillName skillName,
-            object target,
-            double minSkill,
-            double maxSkill)
+        public static bool Mobile_SkillCheckTarget(Mobile from, SkillName skillName, object target, double minSkill, double maxSkill)
         {
             Skill skill = from.Skills[skillName];
 

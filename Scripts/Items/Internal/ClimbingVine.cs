@@ -20,6 +20,11 @@ namespace Server.Items
             ClimbLocation = p;
         }
 
+        public ClimbingVine(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             from.SayTo(from, 1156290, 1153); // *The vines looks as though they may be strong enough to support climbing...*
@@ -28,11 +33,6 @@ namespace Server.Items
             {
                 from.MoveToWorld(ClimbLocation, Map);
             }
-        }
-
-        public ClimbingVine(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -49,27 +49,6 @@ namespace Server.Items
             reader.ReadInt();
 
             ClimbLocation = reader.ReadPoint3D();
-        }
-
-        public static ClimbingVine Vine1 { get; set; }
-        public static ClimbingVine Vine2 { get; set; }
-
-        public static void Initialize()
-        {
-            Vine1 = Map.TerMur.FindItem<ClimbingVine>(new Point3D(687, 1759, 40));
-            Vine2 = Map.TerMur.FindItem<ClimbingVine>(new Point3D(687, 1759, 60));
-
-            if (Vine1 == null)
-            {
-                Vine1 = new ClimbingVine(new Point3D(679, 1757, 100));
-                Vine1.MoveToWorld(new Point3D(678, 1759, 40), Map.TerMur);
-            }
-
-            if (Vine2 == null)
-            {
-                Vine2 = new ClimbingVine(new Point3D(679, 1757, 100));
-                Vine2.MoveToWorld(new Point3D(678, 1759, 60), Map.TerMur);
-            }
         }
     }
 }

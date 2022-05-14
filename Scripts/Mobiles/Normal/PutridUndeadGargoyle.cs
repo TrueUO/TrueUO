@@ -1,5 +1,4 @@
 /* Based on Gargoyle, still no infos on Undead Gargoyle... Have to get also the correct body ID */
-using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -60,7 +59,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich, 5);
             AddLoot(LootPack.MedScrolls);
             AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 4));
-            AddLoot(LootPack.LootItem<InfusedGlassStave>(10.0));
         }
 
         public override void Serialize(GenericWriter writer)

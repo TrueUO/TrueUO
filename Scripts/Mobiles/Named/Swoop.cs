@@ -60,7 +60,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.HighScrolls);
             AddLoot(LootPack.MageryRegs, 4);
             AddLoot(LootPack.LootItem<ParrotItem>(10.0));
-            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override void Serialize(GenericWriter writer)

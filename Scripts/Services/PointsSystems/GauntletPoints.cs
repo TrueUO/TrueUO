@@ -29,13 +29,17 @@ namespace Server.Engines.Points
             BaseCreature bc = victim as BaseCreature;
 
             if (pm == null || bc == null || bc.NoKillAwards || !pm.Alive)
+            {
                 return;
+            }
 
             //Make sure its a boss we killed!!
             bool boss = bc is Impaler || bc is DemonKnight || bc is DarknightCreeper || bc is FleshRenderer || bc is ShadowKnight || bc is AbysmalHorror;
 
             if (!boss)
+            {
                 return;
+            }
 
             int luck = Math.Max(0, pm.RealLuck);
             AwardPoints(pm, (int)Math.Max(0, (bc.Fame * (1 + Math.Sqrt(luck) / 100)) / 2));
@@ -105,7 +109,7 @@ namespace Server.Engines.Points
             typeof(OrnamentOfTheMagician),      typeof(RingOfTheElements),          typeof(RingOfTheVile),
             typeof(Aegis),                      typeof(ArcaneShield),               typeof(AxeOfTheHeavens),
             typeof(BladeOfInsanity),            typeof(BoneCrusher),                typeof(BreathOfTheDead),
-            typeof(Frostbringer),               typeof(SerpentsFang),               typeof(StaffOfTheMagi),
+            typeof(SerpentsFang),               typeof(StaffOfTheMagi),
             typeof(TheBeserkersMaul),           typeof(TheDryadBow),                typeof(DivineCountenance),
             typeof(HatOfTheMagi),               typeof(HuntersHeaddress),           typeof(SpiritOfTheTotem)
         };
@@ -128,25 +132,22 @@ namespace Server.Engines.Points
                 typeof(RingOfTheVile),              typeof(BraceletOfHealth),
                 typeof(Aegis),                      typeof(ArcaneShield),
                 typeof(BladeOfInsanity),            typeof(BoneCrusher),
-                typeof(Frostbringer),               typeof(SerpentsFang),
-                typeof(TheBeserkersMaul),           typeof(TheDryadBow),
-                typeof(HuntersHeaddress),           typeof(SpiritOfTheTotem),
-                typeof(AxeOfTheHeavens),            typeof(BreathOfTheDead),
-                typeof(DivineCountenance)
+                typeof(SerpentsFang),               typeof(TheBeserkersMaul),
+                typeof(TheDryadBow),                typeof(HuntersHeaddress),
+                typeof(SpiritOfTheTotem),           typeof(AxeOfTheHeavens),
+                typeof(BreathOfTheDead),            typeof(DivineCountenance)
             }
         };
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
         }
     }

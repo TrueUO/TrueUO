@@ -9,10 +9,13 @@ namespace Server
     public static class ValidationQueue
     {
         public static event ValidationEventHandler StartValidation;
+
         public static void Initialize()
         {
             if (StartValidation != null)
+            {
                 StartValidation();
+            }
 
             StartValidation = null;
         }
@@ -21,6 +24,7 @@ namespace Server
     public static class ValidationQueue<T>
     {
         private static List<T> m_Queue;
+
         static ValidationQueue()
         {
             m_Queue = new List<T>();
@@ -41,7 +45,9 @@ namespace Server
             if (m != null)
             {
                 for (int i = 0; i < m_Queue.Count; ++i)
+                {
                     m.Invoke(m_Queue[i], null);
+                }
             }
 
             m_Queue.Clear();

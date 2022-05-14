@@ -55,12 +55,11 @@ namespace Server.Mobiles
         public override bool BleedImmune => true;
         public override Poison PoisonImmune => Poison.Lethal;
         public override int TreasureMapLevel => 3;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.MedScrolls, 2);
-            AddLoot(LootPack.NecroRegs, 17, 24);
-            AddLoot(LootPack.RandomLootItem(new[] { typeof(LichFormScroll), typeof(PoisonStrikeScroll), typeof(StrangleScroll), typeof(VengefulSpiritScroll), typeof(WitherScroll) }, false, true));
         }
 
         public override void Serialize(GenericWriter writer)

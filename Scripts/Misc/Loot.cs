@@ -78,23 +78,13 @@ namespace Server
             typeof(Amber), typeof(Amethyst), typeof(Citrine), typeof(Diamond), typeof(Emerald), typeof(Ruby), typeof(Sapphire),
             typeof(StarSapphire), typeof(Tourmaline)
         };
-
         public static Type[] GemTypes => m_GemTypes;
 
         private static readonly Type[] m_RareGemTypes =
         {
             typeof(BlueDiamond), typeof(DarkSapphire), typeof(EcruCitrine), typeof(FireRuby), typeof(PerfectEmerald), typeof(Turquoise), typeof(WhitePearl), typeof(BrilliantAmber)
         };
-
         public static Type[] RareGemTypes => m_RareGemTypes;
-
-        private static readonly Type[] m_MLResources =
-		{
-            typeof(BlueDiamond), typeof(DarkSapphire), typeof(EcruCitrine), typeof(FireRuby), typeof(PerfectEmerald), typeof(Turquoise), typeof(WhitePearl), typeof(BrilliantAmber),
-            typeof(LuminescentFungi), typeof(BarkFragment), typeof(SwitchItem), typeof(ParasiticPlant)
-        };
-
-        public static Type[] MLResources => m_MLResources;
 
         public static Type[] RegTypes => m_RegTypes;
         private static readonly Type[] m_RegTypes =
@@ -103,18 +93,11 @@ namespace Server
             typeof(SulfurousAsh), typeof(SpidersSilk)
         };
 
-        public static Type[] NecroRegTypes => m_NecroRegTypes;
-        private static readonly Type[] m_NecroRegTypes = { typeof(BatWing), typeof(GraveDust), typeof(DaemonBlood), typeof(NoxCrystal), typeof(PigIron) };
-
-        public static Type[] MysticRegTypes => m_MysticRegTypes;
-        private static readonly Type[] m_MysticRegTypes = { typeof(Bone), typeof(DragonBlood), typeof(FertileDirt), typeof(DaemonBone) };
-
         private static readonly Type[] m_PotionTypes =
         {
             typeof(AgilityPotion), typeof(StrengthPotion), typeof(RefreshPotion), typeof(LesserCurePotion),
             typeof(LesserHealPotion), typeof(LesserPoisonPotion)
         };
-
         public static Type[] PotionTypes => m_PotionTypes;
 
         private static readonly Type[] m_ImbuingEssenceIngreds =
@@ -123,24 +106,13 @@ namespace Server
             typeof(EssenceDirection),   typeof(EssenceFeeling), typeof(EssenceOrder),   typeof(EssencePassion),   typeof(EssencePersistence),
             typeof(EssenceSingularity)
         };
-
         public static Type[] ImbuingEssenceIngreds => m_ImbuingEssenceIngreds;
 
         private static readonly Type[] m_SEInstrumentTypes = { typeof(BambooFlute) };
-
         public static Type[] SEInstrumentTypes => m_SEInstrumentTypes;
 
         private static readonly Type[] m_InstrumentTypes = { typeof(Drums), typeof(Harp), typeof(LapHarp), typeof(Lute), typeof(Tambourine), typeof(TambourineTassel) };
-
         public static Type[] InstrumentTypes => m_InstrumentTypes;
-
-        private static readonly Type[] m_StatueTypes =
-        {
-            typeof(StatueSouth), typeof(StatueSouth2), typeof(StatueNorth), typeof(StatueWest), typeof(StatueEast),
-            typeof(StatueEast2), typeof(StatueSouthEast), typeof(BustSouth), typeof(BustEast)
-        };
-
-        public static Type[] StatueTypes => m_StatueTypes;
 
         #region Spell Scrolls
         private static readonly Type[] m_MageryScrollTypes =
@@ -162,36 +134,7 @@ namespace Server
             typeof(ResurrectionScroll), typeof(SummonAirElementalScroll), typeof(SummonDaemonScroll),
             typeof(SummonEarthElementalScroll), typeof(SummonFireElementalScroll), typeof(SummonWaterElementalScroll)
         };
-
-        private static readonly Type[] m_NecromancyScrollTypes =
-        {
-            typeof(AnimateDeadScroll), typeof(BloodOathScroll), typeof(CorpseSkinScroll), typeof(CurseWeaponScroll),
-            typeof(EvilOmenScroll), typeof(HorrificBeastScroll), typeof(LichFormScroll), typeof(MindRotScroll),
-            typeof(PainSpikeScroll), typeof(PoisonStrikeScroll), typeof(StrangleScroll), typeof(SummonFamiliarScroll),
-            typeof(VampiricEmbraceScroll), typeof(VengefulSpiritScroll), typeof(WitherScroll), typeof(WraithFormScroll),
-            typeof(ExorcismScroll)
-        };
-
-        private static readonly Type[] m_ArcanistScrollTypes =
-        {
-            typeof(ArcaneCircleScroll), typeof(GiftOfRenewalScroll), typeof(ImmolatingWeaponScroll), typeof(AttuneWeaponScroll),
-            typeof(ThunderstormScroll), typeof(NatureFuryScroll),
-			typeof(ReaperFormScroll), typeof(WildfireScroll), typeof(EssenceOfWindScroll), typeof(DryadAllureScroll),
-            typeof(EtherealVoyageScroll), typeof(WordOfDeathScroll), typeof(GiftOfLifeScroll), typeof(ArcaneEmpowermentScroll)
-        };
-
-        private static readonly Type[] m_MysticismScrollTypes =
-        {
-            typeof(NetherBoltScroll), typeof(HealingStoneScroll), typeof(PurgeMagicScroll), typeof(EagleStrikeScroll),
-            typeof(AnimatedWeaponScroll), typeof(StoneFormScroll), typeof(SpellTriggerScroll), typeof(CleansingWindsScroll),
-            typeof(BombardScroll), typeof(SpellPlagueScroll), typeof(HailStormScroll), typeof(NetherCycloneScroll),
-            typeof(RisingColossusScroll), typeof(SleepScroll), typeof(MassSleepScroll), typeof(EnchantScroll)
-        };
-
         public static Type[] MageryScrollTypes => m_MageryScrollTypes;
-        public static Type[] NecromancyScrollTypes => m_NecromancyScrollTypes;
-        public static Type[] MysticismScrollTypes => m_MysticismScrollTypes;
-        public static Type[] ArcanistScrollTypes => m_ArcanistScrollTypes;
         #endregion
 
         #region Journals/Books
@@ -326,24 +269,9 @@ namespace Server
             return Construct(m_RareGemTypes);
         }
 
-        public static Item RandomMLResource()
-        {
-            return Construct(m_MLResources);
-        }
-
         public static Item RandomReagent()
         {
             return Construct(m_RegTypes);
-        }
-
-        public static Item RandomNecromancyReagent()
-        {
-            return Construct(m_NecroRegTypes);
-        }
-
-        public static Item RandomPossibleReagent()
-        {
-            return Construct(m_RegTypes, m_NecroRegTypes);
         }
 
         public static Item RandomPotion()
@@ -356,32 +284,9 @@ namespace Server
             return Construct(m_InstrumentTypes, m_SEInstrumentTypes) as BaseInstrument;
         }
 
-        public static Item RandomStatue()
-        {
-            return Construct(m_StatueTypes);
-        }
-
         public static SpellScroll RandomScroll(int minIndex, int maxIndex, SpellbookType type)
         {
-            Type[] types;
-
-            switch (type)
-            {
-                default:
-                    types = m_MageryScrollTypes;
-                    break;
-                case SpellbookType.Necromancer:
-                    types = m_NecromancyScrollTypes;
-                    break;
-                case SpellbookType.Arcanist:
-                    types = m_ArcanistScrollTypes;
-                    break;
-                case SpellbookType.Mystic:
-                    types = m_MysticismScrollTypes;
-                    break;
-            }
-
-            return Construct(types, Utility.RandomMinMax(minIndex, maxIndex)) as SpellScroll;
+            return Construct(m_MageryScrollTypes, Utility.RandomMinMax(minIndex, maxIndex)) as SpellScroll;
         }
 
         public static BaseBook RandomLysanderNotebook()

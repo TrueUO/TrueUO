@@ -51,7 +51,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.MedScrolls);
-            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override bool CanDiscord => true;

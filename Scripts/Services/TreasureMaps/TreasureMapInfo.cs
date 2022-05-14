@@ -279,14 +279,14 @@ namespace Server.Items
         public static Type[] GetReagentList(TreasureLevel level, TreasurePackage package, TreasureFacet facet)
         {
             if (level != TreasureLevel.Stash || package != TreasurePackage.Mage)
+            {
                 return null;
+            }
 
             switch (facet)
             {
                 case TreasureFacet.Felucca:
                 case TreasureFacet.Trammel: return Loot.RegTypes;
-                case TreasureFacet.Malas: return Loot.NecroRegTypes;
-                case TreasureFacet.TerMur: return Loot.MysticRegTypes;
             }
 
             return null;

@@ -103,7 +103,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 3);
-            AddLoot(LootPack.MysticScrolls, 1, 3);
         }
 
         public override void OnDeath(Container c)

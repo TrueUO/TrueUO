@@ -530,7 +530,6 @@ namespace Server.Engines.Points
             Entries[typeof(Aegis)] = 5500.0;
             Entries[typeof(AxeOfTheHeavens)] = 5500.0;
             Entries[typeof(HelmOfInsight)] = 5500.0;
-            Entries[typeof(Frostbringer)] = 5500.0;
             Entries[typeof(StaffOfTheMagi)] = 5500.0;
             Entries[typeof(TheDragonSlayer)] = 5500.0;
             Entries[typeof(BreathOfTheDead)] = 5500.0;

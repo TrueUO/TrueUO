@@ -269,9 +269,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Springs), 1044171, 1, 1044253);
             AddRes(index, typeof(Gears), 1044254, 2, 1044253);
             AddRes(index, typeof(Diamond), 1062608, 1, 1044240);
-
-            AddCraft(typeof(Pitchfork), 1044046, 1023719, 40.0, 90.0, typeof(IronIngot), 1044036, 4, 1044037);
-            //TODO: focus of theurgy - 20th Anniversary Event 
             #endregion
 
             #region Parts
@@ -489,10 +486,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(BrilliantAmberBracelet), 1073107, 1073453, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
             AddRes(index, typeof(Amber), 1062607, 20, 1044240);
             AddRes(index, typeof(BrilliantAmber), 1032697, 10, 1044240);
-
-            index = AddCraft(typeof(FireRubyBracelet), 1073107, 1073454, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
-            AddRes(index, typeof(Ruby), 1062603, 20, 1044240);
-            AddRes(index, typeof(FireRuby), 1032695, 10, 1044240);
 
             index = AddCraft(typeof(DarkSapphireBracelet), 1073107, 1073455, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
             AddRes(index, typeof(Sapphire), 1062602, 20, 1044240);
