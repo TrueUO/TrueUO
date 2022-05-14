@@ -9,71 +9,7 @@ namespace Server
     {
         #region List definitions
 
-        #region ML equipment
-        private static readonly Type[] m_MLWeaponTypes =
-        {
-            typeof(AssassinSpike), typeof(DiamondMace), typeof(ElvenMachete), typeof(ElvenSpellblade), typeof(Leafblade),
-            typeof(OrnateAxe), typeof(RadiantScimitar), typeof(RuneBlade), typeof(WarCleaver), typeof(WildStaff)
-        };
-        public static Type[] MLWeaponTypes => m_MLWeaponTypes;
-
-        private static readonly Type[] m_MLRangedWeaponTypes = { typeof(ElvenCompositeLongbow), typeof(MagicalShortbow) };
-        public static Type[] MLRangedWeaponTypes => m_MLRangedWeaponTypes;
-
-        private static readonly Type[] m_MLArmorTypes =
-        {
-            typeof(Circlet), typeof(GemmedCirclet), typeof(LeafTonlet), typeof(RavenHelm), typeof(RoyalCirclet),
-            typeof(VultureHelm), typeof(WingedHelm), typeof(LeafArms), typeof(LeafChest), typeof(LeafGloves), typeof(LeafGorget),
-            typeof(LeafLegs), typeof(WoodlandArms), typeof(WoodlandChest), typeof(WoodlandGloves), typeof(WoodlandGorget),
-            typeof(WoodlandLegs), typeof(HideChest), typeof(HideGloves), typeof(HideGorget), typeof(HidePants),
-            typeof(HidePauldrons)
-        };
-        public static Type[] MLArmorTypes => m_MLArmorTypes;
-
-        private static readonly Type[] m_MLClothingTypes =
-        {
-            typeof(MaleElvenRobe), typeof(FemaleElvenRobe), typeof(ElvenPants), typeof(ElvenShirt), typeof(ElvenDarkShirt),
-            typeof(ElvenBoots), typeof(VultureHelm), typeof(WoodlandBelt)
-        };
-        public static Type[] MLClothingTypes => m_MLClothingTypes;
-        #endregion
-
-		#region SE equipment
-		private static readonly Type[] m_SEArmorTypes =
-        {
-            typeof(ChainHatsuburi), typeof(LeatherDo), typeof(LeatherHaidate), typeof(LeatherHiroSode), typeof(LeatherJingasa),
-            typeof(LeatherMempo), typeof(LeatherNinjaHood), typeof(LeatherNinjaJacket), typeof(LeatherNinjaMitts),
-            typeof(LeatherNinjaPants), typeof(LeatherSuneate), typeof(DecorativePlateKabuto), typeof(HeavyPlateJingasa),
-            typeof(LightPlateJingasa), typeof(PlateBattleKabuto), typeof(PlateDo), typeof(PlateHaidate), typeof(PlateHatsuburi),
-            typeof(PlateHiroSode), typeof(PlateMempo), typeof(PlateSuneate), typeof(SmallPlateJingasa),
-            typeof(StandardPlateKabuto), typeof(StuddedDo), typeof(StuddedHaidate), typeof(StuddedHiroSode), typeof(StuddedMempo)
-            , typeof(StuddedSuneate)
-        };
-        public static Type[] SEArmorTypes => m_SEArmorTypes;
-		
-		private static readonly Type[] m_SEClothingTypes =
-        {
-            typeof(ClothNinjaJacket), typeof(FemaleKimono), typeof(Hakama), typeof(HakamaShita), typeof(JinBaori),
-            typeof(Kamishimo), typeof(MaleKimono), typeof(NinjaTabi), typeof(Obi), typeof(SamuraiTabi), typeof(TattsukeHakama),
-            typeof(Waraji)
-        };
-        public static Type[] SEClothingTypes => m_SEClothingTypes;
-		
-		private static readonly Type[] m_SEHatTypes = { typeof(ClothNinjaHood), typeof(Kasa) };
-        public static Type[] SEHatTypes => m_SEHatTypes;
-		
-        private static readonly Type[] m_SEWeaponTypes =
-        {
-            typeof(Bokuto), typeof(Daisho), typeof(Kama), typeof(Lajatang), typeof(NoDachi), typeof(Nunchaku), typeof(Sai),
-            typeof(Tekagi), typeof(Tessen), typeof(Tetsubo), typeof(Wakizashi)
-        };
-        public static Type[] SEWeaponTypes => m_SEWeaponTypes;
-
-        private static readonly Type[] m_SERangedWeaponTypes = { typeof(Yumi) };
-        public static Type[] SERangedWeaponTypes => m_SERangedWeaponTypes;
-		#endregion
-		
-		#region Normal equipment
+        #region Normal equipment
 		private static readonly Type[] m_ClothingTypes =
         {
             typeof(Cloak), typeof(Bonnet), typeof(Cap), typeof(FeatheredHat), typeof(FloppyHat), typeof(JesterHat),
@@ -321,48 +257,18 @@ namespace Server
             return Construct(m_WandTypes) as BaseWand;
         }
 
-        public static BaseClothing RandomClothing(bool inTokuno = false, bool isMondain = false)
+        public static BaseClothing RandomClothing()
         {
-            if (isMondain)
-            {
-                return Construct(m_MLClothingTypes, m_ClothingTypes) as BaseClothing;
-            }
-
-            if (inTokuno)
-            {
-                return Construct(m_SEClothingTypes, m_ClothingTypes) as BaseClothing;
-            }
-
             return Construct(m_ClothingTypes) as BaseClothing;
         }
 
-        public static BaseWeapon RandomRangedWeapon(bool inTokuno = false, bool isMondain = false)
+        public static BaseWeapon RandomRangedWeapon()
         {
-            if (isMondain)
-            {
-                return Construct(m_MLRangedWeaponTypes, m_RangedWeaponTypes) as BaseWeapon;
-            }
-
-            if (inTokuno)
-            {
-                return Construct(m_SERangedWeaponTypes, m_RangedWeaponTypes) as BaseWeapon;
-            }
-
             return Construct(m_RangedWeaponTypes) as BaseWeapon;
         }
 
-        public static BaseWeapon RandomWeapon(bool inTokuno = false, bool isMondain = false)
+        public static BaseWeapon RandomWeapon()
         {
-            if (isMondain)
-            {
-                return Construct(m_MLWeaponTypes, m_WeaponTypes) as BaseWeapon;
-            }
-
-            if (inTokuno)
-            {
-                return Construct(m_SEWeaponTypes, m_WeaponTypes) as BaseWeapon;
-            }
-
             return Construct(m_WeaponTypes) as BaseWeapon;
         }
 
@@ -371,28 +277,13 @@ namespace Server
             return Construct(m_JewelryTypes) as BaseJewel;
         }
 
-        public static BaseArmor RandomArmor(bool inTokuno = false, bool isMondain = false)
+        public static BaseArmor RandomArmor()
         {
-            if (isMondain)
-            {
-                return Construct(m_MLArmorTypes, m_ArmorTypes) as BaseArmor;
-            }
-
-            if (inTokuno)
-            {
-                return Construct(m_SEArmorTypes, m_ArmorTypes) as BaseArmor;
-            }
-
             return Construct(m_ArmorTypes) as BaseArmor;
         }
 
-        public static BaseHat RandomHat(bool inTokuno = false)
+        public static BaseHat RandomHat()
         {
-            if (inTokuno)
-            {
-                return Construct(m_SEHatTypes, m_HatTypes) as BaseHat;
-            }
-
             return Construct(m_HatTypes) as BaseHat;
         }
 
@@ -401,125 +292,30 @@ namespace Server
             return Construct(m_ShieldTypes) as BaseShield;
         }
 
-        public static BaseArmor RandomArmorOrShield(bool inTokuno = false, bool isMondain = false)
+        public static BaseArmor RandomArmorOrShield()
         {
-            if (isMondain)
-            {
-                return Construct(m_MLArmorTypes, m_ArmorTypes, m_ShieldTypes) as BaseArmor;
-            }
-
-            if (inTokuno)
-            {
-                return Construct(m_SEArmorTypes, m_ArmorTypes, m_ShieldTypes) as BaseArmor;
-            }
-
             return Construct(m_ArmorTypes, m_ShieldTypes) as BaseArmor;
         }
 
-        public static Item RandomArmorOrShieldOrJewelry(bool inTokuno = false, bool isMondain = false)
+        public static Item RandomArmorOrShieldOrJewelry()
         {
-            if (isMondain)
-            {
-                return Construct(m_MLArmorTypes, m_ArmorTypes, m_HatTypes, m_ShieldTypes, m_JewelryTypes);
-            }
-
-            if (inTokuno)
-            {
-                return Construct(
-                    m_SEArmorTypes,
-                    m_ArmorTypes,
-                    m_SEHatTypes,
-                    m_HatTypes,
-                    m_ShieldTypes,
-                    m_JewelryTypes);
-            }
-
             return Construct(m_ArmorTypes, m_HatTypes, m_ShieldTypes, m_JewelryTypes);
         }
 
-        public static Item RandomArmorOrShieldOrWeapon(bool inTokuno = false, bool isMondain = false)
+        public static Item RandomArmorOrShieldOrWeapon()
         {
-            if (isMondain)
-            {
-                return Construct(
-                    m_MLWeaponTypes,
-                    m_WeaponTypes,
-                    m_MLRangedWeaponTypes,
-                    m_RangedWeaponTypes,
-                    m_MLArmorTypes,
-                    m_ArmorTypes,
-                    m_HatTypes,
-                    m_ShieldTypes);
-            }
-
-            if (inTokuno)
-            {
-                return Construct(
-                    m_SEWeaponTypes,
-                    m_WeaponTypes,
-                    m_SERangedWeaponTypes,
-                    m_RangedWeaponTypes,
-                    m_SEArmorTypes,
-                    m_ArmorTypes,
-                    m_SEHatTypes,
-                    m_HatTypes,
-                    m_ShieldTypes);
-            }
-
-            return Construct(
-                m_WeaponTypes,
-                m_RangedWeaponTypes,
-                m_ArmorTypes,
-                m_HatTypes,
-                m_ShieldTypes);
+            return Construct(m_WeaponTypes, m_RangedWeaponTypes, m_ArmorTypes, m_HatTypes, m_ShieldTypes);
         }
 
-        public static Item RandomArmorOrShieldOrWeaponOrJewelry(bool inTokuno = false, bool isMondain = false)
+        public static Item RandomArmorOrShieldOrWeaponOrJewelry()
         {
-            if (isMondain)
-            {
-                return Construct(
-
-                    m_MLWeaponTypes,
-                    m_WeaponTypes,
-                    m_MLRangedWeaponTypes,
-                    m_RangedWeaponTypes,
-                    m_MLArmorTypes,
-                    m_ArmorTypes,
-                    m_HatTypes,
-                    m_ShieldTypes,
-                    m_JewelryTypes);
-            }
-
-            if (inTokuno)
-            {
-                return Construct(
-
-                    m_SEWeaponTypes,
-                    m_WeaponTypes,
-                    m_SERangedWeaponTypes,
-                    m_RangedWeaponTypes,
-                    m_SEArmorTypes,
-                    m_ArmorTypes,
-                    m_SEHatTypes,
-                    m_HatTypes,
-                    m_ShieldTypes,
-                    m_JewelryTypes);
-            }
-
-            return Construct(
-                m_WeaponTypes,
-                m_RangedWeaponTypes,
-                m_ArmorTypes,
-                m_HatTypes,
-                m_ShieldTypes,
-                m_JewelryTypes);
+            return Construct(m_WeaponTypes, m_RangedWeaponTypes, m_ArmorTypes, m_HatTypes, m_ShieldTypes, m_JewelryTypes);
         }
 
         #region Chest of Heirlooms
         public static Item ChestOfHeirloomsContains()
         {
-            return Construct(m_SEArmorTypes, m_SEHatTypes, m_SEWeaponTypes, m_SERangedWeaponTypes, m_JewelryTypes);
+            return Construct(m_ArmorTypes, m_HatTypes, m_WeaponTypes, m_RangedWeaponTypes, m_JewelryTypes);
         }
         #endregion
 

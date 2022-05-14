@@ -1,10 +1,8 @@
-#region References
 using Server.Accounting;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using System;
-#endregion
 
 namespace Server.Misc
 {
@@ -471,75 +469,25 @@ namespace Server.Misc
             {
                 case 1: // Warrior
                     {
-                        EquipItem(new LeatherChest());
-
                         break;
                     }
                 case 4: // Necromancer
                     {
-                        PackItem(new BagOfNecroReagents(50));
-
-                        EquipItem(new BoneHelm());
-                        EquipItem(new BoneHarvester());
-                        EquipItem(NecroHue(new LeatherChest()));
-                        EquipItem(NecroHue(new LeatherArms()));
-                        EquipItem(NecroHue(new LeatherGloves()));
-                        EquipItem(NecroHue(new LeatherGorget()));
-                        EquipItem(NecroHue(new LeatherLegs()));
-                        EquipItem(NecroHue(new Skirt()));
-                        EquipItem(new Sandals(0x8FD));
-
-                        PackItem(new NecromancerSpellbook((ulong)0x8981)); // animate dead, evil omen, pain spike, summon familiar, wraith form
-
                         addSkillItems = false;
                         break;
                     }
                 case 5: // Paladin
                     {
-                        EquipItem(new Broadsword());
-                        EquipItem(new Helmet());
-                        EquipItem(new PlateGorget());
-                        EquipItem(new RingmailArms());
-                        EquipItem(new RingmailChest());
-                        EquipItem(new RingmailLegs());
-                        EquipItem(new ThighBoots(0x748));
-                        EquipItem(new Cloak(0xCF));
-                        EquipItem(new BodySash(0xCF));
-
-                        PackItem(new BookOfChivalry());
-
                         addSkillItems = false;
                         break;
                     }
                 case 6: // Samurai
                     {
-                        EquipItem(new HakamaShita(0x2C3));
-                        EquipItem(new Hakama(0x2C3));
-                        EquipItem(new SamuraiTabi(0x2C3));
-                        EquipItem(new TattsukeHakama(0x22D));
-                        EquipItem(new Bokuto());
-                        EquipItem(new LeatherJingasa());
-
-                        PackItem(new Scissors());
-                        PackItem(new Bandage(50));
-                        PackItem(new BookOfBushido());
-
                         addSkillItems = false;
                         break;
                     }
                 case 7: // Ninja
                     {
-                        int[] hues = { 0x1A8, 0xEC, 0x99, 0x90, 0xB5, 0x336, 0x89 };
-
-                        EquipItem(new Kasa());
-                        EquipItem(new TattsukeHakama(hues[Utility.Random(hues.Length)]));
-                        EquipItem(new HakamaShita(0x2C3));
-                        EquipItem(new NinjaTabi(0x2C3));
-                        EquipItem(new Tekagi());
-
-                        PackItem(new SmokeBomb());
-                        PackItem(new BookOfNinjitsu());
-
                         addSkillItems = false;
                         break;
                     }
@@ -697,13 +645,6 @@ namespace Server.Misc
             }
         }
 
-        private static Item NecroHue(Item item)
-        {
-            item.Hue = 0x2C3;
-
-            return item;
-        }
-
         private static void AddSkillItems(SkillName skill)
         {
             switch (skill)
@@ -776,10 +717,6 @@ namespace Server.Misc
                     }
                 case SkillName.Bushido:
                     {
-                        EquipItem(new Hakama());
-                        EquipItem(new Kasa());
-                        EquipItem(new BookOfBushido());
-
                         break;
                     }
                 case SkillName.Fletching:
@@ -827,7 +764,6 @@ namespace Server.Misc
                     }
                 case SkillName.Chivalry:
                     {
-                        PackItem(new BookOfChivalry());
                         break;
                     }
                 case SkillName.DetectHidden:
@@ -929,17 +865,10 @@ namespace Server.Misc
                     }
                 case SkillName.Necromancy:
                     {
-                        PackItem(new BagOfNecroReagents(50));
-                        PackItem(new NecromancerSpellbook((ulong)0x8981)); // animate dead, evil omen, pain spike, summon familiar, wraith form
-
                         break;
                     }
                 case SkillName.Ninjitsu:
                     {
-                        EquipItem(new Hakama(0x2C3));
-                        EquipItem(new Kasa());
-                        EquipItem(new BookOfNinjitsu());
-
                         break;
                     }
                 case SkillName.Parry:
@@ -1049,8 +978,6 @@ namespace Server.Misc
                     }
                 case SkillName.Mysticism:
                     {
-                        PackItem(new MysticBook((ulong)0xAB));
-
                         break;
                     }
             }
