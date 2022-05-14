@@ -55,7 +55,6 @@ namespace Server.Items
             SkillName.Fencing,
             SkillName.Macing,
             SkillName.Swords,
-            SkillName.Throwing,
             SkillName.Wrestling
         };
 

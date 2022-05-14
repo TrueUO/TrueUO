@@ -37,7 +37,6 @@ namespace Server.Items
             SkillName.Ninjitsu,
             SkillName.Bushido,
             SkillName.Spellweaving,
-            SkillName.Throwing,
             SkillName.Mysticism,
             SkillName.Imbuing
         };
@@ -56,7 +55,9 @@ namespace Server.Items
             Hue = 0x481;
 
             if (Value == 105.0 || skill == SkillName.Blacksmith || skill == SkillName.Tailoring)
+            {
                 LootType = LootType.Regular;
+            }
         }
 
         public PowerScroll(Serial serial)
@@ -72,13 +73,16 @@ namespace Server.Items
                 {
                     _Skills.AddRange(m_Skills);
                 }
+
                 return _Skills;
             }
         }
+
         public override int Message => 1049469;/* Using a scroll increases the maximum amount of a specific skill or your maximum statistics.
         * When used, the effect is not immediately seen without a gain of points with that skill or statistics.
         * You can view your maximum skill values in your skills window.
         * You can view your maximum statistic value in your statistics window. */
+
         public override int Title
         {
             get
@@ -94,7 +98,9 @@ namespace Server.Items
                 return 0;
             }
         }
+
         public override string DefaultTitle => string.Format("<basefont color=#FFFFFF>Power Scroll ({0} Skill):</basefont>", Value);
+
         public static PowerScroll CreateRandom(int min, int max)
         {
             min /= 5;
@@ -135,12 +141,16 @@ namespace Server.Items
         public override bool CanUse(Mobile from)
         {
             if (!base.CanUse(from))
+            {
                 return false;
+            }
 
             Skill skill = from.Skills[Skill];
 
             if (skill == null)
+            {
                 return false;
+            }
 
             if (skill.Cap >= Value)
             {
@@ -154,7 +164,9 @@ namespace Server.Items
         public override void Use(Mobile from)
         {
             if (!CanUse(from))
+            {
                 return;
+            }
 
             from.SendLocalizedMessage(1049513, GetNameLocalized()); // You feel a surge of magic as the scroll enhances your ~1_type~!
 

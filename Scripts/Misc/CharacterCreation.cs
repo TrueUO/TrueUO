@@ -1043,10 +1043,6 @@ namespace Server.Misc
 
                         break;
                     }
-                case SkillName.Throwing:
-                    {
-                        break;
-                    }
                 case SkillName.Mysticism:
                     {
                         PackItem(new MysticBook((ulong)0xAB));

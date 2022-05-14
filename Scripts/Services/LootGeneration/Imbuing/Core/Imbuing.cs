@@ -1621,7 +1621,6 @@ namespace Server.SkillHandlers
                 SkillName.SpiritSpeak,
                 SkillName.Bushido,
                 SkillName.Ninjitsu,
-                SkillName.Throwing,
                 SkillName.Mysticism
             };
 
@@ -1631,7 +1630,7 @@ namespace Server.SkillHandlers
             new[] { SkillName.Wrestling, SkillName.AnimalTaming, SkillName.SpiritSpeak, SkillName.Tactics, SkillName.Provocation },
             new[] { SkillName.Focus, SkillName.Parry, SkillName.Stealth, SkillName.Meditation, SkillName.AnimalLore, SkillName.Discordance },
             new[] { SkillName.Mysticism, SkillName.Bushido, SkillName.Necromancy, SkillName.Veterinary, SkillName.Stealing, SkillName.EvalInt, SkillName.Anatomy },
-            new[] { SkillName.Peacemaking, SkillName.Ninjitsu, SkillName.Chivalry, SkillName.Archery, SkillName.MagicResist, SkillName.Healing, SkillName.Throwing }
+            new[] { SkillName.Peacemaking, SkillName.Ninjitsu, SkillName.Chivalry, SkillName.Archery, SkillName.MagicResist, SkillName.Healing }
         };
 
         public static SkillName[] GetSkillGroup(SkillName skill)

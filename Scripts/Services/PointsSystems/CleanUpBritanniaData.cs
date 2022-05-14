@@ -475,7 +475,6 @@ namespace Server.Engines.Points
             Entries[typeof(AnimatedLegsoftheInsaneTinker)] = 5000.0;
             Entries[typeof(AxeOfAbandon)] = 5000.0;
             Entries[typeof(BasiliskHideBreastplate)] = 5000.0;
-            Entries[typeof(BouraTailShield)] = 5000.0;
             Entries[typeof(BurningAmber)] = 5000.0;
             Entries[typeof(CavalrysFolly)] = 5000.0;
             Entries[typeof(ClawsOfTheBerserker)] = 5000.0;
