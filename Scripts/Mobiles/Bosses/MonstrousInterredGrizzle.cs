@@ -59,7 +59,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 8);
-            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<GrizzledBones>());
@@ -72,30 +71,11 @@ namespace Server.Mobiles
             AddLoot(LootPack.RandomLootItem(new[] { typeof(GrizzleGauntlets), typeof(GrizzleGreaves), typeof(GrizzleHelm), typeof(GrizzleTunic), typeof(GrizzleVambraces) }, 5.0, 1));
         }
 
-        public override int GetDeathSound()
-        {
-            return 0x57F;
-        }
-
-        public override int GetAttackSound()
-        {
-            return 0x580;
-        }
-
-        public override int GetIdleSound()
-        {
-            return 0x581;
-        }
-
-        public override int GetAngerSound()
-        {
-            return 0x582;
-        }
-
-        public override int GetHurtSound()
-        {
-            return 0x583;
-        }
+        public override int GetDeathSound() { return 0x57F; }
+        public override int GetAttackSound() { return 0x580; }
+        public override int GetIdleSound() { return 0x581; }
+        public override int GetAngerSound() { return 0x582; }
+        public override int GetHurtSound() { return 0x583; }
 
         public override void Serialize(GenericWriter writer)
         {

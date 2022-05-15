@@ -39,20 +39,18 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.AngryFire);
         }
 
-        public override bool CanBeParagon => false;
-
         public Irk(Serial serial)
             : base(serial)
         {
         }
 
+        public override bool CanBeParagon => false;
         public override string DefaultName => "Irk";
         public override int DefaultHue => 0x489;
 
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 2);
-            AddLoot(LootPack.ArcanistScrolls);
             AddLoot(LootPack.LootItem<IrksBrain>(25.0));
             AddLoot(LootPack.LootItem<PaladinGloves>(2.5));
         }
@@ -60,15 +58,13 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

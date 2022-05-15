@@ -268,65 +268,6 @@ namespace Server
             new LootPackItem(typeof(SummonEarthElementalScroll), 1), new LootPackItem(typeof(SummonFireElementalScroll), 1), new LootPackItem(typeof(SummonWaterElementalScroll), 1 )
         };
 
-        public static readonly LootPackItem[] NecroScrollItems =
-        {
-            new LootPackItem(typeof(AnimateDeadScroll), 1),
-            new LootPackItem(typeof(BloodOathScroll), 1),
-            new LootPackItem(typeof(CorpseSkinScroll), 1),
-            new LootPackItem(typeof(CurseWeaponScroll), 1),
-            new LootPackItem(typeof(EvilOmenScroll), 1),
-            new LootPackItem(typeof(HorrificBeastScroll), 1),
-            new LootPackItem(typeof(MindRotScroll), 1),
-            new LootPackItem(typeof(PainSpikeScroll), 1),
-            new LootPackItem(typeof(SummonFamiliarScroll), 1),
-            new LootPackItem(typeof(WraithFormScroll), 1),
-            new LootPackItem(typeof(LichFormScroll), 1),
-            new LootPackItem(typeof(PoisonStrikeScroll), 1),
-            new LootPackItem(typeof(StrangleScroll), 1),
-            new LootPackItem(typeof(WitherScroll), 1),
-            new LootPackItem(typeof(VengefulSpiritScroll), 1),
-            new LootPackItem(typeof(VampiricEmbraceScroll), 1),
-            new LootPackItem(typeof(ExorcismScroll), 1)
-        };
-
-        public static readonly LootPackItem[] ArcanistScrollItems =
-        {
-            new LootPackItem(typeof(ArcaneCircleScroll), 1),
-            new LootPackItem(typeof(GiftOfRenewalScroll), 1),
-            new LootPackItem(typeof(ImmolatingWeaponScroll), 1),
-            new LootPackItem(typeof(AttuneWeaponScroll), 1),
-            new LootPackItem(typeof(ThunderstormScroll), 1),
-            new LootPackItem(typeof(NatureFuryScroll), 1),
-            new LootPackItem(typeof(ReaperFormScroll), 1),
-            new LootPackItem(typeof(WildfireScroll), 1),
-            new LootPackItem(typeof(EssenceOfWindScroll), 1),
-            new LootPackItem(typeof(DryadAllureScroll), 1),
-            new LootPackItem(typeof(EtherealVoyageScroll), 1),
-            new LootPackItem(typeof(WordOfDeathScroll), 1),
-            new LootPackItem(typeof(GiftOfLifeScroll), 1),
-            new LootPackItem(typeof(ArcaneEmpowermentScroll), 1)
-        };
-
-        public static readonly LootPackItem[] MysticScrollItems =
-        {
-            new LootPackItem(typeof(NetherBoltScroll), 1),
-            new LootPackItem(typeof(HealingStoneScroll), 1),
-            new LootPackItem(typeof(PurgeMagicScroll), 1),
-            new LootPackItem(typeof(EnchantScroll), 1),
-            new LootPackItem(typeof(SleepScroll), 1),
-            new LootPackItem(typeof(EagleStrikeScroll), 1),
-            new LootPackItem(typeof(AnimatedWeaponScroll), 1),
-            new LootPackItem(typeof(StoneFormScroll), 1),
-            new LootPackItem(typeof(SpellTriggerScroll), 1),
-            new LootPackItem(typeof(MassSleepScroll), 1),
-            new LootPackItem(typeof(CleansingWindsScroll), 1),
-            new LootPackItem(typeof(BombardScroll), 1),
-            new LootPackItem(typeof(SpellPlagueScroll), 1),
-            new LootPackItem(typeof(HailStormScroll), 1),
-            new LootPackItem(typeof(NetherCycloneScroll), 1),
-            new LootPackItem(typeof(RisingColossusScroll), 1)
-        };
-
         public static readonly LootPackItem[] GemItems = { new LootPackItem(typeof(Amber), 1) };
         public static readonly LootPackItem[] RareGemItems = { new LootPackItem(typeof(BlueDiamond), 1) };
 
@@ -349,14 +290,6 @@ namespace Server
             new LootPackItem(typeof(DaemonBlood), 1),
             new LootPackItem(typeof(NoxCrystal), 1),
             new LootPackItem(typeof(PigIron), 1)
-        };
-
-        public static readonly LootPackItem[] MysticRegItems =
-        {
-            new LootPackItem(typeof(Bone), 1),
-            new LootPackItem(typeof(DragonBlood), 1),
-            new LootPackItem(typeof(FertileDirt), 1),
-            new LootPackItem(typeof(DaemonBone), 1)
         };
 
         public static readonly LootPackItem[] PeerlessResourceItems =
@@ -579,13 +512,9 @@ namespace Server
         public static readonly LootPack MedScrolls = new LootPack(new[] { new LootPackEntry(false, true, MedScrollItems, 100.00, 1) });
         public static readonly LootPack HighScrolls = new LootPack(new[] { new LootPackEntry(false, true, HighScrollItems, 100.00, 1) });
         public static readonly LootPack MageryScrolls = new LootPack(new[] { new LootPackEntry(false, true, MageryScrollItems, 100.00, 1) });
-        public static readonly LootPack NecroScrolls = new LootPack(new[] { new LootPackEntry(false, true, NecroScrollItems, 100.00, 1) });
-        public static readonly LootPack ArcanistScrolls = new LootPack(new[] { new LootPackEntry(false, true, ArcanistScrollItems, 100.00, 1) });
-        public static readonly LootPack MysticScrolls = new LootPack(new[] { new LootPackEntry(false, true, MysticScrollItems, 100.00, 1) });
 
         public static readonly LootPack MageryRegs = new LootPack(new[] { new LootPackEntry(false, true, MageryRegItems, 100.00, 1) });
         public static readonly LootPack NecroRegs = new LootPack(new[] { new LootPackEntry(false, true, NecroRegItems, 100.00, 1) });
-        public static readonly LootPack MysticRegs = new LootPack(new[] { new LootPackEntry(false, true, MysticRegItems, 100.00, 1) });
         public static readonly LootPack PeerlessResource = new LootPack(new[] { new LootPackEntry(false, true, PeerlessResourceItems, 100.00, 1) });
 
         public static readonly LootPack Gems = new LootPack(new[] { new LootPackEntry(false, true, GemItems, 100.00, 1) });

@@ -93,12 +93,16 @@ namespace Server.Mobiles
             Karma = -30000;
         }
 
+        public Travesty(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override bool ShowFameTitle => false;
 
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 8);
-            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<EyeOfTheTravesty>());
@@ -110,11 +114,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.LootItem<ImprisonedDog>(5.0));
             AddLoot(LootPack.LootItem<MarkOfTravesty>(5.0));
             AddLoot(LootPack.LootItem<MalekisHonor>(2.5));
-        }
-
-        public Travesty(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)

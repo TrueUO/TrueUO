@@ -43,13 +43,11 @@ namespace Server.Mobiles
         }
 
         public override bool GivesMLMinorArtifact => true;
-
         public override Poison PoisonImmune => Poison.Lethal;
 
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 3);
-            AddLoot(LootPack.ArcanistScrolls, 1, 3);
             AddLoot(LootPack.LootItem<TaintedSeeds>(30.0));
         }
 
@@ -62,7 +60,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

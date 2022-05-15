@@ -49,29 +49,28 @@ namespace Server.Mobiles
             : base(serial)
         {
         }
+
         public override bool CanBeParagon => false;
         public override bool GivesMLMinorArtifact => true;
         public override bool AlwaysMurderer => true;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 3);
             AddLoot(LootPack.MedScrolls, 2);
             AddLoot(LootPack.HighScrolls, 2);
-            AddLoot(LootPack.ArcanistScrolls);
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

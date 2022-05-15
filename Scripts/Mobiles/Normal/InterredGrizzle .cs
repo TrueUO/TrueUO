@@ -37,8 +37,8 @@ namespace Server.Mobiles
             SetSkill(SkillName.Tactics, 104.5, 105.1);
             SetSkill(SkillName.Wrestling, 105.1, 109.4);
 
-            Fame = 3700;  // Guessed
-            Karma = -3700;  // Guessed
+            Fame = 3700;
+            Karma = -3700;
         }
 
         public InterredGrizzle(Serial serial)
@@ -50,10 +50,9 @@ namespace Server.Mobiles
 
         public override int TreasureMapLevel => 4;
 
-        public override void GenerateLoot() // -- Need to verify
+        public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich);
-            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)

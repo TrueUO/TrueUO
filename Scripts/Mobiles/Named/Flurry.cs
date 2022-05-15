@@ -39,13 +39,12 @@ namespace Server.Mobiles
             Karma = -4500;
         }
 
-        public override bool GivesMLMinorArtifact => true;
-
         public Flurry(Serial serial)
             : base(serial)
         {
         }
 
+        public override bool GivesMLMinorArtifact => true;
         public override double DispelDifficulty => 117.5;
         public override double DispelFocus => 45.0;
         public override bool BleedImmune => true;
@@ -57,7 +56,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Meager);
             AddLoot(LootPack.LowScrolls);
             AddLoot(LootPack.MedScrolls);
-            AddLoot(LootPack.ArcanistScrolls);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -69,7 +67,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

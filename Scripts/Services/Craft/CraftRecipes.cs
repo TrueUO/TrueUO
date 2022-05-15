@@ -89,9 +89,6 @@ namespace Server.Engines.Craft
         QuiverOfIce = 503, // DefTailoring
         QuiverOfBlight = 504, // DefTailoring
         QuiverOfLightning = 505, // DefTailoring
-        SongWovenMantle = 550, // DefTailoring
-        SpellWovenBritches = 551, // DefTailoring
-        StitchersMittens = 552, // DefTailoring
         JesterShoes = 560, // DefTailoring
         ChefsToque = 561, // DefTailoring
         GuildedKilt = 562, // DefTailoring
@@ -99,11 +96,6 @@ namespace Server.Engines.Craft
         FancyKilt = 564, // DefTailoring
         FloweredDress = 565, // DefTailoring
         EveningGown = 566, // DefTailoring
-        TigerPeltBustier = 575, // DefTailoring
-        TigerPeltLongSkirt = 576, // DefTailoring
-        TigerPeltSkirt = 577, // DefTailoring
-        DragonTurtleHideBustier = 584, // DefTailoring
-        CuffsOfTheArchmage = 585, // DefTailoring
         KrampusMinionHat = 586, // DefTailoring
         KrampusMinionBoots = 587, // DefTailoring
         KrampusMinionTalons = 588, // DefTailoring

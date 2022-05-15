@@ -48,10 +48,14 @@ namespace Server.Mobiles
             SetAreaEffect(AreaEffect.AuraOfNausea);
         }
 
+        public LadyMelisande(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 8);
-            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<DiseasedBark>());
@@ -100,15 +104,8 @@ namespace Server.Mobiles
         }
 
         public override bool GivesMLMinorArtifact => true;
-
         public override Poison PoisonImmune => Poison.Lethal;
-
         public override int TreasureMapLevel => 5;
-
-        public LadyMelisande(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

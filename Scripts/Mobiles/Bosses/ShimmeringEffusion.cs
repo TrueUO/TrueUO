@@ -44,12 +44,16 @@ namespace Server.Mobiles
             Karma = -30000;
         }
 
+        public ShimmeringEffusion(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 8);
             AddLoot(LootPack.HighScrolls, 3);
             AddLoot(LootPack.MedScrolls, 3);
-            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<ParrotItem>(25.0));
@@ -118,11 +122,6 @@ namespace Server.Mobiles
         }
 
         #endregion
-
-        public ShimmeringEffusion(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

@@ -46,19 +46,16 @@ namespace Server.Mobiles
             SetAreaEffect(AreaEffect.AuraDamage);
         }
 
+        public ColdDrake(Serial serial) : base(serial)
+        {
+        }
+
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 3);
             AddLoot(LootPack.MageryRegs, 3);
-
-            if (Utility.RandomBool())
-            {
-                AddLoot(LootPack.NecroScrolls, 2);
-            }
-            else
-            {
-                AddLoot(LootPack.MageryScrolls, 2);
-            }
+            AddLoot(LootPack.MageryScrolls, 2);
         }
 
         public override bool CanAngerOnTame => true;
@@ -75,10 +72,6 @@ namespace Server.Mobiles
             m.PlaySound(0x5C6);
 
             m.SendLocalizedMessage(1008111, false, Name); //  : The intense cold is damaging you!
-        }
-
-        public ColdDrake(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

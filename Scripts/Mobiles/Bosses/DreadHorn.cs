@@ -53,13 +53,16 @@ namespace Server.Mobiles
             m_Teleport = DateTime.UtcNow;
         }
 
+        public DreadHorn(Serial serial) : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 8);
             AddLoot(LootPack.LowScrolls, 4);
             AddLoot(LootPack.MedScrolls, 4);
             AddLoot(LootPack.HighScrolls, 4);
-            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<DreadHornMane>());
@@ -100,10 +103,6 @@ namespace Server.Mobiles
         public override Poison PoisonImmune => Poison.Deadly;
         public override Poison HitPoison => Poison.Lethal;
         public override int TreasureMapLevel => 5;
-
-        public DreadHorn(Serial serial) : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

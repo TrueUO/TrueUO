@@ -51,7 +51,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich, 2);
             AddLoot(LootPack.MedScrolls);
             AddLoot(LootPack.HighScrolls);
-            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(0, 2));
             AddLoot(LootPack.LootItem<ParrotItem>(10.0));
         }
 

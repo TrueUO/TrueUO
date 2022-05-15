@@ -53,7 +53,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.LootItem<Bandage>(5, true));
             AddLoot(LootPack.LootItem<Ribs>(true));
-            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override void Serialize(GenericWriter writer)

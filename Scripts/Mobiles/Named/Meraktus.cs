@@ -69,6 +69,11 @@ namespace Server.Mobiles
             SetWeaponAbility(WeaponAbility.Dismount);
         }
 
+        public Meraktus(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 5);
@@ -78,33 +83,13 @@ namespace Server.Mobiles
             AddLoot(LootPack.RandomLootItem(new Type[] { typeof(MinotaurHedge), typeof(BonePile), typeof(LightYarn) }, 100.0, 1, false, true));
             AddLoot(LootPack.LootItem<TormentedChains>(50.0, 1));
             AddLoot(LootPack.LootItem<CrimsonCincture>(2.25, 1));
-            AddLoot(LootPack.ArcanistScrolls, 1);
         }
 
-        public override int GetAngerSound()
-        {
-            return 0x597;
-        }
-
-        public override int GetIdleSound()
-        {
-            return 0x596;
-        }
-
-        public override int GetAttackSound()
-        {
-            return 0x599;
-        }
-
-        public override int GetHurtSound()
-        {
-            return 0x59a;
-        }
-
-        public override int GetDeathSound()
-        {
-            return 0x59c;
-        }
+        public override int GetAngerSound() { return 0x597; }
+        public override int GetIdleSound() { return 0x596; }
+        public override int GetAttackSound() { return 0x599; }
+        public override int GetHurtSound() { return 0x59a; }
+        public override int GetDeathSound() { return 0x59c; }
 
         public override int Meat => 2;
         public override int Hides => 10;
@@ -180,11 +165,6 @@ namespace Server.Mobiles
                 if (m.Alive && m.Body.IsHuman && !m.Mounted)
                     m.Animate(20, 7, 1, true, false, 0); // take hit
             }
-        }
-
-        public Meraktus(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

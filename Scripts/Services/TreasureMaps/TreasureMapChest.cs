@@ -190,7 +190,7 @@ namespace Server.Items
                 }
 
                 for (int i = 0; i < count; ++i)
-                    cont.DropItem(Loot.RandomScroll(0, 63, SpellbookType.Regular));
+                    cont.DropItem(Loot.RandomScroll(0, 63));
                 #endregion
 
                 #region Magical Items
@@ -308,7 +308,7 @@ namespace Server.Items
 
             for (int i = 0; i < count; i++)
             {
-                cont.DropItemStacked(Loot.RandomPossibleReagent());
+                cont.DropItemStacked(Loot.RandomReagent());
             }
             #endregion
 

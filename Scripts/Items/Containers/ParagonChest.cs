@@ -107,7 +107,7 @@ namespace Server.Items
             DropItem(new Gold(level * 200));
 
             for (int i = 0; i < level; ++i)
-                DropItem(Loot.RandomScroll(0, 63, SpellbookType.Regular));
+                DropItem(Loot.RandomScroll(0, 63));
 
             for (int i = 0; i < level * 2; ++i)
             {
@@ -125,7 +125,7 @@ namespace Server.Items
 
             for (int i = 0; i < level; i++)
             {
-                Item item = Loot.RandomPossibleReagent();
+                Item item = Loot.RandomReagent();
                 item.Amount = Utility.RandomMinMax(40, 60);
                 DropItem(item);
             }

@@ -54,7 +54,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich);
-            AddLoot(LootPack.ArcanistScrolls, 0, 1);
             AddLoot(LootPack.PeculiarSeed1);
         }
 

@@ -36,8 +36,8 @@ namespace Server.Mobiles
             SetSkill(SkillName.Tactics, 81.0, 84.6);
             SetSkill(SkillName.Wrestling, 81.3, 83.9);
 
-            Fame = 3700;  // Guessed
-            Karma = -3700;  // Guessed
+            Fame = 3700;
+            Karma = -3700;
 
             SetAreaEffect(AreaEffect.EssenceOfDisease);
         }
@@ -49,10 +49,10 @@ namespace Server.Mobiles
 
         public override Poison HitPoison => Poison.Deadly;
         public override Poison PoisonImmune => Poison.Deadly;
-        public override void GenerateLoot() // Need to verify
+
+        public override void GenerateLoot() 
         {
             AddLoot(LootPack.FilthyRich);
-            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override int GetAngerSound()

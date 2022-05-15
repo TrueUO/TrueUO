@@ -18,7 +18,7 @@ namespace Server.Engines.Craft
 
         private static readonly Type[] m_TailorClothNonColorables =
         {
-            typeof(DeerMask), typeof(BearMask), typeof(OrcMask), typeof(TribalMask), typeof(HornedTribalMask), typeof(CuffsOfTheArchmage)
+            typeof(DeerMask), typeof(BearMask), typeof(OrcMask), typeof(TribalMask), typeof(HornedTribalMask)
         };
 
         // singleton instance
@@ -411,54 +411,12 @@ namespace Server.Engines.Craft
             #endregion
 
             #region Leather Armor
-
-            index = AddCraft(typeof(SpellWovenBritches), 1015293, 1072929, 92.5, 117.5, typeof(Leather), 1044462, 15, 1044463);
-            AddRes(index, typeof(EyeOfTheTravesty), 1032685, 1, 1044253);
-            AddRes(index, typeof(Putrefaction), 1032678, 10, 1044253);
-            AddRes(index, typeof(Scourge), 1032677, 10, 1044253);
-            AddRecipe(index, (int)CraftRecipes.SpellWovenBritches);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(SongWovenMantle), 1015293, 1072931, 92.5, 117.5, typeof(Leather), 1044462, 15, 1044463);
-            AddRes(index, typeof(EyeOfTheTravesty), 1032685, 1, 1044253);
-            AddRes(index, typeof(Blight), 1032675, 10, 1044253);
-            AddRes(index, typeof(Muculent), 1032680, 10, 1044253);
-            AddRecipe(index, (int)CraftRecipes.SongWovenMantle);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(StitchersMittens), 1015293, 1072932, 92.5, 117.5, typeof(Leather), 1044462, 15, 1044463);
-            AddRes(index, typeof(CapturedEssence), 1032686, 1, 1044253);
-            AddRes(index, typeof(Corruption), 1032676, 10, 1044253);
-            AddRes(index, typeof(Taint), 1032679, 10, 1044253);
-            AddRecipe(index, (int)CraftRecipes.StitchersMittens);
-            ForceNonExceptional(index);
-
             AddCraft(typeof(LeatherGorget), 1015293, 1025063, 53.9, 78.9, typeof(Leather), 1044462, 4, 1044463);
             AddCraft(typeof(LeatherCap), 1015293, 1027609, 6.2, 31.2, typeof(Leather), 1044462, 2, 1044463);
             AddCraft(typeof(LeatherGloves), 1015293, 1025062, 51.8, 76.8, typeof(Leather), 1044462, 3, 1044463);
             AddCraft(typeof(LeatherArms), 1015293, 1025061, 53.9, 78.9, typeof(Leather), 1044462, 4, 1044463);
             AddCraft(typeof(LeatherLegs), 1015293, 1025067, 66.3, 91.3, typeof(Leather), 1044462, 10, 1044463);
             AddCraft(typeof(LeatherChest), 1015293, 1025068, 70.5, 95.5, typeof(Leather), 1044462, 12, 1044463);
-
-            AddCraft(typeof(LeatherJingasa), 1015293, 1030177, 45.0, 70.0, typeof(Leather), 1044462, 4, 1044463);
-            AddCraft(typeof(LeatherMempo), 1015293, 1030181, 80.0, 105.0, typeof(Leather), 1044462, 8, 1044463);
-            AddCraft(typeof(LeatherDo), 1015293, 1030182, 75.0, 100.0, typeof(Leather), 1044462, 12, 1044463);
-            AddCraft(typeof(LeatherHiroSode), 1015293, 1030185, 55.0, 80.0, typeof(Leather), 1044462, 5, 1044463);
-            AddCraft(typeof(LeatherSuneate), 1015293, 1030193, 68.0, 93.0, typeof(Leather), 1044462, 12, 1044463);
-            AddCraft(typeof(LeatherHaidate), 1015293, 1030197, 68.0, 93.0, typeof(Leather), 1044462, 12, 1044463);
-
-            AddCraft(typeof(LeatherNinjaPants), 1015293, 1030204, 80.0, 105.0, typeof(Leather), 1044462, 13, 1044463);
-            AddCraft(typeof(LeatherNinjaJacket), 1015293, 1030206, 85.0, 110.0, typeof(Leather), 1044462, 13, 1044463);
-            AddCraft(typeof(LeatherNinjaBelt), 1015293, 1030203, 50.0, 75.0, typeof(Leather), 1044462, 5, 1044463);
-            AddCraft(typeof(LeatherNinjaMitts), 1015293, 1030205, 65.0, 90.0, typeof(Leather), 1044462, 12, 1044463);
-            AddCraft(typeof(LeatherNinjaHood), 1015293, 1030201, 90.0, 115.0, typeof(Leather), 1044462, 14, 1044463);
-
-            AddCraft(typeof(LeafChest), 1015293, 1032667, 75.0, 100.0, typeof(Leather), 1044462, 15, 1044463);
-            AddCraft(typeof(LeafArms), 1015293, 1032670, 60.0, 85.0, typeof(Leather), 1044462, 12, 1044463);
-            AddCraft(typeof(LeafGloves), 1015293, 1032668, 60.0, 85.0, typeof(Leather), 1044462, 10, 1044463);
-            AddCraft(typeof(LeafLegs), 1015293, 1032671, 75.0, 100.0, typeof(Leather), 1044462, 15, 1044463);
-            AddCraft(typeof(LeafGorget), 1015293, 1032669, 65.0, 90.0, typeof(Leather), 1044462, 12, 1044463);
-            AddCraft(typeof(LeafTonlet), 1015293, 1032672, 70.0, 95.0, typeof(Leather), 1044462, 12, 1044463);
             #endregion
 
             #region Studded Armor
@@ -467,27 +425,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(StuddedArms), 1015300, 1025076, 87.1, 112.1, typeof(Leather), 1044462, 10, 1044463);
             AddCraft(typeof(StuddedLegs), 1015300, 1025082, 91.2, 116.2, typeof(Leather), 1044462, 12, 1044463);
             AddCraft(typeof(StuddedChest), 1015300, 1025083, 94.0, 119.0, typeof(Leather), 1044462, 14, 1044463);
-
-            index = AddCraft(typeof(StuddedMempo), 1015300, 1030216, 80.0, 105.0, typeof(Leather), 1044462, 8, 1044463);
-
-            index = AddCraft(typeof(StuddedDo), 1015300, 1030183, 95.0, 120.0, typeof(Leather), 1044462, 14, 1044463);
-
-            index = AddCraft(typeof(StuddedHiroSode), 1015300, 1030186, 85.0, 110.0, typeof(Leather), 1044462, 8, 1044463);
-
-            index = AddCraft(typeof(StuddedSuneate), 1015300, 1030194, 92.0, 117.0, typeof(Leather), 1044462, 14, 1044463);
-
-            index = AddCraft(typeof(StuddedHaidate), 1015300, 1030198, 92.0, 117.0, typeof(Leather), 1044462, 14, 1044463);
-
-            index = AddCraft(typeof(HideChest), 1015300, 1032651, 85.0, 110.0, typeof(Leather), 1044462, 15, 1044463);
-
-            index = AddCraft(typeof(HidePauldrons), 1015300, 1032654, 75.0, 100.0, typeof(Leather), 1044462, 12, 1044463);
-
-            index = AddCraft(typeof(HideGloves), 1015300, 1032652, 75.0, 100.0, typeof(Leather), 1044462, 10, 1044463);
-
-            index = AddCraft(typeof(HidePants), 1015300, 1032655, 92.0, 117.0, typeof(Leather), 1044462, 15, 1044463);
-
-            index = AddCraft(typeof(HideGorget), 1015300, 1032653, 90.0, 115.0, typeof(Leather), 1044462, 12, 1044463);
-
             #endregion
 
             #region Female Armor
@@ -497,22 +434,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(StuddedBustierArms), 1015306, 1027180, 82.9, 107.9, typeof(Leather), 1044462, 8, 1044463);
             AddCraft(typeof(FemaleLeatherChest), 1015306, 1027174, 62.2, 87.2, typeof(Leather), 1044462, 8, 1044463);
             AddCraft(typeof(FemaleStuddedChest), 1015306, 1027170, 87.1, 112.1, typeof(Leather), 1044462, 10, 1044463);
-
-            index = AddCraft(typeof(TigerPeltBustier), 1015306, 1109627, 90.0, 115.0, typeof(Leather), 1044462, 6, 1044463);
-            AddRes(index, typeof(TigerPelt), 1123908, 3, 1044253);
-            AddRecipe(index, (int)CraftRecipes.TigerPeltBustier);
-
-            index = AddCraft(typeof(TigerPeltLongSkirt), 1015306, 1109630, 90.0, 115.0, typeof(Leather), 1044462, 4, 1044463);
-            AddRes(index, typeof(TigerPelt), 1123908, 2, 1044253);
-            AddRecipe(index, (int)CraftRecipes.TigerPeltLongSkirt);
-
-            index = AddCraft(typeof(TigerPeltSkirt), 1015306, 1109631, 90.0, 115.0, typeof(Leather), 1044462, 4, 1044463);
-            AddRes(index, typeof(TigerPelt), 1123908, 2, 1044253);
-            AddRecipe(index, (int)CraftRecipes.TigerPeltSkirt);
-
-            index = AddCraft(typeof(DragonTurtleHideBustier), 1015306, 1109635, 101.5, 116.5, typeof(Leather), 1044462, 6, 1044463);
-            AddRes(index, typeof(DragonTurtleScute), 1123910, 3, 1044253);
-            AddRecipe(index, (int)CraftRecipes.DragonTurtleHideBustier);
             #endregion
 
             #region Bone Armor
@@ -533,13 +454,6 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(OrcHelm), 1049149, 1027947, 90.0, 115.0, typeof(Leather), 1044462, 6, 1044463);
             AddRes(index, typeof(Bone), 1049064, 4, 1049063);
-
-            index = AddCraft(typeof(CuffsOfTheArchmage), 1049149, 1157348, 120.0, 120.1, typeof(Cloth), 1044455, 8, 1044287);
-            AddRes(index, typeof(MidnightBracers), 1061093, 1, 1044253);
-            AddRes(index, typeof(BloodOfTheDarkFather), 1157343, 5, 1044253);
-            AddRes(index, typeof(DarkSapphire), 1032690, 4, 1044253);
-            ForceNonExceptional(index);
-            AddRecipe(index, (int)CraftRecipes.CuffsOfTheArchmage);
             #endregion
 
             // Set the overridable material

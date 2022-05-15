@@ -65,7 +65,6 @@ namespace Server.Mobiles
 
         public virtual string DefaultName => "a changeling";
         public virtual int DefaultHue => 0;
-
         public override bool ShowFameTitle => false;
         public override bool InitialInnocent => m_MorphedInto != null;
 
@@ -77,7 +76,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Gems, 2);
             AddLoot(LootPack.LootItem<Arrow>(35));
             AddLoot(LootPack.LootItem<Bolt>(25));
-            AddLoot(LootPack.ArcanistScrolls);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]

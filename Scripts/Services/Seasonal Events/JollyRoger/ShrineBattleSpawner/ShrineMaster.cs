@@ -276,7 +276,7 @@ namespace Server.Engines.JollyRoger
 
                     SetWearable(new HidePauldrons());
                     SetWearable(new HideGorget());
-                    SetWearable(new LeafGloves());
+                    SetWearable(new LeatherGloves());
                     SetWearable(new LeatherSkirt());
                     SetWearable(new ThighBoots());
                     SetWearable(new BodySash(1308));

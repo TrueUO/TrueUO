@@ -50,7 +50,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich);
-            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override void Serialize(GenericWriter writer)

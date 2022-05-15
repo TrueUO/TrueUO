@@ -41,35 +41,31 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.Rage);
         }
 
-        public override bool CanBeParagon => false;
-
         public Gnaw(Serial serial)
             : base(serial)
         {
         }
 
+        public override bool CanBeParagon => false;
         public override int Hides => 28;
         public override int Meat => 4;
 		
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 2);
-            AddLoot(LootPack.ArcanistScrolls);
             AddLoot(LootPack.LootItem<GnawsFang>(30.0));
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
