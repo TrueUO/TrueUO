@@ -1,13 +1,8 @@
-using Server.Items;
-using Server.Network;
-
 namespace Server.Mobiles
 {
     [CorpseName("a kepetch corpse")]
-    public class Kepetch : BaseCreature, ICarvable
+    public class Kepetch : BaseCreature
     {
-        public bool GatheredFur { get; set; }
-
         [Constructable]
         public Kepetch()
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
@@ -54,35 +49,7 @@ namespace Server.Mobiles
         public override HideType HideType => HideType.Spined;
         public override FoodType FavoriteFood => FoodType.FruitsAndVegies | FoodType.GrainsAndHay;
         public override int DragonBlood => 8;
-        public override int Fur => GatheredFur ? 0 : 15;
-        public override FurType FurType => FurType.Brown;
-
-        public bool Carve(Mobile from, Item item)
-        {
-            if (!GatheredFur)
-            {
-                Fur fur = new Fur(FurType, Fur);
-
-                if (from.Backpack == null || !from.Backpack.TryDropItem(from, fur, false))
-                {
-                    from.SendLocalizedMessage(1112359); // You would not be able to place the gathered kepetch fur in your backpack!
-                    fur.Delete();
-                }
-                else
-                {
-                    from.SendLocalizedMessage(1112360); // You place the gathered kepetch fur into your backpack.
-                    GatheredFur = true;
-                    return true;
-                }
-            }
-            else
-            {
-                PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1112358, from.NetState); // The Kepetch nimbly escapes your attempts to shear its mane.
-            }
-
-            return false;
-        }
-
+        
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Average, 2);
@@ -111,20 +78,13 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
-
-            writer.Write(GatheredFur);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 1)
-                reader.ReadDeltaTime();
-            else
-                GatheredFur = reader.ReadBool();
+            reader.ReadInt();
         }
     }
 }

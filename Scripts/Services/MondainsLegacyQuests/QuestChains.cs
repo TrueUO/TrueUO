@@ -8,17 +8,15 @@ namespace Server.Engines.Quests
     {
         None = 0,
 
-        Aemaeth = 1,
-        CovetousGhost = 2,
-        HonestBeggar = 3,
-        DoughtyWarriors = 4,
-        HonorOfDeBoors = 5,
-        FlintTheQuartermaster = 6,
-        AnimalTraining = 7,
-        PaladinsOfTrinsic = 8,
-        RightingWrong = 9,
-        Ritual = 10,
-        Ritual2 = 11
+        HonestBeggar = 1,
+        DoughtyWarriors = 2,
+        HonorOfDeBoors = 3,
+        FlintTheQuartermaster = 4,
+        AnimalTraining = 5,
+        PaladinsOfTrinsic = 6,
+        RightingWrong = 7,
+        Ritual = 8,
+        Ritual2 = 9
     }
 
     public class BaseChain
@@ -27,12 +25,10 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[12][];
+            Chains = new Type[10][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
-            Chains[(int)QuestChain.Aemaeth] = new[] { typeof(AemaethOneQuest), typeof(AemaethTwoQuest) };
-            Chains[(int)QuestChain.CovetousGhost] = new[] { typeof(GhostOfCovetousQuest), typeof(SaveHisDadQuest), typeof(FathersGratitudeQuest) };
             Chains[(int)QuestChain.HonestBeggar] = new[] { typeof(HonestBeggarQuest), typeof(ReginasThanksQuest) };
             Chains[(int)QuestChain.DoughtyWarriors] = new[] { typeof(DoughtyWarriorsQuest), typeof(DoughtyWarriors2Quest), typeof(DoughtyWarriors3Quest) };
             Chains[(int)QuestChain.HonorOfDeBoors] = new[] { typeof(HonorOfDeBoorsQuest), typeof(JackTheVillainQuest), typeof(SavedHonorQuest) };

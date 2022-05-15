@@ -1,13 +1,8 @@
-using Server.Items;
-using Server.Network;
-
 namespace Server.Mobiles
 {
     [CorpseName("a boura corpse")]
-    public class LowlandBoura : BaseCreature, ICarvable
+    public class LowlandBoura : BaseCreature
     {
-        private bool GatheredFur { get; set; }
-
         [Constructable]
         public LowlandBoura() : base(AIType.AI_Melee, FightMode.Aggressor, 10, 1, 0.2, 0.4)
         {
@@ -54,36 +49,7 @@ namespace Server.Mobiles
         public override int DragonBlood => 8;
         public override HideType HideType => HideType.Spined;
         public override FoodType FavoriteFood => FoodType.FruitsAndVegies;
-        public override int Fur => GatheredFur ? 0 : 30;
-        public override FurType FurType => FurType.Green;
-
-        public bool Carve(Mobile from, Item item)
-        {
-            if (!GatheredFur)
-            {
-                Fur fur = new Fur(FurType, Fur);
-
-                if (from.Backpack == null || !from.Backpack.TryDropItem(from, fur, false))
-                {
-                    from.SendLocalizedMessage(1112352); // You would not be able to place the gathered boura fur in your backpack!
-                    fur.Delete();
-                }
-                else
-                {
-                    from.SendLocalizedMessage(1112353); // You place the gathered boura fur into your backpack.
-                    GatheredFur = true;
-
-                    return true;
-                }
-            }
-            else
-            {
-                PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1112354, from.NetState); // The boura glares at you and will not let you shear its fur.
-            }
-
-            return false;
-        }
-
+        
         public override int GetIdleSound()
         {
             return 1507;
@@ -104,35 +70,16 @@ namespace Server.Mobiles
             return 1505;
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (Controlled)
-                return;
-
-            if (!Controlled)
-                c.DropItem(new BouraSkin());
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
-            writer.Write(GatheredFur);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 1)
-                reader.ReadDeltaTime();
-            else
-            {
-                GatheredFur = reader.ReadBool();
-            }
+            reader.ReadInt();
         }
     }
 }

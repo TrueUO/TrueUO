@@ -57,6 +57,11 @@ namespace Server.Mobiles
             SetWeaponAbility(WeaponAbility.BleedAttack);
         }
 
+        public Raptor(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override int TreasureMapLevel => 3;
 
         public override int Meat => 2;
@@ -159,26 +164,10 @@ namespace Server.Mobiles
             }
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (!Controlled && Utility.RandomDouble() < 0.25)
-            {
-                c.DropItem(new AncientPotteryFragments());
-            }
-        }
-
-        public Raptor(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(2);
+            writer.Write(0);
 
             writer.Write(m_IsFriend);
         }
@@ -186,17 +175,14 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version > 0)
-                m_IsFriend = reader.ReadBool();
-
-            if (version == 1)
-                SetWeaponAbility(WeaponAbility.BleedAttack);
+            m_IsFriend = reader.ReadBool();
 
             if (m_IsFriend)
+            {
                 Delete();
+            }
         }
 
         private class InternalTimer : Timer

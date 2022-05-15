@@ -110,16 +110,14 @@ namespace Server.Mobiles
             base.OnDeath(c);
 
             if (m_Spawner != null)
+            {
                 m_Spawner.OnNavreyKilled();
-
-            if (Utility.RandomBool())
-                c.AddItem(new UntranslatedAncientTome());
+            }
 
             if (0.1 >= Utility.RandomDouble())
+            {
                 c.AddItem(ScrollOfTranscendence.CreateRandom(30, 30));
-
-            if (0.1 >= Utility.RandomDouble())
-                c.AddItem(new TatteredAncientScroll());
+            }
 
             if (Utility.RandomDouble() < 0.10)
                 c.DropItem(new LuckyCoin());

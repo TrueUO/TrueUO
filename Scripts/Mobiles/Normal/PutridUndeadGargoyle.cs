@@ -55,14 +55,13 @@ namespace Server.Mobiles
         public override bool BardImmune => true;
         public override Poison PoisonImmune => Poison.Deadly;
         public override Poison HitPoison => Poison.Deadly;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 5);
             AddLoot(LootPack.MedScrolls);
             AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 4));
-            AddLoot(LootPack.LootItem<TatteredAncientScroll>(5.0));
             AddLoot(LootPack.LootItem<InfusedGlassStave>(10.0));
-            AddLoot(LootPack.LootItem<AncientPotteryFragments>(15.0));
         }
 
         public override void Serialize(GenericWriter writer)

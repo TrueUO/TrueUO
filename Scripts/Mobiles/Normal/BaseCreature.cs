@@ -119,15 +119,6 @@ namespace Server.Mobiles
         Barbed
     }
 
-    public enum FurType
-    {
-        None,
-        Green,
-        LightBrown,
-        Yellow,
-        Brown
-    }
-
     public enum TribeType
     {
         None,
@@ -1920,11 +1911,10 @@ namespace Server.Mobiles
             int hides = Hides;
             int scales = Scales;
             int dragonblood = DragonBlood;
-            int fur = Fur;
 
             bool special = with is HarvestersBlade;
 
-            if (feathers == 0 && wool == 0 && meat == 0 && hides == 0 && scales == 0 && fur == 0 || Summoned || IsBonded || corpse.Animated)
+            if (feathers == 0 && wool == 0 && meat == 0 && hides == 0 && scales == 0 || Summoned || IsBonded || corpse.Animated)
             {
                 if (corpse.Animated)
                 {
@@ -2122,14 +2112,6 @@ namespace Server.Mobiles
                     {
                         from.SendLocalizedMessage(1114100); // You take some blood off the corpse and put it in your backpack.
                     }
-                }
-
-                if (fur != 0)
-                {
-                    Item _fur = new Fur(FurType, fur);
-
-                    corpse.AddCarvedItem(_fur, from);
-                    from.SendLocalizedMessage(1112765); // You shear it, and the fur is now on the corpse.
                 }
 
                 corpse.Carved = true;
@@ -3514,9 +3496,6 @@ namespace Server.Mobiles
         #region Corpse Resources
         public virtual int Feathers => 0;
         public virtual int Wool => 0;
-
-        public virtual int Fur => 0;
-        public virtual FurType FurType => FurType.Green;
 
         public virtual MeatType MeatType => MeatType.Ribs;
         public virtual int Meat => 0;

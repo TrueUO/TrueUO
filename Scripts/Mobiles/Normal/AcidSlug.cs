@@ -50,7 +50,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Average);
             AddLoot(LootPack.LootItem<AcidSac>(75.0));
-            AddLoot(LootPack.LootItem<CongealedSlugAcid>());
         }
 
         public override int GetIdleSound()

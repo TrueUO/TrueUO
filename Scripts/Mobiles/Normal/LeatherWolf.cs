@@ -54,14 +54,6 @@ namespace Server.Mobiles
         {
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (!Controlled && 0.2 > Utility.RandomDouble())
-                c.DropItem(new LeatherWolfSkin());
-        }
-
         public override void OnCombatantChange()
         {
             if (Combatant != null && m_FellowsTimer == null)
@@ -210,25 +202,22 @@ namespace Server.Mobiles
             Karma = -2500;
         }
 
-        public override PackInstinct PackInstinct => PackInstinct.Canine;
-
         public LeatherWolfFellow(Serial serial)
             : base(serial)
         {
         }
 
+        public override PackInstinct PackInstinct => PackInstinct.Canine;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            /*int version = */
             reader.ReadInt();
         }
     }

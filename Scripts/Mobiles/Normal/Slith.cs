@@ -61,19 +61,6 @@ namespace Server.Mobiles
             {
                 c.DropItem(new SlithEye());
             }
-
-            if (!Controlled && Utility.RandomDouble() < 0.25)
-            {
-                switch (Utility.Random(2))
-                {
-                    case 0:
-                        c.DropItem(new AncientPotteryFragments());
-                        break;
-                    case 1:
-                        c.DropItem(new TatteredAncientScroll());
-                        break;
-                }
-            }
         }
 
         public override void Serialize(GenericWriter writer)

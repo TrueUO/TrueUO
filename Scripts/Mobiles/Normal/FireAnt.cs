@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a fire ant corpse")]
@@ -65,16 +63,6 @@ namespace Server.Mobiles
         public override int GetDeathSound()
         {
             return 850;
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (Utility.RandomDouble() < 0.25)
-            {
-                c.DropItem(new SearedFireAntGoo());
-            }
         }
 
         public override void Serialize(GenericWriter writer)
