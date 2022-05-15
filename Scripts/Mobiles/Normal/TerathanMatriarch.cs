@@ -54,7 +54,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Average, 2);
             AddLoot(LootPack.MedScrolls, 2);
             AddLoot(LootPack.Potions);
-            AddLoot(LootPack.NecroRegs, 4, 10);
             AddLoot(LootPack.LootItem<SpidersSilk>(100.0, 5, false, true));
         }
 

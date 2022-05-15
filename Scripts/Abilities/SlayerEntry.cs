@@ -35,8 +35,7 @@ namespace Server.Items
             1070855, // fey slayer
             1156240, // dinosaur slayer
             1156241, // myrmidex slayer
-            1156126, // Eodon Slayer
-            1156347  // Eodon Tribe Slayer
+            1156126  // Eodon Slayer
         };
 
         private readonly SlayerName m_Name;

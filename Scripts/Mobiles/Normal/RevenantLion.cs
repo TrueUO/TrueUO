@@ -57,7 +57,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich, 2);
             AddLoot(LootPack.MedScrolls, 2);
-            AddLoot(LootPack.NecroRegs, 6, 8);
             AddLoot(LootPack.BodyPartsAndBones);
         }
 

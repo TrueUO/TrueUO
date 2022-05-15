@@ -253,7 +253,9 @@ namespace Server.Engines.Craft
                 case EnhanceResult.Broken:
                     {
                         if (!craftItem.ConsumeRes(from, resType, craftSystem, ref resHue, ref maxAmount, ConsumeType.Half, ref resMessage))
+                        {
                             return EnhanceResult.NoResources;
+                        }
 
                         item.Delete();
                         break;
@@ -261,15 +263,14 @@ namespace Server.Engines.Craft
                 case EnhanceResult.Success:
                     {
                         if (!craftItem.ConsumeRes(from, resType, craftSystem, ref resHue, ref maxAmount, ConsumeType.All, ref resMessage))
-                            return EnhanceResult.NoResources;
-
-                        if (craftItem.CaddelliteCraft)
                         {
-                            Caddellite.TryInfuse(from, item, craftSystem);
+                            return EnhanceResult.NoResources;
                         }
 
                         if (item is IResource resour)
+                        {
                             resour.Resource = resource;
+                        }
 
                         if (item is BaseWeapon w)
                         {
@@ -278,7 +279,9 @@ namespace Server.Engines.Craft
                             int hue = w.GetElementalDamageHue();
 
                             if (hue > 0)
+                            {
                                 w.Hue = hue;
+                            }
                         }
                         else if (item is BaseArmor armor)
                         {

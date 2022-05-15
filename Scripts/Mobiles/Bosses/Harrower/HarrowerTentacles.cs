@@ -111,8 +111,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.MedScrolls, 3);
             AddLoot(LootPack.HighScrolls, 2);
             AddLoot(LootPack.MageryRegs, 50);
-            AddLoot(LootPack.NecroRegs, 15, 75);
-            AddLoot(LootPack.LootItem<VampiricEmbraceScroll>(33.3, true));
         }
 
         public override void Serialize(GenericWriter writer)

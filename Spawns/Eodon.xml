@@ -1763,47 +1763,6 @@
     <Objects2>tribewarrior,Sakkhra:MX=8:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=tribeshaman,Sakkhra:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=TribeChieftan,Sakkhra:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Eodon_Hawkwind</Name>
-    <UniqueId>31ca8991-297d-4dc1-b26b-89c119a174e4</UniqueId>
-    <Map>TerMur</Map>
-    <X>679</X>
-    <Y>1862</Y>
-    <Width>10</Width>
-    <Height>10</Height>
-    <CentreX>684</CentreX>
-    <CentreY>1867</CentreY>
-    <CentreZ>40</CentreZ>
-    <Range>5</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>True</IsHomeRangeRelative>
-    <Objects2>hawkwind:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Vof1_Silverback1</Name>
     <UniqueId>30fe96a4-9539-4950-9f75-0e0928e0cc7e</UniqueId>
     <Map>TerMur</Map>

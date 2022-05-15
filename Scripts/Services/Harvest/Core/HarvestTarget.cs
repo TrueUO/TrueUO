@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Items;
 using Server.Targeting;
 
@@ -20,17 +19,6 @@ namespace Server.Engines.Harvest
 
         protected override void OnTarget(Mobile from, object targeted)
         {
-            if (m_System is Mining)
-            {
-                if (targeted is LandTarget landTarget && landTarget.TileID >= 113 && landTarget.TileID <= 120)
-                {
-                    if (TheGreatVolcanoQuest.OnHarvest(from, m_Tool))
-                    {
-                        return;
-                    }
-                }
-            }
-
             if (m_System is Lumberjacking && targeted is IChopable chopable)
             {
                 chopable.OnChop(from);

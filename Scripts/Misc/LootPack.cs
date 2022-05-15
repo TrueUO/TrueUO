@@ -283,15 +283,6 @@ namespace Server
             new LootPackItem(typeof(SpidersSilk), 1)
         };
 
-        public static readonly LootPackItem[] NecroRegItems =
-        {
-            new LootPackItem(typeof(BatWing), 1),
-            new LootPackItem(typeof(GraveDust), 1),
-            new LootPackItem(typeof(DaemonBlood), 1),
-            new LootPackItem(typeof(NoxCrystal), 1),
-            new LootPackItem(typeof(PigIron), 1)
-        };
-
         public static readonly LootPackItem[] PeerlessResourceItems =
         {
             new LootPackItem(typeof(Blight), 1),
@@ -514,7 +505,6 @@ namespace Server
         public static readonly LootPack MageryScrolls = new LootPack(new[] { new LootPackEntry(false, true, MageryScrollItems, 100.00, 1) });
 
         public static readonly LootPack MageryRegs = new LootPack(new[] { new LootPackEntry(false, true, MageryRegItems, 100.00, 1) });
-        public static readonly LootPack NecroRegs = new LootPack(new[] { new LootPackEntry(false, true, NecroRegItems, 100.00, 1) });
         public static readonly LootPack PeerlessResource = new LootPack(new[] { new LootPackEntry(false, true, PeerlessResourceItems, 100.00, 1) });
 
         public static readonly LootPack Gems = new LootPack(new[] { new LootPackEntry(false, true, GemItems, 100.00, 1) });

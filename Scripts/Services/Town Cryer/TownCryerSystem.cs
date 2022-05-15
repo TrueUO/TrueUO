@@ -1,7 +1,6 @@
 using Server.Commands;
 using Server.ContextMenus;
 using Server.Engines.CityLoyalty;
-using Server.Engines.Khaldun;
 using Server.Engines.Quests;
 using Server.Guilds;
 using Server.Gumps;
@@ -94,8 +93,6 @@ namespace Server.Services.TownCryer
                 NewsEntries.Add(new TownCryerNewsEntry(1159346, 1159347, 0x9D3E, null, "https://uo.com/wiki/ultima-online-wiki/combat/jolly-roger/")); // Jolly Roger
                 NewsEntries.Add(new TownCryerNewsEntry(1159262, 1159263, 0x64E, null, "https://uo.com/wiki/ultima-online-wiki/seasonal-events/halloween-treasures-of-the-sea/")); // Forsaken Foes
                 NewsEntries.Add(new TownCryerNewsEntry(1158944, 1158945, 0x9CEA, null, "https://uo.com/wiki/ultima-online-wiki/combat/pvm-player-versus-monster/rising-tide/")); // Rising Tide
-                NewsEntries.Add(new TownCryerNewsEntry(1158552, 1158553, 0x6CE, typeof(GoingGumshoeQuest), null)); // Going Gumshoe
-                NewsEntries.Add(new TownCryerNewsEntry(1158095, 1158097, 0x61E, null, "https://uo.com/")); // Britain Commons
                 NewsEntries.Add(new TownCryerNewsEntry(1158089, 1158091, 0x60F, null, "https://uo.com/wiki/ultima-online-wiki/gameplay/npc-commercial-transactions/clean-up-britannia/")); // Cleanup Britannia
                 NewsEntries.Add(new TownCryerNewsEntry(1158098, 1158100, 0x615, null, "https://uo.com/wiki/ultima-online-wiki/gameplay/crafting/bulk-orders/")); // New Bulk Orders
                 NewsEntries.Add(new TownCryerNewsEntry(1158101, 1158103, 0x616, null, "https://uo.com/wiki/ultima-online-wiki/a-summary-for-returning-players/weapons-armor-and-loot-revamps-2016/")); // 2016 Loot Revamps
@@ -105,7 +102,6 @@ namespace Server.Services.TownCryer
                 NewsEntries.Add(new TownCryerNewsEntry(1158107, 1158109, 0x61A, typeof(RightingWrongQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-wrong/")); // New Wrong
                 NewsEntries.Add(new TownCryerNewsEntry(1158113, 1158115, 0x64C, typeof(BuriedRichesQuest), "https://uo.com/wiki/ultima-online-wiki/gameplay/treasure-maps/")); // New TMaps
                 NewsEntries.Add(new TownCryerNewsEntry(1158119, 1158121, 0x64D, typeof(APleaFromMinocQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-covetous/")); // New Covetous
-                NewsEntries.Add(new TownCryerNewsEntry(1158110, 1158112, 0x64E, typeof(AVisitToCastleBlackthornQuest), "https://uo.com/wiki/ultima-online-wiki/items/artifacts-castle-blackthorn/")); // Castle Blackthorn
                 
                 // New greeting, resets all TC hiding
                 if (NewGreeting)

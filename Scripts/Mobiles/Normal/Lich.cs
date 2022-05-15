@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a liche's corpse")]
@@ -50,17 +48,15 @@ namespace Server.Mobiles
         }
 
         public override TribeType Tribe => TribeType.Undead;
-
         public override bool CanRummageCorpses => true;
         public override bool BleedImmune => true;
         public override Poison PoisonImmune => Poison.Lethal;
         public override int TreasureMapLevel => 3;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.MedScrolls, 2);
-            AddLoot(LootPack.NecroRegs, 17, 24);
-            AddLoot(LootPack.RandomLootItem(new[] { typeof(LichFormScroll), typeof(PoisonStrikeScroll), typeof(StrangleScroll), typeof(VengefulSpiritScroll), typeof(WitherScroll) }, false, true));
         }
 
         public override void Serialize(GenericWriter writer)

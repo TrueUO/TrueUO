@@ -51,7 +51,6 @@ namespace Server.Mobiles
 
         public override int Meat => 1;
         public override int TreasureMapLevel => 2;
-
         public override TribeType Tribe => TribeType.Ophidian;
 
         public override void GenerateLoot()
@@ -59,7 +58,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.MedScrolls, 2);
             AddLoot(LootPack.MageryRegs, 5, 15);
-            AddLoot(LootPack.NecroRegs, 5, 15);
         }
 
         public override void Serialize(GenericWriter writer)

@@ -1,5 +1,4 @@
 using Server.Engines.Points;
-using Server.Engines.Quests;
 using Server.Mobiles;
 using Server.Network;
 using System;
@@ -123,14 +122,6 @@ namespace Server.Engines.ResortAndCasino
                 Dealer.RemoveGame(Player, this);
         }
 
-        public virtual void OnWin()
-        {
-            if (Player != null && QuestHelper.GetQuest(Player, typeof(GettingEvenQuest)) is GettingEvenQuest q)
-            {
-                q.Update(GetType());
-            }
-        }
-
         public virtual void Reset()
         {
             Winner = false;
@@ -177,7 +168,6 @@ namespace Server.Engines.ResortAndCasino
                 PointsSystem.CasinoData.AwardPoints(Player, winnings);
 
                 Winner = true;
-                OnWin();
                 Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153377, string.Format("{0}\t{1}", Player.Name, winnings.ToString(CultureInfo.GetCultureInfo("en-US"))), Player.NetState); // *pays out ~2_VAL~ chips to ~1_NAME~*
             }
         }
@@ -255,7 +245,6 @@ namespace Server.Engines.ResortAndCasino
                 {
                     PointsSystem.CasinoData.AwardPoints(Player, winnings);
                     Winner = true;
-                    OnWin();
 
                     Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153377, string.Format("{0}\t{1}", Player.Name, winnings.ToString(CultureInfo.GetCultureInfo("en-US"))), Player.NetState); // *pays out ~2_VAL~ chips to ~1_NAME~*
                 }
@@ -371,8 +360,7 @@ namespace Server.Engines.ResortAndCasino
                 if (winnings > 0)
                 {
                     Winner = true;
-                    OnWin();
-
+                    
                     WinningTotal = winnings;
                     PointsSystem.CasinoData.AwardPoints(Player, winnings);
 

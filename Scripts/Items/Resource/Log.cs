@@ -88,11 +88,6 @@ namespace Server.Items
                 return false;
             }
 
-            if (HasSocket<Caddellite>())
-            {
-                item.AttachSocket(new Caddellite());
-            }
-
             base.ScissorHelper(from, item, 1, false);
             return true;
         }

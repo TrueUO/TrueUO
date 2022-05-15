@@ -352,11 +352,6 @@ namespace Server.Items
                             BaseIngot ingot = m_Ore.GetIngot();
                             ingot.Amount = ingotAmount;
 
-                            if (m_Ore.HasSocket<Caddellite>())
-                            {
-                                ingot.AttachSocket(new Caddellite());
-                            }
-
                             m_Ore.Consume(toConsume);
                             from.AddToBackpack(ingot);
 
@@ -366,7 +361,9 @@ namespace Server.Items
                                 from.SendLocalizedMessage(1152620); // The magic of your talisman guides your hands as you purify the metal. Success is ensured!
                             }
                             else
+                            {
                                 from.SendLocalizedMessage(501988); // You smelt the ore removing the impurities and put the metal in your backpack.
+                            }
                         }
                     }
                     else

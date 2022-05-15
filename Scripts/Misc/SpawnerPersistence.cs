@@ -33,7 +33,7 @@ namespace Server
             IceHoundRemoval = 0x00000004,
             PaladinAndKrakin = 0x00000008,
             TrinsicPaladins = 0x00000010,
-            TramKhaldun = 0x00000020,
+            UNUSED = 0x00000020,
             FixAddonDeco = 0x00000040,
             LifeStealers = 0x00000080,
             LootNerf2 = 0x00000100,
@@ -213,12 +213,6 @@ namespace Server
                     {
                         FixAddonDeco();
                         VersionFlag |= SpawnerVersion.FixAddonDeco;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.TramKhaldun) == 0)
-                    {
-                        GenerateTramKhaldun();
-                        VersionFlag |= SpawnerVersion.TramKhaldun;
                     }
 
                     if ((VersionFlag & SpawnerVersion.TrinsicPaladins) == 0)
@@ -407,77 +401,6 @@ namespace Server
             Decorate.GenerateRestricted("deco", "Data/Decoration/Ilshenar", t, true, Map.Ilshenar);
             Decorate.GenerateRestricted("deco", "Data/Decoration/Malas", t, true, Map.Malas);
             Decorate.GenerateRestricted("deco", "Data/Decoration/Tokuno", t, true, Map.Tokuno);
-        }
-        #endregion
-
-        #region Tram Khaldun Generation
-        public static void GenerateTramKhaldun()
-        {
-            Region region = null;
-
-            for (var index = 0; index < Region.Regions.Count; index++)
-            {
-                var r = Region.Regions[index];
-
-                if (r.Map == Map.Felucca && r.Name == "Khaldun")
-                {
-                    region = r;
-                    break;
-                }
-            }
-
-            if (region != null)
-            {
-                int spawners = 0;
-                int teleporters = 0;
-
-                foreach (Item item in region.GetEnumeratedItems())
-                {
-                    if (item is XmlSpawner spawner)
-                    {
-                        CopyAndPlaceItem(spawner, spawner.Location, Map.Trammel);
-                        spawners++;
-                    }
-                }
-
-                foreach (Item item in region.GetEnumeratedItems())
-                {
-                    if (item is Teleporter teleporter)
-                    {
-                        CopyAndPlaceItem(teleporter, teleporter.Location, Map.Trammel);
-                        teleporters++;
-                    }
-                }
-
-                ToConsole($"Copied {spawners} khaldun spawners, {teleporters} teleporters and placed in trammel!");
-            }
-            else
-            {
-                ToConsole("No region -Khaldun- Found!", ConsoleColor.Red);
-            }
-
-            Decorate.GenerateFromFile("deco", Path.Combine("Data/Decoration/Trammel", "khaldun.cfg"), Map.Trammel);
-
-            KhaldunEntranceAddon entAddon = new KhaldunEntranceAddon();
-            entAddon.MoveToWorld(new Point3D(6013, 3785, 18), Map.Trammel);
-
-            KhaldunCampAddon campAddon = new KhaldunCampAddon();
-            campAddon.MoveToWorld(new Point3D(6003, 3772, 24), Map.Trammel);
-
-            KhaldunWorkshop workshop = new KhaldunWorkshop();
-            workshop.MoveToWorld(new Point3D(6020, 3747, 18), Map.Trammel);
-
-            Teleporter tele = new Teleporter(new Point3D(5571, 1299, 0), Map.Trammel);
-            tele.MoveToWorld(new Point3D(6011, 3787, 23), Map.Trammel);
-
-            tele = new Teleporter(new Point3D(5571, 1299, 0), Map.Trammel);
-            tele.MoveToWorld(new Point3D(6012, 3787, 23), Map.Trammel);
-
-            tele = new Teleporter(new Point3D(5572, 1299, 0), Map.Trammel);
-            tele.MoveToWorld(new Point3D(6013, 3787, 23), Map.Trammel);
-
-            tele = new Teleporter(new Point3D(5572, 1299, 0), Map.Trammel);
-            tele.MoveToWorld(new Point3D(6014, 3787, 23), Map.Trammel);
         }
         #endregion
 

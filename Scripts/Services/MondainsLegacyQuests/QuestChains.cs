@@ -13,16 +13,12 @@ namespace Server.Engines.Quests
         HonestBeggar = 3,
         DoughtyWarriors = 4,
         HonorOfDeBoors = 5,
-        LaifemTheWeaver = 6,
-        ValleyOfOne = 7,
-        MyrmidexAlliance = 8,
-        EodonianAlliance = 9,
-        FlintTheQuartermaster = 10,
-        AnimalTraining = 11,
-        PaladinsOfTrinsic = 12,
-        RightingWrong = 13,
-        Ritual = 14,
-        Ritual2 = 15
+        FlintTheQuartermaster = 6,
+        AnimalTraining = 7,
+        PaladinsOfTrinsic = 8,
+        RightingWrong = 9,
+        Ritual = 10,
+        Ritual2 = 11
     }
 
     public class BaseChain
@@ -31,7 +27,7 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[16][];
+            Chains = new Type[12][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
@@ -40,10 +36,6 @@ namespace Server.Engines.Quests
             Chains[(int)QuestChain.HonestBeggar] = new[] { typeof(HonestBeggarQuest), typeof(ReginasThanksQuest) };
             Chains[(int)QuestChain.DoughtyWarriors] = new[] { typeof(DoughtyWarriorsQuest), typeof(DoughtyWarriors2Quest), typeof(DoughtyWarriors3Quest) };
             Chains[(int)QuestChain.HonorOfDeBoors] = new[] { typeof(HonorOfDeBoorsQuest), typeof(JackTheVillainQuest), typeof(SavedHonorQuest) };
-            Chains[(int)QuestChain.LaifemTheWeaver] = new[] { typeof(ShearingKnowledgeQuest), typeof(WeavingFriendshipsQuest), typeof(NewSpinQuest)};
-            Chains[(int)QuestChain.ValleyOfOne] = new[] { typeof(TimeIsOfTheEssenceQuest), typeof(UnitingTheTribesQuest) };
-            Chains[(int)QuestChain.MyrmidexAlliance] = new[] { typeof(TheZealotryOfZipactriotlQuest), typeof(DestructionOfZipactriotlQuest) };
-            Chains[(int)QuestChain.EodonianAlliance] = new[] { typeof(ExterminatingTheInfestationQuest), typeof(InsecticideAndRegicideQuest) };
             Chains[(int)QuestChain.FlintTheQuartermaster] = new[] { typeof(ThievesBeAfootQuest), typeof(BibliophileQuest) };
             Chains[(int)QuestChain.AnimalTraining] = new[] { typeof(TamingPetQuest), typeof(UsingAnimalLoreQuest), typeof(LeadingIntoBattleQuest), typeof(TeachingSomethingNewQuest) };
             Chains[(int)QuestChain.PaladinsOfTrinsic] = new[] { typeof(PaladinsOfTrinsic), typeof(PaladinsOfTrinsic2) };

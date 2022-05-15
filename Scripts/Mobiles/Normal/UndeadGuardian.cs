@@ -38,10 +38,10 @@ namespace Server.Mobiles
         }
 
         public override int Meat => 1;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 3);
-            AddLoot(LootPack.NecroRegs, 10, 15);
         }
 
         public override int GetIdleSound()

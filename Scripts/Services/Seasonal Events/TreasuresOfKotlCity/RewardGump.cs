@@ -1,4 +1,3 @@
-using Server.Engines.Craft;
 using Server.Engines.Points;
 using Server.Gumps;
 using Server.Items;
@@ -27,31 +26,9 @@ namespace Server.Engines.TreasuresOfKotlCity
         {
             Item item = null;
 
-            if (citem.Type == typeof(RecipeScroll))
-            {
-                switch (index)
-                {
-                    default:
-                    case 3: item = new RecipeScroll((int)CraftRecipes.KotlBlackRod); break;
-                    case 4: item = new RecipeScroll((int)CraftRecipes.DrSpectorLenses); break;
-                    case 5: item = new RecipeScroll((int)CraftRecipes.KotlAutomatonHead); break;
-                }
-            }
-            else if (citem.Type == typeof(TreasuresOfKotlRewardDeed))
+            if (citem.Type == typeof(TreasuresOfKotlRewardDeed))
             {
                 item = new TreasuresOfKotlRewardDeed(citem.Tooltip);
-            }
-            else if (citem.Type == typeof(TribalBanner))
-            {
-                switch (index)
-                {
-                    case 10: item = new TribalBanner(EodonTribe.Urali); break;
-                    case 11: item = new TribalBanner(EodonTribe.Barrab); break;
-                    case 12: item = new TribalBanner(EodonTribe.Sakkhra); break;
-                    case 13: item = new TribalBanner(EodonTribe.Barako); break;
-                    case 14: item = new TribalBanner(EodonTribe.Kurak); break;
-                    case 15: item = new TribalBanner(EodonTribe.Jukari); break;
-                }
             }
 
             if (item != null)

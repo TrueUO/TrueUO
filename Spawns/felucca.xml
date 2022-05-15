@@ -501,7 +501,7 @@
     <IsGroup>False</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>HireBard:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireBardArcher:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireBeggar:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireFighter:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireMage:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireRanger:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireRangerArcher:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireSailor:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireThief:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>HireBard:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireBardArcher:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireBeggar:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireFighter:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireMage:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireRanger:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireSailor:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=HireThief:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>PalaceOfParoxysmus#14</Name>
@@ -880,48 +880,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Spectre:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Wraith:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Skeleton:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Zombie:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>031e3d7a-f2c7-433d-8dd8-40146566bf6e</UniqueId>
-    <Map>Felucca</Map>
-    <X>7010</X>
-    <Y>389</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7010</CentreX>
-    <CentreY>389</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Unoelil:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Outdoors#383</Name>
@@ -2184,48 +2142,6 @@
     <Objects2>tailor:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=weaver:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=tailorguildmaster:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Enigma Quest</Name>
-    <UniqueId>06a86cd1-b757-468f-a620-7f94564b9cdd</UniqueId>
-    <Map>Felucca</Map>
-    <X>1828</X>
-    <Y>960</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>1828</CentreX>
-    <CentreY>960</CentreY>
-    <CentreZ>7</CentreZ>
-    <Range>20</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Enigma:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>WildLife#75</Name>
     <UniqueId>06eebea5-6b47-47b5-bd07-73b183b60867</UniqueId>
     <Map>Felucca</Map>
@@ -2520,48 +2436,6 @@
     <Objects2>Rat:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Ratman:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Reaper:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Troll:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>07847e2c-b301-4465-b44e-f6b3e659922d</UniqueId>
-    <Map>Felucca</Map>
-    <X>7063</X>
-    <Y>409</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7063</CentreX>
-    <CentreY>409</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Lohn:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>fel gargoyle/forcer/destroy/orc/mage/lord/bomber</Name>
     <UniqueId>07c57ddc-5aed-4bc0-b3cd-247318368deb</UniqueId>
     <Map>Felucca</Map>
@@ -2770,48 +2644,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Boar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cougar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Goat:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Horse:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Panther:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Pig:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Sheep:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BlackBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GrizzlyBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BrownBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=TimberWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreyWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WanderingHealer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bird:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Eagle:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreatHart:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Hind:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bull:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cow:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>08b22528-1d3f-44f0-b301-734fb0542726</UniqueId>
-    <Map>Felucca</Map>
-    <X>7046</X>
-    <Y>390</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7046</CentreX>
-    <CentreY>390</CentreY>
-    <CentreZ>4</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Abbein:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Shame#89</Name>
@@ -3148,48 +2980,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>hiresailor:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Khaldun#33</Name>
-    <UniqueId>09bbf5fd-3c2f-442e-bb87-2eb93069530f</UniqueId>
-    <Map>Felucca</Map>
-    <X>5453</X>
-    <Y>1416</Y>
-    <Width>60</Width>
-    <Height>60</Height>
-    <CentreX>5483</CentreX>
-    <CentreY>1446</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>30</Range>
-    <MaxCount>2</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Khaldun#44</Name>
@@ -3568,48 +3358,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>toxicelemental:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=alligator:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bogthing:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bogling:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=corpser:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=giantserpent:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=lizardman:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=wisp:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=strongmongbat:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=plaguebeast:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=plaguespawn:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ratman:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=sewerrat:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=slime:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=snake:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Artist Guild Quest</Name>
-    <UniqueId>0abfe791-e939-48e4-b073-314d270c687b</UniqueId>
-    <Map>Felucca</Map>
-    <X>1448</X>
-    <Y>1664</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>1448</CentreX>
-    <CentreY>1664</CentreY>
-    <CentreZ>10</CentreZ>
-    <Range>4</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Emilio:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Shame#38</Name>
@@ -6899,7 +6647,7 @@
     <CentreY>101</CentreY>
     <CentreZ>0</CentreZ>
     <Range>25</Range>
-    <MaxCount>34</MaxCount>
+    <MaxCount>33</MaxCount>
     <MinDelay>5</MinDelay>
     <MaxDelay>10</MaxDelay>
     <DelayInSec>False</DelayInSec>
@@ -6927,7 +6675,7 @@
     <IsGroup>False</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>titan:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ettin:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=doppleganger:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=mougguur:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=dog:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=chicken:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=rat:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=cow:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bull:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orcbomber:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orcbrute:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=snake:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=gargoyle:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogre:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>titan:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ettin:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=doppleganger:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=dog:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=chicken:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=rat:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=cow:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bull:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orcbomber:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orcbrute:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=snake:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=gargoyle:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogre:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>WildLife#140</Name>
@@ -7056,48 +6804,6 @@
     <Objects2>Hind:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Llama:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Timberwolf:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Corpser:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Ettin:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Forestostard:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>15385ea9-c175-44ac-a2af-a70abcf64dc8</UniqueId>
-    <Map>Felucca</Map>
-    <X>7057</X>
-    <Y>383</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7057</CentreX>
-    <CentreY>383</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Jothan:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Outdoors#293</Name>
     <UniqueId>15419365-0991-4d10-a38a-5724c363af4b</UniqueId>
     <Map>Felucca</Map>
@@ -7180,90 +6886,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>ettin:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=giantspider:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=wisp:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=mongbat:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=troll:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>1577a36e-dcc2-4cc7-a73a-f1704e08d711</UniqueId>
-    <Map>Felucca</Map>
-    <X>7044</X>
-    <Y>377</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7044</CentreX>
-    <CentreY>377</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>4</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Jusae:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Khaldun#2</Name>
-    <UniqueId>1586c502-8b09-49ad-aed3-5836004e9bcd</UniqueId>
-    <Map>Felucca</Map>
-    <X>5505</X>
-    <Y>1276</Y>
-    <Width>40</Width>
-    <Height>40</Height>
-    <CentreX>5525</CentreX>
-    <CentreY>1296</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>20</Range>
-    <MaxCount>2</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Outdoors#306</Name>
@@ -7432,90 +7054,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Ettin:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Sledge Quest</Name>
-    <UniqueId>169ce3ec-deda-41e9-9e52-7cd2b4991ee6</UniqueId>
-    <Map>Felucca</Map>
-    <X>2678</X>
-    <Y>2130</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>2678</CentreX>
-    <CentreY>2130</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Sledge:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>169e3bfc-2770-4bd9-af11-bc00c9a413ad</UniqueId>
-    <Map>Felucca</Map>
-    <X>7025</X>
-    <Y>377</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>7035</CentreX>
-    <CentreY>387</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>6</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>LostLands#155</Name>
@@ -7770,48 +7308,6 @@
     <Objects2>MaceAndBlade:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>170f5e09-3d89-4db0-966f-9fc52bb3f6ed</UniqueId>
-    <Map>Felucca</Map>
-    <X>6520</X>
-    <Y>116</Y>
-    <Width>12</Width>
-    <Height>12</Height>
-    <CentreX>6526</CentreX>
-    <CentreY>122</CentreY>
-    <CentreZ>-20</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>43200</MinDelay>
-    <MaxDelay>57600</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>DenthesJournal:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Deceit#24</Name>
     <UniqueId>17244a61-ecd1-44be-a132-bda9c60dd5e1</UniqueId>
     <Map>Felucca</Map>
@@ -7978,48 +7474,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>ettin:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=gargoyle:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=gazer:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogre:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=troll:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=waterelemental:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>175d8917-5a7b-4d3b-b2c3-703db41c053a</UniqueId>
-    <Map>Felucca</Map>
-    <X>6260</X>
-    <Y>115</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>6260</CentreX>
-    <CentreY>115</CentreY>
-    <CentreZ>-10</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Onallan:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>TownsPeople#29</Name>
@@ -9114,48 +8568,6 @@
     <Objects2>Rat:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Ratman:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Reaper:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Troll:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>195db535-05c8-4593-a6be-53a5a9c40887</UniqueId>
-    <Map>Felucca</Map>
-    <X>7093</X>
-    <Y>382</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7093</CentreX>
-    <CentreY>382</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Aluniol:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Sanctuary#6</Name>
     <UniqueId>195e5cdb-f82b-4250-881d-da09084b55e3</UniqueId>
     <Map>Felucca</Map>
@@ -9167,7 +8579,7 @@
     <CentreY>48</CentreY>
     <CentreZ>-10</CentreZ>
     <Range>30</Range>
-    <MaxCount>53</MaxCount>
+    <MaxCount>52</MaxCount>
     <MinDelay>5</MinDelay>
     <MaxDelay>10</MaxDelay>
     <DelayInSec>False</DelayInSec>
@@ -9195,7 +8607,7 @@
     <IsGroup>False</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>szavetra:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=imp:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=titan:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=snake:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ratman:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=doppleganger:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=gargoyle:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=cow:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bull:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=chicken:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bird:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=pig:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=dog:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=goat:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=cat:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=rat:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=9:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orccaptain:MX=9:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orcishmage:MX=9:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogre:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogrelord:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>imp:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=titan:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=snake:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ratman:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=doppleganger:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=gargoyle:MX=22:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=cow:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bull:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=chicken:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bird:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=pig:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=dog:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=goat:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=cat:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=rat:MX=18:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=9:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orccaptain:MX=9:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orcishmage:MX=9:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogre:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogrelord:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Outdoors#167</Name>
@@ -9742,48 +9154,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>True</IsHomeRangeRelative>
     <Objects2>EvilWanderingHealer:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>1b88040f-a33f-4ffb-a726-5cab04180091</UniqueId>
-    <Map>Felucca</Map>
-    <X>7054</X>
-    <Y>340</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7054</CentreX>
-    <CentreY>340</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>4</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Aneen:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Shame#26</Name>
@@ -10668,48 +10038,6 @@
     <Objects2>Boar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cougar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Goat:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Horse:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Panther:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Pig:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Sheep:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BlackBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GrizzlyBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BrownBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=TimberWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreyWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WanderingHealer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bird:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Eagle:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreatHart:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Hind:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bull:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cow:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>1e36e180-6840-4562-a116-73731bf30623</UniqueId>
-    <Map>Felucca</Map>
-    <X>6990</X>
-    <Y>344</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>6990</CentreX>
-    <CentreY>344</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Tyleelor:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>TownsLife#42</Name>
     <UniqueId>1e42692f-9d70-42bc-b1f5-4d4802f91b8c</UniqueId>
     <Map>Felucca</Map>
@@ -11256,48 +10584,6 @@
     <Objects2>airelemental:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ettin:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>2004a7c0-7fe6-4fb8-8f10-220e4869757d</UniqueId>
-    <Map>Felucca</Map>
-    <X>7046</X>
-    <Y>390</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7046</CentreX>
-    <CentreY>390</CentreY>
-    <CentreZ>8</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Taellia:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Vendors#252</Name>
     <UniqueId>2006242d-e265-42fd-9119-90f52c27659a</UniqueId>
     <Map>Felucca</Map>
@@ -11338,48 +10624,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>tailor:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=weaver:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=tailorguildmaster:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>203cccb9-d60e-404f-99b8-d80a95e67385</UniqueId>
-    <Map>Felucca</Map>
-    <X>7042</X>
-    <Y>376</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>7052</CentreX>
-    <CentreY>386</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>6</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Vendors#12</Name>
@@ -13188,48 +12432,6 @@
     <Objects2>Boar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cougar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Goat:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Horse:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Panther:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Pig:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Sheep:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BlackBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GrizzlyBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BrownBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=TimberWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreyWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WanderingHealer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bird:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Eagle:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreatHart:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Hind:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bull:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cow:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>26f15d69-58ff-402f-b9f7-00543de764b3</UniqueId>
-    <Map>Felucca</Map>
-    <X>6501</X>
-    <Y>860</Y>
-    <Width>40</Width>
-    <Height>40</Height>
-    <CentreX>6521</CentreX>
-    <CentreY>880</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>20</Range>
-    <MaxCount>5</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>SamplesOfCorruptedWater:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>WildLife#129</Name>
     <UniqueId>273fbb22-5564-4f7b-b8b0-6e8646c2c85c</UniqueId>
     <Map>Felucca</Map>
@@ -13312,48 +12514,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Hellhound:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Hellcat:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>274f827f-77d5-441d-8c08-bb2b1a211390</UniqueId>
-    <Map>Felucca</Map>
-    <X>7001</X>
-    <Y>354</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7001</CentreX>
-    <CentreY>354</CentreY>
-    <CentreZ>4</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Cloorne:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>BritainSewer#19</Name>
@@ -13902,48 +13062,6 @@
     <Objects2>SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WaterElemental:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Dolphin:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>282eb618-d600-4939-b5fa-387d58d03f09</UniqueId>
-    <Map>Felucca</Map>
-    <X>7034</X>
-    <Y>439</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7034</CentreX>
-    <CentreY>439</CentreY>
-    <CentreZ>1</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Ahie:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Vendors#103</Name>
     <UniqueId>282fbf1f-3c2f-49f9-a2ac-e8263778c257</UniqueId>
     <Map>Felucca</Map>
@@ -14110,48 +13228,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Cyclops:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Titan:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>2871686e-c3d3-4ca5-add9-be7557235093</UniqueId>
-    <Map>Felucca</Map>
-    <X>7076</X>
-    <Y>379</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7076</CentreX>
-    <CentreY>379</CentreY>
-    <CentreZ>4</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Tamm:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>fel plaguebeats/toxic/poison ele/corrosive slime</Name>
@@ -16506,48 +15582,6 @@
     <Objects2>Miller:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>2f1b2457-ea8a-4e92-ae1e-71b3f0216694</UniqueId>
-    <Map>Felucca</Map>
-    <X>6984</X>
-    <Y>378</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>6984</CentreX>
-    <CentreY>378</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>4</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Tillanil:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>TownsLife#54</Name>
     <UniqueId>2f2eb09a-48bf-4813-abed-23800d7c03b1</UniqueId>
     <Map>Felucca</Map>
@@ -17512,48 +16546,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>TreasureLevel2:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=TreasureLevel3:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>32d0a873-c870-4558-9758-6c8f76335892</UniqueId>
-    <Map>Felucca</Map>
-    <X>7034</X>
-    <Y>419</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>7044</CentreX>
-    <CentreY>429</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>4</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Wrong#1</Name>
@@ -19362,48 +18354,6 @@
     <Objects2>SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WaterElemental:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Dolphin:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>3733d4ff-8113-4a48-83b5-555a53eea2ad</UniqueId>
-    <Map>Felucca</Map>
-    <X>7034</X>
-    <Y>409</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7034</CentreX>
-    <CentreY>409</CentreY>
-    <CentreZ>18</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Alelle:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Outdoors#46</Name>
     <UniqueId>3761a605-ab3c-4e04-9dcd-56cb9597bb48</UniqueId>
     <Map>Felucca</Map>
@@ -19572,49 +18522,7 @@
     <Objects2>Boneknight:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Skeletalknight:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>37bacb44-a15e-4540-8c30-ad8b101715c3</UniqueId>
-    <Map>Felucca</Map>
-    <X>608</X>
-    <Y>1702</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>608</CentreX>
-    <CentreY>1702</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Strongroot:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>fel belulah/tailor/weaver/guildmaster 4</Name>
+    <Name>fel tailor/weaver/guildmaster 4</Name>
     <UniqueId>37e7505a-7f2d-4117-8025-a1b366821cc4</UniqueId>
     <Map>Felucca</Map>
     <X>3769</X>
@@ -19653,7 +18561,7 @@
     <IsGroup>True</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>True</IsHomeRangeRelative>
-    <Objects2>Belulah:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=tailor:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=weaver:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=tailorguildmaster:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>tailor:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=weaver:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=tailorguildmaster:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Outdoors#392</Name>
@@ -21546,48 +20454,6 @@
     <Objects2>gargoyle:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=gazer:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>3d2a5546-70ae-48c4-9305-16bdf0484ed6</UniqueId>
-    <Map>Felucca</Map>
-    <X>7076</X>
-    <Y>379</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7076</CentreX>
-    <CentreY>379</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Saril:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Shame#95</Name>
     <UniqueId>3d48e77d-3574-46ba-b1ba-dfda2a315146</UniqueId>
     <Map>Felucca</Map>
@@ -21840,48 +20706,6 @@
     <Objects2>Rat:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Ratman:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Reaper:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Troll:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>3e18e9ad-bec7-4d33-82e4-587b6adadfa4</UniqueId>
-    <Map>Felucca</Map>
-    <X>6257</X>
-    <Y>101</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>6257</CentreX>
-    <CentreY>101</CentreY>
-    <CentreZ>-10</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Tiana:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Outdoors#41</Name>
     <UniqueId>3e4eedad-5deb-41b2-88fa-0994d781d4a9</UniqueId>
     <Map>Felucca</Map>
@@ -22048,48 +20872,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>healer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=healerguildmaster:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Khaldun#35</Name>
-    <UniqueId>3eda12be-52d9-4ab2-8e1c-3c48dd7313e0</UniqueId>
-    <Map>Felucca</Map>
-    <X>5469</X>
-    <Y>1381</Y>
-    <Width>60</Width>
-    <Height>60</Height>
-    <CentreX>5499</CentreX>
-    <CentreY>1411</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>30</Range>
-    <MaxCount>2</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Vendors#290</Name>
@@ -22468,48 +21250,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Golemcontroller:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Golem:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>40d735bd-15b8-408f-b682-32aa6696271e</UniqueId>
-    <Map>Felucca</Map>
-    <X>7053</X>
-    <Y>400</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>7063</CentreX>
-    <CentreY>410</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>6</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Vendors#138</Name>
@@ -23476,48 +22216,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>tailor:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=weaver:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=tailorguildmaster:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>43a64180-1979-4c08-90f7-d6d3b8162cd8</UniqueId>
-    <Map>Felucca</Map>
-    <X>7064</X>
-    <Y>351</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7064</CentreX>
-    <CentreY>351</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Mielan:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>LostLands#71</Name>
@@ -24862,48 +23560,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Khaldunsummoner:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Khaldun#6</Name>
-    <UniqueId>47a20443-bf96-4f18-9870-775dc343c283</UniqueId>
-    <Map>Felucca</Map>
-    <X>5395</X>
-    <Y>1292</Y>
-    <Width>40</Width>
-    <Height>40</Height>
-    <CentreX>5415</CentreX>
-    <CentreY>1312</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>20</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>LostLands#61</Name>
@@ -28182,48 +26838,6 @@
     <Objects2>Ghoul:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Giantrat:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Giantserpent:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Headlessone:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>511bf778-e227-4a41-9a94-4bbadb140f5d</UniqueId>
-    <Map>Felucca</Map>
-    <X>7034</X>
-    <Y>409</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7034</CentreX>
-    <CentreY>409</CentreY>
-    <CentreZ>14</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Ciala:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>fel animals</Name>
     <UniqueId>512502b8-3680-4384-98ed-e13210dc3815</UniqueId>
     <Map>Felucca</Map>
@@ -28728,48 +27342,6 @@
     <Objects2>Boar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cougar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Goat:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Horse:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Panther:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Pig:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Sheep:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BlackBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GrizzlyBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BrownBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=TimberWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreyWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WanderingHealer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bird:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Eagle:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreatHart:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Hind:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bull:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cow:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>52170c95-e3aa-4599-af41-fa8f9fa2ed68</UniqueId>
-    <Map>Felucca</Map>
-    <X>7001</X>
-    <Y>354</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7001</CentreX>
-    <CentreY>354</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Aulan:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Vendors#237</Name>
     <UniqueId>5221b05c-458e-41a8-973e-d744dbd3a71d</UniqueId>
     <Map>Felucca</Map>
@@ -28810,48 +27382,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>animaltrainer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Sarakki Quest</Name>
-    <UniqueId>525cc026-f966-4497-a816-e7acd3ce764f</UniqueId>
-    <Map>Felucca</Map>
-    <X>1422</X>
-    <Y>1619</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>1422</CentreX>
-    <CentreY>1619</CentreY>
-    <CentreZ>20</CentreZ>
-    <Range>4</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Sarakki:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>PalaceOfParoxysmus#9</Name>
@@ -29776,48 +28306,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>airelemental:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ettin:MX=8:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=harpy:MX=8:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=8:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>550e197a-195b-479d-917c-4b63406d3738</UniqueId>
-    <Map>Felucca</Map>
-    <X>7034</X>
-    <Y>439</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7034</CentreX>
-    <CentreY>439</CentreY>
-    <CentreZ>3</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Thallary:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>BritainSewer#4</Name>
@@ -32340,48 +30828,6 @@
     <Objects2>sheep:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=cow:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bull:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=rabbit:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=greathart:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=hind:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=llama:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=bird:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>5b4edf7e-4aae-450f-800e-632572c4ff90</UniqueId>
-    <Map>Felucca</Map>
-    <X>6997</X>
-    <Y>372</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>7007</CentreX>
-    <CentreY>382</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>6</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>SeaLife#3</Name>
     <UniqueId>5b65f546-b8c3-45e7-ae29-bfb114a0c0d3</UniqueId>
     <Map>Felucca</Map>
@@ -33976,48 +32422,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Ettin:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>60786d68-4a5a-4da6-a3fb-4cc724c62200</UniqueId>
-    <Map>Felucca</Map>
-    <X>7083</X>
-    <Y>366</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7083</CentreX>
-    <CentreY>366</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>4</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Braen:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>TrinsicPassage#0</Name>
@@ -36624,48 +35028,6 @@
     <Objects2>SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WaterElemental:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Dolphin:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>68297fa3-8f7e-4296-b846-77d9a0785193</UniqueId>
-    <Map>Felucca</Map>
-    <X>7046</X>
-    <Y>390</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7046</CentreX>
-    <CentreY>390</CentreY>
-    <CentreZ>6</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Alejaha:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Vendors#13</Name>
     <UniqueId>686cb767-6242-4685-946d-693311657044</UniqueId>
     <Map>Felucca</Map>
@@ -37462,90 +35824,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Gazer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Giantspider:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Harpy:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Headlessone:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Lizardman:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Mongbat:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>6a223b2f-67af-4ebe-8add-676e37e2f6cd</UniqueId>
-    <Map>Felucca</Map>
-    <X>2958</X>
-    <Y>3446</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>2958</CentreX>
-    <CentreY>3446</CentreY>
-    <CentreZ>15</CentreZ>
-    <Range>4</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Nedrick:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>6a337471-88ba-46b6-a21f-f01b23f82dec</UniqueId>
-    <Map>Felucca</Map>
-    <X>3773</X>
-    <Y>1264</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>3773</CentreX>
-    <CentreY>1264</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>4</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Belulah:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>WildLife#90</Name>
@@ -38598,48 +36876,6 @@
     <Objects2>Fisherman:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>6e38a751-8ee6-4ea6-bb4c-de2370e86c46</UniqueId>
-    <Map>Felucca</Map>
-    <X>743</X>
-    <Y>989</Y>
-    <Width>30</Width>
-    <Height>30</Height>
-    <CentreX>758</CentreX>
-    <CentreY>1004</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>15</Range>
-    <MaxCount>3</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>SosariaSap:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Vendors#151</Name>
     <UniqueId>6e3dc112-04ce-4e11-8353-50611d581eb8</UniqueId>
     <Map>Felucca</Map>
@@ -38890,48 +37126,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>customhairstylist:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=alchemist:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=herbalist:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>6ee4b4b8-45ba-42f8-b4fa-32647cfd9441</UniqueId>
-    <Map>Felucca</Map>
-    <X>7022</X>
-    <Y>401</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>7032</CentreX>
-    <CentreY>411</CentreY>
-    <CentreZ>7</CentreZ>
-    <Range>10</Range>
-    <MaxCount>4</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Outdoors#240</Name>
@@ -40415,7 +38609,7 @@
     <CentreY>174</CentreY>
     <CentreZ>4</CentreZ>
     <Range>10</Range>
-    <MaxCount>6</MaxCount>
+    <MaxCount>5</MaxCount>
     <MinDelay>5</MinDelay>
     <MaxDelay>10</MaxDelay>
     <DelayInSec>False</DelayInSec>
@@ -40443,7 +38637,7 @@
     <IsGroup>False</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>wisp:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Crystalwisp:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>wisp:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>WildLife#89</Name>
@@ -41706,48 +39900,6 @@
     <Objects2>TreasureLevel1:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>PrismOfLight#14</Name>
-    <UniqueId>75ecef5c-5eff-4cf4-a4ba-2e235bfa0ed6</UniqueId>
-    <Map>Felucca</Map>
-    <X>6530</X>
-    <Y>174</Y>
-    <Width>8</Width>
-    <Height>8</Height>
-    <CentreX>6534</CentreX>
-    <CentreY>178</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>4</Range>
-    <MaxCount>2</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>CrystalWisp:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>SeaLife#57</Name>
     <UniqueId>75fee94e-ca77-42ee-84a8-8389453d3550</UniqueId>
     <Map>Felucca</Map>
@@ -41830,48 +39982,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>ettin:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=lizardman:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogre:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=troll:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Khaldun#0</Name>
-    <UniqueId>76461d41-3188-4e80-9f0f-7e502c45339e</UniqueId>
-    <Map>Felucca</Map>
-    <X>5564</X>
-    <Y>1301</Y>
-    <Width>10</Width>
-    <Height>10</Height>
-    <CentreX>5569</CentreX>
-    <CentreY>1306</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Vendors#149</Name>
@@ -42166,48 +40276,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Bonemagi:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Naturalist Quest</Name>
-    <UniqueId>77cf2cca-ae73-4016-a69c-588be9fd1846</UniqueId>
-    <Map>Felucca</Map>
-    <X>1414</X>
-    <Y>1594</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>1414</CentreX>
-    <CentreY>1594</CentreY>
-    <CentreZ>30</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Naturalist:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Shame#80</Name>
@@ -46158,48 +44226,6 @@
     <Objects2>Evilmage:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Khaldun#23</Name>
-    <UniqueId>81af3b4b-be06-4fbe-ac6a-1339cf345f76</UniqueId>
-    <Map>Felucca</Map>
-    <X>5384</X>
-    <Y>1411</Y>
-    <Width>40</Width>
-    <Height>40</Height>
-    <CentreX>5404</CentreX>
-    <CentreY>1431</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>20</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Spawner</Name>
     <UniqueId>81b252fe-a147-4b57-a2a4-8557e1a9f95a</UniqueId>
     <Map>Felucca</Map>
@@ -48132,48 +46158,6 @@
     <Objects2>bardguildmaster:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Khaldun#39</Name>
-    <UniqueId>8779c3a5-f2a8-4791-9a62-8ebb0cbcc38a</UniqueId>
-    <Map>Felucca</Map>
-    <X>5511</X>
-    <Y>1387</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>5521</CentreX>
-    <CentreY>1397</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>SeaLife#54</Name>
     <UniqueId>878736e7-368c-4bc0-8ed5-7b7ca3d03e53</UniqueId>
     <Map>Felucca</Map>
@@ -48886,48 +46870,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>True</IsHomeRangeRelative>
     <Objects2>Banker:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Minter:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Blackheart Quest</Name>
-    <UniqueId>8a109a6d-61af-4359-ac20-be11529c700d</UniqueId>
-    <Map>Felucca</Map>
-    <X>2679</X>
-    <Y>2234</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>2679</CentreX>
-    <CentreY>2234</CentreY>
-    <CentreZ>2</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Blackheart:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>fel mage/alchemist/guildmaster</Name>
@@ -50524,48 +48466,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>True</IsHomeRangeRelative>
     <Objects2>carpenter:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=architect:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=realestatebroker:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Khaldun#27</Name>
-    <UniqueId>8db79cce-885b-492f-939d-4c55d407d494</UniqueId>
-    <Map>Felucca</Map>
-    <X>5400</X>
-    <Y>1455</Y>
-    <Width>60</Width>
-    <Height>60</Height>
-    <CentreX>5430</CentreX>
-    <CentreY>1485</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>30</Range>
-    <MaxCount>3</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>TownsLife#8</Name>
@@ -52500,48 +50400,6 @@
     <Objects2>Brownbear:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Grizzlybear:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Blackbear:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Horse:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Ridablellama:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Rabbit:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=JackRabbit:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bird:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cougar:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Greathart:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>934e0ace-d706-4711-99c9-c261adc41939</UniqueId>
-    <Map>Felucca</Map>
-    <X>7014</X>
-    <Y>367</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7014</CentreX>
-    <CentreY>367</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Ryal:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Vendors#122</Name>
     <UniqueId>9367c1b4-f786-472f-88ad-3f8283008cfd</UniqueId>
     <Map>Felucca</Map>
@@ -53548,48 +51406,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Hind:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Llama:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Timberwolf:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Corpser:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Ettin:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Forestostard:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>95abc187-90b3-4cab-83fb-83fb352ffe62</UniqueId>
-    <Map>Felucca</Map>
-    <X>7046</X>
-    <Y>390</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7046</CentreX>
-    <CentreY>390</CentreY>
-    <CentreZ>10</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Mallew:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>WildLife#11</Name>
@@ -56700,48 +54516,6 @@
     <Objects2>armorer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=weaponsmith:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>9e999c71-d014-4e1b-978a-c0d37c613b6c</UniqueId>
-    <Map>Felucca</Map>
-    <X>7077</X>
-    <Y>372</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>7087</CentreX>
-    <CentreY>382</CentreY>
-    <CentreZ>1</CentreZ>
-    <Range>10</Range>
-    <MaxCount>2</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Vendors#131</Name>
     <UniqueId>9e99df3d-7ba5-4ab5-9eff-b38c291f9997</UniqueId>
     <Map>Felucca</Map>
@@ -58548,48 +56322,6 @@
     <Objects2>Gazer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Giantspider:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Harpy:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Headlessone:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Lizardman:MX=3:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Mongbat:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>a34855a2-907f-4085-945f-4e9584bb19ef</UniqueId>
-    <Map>Felucca</Map>
-    <X>6274</X>
-    <Y>131</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>6274</CentreX>
-    <CentreY>131</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Canir:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>Outdoors#105</Name>
     <UniqueId>a35135d4-73bb-453e-a8e3-a5c34d4c8c60</UniqueId>
     <Map>Felucca</Map>
@@ -59304,48 +57036,6 @@
     <Objects2>Toxicelemental:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Fireelemental:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Scorpion:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>a49717b9-12d0-426c-990f-c5115b688dde</UniqueId>
-    <Map>Felucca</Map>
-    <X>6997</X>
-    <Y>350</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>7007</CentreX>
-    <CentreY>360</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>2</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>SeaLife#80</Name>
     <UniqueId>a49e7e2b-0e67-44aa-b62d-b5eeab5e2cd4</UniqueId>
     <Map>Felucca</Map>
@@ -59388,7 +57078,7 @@
     <Objects2>SeaSerpent:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=SeaSerpent:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WaterElemental:MX=10:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Dolphin:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>fel succubus/imp/titan/szavetra/mougguur</Name>
+    <Name>fel succubus/imp/titan</Name>
     <UniqueId>a4a48573-2c72-4cc3-81c9-42274e683863</UniqueId>
     <Map>Felucca</Map>
     <X>6218</X>
@@ -59399,7 +57089,7 @@
     <CentreY>37</CentreY>
     <CentreZ>5</CentreZ>
     <Range>15</Range>
-    <MaxCount>9</MaxCount>
+    <MaxCount>7</MaxCount>
     <MinDelay>5</MinDelay>
     <MaxDelay>10</MaxDelay>
     <DelayInSec>False</DelayInSec>
@@ -59427,7 +57117,7 @@
     <IsGroup>False</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>True</IsHomeRangeRelative>
-    <Objects2>succubus:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=imp:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=titan:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=szavetra:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=mougguur:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>succubus:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=imp:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=titan:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>fel abscess/hydra/snake</Name>
@@ -59987,7 +57677,7 @@
     <CentreY>155</CentreY>
     <CentreZ>0</CentreZ>
     <Range>15</Range>
-    <MaxCount>6</MaxCount>
+    <MaxCount>5</MaxCount>
     <MinDelay>5</MinDelay>
     <MaxDelay>10</MaxDelay>
     <DelayInSec>False</DelayInSec>
@@ -60015,7 +57705,7 @@
     <IsGroup>False</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>wisp:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=CrystalWisp:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=treasurelevel2:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>wisp:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=treasurelevel2:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Vendors#219</Name>
@@ -61066,48 +58756,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WaterElemental:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Dolphin:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>a8a54515-998a-4846-a662-6c5bfc8b81f8</UniqueId>
-    <Map>Felucca</Map>
-    <X>6266</X>
-    <Y>123</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>6266</CentreX>
-    <CentreY>123</CentreY>
-    <CentreZ>-1</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Brae:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Vendors#232</Name>
@@ -63756,48 +61404,6 @@
     <Objects2>Hellhound:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Spawner</Name>
-    <UniqueId>b1957e55-2244-43cc-b29b-a0eb4e0e7720</UniqueId>
-    <Map>Felucca</Map>
-    <X>7010</X>
-    <Y>389</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>7010</CentreX>
-    <CentreY>389</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>6</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Anolly:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>PrismOfLight#17</Name>
     <UniqueId>b195d1c5-329d-4410-8a57-53f14dd113c6</UniqueId>
     <Map>Felucca</Map>
@@ -64216,48 +61822,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Earthelemental:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Scorpion:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Khaldun#14</Name>
-    <UniqueId>b2aac1f2-b018-4725-aa04-9314d471615f</UniqueId>
-    <Map>Felucca</Map>
-    <X>5425</X>
-    <Y>1336</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>5435</CentreX>
-    <CentreY>1346</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>LostLands#134</Name>
@@ -65728,48 +63292,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>corpser:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=direwolf:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ettin:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ogre:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=reaper:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=skeleton:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=zombie:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>b78edc7c-beee-4b33-827f-a340d88dcd70</UniqueId>
-    <Map>Felucca</Map>
-    <X>3390</X>
-    <Y>326</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>3400</CentreX>
-    <CentreY>336</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>6</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>AriellesBauble:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Vendors#54</Name>
@@ -71117,7 +68639,7 @@
     <CentreY>179</CentreY>
     <CentreZ>0</CentreZ>
     <Range>15</Range>
-    <MaxCount>6</MaxCount>
+    <MaxCount>5</MaxCount>
     <MinDelay>5</MinDelay>
     <MaxDelay>10</MaxDelay>
     <DelayInSec>False</DelayInSec>
@@ -71145,7 +68667,7 @@
     <IsGroup>False</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>CrystalWisp:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=CrystalLatticeSeeker:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=treasurelevel2:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>CrystalLatticeSeeker:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=treasurelevel2:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>TerathanKeep#16</Name>
@@ -72658,48 +70180,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Skeletalknight:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Naturalist Quest</Name>
-    <UniqueId>c91dc374-09ed-4108-82eb-9962b78d03e9</UniqueId>
-    <Map>Felucca</Map>
-    <X>1574</X>
-    <Y>1697</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>1574</CentreX>
-    <CentreY>1697</CentreY>
-    <CentreZ>35</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Naturalist:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>TownsLife#11</Name>
@@ -79632,48 +77112,6 @@
     <Objects2>ghoul:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=giantspider:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=headlessone:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=lizardman:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=orc:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=ratman:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=zombie:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=wisp:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Khaldun#17</Name>
-    <UniqueId>db6d6f51-3a9f-4ce8-9afa-61bfdd9de28b</UniqueId>
-    <Map>Felucca</Map>
-    <X>5373</X>
-    <Y>1349</Y>
-    <Width>40</Width>
-    <Height>40</Height>
-    <CentreX>5393</CentreX>
-    <CentreY>1369</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>20</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Shadowfiend:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>WildLife#8</Name>
     <UniqueId>db7b9c57-358c-49ac-968e-eed664d2f270</UniqueId>
     <Map>Felucca</Map>
@@ -79714,48 +77152,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Boar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cougar:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Goat:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Horse:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Panther:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Pig:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Sheep:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BlackBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GrizzlyBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=BrownBear:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=TimberWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreyWolf:MX=5:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WanderingHealer:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bird:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Eagle:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=GreatHart:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Hind:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Bull:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Cow:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Naturalist Quest</Name>
-    <UniqueId>dbb9acd7-5e5f-4a95-9559-ffcca7dc4ac4</UniqueId>
-    <Map>Felucca</Map>
-    <X>5240</X>
-    <Y>174</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>5240</CentreX>
-    <CentreY>174</CentreY>
-    <CentreZ>15</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Naturalist:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>WildLife#146</Name>
@@ -81144,48 +78540,6 @@
     <Objects2>tanner:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
-    <Name>Naturalist Quest</Name>
-    <UniqueId>dfe31a45-2aab-45b9-9604-a335d1ba4dd2</UniqueId>
-    <Map>Felucca</Map>
-    <X>1393</X>
-    <Y>3769</Y>
-    <Width>0</Width>
-    <Height>0</Height>
-    <CentreX>1393</CentreX>
-    <CentreY>3769</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>0</Range>
-    <MaxCount>1</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>Naturalist:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
     <Name>WildLife#174</Name>
     <UniqueId>dffd3b50-a245-460f-a685-77d2e80e7960</UniqueId>
     <Map>Felucca</Map>
@@ -81772,48 +79126,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=SeaSerpent:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=WaterElemental:MX=15:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=Dolphin:MX=6:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>e17f055d-c081-4123-b763-82e1d5df2779</UniqueId>
-    <Map>Felucca</Map>
-    <X>6982</X>
-    <Y>335</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>6992</CentreX>
-    <CentreY>345</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>2</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=2:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>WildLife#52</Name>
@@ -88337,7 +85649,7 @@
     <CentreY>158</CentreY>
     <CentreZ>0</CentreZ>
     <Range>40</Range>
-    <MaxCount>15</MaxCount>
+    <MaxCount>10</MaxCount>
     <MinDelay>5</MinDelay>
     <MaxDelay>10</MaxDelay>
     <DelayInSec>False</DelayInSec>
@@ -88365,7 +85677,7 @@
     <IsGroup>False</IsGroup>
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>True</IsHomeRangeRelative>
-    <Objects2>crystallatticeseeker:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1:OBJ=crystalwisp:MX=8:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
+    <Objects2>crystallatticeseeker:MX=7:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Vendors#287</Name>
@@ -92062,48 +89374,6 @@
     <IsRunning>True</IsRunning>
     <IsHomeRangeRelative>False</IsHomeRangeRelative>
     <Objects2>Grizelda:MX=1:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
-  </Points>
-  <Points>
-    <Name>Spawner</Name>
-    <UniqueId>fcc613e4-09e8-4f85-b74d-c5ea0ad7134c</UniqueId>
-    <Map>Felucca</Map>
-    <X>6976</X>
-    <Y>374</Y>
-    <Width>20</Width>
-    <Height>20</Height>
-    <CentreX>6986</CentreX>
-    <CentreY>384</CentreY>
-    <CentreZ>0</CentreZ>
-    <Range>10</Range>
-    <MaxCount>4</MaxCount>
-    <MinDelay>5</MinDelay>
-    <MaxDelay>10</MaxDelay>
-    <DelayInSec>False</DelayInSec>
-    <Duration>0</Duration>
-    <DespawnTime>0</DespawnTime>
-    <ProximityRange>-1</ProximityRange>
-    <ProximityTriggerSound>500</ProximityTriggerSound>
-    <TriggerProbability>1</TriggerProbability>
-    <InContainer>False</InContainer>
-    <MinRefractory>0</MinRefractory>
-    <MaxRefractory>0</MaxRefractory>
-    <TODStart>0</TODStart>
-    <TODEnd>0</TODEnd>
-    <TODMode>0</TODMode>
-    <KillReset>1</KillReset>
-    <ExternalTriggering>False</ExternalTriggering>
-    <SequentialSpawning>-1</SequentialSpawning>
-    <AllowGhostTriggering>False</AllowGhostTriggering>
-    <AllowNPCTriggering>False</AllowNPCTriggering>
-    <SpawnOnTrigger>False</SpawnOnTrigger>
-    <SmartSpawning>False</SmartSpawning>
-    <TickReset>False</TickReset>
-    <Team>0</Team>
-    <Amount>1</Amount>
-    <IsGroup>False</IsGroup>
-    <IsRunning>True</IsRunning>
-    <IsHomeRangeRelative>False</IsHomeRangeRelative>
-    <Objects2>MiniatureMushroom:MX=4:SB=0:RT=0:TO=0:KL=0:RK=0:CA=1:DN=-1:DX=-1:SP=1:PR=-1</Objects2>
   </Points>
   <Points>
     <Name>Deceit#8</Name>

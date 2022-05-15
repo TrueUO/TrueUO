@@ -87,7 +87,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.FilthyRich, 3);
             AddLoot(LootPack.MedScrolls, 2);
-            AddLoot(LootPack.NecroRegs, 100, 200);
         }
 
         public override void Serialize(GenericWriter writer)

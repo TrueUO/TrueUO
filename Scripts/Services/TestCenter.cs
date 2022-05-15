@@ -489,9 +489,7 @@ namespace Server.Misc
             bag.DropItem(new AnonsBoots());
             bag.DropItem(new AnonsSpellbook());
             bag.DropItem(new BalakaisShamanStaff());
-            bag.DropItem(new BalakaisShamanStaffGargoyle());
             bag.DropItem(new EnchantressCameo());
-            bag.DropItem(new GrugorsShield());
             bag.DropItem(new HalawasHuntingBow());
             bag.DropItem(new HawkwindsRobe());
             bag.DropItem(new JumusSacredHide());

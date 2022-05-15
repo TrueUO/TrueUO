@@ -40,7 +40,7 @@ namespace Server.Items
             Donations.Add(new CollectionItem(typeof(Kirin), 0x25A0, 1074821, 0x0, 250.0));
             Donations.Add(new CollectionItem(typeof(FireSteed), 0x21F1, 1074821, 0x0, 250.0));
             Donations.Add(new CollectionItem(typeof(SwampDragon), 0x2619, 1074821, 0x0, 250.0));
-            Donations.Add(new CollectionItem(typeof(FireBeetle), 0x260F, 1074820, 0x489, 300.0));
+            Donations.Add(new CollectionItem(typeof(Beetle), 0x260F, 1074820, 0x0, 300.0));
             Donations.Add(new CollectionItem(typeof(Drake), 0x20D6, 1073119, 0x0, 400.0));
             Donations.Add(new CollectionItem(typeof(Reptalon), 0x2D95, 1073121, 0x0, 550.0));
 
@@ -118,7 +118,7 @@ namespace Server.Items
         {
             new Type[] { typeof(Dragon), typeof(Drake) },
             new Type[] { typeof(Kirin), typeof(Nightmare), typeof(Unicorn) },
-            new Type[] { typeof(FireBeetle), typeof(Beetle), typeof(RuneBeetle) },
+            new Type[] { typeof(Beetle), typeof(RuneBeetle) }
         };
 
         public override void IncreaseTier()
@@ -128,7 +128,6 @@ namespace Server.Items
             List<object> list = new List<object>();
             BaseCreature c;
 
-            // haven't got a clue if levels are OSI
             switch (Tier)
             {
                 case 1:
@@ -258,13 +257,6 @@ namespace Server.Items
                     c.Tamable = false;
                     list.Add(c);
 
-                    /*
-                    c = new Sphynx();
-                    c.MoveToWorld( new Point3D( 4506, 1358, 23 ), Map );
-                    c.Blessed = true;	
-                    c.Tamable = false;
-                    list.Add( c );*/
-
                     break;
             }
 
@@ -275,15 +267,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

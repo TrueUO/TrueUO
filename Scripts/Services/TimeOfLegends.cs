@@ -1,5 +1,4 @@
 using Server.Commands;
-using Server.Engines.CannedEvil;
 using Server.Engines.Shadowguard;
 using Server.Items;
 
@@ -43,30 +42,7 @@ namespace Server
             Decorate.Generate("tol", "Data/Decoration/TimeOfLegends/TerMur", Map.TerMur);
             Decorate.Generate("tol", "Data/Decoration/TimeOfLegends/Felucca", Map.Felucca);
 
-            ChampionSpawn sp = new ChampionSpawn
-            {
-                Type = ChampionSpawnType.DragonTurtle
-            };
-            sp.MoveToWorld(new Point3D(451, 1696, 65), Map.TerMur);
-            sp.Active = true;
-            WeakEntityCollection.Add("tol", sp);
-
-            sp = new ChampionSpawn
-            {
-                SpawnRadius = 35,
-                SpawnMod = .5,
-                KillsMod = .5,
-                Type = ChampionSpawnType.DragonTurtle
-            };
-            sp.MoveToWorld(new Point3D(7042, 1889, 60), Map.Felucca);
-            sp.Active = true;
-            WeakEntityCollection.Add("tol", sp);
-
-            PublicMoongate gate = new PublicMoongate();
-            gate.MoveToWorld(new Point3D(719, 1863, 40), Map.TerMur);
-
             ShadowguardController.SetupShadowguard(e.Mobile);
-            Engines.MyrmidexInvasion.GenerateMyrmidexQuest.Generate();
 
             MacawSpawner.Generate();
 

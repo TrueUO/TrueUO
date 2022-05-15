@@ -163,8 +163,6 @@ namespace Server.Engines.Harvest
                     {
                         int amount = def.ConsumedPerHarvest;
                         
-                        Caddellite.OnHarvest(from, tool, this, item);
-
                         if (item.Stackable)
                         {
                             item.Amount = amount;
@@ -196,7 +194,6 @@ namespace Server.Engines.Harvest
                             if (bonus.RequiredMap == null || bonus.RequiredMap == from.Map)
                             {
                                 bonusItem = Construct(bonus.Type, from, tool);
-                                Caddellite.OnHarvest(from, tool, this, bonusItem, false);
 
                                 if (Give(from, bonusItem, true))    //Bonuses always allow placing at feet, even if pack is full irregrdless of def
                                 {

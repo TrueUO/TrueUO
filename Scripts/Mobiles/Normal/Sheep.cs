@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Items;
 using Server.Network;
 using System;
@@ -57,10 +56,12 @@ namespace Server.Mobiles
                 Body = DateTime.UtcNow >= m_NextWoolTime ? 0xCF : 0xDF;
             }
         }
+
         public override int Meat => 3;
         public override MeatType MeatType => MeatType.LambLeg;
         public override FoodType FavoriteFood => FoodType.FruitsAndVegies | FoodType.GrainsAndHay;
         public override int Wool => Body == 0xCF ? 3 : 0;
+
         public bool Carve(Mobile from, Item item)
         {
             if (DateTime.UtcNow < m_NextWoolTime)
@@ -71,23 +72,7 @@ namespace Server.Mobiles
             }
 
             from.SendLocalizedMessage(500452); // You place the gathered wool into your backpack.
-            from.AddToBackpack(new Wool(Map == Map.Felucca ? 2 : 1));
-
-            if (from is PlayerMobile player)
-            {
-                foreach (BaseQuest quest in player.Quests)
-                {
-                    if (quest is ShearingKnowledgeQuest)
-                    {
-                        if (!quest.Completed &&
-                            (player.Map == Map.Trammel || player.Map == Map.Felucca))
-                        {
-                            player.AddToBackpack(new BritannianWool(1));
-                        }
-                        break;
-                    }
-                }
-            }
+            from.AddToBackpack(new Wool(1));
 
             NextWoolTime = DateTime.UtcNow + TimeSpan.FromHours(2.0); // TODO: Proper time delay
 
@@ -103,7 +88,7 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
 
             writer.WriteDeltaTime(m_NextWoolTime);
         }

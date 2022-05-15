@@ -24,7 +24,6 @@ namespace Server.Items
             SlayerGroup reptilian = new SlayerGroup();
             SlayerGroup fey = new SlayerGroup();
             SlayerGroup eodon = new SlayerGroup();
-            SlayerGroup eodonTribe = new SlayerGroup();
             SlayerGroup dino = new SlayerGroup();
             SlayerGroup myrmidex = new SlayerGroup();
 
@@ -519,17 +518,11 @@ namespace Server.Items
                     typeof(MyrmidexLarvae), typeof(MyrmidexDrone),
                     typeof(MyrmidexWarrior), typeof(DragonTurtle),
                     typeof(DragonTurtleHatchling), typeof(DesertScorpion),
-                    typeof(TribeWarrior), typeof(TribeShaman),
-                    typeof(TribeChieftan), typeof(WildTiger),
+                    typeof(WildTiger),
                     typeof(WildBlackTiger), typeof(WildWhiteTiger),
                     typeof(TRex), typeof(SilverbackGorilla));
 
             eodon.Entries = new SlayerEntry[] { };
-
-            eodonTribe.Opposition = new SlayerGroup[] { };
-            eodonTribe.FoundOn = new Type[] { };
-            eodonTribe.Super = new SlayerEntry(SlayerName.EodonTribe, typeof(TribeWarrior), typeof(TribeShaman), typeof(TribeChieftan));
-            eodonTribe.Entries = new SlayerEntry[] { };
 
             dino.Opposition = new[] { fey };
             dino.FoundOn = new Type[] { };
@@ -566,7 +559,6 @@ namespace Server.Items
                     reptilian,
                     fey,
                     eodon,
-                    eodonTribe,
                     dino,
                     myrmidex
                 };

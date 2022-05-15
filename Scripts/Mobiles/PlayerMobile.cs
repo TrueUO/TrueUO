@@ -78,9 +78,7 @@ namespace Server.Mobiles
     {
         Unused = 0x00000001,
         ToggleStoneOnly = 0x00000002,
-        CanBuyCarpets = 0x00000004,
-        VoidPool = 0x00000008,
-        DisabledPvpWarning = 0x00000010
+        DisabledPvpWarning = 0x00000004
     }
 
     public enum NpcGuild
@@ -380,20 +378,6 @@ namespace Server.Mobiles
         {
             get => GetFlag(ExtendedPlayerFlag.DisabledPvpWarning);
             set => SetFlag(ExtendedPlayerFlag.DisabledPvpWarning, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool CanBuyCarpets
-        {
-            get => GetFlag(ExtendedPlayerFlag.CanBuyCarpets);
-            set => SetFlag(ExtendedPlayerFlag.CanBuyCarpets, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool VoidPool
-        {
-            get => GetFlag(ExtendedPlayerFlag.VoidPool);
-            set => SetFlag(ExtendedPlayerFlag.VoidPool, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -2114,17 +2098,12 @@ namespace Server.Mobiles
                 list.Add(new CallbackEntry(RefuseTrades ? 1154112 : 1154113, ToggleTrades)); // Allow Trades / Refuse Trades				
 
                 #region Void Pool
-                if (VoidPool || Region.IsPartOf<VoidPoolRegion>())
+                if (Region.IsPartOf<VoidPoolRegion>())
                 {
                     VoidPoolController controller = Map == Map.Felucca ? VoidPoolController.InstanceFel : VoidPoolController.InstanceTram;
 
                     if (controller != null)
                     {
-                        if (!VoidPool)
-                        {
-                            VoidPool = true;
-                        }
-
                         list.Add(new VoidPoolInfo(this, controller));
                     }
                 }

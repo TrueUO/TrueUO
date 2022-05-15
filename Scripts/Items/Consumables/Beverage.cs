@@ -869,11 +869,6 @@ namespace Server.Items
                         dw.CheckWaterSource(from, this);
                     }
 
-                    if (item.ItemID >= 0xB41 && item.ItemID <= 0xB44)
-                    {
-                        Caddellite.CheckWaterSource(from, this, item);
-                    }
-
                     return;
                 }
 
