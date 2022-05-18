@@ -787,13 +787,6 @@ namespace Server
         {
             if (item != null)
             {
-                if (item is BaseWeapon && 1 > Utility.Random(100))
-                {
-                    item.Delete();
-                    item = new FireHorn();
-                    return item;
-                }
-
                 if (StandardLootItem && (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat))
                 {
                     // Try to generate a random item based on the creature killed
