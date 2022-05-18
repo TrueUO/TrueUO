@@ -16,19 +16,6 @@ namespace Server.Misc
             EventSink.CharacterCreated += EventSink_CharacterCreated;
         }
 
-        public static bool VerifyProfession(int profession)
-        {
-            if (profession < 0)
-                return false;
-            if (profession < 4)
-                return true;
-            if (profession < 6)
-                return true;
-            if (profession < 8)
-                return true;
-            return false;
-        }
-
         private static void AddBackpack(Mobile m)
         {
             Container pack = m.Backpack;
@@ -44,6 +31,7 @@ namespace Server.Misc
             }
 
             PackItem(new Gold(1000)); // Starting gold can be customized here
+            PackItem(new SkinningKnife());
         }
 
         private static void AddShirt(int shirtHue)
@@ -117,9 +105,6 @@ namespace Server.Misc
 
         private static void EventSink_CharacterCreated(CharacterCreatedEventArgs args)
         {
-            if (!VerifyProfession(args.Profession))
-                args.Profession = 0;
-
             NetState state = args.State;
 
             if (state == null)
@@ -142,7 +127,7 @@ namespace Server.Misc
             newChar.AccessLevel = args.Account.AccessLevel;
             newChar.Female = args.Female;
 
-            newChar.Race = args.Race; //Sets body
+            newChar.Race = Race.Human; //Sets body
 
             newChar.Hue = args.Hue | 0x8000;
 
@@ -159,8 +144,6 @@ namespace Server.Misc
                         pm.Skills[i].Cap = skillcap;
                     }
                 }
-
-                pm.Profession = args.Profession;
             }
 
             SetName(newChar, args.Name);
@@ -168,7 +151,6 @@ namespace Server.Misc
             AddBackpack(newChar);
 
             SetStats(newChar, state, args.Profession, args.Str, args.Dex, args.Int);
-            SetSkills(newChar, args.Skills, args.Profession);
 
             Race race = newChar.Race;
 
@@ -197,12 +179,9 @@ namespace Server.Misc
                 newChar.FaceHue = newChar.Hue;
             }
 
-            if (args.Profession <= 3)
-            {
-                AddShirt(args.ShirtHue);
-                AddPants(newChar, args.PantsHue);
-                AddShoes();
-            }
+            AddShirt(args.ShirtHue);
+            AddPants(newChar, args.PantsHue);
+            AddShoes();
 
             if (TestCenter.Enabled)
             {
@@ -291,30 +270,11 @@ namespace Server.Misc
             name = name.Trim();
 
             if (!NameVerification.Validate(name, 2, 16, true, false, true, 1, NameVerification.SpaceDashPeriodQuote))
-                name = "Generic Player";
-
-            m.Name = name;
-        }
-
-        private static bool ValidSkills(SkillNameValue[] skills)
-        {
-            int total = 0;
-
-            for (int i = 0; i < skills.Length; ++i)
             {
-                if (skills[i].Value < 0 || skills[i].Value > 50)
-                    return false;
-
-                total += skills[i].Value;
-
-                for (int j = i + 1; j < skills.Length; ++j)
-                {
-                    if (skills[j].Value > 0 && skills[j].Name == skills[i].Name)
-                        return false;
-                }
+                name = "Generic Player";
             }
 
-            return total == 100 || total == 120;
+            m.Name = name;
         }
 
         private static void SetStats(Mobile m, NetState state, int prof, int str, int dex, int intel)
@@ -381,138 +341,6 @@ namespace Server.Misc
             m.InitStats(str, dex, intel);
         }
 
-        private static void SetSkills(Mobile m, SkillNameValue[] skills, int prof)
-        {
-            switch (prof)
-            {
-                case 1: // Warrior
-                    {
-                        skills = new[]
-                        {
-                        new SkillNameValue(SkillName.Anatomy, 30), new SkillNameValue(SkillName.Healing, 30),
-                        new SkillNameValue(SkillName.Swords, 30), new SkillNameValue(SkillName.Tactics, 30)
-                    };
-
-                        break;
-                    }
-                case 2: // Magician
-                    {
-                        skills = new[]
-                        {
-                        new SkillNameValue(SkillName.EvalInt, 30), new SkillNameValue(SkillName.Wrestling, 30),
-                        new SkillNameValue(SkillName.Magery, 30), new SkillNameValue(SkillName.Meditation, 30)
-                    };
-
-                        break;
-                    }
-                case 3: // Blacksmith
-                    {
-                        skills = new[]
-                        {
-                        new SkillNameValue(SkillName.Mining, 30), new SkillNameValue(SkillName.ArmsLore, 30),
-                        new SkillNameValue(SkillName.Blacksmith, 30), new SkillNameValue(SkillName.Tinkering, 30)
-                    };
-
-                        break;
-                    }
-                case 4: // Necromancer
-                    {
-                        skills = new[]
-                        {
-                        new SkillNameValue(SkillName.Necromancy, 30),
-                        new SkillNameValue(SkillName.SpiritSpeak, 30), new SkillNameValue(SkillName.Swords, 30),
-                        new SkillNameValue(SkillName.Meditation, 20)
-                    };
-
-                        break;
-                    }
-                case 5: // Paladin
-                    {
-                        skills = new[]
-                        {
-                        new SkillNameValue(SkillName.Chivalry, 30), new SkillNameValue(SkillName.Swords, 30),
-                        new SkillNameValue(SkillName.Focus, 30), new SkillNameValue(SkillName.Tactics, 30)
-                    };
-
-                        break;
-                    }
-                case 6: //Samurai
-                    {
-                        skills = new[]
-                        {
-                        new SkillNameValue(SkillName.Bushido, 30), new SkillNameValue(SkillName.Swords, 30),
-                        new SkillNameValue(SkillName.Anatomy, 30), new SkillNameValue(SkillName.Healing, 30)
-                    };
-                        break;
-                    }
-                case 7: //Ninja
-                    {
-                        skills = new[]
-                        {
-                        new SkillNameValue(SkillName.Ninjitsu, 30), new SkillNameValue(SkillName.Hiding, 30),
-                        new SkillNameValue(SkillName.Fencing, 30), new SkillNameValue(SkillName.Stealth, 30)
-                    };
-                        break;
-                    }
-                default:
-                    {
-                        if (!ValidSkills(skills))
-                            return;
-
-                        break;
-                    }
-            }
-
-            bool addSkillItems = true;
-
-            switch (prof)
-            {
-                case 1: // Warrior
-                    {
-                        break;
-                    }
-                case 4: // Necromancer
-                    {
-                        addSkillItems = false;
-                        break;
-                    }
-                case 5: // Paladin
-                    {
-                        addSkillItems = false;
-                        break;
-                    }
-                case 6: // Samurai
-                    {
-                        addSkillItems = false;
-                        break;
-                    }
-                case 7: // Ninja
-                    {
-                        addSkillItems = false;
-                        break;
-                    }
-            }
-
-            for (int i = 0; i < skills.Length; ++i)
-            {
-                SkillNameValue snv = skills[i];
-
-                if (snv.Value > 0 && (snv.Name != SkillName.Stealth || prof == 7) && snv.Name != SkillName.RemoveTrap &&
-                    snv.Name != SkillName.Spellweaving)
-                {
-                    Skill skill = m.Skills[snv.Name];
-
-                    if (skill != null)
-                    {
-                        skill.BaseFixedPoint = snv.Value * 10;
-
-                        if (addSkillItems)
-                            AddSkillItems(snv.Name);
-                    }
-                }
-            }
-        }
-
         private static void EquipItem(Item item)
         {
             EquipItem(item, false);
@@ -521,14 +349,20 @@ namespace Server.Misc
         private static void EquipItem(Item item, bool mustEquip)
         {
             if (m_Mobile != null && m_Mobile.EquipItem(item))
+            {
                 return;
+            }
 
             Container pack = m_Mobile.Backpack;
 
             if (!mustEquip && pack != null)
+            {
                 pack.DropItem(item);
+            }
             else
+            {
                 item.Delete();
+            }
         }
 
         private static void PackItem(Item item)
@@ -536,450 +370,12 @@ namespace Server.Misc
             Container pack = m_Mobile.Backpack;
 
             if (pack != null)
+            {
                 pack.DropItem(item);
+            }
             else
+            {
                 item.Delete();
-        }
-
-        private static void PackInstrument()
-        {
-            switch (Utility.Random(6))
-            {
-                case 0:
-                    PackItem(new Drums());
-                    break;
-                case 1:
-                    PackItem(new Harp());
-                    break;
-                case 2:
-                    PackItem(new LapHarp());
-                    break;
-                case 3:
-                    PackItem(new Lute());
-                    break;
-                case 4:
-                    PackItem(new Tambourine());
-                    break;
-                case 5:
-                    PackItem(new TambourineTassel());
-                    break;
-            }
-        }
-
-        private static void PackScroll(int circle)
-        {
-            switch (Utility.Random(8) * (circle + 1))
-            {
-                case 0:
-                    PackItem(new ClumsyScroll());
-                    break;
-                case 1:
-                    PackItem(new CreateFoodScroll());
-                    break;
-                case 2:
-                    PackItem(new FeeblemindScroll());
-                    break;
-                case 3:
-                    PackItem(new HealScroll());
-                    break;
-                case 4:
-                    PackItem(new MagicArrowScroll());
-                    break;
-                case 5:
-                    PackItem(new NightSightScroll());
-                    break;
-                case 6:
-                    PackItem(new ReactiveArmorScroll());
-                    break;
-                case 7:
-                    PackItem(new WeakenScroll());
-                    break;
-                case 8:
-                    PackItem(new AgilityScroll());
-                    break;
-                case 9:
-                    PackItem(new CunningScroll());
-                    break;
-                case 10:
-                    PackItem(new CureScroll());
-                    break;
-                case 11:
-                    PackItem(new HarmScroll());
-                    break;
-                case 12:
-                    PackItem(new MagicTrapScroll());
-                    break;
-                case 13:
-                    PackItem(new MagicUnTrapScroll());
-                    break;
-                case 14:
-                    PackItem(new ProtectionScroll());
-                    break;
-                case 15:
-                    PackItem(new StrengthScroll());
-                    break;
-                case 16:
-                    PackItem(new BlessScroll());
-                    break;
-                case 17:
-                    PackItem(new FireballScroll());
-                    break;
-                case 18:
-                    PackItem(new MagicLockScroll());
-                    break;
-                case 19:
-                    PackItem(new PoisonScroll());
-                    break;
-                case 20:
-                    PackItem(new TelekinisisScroll());
-                    break;
-                case 21:
-                    PackItem(new TeleportScroll());
-                    break;
-                case 22:
-                    PackItem(new UnlockScroll());
-                    break;
-                case 23:
-                    PackItem(new WallOfStoneScroll());
-                    break;
-            }
-        }
-
-        private static void AddSkillItems(SkillName skill)
-        {
-            switch (skill)
-            {
-                case SkillName.Alchemy:
-                    {
-                        PackItem(new Bottle(4));
-                        PackItem(new MortarPestle());
-
-                        EquipItem(new Robe(Utility.RandomPinkHue()));
-
-                        break;
-                    }
-                case SkillName.Anatomy:
-                    {
-                        PackItem(new Bandage(3));
-
-                        EquipItem(new Robe(Utility.RandomYellowHue()));
-
-                        break;
-                    }
-                case SkillName.AnimalLore:
-                    {
-                        EquipItem(new ShepherdsCrook());
-                        EquipItem(new Robe(Utility.RandomBlueHue()));
-
-                        break;
-                    }
-                case SkillName.Archery:
-                    {
-                        PackItem(new Arrow(25));
-
-                        EquipItem(new Bow());
-
-                        break;
-                    }
-                case SkillName.ArmsLore:
-                    {
-                        switch (Utility.Random(3))
-                        {
-                            case 0:
-                                EquipItem(new Kryss());
-                                break;
-                            case 1:
-                                EquipItem(new Katana());
-                                break;
-                            case 2:
-                                EquipItem(new Club());
-                                break;
-                        }
-
-                        break;
-                    }
-                case SkillName.Begging:
-                    {
-                        EquipItem(new GnarledStaff());
-
-                        break;
-                    }
-                case SkillName.Blacksmith:
-                    {
-                        PackItem(new Tongs());
-                        PackItem(new Pickaxe());
-                        PackItem(new Pickaxe());
-                        PackItem(new IronIngot(50));
-
-                        EquipItem(new HalfApron(Utility.RandomYellowHue()));
-
-                        break;
-                    }
-                case SkillName.Bushido:
-                    {
-                        break;
-                    }
-                case SkillName.Fletching:
-                    {
-                        PackItem(new Board(14));
-                        PackItem(new Feather(5));
-                        PackItem(new Shaft(5));
-
-                        break;
-                    }
-                case SkillName.Camping:
-                    {
-                        PackItem(new Bedroll());
-                        PackItem(new Kindling(5));
-
-                        break;
-                    }
-                case SkillName.Carpentry:
-                    {
-                        PackItem(new Board(10));
-                        PackItem(new Saw());
-
-                        EquipItem(new HalfApron(Utility.RandomYellowHue()));
-
-                        break;
-                    }
-                case SkillName.Cartography:
-                    {
-                        PackItem(new BlankMap());
-                        PackItem(new BlankMap());
-                        PackItem(new BlankMap());
-                        PackItem(new BlankMap());
-                        PackItem(new Sextant());
-                        break;
-                    }
-                case SkillName.Cooking:
-                    {
-                        PackItem(new Kindling(2));
-                        PackItem(new RawLambLeg());
-                        PackItem(new RawChickenLeg());
-                        PackItem(new RawFishSteak());
-                        PackItem(new SackFlour());
-                        PackItem(new Pitcher(BeverageType.Water));
-                        break;
-                    }
-                case SkillName.Chivalry:
-                    {
-                        break;
-                    }
-                case SkillName.DetectHidden:
-                    {
-                        EquipItem(new Cloak(0x455));
-
-                        break;
-                    }
-                case SkillName.Discordance:
-                    {
-                        PackInstrument();
-                        break;
-                    }
-                case SkillName.Fencing:
-                    {
-                        EquipItem(new Kryss());
-
-                        break;
-                    }
-                case SkillName.Fishing:
-                    {
-                        EquipItem(new FishingPole());
-                        EquipItem(new FloppyHat(Utility.RandomYellowHue()));
-
-                        break;
-                    }
-                case SkillName.Healing:
-                    {
-                        PackItem(new Bandage(50));
-                        PackItem(new Scissors());
-                        break;
-                    }
-                case SkillName.Herding:
-                    {
-                        EquipItem(new ShepherdsCrook());
-
-                        break;
-                    }
-                case SkillName.Hiding:
-                    {
-                        EquipItem(new Cloak(0x455));
-
-                        break;
-                    }
-                case SkillName.Inscribe:
-                    {
-                        PackItem(new BlankScroll(2));
-                        PackItem(new BlueBook());
-
-                        break;
-                    }
-                case SkillName.ItemID:
-                    {
-                        EquipItem(new GnarledStaff());
-
-                        break;
-                    }
-                case SkillName.Lockpicking:
-                    {
-                        PackItem(new Lockpick(20));
-
-                        break;
-                    }
-                case SkillName.Lumberjacking:
-                    {
-                        EquipItem(new Hatchet());
-
-                        break;
-                    }
-                case SkillName.Macing:
-                    {
-                        EquipItem(new Club());
-
-                        break;
-                    }
-                case SkillName.Magery:
-                    {
-                        PackItem(new BagOfReagents(50));
-
-                        PackScroll(0);
-                        PackScroll(1);
-                        PackScroll(2);
-
-                        EquipItem(new Spellbook((ulong)0x382A8C38));
-                        EquipItem(new WizardsHat());
-                        EquipItem(new Robe(Utility.RandomBlueHue()));
-
-                        break;
-                    }
-                case SkillName.Mining:
-                    {
-                        PackItem(new Pickaxe());
-                        break;
-                    }
-                case SkillName.Musicianship:
-                    {
-                        PackInstrument();
-                        break;
-                    }
-                case SkillName.Necromancy:
-                    {
-                        break;
-                    }
-                case SkillName.Ninjitsu:
-                    {
-                        break;
-                    }
-                case SkillName.Parry:
-                    {
-                        EquipItem(new WoodenShield());
-
-                        break;
-                    }
-                case SkillName.Peacemaking:
-                    {
-                        PackInstrument();
-
-                        break;
-                    }
-                case SkillName.Poisoning:
-                    {
-                        PackItem(new LesserPoisonPotion());
-                        PackItem(new LesserPoisonPotion());
-
-                        break;
-                    }
-                case SkillName.Provocation:
-                    {
-                        PackInstrument();
-
-                        break;
-                    }
-                case SkillName.Snooping:
-                    {
-                        PackItem(new Lockpick(20));
-
-                        break;
-                    }
-                case SkillName.SpiritSpeak:
-                    {
-                        EquipItem(new Cloak(0x455));
-
-                        break;
-                    }
-                case SkillName.Stealing:
-                    {
-                        PackItem(new Lockpick(20));
-
-                        break;
-                    }
-                case SkillName.Swords:
-                    {
-                        EquipItem(new Katana());
-
-                        break;
-                    }
-                case SkillName.Tactics:
-                    {
-                        EquipItem(new Katana());
-
-                        break;
-                    }
-                case SkillName.Tailoring:
-                    {
-                        PackItem(new BoltOfCloth());
-                        PackItem(new SewingKit());
-
-                        break;
-                    }
-                case SkillName.Tinkering:
-                    {
-                        PackItem(new TinkerTools());
-                        PackItem(new IronIngot(50));
-                        PackItem(new Axle());
-                        PackItem(new AxleGears());
-                        PackItem(new Springs());
-                        PackItem(new ClockFrame());
-
-                        break;
-                    }
-                case SkillName.Tracking:
-                    {
-                        if (m_Mobile != null)
-                        {
-                            Item shoes = m_Mobile.FindItemOnLayer(Layer.Shoes);
-
-                            if (shoes != null)
-                                shoes.Delete();
-                        }
-
-                        EquipItem(new Boots(Utility.RandomYellowHue()));
-                        EquipItem(new SkinningKnife());
-
-                        break;
-                    }
-                case SkillName.Veterinary:
-                    {
-                        PackItem(new Bandage(5));
-                        PackItem(new Scissors());
-
-                        break;
-                    }
-                case SkillName.Wrestling:
-                    {
-                        EquipItem(new LeatherGloves());
-
-                        break;
-                    }
-                case SkillName.Throwing:
-                    {
-                        break;
-                    }
-                case SkillName.Mysticism:
-                    {
-                        break;
-                    }
             }
         }
 

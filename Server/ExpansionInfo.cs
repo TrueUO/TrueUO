@@ -70,9 +70,9 @@ namespace Server
 		ExpansionUOTD = ExpansionUOR | UOTD,
 		ExpansionLBR = ExpansionUOTD | LBR,
 		ExpansionAOS = ExpansionLBR | AOS | LiveAccount,
-		ExpansionSE = ExpansionAOS | SE,
-		ExpansionML = ExpansionSE | ML | NinthAge,
-		ExpansionSA = ExpansionML | SA | Gothic | Rustic,
+		ExpansionSE = ExpansionAOS,
+		ExpansionML = ExpansionSE | NinthAge,
+		ExpansionSA = ExpansionML | Gothic | Rustic,
 		ExpansionHS = ExpansionSA | HS,
 		ExpansionTOL = ExpansionHS | TOL | Jungle | Shadowguard,
 		ExpansionEJ = ExpansionTOL | EJ
