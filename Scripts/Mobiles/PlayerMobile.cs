@@ -2849,14 +2849,6 @@ namespace Server.Mobiles
                 }
             }
 
-            if (Young)
-            {
-                if (YoungDeathTeleport())
-                {
-                    Timer.DelayCall(TimeSpan.FromSeconds(2.5), SendYoungDeathNotice);
-                }
-            }
-
             Guilds.Guild.HandleDeath(this, killer);
 
             if (m_BuffTable != null)
@@ -3117,29 +3109,6 @@ namespace Server.Mobiles
             }
 
             return result;
-        }
-
-        public override bool CheckPoisonImmunity(Mobile from, Poison poison)
-        {
-            if (Young)
-            {
-                return true;
-            }
-
-            return base.CheckPoisonImmunity(from, poison);
-        }
-
-        public override void OnPoisonImmunity(Mobile from, Poison poison)
-        {
-            if (Young)
-            {
-                SendLocalizedMessage(502808);
-                // You would have been poisoned, were you not new to the land of Britannia. Be careful in the future.
-            }
-            else
-            {
-                base.OnPoisonImmunity(from, poison);
-            }
         }
         #endregion
 
@@ -4058,11 +4027,14 @@ namespace Server.Mobiles
 
         public override void OnKillsChange(int oldValue)
         {
-            if (Young && Kills > oldValue)
+            if (Kills < 5)
             {
-                Account acc = Account as Account;
+                SendMessage("NOTICE: If you reach the status of murderer all items will drop to your corpse on death.");
+            }
 
-                acc?.RemoveYoungStatus(0);
+            if (Kills == 5)
+            {
+                SendMessage("WARNING: You have reached the status of murderer and all items will drop to your corpse on death.");
             }
         }
 
@@ -4239,6 +4211,16 @@ namespace Server.Mobiles
         }
         #endregion
 
+        public override TimeSpan GetLogoutDelay()
+        {
+            if (BedrollLogout || TestCenter.Enabled)
+            {
+                return TimeSpan.Zero;
+            }
+
+            return base.GetLogoutDelay();
+        }
+
         #region Young system
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Young
@@ -4249,26 +4231,6 @@ namespace Server.Mobiles
                 SetFlag(PlayerFlag.Young, value);
                 InvalidateProperties();
             }
-        }
-
-        public override string ApplyNameSuffix(string suffix)
-        {
-            if (Young)
-            {
-                suffix = suffix.Length == 0 ? "(Young)" : string.Concat(suffix, " (Young)");
-            }
-
-            return base.ApplyNameSuffix(suffix);
-        }
-
-        public override TimeSpan GetLogoutDelay()
-        {
-            if (Young || BedrollLogout || TestCenter.Enabled)
-            {
-                return TimeSpan.Zero;
-            }
-
-            return base.GetLogoutDelay();
         }
 
         private DateTime m_LastYoungMessage = DateTime.MinValue;
@@ -4316,104 +4278,6 @@ namespace Server.Mobiles
             }
 
             return false;
-        }
-
-        private static readonly Point3D[] m_TrammelDeathDestinations =
-        {
-            new Point3D(1481, 1612, 20), new Point3D(2708, 2153, 0), new Point3D(2249, 1230, 0), new Point3D(5197, 3994, 37),
-            new Point3D(1412, 3793, 0), new Point3D(3688, 2232, 20), new Point3D(2578, 604, 0), new Point3D(4397, 1089, 0),
-            new Point3D(5741, 3218, -2), new Point3D(2996, 3441, 15), new Point3D(624, 2225, 0), new Point3D(1916, 2814, 0),
-            new Point3D(2929, 854, 0), new Point3D(545, 967, 0), new Point3D(3469, 2559, 36)
-        };
-
-        private static readonly Point3D[] m_IlshenarDeathDestinations =
-        {
-            new Point3D(1216, 468, -13), new Point3D(723, 1367, -60), new Point3D(745, 725, -28), new Point3D(281, 1017, 0),
-            new Point3D(986, 1011, -32), new Point3D(1175, 1287, -30), new Point3D(1533, 1341, -3), new Point3D(529, 217, -44),
-            new Point3D(1722, 219, 96)
-        };
-
-        private static readonly Point3D[] m_MalasDeathDestinations =
-        {
-            new Point3D(2079, 1376, -70), new Point3D(944, 519, -71)
-        };
-
-        private static readonly Point3D[] m_TokunoDeathDestinations =
-        {
-            new Point3D(1166, 801, 27), new Point3D(782, 1228, 25), new Point3D(268, 624, 15)
-        };
-
-        public bool YoungDeathTeleport()
-        {
-            if (Region.IsPartOf<Jail>() || Region.IsPartOf("Samurai start location") ||
-                Region.IsPartOf("Ninja start location") || Region.IsPartOf("Ninja cave"))
-            {
-                return false;
-            }
-
-            Point3D loc;
-            Map map;
-
-            DungeonRegion dungeon = (DungeonRegion)Region.GetRegion(typeof(DungeonRegion));
-            if (dungeon != null && dungeon.EntranceLocation != Point3D.Zero)
-            {
-                loc = dungeon.EntranceLocation;
-                map = dungeon.EntranceMap;
-            }
-            else
-            {
-                loc = Location;
-                map = Map;
-            }
-
-            Point3D[] list;
-
-            if (map == Map.Trammel)
-            {
-                list = m_TrammelDeathDestinations;
-            }
-            else if (map == Map.Ilshenar)
-            {
-                list = m_IlshenarDeathDestinations;
-            }
-            else if (map == Map.Malas)
-            {
-                list = m_MalasDeathDestinations;
-            }
-            else if (map == Map.Tokuno)
-            {
-                list = m_TokunoDeathDestinations;
-            }
-            else
-            {
-                return false;
-            }
-
-            Point3D dest = Point3D.Zero;
-            int sqDistance = int.MaxValue;
-
-            for (int i = 0; i < list.Length; i++)
-            {
-                Point3D curDest = list[i];
-
-                int width = loc.X - curDest.X;
-                int height = loc.Y - curDest.Y;
-                int curSqDistance = width * width + height * height;
-
-                if (curSqDistance < sqDistance)
-                {
-                    dest = curDest;
-                    sqDistance = curSqDistance;
-                }
-            }
-
-            MoveToWorld(dest, map);
-            return true;
-        }
-
-        private void SendYoungDeathNotice()
-        {
-            SendGump(new YoungDeathNotice());
         }
         #endregion
 
