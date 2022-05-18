@@ -9,8 +9,6 @@ namespace Server.Mobiles
         private readonly List<SBInfo> m_SBInfos = new List<SBInfo>();
         protected override List<SBInfo> SBInfos => m_SBInfos;
 
-        public override NpcGuild NpcGuild => NpcGuild.TailorsGuild;
-
         [Constructable]
         public Weaver()
             : base("the weaver")

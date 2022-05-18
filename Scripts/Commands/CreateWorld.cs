@@ -61,12 +61,10 @@ namespace Server.Commands
             new CommandEntry("Khaldun",             "GenKhaldun",       "DeleteKhaldun",        Category.Dungeon,         107),
             new CommandEntry("Stealables",          "GenStealArties",   "RemoveStealArties",    Category.Spawn,           108),
             new CommandEntry("Solen Hives",         "SHTelGen",         "SHTelGenDelete",       Category.Dungeon,         109),
-            new CommandEntry("Malas Secrets",       "SecretLocGen",     "SecretLocDelete",      Category.System,          110),
             new CommandEntry("Decorations",         "Decorate",         "DecorateDelete",       Category.Decoration,      113),
             new CommandEntry("ML Decorations",      "DecorateML",       "DecorateMLDelete",     Category.Decoration,      114),
             new CommandEntry("SA Decorations",      "DecorateSA",       "DecorateSADelete",     Category.Decoration,      115),
             new CommandEntry("Spawners",            "XmlLoad Spawns",   "WipeAllXmlSpawners",   Category.Spawn,           116),
-            new CommandEntry("New Despise",         "SetupDespise",     "DeleteDespise",        Category.RevampedDungeon, 117),
             new CommandEntry("New Covetous",        "SetupNewCovetous", "DeleteCovetous",       Category.RevampedDungeon, 118),
             new CommandEntry("New Shame",           "GenerateNewShame", "DeleteShame",          Category.RevampedDungeon, 119),
             new CommandEntry("New Magincia",        "GenNewMagincia",   "DeleteNewMagincia",    Category.Decoration,      120),
@@ -512,8 +510,6 @@ namespace Server.Gumps
                     return StealableArtifactsSpawner.Instance != null;
                 case 109:
                     return SHTeleporter.SHTeleporterCreator.FindSHTeleporter(Map.Trammel, new Point3D(5747, 1895, 0)) != null;
-                case 110:
-                    return WeakEntityCollection.HasCollection("malas");
                 case 113:
                     return WeakEntityCollection.HasCollection("deco");
                 case 114:
@@ -530,8 +526,6 @@ namespace Server.Gumps
                         }
                     }
                     return count > 1000;
-                case 117:
-                    return WeakEntityCollection.HasCollection("despise");
                 case 118:
                     return WeakEntityCollection.HasCollection("newcovetous");
                 case 119:

@@ -55,7 +55,7 @@ namespace Server.Mobiles
         UNUSED = 0x00000040,
         UseOwnFilter = 0x00000080,
         UNUSED2 = 0x00000100,
-        PagingSquelched = 0x00000200,
+        UNUSED3 = 0x00000200,
         Young = 0x00000400,
         AcceptGuildInvites = 0x00000800,
         DisplayChampionTitle = 0x00001000,
@@ -89,13 +89,9 @@ namespace Server.Mobiles
         ThievesGuild,
         RangersGuild,
         HealersGuild,
-        MinersGuild,
         MerchantsGuild,
-        TinkersGuild,
-        TailorsGuild,
         FishermensGuild,
-        BardsGuild,
-        BlacksmithsGuild
+        BardsGuild
     }
     #endregion
 
@@ -316,9 +312,6 @@ namespace Server.Mobiles
         #region PlayerFlags
         public PlayerFlag Flags { get => m_Flags; set => m_Flags = value; }
         public ExtendedPlayerFlag ExtendedFlags { get => m_ExtendedFlags; set => m_ExtendedFlags = value; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool PagingSquelched { get => GetFlag(PlayerFlag.PagingSquelched); set => SetFlag(PlayerFlag.PagingSquelched, value); }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Glassblowing { get => GetFlag(PlayerFlag.Glassblowing); set => SetFlag(PlayerFlag.Glassblowing, value); }
@@ -3213,30 +3206,16 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
             {
-                case 42: 
-                case 41: 
-                case 40: 
-                case 39: 
-                case 38:
-                    NextGemOfSalvationUse = reader.ReadDateTime();
-                    goto case 37;
-                case 37:
-                    m_ExtendedFlags = (ExtendedPlayerFlag)reader.ReadInt();
-                    goto case 36;
-                case 36:
-                    RewardStableSlots = reader.ReadInt();
-                    goto case 35;
-                case 35: 
-                case 34:
-                case 33:
-                case 32:
-                case 31:
+                case 1:
                     {
+                        NextGemOfSalvationUse = reader.ReadDateTime();
+                        m_ExtendedFlags = (ExtendedPlayerFlag)reader.ReadInt();
+                        RewardStableSlots = reader.ReadInt();
+
                         DisplayGuildTitle = reader.ReadBool();
                         m_FameKarmaTitle = reader.ReadString();
                         m_PaperdollSkillTitle = reader.ReadString();
@@ -3245,11 +3224,7 @@ namespace Server.Mobiles
 
                         m_CurrentChampTitle = reader.ReadString();
                         m_CurrentVeteranTitle = reader.ReadInt();
-                        goto case 30;
-                    }
-                case 30: goto case 29;
-                case 29:
-                    {
+
                         m_SSNextSeed = reader.ReadDateTime();
                         m_SSSeedExpire = reader.ReadDateTime();
                         m_SSSeedLocation = reader.ReadPoint3D();
@@ -3270,26 +3245,10 @@ namespace Server.Mobiles
 
                         m_SelectedTitle = reader.ReadInt();
 
-                        goto case 28;
-                    }
-                case 28:
-                    {
-                        goto case 27;
-                    }
-                case 27:
-                    {
                         m_AnkhNextUse = reader.ReadDateTime();
 
-                        goto case 26;
-                    }
-                case 26:
-                    {
                         m_AutoStabled = reader.ReadStrongMobileList();
 
-                        goto case 25;
-                    }
-                case 25:
-                    {
                         int recipeCount = reader.ReadInt();
 
                         if (recipeCount > 0)
@@ -3299,40 +3258,18 @@ namespace Server.Mobiles
                             for (int i = 0; i < recipeCount; i++)
                             {
                                 int r = reader.ReadInt();
-                                if (reader.ReadBool()) //Don't add in recipies which we haven't gotten or have been removed
+                                if (reader.ReadBool()) //Don't add in recipes which we haven't gotten or have been removed
                                 {
                                     m_AcquiredRecipes.Add(r, true);
                                 }
                             }
                         }
-                        goto case 24;
-                    }
-                case 24:
-                    {
-                        goto case 23;
-                    }
-                case 23:
-                    {
+
                         m_ChampionTitles = new ChampionTitleInfo(reader);
-                        goto case 22;
-                    }
-                case 22:
-                    {
-                        goto case 21;
-                    }
-                case 21:
-                    {
-                        goto case 20;
-                    }
-                case 20:
-                    {
+
                         m_AllianceMessageHue = reader.ReadEncodedInt();
                         m_GuildMessageHue = reader.ReadEncodedInt();
 
-                        goto case 19;
-                    }
-                case 19:
-                    {
                         int rank = reader.ReadEncodedInt();
                         int maxRank = RankDefinition.Ranks.Length - 1;
                         if (rank > maxRank)
@@ -3342,12 +3279,7 @@ namespace Server.Mobiles
 
                         m_GuildRank = RankDefinition.Ranks[rank];
                         m_LastOnline = reader.ReadDateTime();
-                        goto case 18;
-                    }
-                case 18:
-                case 17: 
-                case 16:
-                    {
+
                         m_Quest = QuestSerializer.DeserializeQuest(reader);
 
                         if (m_Quest != null)
@@ -3363,40 +3295,14 @@ namespace Server.Mobiles
 
                             for (int i = 0; i < count; ++i)
                             {
-                                Type questType;
-
-                                if (version >= 42)
-                                    questType = reader.ReadObjectType();
-                                else
-                                    questType = QuestSerializer.ReadQuestType(reader);
-
-                                DateTime restartTime;
-
-                                restartTime = reader.ReadDateTime();
+                                var questType = reader.ReadObjectType();
+                                var restartTime = reader.ReadDateTime();
 
                                 m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
                             }
                         }
 
-                        goto case 15;
-                    }
-                case 15:
-                    {
-                        goto case 14;
-                    }
-                case 14:
-                    {
-                        goto case 13;
-                    }
-                case 13: 
-                case 12:
-                    {
-                        goto case 11;
-                    }
-                case 11:
-                case 10:
-                    {
-                        if (reader.ReadBool())
+                        if (reader.ReadBool()) // investigate removing this in the future.
                         {
                             m_HairModID = reader.ReadInt();
                             m_HairModHue = reader.ReadInt();
@@ -3404,35 +3310,14 @@ namespace Server.Mobiles
                             m_BeardModHue = reader.ReadInt();
                         }
 
-                        goto case 9;
-                    }
-                case 9:
-                    {
-                        goto case 8;
-                    }
-                case 8:
-                    {
                         m_NpcGuild = (NpcGuild)reader.ReadInt();
                         m_NpcGuildJoinTime = reader.ReadDateTime();
                         m_NpcGuildGameTime = reader.ReadTimeSpan();
-                        goto case 7;
-                    }
-                case 7:
-                    {
+
                         m_PermaFlags = reader.ReadStrongMobileList();
-                        goto case 6;
-                    }
-                case 6:                   
-                case 5:                   
-                case 4:
-                case 3:
-                case 2:
-                    {
+
                         m_Flags = (PlayerFlag)reader.ReadInt();
-                        goto case 1;
-                    }
-                case 1:
-                    {
+
                         m_LongTermElapse = reader.ReadTimeSpan();
                         m_ShortTermElapse = reader.ReadTimeSpan();
                         m_GameTime = reader.ReadTimeSpan();
@@ -3510,13 +3395,12 @@ namespace Server.Mobiles
             CheckAtrophies(this);
 
             base.Serialize(writer);
-            writer.Write(42); // version
+            writer.Write(1); // version
 
             writer.Write(NextGemOfSalvationUse);
             writer.Write((int)m_ExtendedFlags);
             writer.Write(RewardStableSlots);
 
-            // Version 31/32 Titles
             writer.Write(DisplayGuildTitle);
             writer.Write(m_FameKarmaTitle);
             writer.Write(m_PaperdollSkillTitle);
@@ -3524,8 +3408,6 @@ namespace Server.Mobiles
             writer.Write(m_SubtitleSkillTitle);
             writer.Write(m_CurrentChampTitle);
             writer.Write(m_CurrentVeteranTitle);
-
-            // Version 30 open to take out old Queens Loyalty Info
 
             #region Plant System
             writer.Write(m_SSNextSeed);
@@ -3535,7 +3417,6 @@ namespace Server.Mobiles
             #endregion
 
             #region Mondain's Legacy
-
             if (m_Collections == null)
             {
                 writer.Write(0);
@@ -3568,7 +3449,6 @@ namespace Server.Mobiles
             writer.Write(m_SelectedTitle);
             #endregion
 
-            // Version 28
             writer.Write(m_AnkhNextUse);
             writer.Write(m_AutoStabled, true);
 

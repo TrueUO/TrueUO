@@ -16,7 +16,6 @@ namespace Server.Mobiles
         {
         }
 
-        public override NpcGuild NpcGuild => NpcGuild.TinkersGuild;
         protected override List<SBInfo> SBInfos => m_SBInfos;
         public override void InitSBInfo()
         {
