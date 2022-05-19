@@ -226,9 +226,9 @@ namespace Server.Items
             Register();
         }
 
-        public override bool CheckTravel(Mobile m, Point3D newLocation, TravelCheckType travelType)
+        public override bool CheckTravel(Mobile traveller, Point3D p, TravelCheckType type)
         {
-            return travelType >= (TravelCheckType)4; // teleport only
+            return type >= (TravelCheckType)4; // teleport only
         }
 
         public override void OnLocationChanged(Mobile m, Point3D oldLocation)

@@ -74,7 +74,7 @@ namespace Server.Engines.HuntsmasterChallenge
             Visible = false;
             Name = "Huntsmaster Challenge System";
 
-            MoveToWorld(new Point3D(744, 2136, 0), Map.Trammel);
+            MoveToWorld(new Point3D(744, 2136, 0), Map.Felucca);
         }
 
         public override void OnDoubleClick(Mobile m)
@@ -117,7 +117,6 @@ namespace Server.Engines.HuntsmasterChallenge
 
             if (m_NextHint < DateTime.UtcNow)
             {
-                CheckHint(Map.Trammel);
                 CheckHint(Map.Felucca);
             }
         }
@@ -442,35 +441,11 @@ namespace Server.Engines.HuntsmasterChallenge
             for (int i = 0; i < 9; i++)
             {
                 s = new Static(2931);
-                s.MoveToWorld(new Point3D(748 + i, 2136, 0), Map.Trammel);
-
-                s = new Static(2928);
-                s.MoveToWorld(new Point3D(748 + i, 2137, 0), Map.Trammel);
-
-                s = new Static(2931);
                 s.MoveToWorld(new Point3D(748 + i, 2136, 0), Map.Felucca);
 
                 s = new Static(2928);
                 s.MoveToWorld(new Point3D(748 + i, 2137, 0), Map.Felucca);
             }
-
-            s = new Static(2923);
-            s.MoveToWorld(new Point3D(736, 2150, 0), Map.Trammel);
-
-            s = new Static(2925);
-            s.MoveToWorld(new Point3D(736, 2149, 0), Map.Trammel);
-
-            s = new Static(2924);
-            s.MoveToWorld(new Point3D(736, 2148, 0), Map.Trammel);
-
-            s = new Static(2923);
-            s.MoveToWorld(new Point3D(736, 2146, 0), Map.Trammel);
-
-            s = new Static(2925);
-            s.MoveToWorld(new Point3D(736, 2145, 0), Map.Trammel);
-
-            s = new Static(2924);
-            s.MoveToWorld(new Point3D(736, 2144, 0), Map.Trammel);
 
             s = new Static(2923);
             s.MoveToWorld(new Point3D(736, 2150, 0), Map.Felucca);
@@ -491,149 +466,74 @@ namespace Server.Engines.HuntsmasterChallenge
             s.MoveToWorld(new Point3D(736, 2144, 0), Map.Felucca);
 
             HuntingDisplayTrophy trophy = new HuntingDisplayTrophy(HuntType.GrizzlyBear);
-            trophy.MoveToWorld(new Point3D(748, 2137, 6), Map.Trammel);
-
-            trophy = new HuntingDisplayTrophy(HuntType.GrizzlyBear);
             trophy.MoveToWorld(new Point3D(748, 2137, 6), Map.Felucca);
 
             trophy = new HuntingDisplayTrophy(HuntType.GrayWolf);
             trophy.MoveToWorld(new Point3D(751, 2137, 6), Map.Felucca);
 
-            trophy = new HuntingDisplayTrophy(HuntType.GrayWolf);
-            trophy.MoveToWorld(new Point3D(751, 2137, 6), Map.Trammel);
-
             trophy = new HuntingDisplayTrophy(HuntType.Cougar);
             trophy.MoveToWorld(new Point3D(753, 2137, 6), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Cougar);
-            trophy.MoveToWorld(new Point3D(753, 2137, 6), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.Turkey);
             trophy.MoveToWorld(new Point3D(756, 2137, 6), Map.Felucca);
 
-            trophy = new HuntingDisplayTrophy(HuntType.Turkey);
-            trophy.MoveToWorld(new Point3D(756, 2137, 6), Map.Trammel);
-
             trophy = new HuntingDisplayTrophy(HuntType.Bull);
             trophy.MoveToWorld(new Point3D(748, 2136, 2), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Bull);
-            trophy.MoveToWorld(new Point3D(748, 2136, 2), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.Boar);
             trophy.MoveToWorld(new Point3D(750, 2136, 2), Map.Felucca);
 
-            trophy = new HuntingDisplayTrophy(HuntType.Boar);
-            trophy.MoveToWorld(new Point3D(750, 2136, 2), Map.Trammel);
-
             trophy = new HuntingDisplayTrophy(HuntType.Walrus);
             trophy.MoveToWorld(new Point3D(752, 2136, 2), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Walrus);
-            trophy.MoveToWorld(new Point3D(752, 2136, 2), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.Alligator);
             trophy.MoveToWorld(new Point3D(754, 2136, 2), Map.Felucca);
 
-            trophy = new HuntingDisplayTrophy(HuntType.Alligator);
-            trophy.MoveToWorld(new Point3D(754, 2136, 2), Map.Trammel);
-
             trophy = new HuntingDisplayTrophy(HuntType.Eagle);
             trophy.MoveToWorld(new Point3D(756, 2136, 3), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Eagle);
-            trophy.MoveToWorld(new Point3D(756, 2136, 3), Map.Trammel);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Saurosaurus);
-            trophy.MoveToWorld(new Point3D(746, 2136, 0), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.Saurosaurus);
             trophy.MoveToWorld(new Point3D(746, 2136, 0), Map.Felucca);
 
             trophy = new HuntingDisplayTrophy(HuntType.Anchisaur);
-            trophy.MoveToWorld(new Point3D(744, 2136, 0), Map.Trammel);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Anchisaur);
             trophy.MoveToWorld(new Point3D(744, 2136, 0), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.BlackTiger);
-            trophy.MoveToWorld(new Point3D(744, 2138, 0), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.BlackTiger);
             trophy.MoveToWorld(new Point3D(744, 2138, 0), Map.Felucca);
 
             trophy = new HuntingDisplayTrophy(HuntType.WhiteTiger);
-            trophy.MoveToWorld(new Point3D(744, 2140, 0), Map.Trammel);
-
-            trophy = new HuntingDisplayTrophy(HuntType.WhiteTiger);
             trophy.MoveToWorld(new Point3D(744, 2140, 0), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Triceratops);
-            trophy.MoveToWorld(new Point3D(744, 2142, 0), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.Triceratops);
             trophy.MoveToWorld(new Point3D(744, 2142, 0), Map.Felucca);
 
             trophy = new HuntingDisplayTrophy(HuntType.Allosaurus);
-            trophy.MoveToWorld(new Point3D(743, 2144, 0), Map.Trammel);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Allosaurus);
             trophy.MoveToWorld(new Point3D(743, 2144, 0), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.MyrmidexDrone);
-            trophy.MoveToWorld(new Point3D(741, 2144, 0), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.MyrmidexDrone);
             trophy.MoveToWorld(new Point3D(741, 2144, 0), Map.Felucca);
 
             trophy = new HuntingDisplayTrophy(HuntType.Dimetrosaur);
-            trophy.MoveToWorld(new Point3D(758, 2136, 0), Map.Trammel);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Dimetrosaur);
             trophy.MoveToWorld(new Point3D(758, 2136, 0), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Tiger);
-            trophy.MoveToWorld(new Point3D(738, 2144, 0), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.Tiger);
             trophy.MoveToWorld(new Point3D(738, 2144, 0), Map.Felucca);
 
             trophy = new HuntingDisplayTrophy(HuntType.Najasaurus);
-            trophy.MoveToWorld(new Point3D(736, 2145, 6), Map.Trammel);
-
-            s = new Static(0x9C03);
-            s.MoveToWorld(new Point3D(736, 2144, 6), Map.Trammel);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Najasaurus);
             trophy.MoveToWorld(new Point3D(736, 2145, 6), Map.Felucca);
-
             s = new Static(0x9C03);
             s.MoveToWorld(new Point3D(736, 2144, 6), Map.Felucca);
-
-            trophy = new HuntingDisplayTrophy(HuntType.Lion);
-            trophy.MoveToWorld(new Point3D(736, 2147, 0), Map.Trammel);
 
             trophy = new HuntingDisplayTrophy(HuntType.Lion);
             trophy.MoveToWorld(new Point3D(736, 2147, 0), Map.Felucca);
 
             trophy = new HuntingDisplayTrophy(HuntType.MyrmidexLarvae);
-            trophy.MoveToWorld(new Point3D(736, 2149, 6), Map.Trammel);
-
-            s = new Static(0x9C01);
-            s.MoveToWorld(new Point3D(736, 2149, 6), Map.Trammel);
-
-            trophy = new HuntingDisplayTrophy(HuntType.MyrmidexLarvae);
             trophy.MoveToWorld(new Point3D(736, 2149, 6), Map.Felucca);
-
             s = new Static(0x9C01);
             s.MoveToWorld(new Point3D(736, 2149, 6), Map.Felucca);
 
             XmlSpawner spawner = new XmlSpawner("HuntMaster");
             spawner.MoveToWorld(new Point3D(747, 2148, 0), Map.Felucca);
-            spawner.DoRespawn = true;
-
-            spawner = new XmlSpawner("HuntMaster");
-            spawner.MoveToWorld(new Point3D(747, 2148, 0), Map.Trammel);
             spawner.DoRespawn = true;
         }
     }

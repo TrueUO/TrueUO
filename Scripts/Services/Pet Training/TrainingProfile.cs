@@ -313,8 +313,6 @@ namespace Server.Mobiles
                         if (TrainingProgress >= TrainingProgressMax)
                         {
                             Creature.PrivateOverheadMessage(MessageType.Regular, 0x59, 1157543, mobile.NetState); // *The creature surges with battle experience and is ready to train!*
-
-                            Engines.Quests.LeadingIntoBattleQuest.CheckComplete(mobile);
                         }
                     }
                     else
