@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -6,11 +5,10 @@ using System;
 
 namespace Server.Items
 {
-    public class TreeStump : BaseAddon, IRewardItem
+    public class TreeStump : BaseAddon
     {
         public override bool ForceShowProperties => true;
 
-        private bool m_IsRewardItem;
         private int m_Logs;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -34,23 +32,13 @@ namespace Server.Items
             {
                 TreeStumpDeed deed = new TreeStumpDeed
                 {
-                    IsRewardItem = m_IsRewardItem,
                     Logs = m_Logs
                 };
 
                 return deed;
             }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                UpdateProperties();
-            }
-        }
+        
         [CommandProperty(AccessLevel.GameMaster)]
         public int Logs
         {
@@ -61,6 +49,7 @@ namespace Server.Items
                 UpdateProperties();
             }
         }
+
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
@@ -184,12 +173,10 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             TryGiveResourceCount();
 
-            writer.Write(m_IsRewardItem);
             writer.Write(m_Logs);
             writer.Write(NextResourceCount);
         }
@@ -197,10 +184,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadEncodedInt();
 
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
             m_Logs = reader.ReadInt();
             NextResourceCount = reader.ReadDateTime();
         }
@@ -215,10 +200,9 @@ namespace Server.Items
         }
     }
 
-    public class TreeStumpDeed : BaseAddonDeed, IRewardItem, IRewardOption
+    public class TreeStumpDeed : BaseAddonDeed, IRewardOption
     {
         private int m_ItemID;
-        private bool m_IsRewardItem;
         private int m_Logs;
 
         [Constructable]
@@ -239,22 +223,10 @@ namespace Server.Items
             {
                 TreeStump addon = new TreeStump(m_ItemID)
                 {
-                    IsRewardItem = m_IsRewardItem,
                     Logs = m_Logs
                 };
 
                 return addon;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
@@ -269,26 +241,17 @@ namespace Server.Items
             }
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076223); // 7th Year Veteran Reward
-        }
-
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 from.CloseGump(typeof(RewardOptionGump));
                 from.SendGump(new RewardOptionGump(this));
             }
             else
+            {
                 from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -296,7 +259,6 @@ namespace Server.Items
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
 
-            writer.Write(m_IsRewardItem);
             writer.Write(m_Logs);
         }
 
@@ -305,7 +267,6 @@ namespace Server.Items
             base.Deserialize(reader);
             reader.ReadEncodedInt();
 
-            m_IsRewardItem = reader.ReadBool();
             m_Logs = reader.ReadInt();
         }
 

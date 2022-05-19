@@ -1,18 +1,7 @@
-using Server.Engines.VeteranRewards;
-
 namespace Server.Items
 {
-    public class AllegiancePouch : Backpack, IRewardItem
+    public class AllegiancePouch : Backpack
     {
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get { return m_IsRewardItem; }
-            set { m_IsRewardItem = value; }
-        }
-
         public override int LabelNumber => 1113953;  //Allegiance Pouch
 
         [Constructable]
@@ -24,14 +13,6 @@ namespace Server.Items
 
             DropItem(new OrderBanner());
             DropItem(new ChaosBanner());
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1113802); // 12th Year Veteran Reward
         }
 
         public AllegiancePouch(Serial serial)
@@ -48,7 +29,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

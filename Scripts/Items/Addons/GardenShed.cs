@@ -261,14 +261,6 @@ namespace Server.Items
                 from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (IsRewardItem)
-                list.Add(1113805); // 15th Year Veteran Reward
-        }
-
         private void SendTarget(Mobile m)
         {
             base.OnDoubleClick(m);
@@ -277,7 +269,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.WriteEncodedInt(1); // version
+            writer.WriteEncodedInt(0); // version
 
             writer.Write(IsRewardItem);
         }
@@ -285,10 +277,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
-            if (version > 0)
-                IsRewardItem = reader.ReadBool();
+            IsRewardItem = reader.ReadBool();
         }
 
         private class InternalGump : Gump

@@ -157,9 +157,6 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 BaseHouse house = BaseHouse.FindHouseAt(from);
@@ -170,10 +167,14 @@ namespace Server.Items
                     from.SendGump(new InternalGump(this));
                 }
                 else
+                {
                     from.SendLocalizedMessage(502092); // You must be in your house to do 
+                }
             }
             else
+            {
                 from.SendLocalizedMessage(1042038); // You must have the object in your backpack to use it.          	
+            }
         }
 
         public override void Serialize(GenericWriter writer)

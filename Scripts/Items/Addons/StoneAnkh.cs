@@ -187,30 +187,20 @@ namespace Server.Items
         }
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 from.CloseGump(typeof(InternalGump));
                 from.SendGump(new InternalGump(this));
             }
             else
+            {
                 from.SendLocalizedMessage(1042038); // You must have the object in your backpack to use it.    
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076221); // 5th Year Veteran Reward
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -219,8 +209,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
         }

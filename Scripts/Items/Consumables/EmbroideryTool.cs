@@ -8,7 +8,6 @@ namespace Server.Items
 
         public override bool DeletedItem => false;
         public override int LowSkillMessage => 1158837;  // Your tailoring skill is too low to fix this yourself. An NPC tailor can help you repair this for a fee.
-        public override int VeteranRewardCliloc => 1076220;  // 4th Year Veteran Reward
 
         public override int GumpTitle => 1158846;  // <CENTER>Embroidery Tool</CENTER>
 

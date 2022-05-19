@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -14,7 +13,7 @@ namespace Server.Items
         GemEast = 103
     }
 
-    public class MiningCart : BaseAddon, IRewardItem
+    public class MiningCart : BaseAddon
     {
         public override bool ForceShowProperties => true;
 
@@ -24,7 +23,6 @@ namespace Server.Items
             {
                 MiningCartDeed deed = new MiningCartDeed
                 {
-                    IsRewardItem = m_IsRewardItem,
                     Gems = m_Gems,
                     Ore = m_Ore
                 };
@@ -32,11 +30,6 @@ namespace Server.Items
                 return deed;
             }
         }
-
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get => m_IsRewardItem; set => m_IsRewardItem = value; }
 
         private MiningCartType m_CartType;
 
@@ -388,16 +381,11 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.WriteEncodedInt(1); // version
+            writer.WriteEncodedInt(0); // version
 
             TryGiveResourceCount();
 
-            #region version 1
             writer.Write((int)m_CartType);
-            #endregion
-
-            writer.Write(m_IsRewardItem);
             writer.Write(m_Gems);
             writer.Write(m_Ore);
             writer.Write(NextResourceCount);
@@ -406,26 +394,16 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadEncodedInt();
 
-            int version = reader.ReadEncodedInt();
-
-            switch (version)
-            {
-                case 1:
-                    m_CartType = (MiningCartType)reader.ReadInt();
-                    goto case 0;
-                case 0:
-                    m_IsRewardItem = reader.ReadBool();
-                    m_Gems = reader.ReadInt();
-                    m_Ore = reader.ReadInt();
-
-                    NextResourceCount = reader.ReadDateTime();
-                    break;
-            }
+            m_CartType = (MiningCartType)reader.ReadInt();
+            m_Gems = reader.ReadInt();
+            m_Ore = reader.ReadInt();
+            NextResourceCount = reader.ReadDateTime();
         }
     }
 
-    public class MiningCartDeed : BaseAddonDeed, IRewardItem, IRewardOption
+    public class MiningCartDeed : BaseAddonDeed, IRewardOption
     {
         public override int LabelNumber => 1080385;// deed for a mining cart decoration
 
@@ -435,7 +413,6 @@ namespace Server.Items
             {
                 MiningCart addon = new MiningCart(m_CartType)
                 {
-                    IsRewardItem = m_IsRewardItem,
                     Gems = m_Gems,
                     Ore = m_Ore
                 };
@@ -445,19 +422,6 @@ namespace Server.Items
         }
 
         private MiningCartType m_CartType;
-
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
 
         private int m_Gems;
 
@@ -495,35 +459,24 @@ namespace Server.Items
         {
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1080457); // 10th Year Veteran Reward
-        }
-
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 from.CloseGump(typeof(RewardOptionGump));
                 from.SendGump(new RewardOptionGump(this));
             }
             else
+            {
                 from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
-            writer.Write(m_IsRewardItem);
             writer.Write(m_Gems);
             writer.Write(m_Ore);
         }
@@ -531,10 +484,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadEncodedInt();
 
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
             m_Gems = reader.ReadInt();
             m_Ore = reader.ReadInt();
         }
@@ -552,7 +503,9 @@ namespace Server.Items
             m_CartType = (MiningCartType)choice;
 
             if (!Deleted)
+            {
                 base.OnDoubleClick(from);
+            }
         }
     }
 }

@@ -1,13 +1,11 @@
-using Server.Engines.VeteranRewards;
 using Server.Multis;
 using Server.Network;
 using System;
 
 namespace Server.Items
 {
-    public class SheepStatue : BaseAddon, IRewardItem
+    public class SheepStatue : BaseAddon
     {
-        private bool m_IsRewardItem;
         private int m_ResourceCount;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -33,22 +31,10 @@ namespace Server.Items
             {
                 SheepStatueDeed deed = new SheepStatueDeed
                 {
-                    IsRewardItem = m_IsRewardItem,
                     ResourceCount = m_ResourceCount
                 };
 
                 return deed;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                UpdateProperties();
             }
         }
 
@@ -164,41 +150,33 @@ namespace Server.Items
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.WriteEncodedInt(0); // version
             }
 
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadEncodedInt();
+                reader.ReadEncodedInt();
             }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             TryGiveResourceCount();
 
-            writer.Write(m_IsRewardItem);
             writer.Write(m_ResourceCount);
-
             writer.Write(NextResourceCount);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadEncodedInt();
 
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
             m_ResourceCount = reader.ReadInt();
-
             NextResourceCount = reader.ReadDateTime();
         }
 
@@ -212,9 +190,8 @@ namespace Server.Items
         }
     }
 
-    public class SheepStatueDeed : BaseAddonDeed, IRewardItem
+    public class SheepStatueDeed : BaseAddonDeed
     {
-        private bool m_IsRewardItem;
         private int m_ResourceCount;
 
         [Constructable]
@@ -235,22 +212,10 @@ namespace Server.Items
             {
                 SheepStatue addon = new SheepStatue(m_ResourceCount > 0 ? 0x4A94 : 0x4A95)
                 {
-                    IsRewardItem = m_IsRewardItem,
                     ResourceCount = m_ResourceCount
                 };
 
                 return addon;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
@@ -265,44 +230,31 @@ namespace Server.Items
             }
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076223); // 7th Year Veteran Reward
-        }
-
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (!IsChildOf(from.Backpack))
             {
                 from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
             }
             else
+            {
                 base.OnDoubleClick(from);
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
-            writer.Write(m_IsRewardItem);
             writer.Write(m_ResourceCount);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadEncodedInt();
 
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
             m_ResourceCount = reader.ReadInt();
         }
     }

@@ -9,14 +9,14 @@ using System.Collections.Generic;
 namespace Server.Items.MusicBox
 {
     [Flipable(0x2AF9, 0x2AFD)]
-    public class DawnsMusicBox : Item, ISecurable, IRewardItem
+    public class DawnsMusicBox : Item, ISecurable
     {
         public static readonly int MusicRange = 10;
         private List<MusicName> m_Tracks;
         private Timer m_PlayingTimer;
         private MusicName m_ActualSong;
         private SecureLevel m_Level;
-        private bool m_IsRewardItem;
+        
         [Constructable]
         public DawnsMusicBox()
             : base(0x2AF9)
@@ -55,9 +55,6 @@ namespace Server.Items.MusicBox
 
         [CommandProperty(AccessLevel.GameMaster)]
         public SecureLevel Level { get => m_Level; set => m_Level = value; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get => m_IsRewardItem; set => m_IsRewardItem = value; }
 
         public override void GetProperties(ObjectPropertyList list)
         {
@@ -252,7 +249,6 @@ namespace Server.Items.MusicBox
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Tracks.Count);
@@ -261,13 +257,11 @@ namespace Server.Items.MusicBox
                 writer.Write((int)m_Tracks[i]);
 
             writer.Write((int)m_Level);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
@@ -282,7 +276,6 @@ namespace Server.Items.MusicBox
                             m_Tracks.Add((MusicName)reader.ReadInt());
 
                         m_Level = (SecureLevel)reader.ReadInt();
-                        m_IsRewardItem = reader.ReadBool();
 
                         ToggleTimer(false);
 

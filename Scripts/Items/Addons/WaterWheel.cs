@@ -53,7 +53,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             IsRewardItem = reader.ReadBool();
         }
@@ -101,14 +101,6 @@ namespace Server.Items
         {
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1080457); // 10th Year Veteran Reward
-        }
-
         public void GetOptions(RewardOptionList list)
         {
             list.Add((int)DirectionType.South, 1075386); // South
@@ -147,7 +139,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_IsRewardItem = reader.ReadBool();
         }

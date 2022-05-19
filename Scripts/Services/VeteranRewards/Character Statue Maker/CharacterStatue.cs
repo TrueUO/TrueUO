@@ -37,7 +37,7 @@ namespace Server.Mobiles
         Light
     }
 
-    public class CharacterStatue : Mobile, IRewardItem
+    public class CharacterStatue : Mobile
     {
         private StatueType m_Type;
         private StatuePose m_Pose;
@@ -45,9 +45,9 @@ namespace Server.Mobiles
         private Mobile m_SculptedBy;
         private DateTime m_SculptedOn;
         private CharacterStatuePlinth m_Plinth;
-        private bool m_IsRewardItem;
         private int m_Animation;
         private int m_Frames;
+
         public CharacterStatue(Mobile from, StatueType type)
             : base()
         {
@@ -82,6 +82,7 @@ namespace Server.Mobiles
                 InvalidatePose();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public StatuePose Pose
         {
@@ -92,6 +93,7 @@ namespace Server.Mobiles
                 InvalidatePose();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public StatueMaterial Material
         {
@@ -103,6 +105,7 @@ namespace Server.Mobiles
                 InvalidatePose();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile SculptedBy
         {
@@ -113,24 +116,20 @@ namespace Server.Mobiles
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime SculptedOn
         {
             get => m_SculptedOn;
             set => m_SculptedOn = value;
         }
+
         public CharacterStatuePlinth Plinth
         {
             get => m_Plinth;
             set => m_Plinth = value;
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set => m_IsRewardItem = value;
-        }
-
+        
         public override void OnDoubleClick(Mobile from)
         {
             DisplayPaperdollTo(from);
@@ -143,9 +142,13 @@ namespace Server.Mobiles
             if (m_SculptedBy != null)
             {
                 if (m_SculptedBy.ShowFameTitle && (m_SculptedBy.Player || m_SculptedBy.Body.IsHuman) && m_SculptedBy.Fame >= 10000)
+                {
                     list.Add(1076202, string.Format("{0} {1}", m_SculptedBy.Female ? "Lady" : "Lord", m_SculptedBy.Name)); // Sculpted by ~1_Name~
+                }
                 else
+                {
                     list.Add(1076202, m_SculptedBy.Name); // Sculpted by ~1_Name~
+                }
             }
         }
 
@@ -198,9 +201,7 @@ namespace Server.Mobiles
 
             writer.Write(m_SculptedBy);
             writer.Write(m_SculptedOn);
-
             writer.Write(m_Plinth);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -214,9 +215,7 @@ namespace Server.Mobiles
 
             m_SculptedBy = reader.ReadMobile();
             m_SculptedOn = reader.ReadDateTime();
-
             m_Plinth = reader.ReadItem() as CharacterStatuePlinth;
-            m_IsRewardItem = reader.ReadBool();
 
             InvalidatePose();
 
@@ -246,20 +245,19 @@ namespace Server.Mobiles
 
                 deed.Statue = this;
                 deed.StatueType = m_Type;
-                deed.IsRewardItem = m_IsRewardItem;
 
                 if (m_Plinth != null)
+                {
                     m_Plinth.Delete();
+                }
 
                 return true;
             }
-            else
-            {
-                by.SendLocalizedMessage(500720); // You don't have enough room in your backpack!
-                deed.Delete();
 
-                return false;
-            }
+            by.SendLocalizedMessage(500720); // You don't have enough room in your backpack!
+            deed.Delete();
+
+            return false;
         }
 
         public void Restore(CharacterStatue from)
@@ -418,11 +416,11 @@ namespace Server.Mobiles
         }
     }
 
-    public class CharacterStatueDeed : Item, IRewardItem
+    public class CharacterStatueDeed : Item
     {
         private CharacterStatue m_Statue;
         private StatueType m_Type;
-        private bool m_IsRewardItem;
+        
         public CharacterStatueDeed(CharacterStatue statue)
             : base(0x14F0)
         {
@@ -431,7 +429,6 @@ namespace Server.Mobiles
             if (statue != null)
             {
                 m_Type = statue.StatueType;
-                m_IsRewardItem = statue.IsRewardItem;
             }
 
             Weight = 1.0;
@@ -466,12 +463,14 @@ namespace Server.Mobiles
                 }
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public CharacterStatue Statue
         {
             get => m_Statue;
             set => m_Statue = value;
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public StatueType StatueType
         {
@@ -484,25 +483,15 @@ namespace Server.Mobiles
             }
             set => m_Type = value;
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
+        
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
-            if (m_IsRewardItem)
-                list.Add(1076222); // 6th Year Veteran Reward
-
             if (m_Statue != null)
+            {
                 list.Add(1076231, m_Statue.Name); // Statue of ~1_Name~
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -547,7 +536,6 @@ namespace Server.Mobiles
 
             writer.Write((int)m_Type);
             writer.Write(m_Statue);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -557,7 +545,6 @@ namespace Server.Mobiles
 
             m_Type = (StatueType)reader.ReadInt();
             m_Statue = (CharacterStatue) reader.ReadMobile();
-            m_IsRewardItem = reader.ReadBool();
         }
     }
 
@@ -645,11 +632,6 @@ namespace Server.Mobiles
                     CharacterStatuePlinth plinth = new CharacterStatuePlinth(statue);
 
                     house.Addons[plinth] = from;
-
-                    if (m_Maker is IRewardItem rewardItem)
-                    {
-                        statue.IsRewardItem = rewardItem.IsRewardItem;
-                    }
 
                     statue.Plinth = plinth;
                     plinth.MoveToWorld(loc, map);

@@ -415,24 +415,20 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            if (m_IsRewardItem)
-                list.Add(1076223); // 7th Year Veteran Reward
-
             list.Add(1076207, m_Charges.ToString()); // Remaining Charges: ~1_val~
         }
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
-                return;
-
             if (IsChildOf(from.Backpack))
             {
                 from.CloseGump(typeof(RewardOptionGump));
                 from.SendGump(new RewardOptionGump(this));
             }
             else
+            {
                 from.SendLocalizedMessage(1042038); // You must have the object in your backpack to use it.          	
+            }
         }
 
         public override void Serialize(GenericWriter writer)

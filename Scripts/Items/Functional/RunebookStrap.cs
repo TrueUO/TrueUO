@@ -1,16 +1,10 @@
-using Server.Engines.VeteranRewards;
 using System;
 
 namespace Server.Items
 {
-    public class RunebookStrap : BaseContainer, IRewardItem, IDyable
+    public class RunebookStrap : BaseContainer, IDyable
     {
         public override int LabelNumber => 1159676; // Runebook Strap
-
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get => m_IsRewardItem; set { m_IsRewardItem = value; InvalidateProperties(); } }
 
         public override int DefaultMaxItems => 25;
         public override bool DisplaysContent => false;
@@ -30,18 +24,12 @@ namespace Server.Items
         public virtual bool Dye(Mobile from, DyeTub sender)
         {
             if (Deleted)
+            {
                 return false;
+            }
 
             Hue = sender.DyedHue;
             return true;
-        }
-
-        public override void AddWeightProperty(ObjectPropertyList list)
-        {
-            if (m_IsRewardItem)
-                list.Add(1076219); // 3rd Year Veteran Reward
-
-            base.AddWeightProperty(list);
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -49,7 +37,6 @@ namespace Server.Items
             base.GetProperties(list);            
 
             list.Add(1072241, "{0}\t{1}\t{2}\t{3}", TotalItems, MaxItems, TotalWeight, MaxWeight);
-
             list.Add(1072210, "30"); // Weight reduction: ~1_PERCENTAGE~%            
         }
 
@@ -102,16 +89,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
     }
 }

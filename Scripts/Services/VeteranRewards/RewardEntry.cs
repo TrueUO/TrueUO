@@ -31,28 +31,21 @@ namespace Server.Engines.VeteranRewards
 
         public RewardList List
         {
-            get
-            {
-                return m_List;
-            }
-            set
-            {
-                m_List = value;
-            }
+            get => m_List;
+            set => m_List = value;
         }
+
         public RewardCategory Category => m_Category;
         public Type ItemType => m_ItemType;
         public int Name => m_Name;
         public string NameString => m_NameString;
         public object[] Args => m_Args;
+
         public Item Construct()
         {
             try
             {
                 Item item = Activator.CreateInstance(m_ItemType, m_Args) as Item;
-
-                if (item is IRewardItem)
-                    ((IRewardItem)item).IsRewardItem = true;
 
                 return item;
             }

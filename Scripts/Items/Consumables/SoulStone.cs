@@ -1,6 +1,5 @@
 using Server.Accounting;
 using Server.Engines.Craft;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Multis;
@@ -47,7 +46,6 @@ namespace Server.Items
         }
 
         private string m_Account, m_LastUserName;
-        private DateTime m_NextUse; // TODO: unused, it's here not to break serialize/deserialize
 
         private SkillName m_Skill;
         private double m_SkillValue;
@@ -758,19 +756,15 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.WriteEncodedInt(3); // version
+            writer.WriteEncodedInt(0); // version
 
-            //version 3
             writer.Write(m_LastUserName);
-
-            //version 2
             writer.Write((int)m_Level);
 
             writer.Write(m_ActiveItemID);
             writer.Write(m_InactiveItemID);
 
             writer.Write(m_Account);
-            writer.Write(m_NextUse); //TODO: delete it in a harmless way
 
             writer.WriteEncodedInt((int)m_Skill);
             writer.Write(m_SkillValue);
@@ -779,43 +773,18 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
-            switch (version)
-            {
-                case 3:
-                    {
-                        m_LastUserName = reader.ReadString();
-                        goto case 2;
-                    }
-                case 2:
-                    {
-                        m_Level = (SecureLevel)reader.ReadInt();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        m_ActiveItemID = reader.ReadInt();
-                        m_InactiveItemID = reader.ReadInt();
+            m_LastUserName = reader.ReadString();
+            m_Level = (SecureLevel)reader.ReadInt();
 
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        m_Account = reader.ReadString();
-                        m_NextUse = reader.ReadDateTime(); //TODO: delete it in a harmless way
+            m_ActiveItemID = reader.ReadInt();
+            m_InactiveItemID = reader.ReadInt();
 
-                        m_Skill = (SkillName)reader.ReadEncodedInt();
-                        m_SkillValue = reader.ReadDouble();
-                        break;
-                    }
-            }
+            m_Account = reader.ReadString();
 
-            if (version == 0)
-            {
-                m_ActiveItemID = 0x2A94;
-                m_InactiveItemID = 0x2A93;
-            }
+            m_Skill = (SkillName)reader.ReadEncodedInt();
+            m_SkillValue = reader.ReadDouble();
         }
     }
 
@@ -877,7 +846,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.WriteEncodedInt(2); // version
+            writer.WriteEncodedInt(0); // version
 
             writer.WriteEncodedInt(m_UsesRemaining);
         }
@@ -885,26 +854,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_UsesRemaining = reader.ReadEncodedInt();
-
-            if (version <= 1)
-            {
-                if (ItemID == 0x2A93 || ItemID == 0x2A94)
-                {
-                    ActiveItemID = Utility.Random(0x2AA1, 9);
-                }
-                else
-                {
-                    ActiveItemID = ItemID;
-                }
-
-                InactiveItemID = ActiveItemID;
-            }
-
-            if (version == 0 && Weight == 1)
-                Weight = -1;
         }
 
         public SoulstoneFragment(Serial serial)
@@ -990,7 +942,7 @@ namespace Server.Items
         }
     }
 
-    public class RedSoulstone : SoulStone, IRewardItem
+    public class RedSoulstone : SoulStone
     {
         [Constructable]
         public RedSoulstone()
@@ -1009,48 +961,16 @@ namespace Server.Items
         {
         }
 
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076217); // 1st Year Veteran Reward
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
-
-            writer.Write(m_IsRewardItem);
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_IsRewardItem = reader.ReadBool();
-                        break;
-                    }
-            }
+            reader.ReadInt();
         }
     }
 

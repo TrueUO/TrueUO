@@ -4,26 +4,15 @@ using System;
 
 namespace Server.Items
 {
-    public class CoralTheOwl : Item, Engines.VeteranRewards.IRewardItem
+    public class CoralTheOwl : Item
     {
         public override int LabelNumber => 1123603;  // Coral the Owl
 
         private Timer m_NewsTimer;
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
-
         [Constructable]
         public CoralTheOwl() : base(0x9A9B)
         {
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (IsRewardItem)
-                list.Add(1076217); // 1st Year Veteran Reward
         }
 
         public override bool HandlesOnSpeech => true;
@@ -74,29 +63,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
-
-            writer.Write(IsRewardItem);
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    IsRewardItem = reader.ReadBool();
-                    break;
-                case 0:
-                    break;
-            }
-
-            if (version == 0)
-                IsRewardItem = true;
+            reader.ReadInt();
         }
     }
 }

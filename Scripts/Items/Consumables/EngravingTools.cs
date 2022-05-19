@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Multis;
@@ -13,10 +12,9 @@ namespace Server.Items
         string EngravedText { get; set; }
     }
 
-    public class BaseEngravingTool : Item, IUsesRemaining, IRewardItem
+    public class BaseEngravingTool : Item, IUsesRemaining
     {
         private int m_UsesRemaining;
-        private bool m_IsRewardItem;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
@@ -30,17 +28,6 @@ namespace Server.Items
         }
 
         public virtual bool ShowUsesRemaining { get => true; set { } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
 
         [Constructable]
         public BaseEngravingTool(int itemID)
@@ -65,7 +52,6 @@ namespace Server.Items
 
         public virtual bool DeletedItem => true;
         public virtual int LowSkillMessage => 0;
-        public virtual int VeteranRewardCliloc => 0;
 
         public virtual Type[] Engraves => null;
         public virtual int GumpTitle => 1072359;  // <CENTER>Engraving Tool</CENTER>
@@ -226,14 +212,6 @@ namespace Server.Items
             }
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(VeteranRewardCliloc);
-        }
-
         public override void AddUsesRemainingProperties(ObjectPropertyList list)
         {
             if (ShowUsesRemaining)
@@ -248,7 +226,6 @@ namespace Server.Items
             writer.Write(0); // version
 
             writer.Write(m_UsesRemaining);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -257,7 +234,6 @@ namespace Server.Items
             reader.ReadInt();
 
             m_UsesRemaining = reader.ReadInt();
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalTarget : Target
@@ -683,7 +659,6 @@ namespace Server.Items
 
         public override bool DeletedItem => false;
         public override int LowSkillMessage => 1076178;  // // Your tinkering skill is too low to fix this yourself.  An NPC tinkerer can help you repair this for a fee.
-        public override int VeteranRewardCliloc => 0;
 
         [Constructable]
         public ShieldEngravingTool()

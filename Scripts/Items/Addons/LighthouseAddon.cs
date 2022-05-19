@@ -230,7 +230,7 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1154595); // Your account is not linked to this lighthouse.
             }
-            else if (RewardSystem.CheckIsUsableBy(from, this, null))
+            else 
             {
                 base.OnDoubleClick(from);
             }
@@ -244,7 +244,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
 
             writer.Write(Account);
@@ -253,7 +252,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Account = reader.ReadString();
         }
