@@ -123,6 +123,11 @@ namespace Server.Items
             RugType = type;
         }
 
+        public TigerRugAddonDeed(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack))
@@ -133,11 +138,6 @@ namespace Server.Items
                     base.OnDoubleClick(from);
                 }));
             }
-        }
-
-        public TigerRugAddonDeed(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -235,6 +235,10 @@ namespace Server.Items
         {
         }
 
+        public BananaHoardAddonDeed(Serial serial) : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack))
@@ -280,10 +284,6 @@ namespace Server.Items
                     Callback((BananaHoardSize)info.ButtonID - 1);
                 }
             }
-        }
-
-        public BananaHoardAddonDeed(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -446,6 +446,11 @@ namespace Server.Items
         {
         }
 
+        public PetTigerCubStatuette(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (HasUsed)
@@ -474,15 +479,10 @@ namespace Server.Items
             }
         }
 
-        public PetTigerCubStatuette(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
 
             writer.Write(HasUsed);
         }
@@ -490,16 +490,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (v)
-            {
-                case 1:
-                    HasUsed = reader.ReadBool();
-                    break;
-                case 0:
-                    break;
-            }
+            HasUsed = reader.ReadBool();
         }
     }
 }

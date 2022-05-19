@@ -50,6 +50,11 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.TailSwipe);
         }
 
+        public TRex(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override int Meat => 4;
         public override MeatType MeatType => MeatType.DinoRibs;
         public override bool AutoDispel => true;
@@ -181,6 +186,11 @@ namespace Server.Mobiles
                 Timer.DelayCall(TimeSpan.FromSeconds(5), ChangeHue);
             }
 
+            public FreezeItem(Serial serial)
+                : base(serial)
+            {
+            }
+
             private void ChangeHue()
             {
                 Hue = 1153;
@@ -229,11 +239,6 @@ namespace Server.Mobiles
                 return true;
             }
 
-            public FreezeItem(Serial serial)
-                : base(serial)
-            {
-            }
-
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
@@ -252,11 +257,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 2);
-        }
-
-        public TRex(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

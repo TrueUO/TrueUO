@@ -40,21 +40,21 @@ namespace Server.Items
             Hue = 2007;
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public UnabridgedAtlasOfEodon(Serial serial)
+            : base(serial)
         {
-            if (IsChildOf(m.Backpack))
+        }
+
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (IsChildOf(from.Backpack))
             {
                 Gump g = new Gump(100, 50);
                 g.AddImage(0, 0, 30236);
                 g.AddHtmlLocalized(115, 35, 350, 600, 1156723, 1, false, true);
 
-                m.SendGump(g);
+                from.SendGump(g);
             }
-        }
-
-        public UnabridgedAtlasOfEodon(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
