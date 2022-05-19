@@ -97,7 +97,7 @@ namespace Server.Engines.CityLoyalty
         public static readonly int AnnouncementPeriod = Config.Get("CityLoyalty.AnnouncementPeriod", 48);
 
         public static readonly TimeSpan LoveAtrophyDuration = TimeSpan.FromHours(40);
-        public static Map SystemMap => Siege.SiegeShard ? Map.Felucca : Map.Trammel;
+        public static Map SystemMap => Map.Felucca;
 
         public bool ArtisanFestivalActive => SeasonalEventSystem.IsActive(EventType.ArtisanFestival);
         public static readonly bool AwakeingEventActive = false;

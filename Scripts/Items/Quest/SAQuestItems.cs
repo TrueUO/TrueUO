@@ -556,34 +556,6 @@ namespace Server.Items
         }
     }
 
-    public class DuganMissingQuestCorpse : QuestHintItem
-    {
-        public override Type QuestType => typeof(Engines.Quests.Missing);
-
-        [Constructable]
-        public DuganMissingQuestCorpse()
-            : base(1094954) // You observe the remains of four humans here.  As you observe the tragic scene, you are reminded that you promised to bring evidence to Elder Dugan of their fate.
-        {
-        }
-
-        public DuganMissingQuestCorpse(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.WriteEncodedInt(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadEncodedInt();
-        }
-    }
-
     public class FlintLostBarrelHint : QuestHintItem
     {
         public override Type QuestType => typeof(Engines.Quests.ThievesBeAfootQuest);

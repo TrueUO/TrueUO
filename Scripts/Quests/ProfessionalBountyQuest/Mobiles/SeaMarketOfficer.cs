@@ -122,27 +122,16 @@ namespace Server.Mobiles
             base.Deserialize(reader);
             reader.ReadInt();
 
-            if (Map == Map.Trammel)
-            {
-                TramInstance = this;
-            }
-            else if (Map == Map.Felucca)
+            if (Map == Map.Felucca)
             {
                 FelInstance = this;
             }
         }
 
-        public static SeaMarketOfficer TramInstance { get; set; }
         public static SeaMarketOfficer FelInstance { get; set; }
 
         public static void Initialize()
         {
-            if (TramInstance == null)
-            {
-                TramInstance = new SeaMarketOfficer();
-                TramInstance.MoveToWorld(new Point3D(4543, 2299, -1), Map.Trammel);
-            }
-
             if (FelInstance == null)
             {
                 FelInstance = new SeaMarketOfficer();

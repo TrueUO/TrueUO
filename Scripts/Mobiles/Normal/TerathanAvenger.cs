@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a terathan avenger corpse")]
@@ -57,7 +55,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
-            AddLoot(LootPack.LootItem<TerathanAvengerArms>(25.0));
         }
 
         public override void Serialize(GenericWriter writer)

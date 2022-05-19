@@ -1,5 +1,5 @@
 #region References
-using Server.Engines.Quests;
+
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
@@ -317,9 +317,6 @@ namespace Server.Regions
         protected override void OnDamage(Mobile m)
         {
             base.OnDamage(m);
-
-            if (m is Kodar)
-                return;
 
             m.FixedParticles(0x36B0, 1, 14, 0x26BB, 0x3F, 0x7, EffectLayer.Waist);
             m.PlaySound(0x229);

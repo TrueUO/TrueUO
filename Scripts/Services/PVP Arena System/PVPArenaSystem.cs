@@ -376,21 +376,6 @@ namespace Server.Engines.ArenaSystem
 
         public static void InitializeArenas()
         {
-            if (CanInitialize(ArenaDefinition.LostLandsTrammel))
-            {
-                Instance.Register(new PVPArena(ArenaDefinition.LostLandsTrammel));
-            }
-
-            if (CanInitialize(ArenaDefinition.LostLandsFelucca))
-            {
-                Instance.Register(new PVPArena(ArenaDefinition.LostLandsFelucca));
-            }
-
-            if (CanInitialize(ArenaDefinition.HavenTrammel))
-            {
-                Instance.Register(new PVPArena(ArenaDefinition.HavenTrammel));
-            }
-
             if (CanInitialize(ArenaDefinition.HavenFelucca))
             {
                 Instance.Register(new PVPArena(ArenaDefinition.HavenFelucca));

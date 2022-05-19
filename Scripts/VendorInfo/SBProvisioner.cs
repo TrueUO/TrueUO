@@ -15,7 +15,7 @@ namespace Server.Mobiles
         {
             public InternalBuyInfo()
             {
-                Add(new GenericBuyInfo("1060834", typeof(Engines.Plants.PlantBowl), 2, 20, 0x15FD, 0));
+                Add(new GenericBuyInfo(typeof(Engines.Plants.PlantBowl), 2, 20, 0x15FD, 0));
 
                 Add(new GenericBuyInfo(typeof(Arrow), 2, 20, 0xF3F, 0, true));
                 Add(new GenericBuyInfo(typeof(Bolt), 5, 20, 0x1BFB, 0, true));
@@ -72,17 +72,15 @@ namespace Server.Mobiles
                 Add(new GenericBuyInfo(typeof(Bedroll), 5, 20, 0xA59, 0));
                 Add(new GenericBuyInfo(typeof(Kindling), 2, 20, 0xDE1, 0, true));
 
-                Add(new GenericBuyInfo("1041205", typeof(Multis.SmallBoatDeed), 10177, 20, 0x14F2, 0));
-                Add(new GenericBuyInfo("1041060", typeof(HairDye), 60, 20, 0xEFF, 0));
-                Add(new GenericBuyInfo("1016450", typeof(Chessboard), 2, 20, 0xFA6, 0));
-                Add(new GenericBuyInfo("1016449", typeof(CheckerBoard), 2, 20, 0xFA6, 0));
+                Add(new GenericBuyInfo(typeof(Multis.SmallBoatDeed), 10177, 20, 0x14F2, 0));
+                Add(new GenericBuyInfo(typeof(HairDye), 60, 20, 0xEFF, 0));
+                Add(new GenericBuyInfo(typeof(Chessboard), 2, 20, 0xFA6, 0));
+                Add(new GenericBuyInfo(typeof(CheckerBoard), 2, 20, 0xFA6, 0));
                 Add(new GenericBuyInfo(typeof(Backgammon), 2, 20, 0xE1C, 0));
                 Add(new GenericBuyInfo(typeof(Engines.Mahjong.MahjongGame), 6, 20, 0xFAA, 0));
                 Add(new GenericBuyInfo(typeof(Dices), 2, 20, 0xFA7, 0));
-                Add(new GenericBuyInfo(typeof(SmallBagBall), 3, 20, 0x2256, 0));
-                Add(new GenericBuyInfo(typeof(LargeBagBall), 3, 20, 0x2257, 0));
-                Add(new GenericBuyInfo("1079931", typeof(SalvageBag), 1255, 20, 0xE76, Utility.RandomBlueHue()));
-                Add(new GenericBuyInfo("1114770", typeof(SkinTingeingTincture), 1255, 20, 0xEFF, 90));
+                Add(new GenericBuyInfo(typeof(SalvageBag), 1255, 20, 0xE76, Utility.RandomBlueHue()));
+                Add(new GenericBuyInfo(typeof(SkinTingeingTincture), 1255, 20, 0xEFF, 90));
             }
         }
 

@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -194,14 +193,18 @@ namespace Server.Engines.HuntsmasterChallenge
                 if (info != null)
                 {
                     if (!m_Leaders.ContainsKey(info.HuntType))
+                    {
                         m_Leaders[info.HuntType] = new List<HuntingKillEntry>();
+                    }
 
                     List<HuntingKillEntry> leaders = m_Leaders[info.HuntType];
 
                     if (leaders.Count == 0 || permit.KillEntry.Measurement >= leaders[0].Measurement)
                     {
                         if (leaders.Count > 0 && permit.KillEntry.Measurement > leaders[0].Measurement)
+                        {
                             leaders.Clear();
+                        }
 
                         leaders.Add(new HuntingKillEntry(permit.Owner, permit.KillEntry.Measurement, permit.KillEntry.DateKilled, permit.KillEntry.KillIndex, permit.KillEntry.Location));
 
@@ -211,21 +214,13 @@ namespace Server.Engines.HuntsmasterChallenge
                         master.PlaySound(0x3D);
                     }
                     else
+                    {
                         master.SayTo(from, 1155721); // Begging thy pardon, but your permit has not broken the current record for this species!
+                    }
 
                     permit.HasSubmitted = true;
 
                     CheckKill(info.HuntType, permit.KillEntry);
-
-                    if (from is PlayerMobile mobile)
-                    {
-                        BaseQuest quest = QuestHelper.GetQuest(mobile, typeof(HuntmastersChallengeQuest));
-
-                        if (quest is HuntmastersChallengeQuest challengeQuest)
-                        {
-                            challengeQuest.CompleteChallenge();
-                        }
-                    }
                 }
             }
         }

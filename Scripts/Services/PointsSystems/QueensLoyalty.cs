@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
@@ -155,8 +154,7 @@ namespace Server.Engines.Points
             Entries[typeof(AbyssalInfernal)] = new Tuple<double, double>(150, 15.0);
 
             //Quests
-            Entries[typeof(TheExchangeQuest)] = new Tuple<double, double>(35, 3.5);
-            Entries[typeof(AWorthyPropositionQuest)] = new Tuple<double, double>(50, 5.0);
+            //Entries[typeof(TheExchangeQuest)] = new Tuple<double, double>(35, 3.5);
         }
 
         public override void Serialize(GenericWriter writer)

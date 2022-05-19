@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Items;
 using System;
 
@@ -60,18 +59,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Meager);
             AddLoot(LootPack.BodyPartsAndBones);
-        }
-
-        public override void OnKilledBy(Mobile mob)
-        {
-            base.OnKilledBy(mob);
-
-            if (mob is PlayerMobile pm && 0.2 > Utility.RandomDouble() && QuestHelper.HasQuest<Missing>(pm))
-            {
-                pm.SendLocalizedMessage(1095146); // As the rotworm dies, you find and pickup a scroll case. Inside the scroll case is parchment. The scroll case crumbles to dust.
-
-                pm.AddToBackpack(new ArielHavenWritofMembership());
-            }
         }
 
         public override void OnMovement(Mobile m, Point3D oldLocation)

@@ -30,18 +30,11 @@ namespace Server
             None = 0x00000000,
             Initial = 0x00000001,
             Sphinx = 0x00000002,
-            IceHoundRemoval = 0x00000004,
-            PaladinAndKrakin = 0x00000008,
-            TrinsicPaladins = 0x00000010,
-            UNUSED = 0x00000020,
-            FixAddonDeco = 0x00000040,
-            LifeStealers = 0x00000080,
-            LootNerf2 = 0x00000100,
-            RemoveUnused = 0x00000200,
-            RemoveUnused2 = 0x00000400,
-            RemoveTeleporters = 0x00000800,
-            DestardSpawners = 0x00001000,
-            DoomSpawners    = 0x00002000
+            FixAddonDeco = 0x00000004,
+            LifeStealers = 0x00000008,
+            RemoveTeleporters = 0x00000010,
+            DestardSpawners = 0x00000020,
+            DoomSpawners = 0x00000040
         }
 
         public static string FilePath = Path.Combine("Saves/Misc", "SpawnerPresistence.bin");
@@ -185,24 +178,6 @@ namespace Server
                         VersionFlag |= SpawnerVersion.RemoveTeleporters;
                     }
 
-                    if ((VersionFlag & SpawnerVersion.RemoveUnused2) == 0)
-                    {
-                        RemoveUnused2();
-                        VersionFlag |= SpawnerVersion.RemoveUnused2;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.RemoveUnused) == 0)
-                    {
-                        RemoveUnused();
-                        VersionFlag |= SpawnerVersion.RemoveUnused;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.LootNerf2) == 0)
-                    {
-                        LootNerf2();
-                        VersionFlag |= SpawnerVersion.LootNerf2;
-                    }
-
                     if ((VersionFlag & SpawnerVersion.LifeStealers) == 0)
                     {
                         SpawnLifeStealers();
@@ -213,24 +188,6 @@ namespace Server
                     {
                         FixAddonDeco();
                         VersionFlag |= SpawnerVersion.FixAddonDeco;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.TrinsicPaladins) == 0)
-                    {
-                        SpawnTrinsicPaladins();
-                        VersionFlag |= SpawnerVersion.TrinsicPaladins;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.PaladinAndKrakin) == 0)
-                    {
-                        RemovePaladinsAndKrakens();
-                        VersionFlag |= SpawnerVersion.PaladinAndKrakin;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.IceHoundRemoval) == 0)
-                    {
-                        RemoveIceHounds();
-                        VersionFlag |= SpawnerVersion.IceHoundRemoval;
                     }
 
                     if ((VersionFlag & SpawnerVersion.Sphinx) == 0)
@@ -248,7 +205,6 @@ namespace Server
                     LoadFromXmlSpawner("Spawns/twistedweald.xml", Map.Ilshenar, "TwistedWealdTrigger2");
                     LoadFromXmlSpawner("Spawns/twistedweald.xml", Map.Ilshenar, "TwistedWealdTrigger3");
                     LoadFromXmlSpawner("Spawns/twistedweald.xml", Map.Ilshenar, "TwistedWealdTrigger4");
-                    ReplaceUnderworldVersion9();
                     break;
                 case 8:
                     ReplaceSolenHivesVersion8();
@@ -256,7 +212,6 @@ namespace Server
                 case 7:
                 case 6:
                     ReplaceTwistedWealdVersion7();
-                    RunicReforging.ItemNerfVersion6();
                     break;
                 case 5:
                     HonestyItemsVersion5();
@@ -340,49 +295,6 @@ namespace Server
         }
         #endregion
 
-        #region Remove Unused 2
-        public static void RemoveUnused2()
-        {
-            Remove("xmlquestnpc");
-            Remove("HiddenFigure");
-            Remove("JedahEntille");
-            Remove("EnshroudedFigure");
-            Remove("MilitiaFighter");
-            Remove("Seekerofadventure");
-            Remove("Noble");
-            Remove("peasant");
-            Remove("orderguard");
-            Remove("Chaosguard");
-
-            Remove("bridegroom");
-            Remove("merchant");
-            Remove("baseescortable");
-
-        }
-        #endregion
-
-        #region Remove Unused
-        public static void RemoveUnused()
-        {
-            Remove("Emino");
-            Remove("FierceDragon");
-            Remove("HaochisGuardsman");
-            Remove("Mardoth");
-            Remove("DeadlyImp");
-            Remove("Relnia");
-            Remove("Zoel");
-            Remove("Horus");
-            Remove("Haochi");
-        }
-        #endregion
-
-        #region Loot Nerf 2
-        public static void LootNerf2()
-        {
-            RunicReforging.LootNerf2();
-        }
-        #endregion
-
         #region Spawn Lifestealers
         public static void SpawnLifeStealers()
         {
@@ -404,71 +316,11 @@ namespace Server
         }
         #endregion
 
-        #region Trinny Paladins
-        public static void SpawnTrinsicPaladins()
-        {
-            LoadFromXmlSpawner("Spawns/trammel.xml", Map.Trammel, "TrinsicPaladinSpawner");
-            LoadFromXmlSpawner("Spawns/felucca.xml", Map.Felucca, "TrinsicPaladinSpawner");
-        }
-        #endregion
-
-        #region Remove Paladins And Krakens
-        public static void RemovePaladinsAndKrakens()
-        {
-            Remove("HirePaladin");
-            Remove("Kraken", sp => !Region.Find(sp.Location, sp.Map).IsPartOf("Shame"));
-            ToConsole("Paladins and Krakens removed from spawners.");
-        }
-        #endregion
-
-        #region Remove Ice Hounds
-        public static void RemoveIceHounds()
-        {
-            Remove("icehound");
-            ToConsole("Ice Hounds removed from spawners.");
-        }
-        #endregion
-
         #region Version 11
         public static void AddSphinx()
         {
             Engines.GenerateForgottenPyramid.Generate(null);
             ToConsole("Generated Fortune Sphinx.");
-        }
-        #endregion
-
-        #region Version 9
-        public static void ReplaceUnderworldVersion9()
-        {
-            ReplaceSpawnersByRegionName("Underworld", Map.TerMur, "underworld");
-
-            ReplaceSpawnersByRectangle(new Rectangle2D(5640, 1776, 295, 263), Map.Trammel, null);
-            ReplaceSpawnersByRectangle(new Rectangle2D(5640, 1776, 295, 263), Map.Felucca, "solenhives");
-
-            QuestHintItem hint = new DuganMissingQuestCorpse();
-            hint.MoveToWorld(new Point3D(1038, 1182, -52), Map.TerMur);
-
-            Static item = new Static(7400);
-            item.MoveToWorld(new Point3D(1040, 1181, -53), Map.TerMur);
-
-            item = new Static(7390);
-            item.MoveToWorld(new Point3D(1041, 1185, -50), Map.TerMur);
-
-            item = new Static(7390);
-            item.MoveToWorld(new Point3D(1036, 1185, -52), Map.TerMur);
-
-            hint = new FlintLostLogbookHint();
-            hint.MoveToWorld(new Point3D(1044, 976, -30), Map.TerMur);
-
-            hint = new FlintLostBarrelHint();
-            hint.MoveToWorld(new Point3D(1043, 1003, -43), Map.TerMur);
-
-            hint = new FlintLostBarrelHint();
-            hint.MoveToWorld(new Point3D(1048, 1027, -32), Map.TerMur);
-
-            GenerateUnderworldRooms.GenerateRevealTiles();
-
-            ToConsole("Placed Quest Statics.");
         }
         #endregion
 
