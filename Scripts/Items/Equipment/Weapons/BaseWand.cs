@@ -7,7 +7,6 @@ namespace Server.Items
     public enum WandEffect
     {
         Clumsiness,
-        Identification,
         Healing,
         Feeblemindedness,
         Weakness,
@@ -148,9 +147,6 @@ namespace Server.Items
                 case WandEffect.Clumsiness:
                     list.Add(1017326, m_Charges.ToString());
                     break; // clumsiness charges: ~1_val~
-                case WandEffect.Identification:
-                    list.Add(1017350, m_Charges.ToString());
-                    break; // identification charges: ~1_val~
                 case WandEffect.Healing:
                     list.Add(1017329, m_Charges.ToString());
                     break; // healing charges: ~1_val~

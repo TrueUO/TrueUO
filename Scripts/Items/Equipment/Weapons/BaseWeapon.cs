@@ -115,7 +115,6 @@ namespace Server.Items
         private Mobile m_Crafter;
         private Poison m_Poison;
         private int m_PoisonCharges;
-        private bool m_Identified;
         private int m_Hits;
         private int m_MaxHits;
         private SlayerName m_Slayer;
@@ -126,8 +125,6 @@ namespace Server.Items
         private SkillMod m_MageMod, m_MysticMod;
         private CraftResource m_Resource;
         private bool m_PlayerConstructed;
-
-        private bool m_Altered;
 
         private AosAttributes m_AosAttributes;
         private AosWeaponAttributes m_AosWeaponAttributes;
@@ -228,17 +225,6 @@ namespace Server.Items
 
         [CommandProperty(AccessLevel.GameMaster)]
         public ConsecratedWeaponContext ConsecratedContext { get; set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Identified
-        {
-            get => m_Identified;
-            set
-            {
-                m_Identified = value;
-                InvalidateProperties();
-            }
-        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int HitPoints
@@ -3203,9 +3189,6 @@ namespace Server.Items
             // Version 9
             SaveFlag flags = SaveFlag.None;
 
-            //SetSaveFlag(ref flags, SaveFlag.DamageLevel, m_DamageLevel != WeaponDamageLevel.Regular);
-            //SetSaveFlag(ref flags, SaveFlag.AccuracyLevel, m_AccuracyLevel != WeaponAccuracyLevel.Regular);
-            //SetSaveFlag(ref flags, SaveFlag.DurabilityLevel, m_DurabilityLevel != WeaponDurabilityLevel.Regular);
             SetSaveFlag(ref flags, SaveFlag.Quality, m_Quality != ItemQuality.Normal);
             SetSaveFlag(ref flags, SaveFlag.Hits, m_Hits != 0);
             SetSaveFlag(ref flags, SaveFlag.MaxHits, m_MaxHits != 0);
@@ -3213,7 +3196,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.Poison, m_Poison != null);
             SetSaveFlag(ref flags, SaveFlag.PoisonCharges, m_PoisonCharges != 0);
             SetSaveFlag(ref flags, SaveFlag.Crafter, m_Crafter != null);
-            SetSaveFlag(ref flags, SaveFlag.Identified, m_Identified);
             SetSaveFlag(ref flags, SaveFlag.StrReq, m_StrReq != -1);
             SetSaveFlag(ref flags, SaveFlag.DexReq, m_DexReq != -1);
             SetSaveFlag(ref flags, SaveFlag.IntReq, m_IntReq != -1);
@@ -3236,7 +3218,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.EngravedText, !string.IsNullOrEmpty(m_EngravedText));
             SetSaveFlag(ref flags, SaveFlag.xAbsorptionAttributes, !m_SAAbsorptionAttributes.IsEmpty);
             SetSaveFlag(ref flags, SaveFlag.xNegativeAttributes, !m_NegativeAttributes.IsEmpty);
-            SetSaveFlag(ref flags, SaveFlag.Altered, m_Altered);
             SetSaveFlag(ref flags, SaveFlag.xExtendedWeaponAttributes, !m_ExtendedWeaponAttributes.IsEmpty);
 
             writer.Write((long)flags);
@@ -3393,9 +3374,9 @@ namespace Server.Items
         private enum SaveFlag : long
         {
             None = 0x00000000,
-            Empty1 = 0x00000001,
-            Empty2 = 0x00000002,
-            Empty3 = 0x00000004,
+            UNUSED1 = 0x00000001,
+            UNUSED2 = 0x00000002,
+            UNUSED3 = 0x00000004,
             Quality = 0x00000008,
             Hits = 0x00000010,
             MaxHits = 0x00000020,
@@ -3403,7 +3384,7 @@ namespace Server.Items
             Poison = 0x00000080,
             PoisonCharges = 0x00000100,
             Crafter = 0x00000200,
-            Identified = 0x00000400,
+            UNUSED4 = 0x00000400,
             StrReq = 0x00000800,
             DexReq = 0x00001000,
             IntReq = 0x00002000,
@@ -3426,8 +3407,7 @@ namespace Server.Items
             EngravedText = 0x40000000,
             xAbsorptionAttributes = 0x80000000,
             xNegativeAttributes = 0x100000000,
-            Altered = 0x200000000,
-            xExtendedWeaponAttributes = 0x400000000
+            xExtendedWeaponAttributes = 0x200000000
         }
 
         #region Mondain's Legacy Sets
@@ -3598,21 +3578,6 @@ namespace Server.Items
                         else
                             flags = (SaveFlag)reader.ReadLong();
 
-                        if (version < 20 && GetSaveFlag(flags, SaveFlag.Empty1))
-                        {
-                            reader.ReadInt();
-                        }
-
-                        if (version < 20 && GetSaveFlag(flags, SaveFlag.Empty2))
-                        {
-                            reader.ReadInt();
-                        }
-
-                        if (version < 20 && GetSaveFlag(flags, SaveFlag.Empty3))
-                        {
-                            reader.ReadInt();
-                        }
-
                         if (GetSaveFlag(flags, SaveFlag.Quality))
                         {
                             m_Quality = (ItemQuality)reader.ReadInt();
@@ -3650,11 +3615,6 @@ namespace Server.Items
                         if (GetSaveFlag(flags, SaveFlag.Crafter))
                         {
                             m_Crafter = reader.ReadMobile();
-                        }
-
-                        if (GetSaveFlag(flags, SaveFlag.Identified))
-                        {
-                            m_Identified = version >= 6 || reader.ReadBool();
                         }
 
                         if (GetSaveFlag(flags, SaveFlag.StrReq))
@@ -3862,11 +3822,6 @@ namespace Server.Items
                             m_NegativeAttributes = new NegativeAttributes(this);
                         }
                         #endregion
-
-                        if (GetSaveFlag(flags, SaveFlag.Altered))
-                        {
-                            m_Altered = true;
-                        }
 
                         if (GetSaveFlag(flags, SaveFlag.xExtendedWeaponAttributes))
                         {
@@ -4266,11 +4221,6 @@ namespace Server.Items
             if (IsImbued)
             {
                 list.Add(1080418); // (Imbued)
-            }
-
-            if (m_Altered)
-            {
-                list.Add(1111880); // Altered
             }
         }
 
@@ -5208,17 +5158,6 @@ namespace Server.Items
             return 0;
         }
         #endregion
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Altered
-        {
-            get => m_Altered;
-            set
-            {
-                m_Altered = value;
-                InvalidateProperties();
-            }
-        }
     }
 
     public enum CheckSlayerResult

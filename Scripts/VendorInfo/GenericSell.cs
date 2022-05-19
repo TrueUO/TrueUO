@@ -68,11 +68,7 @@ namespace Server.Mobiles
 
             if (item is BaseArmor armor)
             {
-                if (armor.Quality == ItemQuality.Low)
-                {
-                    price = (int) (price * 0.60);
-                }
-                else if (armor.Quality == ItemQuality.Exceptional)
+                if (armor.Quality == ItemQuality.Exceptional)
                 {
                     price = (int) (price * 1.25);
                 }
@@ -86,11 +82,7 @@ namespace Server.Mobiles
             }
             else if (item is BaseWeapon weapon)
             {
-                if (weapon.Quality == ItemQuality.Low)
-                {
-                    price = (int) (price * 0.60);
-                }
-                else if (weapon.Quality == ItemQuality.Exceptional)
+                if (weapon.Quality == ItemQuality.Exceptional)
                 {
                     price = (int) (price * 1.25);
                 }

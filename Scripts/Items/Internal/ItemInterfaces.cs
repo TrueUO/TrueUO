@@ -60,7 +60,6 @@ namespace Server.Items
 
     public enum ItemQuality
     {
-        Low,
         Normal,
         Exceptional
     }

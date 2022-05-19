@@ -200,13 +200,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(VoidCore), 1113334, 5, 1044253);
             AddRecipe(index, (int)CraftRecipes.MagesHood);
 
-            index = AddCraft(typeof(CowlOfTheMaceAndShield), 1011375, 1159228, 120.0, 215.0, typeof(Cloth), 1044455, 5, 1044287);
-            AddRes(index, typeof(Leather), 1044462, 5, 1044463);
-            AddRes(index, typeof(MaceAndShieldGlasses), 1073381, 1, 1044253);
-            AddRes(index, typeof(VileTentacles), 1113333, 10, 1044253);
-            AddRecipe(index, (int)CraftRecipes.CowlOfTheMaceAndShield);
-            ForceExceptional(index);
-
             index = AddCraft(typeof(MagesHoodOfScholarlyInsight), 1011375, 1159229, 120.0, 215.0, typeof(Cloth), 1044455, 5, 1044287);
             AddRes(index, typeof(Leather), 1044462, 5, 1044463);
             AddRes(index, typeof(TheScholarsHalo), 1157354, 1, 1044253);
@@ -351,27 +344,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Leather), 1044462, 5, 1044463);
             AddRes(index, typeof(FeyWings), 1113332, 5, 1044253);
             AddRecipe(index, (int)CraftRecipes.ElegantCollar);
-
-            index = AddCraft(typeof(CrimsonMaceBelt), 1015283, 1159211, 120.0, 215.0, typeof(Cloth), 1044455, 5, 1044287);
-            AddRes(index, typeof(Leather), 1044462, 5, 1044463);
-            AddRes(index, typeof(CrimsonCincture), 1075043, 1, 1044253);
-            AddRes(index, typeof(Lodestone), 1113348, 10, 1044253);
-            AddRecipe(index, (int)CraftRecipes.CrimsonMaceBelt);
-            ForceExceptional(index);
-
-            index = AddCraft(typeof(CrimsonSwordBelt), 1015283, 1159212, 120.0, 215.0, typeof(Cloth), 1044455, 5, 1044287);
-            AddRes(index, typeof(Leather), 1044462, 5, 1044463);
-            AddRes(index, typeof(CrimsonCincture), 1075043, 1, 1044253);
-            AddRes(index, typeof(Lodestone), 1113348, 10, 1044253);
-            AddRecipe(index, (int)CraftRecipes.CrimsonSwordBelt);
-            ForceExceptional(index);
-
-            index = AddCraft(typeof(CrimsonDaggerBelt), 1015283, 1159213, 120.0, 215.0, typeof(Cloth), 1044455, 5, 1044287);
-            AddRes(index, typeof(Leather), 1044462, 5, 1044463);
-            AddRes(index, typeof(CrimsonCincture), 1075043, 1, 1044253);
-            AddRes(index, typeof(Lodestone), 1113348, 10, 1044253);
-            AddRecipe(index, (int)CraftRecipes.CrimsonDaggerBelt);
-            ForceExceptional(index);
 
             index = AddCraft(typeof(ElegantCollarOfFortune), 1015283, 1159225, 120.0, 215.0, typeof(Cloth), 1044455, 5, 1044287);
             AddRes(index, typeof(Leather), 1044462, 5, 1044463);
