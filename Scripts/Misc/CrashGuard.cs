@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Mail;
 
 namespace Server.Misc
 {
@@ -17,40 +16,29 @@ namespace Server.Misc
         public static void Initialize()
         {
             if (Enabled) // If enabled, register our crash event handler
+            {
                 EventSink.Crashed += CrashGuard_OnCrash;
+            }
         }
 
         public static void CrashGuard_OnCrash(CrashedEventArgs e)
         {
             if (GenerateReport)
+            {
                 GenerateCrashReport(e);
+            }
 
             World.WaitForWriteCompletion();
 
             if (SaveBackup)
+            {
                 Backup();
+            }
 
             if (RestartServer)
-                Restart(e);
-        }
-
-        private static void SendEmail(string filePath)
-        {
-            Console.Write("Crash: Sending email...");
-
-            MailMessage message = new MailMessage(Email.FromAddress, Email.CrashAddresses)
             {
-                Subject = "Automated TrueUO Crash Report",
-
-                Body = "Automated TrueUO Crash Report. See attachment for details."
-            };
-
-            message.Attachments.Add(new Attachment(filePath));
-
-            if (Email.Send(message))
-                Console.WriteLine("done");
-            else
-                Console.WriteLine("failed");
+                Restart(e);
+            }
         }
 
         private static string GetRoot()
@@ -69,7 +57,9 @@ namespace Server.Misc
         private static string Combine(string path1, string path2)
         {
             if (path1.Length == 0)
+            {
                 return path2;
+            }
 
             return Path.Combine(path1, path2);
         }
@@ -96,7 +86,9 @@ namespace Server.Misc
         private static void CreateDirectory(string path)
         {
             if (!Directory.Exists(path))
+            {
                 Directory.CreateDirectory(path);
+            }
         }
 
         private static void CreateDirectory(string path1, string path2)
@@ -247,11 +239,6 @@ namespace Server.Misc
                 }
 
                 Console.WriteLine("done");
-
-                if (Email.FromAddress != null && Email.CrashAddresses != null)
-                {
-                    SendEmail(filePath);
-                }
             }
             catch
             {

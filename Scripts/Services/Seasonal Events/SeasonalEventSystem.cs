@@ -5,7 +5,6 @@ using Server.Engines.RisingTide;
 using Server.Engines.SorcerersDungeon;
 using Server.Engines.TreasuresOfKotlCity;
 using Server.Engines.TreasuresOfDoom;
-using Server.Engines.ArtisanFestival;
 using Server.Gumps;
 using Server.Misc;
 using Server.Mobiles;
