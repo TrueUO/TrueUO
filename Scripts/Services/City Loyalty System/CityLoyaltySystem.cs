@@ -750,20 +750,20 @@ namespace Server.Engines.CityLoyalty
                     }
                 }
 
-                int message;
+                string message;
 
                 if (pm.LastOnline + LoveAtrophyDuration > DateTime.UtcNow)
                 {
-                    message = 1152913; // The moons of Trammel and Felucca align to preserve your virtue status and city loyalty.
+                    message = "The moons align to preserve your city loyalty.";
                 }
                 else
                 {
-                    message = 1152912; // The moons of Trammel and Felucca fail to preserve your virtue status and city loyalty.
+                    message = "The moons fail to preserve your city loyalty.";
                 }
 
                 Timer.DelayCall(TimeSpan.FromSeconds(.7), () =>
                 {
-                    pm.SendLocalizedMessage(message);
+                    pm.SendMessage(message);
                 });
             }
         }

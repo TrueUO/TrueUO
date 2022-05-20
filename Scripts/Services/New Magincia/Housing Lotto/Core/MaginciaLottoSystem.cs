@@ -91,7 +91,6 @@ namespace Server.Engines.NewMagincia
             m_LottoDuration = DefaultLottoDuration;
 
             m_FreeHousingZones = new Dictionary<Map, List<Rectangle2D>>();
-            m_FreeHousingZones[Map.Trammel] = new List<Rectangle2D>();
             m_FreeHousingZones[Map.Felucca] = new List<Rectangle2D>();
 
             if (m_Enabled)
@@ -230,7 +229,7 @@ namespace Server.Engines.NewMagincia
 
         public static bool IsInMagincia(int x, int y, Map map)
         {
-            return x > 3614 && x < 3817 && y > 2031 && y < 2274 && (map == Map.Trammel || map == Map.Felucca);
+            return x > 3614 && x < 3817 && y > 2031 && y < 2274 && map == Map.Felucca;
         }
 
         private void LoadPlots()
@@ -239,17 +238,12 @@ namespace Server.Engines.NewMagincia
             {
                 bool prime = i > 0 && i < 6 || i > 14;
 
-                MaginciaHousingPlot tramplot = new MaginciaHousingPlot(m_Identifiers[i], m_MagHousingZones[i], prime, Map.Trammel);
-                MaginciaHousingPlot felplot = new MaginciaHousingPlot(m_Identifiers[i], m_MagHousingZones[i], prime, Map.Felucca);
+                MaginciaHousingPlot felPlot = new MaginciaHousingPlot(m_Identifiers[i], m_MagHousingZones[i], prime, Map.Felucca);
 
-                RegisterPlot(tramplot);
-                RegisterPlot(felplot);
+                RegisterPlot(felPlot);
 
-                tramplot.AddPlotStone(m_StoneLocs[i]);
-                tramplot.LottoEnds = DateTime.UtcNow + m_LottoDuration;
-
-                felplot.AddPlotStone(m_StoneLocs[i]);
-                felplot.LottoEnds = DateTime.UtcNow + m_LottoDuration;
+                felPlot.AddPlotStone(m_StoneLocs[i]);
+                felPlot.LottoEnds = DateTime.UtcNow + m_LottoDuration;
             }
         }
 
@@ -615,10 +609,6 @@ namespace Server.Engines.NewMagincia
             for (int i = 0; i < m_Plots.Count; i++)
                 m_Plots[i].Serialize(writer);
 
-            writer.Write(m_FreeHousingZones[Map.Trammel].Count);
-            foreach (Rectangle2D rec in m_FreeHousingZones[Map.Trammel])
-                writer.Write(rec);
-
             writer.Write(m_FreeHousingZones[Map.Felucca].Count);
             foreach (Rectangle2D rec in m_FreeHousingZones[Map.Felucca])
                 writer.Write(rec);
@@ -645,7 +635,6 @@ namespace Server.Engines.NewMagincia
             reader.ReadInt();
 
             m_FreeHousingZones = new Dictionary<Map, List<Rectangle2D>>();
-            m_FreeHousingZones[Map.Trammel] = new List<Rectangle2D>();
             m_FreeHousingZones[Map.Felucca] = new List<Rectangle2D>();
 
             m_GoldSink = reader.ReadInt();
@@ -655,10 +644,6 @@ namespace Server.Engines.NewMagincia
             int c = reader.ReadInt();
             for (int i = 0; i < c; i++)
                 RegisterPlot(new MaginciaHousingPlot(reader));
-
-            c = reader.ReadInt();
-            for (int i = 0; i < c; i++)
-                m_FreeHousingZones[Map.Trammel].Add(reader.ReadRect2D());
 
             c = reader.ReadInt();
             for (int i = 0; i < c; i++)
@@ -693,19 +678,7 @@ namespace Server.Engines.NewMagincia
                 Rectangle2D rec = m_MagHousingZones[i];
                 string id = m_Identifiers[i];
 
-                MaginciaHousingPlot plotTram = m_Plots.FirstOrDefault(p => p.Identifier == id && p.Map == Map.Trammel);
                 MaginciaHousingPlot plotFel = m_Plots.FirstOrDefault(p => p.Identifier == id && p.Map == Map.Felucca);
-
-                if (plotTram == null && !m_FreeHousingZones[Map.Trammel].Contains(rec))
-                {
-                    Console.WriteLine("Adding {0} to Magincia Free Housing Zone.[{1}]", rec, "Plot non-existent");
-                    m_FreeHousingZones[Map.Trammel].Add(rec);
-                }
-                else if (plotTram != null && plotTram.Stone == null && (plotTram.Writ == null || plotTram.Writ.Expired))
-                {
-                    Console.WriteLine("Adding {0} to Magincia Free Housing Zone.[{1}]", rec, "Plot existed, writ expired");
-                    UnregisterPlot(plotTram);
-                }
 
                 if (plotFel == null && !m_FreeHousingZones[Map.Felucca].Contains(rec))
                 {

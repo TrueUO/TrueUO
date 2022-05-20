@@ -11,22 +11,13 @@ namespace Server.Engines.Plants
         public Dictionary<Mobile, DateTime> PlantDelayTable { get; } = new Dictionary<Mobile, DateTime>();
 
         public static MaginciaPlantSystem FelInstance { get; private set; }
-        public static MaginciaPlantSystem TramInstance { get; private set; }
 
         public static void Initialize()
         {
-            if (Enabled)
+            if (Enabled && FelInstance == null)
             {
-                if (FelInstance == null)
-                {
-                    FelInstance = new MaginciaPlantSystem();
-                    FelInstance.MoveToWorld(new Point3D(3715, 2049, 5), Map.Felucca);
-                }
-                if (TramInstance == null)
-                {
-                    TramInstance = new MaginciaPlantSystem();
-                    TramInstance.MoveToWorld(new Point3D(3715, 2049, 5), Map.Trammel);
-                }
+                FelInstance = new MaginciaPlantSystem();
+                FelInstance.MoveToWorld(new Point3D(3715, 2049, 5), Map.Felucca);
             }
         }
 
@@ -129,10 +120,10 @@ namespace Server.Engines.Plants
             MaginciaPlantSystem system = null;
             Map map = from.Map;
 
-            if (map == Map.Trammel)
-                system = TramInstance;
-            else if (map == Map.Felucca)
+            if (map == Map.Felucca)
+            {
                 system = FelInstance;
+            }
 
             if (system == null)
             {
@@ -172,20 +163,22 @@ namespace Server.Engines.Plants
         public static void OnPlantDelete(Mobile owner, Map map)
         {
             if (owner == null || map == null)
+            {
                 return;
+            }
 
-            if (map == Map.Trammel)
-                TramInstance.OnPlantDelete(owner);
-            else if (map == Map.Felucca)
+            if (map == Map.Felucca)
+            {
                 FelInstance.OnPlantDelete(owner);
+            }
         }
 
         public static void OnPlantPlanted(Mobile from, Map map)
         {
             if (map == Map.Felucca)
+            {
                 FelInstance.OnPlantPlanted(from);
-            else if (map == Map.Trammel)
-                TramInstance.OnPlantPlanted(from);
+            }
         }
 
         public static Rectangle2D[] MagGrowBounds => m_MagGrowBounds;
@@ -260,11 +253,13 @@ namespace Server.Engines.Plants
             }
 
             if (Map == Map.Felucca)
+            {
                 FelInstance = this;
-            else if (Map == Map.Trammel)
-                TramInstance = this;
+            }
             else
+            {
                 Delete();
+            }
         }
     }
 }

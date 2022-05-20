@@ -14,7 +14,7 @@ namespace Server.Engines.Chat
 
         public Mobile Mobile => m_Mobile;
 
-        public string Username => $"<{m_Mobile.Serial.Value}>{m_Mobile.Name}";
+        public string Username => $"<global>{m_Mobile.Name}";
 
         public Channel CurrentChannel { get => m_Channel; set => m_Channel = value; }
 

@@ -81,11 +81,6 @@ namespace Server.Engines.NewMagincia
             m_Enabled = true;
 
             WarehouseSuperintendent mob = new WarehouseSuperintendent();
-            mob.MoveToWorld(new Point3D(3795, 2259, 20), Map.Trammel);
-            mob.Home = mob.Location;
-            mob.RangeHome = 12;
-
-            mob = new WarehouseSuperintendent();
             mob.MoveToWorld(new Point3D(3795, 2259, 20), Map.Felucca);
             mob.Home = mob.Location;
             mob.RangeHome = 12;
@@ -94,7 +89,9 @@ namespace Server.Engines.NewMagincia
             AddPlotSigns();
 
             if (m_Enabled)
+            {
                 StartTimer();
+            }
 
             m_Phase = Phase.Phase1;
             ActivatePlots();

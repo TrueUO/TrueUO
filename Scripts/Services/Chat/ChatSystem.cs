@@ -5,10 +5,10 @@ namespace Server.Engines.Chat
 {
     public class ChatSystem
     {
-        private static readonly bool Enabled = Config.Get("Chat.Enabled", true);
+        private static readonly bool Enabled = true;
 
-        public static readonly bool AllowCreateChannels = Config.Get("Chat.AllowCreateChannels", true);
-        public const string DefaultChannel = "Help";
+        public static readonly bool AllowCreateChannels = false;
+        public const string DefaultChannel = "General";
 
         public const long ChatDelay = 5000;
 
@@ -37,7 +37,9 @@ namespace Server.Engines.Chat
         public static void ChatAction(NetState state, PacketReader pvSrc)
         {
             if (!Enabled)
+            {
                 return;
+            }
 
             try
             {
@@ -45,7 +47,9 @@ namespace Server.Engines.Chat
                 ChatUser user = ChatUser.GetChatUser(from);
 
                 if (user == null)
+                {
                     return;
+                }
 
                 string lang = pvSrc.ReadStringSafe(4);
                 short actionId = pvSrc.ReadInt16();
@@ -83,7 +87,9 @@ namespace Server.Engines.Chat
         public static void SendCommandTo(Mobile to, ChatCommand type, string param1 = null, string param2 = null)
         {
             if (to != null)
+            {
                 to.Send(new ChatMessagePacket(null, (int)type + 20, param1, param2));
+            }
         }
     }
 }
