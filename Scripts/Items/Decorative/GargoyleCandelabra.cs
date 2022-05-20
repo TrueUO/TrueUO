@@ -25,7 +25,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
+            writer.Write(0);
 
             writer.Write(ShipwreckName);
             writer.Write(IsShipwreckedItem);
@@ -34,21 +34,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 2:
-                    {
-                        ShipwreckName = reader.ReadString();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        IsShipwreckedItem = reader.ReadBool();
-                        break;
-                    }
-            }
+            ShipwreckName = reader.ReadString();
+            IsShipwreckedItem = reader.ReadBool();
         }
 
         public override void AddNameProperties(ObjectPropertyList list)

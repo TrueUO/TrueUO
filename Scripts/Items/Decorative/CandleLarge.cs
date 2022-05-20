@@ -25,6 +25,7 @@ namespace Server.Items
 
         public override int LitItemID => 0xB1A;
         public override int UnlitItemID => 0xA26;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -34,7 +35,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

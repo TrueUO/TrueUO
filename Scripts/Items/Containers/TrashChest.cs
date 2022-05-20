@@ -21,18 +21,17 @@ namespace Server.Items
 
         public override int DefaultMaxWeight => 0;// A value of 0 signals unlimited weight
         public override bool IsDecoContainer => false;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Cleanup = new List<CleanupArray>();
         }

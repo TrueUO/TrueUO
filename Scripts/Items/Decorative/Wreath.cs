@@ -17,16 +17,16 @@ namespace Server.Items
             MadeID = Utility.Random(1114138, 13);
         }
 
+        public HolidayWreath(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             list.Add(1158828, string.Format("#{0}", MadeID)); // Made From Handpicked Trees Near ~1_WHERE~
-        }
-
-        public HolidayWreath(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -40,7 +40,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             MadeID = reader.ReadInt();
         }
@@ -48,7 +48,9 @@ namespace Server.Items
         public virtual bool Dye(Mobile from, DyeTub sender)
         {
             if (Deleted)
+            {
                 return false;
+            }
 
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
@@ -59,16 +61,12 @@ namespace Server.Items
                     Hue = sender.DyedHue;
                     return true;
                 }
-                else
-                {
-                    from.SendLocalizedMessage(500295); // You are too far away to do that.
-                    return false;
-                }
-            }
-            else
-            {
+
+                from.SendLocalizedMessage(500295); // You are too far away to do that.
                 return false;
             }
+
+            return false;
         }
     }
 }

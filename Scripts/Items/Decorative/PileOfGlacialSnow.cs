@@ -23,20 +23,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            list.Add(1070880); // Winter 2004
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -46,8 +39,9 @@ namespace Server.Items
                 from.SendLocalizedMessage(1042010); // You must have the object in your backpack to use it.
             }
             else if (from.Mounted)
+            {
                 from.SendLocalizedMessage(1010097); // You cannot use this while mounted.
-
+            }
             else if (from.CanBeginAction(typeof(SnowPile)))
             {
                 from.SendLocalizedMessage(1005575); // You carefully pack the snow into a ball...

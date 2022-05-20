@@ -13,13 +13,13 @@ namespace Server.Items
             Light = LightType.Circle150;
         }
 
+        public MagicCrystalBall(Serial serial) : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             PublicOverheadMessage(MessageType.Regular, 0x3B2, 1007000 + Utility.Random(28));
-        }
-
-        public MagicCrystalBall(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -31,7 +31,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

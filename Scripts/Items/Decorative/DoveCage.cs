@@ -17,6 +17,11 @@ namespace Server.Items
             _DisplayName = _Names[Utility.Random(_Names.Length)];
         }
 
+        public DoveCage(Serial serial)
+            : base(serial)
+        {
+        }
+
         private static readonly string[] _Names =
         {
             "White-Winged", "Jobi", "Golden Heart", "White-Tipped", "Collared", "Common Ground", "Ruddy Quail", "Thick-Billed Ground", "Celebes Quail", "Dragon Turtle",
@@ -44,11 +49,6 @@ namespace Server.Items
             }
         }
 
-        public DoveCage(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void OnDoubleClick(Mobile m)
         {
             if (!m.InRange(GetWorldLocation(), 3))
@@ -72,7 +72,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _DisplayName = reader.ReadString();
         }

@@ -10,25 +10,23 @@ namespace Server.Items
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public CraftResource Resource { get { return _Resource; } set { _Resource = value; Hue = CraftResources.GetHue(_Resource); InvalidateProperties(); } }
+        public CraftResource Resource { get => _Resource; set { _Resource = value; Hue = CraftResources.GetHue(_Resource); InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Crafter { get { return _Crafter; } set { _Crafter = value; InvalidateProperties(); } }
+        public Mobile Crafter { get => _Crafter; set { _Crafter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public bool PlayerConstructed => true;
 
-        #region Old Item Serialization Vars
-        /* DO NOT USE! Only used in serialization of special scrolls that originally derived from Item */
-        private bool m_InheritsItem;
-
-        protected bool InheritsItem => m_InheritsItem;
-        #endregion
-
         public BaseUtensil(int itemID)
             : base(itemID)
+        {
+        }
+
+        public BaseUtensil(Serial serial)
+            : base(serial)
         {
         }
 
@@ -62,12 +60,16 @@ namespace Server.Items
             Quality = (ItemQuality)quality;
 
             if (makersMark)
+            {
                 Crafter = from;
+            }
 
             if (!craftItem.ForceNonExceptional)
             {
                 if (typeRes == null)
+                {
                     typeRes = craftItem.Resources.GetAt(0).ItemType;
+                }
 
                 Resource = CraftResources.GetFromType(typeRes);
             }
@@ -75,16 +77,10 @@ namespace Server.Items
             return quality;
         }
 
-        public BaseUtensil(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write((int)_Resource);
             writer.Write(_Crafter);
@@ -94,21 +90,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    _Resource = (CraftResource)reader.ReadInt();
-                    _Crafter = reader.ReadMobile();
-                    _Quality = (ItemQuality)reader.ReadInt();
-
-                    break;
-                case 0:
-                    m_InheritsItem = true;
-                    break;
-            }
+            _Resource = (CraftResource)reader.ReadInt();
+            _Crafter = reader.ReadMobile();
+            _Quality = (ItemQuality)reader.ReadInt();
         }
     }
 
@@ -130,15 +116,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -159,15 +143,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -188,15 +170,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -218,15 +198,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -247,15 +225,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -276,15 +252,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -306,15 +280,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -335,15 +307,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -364,15 +334,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 
@@ -393,15 +361,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BaseUtensil insertion
+            reader.ReadInt();
         }
     }
 }

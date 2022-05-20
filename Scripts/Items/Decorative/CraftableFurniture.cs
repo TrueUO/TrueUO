@@ -14,10 +14,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public ItemQuality Quality
         {
-            get
-            {
-                return m_Quality;
-            }
+            get => m_Quality;
             set
             {
                 m_Quality = value;
@@ -28,10 +25,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get
-            {
-                return m_Resource;
-            }
+            get => m_Resource;
             set
             {
                 if (m_Resource != value)
@@ -47,10 +41,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Crafter
         {
-            get
-            {
-                return m_Crafter;
-            }
+            get => m_Crafter;
             set
             {
                 m_Crafter = value;
@@ -75,10 +66,14 @@ namespace Server.Items
             base.AddWeightProperty(list);
 
             if (ShowCrafterName && m_Crafter != null)
+            {
                 list.Add(1050043, m_Crafter.TitleName); // crafted by ~1_NAME~
+            }
 
             if (m_Quality == ItemQuality.Exceptional)
+            {
                 list.Add(1060636); // exceptional
+            }
         }
 
         public override void AddCraftedProperties(ObjectPropertyList list)
@@ -86,7 +81,9 @@ namespace Server.Items
             CraftResourceInfo info = CraftResources.IsStandard(m_Resource) ? null : CraftResources.GetInfo(m_Resource);
 
             if (info != null && info.Number > 0)
+            {
                 list.Add(info.Number);
+            }
         }
 
         public override void Serialize(GenericWriter writer)

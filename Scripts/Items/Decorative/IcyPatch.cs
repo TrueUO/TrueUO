@@ -1,4 +1,4 @@
-﻿using Server.Mobiles;
+using Server.Mobiles;
 using Server.Spells;
 using System;
 
@@ -6,7 +6,6 @@ namespace Server.Items
 {
     public class IcyPatch : Item
     {
-        /* On OSI, the iceypatch with itemid 0x122a is "rarer", so we will give it 1:10 chance of creating it that way */
         [Constructable]
         public IcyPatch()
             : this((Utility.Random(10) == 0) ? 0x122A : 0x122F)
@@ -26,6 +25,7 @@ namespace Server.Items
 
         public override int LabelNumber => 1095159;//An Icy Patch
         public override double DefaultWeight => 5.0;
+
         public override bool OnMoveOver(Mobile m)
         {
             if (m is PlayerMobile && m.Alive && m.IsPlayer())
@@ -43,6 +43,7 @@ namespace Server.Items
                         break; //You lose your footing and ungracefully splatter on the ground.
                 }
             }
+
             return base.OnMoveOver(m);
         }
 
@@ -87,15 +88,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private static void Relocate_Callback(object state)

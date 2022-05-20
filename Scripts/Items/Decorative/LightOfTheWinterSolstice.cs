@@ -3,7 +3,7 @@ namespace Server.Items
     [Flipable(0x236E, 0x2371)]
     public class LightOfTheWinterSolstice : Item
     {
-        private static readonly string[] m_StaffNames = new string[]
+        private static readonly string[] m_StaffNames =
         {
             "Aenima",
             "Alkiser",
@@ -22,7 +22,9 @@ namespace Server.Items
             "V", 
             "Zippy"
         };
+
         private string m_Dipper;
+
         [Constructable]
         public LightOfTheWinterSolstice()
             : this(m_StaffNames[Utility.Random(m_StaffNames.Length)])
@@ -46,17 +48,7 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string Dipper
-        {
-            get
-            {
-                return m_Dipper;
-            }
-            set
-            {
-                m_Dipper = value;
-            }
-        }
+        public string Dipper { get => m_Dipper; set => m_Dipper = value; }
 
         public override void GetProperties(ObjectPropertyList list)
         {
@@ -69,8 +61,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(m_Dipper);
         }
@@ -78,25 +69,14 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_Dipper = reader.ReadString();
-                        break;
-                    }
-                case 0:
-                    {
-                        m_Dipper = m_StaffNames[Utility.Random(m_StaffNames.Length)];
-                        break;
-                    }
-            }
+            m_Dipper = reader.ReadString();
 
             if (m_Dipper != null)
+            {
                 m_Dipper = string.Intern(m_Dipper);
+            }
         }
     }
 }

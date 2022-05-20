@@ -48,7 +48,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
+            writer.Write(0);
 
             writer.Write(ShipwreckName);
             writer.Write(IsShipwreckedItem);

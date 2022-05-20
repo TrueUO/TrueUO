@@ -15,7 +15,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool TurnedOn
         {
-            get { return m_TurnedOn; }
+            get => m_TurnedOn;
             set
             {
                 m_TurnedOn = value;
@@ -41,6 +41,11 @@ namespace Server.Items
             Light = LightType.Circle300;
         }
 
+        public SingingBall(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
             base.GetContextMenuEntries(from, list);
@@ -51,12 +56,16 @@ namespace Server.Items
         public bool CheckAccessible(Mobile from, Item item)
         {
             if (from.AccessLevel >= AccessLevel.GameMaster)
+            {
                 return true; // Staff can access anything
+            }
 
             BaseHouse house = BaseHouse.FindHouseAt(item);
 
             if (house == null)
+            {
                 return false;
+            }
 
             switch (Level)
             {
@@ -68,11 +77,6 @@ namespace Server.Items
             }
 
             return false;
-        }
-
-        public SingingBall(Serial serial)
-            : base(serial)
-        {
         }
 
         public override bool HandlesOnMovement => m_TurnedOn && IsLockedDown;
@@ -97,9 +101,13 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (m_TurnedOn)
+            {
                 list.Add(502695); // turned on
+            }
             else
+            {
                 list.Add(502696); // turned off
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -118,7 +126,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write((int)Level);
             writer.Write(m_TurnedOn);
@@ -127,11 +135,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            if (version > 0)
-                Level = (SecureLevel)reader.ReadInt();
-
+            Level = (SecureLevel)reader.ReadInt();
             m_TurnedOn = reader.ReadBool();
         }
 

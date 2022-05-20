@@ -54,7 +54,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(3); // version
+            writer.Write(0); // version
 
             writer.Write(m_Level);
             writer.Write(m_TargetMap);

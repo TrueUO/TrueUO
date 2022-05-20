@@ -26,6 +26,11 @@ namespace Server.Items
             Hue = 2711;
         }
 
+        public SpikedEggNog(Serial serial)
+            : base(serial)
+        {
+        }
+
         public bool CheckAccessible(Mobile from, Item item)
         {
             if (from.AccessLevel >= AccessLevel.GameMaster)
@@ -147,11 +152,6 @@ namespace Server.Items
             }
         }
 
-        public SpikedEggNog(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
             base.GetContextMenuEntries(from, list);
@@ -171,7 +171,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             NextUseTime = reader.ReadDateTime();
             Level = (SecureLevel)reader.ReadInt();

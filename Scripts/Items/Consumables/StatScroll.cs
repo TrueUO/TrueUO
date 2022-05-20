@@ -5,6 +5,7 @@ namespace Server.Items
     public class StatCapScroll : SpecialScroll
     {
         private readonly int m_StatCap = Config.Get("PlayerCaps.TotalStatCap", 225);
+
         public StatCapScroll()
             : this(105)
         {
@@ -121,7 +122,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = InheritsItem ? 0 : reader.ReadInt(); //Required for SpecialScroll insertion
+            reader.ReadInt();
         }
     }
 }

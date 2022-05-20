@@ -37,7 +37,6 @@ namespace Server.Items
             SkillName.Ninjitsu,
             SkillName.Bushido,
             SkillName.Spellweaving,
-            SkillName.Throwing,
             SkillName.Mysticism,
             SkillName.Imbuing
         };
@@ -181,7 +180,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = InheritsItem ? 0 : reader.ReadInt(); // Required for SpecialScroll insertion
+            reader.ReadInt();
         }
     }
 }

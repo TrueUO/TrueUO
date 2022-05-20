@@ -21,7 +21,12 @@ namespace Server.Items
             Name = SpikeHeadType[type];
         }
 
-        private static readonly string[] SpikeHeadType = new string[]
+        public SpikeHead(Serial serial)
+            : base(serial)
+        {
+        }
+
+        private static readonly string[] SpikeHeadType =
         {
             "MrsTroubleMaker’s Head On A Spike",
             "Brutrin’s Head On A Spike",
@@ -35,11 +40,6 @@ namespace Server.Items
             "Onifrk’s Head On A Spike",
             "Mesanna’s Head On A Spike"
         };
-
-        public SpikeHead(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void OnDoubleClick(Mobile m)
         {
@@ -67,7 +67,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             GumpID = reader.ReadInt();
         }

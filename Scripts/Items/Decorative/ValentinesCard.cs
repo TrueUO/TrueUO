@@ -6,9 +6,11 @@ namespace Server.Items
     public class ValentinesCard : Item
     {
         private static readonly string Unsigned = "___";
+
         private int m_LabelNumber;
         private string m_From;
         private string m_To;
+
         [Constructable]
         public ValentinesCard(int itemid)
             : base(itemid)
@@ -23,29 +25,11 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual string From
-        {
-            get
-            {
-                return m_From;
-            }
-            set
-            {
-                m_From = value;
-            }
-        }
+        public virtual string From { get => m_From; set => m_From = value; }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual string To
-        {
-            get
-            {
-                return m_To;
-            }
-            set
-            {
-                m_To = value;
-            }
-        }
+        public virtual string To { get => m_To; set => m_To = value; }
+
         /*
         * Five possible messages to be signed:
         *
@@ -56,6 +40,7 @@ namespace Server.Items
         * You light my Candle of Love, ~1_target_player~! Signed: ~2_player~	1077593
         *
         */
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(m_LabelNumber, string.Format("{0}\t{1}", (m_To != null) ? m_To : Unsigned, (m_From != null) ? m_From : Unsigned));
@@ -113,8 +98,8 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
+
             writer.Write(m_LabelNumber);
             writer.Write(m_From);
             writer.Write(m_To);
@@ -123,8 +108,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
             m_LabelNumber = reader.ReadInt();
             m_From = reader.ReadString();
             m_To = reader.ReadString();
@@ -150,15 +135,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -178,15 +161,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

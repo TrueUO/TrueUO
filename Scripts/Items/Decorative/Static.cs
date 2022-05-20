@@ -29,24 +29,20 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0 && Weight == 0)
-                Weight = -1;
+            reader.ReadInt();
         }
     }
 
     public class LocalizedStatic : Static
     {
         private int m_LabelNumber;
+
         [Constructable]
         public LocalizedStatic(int itemID)
             : this(itemID, itemID < 0x4000 ? 1020000 + itemID : 1078872 + itemID)
@@ -68,39 +64,30 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Number
         {
-            get
-            {
-                return m_LabelNumber;
-            }
+            get => m_LabelNumber;
             set
             {
                 m_LabelNumber = value;
                 InvalidateProperties();
             }
         }
+
         public override int LabelNumber => m_LabelNumber;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((byte)0); // version
+
             writer.WriteEncodedInt(m_LabelNumber);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadByte();
 
-            int version = reader.ReadByte();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_LabelNumber = reader.ReadEncodedInt();
-                        break;
-                    }
-            }
+            m_LabelNumber = reader.ReadEncodedInt();
         }
     }
 }

@@ -25,6 +25,11 @@ namespace Server.Items
             Weight = weight;
         }
 
+        public ShipwreckedItem(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void AddNameProperties(ObjectPropertyList list)
         {
             if (m_IsBarnacleItem)
@@ -81,15 +86,10 @@ namespace Server.Items
             }
         }
 
-        public ShipwreckedItem(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
+            writer.Write(0);
 
             writer.Write(ShipwreckName);
             writer.Write(m_IsBarnacleItem);
@@ -98,19 +98,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 2:
-                    ShipwreckName = reader.ReadString();
-                    goto case 1;
-                case 1:
-                    m_IsBarnacleItem = reader.ReadBool();
-                    goto case 0;
-                case 0:
-                    break;
-            }
+            ShipwreckName = reader.ReadString();
+            m_IsBarnacleItem = reader.ReadBool();
         }
 
         public bool Dye(Mobile from, DyeTub sender)

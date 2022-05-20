@@ -20,17 +20,21 @@ namespace Server.Items
             Weight = 1.0;
         }
 
-        public void OnFlip(Mobile from)
-        {
-            if (ItemID == NorthID)
-                ItemID = WestID;
-            else if (ItemID == WestID)
-                ItemID = NorthID;
-        }
-
         public TallDoubleLamp(Serial serial)
             : base(serial)
         {
+        }
+
+        public void OnFlip(Mobile from)
+        {
+            if (ItemID == NorthID)
+            {
+                ItemID = WestID;
+            }
+            else if (ItemID == WestID)
+            {
+                ItemID = NorthID;
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -42,7 +46,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

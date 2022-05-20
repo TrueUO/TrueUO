@@ -9,6 +9,7 @@ namespace Server.Items
         public override int LabelNumber => 1125214;  // enchanted wheelbarrow
 
         private bool m_Harvest;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Harvest
         {
@@ -17,9 +18,13 @@ namespace Server.Items
             {
 
                 if (value && (ItemID == 0xA0E6 || ItemID == 0xA0E7))
+                {
                     ItemID = ItemID + 2;
+                }
                 else if (ItemID == 0xA0E8 || ItemID == 0xA0E9)
+                {
                     ItemID = ItemID - 2;
+                }
 
                 m_Harvest = value;
             }
@@ -44,6 +49,11 @@ namespace Server.Items
         {
             Harvest = true;
             Weight = 5.0;
+        }
+
+        public EnchantedWheelbarrow(Serial serial)
+            : base(serial)
+        {
         }
 
         public void StopTimer()
@@ -102,9 +112,13 @@ namespace Server.Items
         public void OnFlip(Mobile from)
         {
             if (ItemID == 0xA0E6 || ItemID == 0xA0E8)
+            {
                 ItemID++;
+            }
             else
+            {
                 ItemID--;
+            }
         }
 
         private static readonly int[] RareColor =
@@ -148,11 +162,6 @@ namespace Server.Items
                     }
                 }
             }
-        }
-
-        public EnchantedWheelbarrow(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

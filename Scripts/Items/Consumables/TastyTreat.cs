@@ -29,6 +29,11 @@ namespace Server.Items
             Amount = amount;
         }
 
+        public TastyTreat(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void AddNameProperties(ObjectPropertyList list)
         {
             base.AddNameProperties(list);
@@ -36,11 +41,17 @@ namespace Server.Items
             list.Add(1113213); //* For Pets Only *
 
             if (Bonus == 0.10)
+            {
                 list.Add(1113215); //Stats Increased by 10%
+            }
             else if (Bonus == 0.15)
+            {
                 list.Add(1113216); //Stats Increased by 15%
+            }
             else
+            {
                 list.Add(1113214); //Stats Increased by 5%
+            }
 
             list.Add(1113212, Duration.TotalMinutes.ToString()); //Duration: ~1_val~ minutes
             list.Add(1113218, CoolDown.TotalMinutes.ToString()); //Cooldown: ~1_val~ minutes
@@ -121,40 +132,23 @@ namespace Server.Items
             BaseCreature bc = (BaseCreature)obj;
 
             if (m_Table.ContainsKey(bc))
+            {
                 m_Table.Remove(bc);
+            }
 
             bc.TempDamageBonus = 0;
-        }
-
-        public TastyTreat(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                m_InheritsItem = true;
-
-                reader.ReadBool();
-            }
+            reader.ReadInt();
         }
-
-        #region Old Item Serialization Vars
-        /* DO NOT USE! Only used in serialization of tasty treats that originally derived from Item */
-        private bool m_InheritsItem;
-
-        protected bool InheritsItem => m_InheritsItem;
-        #endregion
     }
 }

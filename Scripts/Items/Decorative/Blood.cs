@@ -1,6 +1,4 @@
-#region References
 using System;
-#endregion
 
 namespace Server.Items
 {
@@ -16,7 +14,8 @@ namespace Server.Items
         [Constructable]
         public Blood()
             : this(RandomID)
-        { }
+        {
+        }
 
         [Constructable]
         public Blood(int itemID)
@@ -36,14 +35,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
         }
     }

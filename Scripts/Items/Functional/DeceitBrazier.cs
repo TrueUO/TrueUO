@@ -111,7 +111,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_SpawnRange);
@@ -121,14 +120,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version >= 0)
-            {
-                m_SpawnRange = reader.ReadInt();
-                m_NextSpawnDelay = reader.ReadTimeSpan();
-            }
+            m_SpawnRange = reader.ReadInt();
+            m_NextSpawnDelay = reader.ReadTimeSpan();
 
             m_NextSpawn = DateTime.UtcNow;
         }

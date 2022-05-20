@@ -81,7 +81,7 @@ namespace Server.Items
 
         [Constructable]
         public Sign(SignType type, SignFacing facing)
-            : base((0xB95 + (2 * (int)type)) + (int)facing)
+            : base(0xB95 + 2 * (int)type + (int)facing)
         {
         }
 
@@ -99,15 +99,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

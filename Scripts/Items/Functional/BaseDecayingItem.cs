@@ -61,9 +61,13 @@ namespace Server.Items
                 Mobile parent = mobile;
 
                 if (Name == null)
+                {
                     parent.SendLocalizedMessage(1072515, "#" + LabelNumber); // The ~1_name~ expired...
+                }
                 else
+                {
                     parent.SendLocalizedMessage(1072515, Name); // The ~1_name~ expired...
+                }
 
                 Effects.SendLocationParticles(EffectItem.Create(parent.Location, parent.Map, EffectItem.DefaultDuration), 0x3728, 8, 20, 5042);
                 Effects.PlaySound(parent.Location, parent.Map, 0x201);
@@ -90,25 +94,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                var lifespan = reader.ReadInt();
-
-                if (lifespan > 0)
-                {
-                    AttachSocket(new DecayingItemSocket(lifespan, UseSeconds));
-                }
-            }
+            reader.ReadInt();
         }
     }
 }

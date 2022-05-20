@@ -862,20 +862,10 @@ namespace Server.Misc
             };
             PlaceItemIn(bag, 45, 128, toHue);
 
-            toHue = new BagOfNecroReagents(3000)
-            {
-                Hue = 0x488
-            };
-            PlaceItemIn(bag, 64, 125, toHue);
-
-            toHue = new BagOfMysticReagents(3000)
-            {
-                Hue = 1167
-            };
-            PlaceItemIn(bag, 141, 128, toHue);
-
             for (int i = 0; i < 9; ++i)
+            {
                 PlaceItemIn(bag, 45 + (i * 10), 74, new RecallRune());
+            }
 
             PlaceItemIn(cont, 47, 91, bag);
 

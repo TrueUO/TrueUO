@@ -18,15 +18,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -48,15 +46,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -78,15 +74,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -108,15 +102,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -160,7 +152,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Item);
@@ -169,8 +160,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Item = reader.ReadItem() as InternalItem;
         }
@@ -214,7 +204,6 @@ namespace Server.Items
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.Write(0); // version
 
                 writer.Write(m_Item);
@@ -223,8 +212,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadInt();
+                reader.ReadInt();
 
                 m_Item = reader.ReadItem() as DecorativeSwordNorth;
             }
@@ -271,7 +259,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Item);
@@ -280,8 +267,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Item = reader.ReadItem() as InternalItem;
         }
@@ -325,7 +311,6 @@ namespace Server.Items
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.Write(0); // version
 
                 writer.Write(m_Item);
@@ -334,8 +319,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadInt();
+                reader.ReadInt();
 
                 m_Item = reader.ReadItem() as DecorativeSwordWest;
             }
@@ -362,13 +346,17 @@ namespace Server.Items
         public override void OnLocationChange(Point3D oldLocation)
         {
             if (m_Item != null)
+            {
                 m_Item.Location = new Point3D(X - 1, Y, Z);
+            }
         }
 
         public override void OnMapChange()
         {
             if (m_Item != null)
+            {
                 m_Item.Map = Map;
+            }
         }
 
         public override void OnAfterDelete()
@@ -376,13 +364,14 @@ namespace Server.Items
             base.OnAfterDelete();
 
             if (m_Item != null)
+            {
                 m_Item.Delete();
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Item);
@@ -391,8 +380,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Item = reader.ReadItem() as InternalItem;
         }
@@ -436,7 +424,6 @@ namespace Server.Items
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.Write(0); // version
 
                 writer.Write(m_Item);
@@ -445,8 +432,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadInt();
+                reader.ReadInt();
 
                 m_Item = reader.ReadItem() as DecorativeDAxeNorth;
             }
@@ -493,7 +479,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Item);
@@ -502,8 +487,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Item = reader.ReadItem() as InternalItem;
         }
@@ -547,7 +531,6 @@ namespace Server.Items
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.Write(0); // version
 
                 writer.Write(m_Item);
@@ -556,8 +539,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadInt();
+                reader.ReadInt();
 
                 m_Item = reader.ReadItem() as DecorativeDAxeWest;
             }

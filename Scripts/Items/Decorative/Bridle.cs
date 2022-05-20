@@ -1,6 +1,5 @@
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.DecoBridle")]
     public class DecoBridleSouth : Item
     {
         [Constructable]
@@ -25,11 +24,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    [TypeAlias("Server.Items.DecoBridle2")]
     public class DecoBridleEast : Item
     {
         [Constructable]
@@ -54,7 +52,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

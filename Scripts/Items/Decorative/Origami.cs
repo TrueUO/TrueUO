@@ -49,15 +49,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -75,18 +73,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1030296;// a delicate origami butterfly
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -104,18 +101,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1030297;// a delicate origami swan
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -133,18 +129,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1030298;// a delicate origami frog
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -162,18 +157,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1030299;// an intricate geometric origami shape
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -191,18 +185,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1030300;// a delicate origami songbird
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -220,25 +213,22 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1030301;// a delicate origami fish
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
     public class OrigamiDragon : Item
     {
-        //public override int LabelNumber{ get{ return 1030296; } } // a delicate origami butterfly
-
         [Constructable]
         public OrigamiDragon()
             : base(0x4B1C)
@@ -256,23 +246,18 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
-    // [FlipableAttribute( 0x4B1E, 0x4B1F )]
     public class OrigamiBunny : Item
     {
-        //public override int LabelNumber{ get{ return 1030296; } } // a delicate origami butterfly
-
         [Constructable]
         public OrigamiBunny()
             : base(0x4B1F)
@@ -289,15 +274,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 }

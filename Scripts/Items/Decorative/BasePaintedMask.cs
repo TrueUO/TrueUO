@@ -1,7 +1,5 @@
-﻿//using System.Collections.Generic;
 namespace Server.Items.Holiday
 {
-    [TypeAlias("Server.Items.ClownMask", "Server.Items.DaemonMask", "Server.Items.PlagueMask")]
     public class BasePaintedMask : Item
     {
         private static readonly string[] m_Staffers =
@@ -14,7 +12,9 @@ namespace Server.Items.Holiday
             "Eos",
             "Xavier"
         };
+
         private string m_Staffer;
+
         public BasePaintedMask(int itemid)
             : this(m_Staffers[Utility.Random(m_Staffers.Length)], itemid)
         {
@@ -45,25 +45,23 @@ namespace Server.Items.Holiday
                 return MaskName;
             }
         }
+
         public virtual string MaskName => "A Mask";
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
+            writer.Write(0); // version
 
-            writer.Write(1); // version
             writer.Write(m_Staffer);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version == 1)
-            {
-                m_Staffer = Utility.Intern(reader.ReadString());
-            }
+            m_Staffer = Utility.Intern(reader.ReadString());
         }
     }
 }

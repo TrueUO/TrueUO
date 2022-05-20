@@ -1,4 +1,4 @@
-﻿namespace Server.Items.Holiday
+namespace Server.Items.Holiday
 {
     public class PaintedPorcelainMask : BasePaintedMask
     {
@@ -14,18 +14,17 @@
         }
 
         public override string MaskName => "Porcelain Mask";
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

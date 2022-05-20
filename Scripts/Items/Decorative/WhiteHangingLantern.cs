@@ -26,21 +26,27 @@ namespace Server.Items
             get
             {
                 if (ItemID == 0x24C6)
+                {
                     return 0x24C5;
-                else
-                    return 0x24C7;
+                }
+
+                return 0x24C7;
             }
         }
+
         public override int UnlitItemID
         {
             get
             {
                 if (ItemID == 0x24C5)
+                {
                     return 0x24C6;
-                else
-                    return 0x24C8;
+                }
+
+                return 0x24C8;
             }
         }
+
         public void Flip()
         {
             Light = LightType.Circle300;
@@ -71,7 +77,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

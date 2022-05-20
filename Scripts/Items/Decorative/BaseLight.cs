@@ -260,14 +260,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(3);
+            writer.Write(0);
 
             writer.Write((int)Level);
             writer.Write(_PlayerConstructed);
             writer.Write((int)_Resource);
             writer.Write(_Crafter);
             writer.Write((int)_Quality);
-
             writer.Write(m_BurntOut);
             writer.Write(m_Burning);
             writer.Write(m_Duration);

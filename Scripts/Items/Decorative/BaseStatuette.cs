@@ -7,6 +7,7 @@ namespace Server.Items
     public class BaseStatuette : Item
     {
         private bool m_TurnedOn;
+
         [Constructable]
         public BaseStatuette(int itemID)
             : base(itemID)
@@ -19,20 +20,20 @@ namespace Server.Items
         }
 
         public override bool HandlesOnMovement => m_TurnedOn && IsLockedDown;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool TurnedOn
         {
-            get
-            {
-                return m_TurnedOn;
-            }
+            get => m_TurnedOn;
             set
             {
                 m_TurnedOn = value;
                 InvalidateProperties();
             }
         }
+
         public override double DefaultWeight => 1.0;
+
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
             if (m_TurnedOn && IsLockedDown && (!m.Hidden || m.IsPlayer()) && Utility.InRange(m.Location, Location, 2) && !Utility.InRange(oldLocation, Location, 2))
@@ -52,16 +53,20 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (m_TurnedOn)
+            {
                 list.Add(502695); // turned on
+            }
             else
+            {
                 list.Add(502696); // turned off
+            }
         }
 
         public bool IsOwner(Mobile mob)
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
-            return (house != null && house.IsOwner(mob));
+            return house != null && house.IsOwner(mob);
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -80,7 +85,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_TurnedOn);
@@ -89,17 +93,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_TurnedOn = reader.ReadBool();
-                        break;
-                    }
-            }
+            m_TurnedOn = reader.ReadBool();
         }
 
         private class OnOffGump : Gump
@@ -128,10 +124,13 @@ namespace Server.Items
                 if (info.ButtonID == 1)
                 {
                     bool newValue = !m_Statuette.TurnedOn;
+
                     m_Statuette.TurnedOn = newValue;
 
                     if (newValue && !m_Statuette.IsLockedDown)
+                    {
                         from.SendLocalizedMessage(502693); // Remember, this only works when locked down.
+                    }
                 }
                 else
                 {

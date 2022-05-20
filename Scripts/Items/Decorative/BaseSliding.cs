@@ -6,6 +6,7 @@ namespace Server.Items
     {
         private int m_OpenedID;
         private int m_ClosedID;
+
         [Constructable]
         public BaseSliding(int closedID, int openedID)
             : base(closedID)
@@ -40,6 +41,7 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0); // version
+
             writer.Write(m_OpenedID);
             writer.Write(m_ClosedID);
         }
@@ -47,7 +49,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
+
             m_OpenedID = reader.ReadInt();
             m_ClosedID = reader.ReadInt();
         }

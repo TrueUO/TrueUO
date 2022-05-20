@@ -1,7 +1,6 @@
 namespace Server.Items
 {
     [Furniture]
-    [TypeAlias("Server.Items.Easle")]
     public class EasleSouth : Item
     {
         [Constructable]
@@ -19,18 +18,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                ItemID = 0xF66;
-            }
+            reader.ReadInt();
         }
     }
 
@@ -52,18 +46,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                ItemID = 0xF68;
-            }
+            reader.ReadInt();
         }
     }
 
@@ -85,18 +74,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                ItemID = 0xF6A;
-            }
+            reader.ReadInt();
         }
     }
 }

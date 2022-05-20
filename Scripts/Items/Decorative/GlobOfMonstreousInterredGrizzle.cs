@@ -14,18 +14,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1072117;// Glob of Monsterous Interred Grizzle
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

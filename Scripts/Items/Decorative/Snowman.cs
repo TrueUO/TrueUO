@@ -4,6 +4,7 @@ namespace Server.Items
     public class Snowman : Item, IDyable
     {
         private string m_Title;
+
         [Constructable]
         public Snowman()
             : this(Utility.RandomDyedHue(), GetRandomTitle())
@@ -40,20 +41,17 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public string Title
         {
-            get
-            {
-                return m_Title;
-            }
+            get => m_Title;
             set
             {
                 m_Title = value;
                 InvalidateProperties();
             }
         }
+
         public static string GetRandomTitle()
         {
-            // All hail OSI staff
-            string[] titles = new string[]
+            string[] titles =
             {
                 /*  1 */ "Backflash",
                 /*  2 */ "Carbon",
@@ -111,7 +109,9 @@ namespace Server.Items
             };
 
             if (titles.Length > 0)
+            {
                 return titles[Utility.Random(titles.Length)];
+            }
 
             return null;
         }
@@ -121,13 +121,17 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (m_Title != null)
+            {
                 list.Add(1062841, m_Title); // ~1_NAME~ the Snowman
+            }
         }
 
         public bool Dye(Mobile from, DyeTub sender)
         {
             if (Deleted)
+            {
                 return false;
+            }
 
             Hue = sender.DyedHue;
 
@@ -137,8 +141,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(m_Title);
         }
@@ -146,17 +149,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_Title = reader.ReadString();
-                        break;
-                    }
-            }
+            m_Title = reader.ReadString();
 
             Utility.Intern(ref m_Title);
         }

@@ -28,18 +28,17 @@ namespace Server.Items
         public override int LabelNumber => 1074027;// Vanity
         public override int DefaultGumpID => 0x51;
         public override int DefaultDropSound => 0x42;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -59,6 +58,7 @@ namespace Server.Items
 
         public override BaseAddonContainer Addon => new VanityAddon(m_East);
         public override int LabelNumber => 1074027;// Vanity
+
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack))
@@ -73,15 +73,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
 
         private void SendTarget(Mobile m)
@@ -119,7 +117,9 @@ namespace Server.Items
             public override void OnResponse(NetState sender, RelayInfo info)
             {
                 if (m_Deed == null || m_Deed.Deleted || info.ButtonID == 0)
+                {
                     return;
+                }
 
                 m_Deed.m_East = (info.ButtonID != 1);
                 m_Deed.SendTarget(sender.Mobile);

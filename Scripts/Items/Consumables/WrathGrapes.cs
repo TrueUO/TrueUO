@@ -2,7 +2,6 @@ using System;
 
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.WrathGrapes")]
     public class GrapesOfWrath : BaseMagicalFood, ICommodity
     {
         TextDefinition ICommodity.Description => LabelNumber;

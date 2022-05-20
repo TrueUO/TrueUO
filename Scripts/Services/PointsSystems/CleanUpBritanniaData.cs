@@ -604,7 +604,6 @@ namespace Server.Engines.Points
             Entries[typeof(DeadWood)] = 1.0;
             Entries[typeof(DustyPillow)] = 250.0;
             Entries[typeof(EndlessDecanter)] = 10.0;
-            Entries[typeof(EternallyCorruptTree)] = 1000.0;
             Entries[typeof(ExcellentIronMaiden)] = 50.0;
             Entries[typeof(ExecutionersCap)] = 1.0;
             Entries[typeof(Flowstone)] = 250.0;
@@ -634,7 +633,6 @@ namespace Server.Engines.Points
             Entries[typeof(BlueSoulstone)] = 15000.0;
             Entries[typeof(SoulStone)] = 15000.0;
             Entries[typeof(HornOfPlenty)] = 2500.0;
-            Entries[typeof(KepetchWax)] = 500.0;
             Entries[typeof(SlithEye)] = 500.0;
             Entries[typeof(SoulstoneFragment)] = 500.0;
             Entries[typeof(WhiteClothDyeTub)] = 300.0;

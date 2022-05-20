@@ -6,8 +6,9 @@ namespace Server.Items
 {
     public abstract class BaseWindChimes : Item
     {
-        private static readonly int[] m_Sounds = new int[] { 0x505, 0x506, 0x507 };
+        private static readonly int[] m_Sounds = { 0x505, 0x506, 0x507 };
         private bool m_TurnedOn;
+
         public BaseWindChimes(int itemID)
             : base(itemID)
         {
@@ -19,24 +20,26 @@ namespace Server.Items
         }
 
         public static int[] Sounds => m_Sounds;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool TurnedOn
         {
-            get
-            {
-                return m_TurnedOn;
-            }
+            get => m_TurnedOn;
             set
             {
                 m_TurnedOn = value;
                 InvalidateProperties();
             }
         }
+
         public override bool HandlesOnMovement => m_TurnedOn && IsLockedDown;
+
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
             if (m_TurnedOn && IsLockedDown && (!m.Hidden || m.IsPlayer()) && Utility.InRange(m.Location, Location, 2) && !Utility.InRange(oldLocation, Location, 2))
+            {
                 Effects.PlaySound(Location, Map, m_Sounds[Utility.Random(m_Sounds.Length)]);
+            }
 
             base.OnMovement(m, oldLocation);
         }
@@ -46,16 +49,20 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (m_TurnedOn)
+            {
                 list.Add(502695); // turned on
+            }
             else
+            {
                 list.Add(502696); // turned off
+            }
         }
 
         public bool IsOwner(Mobile mob)
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
-            return (house != null && house.IsOwner(mob));
+            return house != null && house.IsOwner(mob);
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -74,7 +81,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_TurnedOn);
@@ -83,17 +89,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_TurnedOn = reader.ReadBool();
-                        break;
-                    }
-            }
+            m_TurnedOn = reader.ReadBool();
         }
 
         private class OnOffGump : Gump
@@ -147,6 +145,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1030290;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -156,7 +155,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -174,6 +173,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1030291;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -183,7 +183,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

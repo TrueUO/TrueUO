@@ -4,9 +4,7 @@ namespace Server.Items
     {
         public override BaseAddonDeed Deed => new GargoyleShortTableDeed();
 
-        #region Mondain's Legacy
         public override bool RetainDeedHue => true;
-        #endregion
 
         [Constructable]
         public GargoyleShortTableAddon()
@@ -25,15 +23,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -55,15 +51,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 }

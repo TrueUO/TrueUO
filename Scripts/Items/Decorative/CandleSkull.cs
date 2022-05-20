@@ -28,21 +28,27 @@ namespace Server.Items
             get
             {
                 if (ItemID == 0x1583 || ItemID == 0x1854)
+                {
                     return 0x1854;
+                }
 
                 return 0x1858;
             }
         }
+
         public override int UnlitItemID
         {
             get
             {
                 if (ItemID == 0x1853 || ItemID == 0x1584)
+                {
                     return 0x1853;
+                }
 
                 return 0x1857;
             }
         }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -52,7 +58,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

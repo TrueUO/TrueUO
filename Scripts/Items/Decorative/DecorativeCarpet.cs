@@ -23,12 +23,19 @@ namespace Server.Items
             Weight = 1.0;
         }
 
+        public DecorativeCarpet(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             if (Movable && IsInsideHouse())
+            {
                 list.Add(1113267); // (Double Click to Lockdown)
+            }
         }
 
         public override bool DisplayWeight => Movable;
@@ -36,7 +43,9 @@ namespace Server.Items
         public override bool OnDroppedToWorld(Mobile from, Point3D p)
         {
             if (!base.OnDroppedToWorld(from, p))
+            {
                 return false;
+            }
 
             InvalidateProperties();
             return true;
@@ -53,9 +62,13 @@ namespace Server.Items
                     Movable = !Movable;
 
                     if (Movable)
+                    {
                         house.Carpets.Remove(this);
+                    }
                     else
+                    {
                         house.Carpets.Add(this);
+                    }
 
                     InvalidateProperties();
                 }
@@ -72,23 +85,15 @@ namespace Server.Items
             return Region.Find(Location, Map).IsPartOf<HouseRegion>();
         }
 
-        public DecorativeCarpet(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            /*int version = */
             reader.ReadInt();
         }
 

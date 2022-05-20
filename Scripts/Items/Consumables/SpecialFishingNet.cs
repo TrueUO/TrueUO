@@ -25,10 +25,12 @@ namespace Server.Items
             0x4B5,
             0x8AA
         };
+
         private static readonly int[] m_WaterTiles =
         {
             0x00A8, 0x00AB, 0x0136, 0x0137
         };
+
         private static readonly int[] m_UndeepWaterTiles =
         {
             0x1797, 0x179C
@@ -89,7 +91,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(m_InUse);
         }

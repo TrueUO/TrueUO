@@ -10,13 +10,13 @@ namespace Server.Items
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public CraftResource Resource { get { return _Resource; } set { _Resource = value; _Resource = value; Hue = CraftResources.GetHue(_Resource); InvalidateProperties(); } }
+        public CraftResource Resource { get => _Resource; set { _Resource = value; _Resource = value; Hue = CraftResources.GetHue(_Resource); InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Crafter { get { return _Crafter; } set { _Crafter = value; InvalidateProperties(); } }
+        public Mobile Crafter { get => _Crafter; set { _Crafter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public bool PlayerConstructed => true;
 
@@ -25,6 +25,11 @@ namespace Server.Items
             : base(0x1047)// It isn't flipable
         {
             Weight = 3.0;
+        }
+
+        public Globe(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void AddCraftedProperties(ObjectPropertyList list)
@@ -57,12 +62,16 @@ namespace Server.Items
             Quality = (ItemQuality)quality;
 
             if (makersMark)
+            {
                 Crafter = from;
+            }
 
             if (!craftItem.ForceNonExceptional)
             {
                 if (typeRes == null)
+                {
                     typeRes = craftItem.Resources.GetAt(0).ItemType;
+                }
 
                 Resource = CraftResources.GetFromType(typeRes);
             }
@@ -70,16 +79,10 @@ namespace Server.Items
             return quality;
         }
 
-        public Globe(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.WriteEncodedInt(1); // version
+            writer.WriteEncodedInt(0); // version
 
             writer.Write((int)_Resource);
             writer.Write(_Crafter);
@@ -89,19 +92,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadEncodedInt();
 
-            int version = reader.ReadEncodedInt();
-
-            switch (version)
-            {
-                case 1:
-                    _Resource = (CraftResource)reader.ReadInt();
-                    _Crafter = reader.ReadMobile();
-                    _Quality = (ItemQuality)reader.ReadInt();
-                    break;
-                case 0:
-                    break;
-            }
+            _Resource = (CraftResource)reader.ReadInt();
+            _Crafter = reader.ReadMobile();
+            _Quality = (ItemQuality)reader.ReadInt();
         }
     }
 }
