@@ -44,15 +44,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -75,7 +73,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyWoodenBowl());
             return true;
@@ -84,15 +84,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -115,7 +113,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyWoodenBowl());
             return true;
@@ -124,15 +124,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -155,7 +153,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyWoodenBowl());
             return true;
@@ -164,15 +164,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -195,7 +193,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyWoodenBowl());
             return true;
@@ -204,15 +204,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -235,7 +233,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyPewterBowl());
             return true;
@@ -244,15 +244,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -275,7 +273,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyPewterBowl());
             return true;
@@ -284,15 +284,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -315,7 +313,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyPewterBowl());
             return true;
@@ -324,15 +324,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -355,7 +353,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyPewterBowl());
             return true;
@@ -364,15 +364,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -395,7 +393,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyPewterBowl());
             return true;
@@ -404,19 +404,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    [TypeAlias("Server.Items.EmptyLargeWoodenBowl")]
     public class EmptyWoodenTub : Item
     {
         [Constructable]
@@ -434,19 +431,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    [TypeAlias("Server.Items.EmptyLargePewterBowl")]
     public class EmptyPewterTub : Item
     {
         [Constructable]
@@ -464,15 +458,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -497,15 +489,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -528,7 +518,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyWoodenTub());
             return true;
@@ -537,15 +529,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -568,7 +558,9 @@ namespace Server.Items
         public override bool Eat(Mobile from)
         {
             if (!base.Eat(from))
+            {
                 return false;
+            }
 
             from.AddToBackpack(new EmptyWoodenTub());
             return true;
@@ -577,15 +569,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -604,29 +594,27 @@ namespace Server.Items
             Hue = 1954;
         }
 
+        public BowlOfBlackrockStew(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override bool Eat(Mobile from)
         {
             from.SendLocalizedMessage(1115751); // You don't want to eat this, it smells horrible.  It looks like food for some kind of demon.
             return false;
         }
 
-        public BowlOfBlackrockStew(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Server.Items
     {
         private static Hashtable m_Table;
         private static Hashtable m_Cooldown;
+
         [Constructable]
         public BaseMagicalFood(int itemID)
             : base(itemID)
@@ -32,10 +33,13 @@ namespace Server.Items
         public virtual TimeSpan Cooldown => TimeSpan.Zero;
         public virtual TimeSpan Duration => TimeSpan.Zero;
         public virtual int EatMessage => 0;
+
         public static bool IsUnderInfluence(Mobile mob, MagicalFood id)
         {
             if (m_Table != null && m_Table[mob] != null && ((int)m_Table[mob] & (int)id) > 0)
+            {
                 return true;
+            }
 
             return false;
         }
@@ -43,7 +47,9 @@ namespace Server.Items
         public static bool CoolingDown(Mobile mob, MagicalFood id)
         {
             if (m_Cooldown != null && m_Cooldown[mob] != null && ((int)m_Cooldown[mob] & (int)id) > 0)
+            {
                 return true;
+            }
 
             return false;
         }
@@ -51,10 +57,14 @@ namespace Server.Items
         public static void StartInfluence(Mobile mob, MagicalFood id, TimeSpan duration, TimeSpan cooldown)
         {
             if (m_Table == null)
+            {
                 m_Table = new Hashtable();
+            }
 
             if (m_Table[mob] == null)
+            {
                 m_Table[mob] = 0;
+            }
 
             m_Table[mob] = (int)m_Table[mob] | (int)id;
 
@@ -66,7 +76,9 @@ namespace Server.Items
             if (obj is object[] args && args.Length == 3)
             {
                 if (args[0] is Mobile && args[1] is MagicalFood && args[2] is TimeSpan)
+                {
                     EndInfluence((Mobile)args[0], (MagicalFood)args[1], (TimeSpan)args[2]);
+                }
             }
         }
 

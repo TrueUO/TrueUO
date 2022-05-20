@@ -93,8 +93,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(DailyRare);
         }
@@ -102,15 +101,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    DailyRare = reader.ReadBool();
-                    break;
-            }
+            DailyRare = reader.ReadBool();
         }
     }
 

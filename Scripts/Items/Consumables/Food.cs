@@ -209,11 +209,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(7); // version
+            writer.Write(0); // version
 
             writer.Write((int)_Quality);
-
             writer.Write(m_EngravedText);
 
             writer.Write(m_PlayerConstructed);
@@ -226,62 +224,16 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            _Quality = (ItemQuality)reader.ReadInt();
+            m_EngravedText = reader.ReadString();
 
-            switch (version)
-            {
-                case 1:
-                    {
-                        switch (reader.ReadInt())
-                        {
-                            case 0:
-                                Poison = null;
-                                break;
-                            case 1:
-                                Poison = Poison.Lesser;
-                                break;
-                            case 2:
-                                Poison = Poison.Regular;
-                                break;
-                            case 3:
-                                Poison = Poison.Greater;
-                                break;
-                            case 4:
-                                Poison = Poison.Deadly;
-                                break;
-                        }
+            m_PlayerConstructed = reader.ReadBool();
+            Poisoner = reader.ReadMobile();
 
-                        break;
-                    }
-                case 2:
-                    {
-                        Poison = Poison.Deserialize(reader);
-                        break;
-                    }
-                case 3:
-                    {
-                        Poison = Poison.Deserialize(reader);
-                        FillFactor = reader.ReadInt();
-                        break;
-                    }
-                case 4:
-                    {
-                        Poisoner = reader.ReadMobile();
-                        goto case 3;
-                    }
-                case 5:
-                    {
-                        m_PlayerConstructed = reader.ReadBool();
-                        goto case 4;
-                    }
-                case 6:
-                    m_EngravedText = reader.ReadString();
-                    goto case 5;
-                case 7:
-                    _Quality = (ItemQuality)reader.ReadInt();
-                    goto case 6;
-            }
+            Poison = Poison.Deserialize(reader);
+            FillFactor = reader.ReadInt();
         }
     }
 
@@ -852,22 +804,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-                Stackable = true;
+            reader.ReadInt();
         }
     }
 
-    [TypeAlias("Server.Items.Pizza")]
     public class CheesePizza : Food
     {
         public override int LabelNumber => 1044516;// cheese pizza
@@ -1453,6 +1399,11 @@ namespace Server.Items
             Pieces = 10;
         }
 
+        public ThreeTieredCake(Serial serial)
+            : base(serial)
+        {
+        }
+
         public virtual int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
         {
             Quality = (ItemQuality)quality;
@@ -1486,11 +1437,6 @@ namespace Server.Items
             {
                 list.Add(1060636); // Exceptional
             }
-        }
-
-        public ThreeTieredCake(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

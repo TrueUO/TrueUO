@@ -1,6 +1,4 @@
-#region References
 using Server.SkillHandlers;
-#endregion
 
 namespace Server.Items
 {
@@ -10,7 +8,6 @@ namespace Server.Items
         public EggBomb()
             : base(0x2808)
         {
-            // Item ID should be 0x2809 - Temporary solution for clients 7.0.0.0 and up
             Stackable = true;
             Weight = 1.0;
         }
@@ -74,11 +71,6 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             reader.ReadInt();
-
-            if (ItemID == 0x2809) // Temporary solution for clients 7.0.0.0 and up
-            {
-                ItemID = 0x2808;
-            }
         }
     }
 }

@@ -41,6 +41,11 @@ namespace Server.Items
             Weight = 1.0;
         }
 
+        public Dough(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override bool WillStack(Mobile from, Item item)
         {
             if (item is IQuality quality && quality.Quality != _Quality)
@@ -66,15 +71,10 @@ namespace Server.Items
             }
         }
 
-        public Dough(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write((int)_Quality);
         }
@@ -175,6 +175,11 @@ namespace Server.Items
             Hue = 150;
         }
 
+        public SweetDough(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void AddCraftedProperties(ObjectPropertyList list)
         {
             if (_Quality == ItemQuality.Exceptional)
@@ -183,15 +188,10 @@ namespace Server.Items
             }
         }
 
-        public SweetDough(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write((int)_Quality);
         }
@@ -420,6 +420,11 @@ namespace Server.Items
             Amount = amount;
         }
 
+        public SackFlour(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!Movable)
@@ -464,15 +469,10 @@ namespace Server.Items
             }
         }
 
-        public SackFlour(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(4); // version
+            writer.Write(0); // version
 
             writer.Write((int)_Quality);
         }
@@ -557,10 +557,17 @@ namespace Server.Items
             Amount = amount;
         }
 
+        public WheatSheaf(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!Movable)
+            {
                 return;
+            }
 
             from.BeginTarget(4, false, TargetFlags.None, OnTarget);
         }
@@ -584,11 +591,6 @@ namespace Server.Items
                 mill.CurFlour += needs;
                 Consume(needs);
             }
-        }
-
-        public WheatSheaf(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

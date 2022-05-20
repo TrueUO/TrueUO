@@ -15,6 +15,11 @@ namespace Server.Items
             Hue = 2001;
         }
 
+        public OilCloth(Serial serial)
+            : base(serial)
+        {
+        }
+
         public bool Dye(Mobile from, DyeTub sender)
         {
             if (Deleted)
@@ -107,11 +112,6 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1005426); // The cloth will not work on that.
             }
-        }
-
-        public OilCloth(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

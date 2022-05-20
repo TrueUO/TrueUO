@@ -97,14 +97,14 @@ namespace Server.Items
             Hue = 700;
         }
 
-        public override int ComputeItemID()
-        {
-            return 0x1956;
-        }
-
         public Shochu(Serial serial)
             : base(serial)
         {
+        }
+
+        public override int ComputeItemID()
+        {
+            return 0x1956;
         }
 
         public override void Serialize(GenericWriter writer)
@@ -148,7 +148,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
@@ -163,6 +163,11 @@ namespace Server.Items
         [Constructable]
         public HotCocoaMug()
             : base(BeverageType.HotCocoa)
+        {
+        }
+
+        public HotCocoaMug(Serial serial)
+            : base(serial)
         {
         }
 
@@ -191,11 +196,6 @@ namespace Server.Items
             }
         }
 
-        public HotCocoaMug(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -214,6 +214,11 @@ namespace Server.Items
         [Constructable]
         public BasketOfGreenTeaMug()
             : base(BeverageType.GreenTea)
+        {
+        }
+
+        public BasketOfGreenTeaMug(Serial serial)
+            : base(serial)
         {
         }
 
@@ -242,11 +247,6 @@ namespace Server.Items
             }
         }
 
-        public BasketOfGreenTeaMug(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -265,6 +265,11 @@ namespace Server.Items
         [Constructable]
         public CoffeeMug()
             : base(BeverageType.Coffee)
+        {
+        }
+
+        public CoffeeMug(Serial serial)
+            : base(serial)
         {
         }
 
@@ -291,11 +296,6 @@ namespace Server.Items
             {
                 base.OnDoubleClick(from);
             }
-        }
-
-        public CoffeeMug(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -347,7 +347,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
@@ -391,7 +391,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
@@ -435,7 +435,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
@@ -496,7 +496,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
@@ -516,7 +516,9 @@ namespace Server.Items
             if (IsEmpty)
             {
                 if (ItemID == 0x9A7 || ItemID == 0xFF7)
+                {
                     return ItemID;
+                }
 
                 return 0xFF6;
             }
@@ -591,7 +593,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
@@ -629,7 +631,9 @@ namespace Server.Items
                 int num = BaseLabelNumber;
 
                 if (IsEmpty || num == 0)
+                {
                     return EmptyLabelNumber;
+                }
 
                 return BaseLabelNumber + (int)m_Content;
             }
@@ -855,12 +859,12 @@ namespace Server.Items
             }
             else if (targ is Item item)
             {
-                IWaterSource src;
-
-                src = item as IWaterSource;
+                var src = item as IWaterSource;
 
                 if (src == null && item is AddonComponent component)
+                {
                     src = component.Addon as IWaterSource;
+                }
 
                 if (src == null || src.Quantity <= 0)
                 {
@@ -1093,7 +1097,9 @@ namespace Server.Items
                     from.BAC += bac;
 
                     if (from.BAC > 60)
+                    {
                         from.BAC = 60;
+                    }
 
                     CheckHeaveTimer(from);
                 }
@@ -1101,7 +1107,9 @@ namespace Server.Items
                 from.PlaySound(Utility.RandomList(0x30, 0x2D6));
 
                 if (m_Poison != null)
+                {
                     from.ApplyPoison(m_Poisoner, m_Poison);
+                }
 
                 --Quantity;
             }
@@ -1165,7 +1173,9 @@ namespace Server.Items
             if (IsEmpty)
             {
                 if (!Fillable || !ValidateUse(from, true))
+                {
                     return;
+                }
 
                 from.BeginTarget(-1, true, TargetFlags.None, Fill_OnTarget);
                 SendLocalizedMessageTo(from, 500837); // Fill from what?
@@ -1247,7 +1257,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(m_Poisoner);
             Poison.Serialize(m_Poison, writer);

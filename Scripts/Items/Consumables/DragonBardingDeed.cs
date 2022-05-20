@@ -54,12 +54,19 @@ namespace Server.Items
             Weight = 1.0;
         }
 
+        public DragonBardingDeed(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             if (m_Exceptional && m_Crafter != null)
+            {
                 list.Add(1050043, m_Crafter.TitleName); // crafted by ~1_NAME~
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -78,7 +85,9 @@ namespace Server.Items
         public virtual void OnTarget(Mobile from, object obj)
         {
             if (Deleted)
+            {
                 return;
+            }
 
             SwampDragon pet = obj as SwampDragon;
 
@@ -109,16 +118,10 @@ namespace Server.Items
             }
         }
 
-        public DragonBardingDeed(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(m_Exceptional);
             writer.Write(m_Crafter);
@@ -128,43 +131,31 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                case 0:
-                    {
-                        m_Exceptional = reader.ReadBool();
-                        m_Crafter = reader.ReadMobile();
-
-                        if (version < 1)
-                            reader.ReadInt();
-
-                        m_Resource = (CraftResource)reader.ReadInt();
-                        break;
-                    }
-            }
+            m_Exceptional = reader.ReadBool();
+            m_Crafter = reader.ReadMobile();
+            m_Resource = (CraftResource)reader.ReadInt();
         }
-
-        #region ICraftable Members
 
         public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
         {
             Exceptional = quality >= 2;
 
             if (makersMark)
+            {
                 Crafter = from;
+            }
 
             Type resourceType = typeRes;
 
             if (resourceType == null)
+            {
                 resourceType = craftItem.Resources.GetAt(0).ItemType;
+            }
 
             Resource = CraftResources.GetFromType(resourceType);
             return quality;
         }
-        #endregion
     }
 }

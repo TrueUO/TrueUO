@@ -6,9 +6,15 @@ namespace Server.Items
     public class ElixirOfRebirth : Item
     {
         [Constructable]
-        public ElixirOfRebirth() : base(0x24E2)
+        public ElixirOfRebirth()
+            : base(0x24E2)
         {
             Hue = 0x48E;
+        }
+
+        public ElixirOfRebirth(Serial serial)
+            : base(serial)
+        {
         }
 
         public override int LabelNumber => 1112762;  // elixir of rebirth
@@ -16,7 +22,9 @@ namespace Server.Items
         public override void OnDoubleClick(Mobile from)
         {
             if (!IsChildOf(from.Backpack))
+            {
                 from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+            }
             else
             {
                 from.Target = new ResurrectTarget(this);
@@ -67,23 +75,21 @@ namespace Server.Items
                     }
                 }
                 else
+                {
                     from.SendLocalizedMessage(1112764); // This may only be used to resurrect dead pets.
+                }
             }
         }
-
-        public ElixirOfRebirth(Serial serial) : base(serial) { }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
         }
     }
