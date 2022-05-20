@@ -158,37 +158,9 @@ namespace Server.Engines.Craft
             AddRecipe(index, (int)CraftRecipes.TheNightReaper);
             ForceNonExceptional(index);
 
-            index = AddCraft(typeof(BarbedLongbow), 1044566, 1073505, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(FireRuby), 1026254, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.BarbedLongbow);
-
             index = AddCraft(typeof(SlayerLongbow), 1044566, 1073506, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(BrilliantAmber), 1026256, 1, 1053098);
             AddRecipe(index, (int)CraftRecipes.SlayerLongbow);
-
-            index = AddCraft(typeof(FrozenLongbow), 1044566, 1073507, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(Turquoise), 1026250, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.FrozenLongbow);
-
-            index = AddCraft(typeof(LongbowOfMight), 1044566, 1073508, 75.0, 125.0, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(BlueDiamond), 1026255, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.LongbowOfMight);
-
-            index = AddCraft(typeof(RangersShortbow), 1044566, 1073509, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(PerfectEmerald), 1026251, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.RangersShortbow);
-
-            index = AddCraft(typeof(LightweightShortbow), 1044566, 1073510, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(WhitePearl), 1026253, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.LightweightShortbow);
-
-            index = AddCraft(typeof(MysticalShortbow), 1044566, 1073511, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(EcruCitrine), 1026252, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.MysticalShortbow);
-
-            index = AddCraft(typeof(AssassinsShortbow), 1044566, 1073512, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(DarkSapphire), 1026249, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.AssassinsShortbow);
 
             SetSubRes(typeof(Board), 1072643);
 

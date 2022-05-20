@@ -11,10 +11,8 @@ namespace Server
         public static Type[] Artifacts => m_Artifacts;
         private static readonly Type[] m_Artifacts =
         {
-            typeof(BladeDance), typeof(BloodwoodSpirit), typeof(Bonesmasher), typeof(Boomstick),
-            typeof(BrightsightLenses), typeof(FleshRipper), typeof(QuiverOfRage), typeof(QuiverOfElements),
-            typeof(RaedsGlory), typeof(RighteousAnger), typeof(RobeOfTheEclipse), typeof(SoulSeeker),
-            typeof(TalonBite), typeof(TotemOfVoid), typeof(WildfireBow), typeof(Windsong)
+            typeof(BloodwoodSpirit), typeof(Boomstick), typeof(BrightsightLenses), typeof(QuiverOfRage),
+            typeof(QuiverOfElements), typeof(SoulSeeker), typeof(TalonBite), typeof(TotemOfVoid)
         };
 
         public static void Initialize()

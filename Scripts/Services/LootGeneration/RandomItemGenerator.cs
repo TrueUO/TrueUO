@@ -9,9 +9,7 @@ namespace Server.Items
     public class RandomItemGenerator
     {
         public static bool Enabled => true;
-        public static int FeluccaLuckBonus { get; private set; }
-        public static int FeluccaBudgetBonus { get; private set; }
-
+        
         public static int MaxBaseBudget { get; private set; }
         public static int MinBaseBudget { get; private set; }
         public static int MaxProps { get; private set; }
@@ -21,9 +19,6 @@ namespace Server.Items
 
         public static void Configure()
         {
-            FeluccaLuckBonus = Config.Get("Loot.FeluccaLuckBonus", 1000);
-            FeluccaBudgetBonus = Config.Get("Loot.FeluccaBudgetBonus", 100);
-
             MaxBaseBudget = Config.Get("Loot.MaxBaseBudget", 700);
             MinBaseBudget = Config.Get("Loot.MinBaseBudget", 150);
             MaxProps = Config.Get("Loot.MaxProps", 8);
@@ -46,7 +41,10 @@ namespace Server.Items
         public static bool GenerateRandomItem(Item item, Mobile killer, BaseCreature victim)
         {
             if (Enabled)
+            {
                 return RunicReforging.GenerateRandomItem(item, killer, victim);
+            }
+
             return false;
         }
 
@@ -78,7 +76,9 @@ namespace Server.Items
         public static int GetBaseBudget(BaseCreature bc)
         {
             if (bc is BaseRenowned)
+            {
                 return MaxBaseBudget;
+            }
 
             return bc.Fame / (20500 / MaxBaseBudget);
         }
@@ -86,7 +86,9 @@ namespace Server.Items
         public static int GetDifficultyFor(BaseCreature bc)
         {
             if (bc == null)
+            {
                 return 0;
+            }
 
             int fame = bc.Fame;
 

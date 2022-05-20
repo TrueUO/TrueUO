@@ -3051,15 +3051,7 @@ namespace Server.Mobiles
 
         public override int Luck => AosAttributes.GetValue(this, AosAttribute.Luck) + TenthAnniversarySculpture.GetLuckBonus(this) + FountainOfFortune.GetLuckBonus(this);
 
-        public int RealLuck
-        {
-            get
-            {
-                int facetBonus = !Siege.SiegeShard && Map == Map.Felucca ? RandomItemGenerator.FeluccaLuckBonus : 0;
-
-                return Luck + FountainOfFortune.GetLuckBonus(this) + facetBonus;
-            }
-        }
+        public int RealLuck => Luck + FountainOfFortune.GetLuckBonus(this);
 
         public override bool IsHarmfulCriminal(IDamageable damageable)
         {
@@ -4188,19 +4180,6 @@ namespace Server.Mobiles
             }
 
             return true;
-        }
-
-        private DateTime m_LastYoungHeal = DateTime.MinValue;
-
-        public bool CheckYoungHealTime()
-        {
-            if (DateTime.UtcNow - m_LastYoungHeal > TimeSpan.FromMinutes(5.0))
-            {
-                m_LastYoungHeal = DateTime.UtcNow;
-                return true;
-            }
-
-            return false;
         }
         #endregion
 

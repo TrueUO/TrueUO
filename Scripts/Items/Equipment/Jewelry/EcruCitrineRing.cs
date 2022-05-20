@@ -6,14 +6,15 @@ namespace Server.Items
 
         [Constructable]
         public EcruCitrineRing()
-            : base()
         {
-            Weight = 1.0;
-
-            if (.75 > Utility.RandomDouble())
+            if (0.75 > Utility.RandomDouble())
+            {
                 Attributes.EnhancePotions = 50;
+            }
             else
+            {
                 Attributes.BonusStr = Utility.RandomMinMax(5, 6);
+            }
         }
 
         public EcruCitrineRing(Serial serial)
@@ -30,7 +31,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -19,7 +19,6 @@ namespace Server.Mobiles
 
             // Equipment
             typeof(AlchemistsBauble),
-            typeof(ArcticDeathDealer),
             typeof(BlazeOfDeath),
             typeof(BurglarsBandana),
             typeof(CaptainQuacklebushsCutlass),

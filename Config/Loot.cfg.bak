@@ -1,3 +1,9 @@
+# The luck bonus applied in Felucca
+FeluccaLuckBonus=1000
+
+# Budget bonus applied in Felucca
+FeluccaBudgetBonus=100
+
 # Max base budget
 MaxBaseBudget=700
 

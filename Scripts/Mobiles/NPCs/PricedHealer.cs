@@ -28,8 +28,9 @@ namespace Server.Mobiles
             get => m_Price;
             set => m_Price = value;
         }
+
         public override bool IsInvulnerable => true;
-        public override bool HealsYoungPlayers => false;
+        
         public override void InitSBInfo()
         {
         }
@@ -53,7 +54,6 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Price);
@@ -62,17 +62,9 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_Price = reader.ReadInt();
-                        break;
-                    }
-            }
+            m_Price = reader.ReadInt();
         }
     }
 }

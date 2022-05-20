@@ -812,7 +812,7 @@ namespace Server.Engines.Quests
         }
     }
 
-    public class EscortablePeasant : NewHavenEscortable
+    public class EscortablePeasant : TownEscortable
     {
         [Constructable]
         public EscortablePeasant()
@@ -919,7 +919,7 @@ namespace Server.Engines.Quests
 
         public override bool ClickTitle => false;
         public override bool CanTeach => true;
-        public virtual bool HealsYoungPlayers => true;
+        
         public override bool CheckTeach(SkillName skill, Mobile from)
         {
             if (!base.CheckTeach(skill, from))
@@ -964,45 +964,19 @@ namespace Server.Engines.Quests
             m.SendGump(new ResurrectGump(m, ResurrectMessage.Healer));
         }
 
-        public virtual void OfferHeal(PlayerMobile m)
-        {
-            Direction = GetDirectionTo(m);
-
-            if (m.CheckYoungHealTime())
-            {
-                Say(501229); // You look like you need some healing my child.
-
-                m.PlaySound(0x1F2);
-                m.FixedEffect(0x376A, 9, 32);
-
-                m.Hits = m.HitsMax;
-            }
-            else
-            {
-                Say(501228); // I can do no more for you at this time.
-            }
-        }
-
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (!m.Frozen && DateTime.UtcNow >= m_NextResurrect && InRange(m, 4) && !InRange(oldLocation, 4) && InLOS(m))
+            if (!m.Frozen && DateTime.UtcNow >= m_NextResurrect && InRange(m, 4) && !InRange(oldLocation, 4) && InLOS(m) && !m.Alive)
             {
-                if (!m.Alive)
-                {
-                    m_NextResurrect = DateTime.UtcNow + ResurrectDelay;
+                m_NextResurrect = DateTime.UtcNow + ResurrectDelay;
 
-                    if (m.Map == null || !m.Map.CanFit(m.Location, 16, false, false))
-                    {
-                        m.SendLocalizedMessage(502391); // Thou can not be resurrected there!
-                    }
-                    else if (CheckResurrect(m))
-                    {
-                        OfferResurrection(m);
-                    }
-                }
-                else if (HealsYoungPlayers && m.Hits < m.HitsMax && m is PlayerMobile mobile && mobile.Young)
+                if (m.Map == null || !m.Map.CanFit(m.Location, 16, false, false))
                 {
-                    OfferHeal(mobile);
+                    m.SendLocalizedMessage(502391); // Thou can not be resurrected there!
+                }
+                else if (CheckResurrect(m))
+                {
+                    OfferResurrection(m);
                 }
             }
         }

@@ -1917,16 +1917,6 @@ namespace Server.Items
                 }
                 else
                 {
-                    int budgetBonus = 0;
-
-                    if (killer != null)
-                    {
-                        if (map != null && map.Rules == MapRules.FeluccaRules)
-                        {
-                            budgetBonus = RandomItemGenerator.FeluccaBudgetBonus;
-                        }
-                    }
-
                     int divisor = GetDivisor(basebudget);
 
                     double perc = 0.0;
@@ -1937,15 +1927,21 @@ namespace Server.Items
                         perc = (100.0 - Math.Sqrt(Utility.RandomMinMax(0, 10000))) / 100.0;
 
                         if (perc > highest)
+                        {
                             highest = perc;
+                        }
                     }
 
                     perc = highest;
 
-                    if (perc > 1.0) perc = 1.0;
+                    if (perc > 1.0)
+                    {
+                        perc = 1.0;
+                    }
+
                     int toAdd = Math.Min(500, RandomItemGenerator.MaxAdjustedBudget - basebudget);
 
-                    budget = Utility.RandomMinMax(basebudget - basebudget / divisor, (int)(basebudget + toAdd * perc)) + budgetBonus;
+                    budget = Utility.RandomMinMax(basebudget - basebudget / divisor, (int)(basebudget + toAdd * perc));
 
                     // Gives a rare chance for a high end item to drop on a low budgeted monster
                     if (rawLuck > 0 && !IsPowerful(budget) && LootPack.CheckLuck(luckchance / 6))

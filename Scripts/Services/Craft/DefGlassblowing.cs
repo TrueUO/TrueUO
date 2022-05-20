@@ -22,15 +22,16 @@ namespace Server.Engines.Craft
                 return m_CraftSystem;
             }
         }
+
         public override SkillName MainSkill => SkillName.Alchemy;
         public override int GumpTitleNumber => 1044622;
+
         public override double GetChanceAtMin(CraftItem item)
         {
             if (item.ItemType == typeof(HollowPrism))
+            {
                 return 0.5; // 50%
-
-            if (item.ItemType == typeof(EtherealSoulbinder))
-                return 0.1; // 10%
+            }
 
             return 0.0; // 0%
         }
@@ -123,18 +124,11 @@ namespace Server.Engines.Craft
 
             AddCraft(typeof(GargoyleWallMirror), 1044050, 1095324, 70.0, 120.0, typeof(Sand), 1044625, 10, 1044627);
 
-            index = AddCraft(typeof(SoulstoneFragment), 1044050, 1071000, 70.0, 120.0, typeof(CrystalGranules), 1112329, 2, 1044253);
-            AddRes(index, typeof(VoidEssence), 1112327, 2, 1044253);
-            SetItemHue(index, 1150);
-
             AddCraft(typeof(EmptyVenomVial), 1044050, 1112215, 52.5, 102.5, typeof(Sand), 1044625, 1, 1044627);
 
             AddCraft(typeof(EmptyOilFlask), 1044050, 1150866, 60.0, 110.0, typeof(Sand), 1044625, 5, 1044627);
 
             AddCraft(typeof(WorkableGlass), 1044050, 1154170, 55.0, 105.0, typeof(Sand), 1044625, 10, 1044627);
-
-            index = AddCraft(typeof(EtherealSoulbinder), 1044050, 1159167, 100.0, 190.0, typeof(Sand), 1044625, 20, 1044627);
-            AddRes(index, typeof(EtherealSand), 1125984, 5, 1159169);
 
             Repair = true;
             MarkOption = true;

@@ -1,6 +1,5 @@
 using Server.Mobiles;
 using Server.Engines.RisingTide;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -211,27 +210,8 @@ namespace Server.Items
             TimerRegistry.RemoveFromRegistry(_TimerID, this);
         }
 
-        private bool _CheckSpawn;
-
         public void OnTick()
         {
-            if (_CheckSpawn)
-            {
-                if (BaseCreature.IsSoulboundEnemies && Spawn != null)
-                {
-                    foreach (BaseCreature bc in Spawn.Keys)
-                    {
-                        if (!bc.Deleted)
-                        {
-                            bc.IsSoulBound = true;
-                        }
-                    }
-
-                }
-
-                _CheckSpawn = false;
-            }
-
             Map map = Map;
 
             if (map == null)
@@ -302,11 +282,6 @@ namespace Server.Items
                     creature.MoveToWorld(spawnLoc, map);
                     creature.Home = spawnLoc;
                     creature.RangeHome = 10;
-
-                    if (BaseCreature.IsSoulboundEnemies)
-                    {
-                        creature.IsSoulBound = true;
-                    }
 
                     Spawn.Add(creature, initial);
 
@@ -457,8 +432,6 @@ namespace Server.Items
 
                     break;
             }
-
-            _CheckSpawn = true;
         }
 
         #region Components

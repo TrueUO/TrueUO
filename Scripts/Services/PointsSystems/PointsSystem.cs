@@ -1,7 +1,6 @@
 using Server.Engines.ArenaSystem;
 using Server.Engines.CityLoyalty;
 using Server.Engines.SorcerersDungeon;
-using Server.Engines.Fellowship;
 using Server.Engines.JollyRoger;
 using Server.Engines.VvV;
 using Server.Misc;
@@ -45,7 +44,6 @@ namespace Server.Engines.Points
         GauntletPoints,
         TOT,
         VAS,
-        FellowshipData,
         JollyRogerData
     }
 
@@ -415,7 +413,6 @@ namespace Server.Engines.Points
         public static DoomGauntlet DoomGauntlet { get; set; }
         public static TreasuresOfTokuno TreasuresOfTokuno { get; set; }
         public static VirtueArtifactsSystem VirtueArtifacts { get; set; }
-        public static FellowshipData FellowshipData { get; set; }
         public static JollyRogerData JollyRogerData { get; set; }
 
         public static void Configure()
@@ -444,7 +441,6 @@ namespace Server.Engines.Points
             DoomGauntlet = new DoomGauntlet();
             TreasuresOfTokuno = new TreasuresOfTokuno();
             VirtueArtifacts = new VirtueArtifactsSystem();
-            FellowshipData = new FellowshipData();
             JollyRogerData = new JollyRogerData();
         }
 
