@@ -24,8 +24,7 @@ namespace Server.Items
         Chainmail,
         Plate,
         Dragon,
-        Wood,
-        Stone
+        Wood
     }
 
     public enum ArmorMeditationAllowance

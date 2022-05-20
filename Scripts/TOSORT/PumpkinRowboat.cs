@@ -59,13 +59,22 @@ namespace Server.Multis
             Rudder.Handle = new PumpkinRudderHandle(Rudder, d);
         }
 
+        public PumpkinRowBoat(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void Delete()
         {
             if (Line != null)
+            {
                 Line.Delete();
+            }
 
             if (Rudder != null && Rudder.Handle != null)
+            {
                 Rudder.Handle.Delete();
+            }
 
             base.Delete();
         }
@@ -73,7 +82,9 @@ namespace Server.Multis
         public override void SetFacingComponents(Direction facing, Direction old, bool ignore)
         {
             if (Rudder == null || Rudder.Handle == null)
+            {
                 return;
+            }
 
             switch (facing)
             {
@@ -136,7 +147,9 @@ namespace Server.Multis
             base.OnMapChange();
 
             if (Line != null)
+            {
                 Line.Map = Map;
+            }
         }
 
         public override void OnPlacement(Mobile from)
@@ -172,11 +185,6 @@ namespace Server.Multis
         public override bool HasAccess(Mobile from)
         {
             return true;
-        }
-
-        public PumpkinRowBoat(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -237,6 +245,11 @@ namespace Server.Multis
             SetFacing(d);
         }
 
+        public MooringBlock(Serial serial)
+            : base(serial)
+        {
+        }
+
         public void SetFacing(Direction dir)
         {
             switch (dir)
@@ -250,11 +263,6 @@ namespace Server.Multis
                     ItemID = 42087;
                     break;
             }
-        }
-
-        public MooringBlock(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -274,6 +282,11 @@ namespace Server.Multis
     {
         public PumpkinRudder(BaseBoat boat, Direction d)
             : base(boat, d)
+        {
+        }
+
+        public PumpkinRudder(Serial serial)
+            : base(serial)
         {
         }
 
@@ -297,11 +310,6 @@ namespace Server.Multis
                     ItemID = 42058;
                     break;
             }
-        }
-
-        public PumpkinRudder(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -335,6 +343,11 @@ namespace Server.Multis
         {
         }
 
+        public PumpkinRudderHandle(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void SetFacing(Direction dir)
         {
             if (Rudder == null)
@@ -362,11 +375,6 @@ namespace Server.Multis
                         break;
                 }
             }
-        }
-
-        public PumpkinRudderHandle(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

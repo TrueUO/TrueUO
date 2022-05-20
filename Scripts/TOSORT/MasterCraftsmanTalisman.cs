@@ -21,6 +21,11 @@ namespace Server.Items
             Charges = charges;
         }
 
+        public MasterCraftsmanTalisman(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -28,21 +33,18 @@ namespace Server.Items
             list.Add(1157213); // Crafting Failure Protection
 
             if (Charges > 0)
+            {
                 list.Add(1049116, Charges.ToString()); // [ Charges: ~1_CHARGES~ ]
+            }
         }
 
-        public MasterCraftsmanTalisman(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override int LabelNumber => 1157217;// MasterCraftsmanTalisman
+        public override int LabelNumber => 1157217;// Master Craftsman Talisman
         public override bool ForceShowName => true;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(_Type);
         }
@@ -50,18 +52,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    _Type = reader.ReadInt();
-                    break;
-                case 0:
-                    _Type = 10;
-                    break;
-            }
+            _Type = reader.ReadInt();
         }
     }
 }

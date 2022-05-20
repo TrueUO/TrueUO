@@ -277,7 +277,7 @@ namespace Server.Items
                 }
             }
 
-            public override void OnResponse(NetState state, RelayInfo info)
+            public override void OnResponse(NetState sender, RelayInfo info)
             {
                 if (info.ButtonID > 0 && Callback != null)
                 {
@@ -407,6 +407,11 @@ namespace Server.Items
         {
         }
 
+        public DragonTurtleFountainAddonDeed(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack))
@@ -417,11 +422,6 @@ namespace Server.Items
                     base.OnDoubleClick(from);
                 }));
             }
-        }
-
-        public DragonTurtleFountainAddonDeed(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

@@ -158,8 +158,7 @@ namespace Server.Items
                     case AMT.Bone: return 30;
                     case AMT.Plate:
                     case AMT.Dragon:
-                    case AMT.Wood:
-                    case AMT.Stone: return 40;
+                    case AMT.Wood: return 40;
                 }
             }
         }
@@ -281,7 +280,6 @@ namespace Server.Items
                     {
                         case AMT.Studded:
                         case AMT.Bone:
-                        case AMT.Stone:
                             toReduce += 3;
                             break;
                         case AMT.Ringmail:
@@ -323,7 +321,6 @@ namespace Server.Items
                 case AMT.Leather:
                     return .1;
                 case AMT.Wood:
-                case AMT.Stone:
                 case AMT.Studded:
                 case AMT.Bone:
                     return .5;

@@ -13,16 +13,16 @@ namespace Server.Items
             _Title = new TextDefinition(1157181 + title);
         }
 
+        public BODRewardTitleDeed(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             list.Add(1114057, Title.ToString()); // ~1_NOTHING~
-        }
-
-        public BODRewardTitleDeed(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

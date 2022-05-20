@@ -52,6 +52,10 @@ namespace Server.Items
             Weight = 10;
         }
 
+        public MoonstoneCrystal(Serial serial) : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.InRange(GetWorldLocation(), 2))
@@ -99,7 +103,7 @@ namespace Server.Items
                 });
             }
 
-            public override void OnResponse(NetState state, RelayInfo info)
+            public override void OnResponse(NetState sender, RelayInfo info)
             {
                 if (info.ButtonID > 0)
                 {
@@ -159,10 +163,6 @@ namespace Server.Items
             }
         }
 
-        public MoonstoneCrystal(Serial serial) : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -180,7 +180,6 @@ namespace Server.Items
         }
     }
 
-    [TypeAlias("Server.Items.KotlPowerCoil")]
     public class KotlPowerCore : Item
     {
         public override int LabelNumber => 1124179;  // Kotl Power Core
@@ -218,6 +217,10 @@ namespace Server.Items
         {
         }
 
+        public EodonianWallMap(Serial serial) : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (from.InRange(GetWorldLocation(), 5))
@@ -227,10 +230,6 @@ namespace Server.Items
 
                 from.SendGump(g);
             }
-        }
-
-        public EodonianWallMap(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

@@ -14,6 +14,11 @@ namespace Server.Items
             Light = LightType.Circle300;
         }
 
+        public JackOLanternHelm(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override int BasePhysicalResistance => 12;
         public override int BaseFireResistance => 14;
         public override int BaseColdResistance => 4;
@@ -25,11 +30,6 @@ namespace Server.Items
         public override int StrReq => 10;
 
         public override ArmorMaterialType MaterialType => ArmorMaterialType.Plate;
-
-        public JackOLanternHelm(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

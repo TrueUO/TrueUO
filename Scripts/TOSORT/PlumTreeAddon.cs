@@ -11,12 +11,12 @@ namespace Server.Items
             AddComponent(new LocalizedAddonComponent(0x9E39, 1029965), 0, 0, 0);
         }
 
-        public override Item FruitItem => new Plum();
-
         public PlumTreeAddon(Serial serial)
             : base(serial)
         {
         }
+
+        public override Item FruitItem => new Plum();
 
         public override void Serialize(GenericWriter writer)
         {

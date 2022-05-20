@@ -74,17 +74,17 @@ namespace Server.Items
             BooksOnly = booksonly;
         }
 
+        public SpecialNaturalDye(Serial serial)
+            : base(serial)
+        {
+        }
+
         public void ValidateHue()
         {
             if (HueInfo.ContainsKey(DyeType))
             {
                 Hue = HueInfo[DyeType].Item1;
             }
-        }
-
-        public SpecialNaturalDye(Serial serial)
-            : base(serial)
-        {
         }
 
         public override int LabelNumber => 1112136;
@@ -98,7 +98,9 @@ namespace Server.Items
             list.Add(1060584, m_UsesRemaining.ToString()); // uses remaining: ~1_val~
 
             if (m_BooksOnly)
+            {
                 list.Add(1157205); // Spellbook Only Dye
+            }
         }
 
         public override void AddNameProperty(ObjectPropertyList list)

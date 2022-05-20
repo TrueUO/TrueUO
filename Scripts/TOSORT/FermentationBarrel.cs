@@ -56,6 +56,11 @@ namespace Server.Items
             MaxItems = 400;
         }
 
+        public FermentationBarrel(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void Open(Mobile from)
         {
             if (!Fermenting)
@@ -104,7 +109,7 @@ namespace Server.Items
             if (m_Timer != null && m_Timer.Running)
                 return;
 
-            m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(10), CheckFermente);
+            m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(10), CheckFermentation);
             m_Timer.Start();
         }
 
@@ -116,7 +121,7 @@ namespace Server.Items
             m_Timer = null;
         }
 
-        public void CheckFermente()
+        public void CheckFermentation()
         {
             if (!Fermented && FermentingEnds < DateTime.UtcNow)
             {
@@ -225,7 +230,7 @@ namespace Server.Items
 
         private int FruitAmount()
         {
-            Type fruittype = null;
+            Type fruitType = null;
             var items = Items;
 
             if (items.Count > 0)
@@ -239,12 +244,12 @@ namespace Server.Items
 
                     if (GetFruitType(items[i].GetType()) != FruitType.None)
                     {
-                        fruittype = items[i].GetType();
+                        fruitType = items[i].GetType();
                     }
                 }
             }
 
-            return fruittype != null ? GetAmount(fruittype, true) : 0;
+            return fruitType != null ? GetAmount(fruitType, true) : 0;
         }
 
         private bool HasYeast()
@@ -616,11 +621,6 @@ namespace Server.Items
             }
         }
 
-        public FermentationBarrel(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -690,6 +690,11 @@ namespace Server.Items
             Year = year;
         }
 
+        public BottleOfWine(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -712,15 +717,10 @@ namespace Server.Items
             list.Add(GetQuantityDescription());
         }
 
-        public BottleOfWine(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
 
             writer.Write((int)FruitType);
             writer.Write(Vintage);
@@ -730,20 +730,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             FruitType = (FruitType)reader.ReadInt();
             Vintage = reader.ReadString();
-
-            if (version > 0)
-            {
-                Year = reader.ReadString();
-            }
-            else
-            {
-                reader.ReadMobile();
-            }
-
+            Year = reader.ReadString();
         }
     }
 }

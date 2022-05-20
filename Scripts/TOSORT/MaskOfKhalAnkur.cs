@@ -76,7 +76,9 @@ namespace Server.Items
             base.OnAdded(parent);
 
             if (Charges == 0)
+            {
                 StartTimer();
+            }
         }
 
         public override void OnRemoved(object parent)
@@ -84,7 +86,9 @@ namespace Server.Items
             base.OnRemoved(parent);
 
             if (Charges == 0)
+            {
                 StopTimer();
+            }
         }
 
         public override int BasePhysicalResistance => 15;
@@ -111,13 +115,17 @@ namespace Server.Items
             ChargeTime = 300;
 
             if (m_Timer == null || !m_Timer.Running)
+            {
                 m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), Slice);
+            }
         }
 
         public virtual void StopTimer()
         {
             if (m_Timer != null)
+            {
                 m_Timer.Stop();
+            }
 
             m_Timer = null;
         }
@@ -125,7 +133,9 @@ namespace Server.Items
         public virtual void Slice()
         {
             if (ChargeTime > 0)
+            {
                 ChargeTime--;
+            }
             else
             {
                 ChargeTime = 0;
@@ -152,7 +162,7 @@ namespace Server.Items
             m_Charges = reader.ReadInt();
             ChargeTime = reader.ReadInt();
 
-            if (Parent != null && Parent is Mobile && ChargeTime > 0)
+            if (Parent is Mobile && ChargeTime > 0)
             {
                 m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), Slice);
             }

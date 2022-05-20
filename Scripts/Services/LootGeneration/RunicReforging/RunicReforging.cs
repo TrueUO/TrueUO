@@ -1869,7 +1869,7 @@ namespace Server.Items
             if (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat)
             {
                 int budget = Utility.RandomMinMax(minBudget, maxBudget);
-                GenerateRandomItem(item, null, budget, LootPack.GetLuckChance(luck), ReforgedPrefix.None, ReforgedSuffix.None, map);
+                GenerateRandomItem(item, null, budget, LootPack.GetLuckChance(luck), ReforgedPrefix.None, ReforgedSuffix.None);
                 return true;
             }
             return false;
@@ -1884,15 +1884,9 @@ namespace Server.Items
         /// <param name="luckchance">adjusted luck</param>
         /// <param name="forcedprefix"></param>
         /// <param name="forcedsuffix"></param>
-        /// <param name="map"></param>
         /// <param name="artifact"></param>
-        public static void GenerateRandomItem(Item item, Mobile killer, int basebudget, int luckchance, ReforgedPrefix forcedprefix, ReforgedSuffix forcedsuffix, Map map = null, bool artifact = false)
+        public static void GenerateRandomItem(Item item, Mobile killer, int basebudget, int luckchance, ReforgedPrefix forcedprefix, ReforgedSuffix forcedsuffix, bool artifact = false)
         {
-            if (map == null && killer != null)
-            {
-                map = killer.Map;
-            }
-
             if (item != null)
             {
                 int budget = basebudget;

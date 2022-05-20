@@ -59,6 +59,11 @@ namespace Server.Mobiles
             Karma = -35000;
         }
 
+        public MyrmidexQueen(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 5);
@@ -323,6 +328,11 @@ namespace Server.Mobiles
                 Hue = 2966;
             }
 
+            public OozeItem(Serial serial)
+                : base(serial)
+            {
+            }
+
             public override bool OnMoveOver(Mobile m)
             {
                 if (m != Owner && SpellHelper.ValidIndirectTarget(Owner, m) && Owner.CanBeHarmful(m, false))
@@ -339,11 +349,6 @@ namespace Server.Mobiles
                 }
 
                 return true;
-            }
-
-            public OozeItem(Serial serial)
-                : base(serial)
-            {
             }
 
             public override void Serialize(GenericWriter writer)
@@ -377,11 +382,6 @@ namespace Server.Mobiles
                 ColUtility.ForEach(_Spawn.Where(sp => sp != null && sp.Alive), sp => sp.Kill());
                 ColUtility.Free(_Spawn);
             });
-        }
-
-        public MyrmidexQueen(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

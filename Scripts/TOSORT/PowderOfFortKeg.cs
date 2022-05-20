@@ -25,28 +25,30 @@ namespace Server.Items
             Weight = 15.0;
         }
 
-        public override bool OnDragDrop(Mobile m, Item dropped)
+        public PowderOfFortKeg(Serial serial)
+            : base(serial)
         {
-            if (dropped is PowderOfTemperament powder)
+        }
+
+        public override bool OnDragDrop(Mobile from, Item dropped)
+        {
+            if (dropped is PowderOfTemperament powder && _Charges < 250)
             {
-                if (_Charges < 250)
+                if (powder.UsesRemaining + _Charges > 250)
                 {
-                    if (powder.UsesRemaining + _Charges > 250)
-                    {
-                        int add = 250 - _Charges;
+                    int add = 250 - _Charges;
 
-                        powder.UsesRemaining -= add;
+                    powder.UsesRemaining -= add;
 
-                        Charges = 250;
-                    }
-                    else
-                    {
-                        Charges += powder.UsesRemaining;
-                        powder.Delete();
-                    }
-
-                    m.PlaySound(0x247);
+                    Charges = 250;
                 }
+                else
+                {
+                    Charges += powder.UsesRemaining;
+                    powder.Delete();
+                }
+
+                from.PlaySound(0x247);
             }
 
             return false;
@@ -117,15 +119,10 @@ namespace Server.Items
             list.Add(number);
         }
 
-        public PowderOfFortKeg(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
 
             writer.Write(_Charges);
         }

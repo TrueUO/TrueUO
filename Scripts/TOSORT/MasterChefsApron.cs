@@ -15,7 +15,14 @@ namespace Server.Items
             Hue = 1990;
 
             while (_Bonus == 0)
+            {
                 _Bonus = Utility.RandomMinMax(20, 30);
+            }
+        }
+
+        public MasterChefsApron(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -23,11 +30,6 @@ namespace Server.Items
             base.GetProperties(list);
 
             list.Add(1072395, "#{0}\t{1}", AosSkillBonuses.GetLabel(SkillName.Cooking), _Bonus); // ~1_NAME~ Exceptional Bonus: ~2_val~%
-        }
-
-        public MasterChefsApron(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

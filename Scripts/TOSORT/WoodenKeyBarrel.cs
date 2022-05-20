@@ -409,18 +409,16 @@ namespace Server.Items
         public virtual void DoDamage(Item g, int mindmg, int maxdmg)
         {
             IPooledEnumerable eable = g.GetMobilesInRange(4);
+
             foreach (Mobile m in eable)
             {
-                if (m != null)
+                if (m != null && m.Alive && m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
                 {
-                    if (m.Alive && m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
-                    {
-                        m.DoHarmful(m);
-                        m.FixedParticles(0x376A, 1, 3, 5052, EffectLayer.Waist);
-                        m.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1154447); // *The barrel explodes sending deadly debris hurdling in your direction!*
-                        m.Damage(Utility.RandomMinMax(mindmg, maxdmg), m);
-                        Effects.PlaySound(g, g.Map, 0x307);
-                    }
+                    m.DoHarmful(m);
+                    m.FixedParticles(0x376A, 1, 3, 5052, EffectLayer.Waist);
+                    m.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1154447); // *The barrel explodes sending deadly debris hurdling in your direction!*
+                    m.Damage(Utility.RandomMinMax(mindmg, maxdmg), m);
+                    Effects.PlaySound(g, g.Map, 0x307);
                 }
             }
             eable.Free();

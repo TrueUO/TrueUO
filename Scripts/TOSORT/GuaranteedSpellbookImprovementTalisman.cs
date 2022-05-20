@@ -19,19 +19,21 @@ namespace Server.Items
             ExceptionalBonus = GetRandomExceptional();
         }
 
+        public GuaranteedSpellbookImprovementTalisman(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             if (Charges > 0)
+            {
                 list.Add(1049116, Charges.ToString()); // [ Charges: ~1_CHARGES~ ]
+            }
 
             list.Add(1157212); // Crafting Failure Protection
-        }
-
-        public GuaranteedSpellbookImprovementTalisman(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
