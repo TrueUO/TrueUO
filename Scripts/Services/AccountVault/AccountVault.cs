@@ -731,12 +731,7 @@ namespace Server.AccountVault
 
         public static bool ValidateMap(AccountVault v)
         {
-            if (Siege.SiegeShard)
-            {
-                return v.Map != Map.Trammel;
-            }
-
-            return v.Map != Map.Felucca;
+            return v.Map != Map.Trammel;
         }
         #endregion
     }

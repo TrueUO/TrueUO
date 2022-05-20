@@ -179,10 +179,5 @@ namespace Server.Misc
         {
             return true;
         }
-
-        public static Race GetRequiredRace()
-        {
-            return Race.Human;
-        }
     }
 }

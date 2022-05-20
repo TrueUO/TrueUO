@@ -10,10 +10,10 @@ namespace Server.AccountVault
     internal static class SystemSettings
     {
         public static bool Enabled = true;
-        public static readonly bool UseTokens = true;
+        public static readonly bool UseTokens = false;
 
-        internal static readonly int RentGoldValue = 50000;
-        internal static readonly int MaxGoldBalance = 1000000;
+        internal static readonly int RentGoldValue = 10000;
+        internal static readonly int MaxGoldBalance = 100000;
 
         internal static readonly int RentTokenValue = 1;
         internal static readonly int MaxTokenBalance = 3;
@@ -132,36 +132,24 @@ namespace Server.AccountVault
 
         private static string[] _VaultRegions =
         {
-            "Royal City",
-            "Papua",
-            "Delucia",
             "Britain",
             "Magincia",
-            "Haven Island",
-            "Buccaneer's Den",
             "Yew",
             "Moonglow",
             "Trinsic",
-            "Minoc",
-            "Wind"
+            "Minoc"
         };
 
         public static string RegionLabel(string region)
         {
             switch (region)
             {
-                case "Royal City": return "#1112571";
-                case "Papua": return "#1011057";
-                case "Delucia": return "#1011058";
                 case "Britain": return "#1011028";
                 case "Magincia": return "#1011345";
-                case "Haven Island": return "#1078342";
-                case "Buccaneer's Den": return "#1075702";
                 case "Yew": return "#1011032";
                 case "Moonglow": return "#1011344";
                 case "Trinsic": return "#1011029";
                 case "Minoc": return "#1011031";
-                case "Wind": return "#1078263";
             }
 
             return region;

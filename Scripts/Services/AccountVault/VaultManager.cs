@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-
 using Server.Mobiles;
-using Server.Items;
 using Server.ContextMenus;
 using Server.Gumps;
 
@@ -9,48 +7,15 @@ namespace Server.AccountVault
 {
     public class VaultManager : Banker
     {
-        public override bool IsActiveVendor => false;
-
         [Constructable]
         public VaultManager()
         {
-            Title = "the Vault Manager";
-            CantWalk = true;
+            Title = "the banker";
         }
 
         public VaultManager(Serial serial)
             : base(serial)
         {
-        }
-
-        public override void InitOutfit()
-        {
-            if (Backpack == null)
-            {
-                Item backpack = new Backpack
-                {
-                    Movable = false
-                };
-                AddItem(backpack);
-            }
-
-            SetWearable(new ElvenShirt());
-            SetWearable(new GuildedKilt(), 1436);
-            SetWearable(new Sandals());
-            SetWearable(new GoldNecklace());
-
-            int hairHue = GetHairHue();
-
-            Utility.AssignRandomHair(this, hairHue);
-            Utility.AssignRandomFacialHair(this, hairHue);
-
-            Utility.AssignRandomHair(this, hairHue);
-            Utility.AssignRandomFacialHair(this, hairHue);
-
-            if (Body == 0x191)
-            {
-                FacialHairItemID = 0;
-            }
         }
 
         public override void AddCustomContextEntries(Mobile from, List<ContextMenuEntry> list)

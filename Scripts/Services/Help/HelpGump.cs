@@ -86,6 +86,7 @@ namespace Server.Engines.Help
                     }
                 case 5: // Stuck
                 {
+                    /*
                     BaseHouse house = BaseHouse.FindHouseAt(from);
 
                     if (house != null)
@@ -112,6 +113,7 @@ namespace Server.Engines.Help
                     {
                         from.SendMessage("The stuck option can not be used from this location.");
                     }
+                    */ // Disable stuck for now.
                     break;
                 }
                 case 6: // Ticket System
