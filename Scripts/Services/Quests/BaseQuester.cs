@@ -43,11 +43,6 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override void CheckMorph()
-        {
-            // Don't morph me!
-        }
-
         public override bool IsActiveVendor => false;
         public override bool IsInvulnerable => true;
         public override bool DisallowAllMoves => true;

@@ -23,12 +23,10 @@ namespace Server.Engines.SeasonalEvents
         TreasuresOfKotlCity,
         SorcerersDungeon,
         TreasuresOfDoom,
-        TreasuresOfKhaldun,
         KrampusEncounter,
         RisingTide,
         Fellowship,
-        JollyRoger,
-        ArtisanFestival
+        JollyRoger
     }
 
     public enum EventStatus
@@ -73,7 +71,6 @@ namespace Server.Engines.SeasonalEvents
             Entries.Add(new RisingTideEvent(EventType.RisingTide, "Rising Tide", EventStatus.Inactive));
             Entries.Add(new ForsakenFoesEvent(EventType.Fellowship, "Fellowship", EventStatus.Inactive));
             Entries.Add(new JollyRogerEvent(EventType.JollyRoger, "Jolly Roger", EventStatus.Inactive));
-            Entries.Add(new ArtisanFestivalEvent(EventType.ArtisanFestival, "Artisan Festival", EventStatus.Inactive, 12, 1, -1));
         }
 
         public static void ClearEntries()

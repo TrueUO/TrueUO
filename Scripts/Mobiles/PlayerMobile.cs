@@ -2,7 +2,6 @@
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.Engines.ArenaSystem;
-using Server.Engines.BulkOrders;
 using Server.Engines.CannedEvil;
 using Server.Engines.CityLoyalty;
 using Server.Engines.Craft;
@@ -149,7 +148,6 @@ namespace Server.Mobiles
 
         #region Points System
         private PointsSystemProps _PointsSystemProps;
-        private BODProps _BODProps;
         private AccountGoldProps _AccountGold;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -161,23 +159,6 @@ namespace Server.Mobiles
                     _PointsSystemProps = new PointsSystemProps(this);
 
                 return _PointsSystemProps;
-            }
-            set
-            {
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODProps BODData
-        {
-            get
-            {
-                if (_BODProps == null)
-                {
-                    _BODProps = new BODProps(this);
-                }
-
-                return _BODProps;
             }
             set
             {
@@ -2891,62 +2872,6 @@ namespace Server.Mobiles
         public SkillName Learning { get => m_Learning; set => m_Learning = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextSmithBulkOrder
-        {
-            get => BulkOrderSystem.GetNextBulkOrder(BODType.Smith, this);
-            set => BulkOrderSystem.SetNextBulkOrder(BODType.Smith, this, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextTailorBulkOrder
-        {
-            get => BulkOrderSystem.GetNextBulkOrder(BODType.Tailor, this);
-            set => BulkOrderSystem.SetNextBulkOrder(BODType.Tailor, this, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextAlchemyBulkOrder
-        {
-            get => BulkOrderSystem.GetNextBulkOrder(BODType.Alchemy, this);
-            set => BulkOrderSystem.SetNextBulkOrder(BODType.Alchemy, this, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextInscriptionBulkOrder
-        {
-            get => BulkOrderSystem.GetNextBulkOrder(BODType.Inscription, this);
-            set => BulkOrderSystem.SetNextBulkOrder(BODType.Inscription, this, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextTinkeringBulkOrder
-        {
-            get => BulkOrderSystem.GetNextBulkOrder(BODType.Tinkering, this);
-            set => BulkOrderSystem.SetNextBulkOrder(BODType.Tinkering, this, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextFletchingBulkOrder
-        {
-            get => BulkOrderSystem.GetNextBulkOrder(BODType.Fletching, this);
-            set => BulkOrderSystem.SetNextBulkOrder(BODType.Fletching, this, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextCarpentryBulkOrder
-        {
-            get => BulkOrderSystem.GetNextBulkOrder(BODType.Carpentry, this);
-            set => BulkOrderSystem.SetNextBulkOrder(BODType.Carpentry, this, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan NextCookingBulkOrder
-        {
-            get => BulkOrderSystem.GetNextBulkOrder(BODType.Cooking, this);
-            set => BulkOrderSystem.SetNextBulkOrder(BODType.Cooking, this, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public DateTime LastEscortTime { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -3169,8 +3094,6 @@ namespace Server.Mobiles
 
             return base.IsHarmfulCriminal(damageable);
         }
-
-        public BOBFilter BOBFilter => BulkOrderSystem.GetBOBFilter(this);
 
         public override void Deserialize(GenericReader reader)
         {

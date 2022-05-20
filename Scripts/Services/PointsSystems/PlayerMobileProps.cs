@@ -1,9 +1,7 @@
 using Server.Accounting;
-using Server.Engines.BulkOrders;
 using Server.Engines.CityLoyalty;
 using Server.Engines.Points;
 using Server.Misc;
-using System;
 
 namespace Server.Mobiles
 {
@@ -190,99 +188,6 @@ namespace Server.Mobiles
 
                 return Player.Account.TotalCurrency * Account.CurrencyThreshold;
             }
-        }
-    }
-
-    [PropertyObject]
-    public class BODProps
-    {
-        public override string ToString()
-        {
-            return "...";
-        }
-
-        public PlayerMobile Player { get; set; }
-
-        public BODProps(PlayerMobile pm)
-        {
-            Player = pm;
-
-            BODContext context = BulkOrderSystem.GetContext(pm, false);
-
-            if (context != null)
-            {
-                foreach (System.Collections.Generic.KeyValuePair<BODType, BODEntry> kvp in context.Entries)
-                {
-                    switch (kvp.Key)
-                    {
-                        case BODType.Smith: Smithy = new BODData(kvp.Key, kvp.Value); break;
-                        case BODType.Tailor: Tailor = new BODData(kvp.Key, kvp.Value); break;
-                        case BODType.Alchemy: Alchemy = new BODData(kvp.Key, kvp.Value); break;
-                        case BODType.Inscription: Inscription = new BODData(kvp.Key, kvp.Value); break;
-                        case BODType.Tinkering: Tinkering = new BODData(kvp.Key, kvp.Value); break;
-                        case BODType.Cooking: Cooking = new BODData(kvp.Key, kvp.Value); break;
-                        case BODType.Fletching: Fletching = new BODData(kvp.Key, kvp.Value); break;
-                        case BODType.Carpentry: Carpentry = new BODData(kvp.Key, kvp.Value); break;
-                    }
-                }
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODData Tailor { get; private set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODData Smithy { get; private set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODData Alchemy { get; private set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODData Carpentry { get; private set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODData Cooking { get; private set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODData Fletching { get; private set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODData Inscription { get; private set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODData Tinkering { get; private set; }
-    }
-
-    [PropertyObject]
-    public class BODData
-    {
-        public override string ToString()
-        {
-            return "...";
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODEntry Entry { get; set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public BODType Type { get; private set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int CachedDeeds => Entry == null ? 0 : Entry.CachedDeeds;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LastBulkOrder => Entry == null ? DateTime.MinValue : Entry.LastBulkOrder;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public double BankedPoints => Entry == null ? 0 : Entry.BankedPoints;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int PendingRewardPoints => Entry == null ? 0 : Entry.PendingRewardPoints;
-
-        public BODData(BODType type, BODEntry entry)
-        {
-            Type = type;
-            Entry = entry;
         }
     }
 

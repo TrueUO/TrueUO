@@ -10,7 +10,6 @@ namespace Server.AccountVault
     public class VaultManager : Banker
     {
         public override bool IsActiveVendor => false;
-        public override bool ChangeRace => false;
 
         [Constructable]
         public VaultManager()

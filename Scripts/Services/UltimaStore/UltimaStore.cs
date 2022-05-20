@@ -338,7 +338,6 @@ namespace Server.Engines.UOStore
 
             Register<SoulstoneToken>(1158404, 1158405, 0x32F4, 0, 2598, 1000, cat, ConstructSoulstone);
             Register<WeddingChest>(1157895, 1157896, 0, 0x9CCC, 0, 500, cat);
-            Register<BagOfBulkOrderCovers>(1071116, 1157603, 0, 0x9CC6, 0, 200, cat, ConstructBOBCoverOne);
 
             Register<TotemOfChromaticFortune>(1157606, 1157604, 0, 0x9CC9, 0, 300, cat);
             Register<PetBrandingIron>(1157314, 1157372, 0, 0x9CC3, 0, 600, cat);
@@ -360,7 +359,6 @@ namespace Server.Engines.UOStore
             Register<MerchantsTrinket>(new TextDefinition[] { 1156828, 1156682 }, 1156667, 0, 0x9C67, 0, 500, cat, ConstructMerchantsTrinket);
 
             Register<ArmorEngravingToolToken>(1080547, 1156652, 0, 0x9C65, 0, 200, cat);
-            Register<BagOfBulkOrderCovers>(1071116, 1156654, 0, 0x9CC6, 0, 200, cat, ConstructBOBCoverTwo);
         }
 
         public static void Register<T>(TextDefinition name, int tooltip, int itemID, int gumpID, int hue, int cost, StoreCategory cat, Func<Mobile, StoreEntry, Item> constructor = null) where T : Item
@@ -616,16 +614,6 @@ namespace Server.Engines.UOStore
             }
 
             return null;
-        }
-
-        public static Item ConstructBOBCoverOne(Mobile m, StoreEntry entry)
-        {
-            return new BagOfBulkOrderCovers(12, 25);
-        }
-
-        public static Item ConstructBOBCoverTwo(Mobile m, StoreEntry entry)
-        {
-            return new BagOfBulkOrderCovers(1, 11);
         }
 
         public static Item ConstructHitchingPost(Mobile m, StoreEntry entry)

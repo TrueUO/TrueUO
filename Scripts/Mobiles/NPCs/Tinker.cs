@@ -1,7 +1,5 @@
 using Server.ContextMenus;
-using Server.Engines.BulkOrders;
 using Server.Items;
-using System;
 using System.Collections.Generic;
 
 namespace Server.Mobiles
@@ -29,27 +27,6 @@ namespace Server.Mobiles
         {
             m_SBInfos.Add(new SBTinker(this));
         }
-
-        #region Bulk Orders
-        public override BODType BODType => BODType.Tinkering;
-
-        public override bool IsValidBulkOrder(Item item)
-        {
-            return item is SmallTinkerBOD || item is LargeTinkerBOD;
-        }
-
-        public override bool SupportsBulkOrders(Mobile from)
-        {
-            return BulkOrderSystem.NewSystemEnabled && from is PlayerMobile && from.Skills[SkillName.Tinkering].Base > 0;
-        }
-
-        public override void OnSuccessfulBulkOrderReceive(Mobile from)
-        {
-            if (from is PlayerMobile mobile)
-                mobile.NextTinkeringBulkOrder = TimeSpan.Zero;
-        }
-
-        #endregion
 
         public override void AddCustomContextEntries(Mobile from, List<ContextMenuEntry> list)
         {

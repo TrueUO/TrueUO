@@ -1,5 +1,3 @@
-using Server.Engines.BulkOrders;
-using System;
 using System.Collections.Generic;
 
 namespace Server.Mobiles
@@ -34,27 +32,6 @@ namespace Server.Mobiles
 
             AddItem(new Items.Robe(Utility.RandomNeutralHue()));
         }
-
-        #region Bulk Orders
-        public override BODType BODType => BODType.Inscription;
-
-        public override bool IsValidBulkOrder(Item item)
-        {
-            return item is SmallInscriptionBOD || item is LargeInscriptionBOD;
-        }
-
-        public override bool SupportsBulkOrders(Mobile from)
-        {
-            return BulkOrderSystem.NewSystemEnabled && from is PlayerMobile && from.Skills[SkillName.Inscribe].Base > 0;
-        }
-
-        public override void OnSuccessfulBulkOrderReceive(Mobile from)
-        {
-            if (from is PlayerMobile mobile)
-                mobile.NextInscriptionBulkOrder = TimeSpan.Zero;
-        }
-
-        #endregion
 
         public override void Serialize(GenericWriter writer)
         {

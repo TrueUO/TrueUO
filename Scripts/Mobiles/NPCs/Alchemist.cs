@@ -1,5 +1,3 @@
-using Server.Engines.BulkOrders;
-using System;
 using System.Collections.Generic;
 
 namespace Server.Mobiles
@@ -14,27 +12,6 @@ namespace Server.Mobiles
             SetSkill(SkillName.Alchemy, 85.0, 100.0);
             SetSkill(SkillName.TasteID, 65.0, 88.0);
         }
-
-        #region Bulk Orders
-        public override BODType BODType => BODType.Alchemy;
-
-        public override bool IsValidBulkOrder(Item item)
-        {
-            return item is SmallAlchemyBOD || item is LargeAlchemyBOD;
-        }
-
-        public override bool SupportsBulkOrders(Mobile from)
-        {
-            return BulkOrderSystem.NewSystemEnabled && from is PlayerMobile && from.Skills[SkillName.Alchemy].Base > 0;
-        }
-
-        public override void OnSuccessfulBulkOrderReceive(Mobile from)
-        {
-            if (from is PlayerMobile mobile)
-                mobile.NextAlchemyBulkOrder = TimeSpan.Zero;
-        }
-
-        #endregion
 
         public Alchemist(Serial serial)
             : base(serial)

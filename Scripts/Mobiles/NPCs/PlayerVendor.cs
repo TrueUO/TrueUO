@@ -127,10 +127,14 @@ namespace Server.Mobiles
         public override bool CheckItemUse(Mobile from, Item item)
         {
             if (!base.CheckItemUse(from, item))
+            {
                 return false;
+            }
 
-            if (item is Container || item is Engines.BulkOrders.BulkOrderBook || item is RecipeBook)
+            if (item is Container || item is RecipeBook)
+            {
                 return true;
+            }
 
             from.SendLocalizedMessage(500447); // That is not accessible.
             return false;
@@ -1364,13 +1368,19 @@ namespace Server.Mobiles
                     if (item is Container)
                     {
                         if (item is LockableContainer container && container.Locked)
+                        {
                             m_Vendor.SayTo(from, 1043298); // Locked items may not be made not-for-sale.
+                        }
                         else if (item.Items.Count > 0)
+                        {
                             m_Vendor.SayTo(from, 1043299); // To be not for sale, all items in a container must be for sale.
+                        }
                         else
+                        {
                             setPrice = true;
+                        }
                     }
-                    else if (item is BaseBook || item is Engines.BulkOrders.BulkOrderBook || item is RecipeBook)
+                    else if (item is BaseBook || item is RecipeBook)
                     {
                         setPrice = true;
                     }

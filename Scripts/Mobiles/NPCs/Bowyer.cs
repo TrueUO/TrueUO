@@ -1,5 +1,3 @@
-using Server.Engines.BulkOrders;
-using System;
 using System.Collections.Generic;
 
 namespace Server.Mobiles
@@ -41,27 +39,6 @@ namespace Server.Mobiles
             m_SBInfos.Add(new SBBowyer());
             m_SBInfos.Add(new SBRangedWeapon());
         }
-
-        #region Bulk Orders
-        public override BODType BODType => BODType.Fletching;
-
-        public override bool IsValidBulkOrder(Item item)
-        {
-            return item is SmallFletchingBOD || item is LargeFletchingBOD;
-        }
-
-        public override bool SupportsBulkOrders(Mobile from)
-        {
-            return BulkOrderSystem.NewSystemEnabled && from is PlayerMobile && from.Skills[SkillName.Fletching].Base > 0;
-        }
-
-        public override void OnSuccessfulBulkOrderReceive(Mobile from)
-        {
-            if (from is PlayerMobile mobile)
-                mobile.NextFletchingBulkOrder = TimeSpan.Zero;
-        }
-
-        #endregion
 
         public override void Serialize(GenericWriter writer)
         {

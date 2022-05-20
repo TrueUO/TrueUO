@@ -387,10 +387,6 @@ namespace Server.Mobiles
                 }
             }
         }
-
-        public override void TurnToTokuno()
-        {
-        }
     }
 }
 

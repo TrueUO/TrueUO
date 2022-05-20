@@ -1,5 +1,3 @@
-using Server.Engines.BulkOrders;
-using System;
 using System.Collections.Generic;
 
 namespace Server.Mobiles
@@ -22,57 +20,6 @@ namespace Server.Mobiles
         }
 
         public override VendorShoeType ShoeType => Utility.RandomBool() ? VendorShoeType.Sandals : VendorShoeType.Shoes;
-
-        #region Bulk Orders
-        public override BODType BODType => BODType.Tailor;
-
-        public override Item CreateBulkOrder(Mobile from, bool fromContextMenu)
-        {
-            if (from is PlayerMobile pm && pm.NextTailorBulkOrder == TimeSpan.Zero && (fromContextMenu || 0.2 > Utility.RandomDouble()))
-            {
-                double theirSkill = pm.Skills[SkillName.Tailoring].Base;
-
-                if (theirSkill >= 70.1)
-                    pm.NextTailorBulkOrder = TimeSpan.FromHours(6.0);
-                else if (theirSkill >= 50.1)
-                    pm.NextTailorBulkOrder = TimeSpan.FromHours(2.0);
-                else
-                    pm.NextTailorBulkOrder = TimeSpan.FromHours(1.0);
-
-                if (theirSkill >= 70.1 && (theirSkill - 40.0) / 300.0 > Utility.RandomDouble())
-                    return new LargeTailorBOD();
-
-                return SmallTailorBOD.CreateRandomFor(from);
-            }
-
-            return null;
-        }
-
-        public override bool IsValidBulkOrder(Item item)
-        {
-            return item is SmallTailorBOD || item is LargeTailorBOD;
-        }
-
-        public override bool SupportsBulkOrders(Mobile from)
-        {
-            return from is PlayerMobile && from.Skills[SkillName.Tailoring].Base > 0;
-        }
-
-        public override TimeSpan GetNextBulkOrder(Mobile from)
-        {
-            if (from is PlayerMobile mobile)
-                return mobile.NextTailorBulkOrder;
-
-            return TimeSpan.Zero;
-        }
-
-        public override void OnSuccessfulBulkOrderReceive(Mobile from)
-        {
-            if (from is PlayerMobile mobile)
-                mobile.NextTailorBulkOrder = TimeSpan.Zero;
-        }
-
-        #endregion
 
         public Tailor(Serial serial)
             : base(serial)
