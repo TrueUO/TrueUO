@@ -537,6 +537,9 @@ namespace Server.Items
             if ((prop = m_Attributes.WeaponSpeed) != 0)
                 list.Add(1060486, prop.ToString()); // swing speed increase ~1_val~%
 
+            if ((prop = m_Attributes.WeaponDamage) != 0)
+                list.Add(1060401, prop.ToString()); // damage increase ~1_val~%
+
             if ((prop = m_Attributes.LowerAmmoCost) > 0)
                 list.Add(1075208, prop.ToString()); // Lower Ammo Cost ~1_Percentage~%
 
