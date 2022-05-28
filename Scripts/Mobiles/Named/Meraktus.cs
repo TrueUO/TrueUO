@@ -11,13 +11,8 @@ namespace Server.Mobiles
         public override ChampionSkullType SkullType => ChampionSkullType.Pain;
         public override bool CanGivePowerscrolls => false;
         public override bool DoesGoldShower => false;
-        public override Type[] UniqueList => new Type[] { typeof(Subdue) };
-        public override Type[] SharedList => new Type[]
-                {
-                    typeof(RoyalGuardSurvivalKnife),
-                    typeof(TheMostKnowledgePerson),
-                    typeof(OblivionsNeedle)
-                };
+        public override Type[] UniqueList => new Type[] { };
+        public override Type[] SharedList => new Type[] { };
         public override Type[] DecorativeList => new Type[]
                 {
                     typeof(ArtifactLargeVase),
@@ -25,10 +20,7 @@ namespace Server.Mobiles
                     typeof(MinotaurStatueDeed)
                 };
 
-        public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[]
-                {
-                    MonsterStatuetteType.Minotaur
-                };
+        public override MonsterStatuetteType[] StatueTypes => new[] { MonsterStatuetteType.Minotaur };
 
         [Constructable]
         public Meraktus()

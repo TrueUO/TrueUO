@@ -157,8 +157,7 @@ namespace Server.Items
                     case AMT.Chainmail: return 28;
                     case AMT.Bone: return 30;
                     case AMT.Plate:
-                    case AMT.Dragon:
-                    case AMT.Wood: return 40;
+                    case AMT.Dragon: return 40;
                 }
             }
         }
@@ -273,8 +272,10 @@ namespace Server.Items
 
                 if (item is BaseArmor armor)
                 {
-                    if (armor.ArmorAttributes.MageArmor > 0 || armor.MaterialType == AMT.Wood ||
-                        armor is BaseShield) continue;
+                    if (armor.ArmorAttributes.MageArmor > 0 || armor is BaseShield)
+                    {
+                        continue;
+                    }
 
                     switch (armor.MaterialType)
                     {
@@ -303,7 +304,9 @@ namespace Server.Items
             foreach (BaseArmor armor in from.Items.OfType<BaseArmor>().OrderBy(arm => -GetArmorRatingReduction(arm)))
             {
                 if (count == 5)
+                {
                     break;
+                }
 
                 toReduce += GetArmorRatingReduction(armor);
                 count++;
@@ -320,7 +323,6 @@ namespace Server.Items
                 case AMT.Cloth:
                 case AMT.Leather:
                     return .1;
-                case AMT.Wood:
                 case AMT.Studded:
                 case AMT.Bone:
                     return .5;

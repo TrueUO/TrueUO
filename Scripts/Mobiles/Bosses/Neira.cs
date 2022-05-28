@@ -71,14 +71,9 @@ namespace Server.Mobiles
         }
 
         public override ChampionSkullType SkullType => ChampionSkullType.Death;
-        public override Type[] UniqueList => new[] { typeof(ShroudOfDeceit) };
-        public override Type[] SharedList => new[]
-                {
-                    typeof(ANecromancerShroud),
-                    typeof(CaptainJohnsHat),
-                    typeof(DetectiveBoots)
-                };
-        public override Type[] DecorativeList => new[] { typeof(WallBlood), typeof(TatteredAncientMummyWrapping) };
+        public override Type[] UniqueList => new Type[] { };
+        public override Type[] SharedList => new Type[] { };
+        public override Type[] DecorativeList => new[] { typeof(WallBlood) };
         public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
         public override bool AlwaysMurderer => true;
         public override bool Unprovokable => true;
@@ -169,25 +164,17 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
+            writer.Write(0); // version
 
-            writer.Write(1); // version
             writer.Write(m_SpeedBoost);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_SpeedBoost = reader.ReadBool();
-                        break;
-                    }
-            }
+            m_SpeedBoost = reader.ReadBool();
         }
 
         private void CheckSpeedBoost()
@@ -233,6 +220,7 @@ namespace Server.Mobiles
         {
             private readonly VirtualMount m_Mount;
             private Mobile m_Rider;
+
             public VirtualMountItem(Mobile mob)
                 : base(0x3EBB)
             {
@@ -252,6 +240,7 @@ namespace Server.Mobiles
 
             public Mobile Rider => m_Rider;
             public IMount Mount => m_Mount;
+
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
@@ -276,6 +265,7 @@ namespace Server.Mobiles
         {
             private readonly Mobile m_Mobile;
             private readonly Mobile m_Target;
+
             public DelayTimer(Mobile m, Mobile target)
                 : base(TimeSpan.FromSeconds(1.0))
             {

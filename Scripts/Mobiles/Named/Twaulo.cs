@@ -55,9 +55,9 @@ namespace Server.Mobiles
 
         public override ChampionSkullType SkullType => ChampionSkullType.Pain;
 
-        public override Type[] UniqueList => new Type[] { typeof(Quell) };
+        public override Type[] UniqueList => new Type[] { };
 
-        public override Type[] SharedList => new Type[] { typeof(TheMostKnowledgePerson), typeof(OblivionsNeedle), typeof(BraveKnightOfTheBritannia) };
+        public override Type[] SharedList => new Type[] { };
 
         public override Type[] DecorativeList => new Type[] { typeof(Pier), typeof(MonsterStatuette) };
 
@@ -152,7 +152,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

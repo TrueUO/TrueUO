@@ -52,16 +52,8 @@ namespace Server.Mobiles
         }
 
         public override ChampionSkullType SkullType => ChampionSkullType.Enlightenment;
-        public override Type[] UniqueList => new[] { typeof(OrcChieftainHelm) };
-        public override Type[] SharedList => new[]
-                {
-                    typeof(RoyalGuardSurvivalKnife),
-                    typeof(DjinnisRing),
-                    typeof(LieutenantOfTheBritannianRoyalGuard),
-                    typeof(SamaritanRobe),
-                    typeof(DetectiveBoots),
-                    typeof(TheMostKnowledgePerson)
-                };
+        public override Type[] UniqueList => new Type[] { };
+        public override Type[] SharedList => new Type[] { };
         public override Type[] DecorativeList => new[]
                 {
                     typeof(WaterTile),
@@ -206,10 +198,6 @@ namespace Server.Mobiles
                         break;
                 }
             }
-
-            /*defender.Damage(Utility.Random(20, 10), this);
-            defender.Stam -= Utility.Random(20, 10);
-            defender.Mana -= Utility.Random(20, 10);*/
         }
 
         public override void OnGotMeleeAttack(Mobile attacker)
@@ -219,17 +207,14 @@ namespace Server.Mobiles
             CheckQueen();
 
             if (m_Queen != null && 0.1 >= Utility.RandomDouble())
+            {
                 SpawnPixies(attacker);
-
-            /*attacker.Damage(Utility.Random(20, 10), this);
-            attacker.Stam -= Utility.Random(20, 10);
-            attacker.Mana -= Utility.Random(20, 10);*/
+            }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Queen);
@@ -239,19 +224,10 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_Queen = reader.ReadMobile();
-                        m_SpawnedQueen = reader.ReadBool();
-
-                        break;
-                    }
-            }
+            m_Queen = reader.ReadMobile();
+            m_SpawnedQueen = reader.ReadBool();
         }
     }
 }

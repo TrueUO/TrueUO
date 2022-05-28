@@ -20,31 +20,9 @@ namespace Server.Engines.Craft
         StoneAnvilSouth = 118,
         StoneAnvilEast = 119,
         OrnateElvenChestEast = 120,
-        IronwoodCrown = 151,
         SmallElegantAquarium = 153,
         WallMountedAquarium = 154,
         LargeElegantAquarium = 155,
-        PirateShield = 172,
-
-        // DefBowFletching
-        SlayerLongbow = 201,
-        BlightGrippedLongbow = 250,
-        FaerieFire = 251,
-        SilvanisFeywoodBow = 252,
-        MischiefMaker = 253,
-        TheNightReaper = 254,
-
-        // DefBlacksmithy
-        GuardianAxe = 328,
-        SingingAxe = 329,
-        ThunderingAxe = 330,
-        HeavyOrnateAxe = 331,
-        RubyMace = 332, 
-        EmeraldMace = 333, 
-        SapphireMace = 334, 
-        SilverEtchedMace = 335,
-        ShardTrasher = 354,
-        GlovesOfFeudalGrip = 356,
 
         // DefTinkering
         InvisibilityPotion = 400,
@@ -77,8 +55,6 @@ namespace Server.Engines.Craft
         FancyKilt = 564, // DefTailoring
         FloweredDress = 565, // DefTailoring
         EveningGown = 566, // DefTailoring
-        KrampusMinionHat = 586, // DefTailoring
-        KrampusMinionBoots = 587, // DefTailoring
         GingerbreadCookie = 599, // DefCooking
         DarkChocolateNutcracker = 600, // DefCooking
         MilkChocolateNutcracker = 601, // DefCooking
@@ -103,8 +79,6 @@ namespace Server.Engines.Craft
         BarakoDraftOfMight = 903, // DefAlchemy
         UraliTranceTonic = 904, // DefAlchemy
         SakkhraProphylaxisPotion = 905, // DefAlchemy
-
-        EodonianWallMap = 1000, // DefCartography
 
         MaceBelt = 1100, // DefTailoring
         SwordBelt = 1101, // DefTailoring

@@ -582,26 +582,18 @@ namespace Server.Misc
             bag.DropItem(new TongueOfTheBeast());
             bag.DropItem(new TheMostKnowledgePerson());
             bag.DropItem(new ShroudOfDeceit());
-            bag.DropItem(new ANecromancerShroud());
             bag.DropItem(new LightsRampart());
-            bag.DropItem(new AcidProofRobe());
             bag.DropItem(new ObiDiEnse());
             bag.DropItem(new TheRobeOfBritanniaAri());
             bag.DropItem(new GauntletsOfAnger());
             bag.DropItem(new JadeArmband());
-            bag.DropItem(new Subdue());
             bag.DropItem(new CrownOfTalKeesh());
-            bag.DropItem(new DjinnisRing());
             bag.DropItem(new EmbroideredOakLeafCloak());
             bag.DropItem(new GladiatorsCollar());
             bag.DropItem(new LieutenantOfTheBritannianRoyalGuard());
             bag.DropItem(new CaptainJohnsHat());
-            bag.DropItem(new BraveKnightOfTheBritannia());
-            bag.DropItem(new Pacify());
             bag.DropItem(new OblivionsNeedle());
             bag.DropItem(new RoyalGuardSurvivalKnife());
-            bag.DropItem(new Quell());
-            bag.DropItem(new Calm());
             bag.DropItem(new OrcChieftainHelm());
             bag.DropItem(new FangOfRactus());
             bag.DropItem(new DetectiveBoots());
@@ -615,7 +607,6 @@ namespace Server.Misc
             };
 
             bag.DropItem(new BowOfTheInfiniteSwarm());
-            bag.DropItem(new GlovesOfFeudalGrip());
             bag.DropItem(new Glenda());
             bag.DropItem(new TheScholarsHalo());
             bag.DropItem(new TheDeceiver());

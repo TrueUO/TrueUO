@@ -272,44 +272,13 @@ namespace Server.Engines.Craft
             AddCraft(typeof(LargeBattleAxe), 1011082, 1025115, 28.0, 78.0, typeof(IronIngot), 1044036, 12, 1044037);
             AddCraft(typeof(TwoHandedAxe), 1011082, 1025187, 33.0, 83.0, typeof(IronIngot), 1044036, 16, 1044037);
             AddCraft(typeof(WarAxe), 1011082, 1025040, 39.1, 89.1, typeof(IronIngot), 1044036, 16, 1044037);
-
-            index = AddCraft(typeof(OrnateAxe), 1011082, 1031572, 70.0, 120.0, typeof(IronIngot), 1044036, 18, 1044037);
-
-            index = AddCraft(typeof(GuardianAxe), 1011082, 1073545, 75.0, 125.0, typeof(IronIngot), 1044036, 15, 1044037);
-            AddRes(index, typeof(BlueDiamond), 1032696, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.GuardianAxe);
-
-            index = AddCraft(typeof(SingingAxe), 1011082, 1073546, 75.0, 125.0, typeof(IronIngot), 1044036, 15, 1044037);
-            AddRes(index, typeof(BrilliantAmber), 1032697, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.SingingAxe);
-
-            index = AddCraft(typeof(ThunderingAxe), 1011082, 1073547, 75.0, 125.0, typeof(IronIngot), 1044036, 15, 1044037);
-            AddRes(index, typeof(EcruCitrine), 1032693, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.ThunderingAxe);
-
-            index = AddCraft(typeof(HeavyOrnateAxe), 1011082, 1073548, 75.0, 125.0, typeof(IronIngot), 1044036, 15, 1044037);
-            AddRes(index, typeof(Turquoise), 1032691, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.HeavyOrnateAxe);
             #endregion
 
             #region Pole Arms
-
             AddCraft(typeof(Bardiche), 1011083, 1023917, 31.7, 81.7, typeof(IronIngot), 1044036, 18, 1044037);
-
-            AddCraft(typeof(BladedStaff), 1011083, 1029917, 40.0, 90.0, typeof(IronIngot), 1044036, 12, 1044037);
-
-            AddCraft(typeof(DoubleBladedStaff), 1011083, 1029919, 45.0, 95.0, typeof(IronIngot), 1044036, 16, 1044037);
-
             AddCraft(typeof(Halberd), 1011083, 1025183, 39.1, 89.1, typeof(IronIngot), 1044036, 20, 1044037);
-
             AddCraft(typeof(Lance), 1011083, 1029920, 48.0, 98.0, typeof(IronIngot), 1044036, 20, 1044037);
-
-            AddCraft(typeof(Pike), 1011083, 1029918, 47.0, 97.0, typeof(IronIngot), 1044036, 12, 1044037);
-
             AddCraft(typeof(ShortSpear), 1011083, 1025123, 45.3, 95.3, typeof(IronIngot), 1044036, 6, 1044037);
-
-            AddCraft(typeof(Scythe), 1011083, 1029914, 39.0, 89.0, typeof(IronIngot), 1044036, 14, 1044037);
-
             AddCraft(typeof(Spear), 1011083, 1023938, 49.0, 99.0, typeof(IronIngot), 1044036, 12, 1044037);
             AddCraft(typeof(WarFork), 1011083, 1025125, 42.9, 92.9, typeof(IronIngot), 1044036, 12, 1044037);
             #endregion
@@ -318,40 +287,8 @@ namespace Server.Engines.Craft
             AddCraft(typeof(HammerPick), 1011084, 1025181, 34.2, 84.2, typeof(IronIngot), 1044036, 16, 1044037);
             AddCraft(typeof(Mace), 1011084, 1023932, 14.5, 64.5, typeof(IronIngot), 1044036, 6, 1044037);
             AddCraft(typeof(Maul), 1011084, 1025179, 19.4, 69.4, typeof(IronIngot), 1044036, 10, 1044037);
-
-            AddCraft(typeof(Scepter), 1011084, 1029916, 21.4, 71.4, typeof(IronIngot), 1044036, 10, 1044037);
-
             AddCraft(typeof(WarMace), 1011084, 1025127, 28.0, 78.0, typeof(IronIngot), 1044036, 14, 1044037);
             AddCraft(typeof(WarHammer), 1011084, 1025177, 34.2, 84.2, typeof(IronIngot), 1044036, 16, 1044037);
-
-            index = AddCraft(typeof(Tessen), 1011084, 1030222, 85.0, 135.0, typeof(IronIngot), 1044036, 16, 1044037);
-            AddSkill(index, SkillName.Tailoring, 50.0, 55.0);
-            AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
-
-            index = AddCraft(typeof(DiamondMace), 1011084, 1031568, 70.0, 120.0, typeof(IronIngot), 1044036, 20, 1044037);
-
-            index = AddCraft(typeof(ShardThrasher), 1011084, 1072918, 70.0, 120.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(EyeOfTheTravesty), 1073126, 1, 1042081);
-            AddRes(index, typeof(Muculent), 1072139, 10, 1042081);
-            AddRes(index, typeof(Corruption), 1072135, 10, 1042081);
-            AddRecipe(index, (int)CraftRecipes.ShardTrasher);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(RubyMace), 1011084, 1073529, 75.0, 125.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(FireRuby), 1032695, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.RubyMace);
-
-            index = AddCraft(typeof(EmeraldMace), 1011084, 1073530, 75.0, 125.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(PerfectEmerald), 1032692, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.EmeraldMace);
-
-            index = AddCraft(typeof(SapphireMace), 1011084, 1073531, 75.0, 125.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(DarkSapphire), 1032690, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.SapphireMace);
-
-            index = AddCraft(typeof(SilverEtchedMace), 1011084, 1073532, 75.0, 125.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(BlueDiamond), 1032696, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.SilverEtchedMace);
             #endregion
 
             #region High Seas Cannons
@@ -399,14 +336,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(BlueDiamond), 1032696, 2, 1044253);
             AddRes(index, typeof(FireRuby), 1032695, 2, 1044253);
             AddRes(index, typeof(SmallPieceofBlackrock), 1150016, 10, 1044253);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(GlovesOfFeudalGrip), 1011173, 1157349, 120.0, 120.1, typeof(RedScales), 1060883, 18, 1060884);
-            SetUseSubRes2(index, true);
-            AddRes(index, typeof(BlueDiamond), 1032696, 4, 1044253);
-            AddRes(index, typeof(GauntletsOfNobility), 1061092, 1, 1053098);
-            AddRes(index, typeof(BloodOfTheDarkFather), 1157343, 5, 1053098);
-            AddRecipe(index, (int)CraftRecipes.GlovesOfFeudalGrip);
             ForceNonExceptional(index);
             #endregion
 

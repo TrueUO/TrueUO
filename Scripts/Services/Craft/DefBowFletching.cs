@@ -47,16 +47,15 @@ namespace Server.Engines.Craft
 
         public override void PlayCraftEffect(Mobile from)
         {
-            // no animation
-            //if ( from.Body.Type == BodyType.Human && !from.Mounted )
-            //	from.Animate( 33, 5, 1, true, false, 0 );
             from.PlaySound(0x55);
         }
 
         public override int PlayEndingEffect(Mobile from, bool failed, bool lostMaterial, bool toolBroken, int quality, bool makersMark, CraftItem item)
         {
             if (toolBroken)
+            {
                 from.SendLocalizedMessage(1044038); // You have worn out your tool
+            }
 
             if (failed)
             {
@@ -69,10 +68,14 @@ namespace Server.Engines.Craft
             }
 
             if (quality == 0)
+            {
                 return 502785; // You were barely able to make this item.  It's quality is below average.
+            }
 
             if (makersMark && quality == 2)
+            {
                 return 1044156; // You create an exceptional quality item and affix your maker's mark.
+            }
 
             if (quality == 2)
             {
@@ -116,51 +119,6 @@ namespace Server.Engines.Craft
 
             AddCraft(typeof(CompositeBow), 1044566, 1029922, 70.0, 110.0, typeof(Board), 1044041, 7, 1044351);
             AddCraft(typeof(RepeatingCrossbow), 1044566, 1029923, 90.0, 130.0, typeof(Board), 1044041, 10, 1044351);
-
-            index = AddCraft(typeof(Yumi), 1044566, 1030224, 90.0, 130.0, typeof(Board), 1044041, 10, 1044351);
-
-            index = AddCraft(typeof(ElvenCompositeLongbow), 1044566, 1031562, 95.0, 145.0, typeof(Board), 1044041, 20, 1044351);
-
-            index = AddCraft(typeof(MagicalShortbow), 1044566, 1031551, 85.0, 135.0, typeof(Board), 1044041, 15, 1044351);
-
-            index = AddCraft(typeof(BlightGrippedLongbow), 1044566, 1072907, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(LardOfParoxysmus), 1032681, 1, 1053098);
-            AddRes(index, typeof(Blight), 1032675, 10, 1053098);
-            AddRes(index, typeof(Corruption), 1032676, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.BlightGrippedLongbow);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(FaerieFire), 1044566, 1072908, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(LardOfParoxysmus), 1032681, 1, 1053098);
-            AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
-            AddRes(index, typeof(Taint), 1032679, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.FaerieFire);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(SilvanisFeywoodBow), 1044566, 1072955, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(LardOfParoxysmus), 1032681, 1, 1053098);
-            AddRes(index, typeof(Scourge), 1032677, 10, 1053098);
-            AddRes(index, typeof(Muculent), 1032680, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.SilvanisFeywoodBow);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(MischiefMaker), 1044566, 1072910, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(DreadHornMane), 1032682, 1, 1053098);
-            AddRes(index, typeof(Corruption), 1032676, 10, 1053098);
-            AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.MischiefMaker);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(TheNightReaper), 1044566, 1072912, 75.0, 125.0, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(DreadHornMane), 1032682, 1, 1053098);
-            AddRes(index, typeof(Blight), 1032675, 10, 1053098);
-            AddRes(index, typeof(Scourge), 1032677, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.TheNightReaper);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(SlayerLongbow), 1044566, 1073506, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(BrilliantAmber), 1026256, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.SlayerLongbow);
 
             SetSubRes(typeof(Board), 1072643);
 

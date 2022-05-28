@@ -354,17 +354,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(BarkFragment), 1032687, 4, 1053098);
             AddRes(index, typeof(Feather), 1027123, 60, 1053098);
 
-            index = AddCraft(typeof(IronwoodCrown), 1062760, 1072924, 85.0, 120.0, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(DiseasedBark), 1032683, 1, 1053098);
-            AddRes(index, typeof(Corruption), 1032676, 10, 1053098);
-            AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.IronwoodCrown);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(PirateShield), 1062760, 1159585, 70.0, 90.0, typeof(Board), 1044041, 12, 1044351);
-            AddRes(index, typeof(IronIngot), 1044036, 8, 1044037);
-            AddRecipe(index, (int)CraftRecipes.PirateShield);
-
             // Instruments
             index = AddCraft(typeof(LapHarp), 1044293, 1023762, 63.1, 88.1, typeof(Board), 1044041, 20, 1044351);
             AddSkill(index, SkillName.Musicianship, 45.0, 50.0);

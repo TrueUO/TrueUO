@@ -23,8 +23,7 @@ namespace Server.Items
         Ringmail,
         Chainmail,
         Plate,
-        Dragon,
-        Wood
+        Dragon
     }
 
     public enum ArmorMeditationAllowance

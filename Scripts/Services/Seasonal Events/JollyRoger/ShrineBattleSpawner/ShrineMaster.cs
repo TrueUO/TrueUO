@@ -264,18 +264,9 @@ namespace Server.Engines.JollyRoger
                 case MasterTitle.Bard:
                     SetWearable(new QuarterStaff());
                     SetWearable(new FeatheredHat(1308));
-
-                    if (Female)
-                    {
-                        SetWearable(new HideFemaleChest());
-                    }
-                    else
-                    {
-                        SetWearable(new HideChest());
-                    }
-
-                    SetWearable(new HidePauldrons());
-                    SetWearable(new HideGorget());
+                    SetWearable(new StuddedChest());
+                    SetWearable(new StuddedArms());
+                    SetWearable(new StuddedGorget());
                     SetWearable(new LeatherGloves());
                     SetWearable(new LeatherSkirt());
                     SetWearable(new ThighBoots());

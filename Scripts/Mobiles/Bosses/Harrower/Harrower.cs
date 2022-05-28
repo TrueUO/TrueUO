@@ -88,9 +88,9 @@ namespace Server.Mobiles
 
         public static bool CanSpawn => m_Instances.Count == 0;
 
-        public Type[] UniqueList => new[] { typeof(AcidProofRobe) };
+        public Type[] UniqueList => new Type[] { };
 
-        public Type[] SharedList => new[] { typeof(TheRobeOfBritanniaAri) };
+        public Type[] SharedList => new Type[] { };
 
         public Type[] DecorativeList => new[] { typeof(EvilIdolSkull), typeof(SkullPole) };
 

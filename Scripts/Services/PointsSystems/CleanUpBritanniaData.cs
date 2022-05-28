@@ -541,39 +541,26 @@ namespace Server.Engines.Points
             Entries[typeof(PendantOfTheMagi)] = 35;
 
             //Replicas
-            Entries[typeof(TatteredAncientMummyWrapping)] = 5000.0;
             Entries[typeof(WindSpirit)] = 5000.0;
             Entries[typeof(GauntletsOfAnger)] = 5000.0;
             Entries[typeof(GladiatorsCollar)] = 5000.0;
             Entries[typeof(OrcChieftainHelm)] = 5000.0;
             Entries[typeof(ShroudOfDeceit)] = 5000.0;
-            Entries[typeof(AcidProofRobe)] = 5000.0;
-            Entries[typeof(ANecromancerShroud)] = 5000.0;
             Entries[typeof(CaptainJohnsHat)] = 5000.0;
             Entries[typeof(CrownOfTalKeesh)] = 5000.0;
-
             Entries[typeof(DetectiveBoots)] = 5000.0;
             Entries[typeof(EmbroideredOakLeafCloak)] = 5000.0;
             Entries[typeof(JadeArmband)] = 5000.0;
             Entries[typeof(LieutenantOfTheBritannianRoyalGuard)] = 5000.0;
             Entries[typeof(MagicalDoor)] = 5000.0;
             Entries[typeof(RoyalGuardInvestigatorsCloak)] = 5000.0;
-            Entries[typeof(SamaritanRobe)] = 5000.0;
             Entries[typeof(TheMostKnowledgePerson)] = 5000.0;
             Entries[typeof(TheRobeOfBritanniaAri)] = 5000.0;
-            Entries[typeof(DjinnisRing)] = 5000.0;
-
-            Entries[typeof(BraveKnightOfTheBritannia)] = 5000.0;
-            Entries[typeof(Calm)] = 5000.0;
             Entries[typeof(FangOfRactus)] = 5000.0;
             Entries[typeof(OblivionsNeedle)] = 5000.0;
-            Entries[typeof(Pacify)] = 5000.0;
-            Entries[typeof(Quell)] = 5000.0;
             Entries[typeof(RoyalGuardSurvivalKnife)] = 5000.0;
-            Entries[typeof(Subdue)] = 5000.0;
             Entries[typeof(Asclepius)] = 5000.0;
             Entries[typeof(BracersofAlchemicalDevastation)] = 5000.0;
-
             Entries[typeof(HygieiasAmulet)] = 5000.0;
             Entries[typeof(ScrollofValiantCommendation)] = 5000.0;
 

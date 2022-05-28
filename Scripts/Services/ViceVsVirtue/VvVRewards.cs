@@ -77,7 +77,6 @@ namespace Server.Engines.VvV
             Rewards.Add(new CollectionItem(typeof(KasaOfTheRajin), 10136, 0, 0, 500));
 
             Rewards.Add(new CollectionItem(typeof(VvVWizardsHat), 5912, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVWoodlandArms), 11116, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVDragonArms), 9815, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVPlateArms), 5136, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVEpaulette), 0x9985, 0, 0, 500));

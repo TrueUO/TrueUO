@@ -142,7 +142,9 @@ namespace Server.Misc
         public static bool IsBuggable(Item item)
         {
             if (item is Fists)
+            {
                 return false;
+            }
 
             if (item is ICommodity || item is BaseBoat ||
                 item is Fish || item is BigFish || item is Food ||
@@ -156,11 +158,9 @@ namespace Server.Misc
                 item is MonsterStatuette || item is Pier ||
                 item is ArtifactLargeVase || item is ArtifactVase ||
                 item is MinotaurStatueDeed || item is SwampTile ||
-                item is WallBlood || item is TatteredAncientMummyWrapping ||
-                item is LavaTile || item is DemonSkull ||
+                item is WallBlood || item is LavaTile || item is DemonSkull ||
                 item is Web || item is WaterTile ||
-                item is WindSpirit || item is DirtPatch ||
-                item is Futon)
+                item is WindSpirit || item is DirtPatch || item is Futon)
                 return true;
 
             return false;
