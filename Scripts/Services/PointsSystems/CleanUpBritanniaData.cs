@@ -395,7 +395,6 @@ namespace Server.Engines.Points
             Entries[typeof(BlazeOfDeath)] = 100.0;
             Entries[typeof(BurglarsBandana)] = 100.0;
             Entries[typeof(CaptainQuacklebushsCutlass)] = 100.0;
-            Entries[typeof(CavortingClub)] = 100.0;
             Entries[typeof(DreadPirateHat)] = 100.0;
             Entries[typeof(EnchantedTitanLegBone)] = 100.0;
             Entries[typeof(GwennosHarp)] = 100.0;
@@ -523,7 +522,6 @@ namespace Server.Engines.Points
             Entries[typeof(Aegis)] = 5500.0;
             Entries[typeof(AxeOfTheHeavens)] = 5500.0;
             Entries[typeof(HelmOfInsight)] = 5500.0;
-            Entries[typeof(Frostbringer)] = 5500.0;
             Entries[typeof(StaffOfTheMagi)] = 5500.0;
             Entries[typeof(TheDragonSlayer)] = 5500.0;
             Entries[typeof(BreathOfTheDead)] = 5500.0;

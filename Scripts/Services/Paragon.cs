@@ -13,7 +13,7 @@ namespace Server.Mobiles
         public static Type[] Artifacts =
         {
             typeof(GoldBricks), typeof(PhillipsWoodenSteed), typeof(AlchemistsBauble), typeof(BlazeOfDeath),
-            typeof(BowOfTheJukaKing), typeof(BurglarsBandana), typeof(CavortingClub), typeof(EnchantedTitanLegBone),
+            typeof(BowOfTheJukaKing), typeof(BurglarsBandana), typeof(EnchantedTitanLegBone),
             typeof(GwennosHarp), typeof(IolosLute), typeof(LunaLance), typeof(NightsKiss),
             typeof(NoxRangersHeavyCrossbow), typeof(OrcishVisage), typeof(PolarBearMask), typeof(ShieldOfInvulnerability),
             typeof(StaffOfPower), typeof(VioletCourage), typeof(HeartOfTheLion), typeof(WrathOfTheDryad),

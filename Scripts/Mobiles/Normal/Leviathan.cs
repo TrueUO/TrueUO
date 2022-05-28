@@ -22,7 +22,6 @@ namespace Server.Mobiles
             typeof(BlazeOfDeath),
             typeof(BurglarsBandana),
             typeof(CaptainQuacklebushsCutlass),
-            typeof(CavortingClub),
             typeof(DreadPirateHat),
             typeof(EnchantedTitanLegBone),
             typeof(GwennosHarp),
