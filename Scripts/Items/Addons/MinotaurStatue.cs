@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 
 namespace Server.Items
@@ -11,9 +10,8 @@ namespace Server.Items
         DefendEast = 103
     }
 
-    public class MinotaurStatue : BaseAddon, IRewardItem
+    public class MinotaurStatue : BaseAddon
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public MinotaurStatue(MinotaurStatueType type)
         {
@@ -50,23 +48,9 @@ namespace Server.Items
         {
             get
             {
-                MinotaurStatueDeed deed = new MinotaurStatueDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                MinotaurStatueDeed deed = new MinotaurStatueDeed();
 
                 return deed;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
@@ -74,23 +58,18 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
     }
 
-    public class MinotaurStatueDeed : BaseAddonDeed, IRewardItem, IRewardOption
+    public class MinotaurStatueDeed : BaseAddonDeed, IRewardOption
     {
         private MinotaurStatueType m_StatueType;
-        private bool m_IsRewardItem;
 
         [Constructable]
         public MinotaurStatueDeed()
@@ -108,23 +87,9 @@ namespace Server.Items
         {
             get
             {
-                MinotaurStatue addon = new MinotaurStatue(m_StatueType)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                MinotaurStatue addon = new MinotaurStatue(m_StatueType);
 
                 return addon;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
@@ -145,16 +110,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         public void GetOptions(RewardOptionList list)

@@ -1,6 +1,5 @@
 using Server.ContextMenus;
 using Server.Engines.Craft;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -41,7 +40,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -73,9 +72,6 @@ namespace Server.Items
 
             return list.Find(x => x.Skill == type);
         }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public SecureLevel Level { get; set; }
@@ -193,10 +189,7 @@ namespace Server.Items
         {
             get
             {
-                RepairBenchDeed deed = new RepairBenchDeed(Tools)
-                {
-                    IsRewardItem = IsRewardItem
-                };
+                RepairBenchDeed deed = new RepairBenchDeed(Tools);
 
                 return deed;
             }
@@ -245,11 +238,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
 
             writer.Write((int)Level);
-
-            writer.Write(IsRewardItem);
 
             writer.Write(Tools == null ? 0 : Tools.Count);
 
@@ -268,12 +259,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            if (version != 0)
-                Level = (SecureLevel)reader.ReadInt();
-
-            IsRewardItem = reader.ReadBool();
+            Level = (SecureLevel)reader.ReadInt();
 
             Tools = new List<RepairBenchDefinition>();
 
@@ -290,7 +278,7 @@ namespace Server.Items
         }
     }
 
-    public class RepairBenchDeed : BaseAddonDeed, IRewardItem, IRewardOption
+    public class RepairBenchDeed : BaseAddonDeed, IRewardOption
     {
         public override int LabelNumber => 1158860;  // Repair Bench
 
@@ -298,29 +286,13 @@ namespace Server.Items
         {
             get
             {
-                RepairBenchAddon addon = new RepairBenchAddon(_Direction, Tools)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                RepairBenchAddon addon = new RepairBenchAddon(_Direction, Tools);
 
                 return addon;
             }
         }
 
         private DirectionType _Direction;
-
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
 
         public List<RepairBenchDefinition> Tools;
 
@@ -344,9 +316,6 @@ namespace Server.Items
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076221); // 5th Year Veteran Reward
 
             if (Tools != null)
             {
@@ -387,8 +356,6 @@ namespace Server.Items
             base.Serialize(writer);
             writer.Write(0);
 
-            writer.Write(m_IsRewardItem);
-
             writer.Write(Tools == null ? 0 : Tools.Count);
 
             if (Tools != null)
@@ -407,8 +374,6 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             reader.ReadInt();
-
-            m_IsRewardItem = reader.ReadBool();
 
             int toolcount = reader.ReadInt();
 

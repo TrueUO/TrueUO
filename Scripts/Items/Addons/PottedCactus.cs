@@ -1,12 +1,10 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Network;
 
 namespace Server.Items
 {
-    public class RewardPottedCactus : Item, IRewardItem
+    public class RewardPottedCactus : Item
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public RewardPottedCactus()
             : this(Utility.RandomMinMax(0x1E0F, 0x1E14))
@@ -27,43 +25,21 @@ namespace Server.Items
 
         public override bool ForceShowProperties => true;
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.WriteEncodedInt(1); // version
-
-            writer.Write(m_IsRewardItem);
+            writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            switch (version)
-            {
-                case 1:
-                    m_IsRewardItem = reader.ReadBool();
-                    break;
-            }
+            reader.ReadEncodedInt();
         }
     }
 
-    public class PottedCactusDeed : Item, IRewardItem
+    public class PottedCactusDeed : Item
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public PottedCactusDeed()
             : base(0x14F0)
@@ -77,17 +53,6 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1080407;// Potted Cactus Deed
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
 
         public override void OnDoubleClick(Mobile from)
         {
@@ -106,16 +71,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalGump : Gump
@@ -165,10 +126,7 @@ namespace Server.Items
 
                 if (info.ButtonID >= 0x1E0F && info.ButtonID <= 0x1E14)
                 {
-                    RewardPottedCactus cactus = new RewardPottedCactus(info.ButtonID)
-                    {
-                        IsRewardItem = m_Cactus.IsRewardItem
-                    };
+                    RewardPottedCactus cactus = new RewardPottedCactus(info.ButtonID);
 
                     if (!m.PlaceInBackpack(cactus))
                     {
@@ -176,7 +134,9 @@ namespace Server.Items
                         m.SendLocalizedMessage(1078837); // Your backpack is full! Please make room and try again.
                     }
                     else
+                    {
                         m_Cactus.Delete();
+                    }
                 }
             }
         }

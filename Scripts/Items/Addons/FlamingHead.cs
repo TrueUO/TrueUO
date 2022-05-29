@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -6,9 +5,8 @@ using Server.Targeting;
 
 namespace Server.Items
 {
-    public class FlamingHead : StoneFaceTrapNoDamage, IAddon, IRewardItem
+    public class FlamingHead : StoneFaceTrapNoDamage, IAddon
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public FlamingHead()
             : this(StoneFaceTrapType.NorthWall)
@@ -35,32 +33,12 @@ namespace Server.Items
         {
             get
             {
-                FlamingHeadDeed deed = new FlamingHeadDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                FlamingHeadDeed deed = new FlamingHeadDeed();
 
                 return deed;
             }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076218); // 2nd Year Veteran Reward
-        }
-
+        
         void IChopable.OnChop(Mobile user)
         {
             OnDoubleClick(user);
@@ -87,19 +65,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadEncodedInt();
         }
 
         public bool CouldFit(IPoint3D p, Map map)
@@ -118,9 +90,8 @@ namespace Server.Items
         }
     }
 
-    public class FlamingHeadDeed : Item, IRewardItem
+    public class FlamingHeadDeed : Item
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public FlamingHeadDeed()
             : base(0x14F0)
@@ -134,25 +105,6 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041050;// a flaming head deed
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076218); // 2nd Year Veteran Reward
-        }
 
         public override void OnDoubleClick(Mobile from)
         {
@@ -180,16 +132,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalTarget : Target
@@ -243,7 +191,6 @@ namespace Server.Items
                                 {
                                     house.Addons[head] = from;
 
-                                    head.IsRewardItem = m_Head.IsRewardItem;
                                     head.MoveToWorld(p3d, map);
 
                                     m_Head.Delete();

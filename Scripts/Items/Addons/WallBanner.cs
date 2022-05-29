@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Network;
 
@@ -19,18 +18,17 @@ namespace Server.Items
         public override bool NeedsWall => true;
         public override Point3D WallPosition => East ? new Point3D(-1, 0, 0) : new Point3D(0, -1, 0);
         public bool East => ((WallBanner)Addon).East;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
 
         public bool Dye(Mobile from, DyeTub sender)
@@ -45,10 +43,10 @@ namespace Server.Items
         }
     }
 
-    public class WallBanner : BaseAddon, IRewardItem
+    public class WallBanner : BaseAddon
     {
-        private bool m_IsRewardItem;
         private bool m_East;
+
         [Constructable]
         public WallBanner(int bannerID)
         {
@@ -204,62 +202,36 @@ namespace Server.Items
         {
             get
             {
-                WallBannerDeed deed = new WallBannerDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                WallBannerDeed deed = new WallBannerDeed();
 
                 return deed;
             }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool East
-        {
-            get => m_East;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
+        public bool East => m_East;
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_East);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_East = reader.ReadBool();
-            m_IsRewardItem = reader.ReadBool();
         }
     }
 
-    public class WallBannerDeed : BaseAddonDeed, IRewardItem
+    public class WallBannerDeed : BaseAddonDeed
     {
         private int m_BannerID;
-        private bool m_IsRewardItem;
+        
         [Constructable]
         public WallBannerDeed()
         {
@@ -276,23 +248,9 @@ namespace Server.Items
         {
             get
             {
-                WallBanner addon = new WallBanner(m_BannerID)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                WallBanner addon = new WallBanner(m_BannerID);
 
                 return addon;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
@@ -320,16 +278,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalGump : Gump

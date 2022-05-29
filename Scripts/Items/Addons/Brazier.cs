@@ -1,18 +1,16 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
 
 namespace Server.Items
 {
-    public class RewardBrazier : Item, IRewardItem
+    public class RewardBrazier : Item
     {
         private static readonly int[] m_Art =
         {
             0x19AA, 0x19BB
         };
 
-        private bool m_IsRewardItem;
         private Item m_Fire;
 
         [Constructable]
@@ -35,16 +33,6 @@ namespace Server.Items
 
         public override bool ForceShowProperties => true;
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
         public override void OnDelete()
         {
             TurnOff();
@@ -98,15 +86,9 @@ namespace Server.Items
         public override void OnLocationChange(Point3D old)
         {
             if (m_Fire != null)
+            {
                 m_Fire.MoveToWorld(new Point3D(X, Y, Z + ItemData.Height), Map);
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076222); // 6th Year Veteran Reward
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -114,7 +96,6 @@ namespace Server.Items
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
 
-            writer.Write(m_IsRewardItem);
             writer.Write(m_Fire);
         }
 
@@ -123,14 +104,12 @@ namespace Server.Items
             base.Deserialize(reader);
             reader.ReadEncodedInt();
 
-            m_IsRewardItem = reader.ReadBool();
             m_Fire = reader.ReadItem();
         }
     }
 
-    public class RewardBrazierDeed : Item, IRewardItem
+    public class RewardBrazierDeed : Item
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public RewardBrazierDeed()
             : base(0x14F0)
@@ -144,17 +123,6 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1080527;// Brazier Deed
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
 
         public override void OnDoubleClick(Mobile from)
         {
@@ -173,16 +141,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalGump : Gump
@@ -214,16 +178,15 @@ namespace Server.Items
             public override void OnResponse(NetState sender, RelayInfo info)
             {
                 if (m_Brazier == null || m_Brazier.Deleted)
+                {
                     return;
+                }
 
                 Mobile m = sender.Mobile;
 
                 if (info.ButtonID == 0x19AA || info.ButtonID == 0x19BB)
                 {
-                    RewardBrazier brazier = new RewardBrazier(info.ButtonID)
-                    {
-                        IsRewardItem = m_Brazier.IsRewardItem
-                    };
+                    RewardBrazier brazier = new RewardBrazier(info.ButtonID);
 
                     if (!m.PlaceInBackpack(brazier))
                     {
@@ -231,7 +194,9 @@ namespace Server.Items
                         m.SendLocalizedMessage(1078837); // Your backpack is full! Please make room and try again.
                     }
                     else
+                    {
                         m_Brazier.Delete();
+                    }
                 }
             }
         }

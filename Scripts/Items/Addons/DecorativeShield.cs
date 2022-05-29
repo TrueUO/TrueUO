@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -6,9 +5,8 @@ using Server.Targeting;
 
 namespace Server.Items
 {
-    public class DecorativeShield : Item, IAddon, IRewardItem
+    public class DecorativeShield : Item, IAddon
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public DecorativeShield()
             : this(0x156C)
@@ -33,24 +31,12 @@ namespace Server.Items
         {
             get
             {
-                DecorativeShieldDeed deed = new DecorativeShieldDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                DecorativeShieldDeed deed = new DecorativeShieldDeed();
 
                 return deed;
             }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
+        
         public bool FacingSouth
         {
             get
@@ -61,14 +47,7 @@ namespace Server.Items
                 return ItemID <= 0x1585;
             }
         }
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076220); // 4th Year Veteran Reward
-        }
-
+        
         void IChopable.OnChop(Mobile user)
         {
             OnDoubleClick(user);
@@ -96,16 +75,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         public bool CouldFit(IPoint3D p, Map map)
@@ -122,9 +97,8 @@ namespace Server.Items
         }
     }
 
-    public class DecorativeShieldDeed : Item, IRewardItem
+    public class DecorativeShieldDeed : Item
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public DecorativeShieldDeed()
             : base(0x14F0)
@@ -139,16 +113,6 @@ namespace Server.Items
 
         public override int LabelNumber => 1049771;// deed for a decorative shield wall hanging
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
         public static int GetWestItemID(int east)
         {
             switch (east)
@@ -183,16 +147,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalGump : Gump
@@ -324,7 +284,6 @@ namespace Server.Items
 
                                     house.Addons[shield] = from;
 
-                                    shield.IsRewardItem = m_Shield.IsRewardItem;
                                     shield.MoveToWorld(p3d, map);
 
                                     m_Shield.Delete();
@@ -396,7 +355,6 @@ namespace Server.Items
                     {
                         m_House.Addons[shield] = sender.Mobile;
 
-                        shield.IsRewardItem = m_Shield.IsRewardItem;
                         shield.MoveToWorld(m_Location, sender.Mobile.Map);
 
                         m_Shield.Delete();

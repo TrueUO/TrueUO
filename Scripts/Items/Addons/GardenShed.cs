@@ -1,5 +1,4 @@
 using Server.ContextMenus;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Network;
 using System.Collections.Generic;
@@ -231,7 +230,7 @@ namespace Server.Items
         }
     }
 
-    public class GardenShedDeed : BaseAddonContainerDeed, IRewardItem
+    public class GardenShedDeed : BaseAddonContainerDeed
     {
         public override BaseAddonContainer Addon => new GardenShedAddon(m_East);
         public override int LabelNumber => 1153491;  // Garden Shed Deed

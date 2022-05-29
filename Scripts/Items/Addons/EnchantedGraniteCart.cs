@@ -57,23 +57,17 @@ namespace Server.Engines.VeteranRewards
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class EnchantedGraniteCartAddon : BaseAddon, ISecurable
     {
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
-
         public override BaseAddonDeed Deed
         {
             get
             {
-                EnchantedGraniteCartAddonDeed deed = new EnchantedGraniteCartAddonDeed
-                {
-                    IsRewardItem = IsRewardItem
-                };
+                EnchantedGraniteCartAddonDeed deed = new EnchantedGraniteCartAddonDeed();
 
                 return deed;
             }
@@ -251,25 +245,22 @@ namespace Server.Engines.VeteranRewards
             writer.Write(m_RewardCount);
             writer.Write(NextUse);
             writer.Write((int)Level);
-            writer.Write(IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
+            reader.ReadInt();
 
             m_RewardCount = reader.ReadInt();
             NextUse = reader.ReadDateTime();
             Level = (SecureLevel)reader.ReadInt();
-            IsRewardItem = reader.ReadBool();
 
             StartTimer();
         }
     }
 
-    public class EnchantedGraniteCartAddonDeed : BaseAddonDeed, IRewardItem, IRewardOption
+    public class EnchantedGraniteCartAddonDeed : BaseAddonDeed, IRewardOption
     {
         public override int LabelNumber => 1159422;  // Enchanted Granite Cart
 
@@ -277,10 +268,7 @@ namespace Server.Engines.VeteranRewards
         {
             get
             {
-                EnchantedGraniteCartAddon addon = new EnchantedGraniteCartAddon(_Direction)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                EnchantedGraniteCartAddon addon = new EnchantedGraniteCartAddon(_Direction);
 
                 return addon;
             }
@@ -288,30 +276,9 @@ namespace Server.Engines.VeteranRewards
 
         private DirectionType _Direction;
 
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
         [Constructable]
         public EnchantedGraniteCartAddonDeed()
         {
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076222); // 6th Year Veteran Reward
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -350,16 +317,12 @@ namespace Server.Engines.VeteranRewards
         {
             base.Serialize(writer);
             writer.Write(0); // Version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadInt();
         }
     }
 }

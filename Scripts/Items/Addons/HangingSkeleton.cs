@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -6,9 +5,8 @@ using Server.Targeting;
 
 namespace Server.Items
 {
-    public class HangingSkeleton : Item, IAddon, IRewardItem
+    public class HangingSkeleton : Item, IAddon
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public HangingSkeleton()
             : this(0x1596)
@@ -33,24 +31,12 @@ namespace Server.Items
         {
             get
             {
-                HangingSkeletonDeed deed = new HangingSkeletonDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                HangingSkeletonDeed deed = new HangingSkeletonDeed();
 
                 return deed;
             }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
+        
         public bool FacingSouth
         {
             get
@@ -62,14 +48,7 @@ namespace Server.Items
                 return false;
             }
         }
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076220); // 4th Year Veteran Reward
-        }
-
+        
         void IChopable.OnChop(Mobile user)
         {
             OnDoubleClick(user);
@@ -96,19 +75,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadEncodedInt();
         }
 
         public bool CouldFit(IPoint3D p, Map map)
@@ -125,9 +98,8 @@ namespace Server.Items
         }
     }
 
-    public class HangingSkeletonDeed : Item, IRewardItem
+    public class HangingSkeletonDeed : Item
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public HangingSkeletonDeed()
             : base(0x14F0)
@@ -142,16 +114,6 @@ namespace Server.Items
 
         public override int LabelNumber => 1049772;// deed for a hanging skeleton decoration
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
         public static int GetWestItemID(int south)
         {
             switch (south)
@@ -191,16 +153,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalGump : Gump
@@ -310,7 +268,6 @@ namespace Server.Items
 
                                     house.Addons[banner] = from;
 
-                                    banner.IsRewardItem = m_Skeleton.IsRewardItem;
                                     banner.MoveToWorld(p3d, map);
 
                                     m_Skeleton.Delete();
@@ -383,7 +340,6 @@ namespace Server.Items
                     {
                         m_House.Addons[banner] = sender.Mobile;
 
-                        banner.IsRewardItem = m_Skeleton.IsRewardItem;
                         banner.MoveToWorld(m_Location, sender.Mobile.Map);
 
                         m_Skeleton.Delete();

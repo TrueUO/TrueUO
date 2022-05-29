@@ -1,5 +1,4 @@
 using Server.ContextMenus;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -12,16 +11,13 @@ using Server.Network;
 namespace Server.Engines.Plants
 {
     [Flipable(19288, 19290)]
-    public class SeedBox : Container, IRewardItem, ISecurable
+    public class SeedBox : Container, ISecurable
     {
         public static readonly int MaxSeeds = 5000;
         public static readonly int MaxUnique = 300;
 
         public override int DefaultMaxItems => MaxUnique;
         public override bool DisplaysContent => false;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
 
         public List<SeedEntry> Entries { get; set; }
 
@@ -337,11 +333,6 @@ namespace Server.Engines.Plants
         {
             base.GetProperties(list);
 
-            if (IsRewardItem)
-            {
-                list.Add(1076220); // 4th Year Veteran Reward
-            }
-
             list.Add(1151847, string.Format("{0}\t{1}", TotalCount.ToString(), MaxSeeds.ToString())); // Seeds in Box: ~1_val~ / ~2_val~
             list.Add(1151848, string.Format("{0}\t{1}", UniqueCount.ToString(), MaxUnique.ToString())); // Unique Seeds In Box: ~1_val~ / ~2_val~
         }
@@ -398,7 +389,6 @@ namespace Server.Engines.Plants
             base.Serialize(writer);
             writer.Write(1);
 
-            writer.Write(IsRewardItem);
             writer.Write((int)Level);
 
             writer.Write(Entries.Count);
@@ -425,7 +415,6 @@ namespace Server.Engines.Plants
 
             Entries = new List<SeedEntry>();
 
-            IsRewardItem = reader.ReadBool();
             Level = (SecureLevel)reader.ReadInt();
 
             int count = reader.ReadInt();

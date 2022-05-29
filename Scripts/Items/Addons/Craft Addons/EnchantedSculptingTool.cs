@@ -1,5 +1,4 @@
 using Server.Engines.Craft;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 
 namespace Server.Items
@@ -8,17 +7,11 @@ namespace Server.Items
     {
         public override CraftSystem CraftSystem => DefMasonry.CraftSystem;
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
-
         public override BaseAddonDeed Deed
         {
             get
             {
-                EnchantedSculptingToolDeed deed = new EnchantedSculptingToolDeed(Tools.Count > 0 ? Tools[0].UsesRemaining : 0)
-                {
-                    IsRewardItem = IsRewardItem
-                };
+                EnchantedSculptingToolDeed deed = new EnchantedSculptingToolDeed(Tools.Count > 0 ? Tools[0].UsesRemaining : 0);
 
                 return deed;
             }
@@ -49,20 +42,16 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
-
-            writer.Write(IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            IsRewardItem = reader.ReadBool();
+            reader.ReadInt();
         }
     }
 
-    public class EnchantedSculptingToolDeed : CraftAddonDeed, IRewardItem, IRewardOption
+    public class EnchantedSculptingToolDeed : CraftAddonDeed, IRewardOption
     {
         public override int LabelNumber => 1159421;  // Enchanted Sculpting Tool
 
@@ -70,29 +59,13 @@ namespace Server.Items
         {
             get
             {
-                EnchantedSculptingToolAddon addon = new EnchantedSculptingToolAddon(_Direction, UsesRemaining)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                EnchantedSculptingToolAddon addon = new EnchantedSculptingToolAddon(_Direction, UsesRemaining);
 
                 return addon;
             }
         }
 
         private DirectionType _Direction;
-
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
 
         [Constructable]
         public EnchantedSculptingToolDeed()
@@ -109,14 +82,6 @@ namespace Server.Items
         public EnchantedSculptingToolDeed(Serial serial)
             : base(serial)
         {
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076223); // 7th Year Veteran Reward
         }
 
         public void GetOptions(RewardOptionList list)
@@ -150,16 +115,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadInt();
         }
     }
 }

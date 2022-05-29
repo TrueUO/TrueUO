@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Multis;
 using Server.Network;
 using System;
@@ -42,9 +41,6 @@ namespace Server.Items
         public override int LabelNumber => 1126813; // totem
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get; set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public DateTime NextResourceCount { get; set; }
 
         public override bool ForceShowProperties => true;
@@ -73,10 +69,7 @@ namespace Server.Items
         {
             get
             {
-                GargishTotemOfEssenceDeed deed = new GargishTotemOfEssenceDeed
-                {
-                    IsRewardItem = IsRewardItem
-                };
+                GargishTotemOfEssenceDeed deed = new GargishTotemOfEssenceDeed();
 
                 return deed;
             }
@@ -140,7 +133,6 @@ namespace Server.Items
 
             TryGiveResourceCount();
 
-            writer.Write(IsRewardItem);
             writer.Write(m_ResourceCount);
             writer.Write(NextResourceCount);
         }
@@ -150,7 +142,6 @@ namespace Server.Items
             base.Deserialize(reader);
             reader.ReadInt();
 
-            IsRewardItem = reader.ReadBool();
             m_ResourceCount = reader.ReadInt();
             NextResourceCount = reader.ReadDateTime();
         }
@@ -167,14 +158,9 @@ namespace Server.Items
         }
     }
 
-    public class GargishTotemOfEssenceDeed : BaseAddonDeed, IRewardItem, IDyable
+    public class GargishTotemOfEssenceDeed : BaseAddonDeed, IDyable
     {
         public override int LabelNumber => 1159556; // Gargish Totem of Essence
-
-        private bool m_IsRewardItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem { get => m_IsRewardItem; set { m_IsRewardItem = value; InvalidateProperties(); } }
 
         private int m_ResourceCount;
 
@@ -201,10 +187,7 @@ namespace Server.Items
         {
             get
             {
-                GargishTotemOfEssence addon = new GargishTotemOfEssence
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                GargishTotemOfEssence addon = new GargishTotemOfEssence();
 
                 return addon;
             }
@@ -225,7 +208,6 @@ namespace Server.Items
             base.Serialize(writer);
             writer.Write(0);
 
-            writer.Write(m_IsRewardItem);
             writer.Write(m_ResourceCount);
         }
 
@@ -234,7 +216,6 @@ namespace Server.Items
             base.Deserialize(reader);
             reader.ReadInt();
 
-            m_IsRewardItem = reader.ReadBool();
             m_ResourceCount = reader.ReadInt();
         }
     }

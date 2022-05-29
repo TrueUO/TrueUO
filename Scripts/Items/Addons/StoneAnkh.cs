@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -20,32 +19,21 @@ namespace Server.Items
 
         public override bool ForceShowProperties => true;
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (Addon is StoneAnkh ankh && ankh.IsRewardItem)
-                list.Add(1076221); // 5th Year Veteran Reward
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
-    public class StoneAnkh : BaseAddon, IRewardItem
+    public class StoneAnkh : BaseAddon
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public StoneAnkh()
             : this(true)
@@ -76,37 +64,15 @@ namespace Server.Items
         {
             get
             {
-                StoneAnkhDeed deed = new StoneAnkhDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                StoneAnkhDeed deed = new StoneAnkhDeed();
 
                 return deed;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
         public override void OnChop(Mobile from)
         {
             from.SendLocalizedMessage(500489); // You can't use an axe on that.
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076221); // 5th Year Veteran Reward
         }
 
         public override void OnComponentUsed(AddonComponent c, Mobile from)
@@ -131,26 +97,20 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadEncodedInt();
         }
     }
 
-    public class StoneAnkhDeed : BaseAddonDeed, IRewardItem
+    public class StoneAnkhDeed : BaseAddonDeed
     {
         private bool m_East;
-        private bool m_IsRewardItem;
+        
         [Constructable]
         public StoneAnkhDeed()
         {
@@ -163,24 +123,11 @@ namespace Server.Items
 
         public override int LabelNumber => 1049773;// deed for a stone ankh
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
         public override BaseAddon Addon
         {
             get
             {
-                StoneAnkh addon = new StoneAnkh(m_East)
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                StoneAnkh addon = new StoneAnkh(m_East);
 
                 return addon;
             }
@@ -202,16 +149,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private void SendTarget(Mobile m)

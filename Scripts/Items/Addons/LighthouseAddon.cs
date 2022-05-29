@@ -1,5 +1,4 @@
 using Server.Accounting;
-using Server.Engines.VeteranRewards;
 using Server.Multis;
 using System.Collections.Generic;
 
@@ -186,23 +185,23 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
+
             writer.Write(Account);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
             Account = reader.ReadString();
 
             Lighthouses.Add(this);
         }
     }
 
-    public class LighthouseAddonDeed : BaseAddonDeed, IRewardItem
+    public class LighthouseAddonDeed : BaseAddonDeed
     {
         [CommandProperty(AccessLevel.GameMaster)]
         public string Account { get; set; }

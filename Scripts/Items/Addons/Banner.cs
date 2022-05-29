@@ -1,4 +1,3 @@
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -6,9 +5,8 @@ using Server.Targeting;
 
 namespace Server.Items
 {
-    public class Banner : Item, IAddon, IDyable, IRewardItem
+    public class Banner : Item, IAddon, IDyable
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public Banner(int itemID)
             : base(itemID)
@@ -27,32 +25,13 @@ namespace Server.Items
         {
             get
             {
-                BannerDeed deed = new BannerDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                BannerDeed deed = new BannerDeed();
 
                 return deed;
             }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
+        
         public bool FacingSouth => (ItemID & 0x1) == 0;
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076218); // 2nd Year Veteran Reward
-        }
 
         void IChopable.OnChop(Mobile user)
         {
@@ -80,19 +59,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
+            reader.ReadEncodedInt();
         }
 
         public bool Dye(Mobile from, DyeTub sender)
@@ -119,9 +92,8 @@ namespace Server.Items
         }
     }
 
-    public class BannerDeed : Item, IRewardItem
+    public class BannerDeed : Item
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public BannerDeed()
             : base(0x14F0)
@@ -135,25 +107,6 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041007;// a banner deed
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
-            }
-        }
-
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (m_IsRewardItem)
-                list.Add(1076218); // 2nd Year Veteran Reward
-        }
 
         public override void OnDoubleClick(Mobile from)
         {
@@ -181,16 +134,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalGump : Gump
@@ -306,31 +255,44 @@ namespace Server.Items
                                     Banner banner = null;
 
                                     if (north)
+                                    {
                                         banner = new Banner(m_ItemID);
+                                    }
                                     else if (west)
+                                    {
                                         banner = new Banner(m_ItemID + 1);
+                                    }
 
                                     house.Addons[banner] = from;
 
-                                    banner.IsRewardItem = m_Banner.IsRewardItem;
                                     banner.MoveToWorld(p3d, map);
 
                                     m_Banner.Delete();
                                 }
                                 else
+                                {
                                     from.SendLocalizedMessage(1042039); // The banner must be placed next to a wall.								
+                                }
                             }
                             else
+                            {
                                 from.SendLocalizedMessage(1042036); // That location is not in your house.
+                            }
                         }
                         else
+                        {
                             from.SendLocalizedMessage(500269); // You cannot build that there.		
+                        }
                     }
                     else
+                    {
                         from.SendLocalizedMessage(502092); // You must be in your house to do 
+                    }
                 }
                 else
+                {
                     from.SendLocalizedMessage(1042038); // You must have the object in your backpack to use it.     
+                }
             }
 
             private class FacingGump : Gump
@@ -385,7 +347,6 @@ namespace Server.Items
                     {
                         m_House.Addons[banner] = sender.Mobile;
 
-                        banner.IsRewardItem = m_Banner.IsRewardItem;
                         banner.MoveToWorld(m_Location, sender.Mobile.Map);
 
                         m_Banner.Delete();

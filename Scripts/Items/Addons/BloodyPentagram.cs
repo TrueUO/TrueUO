@@ -1,5 +1,3 @@
-using Server.Engines.VeteranRewards;
-
 namespace Server.Items
 {
     public class BloodyPentagramComponent : AddonComponent
@@ -15,25 +13,24 @@ namespace Server.Items
         }
 
         public override bool DisplayWeight => false;
+
         public override int LabelNumber => 1080279;// Bloody Pentagram
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
-    public class BloodyPentagramAddon : BaseAddon, IRewardItem
+    public class BloodyPentagramAddon : BaseAddon
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public BloodyPentagramAddon()
         {
@@ -87,23 +84,9 @@ namespace Server.Items
         {
             get
             {
-                BloodyPentagramDeed deed = new BloodyPentagramDeed
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                BloodyPentagramDeed deed = new BloodyPentagramDeed();
 
                 return deed;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
@@ -111,22 +94,17 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
     }
 
-    public class BloodyPentagramDeed : BaseAddonDeed, IRewardItem
+    public class BloodyPentagramDeed : BaseAddonDeed
     {
-        private bool m_IsRewardItem;
         [Constructable]
         public BloodyPentagramDeed()
         {
@@ -143,23 +121,9 @@ namespace Server.Items
         {
             get
             {
-                BloodyPentagramAddon addon = new BloodyPentagramAddon
-                {
-                    IsRewardItem = m_IsRewardItem
-                };
+                BloodyPentagramAddon addon = new BloodyPentagramAddon();
 
                 return addon;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
-                InvalidateProperties();
             }
         }
 
@@ -167,16 +131,12 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadEncodedInt();
-
-            m_IsRewardItem = reader.ReadBool();
         }
     }
 }

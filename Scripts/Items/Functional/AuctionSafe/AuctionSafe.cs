@@ -1,5 +1,4 @@
 using Server.ContextMenus;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -237,15 +236,13 @@ namespace Server.Engines.Auction
         }
     }
 
-    public class AuctionSafeDeed : BaseAddonDeed, IRewardItem
+    public class AuctionSafeDeed : BaseAddonDeed
     {
         public bool SouthFacing { get; set; }
         public Mobile From { get; set; }
 
         public override BaseAddon Addon => new AuctionSafe(From, SouthFacing);
         public override int LabelNumber => 1156371;  // Auction Safe
-
-        public bool IsRewardItem { get; set; }
 
         [Constructable]
         public AuctionSafeDeed()
@@ -273,14 +270,6 @@ namespace Server.Engines.Auction
             }
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            base.GetProperties(list);
-
-            if (IsRewardItem)
-                list.Add(1076217); // 1st Year Veteran Reward
-        }
-
         public AuctionSafeDeed(Serial serial)
             : base(serial)
         {
@@ -289,17 +278,13 @@ namespace Server.Engines.Auction
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
-
-            writer.Write(IsRewardItem);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             reader.ReadInt();
-
-            IsRewardItem = reader.ReadBool();
         }
     }
 }

@@ -5,11 +5,6 @@ using System.Collections.Generic;
 
 namespace Server.Engines.VeteranRewards
 {
-    public interface IRewardItem
-    {
-        bool IsRewardItem { get; set; }
-    }
-
     public class RewardSystem
     {
         public static bool Enabled = Config.Get("VetRewards.Enabled", true);
@@ -21,6 +16,7 @@ namespace Server.Engines.VeteranRewards
 
         private static RewardCategory[] m_Categories;
         private static RewardList[] m_Lists;
+
         public static RewardCategory[] Categories
         {
             get

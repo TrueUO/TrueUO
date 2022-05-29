@@ -1,5 +1,4 @@
 using Server.Engines.Quests.Haven;
-using Server.Engines.VeteranRewards;
 using Server.Gumps;
 using Server.Network;
 using Server.Targeting;
@@ -26,9 +25,6 @@ namespace Server.Items
 
             if (Addon is CannonAddon addon)
             {
-                if (addon.IsRewardItem)
-                    list.Add(1076223); // 7th Year Veteran Reward
-
                 list.Add(1076207, addon.Charges.ToString()); // Remaining Charges: ~1_val~
             }
         }
@@ -36,15 +32,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -57,7 +51,6 @@ namespace Server.Items
 
         private CannonDirection m_CannonDirection;
         private int m_Charges;
-        private bool m_IsRewardItem;
 
         [Constructable]
         public CannonAddon(CannonDirection direction)
@@ -112,8 +105,7 @@ namespace Server.Items
             {
                 CannonDeed deed = new CannonDeed
                 {
-                    Charges = m_Charges,
-                    IsRewardItem = m_IsRewardItem
+                    Charges = m_Charges
                 };
 
                 return deed;
@@ -129,19 +121,6 @@ namespace Server.Items
             set
             {
                 m_Charges = value;
-
-                foreach (AddonComponent c in Components)
-                    c.InvalidateProperties();
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
 
                 foreach (AddonComponent c in Components)
                     c.InvalidateProperties();
@@ -224,23 +203,19 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write((int)m_CannonDirection);
             writer.Write(m_Charges);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_CannonDirection = (CannonDirection)reader.ReadInt();
             m_Charges = reader.ReadInt();
-            m_IsRewardItem = reader.ReadBool();
         }
 
         private class InternalTarget : Target
@@ -358,11 +333,11 @@ namespace Server.Items
         }
     }
 
-    public class CannonDeed : BaseAddonDeed, IRewardItem, IRewardOption
+    public class CannonDeed : BaseAddonDeed, IRewardOption
     {
         private CannonDirection m_Direction;
         private int m_Charges;
-        private bool m_IsRewardItem;
+        
         [Constructable]
         public CannonDeed()
         {
@@ -381,8 +356,7 @@ namespace Server.Items
             {
                 CannonAddon addon = new CannonAddon(m_Direction)
                 {
-                    Charges = m_Charges,
-                    IsRewardItem = m_IsRewardItem
+                    Charges = m_Charges
                 };
 
                 return addon;
@@ -396,17 +370,6 @@ namespace Server.Items
             set
             {
                 m_Charges = value;
-                InvalidateProperties();
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get => m_IsRewardItem;
-            set
-            {
-                m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
@@ -437,7 +400,6 @@ namespace Server.Items
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_Charges);
-            writer.Write(m_IsRewardItem);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -446,7 +408,6 @@ namespace Server.Items
             reader.ReadEncodedInt();
 
             m_Charges = reader.ReadInt();
-            m_IsRewardItem = reader.ReadBool();
         }
 
         public void GetOptions(RewardOptionList list)
