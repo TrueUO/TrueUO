@@ -239,12 +239,6 @@ namespace Server.Mobiles.MannequinProperty
         public override SkillName Skill => SkillName.Ninjitsu;
     }
 
-    public class ThrowingBonusProperty : SkillBonusAttr
-    {
-        public override int LabelNumber => 1044117;  // Throwing
-        public override SkillName Skill => SkillName.Throwing;
-    }
-
     public class LumberjackingBonusProperty : SkillBonusAttr
     {
         public override int LabelNumber => 1044104;  // Lumberjacking

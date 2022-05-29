@@ -177,10 +177,9 @@ namespace Server.Items
 
         public virtual double GetSkillTotal(Mobile from)
         {
-            return GetSkill(from, SkillName.Swords) + GetSkill(from, SkillName.Macing) +
-                   GetSkill(from, SkillName.Fencing) + GetSkill(from, SkillName.Archery) + GetSkill(from, SkillName.Parry) +
-                   GetSkill(from, SkillName.Lumberjacking) + GetSkill(from, SkillName.Stealth) + GetSkill(from, SkillName.Throwing) +
-                   GetSkill(from, SkillName.Poisoning) + GetSkill(from, SkillName.Bushido) + GetSkill(from, SkillName.Ninjitsu);
+            return GetSkill(from, SkillName.Swords) + GetSkill(from, SkillName.Macing) + GetSkill(from, SkillName.Fencing) + GetSkill(from, SkillName.Archery) +
+                   GetSkill(from, SkillName.Parry) + GetSkill(from, SkillName.Lumberjacking) + GetSkill(from, SkillName.Stealth) + GetSkill(from, SkillName.Poisoning) +
+                   GetSkill(from, SkillName.Bushido) + GetSkill(from, SkillName.Ninjitsu);
         }
 
         public virtual double GetSkill(Mobile from, SkillName skillName)
@@ -282,7 +281,7 @@ namespace Server.Items
             new SerpentArrow(),
             new ForceOfNature(),
             new InfusedThrow(),
-            new MysticArc(),
+            null,
             null,
             new ColdWind()
         };
@@ -326,9 +325,10 @@ namespace Server.Items
         public static readonly WeaponAbility ForceOfNature = m_Abilities[29];
 
         public static readonly WeaponAbility InfusedThrow = m_Abilities[30];
-        public static readonly WeaponAbility MysticArc = m_Abilities[31];
 
-        public static readonly WeaponAbility Empty = m_Abilities[32];
+        public static readonly WeaponAbility Empty = m_Abilities[31];
+        public static readonly WeaponAbility Empty2 = m_Abilities[32];
+
         public static readonly WeaponAbility ColdWind = m_Abilities[33];
 
         public static bool IsWeaponAbility(Mobile m, WeaponAbility a)

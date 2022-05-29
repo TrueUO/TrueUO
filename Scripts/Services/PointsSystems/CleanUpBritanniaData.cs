@@ -473,8 +473,6 @@ namespace Server.Engines.Points
             Entries[typeof(DemonBridleRing)] = 5000.0;
             Entries[typeof(DemonHuntersStandard)] = 5000.0;
             Entries[typeof(DraconisWrath)] = 5000.0;
-            Entries[typeof(EternalGuardianStaff)] = 5000.0;
-            Entries[typeof(FallenMysticsSpellbook)] = 5000.0;
             Entries[typeof(IronwoodCompositeBow)] = 5000.0;
             Entries[typeof(JadeWarAxe)] = 5000.0;
             Entries[typeof(Lavaliere)] = 5000.0;

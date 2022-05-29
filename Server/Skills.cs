@@ -82,9 +82,8 @@ namespace Server
 		Ninjitsu = 53,
 		Spellweaving = 54,
 		Mysticism = 55,
-		Imbuing = 56,
-		Throwing = 57
-	}
+		Imbuing = 56
+    }
 
 	[PropertyObject]
 	public class Skill
@@ -642,9 +641,8 @@ namespace Server
 			new SkillInfo(53, "Ninjitsu", 0.0, 0.0, 0.0, "Ninja", null, 0.0, 0.0, 0.0, 1.0, StatCode.Dex, StatCode.Int, true ),
 			new SkillInfo(54, "Spellweaving", 0.0, 0.0, 0.0, "Arcanist", null, 0.0, 0.0, 0.0, 1.0, StatCode.Int, StatCode.Str, true),
 			new SkillInfo(55, "Mysticism", 0.0, 0.0, 0.0, "Mystic", null, 0.0, 0.0, 0.0, 1.0, StatCode.Str, StatCode.Int, true ),
-			new SkillInfo(56, "Imbuing", 0.0, 0.0, 0.0, "Artificer", null, 0.0, 0.0, 0.0, 1.0, StatCode.Int, StatCode.Str),
-			new SkillInfo(57, "Throwing", 0.0, 0.0, 0.0, "Bladeweaver", null, 0.0, 0.0, 0.0, 1.0, StatCode.Dex, StatCode.Str, true ),
-		};
+			new SkillInfo(56, "Imbuing", 0.0, 0.0, 0.0, "Artificer", null, 0.0, 0.0, 0.0, 1.0, StatCode.Int, StatCode.Str)
+        };
 
 		public static SkillInfo[] Table { get => m_Table; set => m_Table = value; }
 	}
@@ -828,10 +826,7 @@ namespace Server
 
 		[CommandProperty(AccessLevel.Counselor)]
 		public Skill Imbuing { get => this[SkillName.Imbuing]; set { } }
-
-		[CommandProperty(AccessLevel.Counselor)]
-		public Skill Throwing { get => this[SkillName.Throwing]; set { } }
-		#endregion
+        #endregion
 
 		[CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
 		public int Cap { get => m_Cap; set => m_Cap = value; }

@@ -52,7 +52,7 @@ namespace Server.Spells.SkillMasteries
         {
             BaseWeapon weapon = GetWeapon();
 
-            if (weapon is BaseRanged ranged && !(ranged is BaseThrown) && o is IPoint3D p && SpellHelper.CheckTown(p, Caster) && CheckSequence())
+            if (weapon is BaseRanged ranged && o is IPoint3D p && SpellHelper.CheckTown(p, Caster) && CheckSequence())
             {
                 List<Mobile> targets = new List<Mobile>();
 

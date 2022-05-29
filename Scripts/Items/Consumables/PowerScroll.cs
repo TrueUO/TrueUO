@@ -36,9 +36,7 @@ namespace Server.Items
             SkillName.SpiritSpeak,
             SkillName.Ninjitsu,
             SkillName.Bushido,
-            SkillName.Spellweaving,
-            SkillName.Mysticism,
-            SkillName.Imbuing
+            SkillName.Spellweaving
         };
 
         private static readonly List<SkillName> _Skills = new List<SkillName>();

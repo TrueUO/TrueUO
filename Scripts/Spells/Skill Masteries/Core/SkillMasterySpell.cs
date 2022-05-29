@@ -1106,7 +1106,6 @@ namespace Server.Spells.SkillMasteries
             double fenc = Caster.Skills[SkillName.Fencing].Value;
             double mcng = Caster.Skills[SkillName.Macing].Value;
             double arch = Caster.Skills[SkillName.Archery].Value;
-            double thro = Caster.Skills[SkillName.Throwing].Value;
             double wres = Caster.Skills[SkillName.Wrestling].Value;
 
             double val = swrd;
@@ -1119,9 +1118,6 @@ namespace Server.Spells.SkillMasteries
 
             if (arch > val)
                 val = arch;
-
-            if (thro > val)
-                val = thro;
 
             if (wres > val)
                 val = wres;

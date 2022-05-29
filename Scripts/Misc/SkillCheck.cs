@@ -227,7 +227,7 @@ namespace Server.Misc
 
             if (from is PlayerMobile)
             {
-                if (skill.Info.SkillID == (int)SkillName.Throwing)
+                if (skill.Info.SkillID == (int)SkillName.Mysticism)
                 {
                     return false;
                 }

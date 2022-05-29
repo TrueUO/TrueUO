@@ -1072,34 +1072,6 @@ namespace Server.Items
 
             chance *= 1.0 + (double)bonus / 100;
 
-            if (atkWeapon is BaseThrown thrown)
-            {
-                //Distance malas
-                if (attacker.InRange(defender, 1))  //Close Quarters
-                {
-                    chance -= 0.12 - Math.Min(12, (attacker.Skills[SkillName.Throwing].Value + attacker.RawDex) / 20) / 10;
-                }
-                else if (attacker.GetDistanceToSqrt(defender) < thrown.MinThrowRange)  //too close
-                {
-                    chance -= 0.12;
-                }
-
-                //shield penalty
-                if (attacker.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
-                {
-                    double malus = Math.Min(90, 1200 / Math.Max(1.0, attacker.Skills[SkillName.Parry].Value));
-
-                    chance = chance - chance * (malus / 100);
-                }
-            }
-
-            if (defWeapon is BaseThrown && defender.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
-            {
-                double malus = Math.Min(90, 1200 / Math.Max(1.0, defender.Skills[SkillName.Parry].Value));
-
-                chance = chance + chance * (malus / 100);
-            }
-
             if (chance < 0.02)
             {
                 chance = 0.02;
@@ -1916,17 +1888,6 @@ namespace Server.Items
             percentageBonus -= Block.GetMeleeReduction(defender);
 
             percentageBonus += BattleLust.GetBonus(attacker, defender);
-
-            if (this is BaseThrown)
-            {
-                double dist = attacker.GetDistanceToSqrt(defender);
-                int max = ((BaseThrown)this).MaxThrowRange;
-
-                if (dist > max)
-                {
-                    percentageBonus -= 47;
-                }
-            }
 
             if (RunedSashOfWarding.IsUnderEffects(defender, WardingEffect.WeaponDamage))
             {
@@ -4863,9 +4824,6 @@ namespace Server.Items
                     case SkillName.Archery:
                         list.Add(1061175);
                         break; // skill required: archery
-                    case SkillName.Throwing:
-                        list.Add(1112075); // skill required: throwing
-                        break;
                 }
             }
 

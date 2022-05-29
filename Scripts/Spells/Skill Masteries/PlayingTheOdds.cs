@@ -85,7 +85,7 @@ namespace Server.Spells.SkillMasteries
                 {
                     if (target is Mobile mob && HitLower.ApplyDefense(mob))
                     {
-                        if (wep is BaseRanged ranged && !(ranged is BaseThrown))
+                        if (wep is BaseRanged ranged)
                         {
                             Caster.MovingEffect(mob, ranged.EffectID, 18, 1, false, false);
                         }
@@ -164,7 +164,7 @@ namespace Server.Spells.SkillMasteries
 
         public static int RangeModifier(BaseWeapon weapon)
         {
-            if (weapon is BaseRanged && !(weapon is BaseThrown) && weapon.RootParent is Mobile m && GetSpell(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell)
+            if (weapon is BaseRanged && weapon.RootParent is Mobile m && GetSpell(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell)
             {
                 return weapon.DefMaxRange / 2;
             }

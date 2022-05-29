@@ -293,7 +293,6 @@ namespace Server.Mobiles
             WeaponAbility.WhirlwindAttack,
             WeaponAbility.LightningArrow,
             WeaponAbility.InfusedThrow,
-            WeaponAbility.MysticArc,
             WeaponAbility.TalonStrike,
             WeaponAbility.PsychicAttack,
             WeaponAbility.ArmorIgnore,

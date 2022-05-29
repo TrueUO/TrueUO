@@ -307,7 +307,7 @@ namespace Server.Items
                         return false;
                 }
 
-                if (skill == SkillName.Throwing)
+                if (skill == SkillName.Mysticism)
                     return false;
 
                 return true;

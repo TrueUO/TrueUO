@@ -206,8 +206,7 @@ namespace Server.Engines.VendorSearching
 				new SearchCriterionEntry(SkillName.Swords, 1044100),
                 new SearchCriterionEntry(SkillName.Macing, 1044101),
                 new SearchCriterionEntry(SkillName.Fencing, 1044102),
-                new SearchCriterionEntry(SkillName.Archery, 1044091),
-                new SearchCriterionEntry(SkillName.Throwing, 1044117)
+                new SearchCriterionEntry(SkillName.Archery, 1044091)
             }),
             new SearchCriteriaCategory(Category.Skill1, 19, 1114255, new[] // Skill Group 1
             {
@@ -251,8 +250,7 @@ namespace Server.Engines.VendorSearching
                 new SearchCriterionEntry(SkillName.Peacemaking, 1044069),
                 new SearchCriterionEntry(SkillName.Archery, 1044091),
                 new SearchCriterionEntry(SkillName.Chivalry, 1044111),
-                new SearchCriterionEntry(SkillName.Ninjitsu, 1044113),
-                new SearchCriterionEntry(SkillName.Throwing, 1044117)
+                new SearchCriterionEntry(SkillName.Ninjitsu, 1044113)
             }),
             new SearchCriteriaCategory(Category.Skill6, 24, 1114260, new[] // Skill Group 6
             {

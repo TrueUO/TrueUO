@@ -477,8 +477,7 @@ namespace Server.Gumps
                 SkillName.Parry,
                 SkillName.Swords,
                 SkillName.Tactics,
-                SkillName.Wrestling,
-                SkillName.Throwing
+                SkillName.Wrestling
             }),
             new SkillsGumpGroup("Actions", new[]
             {

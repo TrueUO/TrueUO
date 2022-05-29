@@ -836,12 +836,14 @@ namespace Server.SkillHandlers
 
             if (item is BaseWeapon itemToImbue)
             {
-                if (itemToImbue is BaseThrown)
-                    maxWeight += 0;
-                else if (itemToImbue is BaseRanged)
+                if (itemToImbue is BaseRanged)
+                {
                     maxWeight += 50;
+                }
                 else if (itemToImbue.Layer == Layer.TwoHanded)
+                {
                     maxWeight += 100;
+                }
             }
             else if (item is BaseJewel)
             {
@@ -862,12 +864,21 @@ namespace Server.SkillHandlers
             int inc = ItemPropertyInfo.GetScale(item, id, false);
 
             if (max == 1 && inc == 0)
+            {
                 return 10;
+            }
 
             double v = Math.Floor(value / ((double)max / 10));
 
-            if (v > 10) v = 10;
-            if (v < 1) v = 1;
+            if (v > 10)
+            {
+                v = 10;
+            }
+
+            if (v < 1)
+            {
+                v = 1;
+            }
 
             return (int)v;
         }
@@ -878,12 +889,21 @@ namespace Server.SkillHandlers
             int inc = ItemPropertyInfo.GetScale(item, id, false);
 
             if (max == 1 && inc == 0)
+            {
                 return 5;
+            }
 
             double v = Math.Floor(value / (max / 5.0));
 
-            if (v > 5) v = 5;
-            if (v < 1) v = 1;
+            if (v > 5)
+            {
+                v = 5;
+            }
+
+            if (v < 1)
+            {
+                v = 1;
+            }
 
             return (int)v;
         }
@@ -1621,7 +1641,6 @@ namespace Server.SkillHandlers
                 SkillName.SpiritSpeak,
                 SkillName.Bushido,
                 SkillName.Ninjitsu,
-                SkillName.Throwing,
                 SkillName.Mysticism
             };
 
@@ -1631,7 +1650,7 @@ namespace Server.SkillHandlers
             new[] { SkillName.Wrestling, SkillName.AnimalTaming, SkillName.SpiritSpeak, SkillName.Tactics, SkillName.Provocation },
             new[] { SkillName.Focus, SkillName.Parry, SkillName.Stealth, SkillName.Meditation, SkillName.AnimalLore, SkillName.Discordance },
             new[] { SkillName.Mysticism, SkillName.Bushido, SkillName.Necromancy, SkillName.Veterinary, SkillName.Stealing, SkillName.EvalInt, SkillName.Anatomy },
-            new[] { SkillName.Peacemaking, SkillName.Ninjitsu, SkillName.Chivalry, SkillName.Archery, SkillName.MagicResist, SkillName.Healing, SkillName.Throwing }
+            new[] { SkillName.Peacemaking, SkillName.Ninjitsu, SkillName.Chivalry, SkillName.Archery, SkillName.MagicResist, SkillName.Healing }
         };
 
         public static SkillName[] GetSkillGroup(SkillName skill)
