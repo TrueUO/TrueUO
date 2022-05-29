@@ -201,8 +201,6 @@ namespace Server.Spells
             Register(727, typeof(SkillMasteries.ToughnessSpell));
             Register(728, typeof(SkillMasteries.OnslaughtSpell));
             Register(729, typeof(SkillMasteries.FocusedEyeSpell));
-            Register(730, typeof(SkillMasteries.ElementalFurySpell));
-            Register(731, typeof(SkillMasteries.CalledShotSpell));
             Register(732, typeof(SkillMasteries.PassiveMasterySpell));
             Register(733, typeof(SkillMasteries.ShieldBashSpell));
             Register(734, typeof(SkillMasteries.BodyGuardSpell));

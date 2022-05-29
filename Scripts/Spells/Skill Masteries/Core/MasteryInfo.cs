@@ -68,9 +68,6 @@ namespace Server.Spells.SkillMasteries
             Infos.Add(new MasteryInfo(typeof(OnslaughtSpell), 728, SkillName.Swords));
             Infos.Add(new MasteryInfo(typeof(FocusedEyeSpell), 729, SkillName.Swords));
 
-            Infos.Add(new MasteryInfo(typeof(ElementalFurySpell), 730, SkillName.Throwing));
-            Infos.Add(new MasteryInfo(typeof(CalledShotSpell), 731, SkillName.Throwing));
-
             Infos.Add(new MasteryInfo(typeof(ShieldBashSpell), 733, SkillName.Parry));
             Infos.Add(new MasteryInfo(typeof(BodyGuardSpell), 734, SkillName.Parry));
             Infos.Add(new MasteryInfo(typeof(HeightenedSensesSpell), 735, SkillName.Parry));
@@ -100,7 +97,6 @@ namespace Server.Spells.SkillMasteries
             Infos.Add(new MasteryInfo(null, 732, SkillName.Fencing, PassiveSpell.SavingThrow));           // Saving Throw
             Infos.Add(new MasteryInfo(null, 732, SkillName.Swords, PassiveSpell.SavingThrow));            // Saving Throw
             Infos.Add(new MasteryInfo(null, 732, SkillName.Macing, PassiveSpell.SavingThrow));            // Saving Throw
-            Infos.Add(new MasteryInfo(null, 732, SkillName.Throwing, PassiveSpell.SavingThrow));          // Saving Throw
 
             Infos.Add(new MasteryInfo(null, 738, SkillName.Poisoning, PassiveSpell.Potency));         // Potency
             Infos.Add(new MasteryInfo(null, 741, SkillName.Wrestling, PassiveSpell.Knockout));         // Knockout
@@ -496,7 +492,6 @@ namespace Server.Spells.SkillMasteries
                 case SkillName.Fencing: return 1155778;
                 case SkillName.Macing: return 1155779;
                 case SkillName.Swords: return 1155780;
-                case SkillName.Throwing: return 1155781;
                 case SkillName.Parry: return 1155782;
                 case SkillName.Poisoning: return 1155783;
                 case SkillName.Wrestling: return 1155784;
@@ -626,7 +621,6 @@ namespace Server.Spells.SkillMasteries
             SkillName.Fencing,
             SkillName.Macing,
             SkillName.Swords,
-            SkillName.Throwing,
             SkillName.Parry,
             SkillName.Poisoning,
             SkillName.Wrestling,
@@ -649,7 +643,6 @@ namespace Server.Spells.SkillMasteries
             1156309,
             1156308,
             1156307,
-            1156317,
             1156302,
             1156304,
             1156310,
@@ -672,7 +665,6 @@ namespace Server.Spells.SkillMasteries
             "the Needle",
             "the Crushing",
             "the Blade",
-            "the Precise",
             "the Deflector",
             "the Lethal",
             "the Champion",

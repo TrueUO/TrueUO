@@ -104,8 +104,6 @@ namespace Server.Spells.SkillMasteries
             if (Caster.Player)
             {
                 Caster.FixedParticles(0x3735, 1, 30, 9503, EffectLayer.Waist);
-
-                //m_Caster.PlaySound(0x5C);
             }
         }
 
@@ -1282,7 +1280,6 @@ namespace Server.Spells.SkillMasteries
 
                     value += FocusedEyeSpell.HitChanceBonus(m);
                     value += PlayingTheOddsSpell.HitChanceBonus(m);
-                    value += CalledShotSpell.GetHitChanceBonus(m);
                     value += CombatTrainingSpell.GetHitChanceBonus(m);
 
                     value += MasteryInfo.SavingThrowChance(m, attr);
