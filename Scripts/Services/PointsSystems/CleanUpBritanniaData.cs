@@ -467,7 +467,6 @@ namespace Server.Engines.Points
             Entries[typeof(AnimatedLegsoftheInsaneTinker)] = 5000.0;
             Entries[typeof(AxeOfAbandon)] = 5000.0;
             Entries[typeof(BasiliskHideBreastplate)] = 5000.0;
-            Entries[typeof(BurningAmber)] = 5000.0;
             Entries[typeof(CavalrysFolly)] = 5000.0;
             Entries[typeof(ClawsOfTheBerserker)] = 5000.0;
             Entries[typeof(DefenderOfTheMagus)] = 5000.0;
@@ -485,10 +484,8 @@ namespace Server.Engines.Points
             Entries[typeof(ProtectoroftheBattleMage)] = 5000.0;
             Entries[typeof(ResonantStaffofEnlightenment)] = 5000.0;
             Entries[typeof(ShroudOfTheCondemned)] = 500.0;
-            Entries[typeof(HumanSignOfOrder)] = 5000.0;
             Entries[typeof(HumanSignOfChaos)] = 5000.0;
             Entries[typeof(Slither)] = 5000.0;
-            Entries[typeof(StandardOfChaos)] = 5000.0;
             Entries[typeof(Tangle1)] = 5000.0;
             Entries[typeof(TheImpalersPick)] = 5000.0;
             Entries[typeof(TorcOfTheGuardians)] = 5000.0;
@@ -584,7 +581,6 @@ namespace Server.Engines.Points
             Entries[typeof(ClockworkAssembly)] = 50.0;
             Entries[typeof(ConjurersTrinket)] = 10000.0;
 
-            Entries[typeof(CorgulsHandbookOnMysticism)] = 250.0;
             Entries[typeof(CrownOfArcaneTemperament)] = 5000.0;
             Entries[typeof(DeadWood)] = 1.0;
             Entries[typeof(DustyPillow)] = 250.0;

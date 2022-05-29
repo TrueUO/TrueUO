@@ -99,7 +99,6 @@ namespace Server.Mobiles
         }
 
         public override bool AlwaysMurderer => true;
-        public override bool DropPrimer => false;
         public override bool GiveMLSpecial => false;
 
         public override int GetAngerSound() { return 1550; }

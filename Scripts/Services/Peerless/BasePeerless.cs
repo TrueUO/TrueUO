@@ -1,6 +1,5 @@
 using Server.Items;
 using Server.Spells;
-using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
@@ -12,7 +11,6 @@ namespace Server.Mobiles
         public PeerlessAltar Altar { get => m_Altar; set => m_Altar = value; }
 
         public override bool CanBeParagon => false;
-        public virtual bool DropPrimer => true;
         public virtual bool GiveMLSpecial => true;
         public override bool Unprovokable => true;
 
@@ -36,42 +34,14 @@ namespace Server.Mobiles
         {
             base.OnDeath(c);
 
-            if (DropPrimer)
-            {
-                SkillMasteryPrimer primer = SkillMasteryPrimer.GetRandom();
-                List<DamageStore> rights = GetLootingRights();
-
-                if (rights.Count > 0)
-                {
-                    Mobile m = rights[Utility.Random(rights.Count)].m_Mobile;
-
-                    m.SendLocalizedMessage(1156209); // You have received a mastery primer!
-
-                    if (m.Backpack == null || !m.Backpack.TryDropItem(m, primer, false))
-                        m.BankBox.DropItem(primer);
-                }
-                else
-                {
-                    c.DropItem(primer);
-                }
-            }
-
             if (GivesMLMinorArtifact && 0.5 > Utility.RandomDouble())
             {
                 MondainsLegacy.DropPeerlessMinor(c);
             }
 
-            if (GiveMLSpecial)
+            if (GiveMLSpecial && Utility.RandomDouble() < 0.025)
             {
-                if (Utility.RandomDouble() < 0.10)
-                {
-                    c.DropItem(new HumanFeyLeggings());
-                }
-
-                if (Utility.RandomDouble() < 0.025)
-                {
-                    c.DropItem(new CrimsonCincture());
-                }
+                c.DropItem(new CrimsonCincture());
             }
 
             if (m_Altar != null)

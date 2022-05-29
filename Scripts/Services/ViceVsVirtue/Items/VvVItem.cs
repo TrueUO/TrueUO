@@ -29,21 +29,6 @@ namespace Server.Items
                 ring.Attributes.CastRecovery = 3;
             }
 
-            if (item is HumanFeyLeggings fey)
-            {
-                if (fey.PhysicalBonus != 3)
-                    fey.PhysicalBonus = 3;
-
-                if (fey.FireBonus != 3)
-                    fey.FireBonus = 3;
-
-                if (fey.ColdBonus != 3)
-                    fey.ColdBonus = 3;
-
-                if (fey.EnergyBonus != 3)
-                    fey.EnergyBonus = 3;
-            }
-
             if (item is FoldedSteelGlasses steelGlasses && steelGlasses.Attributes.DefendChance != 25)
             {
                 steelGlasses.Attributes.DefendChance = 25;

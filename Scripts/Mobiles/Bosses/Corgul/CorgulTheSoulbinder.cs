@@ -28,7 +28,7 @@ namespace Server.Mobiles
         public override double TeleportProb => 1.0;
         public override bool TeleportsPets => true;
 
-        public override Type[] UniqueList => new[] { typeof(CorgulsEnchantedSash), typeof(CorgulsHandbookOnMysticism), typeof(CorgulsHandbookOnTheUndead) };
+        public override Type[] UniqueList => new[] { typeof(CorgulsEnchantedSash) };
         public override Type[] SharedList => new[] { typeof(HelmOfVengence), typeof(RingOfTheSoulbinder), typeof(RuneEngravedPegLeg), typeof(CullingBlade) };
         public override Type[] DecorativeList => new[] { typeof(EnchantedBladeDeed), typeof(EnchantedVortexDeed) };
 

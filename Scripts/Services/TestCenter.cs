@@ -456,32 +456,6 @@ namespace Server.Misc
 
             Container bag = new Bag
             {
-                Hue = 2075,
-                Name = "SA Major Artifacts Human"
-            };
-
-            bag.DropItem(new AnimatedLegsoftheInsaneTinker());
-            bag.DropItem(new ResonantStaffofEnlightenment());
-            bag.DropItem(new JadeWarAxe());
-            bag.DropItem(new DemonHuntersStandard());
-            bag.DropItem(new WallOfHungryMouths());
-            bag.DropItem(new HumanSignOfChaos());
-            bag.DropItem(new IronwoodCompositeBow());
-            bag.DropItem(new ClawsOfTheBerserker());
-            bag.DropItem(new StandardOfChaos());
-            bag.DropItem(new DefenderOfTheMagus());
-            bag.DropItem(new TheImpalersPick());
-            bag.DropItem(new CavalrysFolly());
-            bag.DropItem(new AxeOfAbandon());
-            bag.DropItem(new ProtectoroftheBattleMage());
-            bag.DropItem(new FallenMysticsSpellbook());
-            bag.DropItem(new CrownOfArcaneTemperament());
-            bag.DropItem(new VampiricEssence());
-
-            PlaceItemIn(box, 17, 57, bag);
-
-            bag = new Bag
-            {
                 Hue = 1159,
                 Name = "Eodon Artifacts"
             };

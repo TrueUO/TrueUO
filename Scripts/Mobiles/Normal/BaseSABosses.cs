@@ -21,8 +21,6 @@ namespace Server.Mobiles
         public abstract Type[] SharedSAList { get; }
 
         public override bool GiveMLSpecial => false;
-        public virtual bool NoGoodies => false;
-        public override bool DropPrimer => false;
 
         public override void Serialize(GenericWriter writer)
         {

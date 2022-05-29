@@ -163,20 +163,28 @@ namespace Server.Custom
             }
         }
 
-        public override void OnResponse(NetState state, RelayInfo info)
+        public override void OnResponse(NetState sender, RelayInfo info)
         {
-            Mobile m = state.Mobile;
+            Mobile m = sender.Mobile;
             int x = info.ButtonID;
-            if (x >= 100) m.SendGump(new SearchImageGump(0, SearchImageCommand.ImageNames[x - 100])); //Previous Page
+
+            if (x >= 100)
+            {
+                m.SendGump(new SearchImageGump(0, SearchImageCommand.ImageNames[x - 100])); //Previous Page
+            }
             else if (x >= 20)
             {
                 int z = x - 20;
+
                 for (int n = 0; n < SearchImageCommand.ImageNames.Count; n++)
+                {
                     if (SearchImageCommand.ImageNames[n].StartsWith(letters[z]))
                     {
                         m_Index = n;
                         break;
                     }
+                }
+
                 m.SendGump(new BrowseImageNamesGump(m_Index));
             }
             else if (x == 3) m.SendGump(new BrowseImageNamesGump(m_Index - 32)); //Previous Page
@@ -213,9 +221,10 @@ namespace Server.Custom
             AddLabel(30, 270, 0, $"Flags: {id.Flags.ToString()}");
         }
 
-        public override void OnResponse(NetState state, RelayInfo info)
+        public override void OnResponse(NetState sender, RelayInfo info)
         {
-            Mobile m = state.Mobile;
+            Mobile m = sender.Mobile;
+
             m.SendGump(new SearchImageGump(m_Search));
         }
     }
@@ -935,7 +944,6 @@ namespace Server.Custom
                     if ((int)TileData.ItemTable[x].Flags == 18432) list.Add(x);
             }
 
-            //TODO: These need to be refined/replaced with better lists, but they are a start...
             else if (search == "Chairs") { list.AddRange(GetList("chair")); list.AddRange(GetList("stool")); }
             else if (search == "Storage") { list.AddRange(GetList("crate")); list.AddRange(GetList("box")); }
             else if (search == "Tables") { list.AddRange(GetList("table")); }
@@ -957,7 +965,6 @@ namespace Server.Custom
             else if (search == "Stones") { list.AddRange(GetList("stone")); }
             else if (search == "Debris") { list.AddRange(GetList("debris")); }
             else if (search == "Symbols") { list.AddRange(GetList("symbol")); }
-            //TODO: These need to be refined/replaced with better lists, but they are a start...
 
             else
             {
@@ -968,16 +975,6 @@ namespace Server.Custom
                 }
             }
             return list;
-        }
-
-        private bool FindItem(IEntity m, int itemID)
-        {
-            IPooledEnumerable eable = m.Map.GetItemsInRange(new Point3D(m.X, m.Y, m.Z), 0);
-            foreach (Item item in eable)
-            {
-                if (item.Z == m.Z && item.ItemID == itemID) return true;
-            }
-            return false;
         }
 
         public override void OnResponse(NetState state, RelayInfo info)
@@ -1005,7 +1002,10 @@ namespace Server.Custom
                 int itemID = x - 100000;
                 m.Target = new CreateItemTarget(itemID, m_Search, m_Index, m_ShowImage);
             }
-            else if (x == 50) m.SendGump(new SearchImageGump(m_Index, m_Search, !m_ShowImage)); //Show or Hide images
+            else if (x == 50)
+            {
+                m.SendGump(new SearchImageGump(m_Index, m_Search, !m_ShowImage)); //Show or Hide images
+            }
             else if (x == 1)
             {
                 m.CloseGump(typeof(SearchImageGump));
@@ -1024,7 +1024,10 @@ namespace Server.Custom
                     m.SendMessage("Please enter the search string.");
                     m.SendGump(new SearchImageGump(m_Search));
                 }
-                else m.SendGump(new SearchImageGump(temp));
+                else
+                {
+                    m.SendGump(new SearchImageGump(temp));
+                }
             }
             else if (x == 5 && tr2 != null)
             {
@@ -1039,7 +1042,10 @@ namespace Server.Custom
                     m.SendMessage("Please enter a decimal number between 1 and TileData.ItemTable.Length.");
                     m.SendGump(new SearchImageGump(m_Index, m_Search, m_ShowImage));
                 }
-                else m.SendGump(new SearchImageGump(temp, "ALL", m_ShowImage));
+                else
+                {
+                    m.SendGump(new SearchImageGump(temp, "ALL", m_ShowImage));
+                }
             }
             else if (x == 3) m.SendGump(new SearchImageGump(m_Index - 10, m_Search, m_ShowImage)); //Previous Page
             else if (x == 4) m.SendGump(new SearchImageGump(m_Index + 10, m_Search, m_ShowImage)); //Next Page
