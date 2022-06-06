@@ -1,11 +1,13 @@
 using Server.Spells;
 using Server.Spells.Seventh;
 using System;
+using Server.Engines.Craft;
 
 namespace Server.Items
 {
-    public class MaskOfKhalAnkur : BaseHat
+    public class MaskOfKhalAnkur : BaseHat, IRepairable
     {
+        public CraftSystem RepairSystem => DefTailoring.CraftSystem;
         public override bool IsArtifact => true;
         public override int LabelNumber => 1158701;  // Mask of Khal Ankur
 
