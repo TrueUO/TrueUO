@@ -169,15 +169,5 @@ namespace Server.Misc
                 return RandomSkinHue();
             }
         }
-
-        public static bool ValidateEquipment(Mobile from, Item equipment)
-        {
-            return ValidateEquipment(from, equipment, true);
-        }
-
-        public static bool ValidateEquipment(Mobile from, Item equipment, bool message)
-        {
-            return true;
-        }
     }
 }

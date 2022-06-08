@@ -1,6 +1,4 @@
 using Server.Engines.Craft;
-using Server.Misc;
-
 using System;
 
 namespace Server.Items
@@ -405,11 +403,6 @@ namespace Server.Items
                     from.SendLocalizedMessage(1155496); // This item can only be used by VvV participants!
                     return false;
                 }
-            }
-
-            if (from.AccessLevel < AccessLevel.GameMaster && !RaceDefinitions.ValidateEquipment(from, this))
-            {
-                return false;
             }
 
             return base.CanEquip(from);

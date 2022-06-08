@@ -1,4 +1,3 @@
-using Server.Mobiles;
 using System.Collections.Generic;
 
 namespace Server.Items
@@ -55,90 +54,81 @@ namespace Server.Items
                 }
                 else if (item is DryReeds dryReeds)
                 {
-                    if (!(from is PlayerMobile) || !((PlayerMobile)from).BasketWeaving)
+                    Container cont = from.Backpack;
+
+                    Engines.Plants.PlantHue hue = dryReeds.PlantHue;
+
+                    if (!dryReeds.IsChildOf(from.Backpack))
                     {
-                        from.SendLocalizedMessage(1112253); //You haven't learned basket weaving. Perhaps studying a book would help!
+                        from.SendLocalizedMessage(1116249); //That must be in your backpack for you to use it.
                     }
-                    else
+                    else if (cont != null)
                     {
-                        Container cont = from.Backpack;
+                        Item[] items = cont.FindItemsByType(typeof(DryReeds));
+                        List<Item> list = new List<Item>();
 
-                        Engines.Plants.PlantHue hue = dryReeds.PlantHue;
+                        int total = 0;
 
-                        if (!dryReeds.IsChildOf(from.Backpack))
+                        for (var index = 0; index < items.Length; index++)
                         {
-                            from.SendLocalizedMessage(1116249); //That must be in your backpack for you to use it.
-                        }
-                        else if (cont != null)
-                        {
-                            Item[] items = cont.FindItemsByType(typeof(DryReeds));
-                            List<Item> list = new List<Item>();
+                            Item it = items[index];
 
-                            int total = 0;
-
-                            for (var index = 0; index < items.Length; index++)
+                            if (it is DryReeds check && dryReeds.PlantHue == check.PlantHue)
                             {
-                                Item it = items[index];
+                                total += check.Amount;
+                                list.Add(check);
+                            }
+                        }
 
-                                if (it is DryReeds check)
+                        int toConsume = 2;
+
+                        if (list.Count > 0 && total > 1)
+                        {
+                            for (var index = 0; index < list.Count; index++)
+                            {
+                                Item it = list[index];
+
+                                if (it.Amount >= toConsume)
                                 {
-                                    if (dryReeds.PlantHue == check.PlantHue)
-                                    {
-                                        total += check.Amount;
-                                        list.Add(check);
-                                    }
+                                    it.Consume(toConsume);
+                                    toConsume = 0;
+                                }
+                                else if (it.Amount < toConsume)
+                                {
+                                    it.Delete();
+                                    toConsume -= it.Amount;
+                                }
+
+                                if (toConsume <= 0)
+                                {
+                                    break;
                                 }
                             }
 
-                            int toConsume = 2;
+                            SoftenedReeds sReed = new SoftenedReeds(hue);
 
-                            if (list.Count > 0 && total > 1)
+                            if (!from.Backpack.TryDropItem(from, sReed, false))
                             {
-                                for (var index = 0; index < list.Count; index++)
-                                {
-                                    Item it = list[index];
+                                sReed.MoveToWorld(from.Location, from.Map);
+                            }
 
-                                    if (it.Amount >= toConsume)
-                                    {
-                                        it.Consume(toConsume);
-                                        toConsume = 0;
-                                    }
-                                    else if (it.Amount < toConsume)
-                                    {
-                                        it.Delete();
-                                        toConsume -= it.Amount;
-                                    }
+                            m_UsesRemaining--;
 
-                                    if (toConsume <= 0)
-                                    {
-                                        break;
-                                    }
-                                }
-
-                                SoftenedReeds sReed = new SoftenedReeds(hue);
-
-                                if (!from.Backpack.TryDropItem(from, sReed, false))
-                                {
-                                    sReed.MoveToWorld(from.Location, from.Map);
-                                }
-
-                                m_UsesRemaining--;
-
-                                if (m_UsesRemaining <= 0)
-                                {
-                                    Delete();
-                                }
-                                else
-                                {
-                                    InvalidateProperties();
-                                }
-
-                                from.PlaySound(0x23E);
+                            if (m_UsesRemaining <= 0)
+                            {
+                                Delete();
                             }
                             else
                             {
-                                from.SendLocalizedMessage(1112250); //You don't have enough of this type of dry reeds to make that.
+                                InvalidateProperties();
                             }
+
+                            from.PlaySound(0x23E);
+                        }
+                        else
+                        {
+                            from.SendLocalizedMessage(
+                                1112250); //You don't have enough of this type of dry reeds to make that.
                         }
                     }
                 }

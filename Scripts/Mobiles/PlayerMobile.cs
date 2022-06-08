@@ -61,7 +61,7 @@ namespace Server.Mobiles
         HasStatReward = 0x00002000,
         GemMining = 0x00004000,
         ToggleMiningGem = 0x00008000,
-        BasketWeaving = 0x00010000,
+        UNUSED4 = 0x00010000,
         AbyssEntry = 0x00020000,
         ToggleClippings = 0x00040000,
         ToggleCutClippings = 0x00080000,
@@ -308,9 +308,6 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool GemMining { get => GetFlag(PlayerFlag.GemMining); set => SetFlag(PlayerFlag.GemMining, value); }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool BasketWeaving { get => GetFlag(PlayerFlag.BasketWeaving); set => SetFlag(PlayerFlag.BasketWeaving, value); }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool ToggleMiningStone { get => GetFlag(PlayerFlag.ToggleMiningStone); set => SetFlag(PlayerFlag.ToggleMiningStone, value); }
@@ -1138,24 +1135,21 @@ namespace Server.Mobiles
 
                     Item item = items[i];
 
-                    bool drop = !RaceDefinitions.ValidateEquipment(from, item, false);
+                    bool drop = false;
 
                     if (item is BaseWeapon weapon)
                     {
-                        if (!drop)
+                        if (dex < weapon.DexRequirement)
                         {
-                            if (dex < weapon.DexRequirement)
-                            {
-                                drop = true;
-                            }
-                            else if (str < AOS.Scale(weapon.StrRequirement, 100 - weapon.GetLowerStatReq()))
-                            {
-                                drop = true;
-                            }
-                            else if (intel < weapon.IntRequirement)
-                            {
-                                drop = true;
-                            }
+                            drop = true;
+                        }
+                        else if (str < AOS.Scale(weapon.StrRequirement, 100 - weapon.GetLowerStatReq()))
+                        {
+                            drop = true;
+                        }
+                        else if (intel < weapon.IntRequirement)
+                        {
+                            drop = true;
                         }
 
                         if (drop)
@@ -1174,34 +1168,34 @@ namespace Server.Mobiles
                     }
                     else if (item is BaseArmor armor)
                     {
-                        if (!drop)
+                        if (!armor.AllowMaleWearer && !from.Female && from.AccessLevel < AccessLevel.GameMaster)
                         {
-                            if (!armor.AllowMaleWearer && !from.Female && from.AccessLevel < AccessLevel.GameMaster)
-                            {
-                                drop = true;
-                            }
-                            else if (!armor.AllowFemaleWearer && from.Female && from.AccessLevel < AccessLevel.GameMaster)
-                            {
-                                drop = true;
-                            }
-                            else
-                            {
-                                int strBonus = armor.ComputeStatBonus(StatType.Str), strReq = armor.ComputeStatReq(StatType.Str);
-                                int dexBonus = armor.ComputeStatBonus(StatType.Dex), dexReq = armor.ComputeStatReq(StatType.Dex);
-                                int intBonus = armor.ComputeStatBonus(StatType.Int), intReq = armor.ComputeStatReq(StatType.Int);
+                            drop = true;
+                        }
+                        else if (!armor.AllowFemaleWearer && from.Female && from.AccessLevel < AccessLevel.GameMaster)
+                        {
+                            drop = true;
+                        }
+                        else
+                        {
+                            int strBonus = armor.ComputeStatBonus(StatType.Str),
+                                strReq = armor.ComputeStatReq(StatType.Str);
+                            int dexBonus = armor.ComputeStatBonus(StatType.Dex),
+                                dexReq = armor.ComputeStatReq(StatType.Dex);
+                            int intBonus = armor.ComputeStatBonus(StatType.Int),
+                                intReq = armor.ComputeStatReq(StatType.Int);
 
-                                if (dex < dexReq || dex + dexBonus < 1)
-                                {
-                                    drop = true;
-                                }
-                                else if (str < strReq || str + strBonus < 1)
-                                {
-                                    drop = true;
-                                }
-                                else if (intel < intReq || intel + intBonus < 1)
-                                {
-                                    drop = true;
-                                }
+                            if (dex < dexReq || dex + dexBonus < 1)
+                            {
+                                drop = true;
+                            }
+                            else if (str < strReq || str + strBonus < 1)
+                            {
+                                drop = true;
+                            }
+                            else if (intel < intReq || intel + intBonus < 1)
+                            {
+                                drop = true;
                             }
                         }
 
@@ -1229,25 +1223,23 @@ namespace Server.Mobiles
                     }
                     else if (item is BaseClothing clothing)
                     {
-                        if (!drop)
+                        if (!clothing.AllowMaleWearer && !from.Female && from.AccessLevel < AccessLevel.GameMaster)
                         {
-                            if (!clothing.AllowMaleWearer && !from.Female && from.AccessLevel < AccessLevel.GameMaster)
-                            {
-                                drop = true;
-                            }
-                            else if (!clothing.AllowFemaleWearer && from.Female && from.AccessLevel < AccessLevel.GameMaster)
-                            {
-                                drop = true;
-                            }
-                            else
-                            {
-                                int strBonus = clothing.ComputeStatBonus(StatType.Str);
-                                int strReq = clothing.ComputeStatReq(StatType.Str);
+                            drop = true;
+                        }
+                        else if (!clothing.AllowFemaleWearer && from.Female &&
+                                 from.AccessLevel < AccessLevel.GameMaster)
+                        {
+                            drop = true;
+                        }
+                        else
+                        {
+                            int strBonus = clothing.ComputeStatBonus(StatType.Str);
+                            int strReq = clothing.ComputeStatReq(StatType.Str);
 
-                                if (str < strReq || str + strBonus < 1)
-                                {
-                                    drop = true;
-                                }
+                            if (str < strReq || str + strBonus < 1)
+                            {
+                                drop = true;
                             }
                         }
 
@@ -1266,14 +1258,7 @@ namespace Server.Mobiles
                             moved = true;
                         }
                     }
-                    else if (item is BaseQuiver && drop)
-                    {
-                        from.AddToBackpack(item);
-
-                        from.SendLocalizedMessage(1062002, "quiver"); // You can no longer wear your ~1_ARMOR~
-                        moved = true;
-                    }
-
+                    
                     #region Vice Vs Virtue
                     if (item is IVvVItem vvvItem && vvvItem.IsVvVItem && !ViceVsVirtueSystem.IsVvV(from))
                     {

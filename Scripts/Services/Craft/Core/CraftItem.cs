@@ -63,7 +63,6 @@ namespace Server.Engines.Craft
         public bool ForceNonExceptional { get; set; }
         public bool ForceExceptional { get; set; }
         public Expansion RequiredExpansion { get; set; }
-        public bool RequiresBasketWeaving { get; set; }
         public bool RequiresResTarget { get; set; }
         public bool RequiresMechanicalLife { get; set; }
 
@@ -1576,71 +1575,65 @@ namespace Server.Engines.Craft
                     {
                         if (Recipe == null || !(from is PlayerMobile) || ((PlayerMobile)from).HasRecipe(Recipe))
                         {
-                            if (!RequiresBasketWeaving || from is PlayerMobile mobile && mobile.BasketWeaving)
+                            if (!RequiresMechanicalLife || from is PlayerMobile pm && pm.MechanicalLife)
                             {
-                                if (!RequiresMechanicalLife || from is PlayerMobile pm && pm.MechanicalLife)
-                                {
-                                    int badCraft = craftSystem.CanCraft(from, tool, ItemType);
+                                int badCraft = craftSystem.CanCraft(from, tool, ItemType);
 
-                                    if (badCraft <= 0)
+                                if (badCraft <= 0)
+                                {
+                                    if (RequiresResTarget && NeedsResTarget(from, craftSystem))
                                     {
-                                        if (RequiresResTarget && NeedsResTarget(from, craftSystem))
+                                        from.Target = new ChooseResTarget(from, this, craftSystem, typeRes, tool);
+                                        from.SendMessage("Choose the resource you would like to use.");
+                                        return;
+                                    }
+
+                                    int resHue = 0;
+                                    int maxAmount = 0;
+                                    object message = null;
+
+                                    if (ConsumeRes(from, typeRes, craftSystem, ref resHue, ref maxAmount,
+                                        ConsumeType.None, ref message))
+                                    {
+                                        message = null;
+
+                                        if (ConsumeAttributes(from, ref message, false))
                                         {
-                                            from.Target = new ChooseResTarget(from, this, craftSystem, typeRes, tool);
-                                            from.SendMessage("Choose the resource you would like to use.");
+                                            CraftContext context = craftSystem.GetContext(from);
+
+                                            if (context != null)
+                                            {
+                                                context.OnMade(this);
+                                            }
+
+                                            int iMin = craftSystem.MinCraftEffect;
+                                            int iMax = craftSystem.MaxCraftEffect - iMin + 1;
+                                            int iRandom = Utility.Random(iMax);
+                                            iRandom += iMin + 1;
+                                            new InternalTimer(from, craftSystem, this, typeRes, tool, iRandom).Start();
                                             return;
                                         }
 
-                                        int resHue = 0;
-                                        int maxAmount = 0;
-                                        object message = null;
-
-                                        if (ConsumeRes(from, typeRes, craftSystem, ref resHue, ref maxAmount, ConsumeType.None, ref message))
-                                        {
-                                            message = null;
-
-                                            if (ConsumeAttributes(from, ref message, false))
-                                            {
-                                                CraftContext context = craftSystem.GetContext(from);
-
-                                                if (context != null)
-                                                {
-                                                    context.OnMade(this);
-                                                }
-
-                                                int iMin = craftSystem.MinCraftEffect;
-                                                int iMax = craftSystem.MaxCraftEffect - iMin + 1;
-                                                int iRandom = Utility.Random(iMax);
-                                                iRandom += iMin + 1;
-                                                new InternalTimer(from, craftSystem, this, typeRes, tool, iRandom).Start();
-                                                return;
-                                            }
-
-                                            from.EndAction(typeof(CraftSystem));
-                                            from.SendGump(new CraftGump(from, craftSystem, tool, message));
-                                        }
-                                        else
-                                        {
-                                            from.EndAction(typeof(CraftSystem));
-                                            from.SendGump(new CraftGump(from, craftSystem, tool, message));
-                                        }
+                                        from.EndAction(typeof(CraftSystem));
+                                        from.SendGump(new CraftGump(from, craftSystem, tool, message));
                                     }
                                     else
                                     {
                                         from.EndAction(typeof(CraftSystem));
-                                        from.SendGump(new CraftGump(from, craftSystem, tool, badCraft));
+                                        from.SendGump(new CraftGump(from, craftSystem, tool, message));
                                     }
                                 }
                                 else
                                 {
                                     from.EndAction(typeof(CraftSystem));
-                                    from.SendGump(new CraftGump(from, craftSystem, tool, 1113034)); // You haven't read the Mechanical Life Manual. Talking to Sutek might help!
+                                    from.SendGump(new CraftGump(from, craftSystem, tool, badCraft));
                                 }
                             }
                             else
                             {
                                 from.EndAction(typeof(CraftSystem));
-                                from.SendGump(new CraftGump(from, craftSystem, tool, 1112253)); // You haven't learned basket weaving. Perhaps studying a book would help!
+                                from.SendGump(new CraftGump(from, craftSystem, tool,
+                                    1113034)); // You haven't read the Mechanical Life Manual. Talking to Sutek might help!
                             }
                         }
                         else

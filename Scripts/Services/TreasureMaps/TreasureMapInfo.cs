@@ -262,11 +262,6 @@ namespace Server.Items
             if (level >= TreasureLevel.Cache)
             {
                 list = _DecorativeTable[(int)package];
-
-                if (facet == TreasureFacet.Malas)
-                {
-                    list = _DecorativeMalasArtifacts;
-                }
             }
             else if (level == TreasureLevel.Supply)
             {
@@ -598,18 +593,10 @@ namespace Server.Items
             typeof(CandelabraOfSouls), typeof(GoldBricks), typeof(PhillipsWoodenSteed), typeof(AncientShipModelOfTheHMSCape), typeof(AdmiralsHeartyRum)
         };
 
-        private static readonly Type[] _DecorativeMalasArtifacts =
-        {
-            typeof(CoffinPiece)
-        };
-
         private static readonly Type[] _FunctionalMinorArtifacts =
         {
-            typeof(BlazeOfDeath), typeof(BurglarsBandana), typeof(DreadPirateHat),
-            typeof(EnchantedTitanLegBone), typeof(GwennosHarp), typeof(IolosLute), typeof(LunaLance),
-            typeof(NightsKiss), typeof(NoxRangersHeavyCrossbow), typeof(PolarBearMask), typeof(VioletCourage),
-            typeof(HeartOfTheLion), typeof(ColdBlood), typeof(AlchemistsBauble), typeof(CaptainQuacklebushsCutlass),
-            typeof(ShieldOfInvulnerability)
+            typeof(BurglarsBandana), typeof(DreadPirateHat), typeof(GwennosHarp), typeof(IolosLute),
+            typeof(PolarBearMask), typeof(HeartOfTheLion), typeof(AlchemistsBauble), typeof(ShieldOfInvulnerability)
         };
 
         private static readonly SkillName[][] _TranscendenceTable =

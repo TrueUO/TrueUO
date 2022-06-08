@@ -382,12 +382,6 @@ namespace Server.Engines.Craft
             craftItem.NeedMill = needMill;
         }
 
-        public void SetRequiresBasketWeaving(int index)
-        {
-            CraftItem craftItem = CraftItems.GetAt(index);
-            craftItem.RequiresBasketWeaving = true;
-        }
-
         public void SetRequireResTarget(int index)
         {
             CraftItem craftItem = CraftItems.GetAt(index);

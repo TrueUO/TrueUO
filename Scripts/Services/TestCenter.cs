@@ -5,7 +5,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Text;
-using Server.Engines.Points;
 using Server.SkillHandlers;
 using Server.Spells.SkillMasteries;
 using Server.Engines.Craft;
@@ -77,22 +76,6 @@ namespace Server.Misc
                             {
                                 GiveResources(from);
                                 from.SendMessage("Resources have been added to your bank");
-                            }
-                        }
-                        else if (Insensitive.Equals(name, "arties"))
-                        {
-                            if (CanGive(from, "Artifacts"))
-                            {
-                                GiveArtifacts(from);
-                                from.SendMessage("Artifacts have been added to your bank");
-                            }
-                        }
-                        else if (Insensitive.Equals(name, "air"))
-                        {
-                            if (CanGive(from, "Air"))
-                            {
-                                GiveAirFreshner(from);
-                                from.SendMessage("Air Freshner has been added to your bank.");
                             }
                         }
                         else if (Insensitive.Equals(name, "seeds"))
@@ -444,153 +427,6 @@ namespace Server.Misc
             PlaceItemIn(box, 139, 93, bag);
 
             PlaceItemIn(from.BankBox, 88, 142, box);
-        }
-
-        public static void GiveArtifacts(Mobile from)
-        {
-            var box = new WoodenBox
-            {
-                Hue = 1170,
-                Name = "Artifacts"
-            };
-
-            Container bag = new Bag
-            {
-                Hue = 1159,
-                Name = "Eodon Artifacts"
-            };
-
-            bag.DropItem(new AnonsBoots());
-            bag.DropItem(new AnonsSpellbook());
-            bag.DropItem(new BalakaisShamanStaff());
-            bag.DropItem(new EnchantressCameo());
-            bag.DropItem(new HalawasHuntingBow());
-            bag.DropItem(new HawkwindsRobe());
-            bag.DropItem(new JumusSacredHide());
-            bag.DropItem(new JuonarsGrimoire());
-            bag.DropItem(new LereisHuntingSpear());
-            bag.DropItem(new MinaxsSandles());
-            bag.DropItem(new OzymandiasObi());
-            bag.DropItem(new ShantysWaders());
-            bag.DropItem(new TotemOfTheTribe());
-            bag.DropItem(new WamapsBoneEarrings());
-            bag.DropItem(new UnstableTimeRift());
-            bag.DropItem(new MocapotlsObsidianSword());
-
-            PlaceItemIn(box, 40, 57, bag);
-
-            bag = new Bag
-            {
-                Hue = 1266,
-                Name = "Major Artifacts"
-            };
-
-            bag.DropItem(new TitansHammer());
-            bag.DropItem(new InquisitorsResolution());
-            bag.DropItem(new BladeOfTheRighteous());
-            bag.DropItem(new ZyronicClaw());
-
-            for (int i = 0; i < DoomGauntlet.DoomArtifacts.Length; i++)
-            {
-                bag.DropItem(Loot.Construct(DoomGauntlet.DoomArtifacts[i]));
-            }
-
-            PlaceItemIn(box, 65, 57, bag);
-
-            bag = new Bag
-            {
-                Hue = 1281,
-                Name = "Tokuno Major Artifacts"
-            };
-
-            bag.DropItem(new SwordsOfProsperity());
-            bag.DropItem(new SwordOfTheStampede());
-            bag.DropItem(new WindsEdge());
-            bag.DropItem(new DarkenedSky());
-            bag.DropItem(new RuneBeetleCarapace());
-            bag.DropItem(new KasaOfTheRajin());
-            bag.DropItem(new Stormgrip());
-            bag.DropItem(new TomeOfLostKnowledge());
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.ParagonGold));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.VioletCouragePurple));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.InvulnerabilityBlue));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.LunaWhite));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.DryadGreen));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.ShadowDancerBlack));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.BerserkerRed));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.NoxGreen));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.RumRed));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.FireOrange));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.FadedCoal));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.Coal));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.FadedGold));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.StormBronze));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.Rose));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.MidnightCoal));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.FadedBronze));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.FadedRose));
-            bag.DropItem(new PigmentsOfTokuno(PigmentType.DeepRose));
-
-            PlaceItemIn(box, 115, 57, bag);
-
-            bag = new Bag
-            {
-                Hue = 1167,
-                Name = "Minor Artifacts"
-            };
-
-            for (int i = 0; i < MondainsLegacy.Artifacts.Length; i++)
-            {
-                bag.DropItem(Loot.Construct(MondainsLegacy.Artifacts[i]));
-            }
-
-            PlaceItemIn(box, 90, 57, bag);
-
-            bag = new Bag
-            {
-                Hue = 55,
-                Name = "Replicas"
-            };
-
-            bag.DropItem(new RoyalGuardInvestigatorsCloak());
-            bag.DropItem(new TongueOfTheBeast());
-            bag.DropItem(new TheMostKnowledgePerson());
-            bag.DropItem(new ShroudOfDeceit());
-            bag.DropItem(new LightsRampart());
-            bag.DropItem(new ObiDiEnse());
-            bag.DropItem(new TheRobeOfBritanniaAri());
-            bag.DropItem(new GauntletsOfAnger());
-            bag.DropItem(new JadeArmband());
-            bag.DropItem(new CrownOfTalKeesh());
-            bag.DropItem(new EmbroideredOakLeafCloak());
-            bag.DropItem(new GladiatorsCollar());
-            bag.DropItem(new LieutenantOfTheBritannianRoyalGuard());
-            bag.DropItem(new CaptainJohnsHat());
-            bag.DropItem(new OblivionsNeedle());
-            bag.DropItem(new RoyalGuardSurvivalKnife());
-            bag.DropItem(new OrcChieftainHelm());
-            bag.DropItem(new FangOfRactus());
-            bag.DropItem(new DetectiveBoots());
-
-            PlaceItemIn(box, 90, 139, bag);
-
-            bag = new Bag
-            {
-                Hue = 2731,
-                Name = "Doom Upgrade Arties"
-            };
-
-            bag.DropItem(new BowOfTheInfiniteSwarm());
-            bag.DropItem(new Glenda());
-            bag.DropItem(new TheScholarsHalo());
-            bag.DropItem(new TheDeceiver());
-
-            PlaceItemIn(box, 17, 83, bag);
-            PlaceItemIn(from.BankBox, 63, 106, box);
-        }
-
-        public static void GiveAirFreshner(Mobile from)
-        {
         }
 
         public static void GiveSeeds(Mobile from)

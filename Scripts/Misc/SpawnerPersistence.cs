@@ -29,12 +29,11 @@ namespace Server
         {
             None = 0x00000000,
             Initial = 0x00000001,
-            Sphinx = 0x00000002,
-            FixAddonDeco = 0x00000004,
-            LifeStealers = 0x00000008,
-            RemoveTeleporters = 0x00000010,
-            DestardSpawners = 0x00000020,
-            DoomSpawners = 0x00000040
+            FixAddonDeco = 0x00000002,
+            LifeStealers = 0x00000004,
+            RemoveTeleporters = 0x00000008,
+            DestardSpawners = 0x00000010,
+            DoomSpawners = 0x00000020
         }
 
         public static string FilePath = Path.Combine("Saves/Misc", "SpawnerPresistence.bin");
@@ -189,12 +188,6 @@ namespace Server
                         FixAddonDeco();
                         VersionFlag |= SpawnerVersion.FixAddonDeco;
                     }
-
-                    if ((VersionFlag & SpawnerVersion.Sphinx) == 0)
-                    {
-                        AddSphinx();
-                        VersionFlag |= SpawnerVersion.Sphinx;
-                    }
                     goto case 10;
                 case 10:
                     if ((VersionFlag & SpawnerVersion.Initial) == 0)
@@ -313,14 +306,6 @@ namespace Server
             Decorate.GenerateRestricted("deco", "Data/Decoration/Ilshenar", t, true, Map.Ilshenar);
             Decorate.GenerateRestricted("deco", "Data/Decoration/Malas", t, true, Map.Malas);
             Decorate.GenerateRestricted("deco", "Data/Decoration/Tokuno", t, true, Map.Tokuno);
-        }
-        #endregion
-
-        #region Version 11
-        public static void AddSphinx()
-        {
-            Engines.GenerateForgottenPyramid.Generate(null);
-            ToConsole("Generated Fortune Sphinx.");
         }
         #endregion
 

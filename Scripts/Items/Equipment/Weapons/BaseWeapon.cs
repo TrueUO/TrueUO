@@ -11,8 +11,6 @@ using Server.Spells.Ninjitsu;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
 using Server.Spells.Spellweaving;
-using Server.Misc;
-
 using System;
 using System.Collections.Generic;
 #endregion
@@ -733,11 +731,6 @@ namespace Server.Items
                     from.SendLocalizedMessage(1155496); // This item can only be used by VvV participants!
                     return false;
                 }
-            }
-
-            if (!RaceDefinitions.ValidateEquipment(from, this))
-            {
-                return false;
             }
 
             if (from.Dex < DexRequirement)

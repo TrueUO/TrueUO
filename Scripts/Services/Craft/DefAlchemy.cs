@@ -269,7 +269,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(SoftenedReeds), 1044495, 1112249, 75.0, 100.0, typeof(DryReeds), 1112248, 1, 1112250);
             AddRes(index, typeof(ScouringToxin), 1112292, 2, 1112326);
             SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
 
             index = AddCraft(typeof(VialOfVitriol), 1044495, 1113331, 90.0, 100.0, typeof(ParasiticPotion), 1072848, 1, 1113754);
             AddRes(index, typeof(Nightshade), 1044358, 30, 1044366);

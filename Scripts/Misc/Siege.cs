@@ -33,7 +33,6 @@ namespace Server
             if (SiegeShard)
             {
                 EventSink.AfterWorldSave += OnAfterSave;
-                EventSink.Login += OnLogin;
 
                 EventSink.WorldSave += OnSave;
                 EventSink.WorldLoad += OnLoad;
@@ -122,17 +121,6 @@ namespace Server
             }
 
             CheckTime();
-        }
-
-        public static void OnLogin(LoginEventArgs e)
-        {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null && pm.Map == Map.Trammel && pm.AccessLevel == AccessLevel.Player)
-            {
-                pm.MoveToWorld(new Point3D(989, 519, -50), Map.Malas);
-                pm.SendMessage("You have been removed from Trammel.");
-            }
         }
 
         public static void Initialize()

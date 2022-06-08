@@ -1,6 +1,5 @@
 using Server.Engines.Craft;
 using Server.Network;
-using Server.Misc;
 using AMA = Server.Items.ArmorMeditationAllowance;
 using AMT = Server.Items.ArmorMaterialType;
 
@@ -857,31 +856,37 @@ namespace Server.Items
             for (int i = m.Items.Count - 1; i >= 0; --i)
             {
                 if (i >= m.Items.Count)
+                {
                     continue;
+                }
 
                 Item item = m.Items[i];
 
                 if (item is BaseArmor armor)
                 {
-                    if (!RaceDefinitions.ValidateEquipment(m, armor))
-                    {
-                        m.AddToBackpack(armor);
-                    }
-                    else if (!armor.AllowMaleWearer && !m.Female && m.AccessLevel < AccessLevel.GameMaster)
+                    if (!armor.AllowMaleWearer && !m.Female && m.AccessLevel < AccessLevel.GameMaster)
                     {
                         if (armor.AllowFemaleWearer)
+                        {
                             m.SendLocalizedMessage(1010388); // Only females can wear this.
+                        }
                         else
+                        {
                             m.SendMessage("You may not wear this.");
+                        }
 
                         m.AddToBackpack(armor);
                     }
                     else if (!armor.AllowFemaleWearer && m.Female && m.AccessLevel < AccessLevel.GameMaster)
                     {
                         if (armor.AllowMaleWearer)
+                        {
                             m.SendLocalizedMessage(1063343); // Only males can wear this.
+                        }
                         else
+                        {
                             m.SendMessage("You may not wear this.");
+                        }
 
                         m.AddToBackpack(armor);
                     }
@@ -1545,11 +1550,6 @@ namespace Server.Items
                 if (IsVvVItem && !Engines.VvV.ViceVsVirtueSystem.IsVvV(from))
                 {
                     from.SendLocalizedMessage(1155496); // This item can only be used by VvV participants!
-                    return false;
-                }
-
-                if (!RaceDefinitions.ValidateEquipment(from, this))
-                {
                     return false;
                 }
 

@@ -36,7 +36,6 @@ namespace Server.Engines.Craft
         WeatheredBronzeFairySculpture = 460,
         WeatheredBronzeGlobeSculpture = 461,
         WeatheredBronzeManOnABench = 462,
-        EnchantedPicnicBasket = 464,
         Telescope = 465,
         BarbedWhip = 466,
         SpikedWhip = 467,
@@ -44,8 +43,6 @@ namespace Server.Engines.Craft
        
         RotWormStew = 500, // DefCooking
         ElvenQuiver = 501, // DefTailoring
-        QuiverOfFire = 502, // DefTailoring
-        QuiverOfIce = 503, // DefTailoring
         QuiverOfBlight = 504, // DefTailoring
         QuiverOfLightning = 505, // DefTailoring
         JesterShoes = 560, // DefTailoring

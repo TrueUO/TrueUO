@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
 using System;
-using Server.Services.BasketWeaving.Baskets;
 
 namespace Server.Engines.Craft
 {
@@ -177,69 +176,7 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(SoftenedReeds), 1044042, 1112249, 75.0, 100.0, typeof(DryReeds), 1112248, 1, 1112250);
             AddRes(index, typeof(ScouringToxin), 1112292, 2, 1112326);
-            SetRequiresBasketWeaving(index);
             SetRequireResTarget(index);
-
-            index = AddCraft(typeof(RoundBasket), 1044042, 1112293, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 2, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 3, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(RoundBasketHandles), 1044042, 1112357, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 2, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 3, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(SmallBushel), 1044042, 1112337, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 1, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 2, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(PicnicBasket2), 1044042, 1023706, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 1, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 2, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(WinnowingBasket), 1044042, 1026274, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 2, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 3, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(SquareBasket), 1044042, 1112295, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 2, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 3, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(BasketCraftable), 1044042, 1022448, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 2, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 3, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(TallRoundBasket), 1044042, 1112297, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 3, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 4, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(SmallSquareBasket), 1044042, 1112296, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 1, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 2, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(TallBasket), 1044042, 1112299, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 3, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 4, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(SmallRoundBasket), 1044042, 1112298, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 1, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 2, 1044351);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
-
-            index = AddCraft(typeof(EnchantedPicnicBasket), 1044042, 1158333, 75.0, 100.0, typeof(SoftenedReeds), 1112249, 2, 1112251);
-            AddRes(index, typeof(Shaft), 1027125, 3, 1044351);
-            AddRecipe(index, (int)CraftRecipes.EnchantedPicnicBasket);
-            SetRequireResTarget(index);
-            SetRequiresBasketWeaving(index);
             #endregion
 
             #region Tools
