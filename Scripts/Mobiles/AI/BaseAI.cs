@@ -15,18 +15,13 @@ namespace Server.Mobiles
     {
         AI_Use_Default,
         AI_Melee,
-        AI_UNUSED1,
         AI_Archer,
         AI_Healer,
         AI_Vendor,
         AI_Mage,
-        AI_UNUSED2,
-        AI_UNUSED3,
-        AI_UNUSED4,
         AI_NecroMage,
         AI_OrcScout,
         AI_Spellbinder,
-        AI_UNUSED5,
         AI_Samurai,
         AI_Ninja,
         AI_Spellweaving,
@@ -239,14 +234,7 @@ namespace Server.Mobiles
                         list.Add(new InternalEntry(from, 6113, 14, m_Mobile, this, OrderType.Transfer)); // Transfer
                     }
 
-                    list.Add(
-                        new InternalEntry(
-                            from,
-                            m_Mobile is BaseHire ? 6129 : 6118,
-                            14,
-                            m_Mobile,
-                            this,
-                            OrderType.Release)); // Dismiss / Release
+                    list.Add(new InternalEntry(from, m_Mobile is BaseHire ? 6129 : 6118, 14, m_Mobile, this, OrderType.Release)); // Dismiss / Release
                 }
                 else if (m_Mobile.IsPetFriend(from))
                 {
@@ -324,13 +312,10 @@ namespace Server.Mobiles
                 return;
             }
 
-            if (order == OrderType.Attack && target is BaseCreature bc)
+            if (order == OrderType.Attack && target is BaseCreature bc && bc.IsScaryToPets && m_Mobile.IsScaredOfScaryThings)
             {
-                if (bc.IsScaryToPets && m_Mobile.IsScaredOfScaryThings)
-                {
-                    m_Mobile.SayTo(from, "Your pet refuses to attack this creature!");
-                    return;
-                }
+                m_Mobile.SayTo(from, "Your pet refuses to attack this creature!");
+                return;
             }
 
             if (m_Mobile.CheckControlChance(from))
@@ -361,7 +346,7 @@ namespace Server.Mobiles
             SkillName.Parry, SkillName.Healing, SkillName.Hiding, SkillName.Stealing, SkillName.Alchemy, SkillName.AnimalLore,
             SkillName.ItemID, SkillName.ArmsLore, SkillName.Begging, SkillName.Blacksmith, SkillName.Fletching,
             SkillName.Peacemaking, SkillName.Camping, SkillName.Carpentry, SkillName.Cartography, SkillName.Cooking,
-            SkillName.DetectHidden, SkillName.Discordance, //??
+            SkillName.DetectHidden, SkillName.Discordance, 
 			SkillName.EvalInt, SkillName.Fishing, SkillName.Provocation, SkillName.Lockpicking, SkillName.Magery,
             SkillName.MagicResist, SkillName.Tactics, SkillName.Snooping, SkillName.RemoveTrap, SkillName.Musicianship,
             SkillName.Poisoning, SkillName.Archery, SkillName.SpiritSpeak, SkillName.Tailoring, SkillName.AnimalTaming,

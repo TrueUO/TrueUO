@@ -96,8 +96,6 @@ namespace Server.Mobiles
         Green,
         White,
         Blue,
-        MedusaLight,
-        MedusaDark,
         All
     }
 
@@ -1255,12 +1253,9 @@ namespace Server.Mobiles
                 return false;
             }
 
-            if (Combatant != m)
+            if (Combatant != m && TransformationSpellHelper.UnderTransformation(m, typeof(EtherealVoyageSpell)))
             {
-                if (TransformationSpellHelper.UnderTransformation(m, typeof(EtherealVoyageSpell)))
-                {
-                    return false;
-                }
+                return false;
             }
 
             if (Tribe != TribeType.None && IsTribeEnemy(m))

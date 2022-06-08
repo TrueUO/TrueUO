@@ -798,7 +798,9 @@ namespace Server.Items
                 if (house == null || !house.IsLockedDown(this))
                 {
                     if (message)
+                    {
                         from.SendLocalizedMessage(502946, "", 0x59); // That belongs to someone else.
+                    }
 
                     return false;
                 }
@@ -807,7 +809,9 @@ namespace Server.Items
             if (from.Map != Map || !from.InRange(GetWorldLocation(), 2) || !from.InLOS(this))
             {
                 if (message)
+                {
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+                }
 
                 return false;
             }
@@ -902,14 +906,11 @@ namespace Server.Items
                     from.SendLocalizedMessage(1010089); // You fill the container with water.
                 }
             }
-            else if (targ is Cow cow)
+            else if (targ is Cow cow && cow.TryMilk(from))
             {
-                if (cow.TryMilk(from))
-                {
-                    Content = BeverageType.Milk;
-                    Quantity = MaxQuantity;
-                    from.SendLocalizedMessage(1080197); // You fill the container with milk.
-                }
+                Content = BeverageType.Milk;
+                Quantity = MaxQuantity;
+                from.SendLocalizedMessage(1080197); // You fill the container with milk.
             }
         }
 
@@ -1072,7 +1073,9 @@ namespace Server.Items
             else if (from == targ)
             {
                 if (from.Thirst < 20)
+                {
                     from.Thirst += 1;
+                }
 
                 if (ContainsAlchohol)
                 {

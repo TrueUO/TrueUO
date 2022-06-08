@@ -977,9 +977,9 @@ namespace Server.Custom
             return list;
         }
 
-        public override void OnResponse(NetState state, RelayInfo info)
+        public override void OnResponse(NetState sender, RelayInfo info)
         {
-            Mobile m = state.Mobile;
+            Mobile m = sender.Mobile;
             int x = info.ButtonID;
             TextRelay tr1 = info.GetTextEntry(1);
             TextRelay tr2 = info.GetTextEntry(2);
