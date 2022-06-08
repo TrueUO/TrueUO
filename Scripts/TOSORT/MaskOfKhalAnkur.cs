@@ -1,11 +1,13 @@
 using Server.Spells;
 using Server.Spells.Seventh;
 using System;
+using Server.Engines.Craft;
 
 namespace Server.Items
 {
-    public class MaskOfKhalAnkur : BaseHat
+    public class MaskOfKhalAnkur : BaseHat, IRepairable
     {
+        public CraftSystem RepairSystem => DefTailoring.CraftSystem;
         public override bool IsArtifact => true;
         public override int LabelNumber => 1158701;  // Mask of Khal Ankur
 
@@ -23,7 +25,9 @@ namespace Server.Items
                 m_Charges = value;
 
                 if (m_Charges == 0)
+                {
                     StartTimer();
+                }
 
                 InvalidateProperties();
             }
@@ -148,7 +152,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
+            writer.Write(1);
 
             writer.Write(m_Charges);
             writer.Write(ChargeTime);
@@ -157,7 +161,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            reader.ReadInt();
+            int version = reader.ReadInt();
 
             m_Charges = reader.ReadInt();
             ChargeTime = reader.ReadInt();
