@@ -26,7 +26,7 @@ namespace Server.Spells
         private readonly SpellInfo m_Info;
         private SpellState m_State;
         private long m_CastTime;
-        private IDamageable m_InstantTarget;
+        private IEntity m_InstantTarget;
 
         public int ID => SpellRegistry.GetRegistryNumber(this);
 
@@ -40,7 +40,7 @@ namespace Server.Spells
         public Item Scroll => m_Scroll;
         public long CastTime => m_CastTime;
 
-        public IDamageable InstantTarget { get => m_InstantTarget; set => m_InstantTarget = value; }
+        public IEntity InstantTarget { get => m_InstantTarget; set => m_InstantTarget = value; }
 
         public bool Disturbed { get; set; }
 
