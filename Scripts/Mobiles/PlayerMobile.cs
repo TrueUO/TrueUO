@@ -826,6 +826,11 @@ namespace Server.Mobiles
 
             from.TargetLocked = true;
 
+            if (e.SkillID == 22)
+            {
+                Provocation.DeferredSecondaryTarget = true;
+            }
+
             if (e.SkillID == 35)
             {
                 AnimalTaming.DisableMessage = true;
@@ -835,6 +840,11 @@ namespace Server.Mobiles
             if (from.UseSkill(e.SkillID))
             {
                 from.Target?.Invoke(from, target);
+            }
+
+            if (e.SkillID == 22)
+            {
+                Provocation.DeferredSecondaryTarget = false;
             }
 
             if (e.SkillID == 35)
