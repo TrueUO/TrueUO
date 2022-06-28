@@ -1854,13 +1854,14 @@ namespace Server.Items
         /// <param name="minBudget"></param>
         /// <param name="maxBudget"></param>
         /// <param name="map"></param>
+        /// <param name="finder">if treasuyre chest then finder is populated</param>
         /// <returns></returns>
-        public static bool GenerateRandomItem(Item item, int luck, int minBudget, int maxBudget, Map map)
+        public static bool GenerateRandomItem(Item item, int luck, int minBudget, int maxBudget, Map map, Mobile finder = null)
         {
             if (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat)
             {
                 int budget = Utility.RandomMinMax(minBudget, maxBudget);
-                GenerateRandomItem(item, null, budget, LootPack.GetLuckChance(luck), ReforgedPrefix.None, ReforgedSuffix.None, map);
+                GenerateRandomItem(item, finder, budget, LootPack.GetLuckChance(luck), ReforgedPrefix.None, ReforgedSuffix.None, map);
                 return true;
             }
             return false;

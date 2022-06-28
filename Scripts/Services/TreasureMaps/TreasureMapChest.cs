@@ -238,7 +238,7 @@ namespace Server.Items
                         int min, max;
                         GetRandomItemStat(out min, out max, propsScale);
 
-                        RunicReforging.GenerateRandomItem(item, luck, min, max, map);
+                        RunicReforging.GenerateRandomItem(item, luck, min, max, map, from);
 
                         cont.DropItem(item);
                     }

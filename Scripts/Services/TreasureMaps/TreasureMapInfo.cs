@@ -1022,7 +1022,7 @@ namespace Server.Items
 
                 if (item != null)
                 {
-                    RunicReforging.GenerateRandomItem(item, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map);
+                    RunicReforging.GenerateRandomItem(item, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map, from);
                     chest.DropItem(item);
                 }
             }
