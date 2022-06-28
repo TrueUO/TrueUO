@@ -77,7 +77,7 @@ namespace Server.Items
 
             if (!allowableSpecial)
             {
-                system = CraftSystem.GetSystem(item.GetType());                
+                system = CraftSystem.GetSystem(item.GetType());
             }
             else
             {
@@ -941,30 +941,12 @@ namespace Server.Items
 
         public static int Scale(int min, int max, int perclow, int perchigh, int luckchance, bool reforged)
         {
-            int percent;
-
-            if (reforged)
-            {
-                percent = Utility.RandomMinMax(perclow, perchigh);
-            }
-            else
-            {
-                percent = Utility.RandomMinMax(0, perchigh);
-            }
-
+            decimal percent = Utility.RandomMinMax(perclow, perchigh);
             if (LootPack.CheckLuck(luckchance))
                 percent += 10;
+            percent = percent > perchigh ? perchigh : percent;
 
-            if (percent < perclow) percent = perclow;
-            if (percent > perchigh) percent = perchigh;
-
-            int scaledBy = Math.Abs(min - max) + 1;
-
-            scaledBy = 10000 / scaledBy;
-
-            percent *= 10000 + scaledBy;
-
-            return min + (max - min) * percent / 1000001;
+            return Convert.ToInt32(Math.Round(((max - min) * percent / 100) + min));
         }
 
         private static int CalculateValue(Item item, object attribute, int min, int max, int perclow, int perchigh, ref int budget, int luckchance)
@@ -1938,18 +1920,23 @@ namespace Server.Items
 
                     int divisor = GetDivisor(basebudget);
 
-                    double perc = 0.0;
-                    double highest = 0.0;
+                    int luckyRandom = 10000;
+                    int rerolls = 1 + rawLuck / 600;
+                    double percOfFreeRoll = (double)(rawLuck % 600) / 600;
 
-                    for (int i = 0; i < 1 + rawLuck / 600; i++)
+                    for (int i = 0; i < rerolls; i++)
                     {
-                        perc = (100.0 - Math.Sqrt(Utility.RandomMinMax(0, 10000))) / 100.0;
+                        int newRandom = Utility.RandomMinMax(0, luckyRandom);
+                        luckyRandom = newRandom;
 
-                        if (perc > highest)
-                            highest = perc;
+                        if (i == rerolls - 1)
+                        {
+                            newRandom = Utility.RandomMinMax(0, luckyRandom);
+                            luckyRandom = luckyRandom + (int)((newRandom - luckyRandom) * percOfFreeRoll);
+                        }
                     }
 
-                    perc = highest;
+                    double perc = (100.0 - Math.Sqrt(luckyRandom)) / 100.0;
 
                     if (perc > 1.0) perc = 1.0;
                     int toAdd = Math.Min(500, RandomItemGenerator.MaxAdjustedBudget - basebudget);
@@ -1977,12 +1964,13 @@ namespace Server.Items
                     if (forcedsuffix == ReforgedSuffix.None && budget >= Utility.Random(2700))
                         suffix = ChooseRandomSuffix(item, budget, prefix);
 
+
                     if (!IsPowerful(budget))
                     {
                         mods = Math.Max(1, GetProperties(5));
 
-                        perchigh = Math.Max(50, Math.Min(500, budget) / mods);
-                        perclow = Math.Max(20, perchigh / 3);
+                        perchigh = Math.Max(50, Math.Min(550, budget) / mods);
+                        perclow = Math.Max(20, (int)(perchigh / 3 * perc));
                     }
                     else
                     {
@@ -1992,7 +1980,7 @@ namespace Server.Items
                         mods = Math.Max(minmods, GetProperties(maxmods));
 
                         perchigh = 100;
-                        perclow = Utility.RandomMinMax(50, 70);
+                        perclow = (int)(Utility.RandomMinMax(50, 70) * perc);
                     }
 
                     if (perchigh > 100) perchigh = 100;
@@ -2749,7 +2737,7 @@ namespace Server.Items
             if (item is BaseArmor armor)
                 return armor.WeaponAttributes;
 
-            if(item is BaseClothing clothing)
+            if (item is BaseClothing clothing)
                 return clothing.WeaponAttributes;
 
             return null;
