@@ -1970,7 +1970,7 @@ namespace Server.Items
                         mods = Math.Max(1, GetProperties(5));
 
                         perchigh = Math.Max(50, Math.Min(550, budget) / mods);
-                        perclow = Math.Max(20, (int)(perchigh / 3 * perc));
+                        perclow = Math.Max(20, Convert.ToInt32(perchigh / 3 * perc));
                     }
                     else
                     {
@@ -1980,7 +1980,7 @@ namespace Server.Items
                         mods = Math.Max(minmods, GetProperties(maxmods));
 
                         perchigh = 100;
-                        perclow = (int)(Utility.RandomMinMax(50, 70) * perc);
+                        perclow = Convert.ToInt32(Utility.RandomMinMax(50, 70) * perc);
                     }
 
                     if (perchigh > 100) perchigh = 100;
