@@ -266,6 +266,8 @@ namespace Server.Mobiles
         private IDamageable m_ControlTarget; // My target mobile
         private Point3D m_ControlDest; // My target destination (patrol)
         private OrderType m_ControlOrder; // My order
+        private bool m_isGuarding; // My control protector
+        private bool m_isFollowing; // My control protector
 
         private int m_Loyalty;
 
@@ -2543,7 +2545,7 @@ namespace Server.Mobiles
                 if (m_bSummoned)
                 {
                     m_SummonEnd = reader.ReadDeltaTime();
-                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete()); 
+                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete());
                 }
 
                 m_iControlSlots = reader.ReadInt();
@@ -2829,8 +2831,8 @@ namespace Server.Mobiles
         private static readonly Type[] m_Meat =
         {
             typeof(Bacon), typeof(CookedBird), typeof(Sausage), typeof(Ham), typeof(Ribs), typeof(LambLeg), typeof(ChickenLeg),
-            typeof(RawBird), typeof(RawRibs), typeof(RawLambLeg), typeof(RawChickenLeg), 
-			typeof(Head), typeof(LeftArm), typeof(LeftLeg), typeof(Torso), typeof(RightArm), typeof(RightLeg)
+            typeof(RawBird), typeof(RawRibs), typeof(RawLambLeg), typeof(RawChickenLeg),
+            typeof(Head), typeof(LeftArm), typeof(LeftLeg), typeof(Torso), typeof(RightArm), typeof(RightLeg)
         };
 
         private static readonly Type[] m_FruitsAndVegies =
@@ -3023,7 +3025,7 @@ namespace Server.Mobiles
             {
                 canDrop = true;
             }
-            
+
             if (!canDrop && !from.InRange(Location, 2) && base.OnDragDrop(from, dropped))
             {
                 return true;
@@ -3415,6 +3417,38 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D ControlDest { get => m_ControlDest; set => m_ControlDest = value; }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public virtual Boolean IsFollowing { get => m_isFollowing; set => m_isFollowing = value; }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public virtual Boolean IsGuarding
+        {
+            get => m_isGuarding;
+            set
+            {
+                m_isGuarding = value;
+
+                if (IsGuarding)
+                {
+                    CurrentSpeed = ActiveSpeed;
+                    PlaySound(GetIdleSound());
+                    Warmode = true;
+                    string petname = $"{Name}";
+                    ControlMaster.SendLocalizedMessage(1049671, petname); //~1_PETNAME~ is now guarding you.
+                    if (m_AI != null)
+                    {
+                        m_AI.OnCurrentOrderChanged();
+                    }
+                    InvalidateProperties();
+
+                    if (m_ControlMaster != null)
+                    {
+                        m_ControlMaster.InvalidateProperties();
+                    }
+                }
+            }
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual OrderType ControlOrder
@@ -5161,7 +5195,7 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            if (m_ControlOrder == OrderType.Guard)
+            if (m_isGuarding)
             {
                 list.Add(1080078); // guarding
             }
@@ -5356,7 +5390,7 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual bool IsAggressiveMonster => IsMonster && ( m_FightMode == FightMode.Closest || m_FightMode == FightMode.Strongest || m_FightMode == FightMode.Weakest || m_FightMode == FightMode.Good);
+        public virtual bool IsAggressiveMonster => IsMonster && (m_FightMode == FightMode.Closest || m_FightMode == FightMode.Strongest || m_FightMode == FightMode.Weakest || m_FightMode == FightMode.Good);
 
         public List<DamageStore> LootingRights { get; set; }
 
@@ -7003,7 +7037,7 @@ namespace Server.Mobiles
                 {
                     if (!onlyBonded || pet.IsBonded)
                     {
-                        if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
+                        if (pet.IsGuarding || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
                         {
                             move.Add(pet);
                         }
