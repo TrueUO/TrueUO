@@ -24,9 +24,9 @@ namespace Server.Engines.Despise
             {
                 default:
                     {
-                        if (m_Creature.ControlOrder != OrderType.Follow)
+                        if (m_Creature.ControlOrder != LastOrderType.Follow)
                         {
-                            m_Creature.ControlOrder = OrderType.Follow;
+                            m_Creature.ControlOrder = LastOrderType.Follow;
                         }
 
                         DoOrderFollow();
@@ -36,9 +36,9 @@ namespace Server.Engines.Despise
                     {
                         if (m_Creature.Combatant != null)
                         {
-                            if (m_Creature.ControlOrder == OrderType.Follow)
+                            if (m_Creature.ControlOrder == LastOrderType.Follow)
                             {
-                                m_Creature.ControlOrder = OrderType.Attack;
+                                m_Creature.ControlOrder = LastOrderType.Attack;
                                 Action = ActionType.Combat;
                             }
 
@@ -71,7 +71,7 @@ namespace Server.Engines.Despise
                             if (closest != null)
                             {
                                 m_Creature.ControlTarget = closest;
-                                m_Creature.ControlOrder = OrderType.Attack;
+                                m_Creature.ControlOrder = LastOrderType.Attack;
                                 m_Creature.Combatant = closest;
                                 m_Creature.DebugSay("But -that- is not dead. Here we go again...");
 
@@ -86,9 +86,9 @@ namespace Server.Engines.Despise
                     {
                         if (m_Creature.Combatant != null)
                         {
-                            if (m_Creature.ControlOrder == OrderType.Follow)
+                            if (m_Creature.ControlOrder == LastOrderType.Follow)
                             {
-                                m_Creature.ControlOrder = OrderType.Attack;
+                                m_Creature.ControlOrder = LastOrderType.Attack;
                                 Action = ActionType.Combat;
                             }
 
@@ -103,7 +103,7 @@ namespace Server.Engines.Despise
                             if (m_Creature.Debug)
                                 m_Creature.DebugSay("I have detected {0}, attacking", m_Creature.FocusMob.Name);
 
-                            m_Creature.ControlOrder = OrderType.Attack;
+                            m_Creature.ControlOrder = LastOrderType.Attack;
                             m_Creature.Combatant = m_Creature.FocusMob;
 
                             Action = ActionType.Combat;
@@ -114,9 +114,9 @@ namespace Server.Engines.Despise
 
             if (m_Creature.Combatant == null)
             {
-                if (m_Creature.ControlOrder != OrderType.Follow)
+                if (m_Creature.ControlOrder != LastOrderType.Follow)
                 {
-                    m_Creature.ControlOrder = OrderType.Follow;
+                    m_Creature.ControlOrder = LastOrderType.Follow;
                 }
 
                 m_Creature.ControlTarget = m_Creature.ControlMaster;
@@ -254,9 +254,9 @@ namespace Server.Engines.Despise
             {
                 default:
                     {
-                        if (m_Creature.ControlOrder != OrderType.Follow)
+                        if (m_Creature.ControlOrder != LastOrderType.Follow)
                         {
-                            m_Creature.ControlOrder = OrderType.Follow;
+                            m_Creature.ControlOrder = LastOrderType.Follow;
                         }
 
                         DoOrderFollow();
@@ -266,9 +266,9 @@ namespace Server.Engines.Despise
                     {
                         if (m_Creature.Combatant != null)
                         {
-                            if (m_Creature.ControlOrder == OrderType.Follow)
+                            if (m_Creature.ControlOrder == LastOrderType.Follow)
                             {
-                                m_Creature.ControlOrder = OrderType.Attack;
+                                m_Creature.ControlOrder = LastOrderType.Attack;
                                 Action = ActionType.Combat;
                             }
 
@@ -301,7 +301,7 @@ namespace Server.Engines.Despise
                             if (closest != null)
                             {
                                 m_Creature.ControlTarget = closest;
-                                m_Creature.ControlOrder = OrderType.Attack;
+                                m_Creature.ControlOrder = LastOrderType.Attack;
                                 m_Creature.Combatant = closest;
                                 m_Creature.DebugSay("But -that- is not dead. Here we go again...");
 
@@ -316,9 +316,9 @@ namespace Server.Engines.Despise
                     {
                         if (m_Creature.Combatant != null)
                         {
-                            if (m_Creature.ControlOrder == OrderType.Follow)
+                            if (m_Creature.ControlOrder == LastOrderType.Follow)
                             {
-                                m_Creature.ControlOrder = OrderType.Attack;
+                                m_Creature.ControlOrder = LastOrderType.Attack;
                                 Action = ActionType.Combat;
                             }
 
@@ -333,7 +333,7 @@ namespace Server.Engines.Despise
                             if (m_Creature.Debug)
                                 m_Creature.DebugSay("I have detected {0}, attacking", m_Creature.FocusMob.Name);
 
-                            m_Creature.ControlOrder = OrderType.Attack;
+                            m_Creature.ControlOrder = LastOrderType.Attack;
                             m_Creature.Combatant = m_Creature.FocusMob;
 
                             Action = ActionType.Combat;
@@ -344,9 +344,9 @@ namespace Server.Engines.Despise
 
             if (m_Creature.Combatant == null)
             {
-                if (m_Creature.ControlOrder != OrderType.Follow)
+                if (m_Creature.ControlOrder != LastOrderType.Follow)
                 {
-                    m_Creature.ControlOrder = OrderType.Follow;
+                    m_Creature.ControlOrder = LastOrderType.Follow;
                 }
 
                 m_Creature.ControlTarget = m_Creature.ControlMaster;

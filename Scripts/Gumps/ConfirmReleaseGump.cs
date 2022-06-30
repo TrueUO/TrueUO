@@ -54,7 +54,7 @@ namespace Server.Gumps
                     if (m_Pet.Map == m_From.Map && m_Pet.InRange(m_From, 14))
                     {
                         m_Pet.ControlTarget = null;
-                        m_Pet.ControlOrder = OrderType.Release;
+                        m_Pet.ControlOrder = LastOrderType.Release;
                     }
                 }
             }

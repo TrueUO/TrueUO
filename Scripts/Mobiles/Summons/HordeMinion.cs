@@ -17,9 +17,9 @@ namespace Server.Mobiles
         public override bool CanAutoStable => Backpack == null || Backpack.Items.Count == 0;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public override OrderType ControlOrder
+        public override LastOrderType ControlOrder
         {
-            get { return OrderType.Come; }
+            get { return LastOrderType.Come; }
             set { }
         }
 

@@ -467,7 +467,7 @@ namespace Server.Misc
                         return Notoriety.Innocent;
                     }
 
-                    if (bc.Controlled && bc.IsGuarding && bc.ControlTarget == source)
+                    if (bc.Controlled && bc.GuardMode == GuardType.Guarding && bc.ControlTarget == source)
                     {
                         return Notoriety.CanBeAttacked;
                     }
