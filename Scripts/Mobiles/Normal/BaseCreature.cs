@@ -40,7 +40,7 @@ namespace Server.Mobiles
         Evil, // Only attack aggressor -or- negative karma
         Good // Only attack aggressor -or- positive karma
     }
-
+    [Flags]
     public enum LastOrderType
     {
         None = 0, //When no order, let's roam
@@ -60,11 +60,13 @@ namespace Server.Mobiles
         Stop = 11, //"(All/Name) stop Cancels any current orders to attack, guard or follow.
         Transfer = 12 //"(Name) transfer" Transfers complete ownership to targeted player.
     }
+    [Flags]
     public enum GuardType
     {
         Passive = 0, //Wont protect owner
         Active = 6 //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
     }
+    [Flags]
     public enum MovementType
     {
         Roam = 0, //No Actions

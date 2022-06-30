@@ -884,7 +884,7 @@ namespace Server.Mobiles
 
         public virtual void OnAggressiveAction(Mobile aggressor)
         {
-            if (m_Mobile.Controlled && m_Mobile.ControlOrder == LastOrderType.Attack)
+            if (m_Mobile.Controlled && m_Mobile.PetAction == PetActionType.Attack)
             {
                 return;
             }

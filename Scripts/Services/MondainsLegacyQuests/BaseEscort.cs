@@ -272,7 +272,7 @@ namespace Server.Engines.Quests
             }
             else
             {
-                if (ControlOrder != LastOrderType.Follow)
+                if (MovementMode != MovementType.Follow)
                     StartFollow(master);
 
                 LastSeenEscorter = DateTime.UtcNow;

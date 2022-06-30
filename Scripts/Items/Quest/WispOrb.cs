@@ -493,7 +493,7 @@ namespace Server.Engines.Despise
 
         public bool IsFollowing()
         {
-            return (int)m_Pet.GetDistanceToSqrt(GetAnchorLocation()) > m_Pet.GetLeashLength() + 1 && m_Pet.ControlOrder == LastOrderType.Follow;
+            return (int)m_Pet.GetDistanceToSqrt(GetAnchorLocation()) > m_Pet.GetLeashLength() + 1 && m_Pet.MovementMode == MovementType.Follow;
         }
 
         public override void Delete()
