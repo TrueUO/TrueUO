@@ -290,7 +290,7 @@ namespace Server.Menus.Questions
 
                 foreach (var m in fromMap.GetMobilesInRange(fromLoc, 3))
                 {
-                    if (m is BaseCreature bc && (bc.Controlled && bc.ControlMaster == m_Mobile && bc.GuardMode == GuardType.Active || bc.ControlOrder == LastOrderType.Follow || bc.ControlOrder == LastOrderType.Come))
+                    if (m is BaseCreature bc && (bc.Controlled && bc.ControlMaster == m_Mobile && bc.GuardMode == GuardType.Active || bc.MovementMode == MovementType.Follow || bc.PetAction== PetActionType.Come))
                     {
                         move.Add(bc);
                     }

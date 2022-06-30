@@ -19,7 +19,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public override LastOrderType ControlOrder
         {
-            get { return LastOrderType.Come; }
+            get { return LastOrderType.Follow; }
             set { }
         }
 
