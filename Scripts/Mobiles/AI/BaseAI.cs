@@ -1450,8 +1450,15 @@ namespace Server.Mobiles
             }
             else if (m_Mobile.ControlTarget != null && !m_Mobile.ControlTarget.Deleted && m_Mobile.ControlTarget != m_Mobile || m_Mobile.ControlMaster != null && !m_Mobile.ControlMaster.Deleted)
             {
-                if (m_Mobile.ControlTarget != null && m_Mobile.ControlTarget.Deleted)
+                if (m_Mobile.ControlTarget == null && m_Mobile.ControlMaster != null)
+                {
                     m_Mobile.ControlTarget = m_Mobile.ControlMaster;
+                }
+                else if (m_Mobile.ControlTarget == null)
+                {
+                    m_Mobile.MovementMode = MovementType.Roam;
+                    return true;
+                }
 
                 int iCurrDist = (int)m_Mobile.GetDistanceToSqrt(m_Mobile.ControlTarget);
 
