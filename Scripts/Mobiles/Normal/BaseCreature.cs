@@ -63,7 +63,7 @@ namespace Server.Mobiles
     public enum GuardType
     {
         Passive = 0, //Wont protect owner
-        Guarding = 6 //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
+        Active = 6 //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
     }
     public enum MovementType
     {
@@ -4283,7 +4283,7 @@ namespace Server.Mobiles
 
             if (m_AI != null)
             {
-                if (GuardMode == GuardType.Guarding)
+                if (GuardMode == GuardType.Active)
                 {
                     m_AI.OnAggressiveAction(aggressor);
                 }
@@ -4298,7 +4298,7 @@ namespace Server.Mobiles
             //StopFlee();
             ForceReacquire();
 
-            if (aggressor.ChangingCombatant && (m_bControlled || m_bSummoned) && GuardMode == GuardType.Guarding)
+            if (aggressor.ChangingCombatant && (m_bControlled || m_bSummoned) && GuardMode == GuardType.Active)
             {
                 ControlTarget = aggressor;
                // PetAction = PetActionType.Attack;
@@ -5245,7 +5245,7 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            if (GuardMode == GuardType.Guarding)
+            if (GuardMode == GuardType.Active)
             {
 //                list.Add(1080078); // guarding
             }
@@ -7094,7 +7094,7 @@ namespace Server.Mobiles
                 {
                     if (!onlyBonded || pet.IsBonded)
                     {
-                        if (pet.GuardMode == GuardType.Guarding || pet.MovementMode == MovementType.Follow || pet.PetAction == PetActionType.Come)
+                        if (pet.GuardMode == GuardType.Active || pet.MovementMode == MovementType.Follow || pet.PetAction == PetActionType.Come)
                         {
                             move.Add(pet);
                         }

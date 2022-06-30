@@ -4812,7 +4812,7 @@ namespace Server.Mobiles
 
             for (int i = AllFollowers.Count - 1; i >= 0; i--)
             {
-                if (AllFollowers[i] is BaseCreature c && c.GuardMode == GuardType.Guarding)
+                if (AllFollowers[i] is BaseCreature c && c.GuardMode == GuardType.Active)
                 {
                     list.Add(501129); // guarded
                     break;

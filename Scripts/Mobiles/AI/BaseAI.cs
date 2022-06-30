@@ -128,7 +128,7 @@ namespace Server.Mobiles
                 m_AI = ai;
                 m_Order = order;
 
-                if (mobile.IsDeadPet && (mobile.GuardMode == GuardType.Guarding || order == LastOrderType.Attack || order == LastOrderType.Transfer || order == LastOrderType.Drop))
+                if (mobile.IsDeadPet && (mobile.GuardMode == GuardType.Active || order == LastOrderType.Attack || order == LastOrderType.Transfer || order == LastOrderType.Drop))
                 {
                     Enabled = false;
                 }
@@ -143,7 +143,7 @@ namespace Server.Mobiles
                         m_From.RevealingAction();
                     }
 
-                    if (m_Mobile.IsDeadPet && (m_Mobile.GuardMode == GuardType.Guarding || m_Order == LastOrderType.Attack || m_Order == LastOrderType.Transfer || m_Order == LastOrderType.Drop))
+                    if (m_Mobile.IsDeadPet && (m_Mobile.GuardMode == GuardType.Active || m_Order == LastOrderType.Attack || m_Order == LastOrderType.Transfer || m_Order == LastOrderType.Drop))
                     {
                         return;
                     }
@@ -690,7 +690,7 @@ namespace Server.Mobiles
 
                                     if (!m_Mobile.IsDeadPet && WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
-                                        m_Mobile.GuardMode = GuardType.Guarding;
+                                        m_Mobile.GuardMode = GuardType.Active;
                                     }
 
                                     return;
@@ -1202,13 +1202,13 @@ namespace Server.Mobiles
                     m_Mobile.Home = m_Mobile.Location;
                     m_Mobile.CurrentSpeed = m_Mobile.PassiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
-                    m_Mobile.Warmode = m_Mobile.GuardMode == GuardType.Guarding;
+                    m_Mobile.Warmode = m_Mobile.GuardMode == GuardType.Active;
                     m_Mobile.Combatant = null;
                     break;
                 case MovementType.Follow:
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
 
-                    m_Mobile.Warmode = m_Mobile.GuardMode == GuardType.Guarding;
+                    m_Mobile.Warmode = m_Mobile.GuardMode == GuardType.Active;
                     m_Mobile.Combatant = null;
                     m_Mobile.AdjustSpeeds();
 
@@ -1226,7 +1226,7 @@ namespace Server.Mobiles
             }
             switch (m_Mobile.GuardMode)
             {
-                case GuardType.Guarding:
+                case GuardType.Active:
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     m_Mobile.Warmode = true;
@@ -1248,7 +1248,7 @@ namespace Server.Mobiles
                     m_Mobile.AdjustSpeeds();
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
-                    m_Mobile.Warmode = m_Mobile.GuardMode == GuardType.Guarding;
+                    m_Mobile.Warmode = m_Mobile.GuardMode == GuardType.Active;
                     m_Mobile.Combatant = null;
                     break;
                 case PetActionType.Drop:
@@ -1608,7 +1608,7 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderGuard()
         {
-            if (m_Mobile.GuardMode != GuardType.Guarding || m_Mobile.IsDeadPet)
+            if (m_Mobile.GuardMode != GuardType.Active || m_Mobile.IsDeadPet)
             {
                 return false;
             }
