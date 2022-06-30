@@ -1323,7 +1323,7 @@ namespace Server.Mobiles
                 {
                     m_Mobile.DebugSay("I have lost my master. I stay here");
                     m_Mobile.ControlTarget = null;
-                    m_Mobile.ControlOrder = LastOrderType.None;
+                    m_Mobile.PetAction = PetActionType.NoAction;
                 }
                 else
                 {
@@ -1450,7 +1450,7 @@ namespace Server.Mobiles
             }
             else if (m_Mobile.ControlTarget != null && !m_Mobile.ControlTarget.Deleted && m_Mobile.ControlTarget != m_Mobile || m_Mobile.ControlMaster != null && !m_Mobile.ControlMaster.Deleted)
             {
-                if (m_Mobile.ControlTarget == null && m_Mobile.ControlMaster != null)
+                if (m_Mobile.ControlTarget == null || m_Mobile.ControlTarget.Deleted && m_Mobile.ControlMaster != null)
                 {
                     m_Mobile.ControlTarget = m_Mobile.ControlMaster;
                 }

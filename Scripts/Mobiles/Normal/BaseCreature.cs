@@ -5247,12 +5247,15 @@ namespace Server.Mobiles
 
             if (GuardMode == GuardType.Guarding)
             {
-                list.Add(1080078); // guarding
+//                list.Add(1080078); // guarding
             }
-            //list.Add(MovementMode.ToString());
-            //list.Add(GuardMode.ToString());
-            //list.Add(PetAction.ToString());
-            //list.Add(ControlOrder.ToString());
+            if (this.ControlMaster != null && this.ControlMaster.IsPlayer())
+            {
+                list.Add("Move: " + MovementMode.ToString());
+                list.Add("Guard: " + GuardMode.ToString());
+                list.Add("Action: " + PetAction.ToString());
+                list.Add("Last: " + ControlOrder.ToString());
+            }
 
             if (IsGolem)
                 list.Add(1113697); // (Golem)
@@ -6047,7 +6050,7 @@ namespace Server.Mobiles
                 ControlMaster = m;
                 Controlled = true;
                 ControlTarget = null;
-                ControlOrder = LastOrderType.Come;
+                ControlOrder = LastOrderType.Follow;
                 Guild = null;
 
                 UpdateMasteryInfo();
