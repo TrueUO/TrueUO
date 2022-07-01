@@ -3465,6 +3465,8 @@ namespace Server.Mobiles
             set
             {
                 m_Movement = value;
+                m_AI.OnCurrentMovementChanged();
+                InvalidateProperties();
             }
         }
 
@@ -3475,7 +3477,13 @@ namespace Server.Mobiles
             set
             {
                 m_GuardMode = value;
+                m_AI.OnCurrentGuardChanged();
                 InvalidateProperties();
+
+                if (m_ControlMaster != null)
+                {
+                    m_ControlMaster.InvalidateProperties();
+                }
             }
         }
 
@@ -3500,11 +3508,9 @@ namespace Server.Mobiles
                         case LastOrderType.Follow:
                         case LastOrderType.Stay:
                             MovementMode = (MovementType)(int)value;
-                            m_AI.OnCurrentMovementChanged();
                             break;
                         case LastOrderType.Guard:
                             GuardMode = (GuardType)(int)value;
-                            m_AI.OnCurrentGuardChanged();
                             break;
                         case LastOrderType.Come:
                         case LastOrderType.Drop:
@@ -3515,7 +3521,7 @@ namespace Server.Mobiles
                         case LastOrderType.Stop:
                         case LastOrderType.Transfer:
                             PetAction = (PetActionType)(int)value;
-                            //m_AI.OnCurrentPetActionChanged();
+                            m_AI.OnCurrentPetActionChanged();
                             break;
                         default:
                             break;
@@ -3523,12 +3529,6 @@ namespace Server.Mobiles
 
                 }
 
-                InvalidateProperties();
-
-                if (m_ControlMaster != null)
-                {
-                    m_ControlMaster.InvalidateProperties();
-                }
             }
         }
 
@@ -4285,7 +4285,7 @@ namespace Server.Mobiles
 
             if (m_AI != null)
             {
-                if (GuardMode == GuardType.Active)
+                if (!Controlled || m_PetAction == PetActionType.Attack || m_GuardMode == GuardType.Active)
                 {
                     m_AI.OnAggressiveAction(aggressor);
                 }
@@ -5247,11 +5247,11 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            if (GuardMode == GuardType.Active)
-            {
-//                list.Add(1080078); // guarding
-            }
-            if (this.ControlMaster != null && this.ControlMaster.IsPlayer())
+            //if (GuardMode == GuardType.Active)
+            //{
+            //     list.Add(1080078); // guarding
+            //}
+            if (this.ControlMaster != null && ControlMaster is PlayerMobile)
             {
                 list.Add("Move: " + MovementMode.ToString());
                 list.Add("Guard: " + GuardMode.ToString());

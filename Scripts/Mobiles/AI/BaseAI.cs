@@ -1166,7 +1166,8 @@ namespace Server.Mobiles
                 case PetActionType.Unfriend:
                     return DoOrderUnfriend();
                 case PetActionType.Attack:
-                    return DoOrderAttack();
+                    DoOrderAttack();    //Attack mode will persist so movement needs to process
+                    break;
                 case PetActionType.Release:
                     return DoOrderRelease();
                 case PetActionType.Stop:
@@ -1207,7 +1208,7 @@ namespace Server.Mobiles
                     break;
                 case MovementType.Follow:
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
-
+                    m_Mobile.PetAction = PetActionType.NoAction;
                     m_Mobile.Warmode = m_Mobile.GuardMode == GuardType.Active;
                     m_Mobile.Combatant = null;
                     m_Mobile.AdjustSpeeds();
@@ -1715,13 +1716,17 @@ namespace Server.Mobiles
                 return true;
             }
 
-            if (m_Mobile.ControlTarget == null || m_Mobile.ControlTarget.Deleted || m_Mobile.ControlTarget.Map != m_Mobile.Map || !m_Mobile.ControlTarget.Alive || m_Mobile.ControlTarget is Mobile mobile && mobile.IsDeadBondedPet)
+            if (m_Mobile.ControlTarget == m_Mobile.ControlMaster
+                || m_Mobile.IsPetFriend(m_Mobile.ControlTarget as Mobile)
+                || m_Mobile.ControlTarget == null
+                || m_Mobile.ControlTarget.Deleted
+                || m_Mobile.ControlTarget.Map != m_Mobile.Map
+                || !m_Mobile.ControlTarget.Alive
+                || m_Mobile.ControlTarget is Mobile mobile && mobile.IsDeadBondedPet)
             {
                 m_Mobile.DebugSay("I think he might be dead. He's not anywhere around here at least. That's cool. I'm glad he's dead.");
 
-                m_Mobile.ControlTarget = m_Mobile.ControlMaster;
-
-                if (m_Mobile.FightMode == FightMode.Closest || m_Mobile.FightMode == FightMode.Aggressor)
+                if (m_Mobile.FightMode != FightMode.None)
                 {
                     Mobile newCombatant = null;
                     double newScore = 0.0;
@@ -1759,10 +1764,10 @@ namespace Server.Mobiles
                         m_Mobile.DebugSay("But -that- is not dead. Here we go again...");
                         Think();
                     }
-                }
-                if (m_Mobile != null && m_Mobile.Combatant == null)
-                {
-                    m_Mobile.PetAction = PetActionType.NoAction;
+                    else
+                    {
+                        m_Mobile.ControlTarget = m_Mobile.ControlMaster;
+                    }
                 }
             }
             else
@@ -1772,10 +1777,8 @@ namespace Server.Mobiles
                 if (m_Mobile.Combatant != null)
                 {
                     m_Mobile.Direction = m_Mobile.GetDirectionTo(m_Mobile.Combatant);
-                    Think();
                 }
-                else
-                    m_Mobile.PetAction = PetActionType.NoAction;
+                Think();
 
             }
 
