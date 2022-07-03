@@ -4619,7 +4619,7 @@ namespace Server.Mobiles
                     }
                 }
             }
-            else if (ReacquireOnMovement)
+            else if (ReacquireOnMovement && !m.Hidden && m.Alive && (m.IsPlayer() && m is PlayerMobile || m is BaseCreature bc && (bc.Controlled || bc.Summoned)))
             {
                 ForceReacquire();
             }
@@ -5937,12 +5937,11 @@ namespace Server.Mobiles
 
         public bool GivenSpecialArtifact { get; set; }
 
-        /* To save on cpu usage, RunUO creatures only reacquire creatures under the following circumstances:
-        *  - 10 seconds have elapsed since the last time it tried
-        *  - The creature was attacked
-        *  - Some creatures, like dragons, will reacquire when they see someone move
-        *
-        * This functionality appears to be implemented on OSI as well
+        /*
+            To save on cpu usage, RunUO creatures only reacquire creatures under the following circumstances:
+            - 10 seconds have elapsed since the last time it tried
+            - The creature was attacked
+            - This functionality appears to be implemented on OSI as well
         */
 
         private long m_NextReacquireTime;
