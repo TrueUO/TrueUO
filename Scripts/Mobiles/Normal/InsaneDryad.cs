@@ -9,6 +9,7 @@ namespace Server.Mobiles
     {
         public override bool InitialInnocent => true;
         public static TimeSpan PeaceDuration => TimeSpan.FromSeconds(20);
+        public static TimeSpan DistractDuration => TimeSpan.FromSeconds(3);
 
         [Constructable]
         public MLDryad()
@@ -102,33 +103,43 @@ namespace Server.Mobiles
 
         public void AreaPeace()
         {
-            if (Combatant == null || Deleted || !Alive || m_NextPeace > DateTime.UtcNow || 0.1 < Utility.RandomDouble())
+            if (Combatant != null && !Deleted && Alive && m_NextPeace <= DateTime.UtcNow && 0.1 >= Utility.RandomDouble())
             {
+                IPooledEnumerable eable = GetMobilesInRange(RangePerception);
+
+                foreach (object o in eable)
+                {
+                    if (o is PlayerMobile p && IsValidTarget(p))
+                    {
+                        AddPeaceEffects(p);
+                    }
+                }
+
+                eable.Free();
+                m_NextPeace = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+                PlaySound(0x1D3);
                 return;
             }
-
-            IPooledEnumerable eable = GetMobilesInRange(RangePerception);
-
-            foreach (object o in eable)
-            {
-                if (o is PlayerMobile p && IsValidTarget(p))
-                {
-                    AddPeaceEffects(p);
-                }
-            }
-
-            eable.Free();
-
-            m_NextPeace = DateTime.UtcNow + TimeSpan.FromSeconds(10);
-            PlaySound(0x1D3);
+            m_NextPeace = DateTime.UtcNow + TimeSpan.FromSeconds(1);
         }
 
         public void AddPeaceEffects(PlayerMobile p)
         {
-            p.SendLocalizedMessage(1072065); // You gaze upon the dryad's beauty, and forget to continue battling!
+            TimeSpan duration = TimeSpan.Zero;
+            if (Utility.RandomBool())
+            {
+                p.SendLocalizedMessage(1072065); // You gaze upon the dryad's beauty, and forget to continue battling!
+                duration = PeaceDuration;
+            }
+            else
+            {
+                p.SendLocalizedMessage(1072066); // You gaze upon the dryad's beauty and are momentarily distracted.
+                duration = DistractDuration;
+            }
+
+
             p.FixedParticles(0x376A, 1, 20, 0x7F5, EffectLayer.Waist);
 
-            p.Warmode = false;
             p.Combatant = null;
 
             if (Peaced == null)
@@ -141,8 +152,8 @@ namespace Server.Mobiles
                 Peaced[p].Stop();
             }
 
-            p.PeacedUntil = DateTime.UtcNow + PeaceDuration;
-            Peaced[p] = Timer.DelayCall(PeaceDuration, RemoveTimer, p);
+            p.PeacedUntil = DateTime.UtcNow + duration;
+            Peaced[p] = Timer.DelayCall(duration, RemoveTimer, p);
         }
 
         public bool IsValidTarget(PlayerMobile m)
@@ -169,25 +180,25 @@ namespace Server.Mobiles
 
         public void AreaUndress()
         {
-            if (Combatant == null || Deleted || !Alive || m_NextUndress > DateTime.UtcNow || 0.05 < Utility.RandomDouble())
-                return;
-
-            IPooledEnumerable eable = GetMobilesInRange(RangePerception);
-
-            foreach (Mobile m in eable)
+            if (Combatant != null && !Deleted && Alive && m_NextUndress <= DateTime.UtcNow && 0.05 >= Utility.RandomDouble())
             {
-                if (m != null && m.Player && !m.Female && !m.Hidden && m.IsPlayer() && CanBeHarmful(m))
-                {
-                    UndressItem(m, Layer.OuterTorso);
-                    UndressItem(m, Layer.InnerTorso);
-                    UndressItem(m, Layer.MiddleTorso);
-                    UndressItem(m, Layer.Pants);
-                    UndressItem(m, Layer.Shirt);
+                IPooledEnumerable eable = GetMobilesInRange(RangePerception);
 
-                    m.SendLocalizedMessage(1072197); // The dryad's beauty makes your blood race. Your clothing is too confining.
+                foreach (Mobile m in eable)
+                {
+                    if (m != null && m.Player && !m.Hidden && m.IsPlayer() && (m.Body.IsMale || (!m.Body.IsFemale && !m.Female)) && CanBeHarmful(m))
+                    {
+                        UndressItem(m, Layer.OuterTorso);
+                        UndressItem(m, Layer.InnerTorso);
+                        UndressItem(m, Layer.MiddleTorso);
+                        UndressItem(m, Layer.Pants);
+                        UndressItem(m, Layer.Shirt);
+
+                        m.SendLocalizedMessage(1072197); // The dryad's beauty makes your blood race. Your clothing is too confining.
+                    }
                 }
+                eable.Free();
             }
-            eable.Free();
 
             m_NextUndress = DateTime.UtcNow + TimeSpan.FromMinutes(1);
         }
