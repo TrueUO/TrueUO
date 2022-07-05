@@ -99,12 +99,12 @@ namespace Server.Mobiles
 
             if (m != null && m.Player && !m.Hidden && m != this)
             {
-                if (ControlOrder == OrderType.Follow && m_NextYell < DateTime.UtcNow && m != ControlMaster && m_Announcement != null)
+                if (MovementMode == MovementType.Follow && m_NextYell < DateTime.UtcNow && m != ControlMaster && m_Announcement != null)
                 {
                     m_Announcement.Say(this, m);
                     m_NextYell = DateTime.UtcNow + YellDelay + TimeSpan.FromSeconds(Utility.RandomMinMax(-2, 2));
                 }
-                else if (ControlOrder == OrderType.Stay && m_Greeting != null)
+                else if (MovementMode == MovementType.Stay && m_Greeting != null)
                 {
                     if (m_Location != Location)
                     {
@@ -126,7 +126,7 @@ namespace Server.Mobiles
                 m_Location = Location;
             }
 
-            return m_House != null && m_House.IsOwner(owner) && ControlOrder == OrderType.Stay;
+            return m_House != null && m_House.IsOwner(owner) && MovementMode == MovementType.Stay;
         }
 
         public override void Serialize(GenericWriter writer)
@@ -398,7 +398,7 @@ namespace Server.Mobiles
                 AddButton(15, 65, 0x845, 0x846, 4, GumpButtonType.Reply, 0);
                 AddHtmlLocalized(45, 63, 450, 20, 3006246, 0x7FFF, false, false); // Set Greeting Text
 
-                if (herald.ControlOrder == OrderType.Stay)
+                if (herald.MovementMode == MovementType.Stay)
                 {
                     AddHtmlLocalized(45, 83, 450, 20, 1076138, 0x7D32, false, false); // Stay here and greet guests
 
@@ -432,13 +432,13 @@ namespace Server.Mobiles
                         break;
                     case 5:
                         {
-                            if (m_Herald.ControlOrder == OrderType.Follow)
+                            if (m_Herald.MovementMode == MovementType.Follow)
                             {
                                 BaseHouse house = BaseHouse.FindHouseAt(m_Herald);
 
                                 if (house != null && house.IsOwner(m))
                                 {
-                                    m_Herald.ControlOrder = OrderType.Stay;
+                                    m_Herald.ControlOrder = LastOrderType.Stay;
                                     m_Herald.ControlTarget = null;
                                 }
                                 else
@@ -449,9 +449,9 @@ namespace Server.Mobiles
                         }
                     case 6:
                         {
-                            if (m_Herald.ControlOrder == OrderType.Stay)
+                            if (m_Herald.MovementMode == MovementType.Stay)
                             {
-                                m_Herald.ControlOrder = OrderType.Follow;
+                                m_Herald.ControlOrder = LastOrderType.Follow;
                                 m_Herald.ControlTarget = m;
                             }
 
