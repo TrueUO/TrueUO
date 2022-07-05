@@ -40,25 +40,54 @@ namespace Server.Mobiles
         Evil, // Only attack aggressor -or- negative karma
         Good // Only attack aggressor -or- positive karma
     }
-
-    public enum OrderType
+    [Flags]
+    public enum LastOrderType
     {
-        None, //When no order, let's roam
-        Come, //"(All/Name) come"  Summons all or one pet to your location.
-        Drop, //"(Name) drop"  Drops its loot to the ground (if it carries any).
-        Follow, //"(Name) follow"  Follows targeted being.
-                //"(All/Name) follow me"  Makes all or one pet follow you.
-        Friend, //"(Name) friend"  Allows targeted player to confirm resurrection.
-        Unfriend, // Remove a friend
-        Guard, //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
-               //"(All/Name) guard me"  Makes all or one pet guard you.
-        Attack, //"(All/Name) kill",
-                //"(All/Name) attack"  All or the specified pet(s) currently under your control attack the target.
-        Patrol, //"(Name) patrol"  Roves between two or more guarded targets.
-        Release, //"(Name) release"  Releases pet back into the wild (removes "tame" status).
-        Stay, //"(All/Name) stay" All or the specified pet(s) will stop and stay in current spot.
-        Stop, //"(All/Name) stop Cancels any current orders to attack, guard or follow.
-        Transfer //"(Name) transfer" Transfers complete ownership to targeted player.
+        None = 0, //When no order, let's roam
+        Come = 1, //"(All/Name) come"  Summons all or one pet to your location.
+        Drop = 2, //"(Name) drop"  Drops its loot to the ground (if it carries any).
+        Follow = 3, //"(Name) follow"  Follows targeted being.
+                    //"(All/Name) follow me"  Makes all or one pet follow you.
+        Friend = 4, //"(Name) friend"  Allows targeted player to confirm resurrection.
+        Unfriend = 5, // Remove a friend
+        Guard = 6, //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
+                   //"(All/Name) guard me"  Makes all or one pet guard you.
+        Attack = 7, //"(All/Name) kill",
+                    //"(All/Name) attack"  All or the specified pet(s) currently under your control attack the target.
+        Patrol = 8, //"(Name) patrol"  Roves between two or more guarded targets.
+        Release = 9, //"(Name) release"  Releases pet back into the wild (removes "tame" status).
+        Stay = 10, //"(All/Name) stay" All or the specified pet(s) will stop and stay in current spot.
+        Stop = 11, //"(All/Name) stop Cancels any current orders to attack, guard or follow.
+        Transfer = 12 //"(Name) transfer" Transfers complete ownership to targeted player.
+    }
+    [Flags]
+    public enum GuardType
+    {
+        Passive = 0, //Wont protect owner
+        Active = 6 //"(Name) guard"  Makes the specified pet guard you. Pets can only guard their owner.
+    }
+    [Flags]
+    public enum MovementType
+    {
+        Roam = 0, //No Actions
+        Follow = 3, //"(Name) follow"  Follows targeted being.
+                    //"(All/Name) follow me"  Makes all or one pet follow you.
+        Patrol = 8, //"(Name) patrol"  Roves between two or more guarded targets.
+        Stay = 10 //"(All/Name) stay" All or the specified pet(s) will stop and stay in current spot.
+    }
+
+    public enum PetActionType
+    {
+        NoAction = 0, //No Actions
+        Come = 1, //"(All/Name) come"  Summons all or one pet to your location.
+        Drop = 2, //"(Name) drop"  Drops its loot to the ground (if it carries any).
+        Friend = 4, //"(Name) friend"  Allows targeted player to confirm resurrection.
+        Unfriend = 5, // Remove a friend
+        Attack = 7, //"(All/Name) kill",
+                    //"(All/Name) attack"  All or the specified pet(s) currently under your control attack the target.
+        Release = 9, //"(Name) release"  Releases pet back into the wild (removes "tame" status).
+        Stop = 11, //"(All/Name) stop Cancels any current ordiers to attack, guard or follow.
+        Transfer = 12 //"(Name) transfer" Transfers complete ownership to targeted player.
     }
 
     [Flags]
@@ -265,7 +294,10 @@ namespace Server.Mobiles
         private Mobile m_ControlMaster; // My master
         private IDamageable m_ControlTarget; // My target mobile
         private Point3D m_ControlDest; // My target destination (patrol)
-        private OrderType m_ControlOrder; // My order
+        private LastOrderType m_ControlOrder; // My order
+        private PetActionType m_PetAction; // My control protector
+        private MovementType m_Movement; // My control protector
+        private GuardType m_GuardMode; // My control protector
 
         private int m_Loyalty;
 
@@ -2216,7 +2248,7 @@ namespace Server.Mobiles
             m_bControlled = false;
             m_ControlMaster = null;
             m_ControlTarget = null;
-            m_ControlOrder = OrderType.None;
+            m_ControlOrder = LastOrderType.None;
 
             m_bTamable = false;
 
@@ -2528,7 +2560,7 @@ namespace Server.Mobiles
                 m_ControlMaster = reader.ReadMobile();
                 m_ControlTarget = reader.ReadMobile();
                 m_ControlDest = reader.ReadPoint3D();
-                m_ControlOrder = (OrderType)reader.ReadInt();
+                m_ControlOrder = (LastOrderType)reader.ReadInt();
 
                 m_dMinTameSkill = reader.ReadDouble();
 
@@ -2543,7 +2575,7 @@ namespace Server.Mobiles
                 if (m_bSummoned)
                 {
                     m_SummonEnd = reader.ReadDeltaTime();
-                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete()); 
+                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete());
                 }
 
                 m_iControlSlots = reader.ReadInt();
@@ -2555,7 +2587,7 @@ namespace Server.Mobiles
                 m_bControlled = false;
                 m_ControlMaster = null;
                 m_ControlTarget = null;
-                m_ControlOrder = OrderType.None;
+                m_ControlOrder = LastOrderType.None;
             }
 
             if (version >= 3)
@@ -2643,7 +2675,7 @@ namespace Server.Mobiles
             {
                 m_Friends = reader.ReadStrongMobileList();
             }
-            else if (version < 13 && m_ControlOrder >= OrderType.Unfriend)
+            else if (version < 13 && m_ControlOrder >= LastOrderType.Unfriend)
             {
                 ++m_ControlOrder;
             }
@@ -2829,8 +2861,8 @@ namespace Server.Mobiles
         private static readonly Type[] m_Meat =
         {
             typeof(Bacon), typeof(CookedBird), typeof(Sausage), typeof(Ham), typeof(Ribs), typeof(LambLeg), typeof(ChickenLeg),
-            typeof(RawBird), typeof(RawRibs), typeof(RawLambLeg), typeof(RawChickenLeg), 
-			typeof(Head), typeof(LeftArm), typeof(LeftLeg), typeof(Torso), typeof(RightArm), typeof(RightLeg)
+            typeof(RawBird), typeof(RawRibs), typeof(RawLambLeg), typeof(RawChickenLeg),
+            typeof(Head), typeof(LeftArm), typeof(LeftLeg), typeof(Torso), typeof(RightArm), typeof(RightLeg)
         };
 
         private static readonly Type[] m_FruitsAndVegies =
@@ -3023,7 +3055,7 @@ namespace Server.Mobiles
             {
                 canDrop = true;
             }
-            
+
             if (!canDrop && !from.InRange(Location, 2) && base.OnDragDrop(from, dropped))
             {
                 return true;
@@ -3417,29 +3449,86 @@ namespace Server.Mobiles
         public Point3D ControlDest { get => m_ControlDest; set => m_ControlDest = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual OrderType ControlOrder
+        public PetActionType PetAction
         {
-            get => m_ControlOrder;
+            get { return m_PetAction; }
             set
             {
-                m_ControlOrder = value;
+                m_PetAction = value;
+                InvalidateProperties();
+            }
+        }
 
-                if (m_Allured && m_ControlOrder != OrderType.None)
-                {
-                    Say(1079120); // Very well.
-                }
+        [CommandProperty(AccessLevel.GameMaster)]
+        public MovementType MovementMode {
+            get => m_Movement;
+            set
+            {
+                m_Movement = value;
+                m_AI.OnCurrentMovementChanged();
+                InvalidateProperties();
+            }
+        }
 
-                if (m_AI != null)
-                {
-                    m_AI.OnCurrentOrderChanged();
-                }
-
+        [CommandProperty(AccessLevel.GameMaster)]
+        public GuardType GuardMode
+        {
+            get => m_GuardMode;
+            set
+            {
+                m_GuardMode = value;
+                m_AI.OnCurrentGuardChanged();
                 InvalidateProperties();
 
                 if (m_ControlMaster != null)
                 {
                     m_ControlMaster.InvalidateProperties();
                 }
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public virtual LastOrderType ControlOrder
+        {
+            get => m_ControlOrder;
+            set
+            {
+                m_ControlOrder = value;
+
+                if (m_Allured && m_ControlOrder != LastOrderType.None)
+                {
+                    Say(1079120); // Very well.
+                }
+
+                if (m_AI != null)
+                {
+                    switch (value)
+                    {
+                        case LastOrderType.None:
+                        case LastOrderType.Follow:
+                        case LastOrderType.Stay:
+                            MovementMode = (MovementType)(int)value;
+                            break;
+                        case LastOrderType.Guard:
+                            GuardMode = (GuardType)(int)value;
+                            break;
+                        case LastOrderType.Come:
+                        case LastOrderType.Drop:
+                        case LastOrderType.Friend:
+                        case LastOrderType.Unfriend:
+                        case LastOrderType.Attack:
+                        case LastOrderType.Release:
+                        case LastOrderType.Stop:
+                        case LastOrderType.Transfer:
+                            PetAction = (PetActionType)(int)value;
+                            m_AI.OnCurrentPetActionChanged();
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
+
             }
         }
 
@@ -4194,11 +4283,9 @@ namespace Server.Mobiles
 
             base.AggressiveAction(aggressor, criminal);
 
-            OrderType ct = m_ControlOrder;
-
             if (m_AI != null)
             {
-                if (ct != OrderType.Follow && ct != OrderType.Stop && ct != OrderType.Stay)
+                if (!Controlled || m_PetAction == PetActionType.Attack || m_GuardMode == GuardType.Active)
                 {
                     m_AI.OnAggressiveAction(aggressor);
                 }
@@ -4213,12 +4300,11 @@ namespace Server.Mobiles
             //StopFlee();
             ForceReacquire();
 
-            if (aggressor.ChangingCombatant && (m_bControlled || m_bSummoned) &&
-                (ct == OrderType.Come || ct == OrderType.Stay || ct == OrderType.Stop || ct == OrderType.None ||
-                 ct == OrderType.Follow))
+            if (aggressor.ChangingCombatant && (m_bControlled || m_bSummoned) && GuardMode == GuardType.Active)
             {
                 ControlTarget = aggressor;
-                ControlOrder = OrderType.Attack;
+               // PetAction = PetActionType.Attack;
+                //GuardMode = GuardType.Guarding;
             }
             else if (Combatant == null && !m_bBardPacified)
             {
@@ -5161,9 +5247,16 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            if (m_ControlOrder == OrderType.Guard)
+            //if (GuardMode == GuardType.Active)
+            //{
+            //     list.Add(1080078); // guarding
+            //}
+            if (this.ControlMaster != null && ControlMaster is PlayerMobile)
             {
-                list.Add(1080078); // guarding
+                list.Add("Move: " + MovementMode.ToString());
+                list.Add("Guard: " + GuardMode.ToString());
+                list.Add("Action: " + PetAction.ToString());
+                list.Add("Last: " + ControlOrder.ToString());
             }
 
             if (IsGolem)
@@ -5356,7 +5449,7 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual bool IsAggressiveMonster => IsMonster && ( m_FightMode == FightMode.Closest || m_FightMode == FightMode.Strongest || m_FightMode == FightMode.Weakest || m_FightMode == FightMode.Good);
+        public virtual bool IsAggressiveMonster => IsMonster && (m_FightMode == FightMode.Closest || m_FightMode == FightMode.Strongest || m_FightMode == FightMode.Weakest || m_FightMode == FightMode.Good);
 
         public List<DamageStore> LootingRights { get; set; }
 
@@ -5607,7 +5700,8 @@ namespace Server.Mobiles
 
                 IsDeadPet = true;
                 ControlTarget = ControlMaster;
-                ControlOrder = OrderType.Follow;
+                ControlOrder = LastOrderType.Follow;
+                GuardMode = GuardType.Passive;
 
                 ProcessDeltaQueue();
                 SendIncomingPacket();
@@ -5928,7 +6022,6 @@ namespace Server.Mobiles
                 ControlMaster = null;
                 Controlled = false;
                 ControlTarget = null;
-                ControlOrder = OrderType.None;
                 Guild = null;
 
                 UpdateMasteryInfo();
@@ -5958,7 +6051,7 @@ namespace Server.Mobiles
                 ControlMaster = m;
                 Controlled = true;
                 ControlTarget = null;
-                ControlOrder = OrderType.Come;
+                ControlOrder = LastOrderType.Follow;
                 Guild = null;
 
                 UpdateMasteryInfo();
@@ -7002,7 +7095,7 @@ namespace Server.Mobiles
                 {
                     if (!onlyBonded || pet.IsBonded)
                     {
-                        if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
+                        if (pet.GuardMode == GuardType.Active || pet.MovementMode == MovementType.Follow || pet.PetAction == PetActionType.Come)
                         {
                             move.Add(pet);
                         }
