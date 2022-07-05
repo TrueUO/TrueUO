@@ -1,11 +1,13 @@
 using Server.Spells;
 using Server.Spells.Seventh;
 using System;
+using Server.Engines.Craft;
 
 namespace Server.Items
 {
-    public class MaskOfKhalAnkur : BaseHat
+    public class MaskOfKhalAnkur : BaseHat, IRepairable
     {
+        public CraftSystem RepairSystem => DefTailoring.CraftSystem;
         public override bool IsArtifact => true;
         public override int LabelNumber => 1158701;  // Mask of Khal Ankur
 
@@ -23,7 +25,9 @@ namespace Server.Items
                 m_Charges = value;
 
                 if (m_Charges == 0)
+                {
                     StartTimer();
+                }
 
                 InvalidateProperties();
             }
@@ -51,6 +55,11 @@ namespace Server.Items
             AttachSocket(new Caddellite());
         }
 
+        public MaskOfKhalAnkur(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (Parent != from)
@@ -73,7 +82,9 @@ namespace Server.Items
             base.OnAdded(parent);
 
             if (Charges == 0)
+            {
                 StartTimer();
+            }
         }
 
         public override void OnRemoved(object parent)
@@ -81,7 +92,9 @@ namespace Server.Items
             base.OnRemoved(parent);
 
             if (Charges == 0)
+            {
                 StopTimer();
+            }
         }
 
         public override int BasePhysicalResistance => 15;
@@ -101,11 +114,6 @@ namespace Server.Items
             list.Add(1158662); // Caddellite Infused
         }
 
-        public MaskOfKhalAnkur(Serial serial)
-            : base(serial)
-        {
-        }
-
         private Timer m_Timer;
 
         public virtual void StartTimer()
@@ -113,13 +121,17 @@ namespace Server.Items
             ChargeTime = 300;
 
             if (m_Timer == null || !m_Timer.Running)
+            {
                 m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), Slice);
+            }
         }
 
         public virtual void StopTimer()
         {
             if (m_Timer != null)
+            {
                 m_Timer.Stop();
+            }
 
             m_Timer = null;
         }
@@ -127,7 +139,9 @@ namespace Server.Items
         public virtual void Slice()
         {
             if (ChargeTime > 0)
+            {
                 ChargeTime--;
+            }
             else
             {
                 ChargeTime = 0;
@@ -154,8 +168,10 @@ namespace Server.Items
             m_Charges = reader.ReadInt();
             ChargeTime = reader.ReadInt();
 
-            if (Parent != null && Parent is Mobile && ChargeTime > 0)
+            if (Parent is Mobile && ChargeTime > 0)
+            {
                 m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), Slice);
+            }
 
             if (version == 0)
             {
