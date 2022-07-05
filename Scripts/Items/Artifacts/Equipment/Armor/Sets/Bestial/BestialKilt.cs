@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class BestialKilt : GargishClothKilt, ISetItem
+    public class BestialKilt : GargishClothKiltArmor
     {
         public override bool IsArtifact => true;
         public override int LabelNumber => 1151546;  // Bestial Kilt
