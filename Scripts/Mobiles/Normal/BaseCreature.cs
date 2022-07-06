@@ -2134,7 +2134,6 @@ namespace Server.Mobiles
                         {
                             Item s = list[index];
 
-                            //corpse.AddCarvedItem(s, from);
                             if (!from.PlaceInBackpack(s))
                             {
                                 corpse.AddCarvedItem(s, from);
@@ -4297,14 +4296,11 @@ namespace Server.Mobiles
                 }
             }
 
-            //StopFlee();
             ForceReacquire();
 
             if (aggressor.ChangingCombatant && (m_bControlled || m_bSummoned) && GuardMode == GuardType.Active)
             {
                 ControlTarget = aggressor;
-               // PetAction = PetActionType.Attack;
-                //GuardMode = GuardType.Guarding;
             }
             else if (Combatant == null && !m_bBardPacified)
             {
@@ -5247,16 +5243,9 @@ namespace Server.Mobiles
                 list.Add(TotalWeight == 1 ? 1072788 : 1072789, TotalWeight.ToString()); // Weight: ~1_WEIGHT~ stones
             }
 
-            //if (GuardMode == GuardType.Active)
-            //{
-            //     list.Add(1080078); // guarding
-            //}
-            if (this.ControlMaster != null && ControlMaster is PlayerMobile)
+            if (GuardMode == GuardType.Active)
             {
-                list.Add("Move: " + MovementMode.ToString());
-                list.Add("Guard: " + GuardMode.ToString());
-                list.Add("Action: " + PetAction.ToString());
-                list.Add("Last: " + ControlOrder.ToString());
+                 list.Add(1080078); // guarding
             }
 
             if (IsGolem)
