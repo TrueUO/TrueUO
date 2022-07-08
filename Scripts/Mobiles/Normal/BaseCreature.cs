@@ -257,6 +257,8 @@ namespace Server.Mobiles
             }
         }
 
+        public override int HearRange => 24;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool CanMove { get; set; }
 
@@ -3219,6 +3221,8 @@ namespace Server.Mobiles
                 }
             }
         }
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime StopDuration{ get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D Home { get => m_pHome; set => m_pHome = value; }
@@ -4377,18 +4381,19 @@ namespace Server.Mobiles
                 return true;
             }
 
-            return m_AI != null && m_AI.HandlesOnSpeech(from) && from.InRange(this, m_iRangePerception);
+            return m_AI != null && m_AI.HandlesOnSpeech(from);
         }
 
         public override void OnSpeech(SpeechEventArgs e)
         {
             InhumanSpeech speechType = SpeechType;
 
+            int speechRange = ControlMaster == e.Mobile || IsPetFriend(e.Mobile) ? HearRange : m_iRangePerception;
             if (speechType != null && speechType.OnSpeech(this, e.Mobile, e.Speech))
             {
                 e.Handled = true;
             }
-            else if (!e.Handled && m_AI != null && e.Mobile.InRange(this, m_iRangePerception))
+            else if (!e.Handled && m_AI != null && e.Mobile.InRange(this, speechRange))
             {
                 m_AI.OnSpeech(e);
             }
