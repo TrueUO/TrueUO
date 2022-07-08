@@ -1246,6 +1246,7 @@ namespace Server.Mobiles
             switch (m_Mobile.PetAction)
             {
                 case PetActionType.Come:
+                    m_Mobile.Home = m_Mobile.ControlMaster.Location;
                     m_Mobile.AdjustSpeeds();
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
@@ -1270,9 +1271,11 @@ namespace Server.Mobiles
                     m_Mobile.Combatant = null;
                     break;
                 case PetActionType.Stop:
-                    m_Mobile.GuardMode = GuardType.Passive;
-                    m_Mobile.MovementMode = MovementType.Roam;
+                    m_Mobile.StopDuration = DateTime.Now.AddSeconds(30);
+                    m_Mobile.ControlTarget = null;
                     m_Mobile.Home = m_Mobile.Location;
+                    m_Mobile.GuardMode = GuardType.Passive;
+                    m_Mobile.MovementMode = MovementType.Stay;
                     m_Mobile.CurrentSpeed = m_Mobile.PassiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     m_Mobile.Warmode = false;
@@ -1320,7 +1323,7 @@ namespace Server.Mobiles
             {
                 int iCurrDist = (int)m_Mobile.GetDistanceToSqrt(m_Mobile.ControlMaster);
 
-                if (iCurrDist > m_Mobile.RangePerception)
+                if (iCurrDist > m_Mobile.HearRange)
                 {
                     m_Mobile.DebugSay("I have lost my master. I stay here");
                     m_Mobile.ControlTarget = null;
@@ -1457,6 +1460,7 @@ namespace Server.Mobiles
                 }
                 else if (m_Mobile.ControlTarget == null)
                 {
+                    m_Mobile.Home = m_Mobile.Location;
                     m_Mobile.MovementMode = MovementType.Roam;
                     return true;
                 }
@@ -1500,6 +1504,7 @@ namespace Server.Mobiles
             }
             else
             {
+                m_Mobile.Home = m_Mobile.Location;
                 m_Mobile.MovementMode = MovementType.Roam;
                 m_Mobile.DebugSay("I have nobody to follow");
                 m_Mobile.ControlTarget = null;
@@ -1871,7 +1876,11 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderStop()
         {
-            m_Mobile.GuardMode = GuardType.Passive;
+            if (DoOrderGuard())
+            {
+                m_Mobile.DebugSay("I shall protect my master!");
+                return true;
+            }
 
             if (m_Mobile.ControlMaster == null || m_Mobile.ControlMaster.Deleted)
             {
@@ -1880,13 +1889,13 @@ namespace Server.Mobiles
 
             m_Mobile.DebugSay("My master told me to stop.");
 
-            m_Mobile.Home = m_Mobile.Location;
+            //Stay for 30 seconds
+            if (m_Mobile.StopDuration == null || DateTime.Now > m_Mobile.StopDuration)
+            {
+                m_Mobile.PetAction = PetActionType.NoAction;
+                m_Mobile.MovementMode = MovementType.Roam;
+            }
 
-            m_Mobile.ControlTarget = null;
-
-            WalkRandomInHome(3, 2, 1);
-            m_Mobile.PetAction = PetActionType.NoAction;
-            m_Mobile.MovementMode = MovementType.Roam;
             return true;
         }
 

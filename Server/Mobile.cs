@@ -1434,6 +1434,8 @@ namespace Server
         [CommandProperty(AccessLevel.Decorator)]
         public int BAC { get => m_BAC; set => m_BAC = value; }
 
+        public virtual int HearRange => 15;
+
         public virtual int DefaultBloodHue => 0;
 
         public virtual bool HasBlood => Alive && BloodHue >= 0 && !Body.IsGhost && !Body.IsEquipment;
@@ -4768,15 +4770,15 @@ namespace Server
 
 			if (m_Map != null)
 			{
-				IPooledEnumerable<IEntity> eable = m_Map.GetObjectsInRange(m_Location, range);
+				IPooledEnumerable<IEntity> eable = m_Map.GetObjectsInRange(m_Location, 24);
 
 				foreach (IEntity o in eable)
 				{
-					if (o is Mobile heard)
-					{
+					if (o is Mobile heard && heard.InRange(this, heard.HearRange))
+                    {
                         if (heard.CanSee(this) && (m_NoSpeechLOS || !heard.Player || heard.InLOS(this)))
 						{
-							if (heard.m_NetState != null)
+							if (heard.m_NetState != null && heard.InRange(this, range))
 							{
 								hears.Add(heard);
 							}
