@@ -1614,7 +1614,7 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderGuard()
         {
-            if (m_Mobile.GuardMode != GuardType.Active || m_Mobile.IsDeadPet)
+            if (m_Mobile.GuardMode != GuardType.Active || m_Mobile.IsDeadPet || m_Mobile.PetAction == PetActionType.Come)
             {
                 return false;
             }
