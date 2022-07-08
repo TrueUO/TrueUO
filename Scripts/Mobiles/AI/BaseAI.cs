@@ -1890,7 +1890,7 @@ namespace Server.Mobiles
             m_Mobile.DebugSay("My master told me to stop.");
 
             //Stay for 30 seconds
-            if (m_Mobile.StopDuration == null || DateTime.Now > m_Mobile.StopDuration)
+            if (DateTime.Now > m_Mobile.StopDuration)
             {
                 m_Mobile.PetAction = PetActionType.NoAction;
                 m_Mobile.MovementMode = MovementType.Roam;
