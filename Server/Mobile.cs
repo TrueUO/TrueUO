@@ -4774,7 +4774,7 @@ namespace Server
 
 				foreach (IEntity o in eable)
 				{
-					if (o is Mobile heard && heard.InRange(this, heard.HearRange))
+					if (o is Mobile heard && heard.InRange(this, Math.Max(heard.HearRange, range)))
                     {
                         if (heard.CanSee(this) && (m_NoSpeechLOS || !heard.Player || heard.InLOS(this)))
 						{
