@@ -295,6 +295,8 @@ namespace Server.Mobiles
         private bool m_bControlled; // Is controlled
         private Mobile m_ControlMaster; // My master
         private IDamageable m_ControlTarget; // My target mobile
+        private Mobile m_FollowTarget; // Who i'm following
+
         private Point3D m_ControlDest; // My target destination (patrol)
         private LastOrderType m_ControlOrder; // My order
         private PetActionType m_PetAction; // My control protector
@@ -3447,6 +3449,9 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public IDamageable ControlTarget { get => m_ControlTarget; set => m_ControlTarget = value; }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Mobile FollowTarget { get => m_FollowTarget; set => m_FollowTarget = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D ControlDest { get => m_ControlDest; set => m_ControlDest = value; }
