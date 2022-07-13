@@ -164,7 +164,7 @@ namespace Server.Items
                     attendant.BindedToPlayer = m_Deed.Owner != null;
                     attendant.SetControlMaster(m);
                     attendant.ControlOrder = LastOrderType.Follow;
-                    attendant.ControlTarget = m;
+                    attendant.FollowTarget = m;
                     attendant.MoveToWorld(m.Location, m.Map);
 
                     m_Deed.Delete();

@@ -143,7 +143,7 @@ namespace Server.Engines.Quests
             PassiveSpeed = 0.2;
 
             ControlOrder = LastOrderType.Follow;
-            ControlTarget = escorter;
+            FollowTarget = escorter;
 
             CurrentSpeed = 0.1;
         }
@@ -154,7 +154,7 @@ namespace Server.Engines.Quests
             PassiveSpeed = 1.0;
 
             ControlOrder = LastOrderType.None;
-            ControlTarget = null;
+            FollowTarget = null;
 
             CurrentSpeed = 1.0;
 
