@@ -15,6 +15,8 @@ using Server.Targeting;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Server.Spells.SkillMasteries;
+
 #endregion
 
 namespace Server.Spells
@@ -785,7 +787,6 @@ namespace Server.Spells
             m_Caster.Region?.OnSpellCast(m_Caster, this);
 
             m_Caster.NextSpellTime = Core.TickCount + (int)GetCastRecovery().TotalMilliseconds;
-
             Target originalTarget = m_Caster.Target;
 
             if (InstantTarget == null || !OnCastInstantTarget())
@@ -806,6 +807,25 @@ namespace Server.Spells
                 return false;
 
             Type spellType = GetType();
+
+            if (spellType.BaseType != null && spellType.IsSubclassOf(typeof(SkillMasterySpell)))
+            {
+                try
+                {
+                    spellType
+                        .GetTypeInfo()
+                        .GetMethod("OnTarget",
+                            BindingFlags.Instance | BindingFlags.NonPublic)
+                        ?.Invoke(this, new object[] { InstantTarget });
+                    return true;
+                }
+                catch
+                {
+                    LogBadConstructorForInstantTarget();
+                    return false;
+                }
+
+            }
 
             Type[] types = spellType.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
