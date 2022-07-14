@@ -194,7 +194,7 @@ namespace Server.Mobiles
             Summoned = true;
             SummonMaster = caster;
 
-            ControlOrder = OrderType.Follow;
+            ControlOrder = LastOrderType.Follow;
             ControlTarget = caster;
 
             TimeSpan duration = TimeSpan.FromSeconds(30 + caster.Skills.Ninjitsu.Fixed / 40);

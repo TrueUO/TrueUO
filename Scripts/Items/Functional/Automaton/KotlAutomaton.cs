@@ -149,7 +149,7 @@ namespace Server.Items
                 BrokenAutomatonHead broke = new BrokenAutomatonHead(this);
 
                 ControlTarget = null;
-                ControlOrder = OrderType.Stay;
+                ControlOrder = LastOrderType.Stay;
                 Internalize();
 
                 IsStabled = true;
