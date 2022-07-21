@@ -1267,6 +1267,7 @@ namespace Server.Mobiles
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     break;
                 case PetActionType.Attack:
+                    m_Mobile.FollowTarget = null;
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     m_Mobile.Warmode = true;
@@ -1309,16 +1310,31 @@ namespace Server.Mobiles
                 m_Mobile.DebugSay("I shall protect my master!");
                 return true;
             }
+
+            if (!m_Mobile.InRange(m_Mobile.Home, m_Mobile.RangePerception))
+            {
+                if (m_Mobile.ControlMaster != null &&
+                    m_Mobile.InRange(m_Mobile.ControlMaster, m_Mobile.HearRange * 2))
+                {
+                    m_Mobile.FollowTarget = m_Mobile.ControlMaster;
+                    m_Mobile.MovementMode = MovementType.Follow;
+                }
+                else
+                    m_Mobile.Home = m_Mobile.Location;
+            }
+
             m_Mobile.DebugSay("I have no order");
 
             WalkRandomInHome(3, 2, 1);
 
             if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && !mobile.IsDeadBondedPet)
             {
+                m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                 m_Mobile.Warmode = true;
             }
             else
             {
+                m_Mobile.CurrentSpeed = m_Mobile.PassiveSpeed;
                 m_Mobile.Warmode = false;
             }
 
@@ -1757,48 +1773,47 @@ namespace Server.Mobiles
             {
                 m_Mobile.DebugSay("I think he might be dead. He's not anywhere around here at least. That's cool. I'm glad he's dead.");
 
-                if (m_Mobile.FightMode != FightMode.None)
+                if (m_Mobile.FightMode == FightMode.None)
+                    return true;
+
+                Mobile newCombatant = null;
+                double newScore = 0.0;
+
+                IPooledEnumerable<Mobile> eable = m_Mobile.GetMobilesInRange(m_Mobile.RangePerception);
+
+                foreach (Mobile aggr in eable)
                 {
-                    Mobile newCombatant = null;
-                    double newScore = 0.0;
-
-                    IPooledEnumerable<Mobile> eable = m_Mobile.GetMobilesInRange(m_Mobile.RangePerception);
-
-                    foreach (Mobile aggr in eable)
+                    if (!m_Mobile.CanSee(aggr) || aggr.Combatant != m_Mobile)
                     {
-                        if (!m_Mobile.CanSee(aggr) || aggr.Combatant != m_Mobile)
-                        {
-                            continue;
-                        }
-
-                        if (aggr.IsDeadBondedPet || !aggr.Alive)
-                        {
-                            continue;
-                        }
-
-                        double aggrScore = m_Mobile.GetFightModeRanking(aggr, FightMode.Closest, false);
-
-                        if ((newCombatant == null || aggrScore > newScore || aggrScore == newScore && !aggr.Player && newCombatant.Player) && m_Mobile.InLOS(aggr))
-                        {
-                            newCombatant = aggr;
-                            newScore = aggrScore;
-                        }
+                        continue;
                     }
 
-                    eable.Free();
+                    if (aggr.IsDeadBondedPet || !aggr.Alive)
+                    {
+                        continue;
+                    }
 
-                    if (newCombatant != null)
+                    double aggrScore = m_Mobile.GetFightModeRanking(aggr, FightMode.Closest, false);
+
+                    if ((newCombatant == null || aggrScore > newScore || aggrScore == newScore && !aggr.Player && newCombatant.Player) && m_Mobile.InLOS(aggr))
                     {
-                        m_Mobile.ControlTarget = newCombatant;
-                        m_Mobile.ControlOrder = LastOrderType.Attack;
-                        m_Mobile.Combatant = newCombatant;
-                        m_Mobile.DebugSay("But -that- is not dead. Here we go again...");
-                        Think();
+                        newCombatant = aggr;
+                        newScore = aggrScore;
                     }
-                    else
-                    {
-                        m_Mobile.ControlTarget = m_Mobile.ControlMaster;
-                    }
+                }
+
+                eable.Free();
+
+                if (newCombatant != null)
+                {
+                    m_Mobile.ControlTarget = newCombatant;
+                    m_Mobile.Combatant = newCombatant;
+                    m_Mobile.DebugSay("But -that- is not dead. Here we go again...");
+                    Think();
+                }
+                else if(m_Mobile.MovementMode==MovementType.Follow)
+                {
+                    m_Mobile.FollowTarget = m_Mobile.ControlMaster;
                 }
             }
             else
@@ -2077,7 +2092,8 @@ namespace Server.Mobiles
                             m_Creature.SummonMaster = to;
                         }
 
-                        m_Creature.ControlTarget = to;
+                        m_Creature.ControlTarget = null;
+                        m_Creature.FollowTarget = to;
                         m_Creature.ControlOrder = LastOrderType.Follow;
 
                         m_Creature.BondingBegin = DateTime.MinValue;

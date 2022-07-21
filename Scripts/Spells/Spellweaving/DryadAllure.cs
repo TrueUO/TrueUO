@@ -101,7 +101,7 @@ namespace Server.Spells.Spellweaving
                 else
                 {
                     bc.PlaySound(0x5C5);
-                    bc.ControlTarget = Caster;
+                    bc.FollowTarget = Caster;
                     bc.ControlOrder = LastOrderType.Attack;
                     bc.Combatant = Caster;
 

@@ -119,7 +119,7 @@ namespace Server.Engines.Despise
                     m_Creature.ControlOrder = LastOrderType.Follow;
                 }
 
-                m_Creature.ControlTarget = m_Creature.ControlMaster;
+                m_Creature.FollowTarget = m_Creature.ControlMaster;
                 Action = ActionType.Guard;
                 DoOrderFollow();
             }
@@ -349,7 +349,7 @@ namespace Server.Engines.Despise
                     m_Creature.ControlOrder = LastOrderType.Follow;
                 }
 
-                m_Creature.ControlTarget = m_Creature.ControlMaster;
+                m_Creature.FollowTarget = m_Creature.ControlMaster;
                 Action = ActionType.Guard;
                 DoOrderFollow();
             }
