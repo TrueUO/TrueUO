@@ -257,6 +257,8 @@ namespace Server.Mobiles
             }
         }
 
+        public override int HearRange => 24;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool CanMove { get; set; }
 
@@ -293,6 +295,8 @@ namespace Server.Mobiles
         private bool m_bControlled; // Is controlled
         private Mobile m_ControlMaster; // My master
         private IDamageable m_ControlTarget; // My target mobile
+        private Mobile m_FollowTarget; // Who i'm following
+
         private Point3D m_ControlDest; // My target destination (patrol)
         private LastOrderType m_ControlOrder; // My order
         private PetActionType m_PetAction; // My control protector
@@ -3219,6 +3223,8 @@ namespace Server.Mobiles
                 }
             }
         }
+        [CommandProperty(AccessLevel.GameMaster)]
+        public DateTime StopDuration{ get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D Home { get => m_pHome; set => m_pHome = value; }
@@ -3443,6 +3449,9 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public IDamageable ControlTarget { get => m_ControlTarget; set => m_ControlTarget = value; }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public Mobile FollowTarget { get => m_FollowTarget; set => m_FollowTarget = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D ControlDest { get => m_ControlDest; set => m_ControlDest = value; }
@@ -4377,18 +4386,19 @@ namespace Server.Mobiles
                 return true;
             }
 
-            return m_AI != null && m_AI.HandlesOnSpeech(from) && from.InRange(this, m_iRangePerception);
+            return m_AI != null && m_AI.HandlesOnSpeech(from);
         }
 
         public override void OnSpeech(SpeechEventArgs e)
         {
             InhumanSpeech speechType = SpeechType;
 
+            int speechRange = ControlMaster == e.Mobile || IsPetFriend(e.Mobile) ? HearRange : m_iRangePerception;
             if (speechType != null && speechType.OnSpeech(this, e.Mobile, e.Speech))
             {
                 e.Handled = true;
             }
-            else if (!e.Handled && m_AI != null && e.Mobile.InRange(this, m_iRangePerception))
+            else if (!e.Handled && m_AI != null && e.Mobile.InRange(this, speechRange))
             {
                 m_AI.OnSpeech(e);
             }
@@ -5688,9 +5698,11 @@ namespace Server.Mobiles
                 Mana = 0;
 
                 IsDeadPet = true;
-                ControlTarget = ControlMaster;
+                ControlTarget = null;
+                FollowTarget = ControlMaster;
                 ControlOrder = LastOrderType.Follow;
                 GuardMode = GuardType.Passive;
+                PetAction = PetActionType.NoAction;
 
                 ProcessDeltaQueue();
                 SendIncomingPacket();

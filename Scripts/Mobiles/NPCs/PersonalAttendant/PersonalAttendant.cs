@@ -73,7 +73,7 @@ namespace Server.Mobiles
         public virtual void CommandFollow(Mobile by)
         {
             ControlOrder = LastOrderType.Follow;
-            ControlTarget = by;
+            FollowTarget = by;
 
             if (m_Timer != null)
             {
@@ -199,7 +199,7 @@ namespace Server.Mobiles
                 if (m_Attendant != null && !m_Attendant.Deleted)
                 {
                     m_Attendant.ControlOrder = LastOrderType.Follow;
-                    m_Attendant.ControlTarget = m_Attendant.ControlMaster;
+                    m_Attendant.FollowTarget = m_Attendant.ControlMaster;
 
                     if (obj is Point3D point3D && m_Attendant.ControlMaster != null)
                     {
