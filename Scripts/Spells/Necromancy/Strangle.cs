@@ -172,7 +172,8 @@ namespace Server.Spells.Necromancy
 
             protected override void OnTick()
             {
-                if (!m_Target.Alive)
+
+                if (!m_Target.Alive || m_Target.IsDeadBondedPet)
                 {
                     m_Table.Remove(m_Target);
                     Stop();
