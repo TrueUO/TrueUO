@@ -452,7 +452,7 @@ namespace Server.Mobiles
                             if (m_Herald.MovementMode == MovementType.Stay)
                             {
                                 m_Herald.ControlOrder = LastOrderType.Follow;
-                                m_Herald.ControlTarget = m;
+                                m_Herald.FollowTarget = m;
                             }
 
                             break;

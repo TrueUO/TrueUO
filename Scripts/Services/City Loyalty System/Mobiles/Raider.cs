@@ -101,7 +101,7 @@ namespace Server.Mobiles
 
                 SetControlMaster(m);
                 IsBonded = false;
-                ControlTarget = m;
+                FollowTarget = m;
                 ControlOrder = LastOrderType.Follow;
 
                 m.SendLocalizedMessage(1152236, Name); // You arrest the ~1_name~. Take the criminal to the guard captain.

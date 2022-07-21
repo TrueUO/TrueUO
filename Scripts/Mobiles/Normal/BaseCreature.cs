@@ -5698,9 +5698,11 @@ namespace Server.Mobiles
                 Mana = 0;
 
                 IsDeadPet = true;
-                ControlTarget = ControlMaster;
+                ControlTarget = null;
+                FollowTarget = ControlMaster;
                 ControlOrder = LastOrderType.Follow;
                 GuardMode = GuardType.Passive;
+                PetAction = PetActionType.NoAction;
 
                 ProcessDeltaQueue();
                 SendIncomingPacket();
