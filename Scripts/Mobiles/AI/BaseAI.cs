@@ -339,7 +339,12 @@ namespace Server.Mobiles
                 }
             }
 
-            if (m_Mobile.CheckControlChance(from))
+            if (order == LastOrderType.Follow && target is Mobile && m_Mobile.CheckControlChance(from))
+            {
+                m_Mobile.FollowTarget = (Mobile)target;
+                m_Mobile.ControlOrder = order;
+            }
+            else if (m_Mobile.CheckControlChance(from))
             {
                 m_Mobile.ControlTarget = target;
                 m_Mobile.ControlOrder = order;
@@ -545,6 +550,7 @@ namespace Server.Mobiles
                                     if (m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = null;
+                                        m_Mobile.FollowTarget = e.Mobile;
                                         m_Mobile.ControlOrder = LastOrderType.Come;
                                     }
 
@@ -593,7 +599,7 @@ namespace Server.Mobiles
                                 {
                                     if (m_Mobile.CheckControlChance(e.Mobile))
                                     {
-                                        m_Mobile.ControlTarget = e.Mobile;
+                                        m_Mobile.FollowTarget = e.Mobile;
                                         m_Mobile.ControlOrder = LastOrderType.Follow;
                                     }
                                     return;
@@ -627,6 +633,7 @@ namespace Server.Mobiles
                                     if (WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
                                         m_Mobile.ControlTarget = null;
+                                        m_Mobile.FollowTarget = e.Mobile;
                                         m_Mobile.ControlOrder = LastOrderType.Come;
                                     }
 
@@ -739,7 +746,7 @@ namespace Server.Mobiles
                                 {
                                     if (WasNamed(speech) && m_Mobile.CheckControlChance(e.Mobile))
                                     {
-                                        m_Mobile.ControlTarget = e.Mobile;
+                                        m_Mobile.FollowTarget = e.Mobile;
                                         m_Mobile.ControlOrder = LastOrderType.Follow;
                                     }
 
@@ -1207,9 +1214,10 @@ namespace Server.Mobiles
                     m_Mobile.Combatant = null;
                     break;
                 case MovementType.Follow:
+                    m_Mobile.GuardMode = GuardType.Passive;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     m_Mobile.PetAction = PetActionType.NoAction;
-                    m_Mobile.Warmode = m_Mobile.GuardMode == GuardType.Active;
+                    m_Mobile.Warmode = false;
                     m_Mobile.Combatant = null;
                     m_Mobile.AdjustSpeeds();
 
@@ -1246,6 +1254,7 @@ namespace Server.Mobiles
             switch (m_Mobile.PetAction)
             {
                 case PetActionType.Come:
+                    m_Mobile.Home = m_Mobile.ControlMaster.Location;
                     m_Mobile.AdjustSpeeds();
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
@@ -1258,6 +1267,7 @@ namespace Server.Mobiles
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     break;
                 case PetActionType.Attack:
+                    m_Mobile.FollowTarget = null;
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     m_Mobile.Warmode = true;
@@ -1270,9 +1280,11 @@ namespace Server.Mobiles
                     m_Mobile.Combatant = null;
                     break;
                 case PetActionType.Stop:
-                    m_Mobile.GuardMode = GuardType.Passive;
-                    m_Mobile.MovementMode = MovementType.Roam;
+                    m_Mobile.StopDuration = DateTime.Now.AddSeconds(30);
+                    m_Mobile.ControlTarget = null;
                     m_Mobile.Home = m_Mobile.Location;
+                    m_Mobile.GuardMode = GuardType.Passive;
+                    m_Mobile.MovementMode = MovementType.Stay;
                     m_Mobile.CurrentSpeed = m_Mobile.PassiveSpeed;
                     m_Mobile.PlaySound(m_Mobile.GetIdleSound());
                     m_Mobile.Warmode = false;
@@ -1298,16 +1310,31 @@ namespace Server.Mobiles
                 m_Mobile.DebugSay("I shall protect my master!");
                 return true;
             }
+
+            if (!m_Mobile.InRange(m_Mobile.Home, m_Mobile.RangePerception))
+            {
+                if (m_Mobile.ControlMaster != null &&
+                    m_Mobile.InRange(m_Mobile.ControlMaster, m_Mobile.HearRange * 2))
+                {
+                    m_Mobile.FollowTarget = m_Mobile.ControlMaster;
+                    m_Mobile.MovementMode = MovementType.Follow;
+                }
+                else
+                    m_Mobile.Home = m_Mobile.Location;
+            }
+
             m_Mobile.DebugSay("I have no order");
 
             WalkRandomInHome(3, 2, 1);
 
             if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && !mobile.IsDeadBondedPet)
             {
+                m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                 m_Mobile.Warmode = true;
             }
             else
             {
+                m_Mobile.CurrentSpeed = m_Mobile.PassiveSpeed;
                 m_Mobile.Warmode = false;
             }
 
@@ -1320,10 +1347,10 @@ namespace Server.Mobiles
             {
                 int iCurrDist = (int)m_Mobile.GetDistanceToSqrt(m_Mobile.ControlMaster);
 
-                if (iCurrDist > m_Mobile.RangePerception)
+                if (iCurrDist > m_Mobile.HearRange)
                 {
                     m_Mobile.DebugSay("I have lost my master. I stay here");
-                    m_Mobile.ControlTarget = null;
+                    m_Mobile.FollowTarget = null;
                     m_Mobile.PetAction = PetActionType.NoAction;
                 }
                 else
@@ -1333,7 +1360,7 @@ namespace Server.Mobiles
                     // Not exactly OSI style, but better than nothing.
                     bool bRun = CanRun && iCurrDist > 5;
 
-                    if (WalkMobileRange(m_Mobile.ControlMaster, iCurrDist, bRun, 0, 1))
+                    if (WalkMobileRange(m_Mobile.FollowTarget, iCurrDist, bRun, 0, 1))
                     {
                         if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && !mobile.IsDeadBondedPet)
                         {
@@ -1449,19 +1476,20 @@ namespace Server.Mobiles
             {
                 m_Mobile.DebugSay("Praise the shepherd!");
             }
-            else if (m_Mobile.ControlTarget != null && !m_Mobile.ControlTarget.Deleted && m_Mobile.ControlTarget != m_Mobile || m_Mobile.ControlMaster != null && !m_Mobile.ControlMaster.Deleted)
+            else if (m_Mobile.FollowTarget != null && !m_Mobile.FollowTarget.Deleted && m_Mobile.FollowTarget != m_Mobile || m_Mobile.ControlMaster != null && !m_Mobile.ControlMaster.Deleted)
             {
-                if (m_Mobile.ControlTarget == null || m_Mobile.ControlTarget.Deleted && m_Mobile.ControlMaster != null)
+                if (m_Mobile.FollowTarget == null || m_Mobile.FollowTarget.Deleted && m_Mobile.ControlMaster != null)
                 {
-                    m_Mobile.ControlTarget = m_Mobile.ControlMaster;
+                    m_Mobile.FollowTarget = m_Mobile.ControlMaster;
                 }
-                else if (m_Mobile.ControlTarget == null)
+                else if (m_Mobile.FollowTarget == null)
                 {
+                    m_Mobile.Home = m_Mobile.Location;
                     m_Mobile.MovementMode = MovementType.Roam;
                     return true;
                 }
 
-                int iCurrDist = (int)m_Mobile.GetDistanceToSqrt(m_Mobile.ControlTarget);
+                int iCurrDist = (int)m_Mobile.GetDistanceToSqrt(m_Mobile.FollowTarget);
 
                 if (iCurrDist > m_Mobile.RangePerception * 5)
                 {
@@ -1478,12 +1506,12 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    m_Mobile.DebugSay("My master told me to follow: {0}", m_Mobile.ControlTarget.Name);
+                    m_Mobile.DebugSay("My master told me to follow: {0}", m_Mobile.FollowTarget.Name);
 
                     // Not exactly OSI style, but better than nothing.
                     bool bRun = iCurrDist > 5;
 
-                    if (WalkMobileRange(m_Mobile.ControlTarget, 1, bRun, 0, 1))
+                    if (WalkMobileRange(m_Mobile.FollowTarget, 1, bRun, 0, 1))
                     {
                         if (m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive && (!(m_Mobile.Combatant is Mobile) || !((Mobile)m_Mobile.Combatant).IsDeadBondedPet))
                         {
@@ -1500,9 +1528,10 @@ namespace Server.Mobiles
             }
             else
             {
+                m_Mobile.Home = m_Mobile.Location;
                 m_Mobile.MovementMode = MovementType.Roam;
                 m_Mobile.DebugSay("I have nobody to follow");
-                m_Mobile.ControlTarget = null;
+                m_Mobile.FollowTarget = null;
             }
 
             return true;
@@ -1564,7 +1593,7 @@ namespace Server.Mobiles
 
                             m_Mobile.AddPetFriend(to);
 
-                            m_Mobile.ControlTarget = to;
+                            m_Mobile.ControlTarget = null;
                             m_Mobile.PetAction = PetActionType.NoAction;
                             return true;
                         }
@@ -1572,7 +1601,7 @@ namespace Server.Mobiles
                 }
             }
             m_Mobile.PetAction = PetActionType.NoAction;
-            m_Mobile.ControlTarget = from;
+            m_Mobile.ControlTarget = null;
             return true;
         }
 
@@ -1602,14 +1631,14 @@ namespace Server.Mobiles
                 m_Mobile.RemovePetFriend(to);
             }
 
-            m_Mobile.ControlTarget = from;
+            m_Mobile.ControlTarget = null;
             m_Mobile.PetAction = PetActionType.NoAction;
             return true;
         }
 
         public virtual bool DoOrderGuard()
         {
-            if (m_Mobile.GuardMode != GuardType.Active || m_Mobile.IsDeadPet)
+            if (m_Mobile.GuardMode != GuardType.Active || m_Mobile.IsDeadPet || m_Mobile.PetAction == PetActionType.Come)
             {
                 return false;
             }
@@ -1617,6 +1646,12 @@ namespace Server.Mobiles
             Mobile controlMaster = m_Mobile.ControlMaster;
 
             if (controlMaster == null || controlMaster.Deleted)
+            {
+                return false;
+            }
+
+            if (m_Mobile.GetDistanceToSqrt(controlMaster) > m_Mobile.HearRange + 1 &&
+                (m_Mobile.MovementMode == MovementType.Follow || m_Mobile.MovementMode == MovementType.Stay))
             {
                 return false;
             }
@@ -1629,7 +1664,10 @@ namespace Server.Mobiles
             }
 
             Mobile closestMob = combatant;
-            double closestDist = combatant == null ? m_Mobile.RangePerception : combatant.GetDistanceToSqrt(controlMaster);
+            double closestDist = Math.Min(
+                combatant == null ? m_Mobile.HearRange :
+                    combatant.GetDistanceToSqrt(controlMaster), m_Mobile.HearRange
+                );
 
             for (var index = 0; index < controlMaster.Aggressors.Count; index++)
             {
@@ -1706,7 +1744,16 @@ namespace Server.Mobiles
 
         public bool ValidGuardTarget(Mobile combatant)
         {
-            return combatant != null && combatant != m_Mobile && combatant != m_Mobile.ControlMaster && !combatant.Deleted && m_Mobile.CanSee(combatant) && combatant.Alive && !combatant.IsDeadBondedPet && m_Mobile.CanBeHarmful(combatant, false) && combatant.Map == m_Mobile.Map && combatant.GetDistanceToSqrt(m_Mobile) <= m_Mobile.RangePerception;
+            return combatant != null &&
+                   combatant != m_Mobile &&
+                   combatant != m_Mobile.ControlMaster &&
+                   !combatant.Deleted &&
+                   m_Mobile.CanSee(combatant) &&
+                   combatant.Alive &&
+                   !combatant.IsDeadBondedPet &&
+                   m_Mobile.CanBeHarmful(combatant, false) &&
+                   combatant.Map == m_Mobile.Map &&
+                   combatant.GetDistanceToSqrt(m_Mobile.ControlMaster) <= m_Mobile.HearRange + 5;
         }
 
         public virtual bool DoOrderAttack()
@@ -1726,48 +1773,47 @@ namespace Server.Mobiles
             {
                 m_Mobile.DebugSay("I think he might be dead. He's not anywhere around here at least. That's cool. I'm glad he's dead.");
 
-                if (m_Mobile.FightMode != FightMode.None)
+                if (m_Mobile.FightMode == FightMode.None)
+                    return true;
+
+                Mobile newCombatant = null;
+                double newScore = 0.0;
+
+                IPooledEnumerable<Mobile> eable = m_Mobile.GetMobilesInRange(m_Mobile.RangePerception);
+
+                foreach (Mobile aggr in eable)
                 {
-                    Mobile newCombatant = null;
-                    double newScore = 0.0;
-
-                    IPooledEnumerable<Mobile> eable = m_Mobile.GetMobilesInRange(m_Mobile.RangePerception);
-
-                    foreach (Mobile aggr in eable)
+                    if (!m_Mobile.CanSee(aggr) || aggr.Combatant != m_Mobile)
                     {
-                        if (!m_Mobile.CanSee(aggr) || aggr.Combatant != m_Mobile)
-                        {
-                            continue;
-                        }
-
-                        if (aggr.IsDeadBondedPet || !aggr.Alive)
-                        {
-                            continue;
-                        }
-
-                        double aggrScore = m_Mobile.GetFightModeRanking(aggr, FightMode.Closest, false);
-
-                        if ((newCombatant == null || aggrScore > newScore || aggrScore == newScore && !aggr.Player && newCombatant.Player) && m_Mobile.InLOS(aggr))
-                        {
-                            newCombatant = aggr;
-                            newScore = aggrScore;
-                        }
+                        continue;
                     }
 
-                    eable.Free();
+                    if (aggr.IsDeadBondedPet || !aggr.Alive)
+                    {
+                        continue;
+                    }
 
-                    if (newCombatant != null)
+                    double aggrScore = m_Mobile.GetFightModeRanking(aggr, FightMode.Closest, false);
+
+                    if ((newCombatant == null || aggrScore > newScore || aggrScore == newScore && !aggr.Player && newCombatant.Player) && m_Mobile.InLOS(aggr))
                     {
-                        m_Mobile.ControlTarget = newCombatant;
-                        m_Mobile.ControlOrder = LastOrderType.Attack;
-                        m_Mobile.Combatant = newCombatant;
-                        m_Mobile.DebugSay("But -that- is not dead. Here we go again...");
-                        Think();
+                        newCombatant = aggr;
+                        newScore = aggrScore;
                     }
-                    else
-                    {
-                        m_Mobile.ControlTarget = m_Mobile.ControlMaster;
-                    }
+                }
+
+                eable.Free();
+
+                if (newCombatant != null)
+                {
+                    m_Mobile.ControlTarget = newCombatant;
+                    m_Mobile.Combatant = newCombatant;
+                    m_Mobile.DebugSay("But -that- is not dead. Here we go again...");
+                    Think();
+                }
+                else if(m_Mobile.MovementMode==MovementType.Follow)
+                {
+                    m_Mobile.FollowTarget = m_Mobile.ControlMaster;
                 }
             }
             else
@@ -1871,7 +1917,11 @@ namespace Server.Mobiles
 
         public virtual bool DoOrderStop()
         {
-            m_Mobile.GuardMode = GuardType.Passive;
+            if (DoOrderGuard())
+            {
+                m_Mobile.DebugSay("I shall protect my master!");
+                return true;
+            }
 
             if (m_Mobile.ControlMaster == null || m_Mobile.ControlMaster.Deleted)
             {
@@ -1880,13 +1930,13 @@ namespace Server.Mobiles
 
             m_Mobile.DebugSay("My master told me to stop.");
 
-            m_Mobile.Home = m_Mobile.Location;
+            //Stay for 30 seconds
+            if (DateTime.Now > m_Mobile.StopDuration)
+            {
+                m_Mobile.PetAction = PetActionType.NoAction;
+                m_Mobile.MovementMode = MovementType.Roam;
+            }
 
-            m_Mobile.ControlTarget = null;
-
-            WalkRandomInHome(3, 2, 1);
-            m_Mobile.PetAction = PetActionType.NoAction;
-            m_Mobile.MovementMode = MovementType.Roam;
             return true;
         }
 
@@ -2042,7 +2092,8 @@ namespace Server.Mobiles
                             m_Creature.SummonMaster = to;
                         }
 
-                        m_Creature.ControlTarget = to;
+                        m_Creature.ControlTarget = null;
+                        m_Creature.FollowTarget = to;
                         m_Creature.ControlOrder = LastOrderType.Follow;
 
                         m_Creature.BondingBegin = DateTime.MinValue;

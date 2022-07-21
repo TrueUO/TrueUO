@@ -430,7 +430,7 @@ namespace Server.Mobiles
                 pet.SummonMaster = from;
             }
 
-            pet.ControlTarget = from;
+            pet.FollowTarget = from;
             pet.ControlOrder = LastOrderType.Follow;
 
             pet.MoveToWorld(from.Location, from.Map);
