@@ -19,9 +19,6 @@ namespace Server.Items
             }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRead { get; set; } = false;
-
         private int m_Level;
         private Map m_TargetMap;
         private Point3D m_TargetLocation;
@@ -107,9 +104,8 @@ namespace Server.Items
             base.Serialize(writer);
             writer.Write(7);
 
-            // Version 7 - Removed retention date. SOSs do not reset like treasure maps.
+            // Version 7 - Removed retention date and IsRead. SOSs do not reset like treasure maps.
 
-            writer.Write(IsRead);
             writer.Write(ShipwreckName);
             writer.Write(m_Level);
             writer.Write(m_TargetMap);
@@ -130,9 +126,9 @@ namespace Server.Items
                         if (version < 7)
                         {
                             reader.ReadDateTime();
+                            reader.ReadBool();
                         }
 
-                        IsRead = reader.ReadBool();
                         goto case 5;
                     }
                 case 5:
@@ -171,8 +167,6 @@ namespace Server.Items
                     entry = MessageEntry.Entries[m_MessageIndex];
                 else
                     entry = MessageEntry.Entries[m_MessageIndex = Utility.Random(MessageEntry.Entries.Length)];
-
-                IsRead = true;
 
                 from.CloseGump(typeof(MessageGump));
                 from.SendGump(new MessageGump(entry, m_TargetMap, m_TargetLocation));
