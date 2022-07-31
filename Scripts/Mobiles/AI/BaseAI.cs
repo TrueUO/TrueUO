@@ -1224,6 +1224,7 @@ namespace Server.Mobiles
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     break;
                 case MovementType.Stay:
+                    m_Mobile.PetAction = PetActionType.NoAction;
                     break;
             }
         }
@@ -1929,7 +1930,7 @@ namespace Server.Mobiles
             m_Mobile.DebugSay("My master told me to stop.");
 
             //Stay for 30 seconds
-            if (DateTime.Now > m_Mobile.StopDuration)
+            if (DateTime.Now > m_Mobile.StopDuration && m_Mobile.MovementMode == MovementType.Stay)
             {
                 m_Mobile.PetAction = PetActionType.NoAction;
                 m_Mobile.MovementMode = MovementType.Roam;
