@@ -19,12 +19,6 @@ namespace Server.Items
             }
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRead { get; set; } = false;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime RetentionDate { get; set; }
-
         private int m_Level;
         private Map m_TargetMap;
         private Point3D m_TargetLocation;
@@ -105,49 +99,18 @@ namespace Server.Items
             "The Silver Hart", "The Vengeance Bay Ghost Ship", "The Poseidon's Fury", "The Lusty Wench", "The Empire", "The Ararat", "The Rogue", "The Arabella"
         };
 
-        public void SOSReset()
-        {
-            if (!IsRead && RootParent is Container && RetentionDate < DateTime.UtcNow)
-            {
-                m_TargetLocation = FindLocation(m_TargetMap);
-                m_MessageIndex = Utility.Random(MessageEntry.Entries.Length);
-
-                RetentionDate = DateTime.UtcNow + TimeSpan.FromDays(30);
-            }
-        }
-
-        protected override void OnParentChanged(object oldParent)
-        {
-            base.OnParentChanged(oldParent);            
-
-            if (!IsRead)
-            {
-                if (RetentionDate != DateTime.MinValue)
-                {
-                    RetentionDate = DateTime.MinValue;
-                }
-
-                if (oldParent == null && RootParent is Container)
-                {
-                    RetentionDate = DateTime.UtcNow + TimeSpan.FromDays(30);
-                }
-            }            
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(6);
+            writer.Write(7);
 
-            writer.Write(RetentionDate);
-            writer.Write(IsRead);
+            // Version 7 - Removed retention date and IsRead. SOSs do not reset like treasure maps.
+
             writer.Write(ShipwreckName);
             writer.Write(m_Level);
             writer.Write(m_TargetMap);
             writer.Write(m_TargetLocation);
             writer.Write(m_MessageIndex);
-
-            SOSReset();
         }
 
         public override void Deserialize(GenericReader reader)
@@ -157,10 +120,15 @@ namespace Server.Items
 
             switch (version)
             {
+                case 7: 
                 case 6:
                     {
-                        RetentionDate = reader.ReadDateTime();
-                        IsRead = reader.ReadBool();
+                        if (version < 7)
+                        {
+                            reader.ReadDateTime();
+                            reader.ReadBool();
+                        }
+
                         goto case 5;
                     }
                 case 5:
@@ -187,11 +155,6 @@ namespace Server.Items
                         break;
                     }
             }
-
-            if (version < 6 && RootParent is Container)
-            {
-                RetentionDate = DateTime.UtcNow + TimeSpan.FromDays(30);
-            }
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -204,9 +167,6 @@ namespace Server.Items
                     entry = MessageEntry.Entries[m_MessageIndex];
                 else
                     entry = MessageEntry.Entries[m_MessageIndex = Utility.Random(MessageEntry.Entries.Length)];
-
-                IsRead = true;
-                RetentionDate = DateTime.MinValue;
 
                 from.CloseGump(typeof(MessageGump));
                 from.SendGump(new MessageGump(entry, m_TargetMap, m_TargetLocation));
