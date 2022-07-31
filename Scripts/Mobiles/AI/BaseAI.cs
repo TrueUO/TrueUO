@@ -1224,6 +1224,7 @@ namespace Server.Mobiles
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     break;
                 case MovementType.Stay:
+                    m_Mobile.PetAction = PetActionType.NoAction;
                     break;
             }
         }
@@ -1511,18 +1512,16 @@ namespace Server.Mobiles
                     // Not exactly OSI style, but better than nothing.
                     bool bRun = iCurrDist > 5;
 
-                    if (WalkMobileRange(m_Mobile.FollowTarget, 1, bRun, 0, 1))
+                    if (m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive && (!(m_Mobile.Combatant is Mobile) || !((Mobile)m_Mobile.Combatant).IsDeadBondedPet))
                     {
-                        if (m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive && (!(m_Mobile.Combatant is Mobile) || !((Mobile)m_Mobile.Combatant).IsDeadBondedPet))
-                        {
-                            m_Mobile.Warmode = true;
-                        }
-                        else
-                        {
-                            m_Mobile.Warmode = false;
-
-                            m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
-                        }
+                        WalkMobileRange(m_Mobile.Combatant, 1, bRun, 0, 1);
+                        m_Mobile.Warmode = true;
+                    }
+                    else
+                    {
+                        WalkMobileRange(m_Mobile.FollowTarget, 1, bRun, 0, 1);
+                        m_Mobile.Warmode = false;
+                        m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     }
                 }
             }
@@ -1931,7 +1930,7 @@ namespace Server.Mobiles
             m_Mobile.DebugSay("My master told me to stop.");
 
             //Stay for 30 seconds
-            if (DateTime.Now > m_Mobile.StopDuration)
+            if (DateTime.Now > m_Mobile.StopDuration && m_Mobile.MovementMode == MovementType.Stay)
             {
                 m_Mobile.PetAction = PetActionType.NoAction;
                 m_Mobile.MovementMode = MovementType.Roam;
