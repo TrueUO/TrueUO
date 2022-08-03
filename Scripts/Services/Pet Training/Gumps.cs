@@ -78,7 +78,7 @@ namespace Server.Mobiles
             AddHtmlLocalized(47, 74, 160, 18, 1049593, 0xC8, false, false); // Attributes
 
             AddHtmlLocalized(53, 92, 160, 18, 1049578, _Label, false, false); // Hits
-            AddHtml(180, 92, 75, 18, FormatAttributes(Creature.Hits, Creature.HitsMax), false, false);
+            AddHtml(150, 92, 105, 18, FormatAttributes(Creature.Hits, Creature.HitsMax), false, false);
 
             AddHtmlLocalized(53, 110, 160, 18, 1049579, _Label, false, false); // Stamina
             AddHtml(180, 110, 75, 18, FormatAttributes(Creature.Stam, Creature.StamMax), false, false);
