@@ -142,8 +142,8 @@ namespace Server.Engines.Quests
             ActiveSpeed = 0.1;
             PassiveSpeed = 0.2;
 
-            ControlOrder = OrderType.Follow;
-            ControlTarget = escorter;
+            ControlOrder = LastOrderType.Follow;
+            FollowTarget = escorter;
 
             CurrentSpeed = 0.1;
         }
@@ -153,8 +153,8 @@ namespace Server.Engines.Quests
             ActiveSpeed = 0.2;
             PassiveSpeed = 1.0;
 
-            ControlOrder = OrderType.None;
-            ControlTarget = null;
+            ControlOrder = LastOrderType.None;
+            FollowTarget = null;
 
             CurrentSpeed = 1.0;
 
@@ -268,11 +268,11 @@ namespace Server.Engines.Quests
                     return null;
                 }
 
-                ControlOrder = OrderType.Stay;
+                ControlOrder = LastOrderType.Stay;
             }
             else
             {
-                if (ControlOrder != OrderType.Follow)
+                if (MovementMode != MovementType.Follow)
                     StartFollow(master);
 
                 LastSeenEscorter = DateTime.UtcNow;

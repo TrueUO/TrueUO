@@ -78,13 +78,13 @@ namespace Server.Mobiles
             AddHtmlLocalized(47, 74, 160, 18, 1049593, 0xC8, false, false); // Attributes
 
             AddHtmlLocalized(53, 92, 160, 18, 1049578, _Label, false, false); // Hits
-            AddHtml(180, 92, 75, 18, FormatAttributes(Creature.Hits, Creature.HitsMax), false, false);
+            AddHtml(140, 92, 115, 18, FormatAttributes(Creature.Hits, Creature.HitsMax), false, false);
 
             AddHtmlLocalized(53, 110, 160, 18, 1049579, _Label, false, false); // Stamina
-            AddHtml(180, 110, 75, 18, FormatAttributes(Creature.Stam, Creature.StamMax), false, false);
+            AddHtml(140, 110, 115, 18, FormatAttributes(Creature.Stam, Creature.StamMax), false, false);
 
             AddHtmlLocalized(53, 128, 160, 18, 1049580, _Label, false, false); // Mana
-            AddHtml(180, 128, 75, 18, FormatAttributes(Creature.Mana, Creature.ManaMax), false, false);
+            AddHtml(140, 128, 115, 18, FormatAttributes(Creature.Mana, Creature.ManaMax), false, false);
 
             AddHtmlLocalized(53, 146, 160, 18, 1028335, _Label, false, false); // Strength
             AddHtml(180, 146, 75, 18, FormatStat(Creature.Str), false, false);

@@ -155,20 +155,26 @@ namespace Server.Items
                         }
                         else
                         {
-                            bool okay = (item.IsChildOf(from.Backpack));
+                            bool okay = item.IsChildOf(from.Backpack);
 
                             if (!okay)
                             {
-                                if (item.Parent == null)
-                                {
-                                    BaseHouse house = BaseHouse.FindHouseAt(item);
+                                BaseHouse house = BaseHouse.FindHouseAt(item);
 
-                                    if (!house.IsCoOwner(from))
-                                        from.SendLocalizedMessage(501023); // You must be the owner to use this item.
-                                    else if (!house.IsLockedDown(item) && !house.IsSecure(item) && (!(item is AddonComponent) || !house.Addons.ContainsKey(((AddonComponent)item).Addon)))
+                                if (item.Parent == null && house != null)
+                                {
+                                    if (!house.IsLockedDown(item) && !house.IsSecure(item) && (!(item is AddonComponent component) || !house.Addons.ContainsKey(component.Addon)))
+                                    {
                                         from.SendLocalizedMessage(501022); // Furniture must be locked down to paint it.
+                                    }
+                                    else if (!house.IsCoOwner(from))
+                                    {
+                                        from.SendLocalizedMessage(501023); // You must be the owner to use this item.
+                                    }
                                     else
+                                    {
                                         okay = true;
+                                    }
                                 }
                                 else
                                 {
@@ -218,7 +224,7 @@ namespace Server.Items
                     else if (m_Tub.AllowLeather)
                     {
                         if (item is BaseArmor armor && (armor.MaterialType == ArmorMaterialType.Leather || armor.MaterialType == ArmorMaterialType.Studded) ||
-                            item is BaseClothing clothing && (clothing.DefaultResource == CraftResource.RegularLeather) || m_Tub.CanForceDye(item))
+                            item is BaseClothing clothing && clothing.DefaultResource == CraftResource.RegularLeather || m_Tub.CanForceDye(item))
                         {
                             if (!from.InRange(m_Tub.GetWorldLocation(), 1) || !from.InRange(item.GetWorldLocation(), 1))
                             {

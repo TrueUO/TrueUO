@@ -101,8 +101,8 @@ namespace Server.Spells.Spellweaving
                 else
                 {
                     bc.PlaySound(0x5C5);
-                    bc.ControlTarget = Caster;
-                    bc.ControlOrder = OrderType.Attack;
+                    bc.FollowTarget = Caster;
+                    bc.ControlOrder = LastOrderType.Attack;
                     bc.Combatant = Caster;
 
                     Caster.SendLocalizedMessage(1074378); // The humanoid becomes enraged by your charming attempt and attacks you.

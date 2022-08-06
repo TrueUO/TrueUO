@@ -132,6 +132,10 @@ namespace Server.Items
                 {
                     User.SendLocalizedMessage(1076766); // That is too far away.
                 }
+                else if (!Jawbone.IsLockedDown)
+                {
+                    User.SendLocalizedMessage(502692); // This must be in a house and be locked down to work.
+                }
                 else if (SpellHelper.RestrictRedTravel && User.Murderer)
                 {
                     User.SendLocalizedMessage(1019004); // You are not allowed to travel there.
@@ -157,7 +161,9 @@ namespace Server.Items
                     User.SendLocalizedMessage(1019003); // You are already there.
                 }
                 else
+                {
                     return true;
+                }
 
                 return false;
             }

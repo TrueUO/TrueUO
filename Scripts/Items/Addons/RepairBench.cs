@@ -473,7 +473,7 @@ namespace Server.Items
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            if (m_Addon == null || !m_Addon.Deleted)
+            if (m_Addon == null || m_Addon.Deleted)
                 return;
 
             Mobile m = sender.Mobile;

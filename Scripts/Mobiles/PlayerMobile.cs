@@ -4812,7 +4812,7 @@ namespace Server.Mobiles
 
             for (int i = AllFollowers.Count - 1; i >= 0; i--)
             {
-                if (AllFollowers[i] is BaseCreature c && c.ControlOrder == OrderType.Guard)
+                if (AllFollowers[i] is BaseCreature c && c.GuardMode == GuardType.Active)
                 {
                     list.Add(501129); // guarded
                     break;
@@ -6158,7 +6158,7 @@ namespace Server.Mobiles
                     }
 
                     pet.ControlTarget = null;
-                    pet.ControlOrder = OrderType.Stay;
+                    pet.ControlOrder = LastOrderType.Stay;
                     pet.Internalize();
 
                     pet.SetControlMaster(null);
@@ -6215,8 +6215,8 @@ namespace Server.Mobiles
                         pet.SummonMaster = this;
                     }
 
-                    pet.ControlTarget = this;
-                    pet.ControlOrder = OrderType.Follow;
+                    pet.FollowTarget = this;
+                    pet.ControlOrder = LastOrderType.Follow;
 
                     pet.MoveToWorld(Location, Map);
 

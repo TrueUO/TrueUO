@@ -324,7 +324,7 @@ namespace Server.Mobiles
             else
             {
                 pet.ControlTarget = null;
-                pet.ControlOrder = OrderType.Stay;
+                pet.ControlOrder = LastOrderType.Stay;
                 pet.Internalize();
 
                 pet.SetControlMaster(null);
@@ -430,8 +430,8 @@ namespace Server.Mobiles
                 pet.SummonMaster = from;
             }
 
-            pet.ControlTarget = from;
-            pet.ControlOrder = OrderType.Follow;
+            pet.FollowTarget = from;
+            pet.ControlOrder = LastOrderType.Follow;
 
             pet.MoveToWorld(from.Location, from.Map);
 

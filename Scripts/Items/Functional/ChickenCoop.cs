@@ -202,8 +202,8 @@ namespace Server.Items
                 if (pet.Summoned)
                     pet.SummonMaster = from;
 
-                pet.ControlTarget = from;
-                pet.ControlOrder = OrderType.Follow;
+                pet.FollowTarget = from;
+                pet.ControlOrder = LastOrderType.Follow;
 
                 pet.MoveToWorld(from.Location, from.Map);
 
@@ -294,7 +294,7 @@ namespace Server.Items
             else
             {
                 pet.ControlTarget = null;
-                pet.ControlOrder = OrderType.Stay;
+                pet.ControlOrder = LastOrderType.Stay;
                 pet.Internalize();
 
                 pet.SetControlMaster(null);

@@ -366,8 +366,8 @@ namespace Server.Engines.Despise
                             creature.Link(m_Orb);
 
                             m_Orb.Pet.SetControlMaster(from);
-                            m_Orb.Pet.ControlTarget = from;
-                            m_Orb.Pet.ControlOrder = OrderType.Follow;
+                            m_Orb.Pet.FollowTarget = from;
+                            m_Orb.Pet.ControlOrder = LastOrderType.Follow;
 
                             from.SendLocalizedMessage(1153276); // Your Wisp Orb takes control of the creature!
                             m_Orb.Pet.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1153295, from.Name); // * This creature is now under the control of ~1_NAME~ *
@@ -440,8 +440,8 @@ namespace Server.Engines.Despise
                 Anchor = m;
                 from.SendLocalizedMessage(1153280, m == m_Owner ? "You!" : m.Name + ".");
 
-                m_Pet.ControlTarget = m;
-                m_Pet.ControlOrder = OrderType.Follow;
+                m_Pet.FollowTarget = m;
+                m_Pet.ControlOrder = LastOrderType.Follow;
             }
 
             if (p is Item item)
@@ -455,8 +455,8 @@ namespace Server.Engines.Despise
                 else if (name is string stringName)
                     from.SendLocalizedMessage(1153280, stringName);
 
-                m_Pet.ControlTarget = m_Pet.ControlMaster;
-                m_Pet.ControlOrder = OrderType.Follow;
+                m_Pet.FollowTarget = m_Pet.ControlMaster;
+                m_Pet.ControlOrder = LastOrderType.Follow;
             }
         }
 
@@ -493,7 +493,7 @@ namespace Server.Engines.Despise
 
         public bool IsFollowing()
         {
-            return (int)m_Pet.GetDistanceToSqrt(GetAnchorLocation()) > m_Pet.GetLeashLength() + 1 && m_Pet.ControlOrder == OrderType.Follow;
+            return (int)m_Pet.GetDistanceToSqrt(GetAnchorLocation()) > m_Pet.GetLeashLength() + 1 && m_Pet.MovementMode == MovementType.Follow;
         }
 
         public override void Delete()

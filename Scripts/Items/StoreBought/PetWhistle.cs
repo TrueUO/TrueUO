@@ -214,7 +214,7 @@ namespace Server.Items
 
                 Mobile m = sender.Mobile;
 
-                if (_Item.PetLinked.ControlOrder != OrderType.Stay || _Item.PetLinked.ControlMaster != m)
+                if (_Item.PetLinked.MovementMode != MovementType.Stay || _Item.PetLinked.ControlMaster != m)
                     m.SendLocalizedMessage(1159389); // You must command your pet to stay before using this item.
 
                 Effects.PlaySound(m.Location, m.Map, 1665);

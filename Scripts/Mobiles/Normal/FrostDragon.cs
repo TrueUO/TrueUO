@@ -65,7 +65,6 @@ namespace Server.Mobiles
 
         public override bool CanAngerOnTame => true;
         public override bool StatLossAfterTame => true;
-        public override bool ReacquireOnMovement => !Controlled;
         public override bool AutoDispel => !Controlled;
         public override int TreasureMapLevel => 4;
         public override int Meat => 19;

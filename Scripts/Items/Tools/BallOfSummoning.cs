@@ -211,8 +211,8 @@ namespace Server.Items
                 if (pet.Summoned)
                     pet.SummonMaster = from;
 
-                pet.ControlTarget = from;
-                pet.ControlOrder = OrderType.Follow;
+                pet.FollowTarget = from;
+                pet.ControlOrder = LastOrderType.Follow;
 
                 pet.IsStabled = false;
                 pet.StabledBy = null;

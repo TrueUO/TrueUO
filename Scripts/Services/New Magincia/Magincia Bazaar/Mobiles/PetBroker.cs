@@ -179,7 +179,7 @@ namespace Server.Engines.NewMagincia
 
             pet.Blessed = false;
             pet.ControlTarget = null;
-            pet.ControlOrder = OrderType.Stay;
+            pet.ControlOrder = LastOrderType.Stay;
             pet.Internalize();
             pet.SetControlMaster(null);
             pet.SummonMaster = null;
@@ -196,7 +196,7 @@ namespace Server.Engines.NewMagincia
             }
 
             pet.ControlTarget = null;
-            pet.ControlOrder = OrderType.Stay;
+            pet.ControlOrder = LastOrderType.Stay;
             pet.Internalize();
 
             pet.SetControlMaster(null);
