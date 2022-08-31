@@ -65,7 +65,7 @@ namespace Server.Items
             }
         }
 
-        public override BaseAddonDeed Deed => new ShipPaintingDeed();
+        public override BaseAddonDeed Deed => new ShipPaintingDeed(m_ResourceCount);
 
         public override void GetProperties(ObjectPropertyList list, AddonComponent c)
         {
@@ -106,19 +106,47 @@ namespace Server.Items
 
     public class ShipPaintingDeed : BaseAddonDeed, IRewardOption
     {
+        private int m_ResourceCount;
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int ResourceCount
+        {
+            get => m_ResourceCount;
+            set
+            {
+                m_ResourceCount = value;
+                InvalidateProperties();
+            }
+        }
+
         public override int LabelNumber => 1154180;  // Ship Painting 
 
         private DirectionType _Direction;
 
         [Constructable]
         public ShipPaintingDeed()
+            : this(0)
+        {
+        }
+
+        [Constructable]
+        public ShipPaintingDeed(int resCount)
         {
             LootType = LootType.Blessed;
+
+            ResourceCount = resCount;
         }
 
         public ShipPaintingDeed(Serial serial)
             : base(serial)
         {
+        }
+
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            base.GetProperties(list);
+
+            list.Add(1154175, ResourceCount.ToString()); // Powder Charges: ~1_COUNT~
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -148,18 +176,37 @@ namespace Server.Items
                 base.OnDoubleClick(from);
         }
 
-        public override BaseAddon Addon => new ShipPaintingAddon(_Direction);
+        public override BaseAddon Addon
+        {
+            get
+            {
+                ShipPaintingAddon addon = new ShipPaintingAddon(_Direction, m_ResourceCount, DateTime.UtcNow + TimeSpan.FromDays(7));
+
+                return addon;
+            }
+        }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
+            writer.Write(1);
+
+            writer.Write(m_ResourceCount);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
+
+            switch (version)
+            {
+                case 1:
+                    m_ResourceCount = reader.ReadInt();
+                    break;
+                case 0:
+                    break;
+            }
         }
     }
 }
