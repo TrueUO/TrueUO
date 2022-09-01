@@ -58,7 +58,9 @@ namespace Server.Items
                     Item item = Loot.Construct(m_Potions);
 
                     if (item == null)
+                    {
                         return;
+                    }
 
                     ResourceCount--;
 
@@ -72,7 +74,7 @@ namespace Server.Items
             }
         }
 
-        public override BaseAddonDeed Deed => new BarrelSpongeDeed();
+        public override BaseAddonDeed Deed => new BarrelSpongeDeed(m_ResourceCount);
 
         public override void GetProperties(ObjectPropertyList list, AddonComponent c)
         {
@@ -139,13 +141,34 @@ namespace Server.Items
     [Furniture]
     public class BarrelSpongeDeed : BaseAddonDeed
     {
+        private int m_ResourceCount;
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int ResourceCount
+        {
+            get => m_ResourceCount;
+            set
+            {
+                m_ResourceCount = value;
+                InvalidateProperties();
+            }
+        }
+
         public override int LabelNumber => 1098376;  // Barrel Sponge
         public override bool IsArtifact => true; // allows dying of the deed.
 
         [Constructable]
         public BarrelSpongeDeed()
+            : this(0)
+        {
+        }
+
+        [Constructable]
+        public BarrelSpongeDeed(int resCount)
         {
             LootType = LootType.Blessed;
+
+            ResourceCount = resCount;
         }
 
         public BarrelSpongeDeed(Serial serial)
@@ -153,18 +176,37 @@ namespace Server.Items
         {
         }
 
-        public override BaseAddon Addon => new BarrelSpongeAddon();
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            base.GetProperties(list);
+
+            list.Add(1154178, ResourceCount.ToString()); // Potions: ~1_COUNT~
+        }
+
+        public override BaseAddon Addon =>
+            new BarrelSpongeAddon(m_ResourceCount, DateTime.UtcNow + TimeSpan.FromDays(7));
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0); // version
+            writer.Write(1);
+
+            writer.Write(m_ResourceCount);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            reader.ReadInt();
+            int version = reader.ReadInt();
+
+            switch (version)
+            {
+                case 1:
+                    m_ResourceCount = reader.ReadInt();
+                    break;
+                case 0:
+                    break;
+            }
         }
     }
 }

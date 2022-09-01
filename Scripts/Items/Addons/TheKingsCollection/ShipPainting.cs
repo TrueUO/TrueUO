@@ -97,7 +97,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_ResourceCount = reader.ReadInt();
             NextResourceCount = reader.ReadDateTime();
@@ -173,18 +173,13 @@ namespace Server.Items
             _Direction = (DirectionType)choice;
 
             if (!Deleted)
-                base.OnDoubleClick(from);
-        }
-
-        public override BaseAddon Addon
-        {
-            get
             {
-                ShipPaintingAddon addon = new ShipPaintingAddon(_Direction, m_ResourceCount, DateTime.UtcNow + TimeSpan.FromDays(7));
-
-                return addon;
+                base.OnDoubleClick(from);
             }
         }
+
+        public override BaseAddon Addon =>
+            new ShipPaintingAddon(_Direction, m_ResourceCount, DateTime.UtcNow + TimeSpan.FromDays(7));
 
         public override void Serialize(GenericWriter writer)
         {
