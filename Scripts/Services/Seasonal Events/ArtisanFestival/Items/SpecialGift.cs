@@ -27,21 +27,6 @@ namespace Server.Engines.ArtisanFestival
             list.Add(1157163, _Owner != null ? _Owner.Name : "Somebody"); // A Special Gift for ~1_NAME~ 
         }
 
-        public override void OnDoubleClick(Mobile from)
-        {
-            if (from is PlayerMobile pm && from.InRange(GetWorldLocation(), 3))
-            {
-                if (_Owner == null || pm == _Owner)
-                {
-                    base.OnDoubleClick(pm);
-                }
-                else
-                {
-                    pm.SendLocalizedMessage(1157162); // That's not your gift!
-                }
-            }
-        }
-
         private Item RandomGift(Mobile m)
         {
             switch (Utility.Random(4))
