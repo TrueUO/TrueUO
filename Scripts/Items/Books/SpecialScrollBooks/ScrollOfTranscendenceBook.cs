@@ -45,30 +45,32 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            _SkillInfo = new Dictionary<SkillCat, List<SkillName>>();
+            _SkillInfo = new Dictionary<SkillCat, List<SkillName>>
+            {
+                [SkillCat.Miscellaneous] = new List<SkillName> { SkillName.ArmsLore, SkillName.Begging, SkillName.Camping, SkillName.Cartography, SkillName.Forensics, SkillName.ItemID, SkillName.TasteID },
+                [SkillCat.Combat] = new List<SkillName> { SkillName.Anatomy, SkillName.Archery, SkillName.Fencing, SkillName.Focus, SkillName.Healing, SkillName.Macing, SkillName.Parry, SkillName.Swords, SkillName.Tactics, SkillName.Throwing, SkillName.Wrestling },
+                [SkillCat.TradeSkills] = new List<SkillName> { SkillName.Alchemy, SkillName.Blacksmith, SkillName.Fletching, SkillName.Carpentry, SkillName.Cooking, SkillName.Inscribe, SkillName.Lumberjacking, SkillName.Mining, SkillName.Tailoring, SkillName.Tinkering },
+                [SkillCat.Magic] = new List<SkillName> { SkillName.Bushido, SkillName.Chivalry, SkillName.EvalInt, SkillName.Imbuing, SkillName.Magery, SkillName.Meditation, SkillName.Mysticism, SkillName.Necromancy, SkillName.Ninjitsu, SkillName.MagicResist, SkillName.Spellweaving, SkillName.SpiritSpeak },
+                [SkillCat.Wilderness] = new List<SkillName> { SkillName.AnimalLore, SkillName.AnimalTaming, SkillName.Fishing, SkillName.Herding, SkillName.Tracking, SkillName.Veterinary },
+                [SkillCat.Thievery] = new List<SkillName> { SkillName.DetectHidden, SkillName.Hiding, SkillName.Lockpicking, SkillName.Poisoning, SkillName.RemoveTrap, SkillName.Snooping, SkillName.Stealing, SkillName.Stealth },
+                [SkillCat.Bard] = new List<SkillName> { SkillName.Discordance, SkillName.Musicianship, SkillName.Peacemaking, SkillName.Provocation }
+            };
 
-            _SkillInfo[SkillCat.Miscellaneous] = new List<SkillName> { SkillName.ArmsLore, SkillName.Begging, SkillName.Camping, SkillName.Cartography, SkillName.Forensics, SkillName.ItemID, SkillName.TasteID };
-            _SkillInfo[SkillCat.Combat] = new List<SkillName> { SkillName.Anatomy, SkillName.Archery, SkillName.Fencing, SkillName.Focus, SkillName.Healing, SkillName.Macing, SkillName.Parry, SkillName.Swords, SkillName.Tactics, SkillName.Throwing, SkillName.Wrestling };
-            _SkillInfo[SkillCat.TradeSkills] = new List<SkillName> { SkillName.Alchemy, SkillName.Blacksmith, SkillName.Fletching, SkillName.Carpentry, SkillName.Cooking, SkillName.Inscribe, SkillName.Lumberjacking, SkillName.Mining, SkillName.Tailoring, SkillName.Tinkering };
-            _SkillInfo[SkillCat.Magic] = new List<SkillName> { SkillName.Bushido, SkillName.Chivalry, SkillName.EvalInt, SkillName.Imbuing, SkillName.Magery, SkillName.Meditation, SkillName.Mysticism, SkillName.Necromancy, SkillName.Ninjitsu, SkillName.MagicResist, SkillName.Spellweaving, SkillName.SpiritSpeak };
-            _SkillInfo[SkillCat.Wilderness] = new List<SkillName> { SkillName.AnimalLore, SkillName.AnimalTaming, SkillName.Fishing, SkillName.Herding, SkillName.Tracking, SkillName.Veterinary };
-            _SkillInfo[SkillCat.Thievery] = new List<SkillName> { SkillName.DetectHidden, SkillName.Hiding, SkillName.Lockpicking, SkillName.Poisoning, SkillName.RemoveTrap, SkillName.Snooping, SkillName.Stealing, SkillName.Stealth };
-            _SkillInfo[SkillCat.Bard] = new List<SkillName> { SkillName.Discordance, SkillName.Musicianship, SkillName.Peacemaking, SkillName.Provocation };
-
-            _ValueInfo = new Dictionary<int, double>();
-
-            _ValueInfo[1151659] = 0.1;
-            _ValueInfo[1151660] = 0.2;
-            _ValueInfo[1151661] = 0.3;
-            _ValueInfo[1151662] = 0.4;
-            _ValueInfo[1151663] = 0.5;
-            _ValueInfo[1151664] = 0.6;
-            _ValueInfo[1151665] = 0.7;
-            _ValueInfo[1151666] = 0.8;
-            _ValueInfo[1151667] = 0.9;
-            _ValueInfo[1151668] = 1.0;
-            _ValueInfo[1151669] = 3.0;
-            _ValueInfo[1151670] = 5.0;
+            _ValueInfo = new Dictionary<int, double>
+            {
+                [1151659] = 0.1,
+                [1151660] = 0.2,
+                [1151661] = 0.3,
+                [1151662] = 0.4,
+                [1151663] = 0.5,
+                [1151664] = 0.6,
+                [1151665] = 0.7,
+                [1151666] = 0.8,
+                [1151667] = 0.9,
+                [1151668] = 1.0,
+                [1151669] = 3.0,
+                [1151670] = 5.0
+            };
         }
     }
 }
