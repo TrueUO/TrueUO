@@ -794,17 +794,15 @@ namespace Server.Items
 
         public bool TryCharge(Mobile from)
         {
-            Type charge = this is LightShipCannon ? typeof(LightPowderCharge) : typeof(HeavyPowderCharge);
-
             if (m_Charged)
             {
                 from.SendLocalizedMessage(1116012); //The cannon is already charged.
             }
-            else if (CheckForItem(charge, from))
+            else if (CheckForItem(typeof(PowderCharge), from))
             {
                 AddAction(from, 1149644); //Charging started.
                 DoAreaMessage(1116035, 10, from); //~1_NAME~ begins loading the cannon with a powder charge.
-                Timer.DelayCall(ActionTime, new TimerStateCallback(Charge), new object[] { from, charge });
+                Timer.DelayCall(ActionTime, new TimerStateCallback(Charge), new object[] { from, typeof(PowderCharge) });
                 return true;
             }
             else
@@ -812,14 +810,16 @@ namespace Server.Items
                 AddAction(from, 1149665); //Need powder charge.
                 from.SendLocalizedMessage(1149665);
             }
+
             return false;
         }
 
         public bool TryLoad(Mobile from)
         {
             if (!m_Charged)
+            {
                 from.SendLocalizedMessage(1116018); //The cannon needs to be charged with a rammer and powder charge before it can be loaded.
-
+            }
             else if (CheckForItem(typeof(Ramrod), from))
             {
                 AddAction(from, 1149666); //Select Ammunition
@@ -831,17 +831,20 @@ namespace Server.Items
                 AddAction(from, 1149660);
                 from.SendLocalizedMessage(1149660); //You need a ramrod.
             }
+
             return false;
         }
 
         public bool TryPrime(Mobile from)
         {
             if (m_Primed)
+            {
                 from.SendLocalizedMessage(1116019); //The cannon is already primed and ready to be fired.
-
+            }
             else if (!m_Charged || m_AmmoType == AmmunitionType.Empty)
+            {
                 from.SendLocalizedMessage(1116021); //The cannon needs to be charged and loaded before it can be primed.
-
+            }
             else if (CheckForItem(typeof(FuseCord), from))
             {
                 AddAction(from, 1149650); //Priming started
@@ -854,6 +857,7 @@ namespace Server.Items
                 AddAction(from, 1149661);
                 from.SendLocalizedMessage(1149661); //you need a fuse.
             }
+
             return false;
         }
 
@@ -981,9 +985,7 @@ namespace Server.Items
                 return;
             }
 
-            Type type = this is LightShipCannon ? typeof(LightPowderCharge) : typeof(HeavyPowderCharge);
-
-            Item item = Loot.Construct(type);
+            Item item = Loot.Construct(typeof(PowderCharge));
 
             if (item != null)
             {
