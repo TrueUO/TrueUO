@@ -649,7 +649,7 @@ namespace Server.Engines.Craft
 
             #region High Seas Cannons
 
-            index = AddCraft(typeof(Cannonball), 1116354, 1116029, 10.0, 60.0, typeof(IronIngot), 1044036, 12, 1044037);
+            index = AddCraft(typeof(Cannonball), 1116354, 1116266, 10.0, 60.0, typeof(IronIngot), 1044036, 12, 1044037);
             SetUseAllRes(index, true);
 
             index = AddCraft(typeof(Grapeshot), 1116354, 1116030, 15.0, 70.0, typeof(IronIngot), 1044036, 12, 1044037);
