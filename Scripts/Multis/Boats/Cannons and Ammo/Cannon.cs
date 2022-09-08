@@ -794,7 +794,7 @@ namespace Server.Items
 
         public bool TryCharge(Mobile from)
         {
-            Type charge = this is LightShipCannon ? typeof(LightPowderCharge) : typeof(HeavyPowderCharge);
+            Type charge = typeof(PowderCharge);
 
             if (m_Charged)
             {
@@ -981,7 +981,7 @@ namespace Server.Items
                 return;
             }
 
-            Type type = this is LightShipCannon ? typeof(LightPowderCharge) : typeof(HeavyPowderCharge);
+            Type type = typeof(PowderCharge);
 
             Item item = Loot.Construct(type);
 
@@ -1375,111 +1375,6 @@ namespace Server.Items
                 m_AmmoType = AmmunitionType.Empty;
 
             InvalidateDamageState();
-
-            Timer.DelayCall(Replace);
-        }
-
-        private void Replace()
-        {
-            if (m_Galleon != null && !m_Galleon.Deleted)
-            {
-                BaseShipCannon newCannon = null;
-                Point3D loc = Location;
-                Delete();
-
-                if (this is HeavyShipCannon)
-                {
-                    newCannon = new Carronade(m_Galleon);
-                }
-                else if (this is LightShipCannon)
-                {
-                    newCannon = new Culverin(m_Galleon);
-                }
-
-                if (newCannon != null)
-                {
-                    if (!m_Galleon.TryAddCannon(null, loc, newCannon, null))
-                    {
-                        ShipCannonDeed deed = GetDeed;
-
-                        if (deed != null)
-                        {
-                            m_Galleon.GalleonHold.DropItem(deed);
-                        }
-
-                        newCannon.Delete();
-                    }
-                }
-            }
-            else
-            {
-                Delete();
-            }
-        }
-    }
-
-    public class LightShipCannon : BaseCannon
-    {
-        public override int Range => 8;
-
-        public override ShipCannonDeed GetDeed => new LightShipCannonDeed();
-
-        public override Type[] LoadTypes => new[] { typeof(LightCannonball), typeof(LightGrapeshot), typeof(LightFlameCannonball),   typeof(LightFrostCannonball) };
-
-        public LightShipCannon(BaseGalleon g) : base(g)
-        {
-        }
-
-        public override bool TryLoadAmmo(Item ammo)
-        {
-            return ammo is LightCannonball || ammo is LightGrapeshot;
-        }
-
-        public LightShipCannon(Serial serial) : base(serial) { }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class HeavyShipCannon : BaseCannon
-    {
-        public override int Range => 10;
-        public override TimeSpan ActionTime => TimeSpan.FromSeconds(2.0);
-
-        public override int LabelNumber => 0;
-
-        public override Type[] LoadTypes => new[] { typeof(HeavyCannonball), typeof(HeavyGrapeshot), typeof(HeavyFrostCannonball), typeof(HeavyFlameCannonball) };
-
-        public HeavyShipCannon(BaseGalleon g) : base(g)
-        {
-        }
-
-        public override bool TryLoadAmmo(Item ammo)
-        {
-            return ammo is HeavyCannonball || ammo is HeavyGrapeshot;
-        }
-
-        public HeavyShipCannon(Serial serial) : base(serial) { }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
         }
     }
 }

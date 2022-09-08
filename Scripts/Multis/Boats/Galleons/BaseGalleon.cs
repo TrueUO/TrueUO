@@ -1101,7 +1101,7 @@ namespace Server.Multis
             if (cannon == null)
                 return;
 
-            int type = cannon is PumpkinCannon ? 3 : cannon is Blundercannon ? 2 : cannon is LightShipCannon || cannon is Culverin ? 0 : 1;
+            int type = cannon is PumpkinCannon ? 3 : cannon is Blundercannon ? 2 : cannon is Culverin ? 0 : 1;
 
             switch (Facing)
             {
