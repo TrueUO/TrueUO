@@ -197,8 +197,8 @@ namespace Server.Items
             {
                 ICannonAmmo ammo = null;
 
-                Cannonball cannon = FindItemByType<Cannonball>();
-                Grapeshot grapeshot = FindItemByType<Grapeshot>();
+                var cannon = FindItemByType<BaseCannonball>();
+                var grapeshot = FindItemByType<Grapeshot>();
 
                 if (cannon != null)
                 {
@@ -210,7 +210,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    cannon = m.Backpack.FindItemByType<Cannonball>();
+                    cannon = m.Backpack.FindItemByType<BaseCannonball>();
                     grapeshot = m.Backpack.FindItemByType<Grapeshot>();
 
                     if (cannon != null)
@@ -328,7 +328,7 @@ namespace Server.Items
                 switch (AmmoType)
                 {
                     default: item = null; break;
-                    case AmmunitionType.Grapeshot: item = new Cannonball(); break;
+                    case AmmunitionType.Grapeshot: item = new Grapeshot(); break;
                     case AmmunitionType.Cannonball: item = new Cannonball(); break;
                     case AmmunitionType.FrostCannonball: item = new FrostCannonball(); break;
                     case AmmunitionType.FlameCannonball: item = new FlameCannonball(); break;
@@ -404,7 +404,7 @@ namespace Server.Items
 
         private readonly Type[] _Types =
         {
-            typeof(Cannonball), typeof(Grapeshot), typeof(PowderCharge), typeof(FuseCord)
+            typeof(BaseCannonball), typeof(Grapeshot), typeof(PowderCharge), typeof(FuseCord)
         };
 
         public override void OnDoubleClickDead(Mobile m)
