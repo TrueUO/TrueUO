@@ -221,7 +221,7 @@ namespace Server.Engines.Quests
                                 mob.SendLocalizedMessage(1149840); //Here is some special cannon ammunition.  It's imported!
                             }
 
-                            if (reward is HeavyFlameCannonball || reward is LightFlameCannonball || reward is HeavyFrostCannonball || reward is LightFrostCannonball)
+                            if (reward is FlameCannonball || reward is FrostCannonball)
                             {
                                 reward.Amount = Utility.RandomMinMax(5, 10);
                             }
@@ -285,11 +285,11 @@ namespace Server.Engines.Quests
 
         private readonly Type[] m_CapturedRewards =
         {
-           typeof(RuinedShipPlans),      typeof(RuinedShipPlans),
-           typeof(LightFlameCannonball), typeof(HeavyFlameCannonball),
-           typeof(LightFrostCannonball), typeof(HeavyFrostCannonball),
-           typeof(LightFlameCannonball), typeof(HeavyFlameCannonball),
-           typeof(LightFrostCannonball), typeof(HeavyFrostCannonball)
+           typeof(RuinedShipPlans), typeof(RuinedShipPlans),
+           typeof(FlameCannonball), typeof(FlameCannonball),
+           typeof(FrostCannonball), typeof(FrostCannonball),
+           typeof(FlameCannonball), typeof(FlameCannonball),
+           typeof(FrostCannonball), typeof(FrostCannonball)
         };
 
         public override void Serialize(GenericWriter writer)
