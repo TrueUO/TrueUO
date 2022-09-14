@@ -33,9 +33,7 @@ namespace Server.Engines.Quests.Collector
 
         public override void OnDoubleClick(Mobile from)
         {
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
+            if (from is PlayerMobile player)
             {
                 QuestSystem qs = player.Quest;
 
@@ -81,53 +79,46 @@ namespace Server.Engines.Quests.Collector
                 if (m_Paints.Deleted || !m_Paints.IsChildOf(from.Backpack))
                     return;
 
-                PlayerMobile player = from as PlayerMobile;
-
-                if (player != null)
+                if (from is PlayerMobile player)
                 {
                     QuestSystem qs = player.Quest;
 
-                    if (qs is CollectorQuest)
+                    if (qs is CollectorQuest && qs.FindObjective(typeof(CaptureImagesObjective)) is CaptureImagesObjective obj && !obj.Completed)
                     {
-                        CaptureImagesObjective obj = qs.FindObjective(typeof(CaptureImagesObjective)) as CaptureImagesObjective;
-
-                        if (obj != null && !obj.Completed)
+                        if (targeted is Mobile)
                         {
-                            if (targeted is Mobile)
+                            ImageType image;
+                            CaptureResponse response = obj.CaptureImage(targeted.GetType().Name == "GreaterMongbat" ? new Mongbat().GetType() : targeted.GetType(), out image);
+
+                            switch (response)
                             {
-                                ImageType image;
-                                CaptureResponse response = obj.CaptureImage(targeted.GetType().Name == "GreaterMongbat" ? new Mongbat().GetType() : targeted.GetType(), out image);
-
-                                switch (response)
+                                case CaptureResponse.Valid:
                                 {
-                                    case CaptureResponse.Valid:
-                                        {
-                                            player.SendLocalizedMessage(1055125); // The enchanted paints swirl for a moment then an image begins to take shape. *Click*
-                                            player.AddToBackpack(new PaintedImage(image));
+                                    player.SendLocalizedMessage(1055125); // The enchanted paints swirl for a moment then an image begins to take shape. *Click*
+                                    player.AddToBackpack(new PaintedImage(image));
 
-                                            break;
-                                        }
-                                    case CaptureResponse.AlreadyDone:
-                                        {
-                                            player.SendAsciiMessage(0x2C, "You have already captured the image of this creature");
+                                    break;
+                                }
+                                case CaptureResponse.AlreadyDone:
+                                {
+                                    player.SendAsciiMessage(0x2C, "You have already captured the image of this creature");
 
-                                            break;
-                                        }
-                                    case CaptureResponse.Invalid:
-                                        {
-                                            player.SendLocalizedMessage(1055124); // You have no interest in capturing the image of this creature.
+                                    break;
+                                }
+                                case CaptureResponse.Invalid:
+                                {
+                                    player.SendLocalizedMessage(1055124); // You have no interest in capturing the image of this creature.
 
-                                            break;
-                                        }
+                                    break;
                                 }
                             }
-                            else
-                            {
-                                player.SendAsciiMessage(0x35, "You have no interest in that.");
-                            }
-
-                            return;
                         }
+                        else
+                        {
+                            player.SendAsciiMessage(0x35, "You have no interest in that.");
+                        }
+
+                        return;
                     }
                 }
 

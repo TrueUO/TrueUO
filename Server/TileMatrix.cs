@@ -129,7 +129,7 @@ namespace Server
 
 				for (int j = 0; j < 8; ++j)
 				{
-					m_EmptyStaticBlock[i][j] = new StaticTile[0];
+					m_EmptyStaticBlock[i][j] = Array.Empty<StaticTile>();
 				}
 			}
 

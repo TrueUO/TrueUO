@@ -31,17 +31,13 @@ namespace Server.Engines.Harvest
                     // grave
                     if (itemID == 0xED3 || itemID == 0xEDF || itemID == 0xEE0 || itemID == 0xEE1 || itemID == 0xEE2 || itemID == 0xEE8)
                     {
-                        PlayerMobile player = from as PlayerMobile;
-
-                        if (player != null)
+                        if (from is PlayerMobile player)
                         {
                             QuestSystem qs = player.Quest;
 
                             if (qs is WitchApprenticeQuest)
                             {
-                                FindIngredientObjective obj = qs.FindObjective(typeof(FindIngredientObjective)) as FindIngredientObjective;
-
-                                if (obj != null && !obj.Completed && obj.Ingredient == Ingredient.Bones)
+                                if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.Bones)
                                 {
                                     player.SendLocalizedMessage(1055037); // You finish your grim work, finding some of the specific bones listed in the Hag's recipe.
                                     obj.Complete();

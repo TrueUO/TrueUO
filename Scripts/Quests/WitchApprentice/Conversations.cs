@@ -1,3 +1,5 @@
+using System;
+
 namespace Server.Engines.Quests.Hag
 {
     public class DontOfferConversation : QuestConversation
@@ -254,7 +256,7 @@ namespace Server.Engines.Quests.Hag
                 1055009;
         public override void OnRead()
         {
-            System.AddObjective(new FindIngredientObjective(new Ingredient[0]));
+            System.AddObjective(new FindIngredientObjective(Array.Empty<Ingredient>()));
         }
     }
 

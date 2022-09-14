@@ -243,7 +243,7 @@ namespace Server.Commands
 				{
 					argString = "";
 					command = text.ToLower();
-					args = new string[0];
+					args = Array.Empty<string>();
 				}
 
 				m_Entries.TryGetValue(command, out CommandEntry entry);
