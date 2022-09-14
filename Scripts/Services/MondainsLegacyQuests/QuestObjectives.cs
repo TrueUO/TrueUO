@@ -216,7 +216,7 @@ namespace Server.Engines.Quests
             {
                 Type type = Creatures[index];
 
-                if (type.IsAssignableFrom(mob.GetType()))
+                if (type.IsInstanceOfType(mob))
                 {
                     if (Region != null && !mob.Region.IsPartOf(Region))
                     {
@@ -333,7 +333,7 @@ namespace Server.Engines.Quests
             if (m_Obtain == null)
                 return false;
 
-            if (m_Obtain.IsAssignableFrom(item.GetType()))
+            if (m_Obtain.IsInstanceOfType(item))
                 return true;
 
             return false;

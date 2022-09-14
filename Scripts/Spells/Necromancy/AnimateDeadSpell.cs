@@ -137,7 +137,7 @@ namespace Server.Spells.Necromancy
                    new SummonEntry(0, typeof(PatchworkSkeleton))
                }),
             // Default group
-            new CreatureGroup(new Type[0], new[]
+            new CreatureGroup(Type.EmptyTypes, new[]
             {
                 new SummonEntry(18000, typeof(LichLord)),
                 new SummonEntry(10000, typeof(FleshGolem)),

@@ -390,7 +390,7 @@ namespace Server.Gumps
 
                 try
                 {
-                    ConstructorInfo ctor = Type.GetConstructor(new Type[0]);
+                    ConstructorInfo ctor = Type.GetConstructor(Type.EmptyTypes);
                     if (ctor != null)
                         i = ctor.Invoke(null) as Item;
                 }
