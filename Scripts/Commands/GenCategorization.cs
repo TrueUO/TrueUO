@@ -292,7 +292,7 @@ namespace Server.Commands
         {
             m_Title = "(empty)";
             m_Matches = new Type[0];
-            m_SubCategories = new CategoryEntry[0];
+            m_SubCategories = Array.Empty<CategoryEntry>();
             m_Matched = new ArrayList();
         }
 

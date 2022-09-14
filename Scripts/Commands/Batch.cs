@@ -227,7 +227,7 @@ namespace Server.Commands
             {
                 argString = "";
                 command = m_Command.ToLower();
-                args = new string[0];
+                args = Array.Empty<string>();
             }
         }
     }

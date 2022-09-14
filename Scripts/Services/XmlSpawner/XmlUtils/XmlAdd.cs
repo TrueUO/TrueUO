@@ -1029,7 +1029,7 @@ namespace Server.Mobiles
 
                 XmlSpawner spawner = new XmlSpawner(SpawnId, from.Location.X, from.Location.Y, 0, 0, sname, maxcount,
                     defs.MinDelay, defs.MaxDelay, defs.Duration, defs.ProximityRange, defs.ProximitySound, 1,
-                    defs.Team, defs.HomeRange, defs.HomeRangeIsRelative, new XmlSpawner.SpawnObject[0], defs.RefractMin, defs.RefractMax,
+                    defs.Team, defs.HomeRange, defs.HomeRangeIsRelative, Array.Empty<XmlSpawner.SpawnObject>(), defs.RefractMin, defs.RefractMax,
                     defs.TODStart, defs.TODEnd, null, defs.TriggerObjectProp, defs.ProximityMsg, defs.TriggerOnCarried, defs.NoTriggerOnCarried,
                     defs.SpeechTrigger, null, null, defs.PlayerTriggerProp, defs.TriggerProbability, null, defs.Group, defs.TODMode, defs.KillReset, defs.ExternalTriggering,
                     defs.SequentialSpawn, null, defs.AllowGhostTrig, defs.AllowNPCTrig, defs.SpawnOnTrigger, null, defs.DespawnTime, defs.SkillTrigger, defs.SmartSpawning, null)

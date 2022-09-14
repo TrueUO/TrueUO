@@ -1891,7 +1891,7 @@ namespace Server.Multis
         {
             Foundation = foundation;
             Components = components;
-            Fixtures = new MultiTileEntry[0];
+            Fixtures = Array.Empty<MultiTileEntry>();
         }
 
         public DesignState(DesignState toCopy)
@@ -2009,7 +2009,7 @@ namespace Server.Multis
                 Components.Add(mte.m_ItemID, mte.m_OffsetX, mte.m_OffsetY, mte.m_OffsetZ);
             }
 
-            Fixtures = new MultiTileEntry[0];
+            Fixtures = Array.Empty<MultiTileEntry>();
         }
 
         public void MeltFixtures()

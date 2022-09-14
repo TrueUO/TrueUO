@@ -78,7 +78,7 @@ namespace Server.Spells.Necromancy
         private static readonly CreatureGroup[] m_Groups =
         {
             // Undead group--empty
-            new CreatureGroup(SlayerGroup.GetEntryByName(SlayerName.Silver).Types, new SummonEntry[0]),
+            new CreatureGroup(SlayerGroup.GetEntryByName(SlayerName.Silver).Types, Array.Empty<SummonEntry>()),
             // Insects
             new CreatureGroup(new[]
             {
