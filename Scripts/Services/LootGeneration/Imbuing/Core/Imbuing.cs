@@ -37,8 +37,7 @@ namespace Server.SkillHandlers
             }
             else if (from is PlayerMobile pm)
             {
-                pm.CloseGump(typeof(ImbuingGump));
-                BaseGump.SendGump(new ImbuingGump(pm));
+                BaseGump.SendGump(new ImbuingGump(pm), true);
                 pm.BeginAction(typeof(Imbuing));
             }
 

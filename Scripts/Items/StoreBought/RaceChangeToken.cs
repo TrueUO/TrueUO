@@ -27,8 +27,7 @@ namespace Server.Items
             }
             else if (from is PlayerMobile mobile)
             {
-                mobile.CloseGump(typeof(RaceChangeConfirmGump));
-                BaseGump.SendGump(new RaceChangeConfirmGump(mobile, this));
+                BaseGump.SendGump(new RaceChangeConfirmGump(mobile, this), true);
             }
         }
 

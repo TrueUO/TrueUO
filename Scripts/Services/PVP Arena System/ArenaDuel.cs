@@ -456,7 +456,7 @@ namespace Server.Engines.ArenaSystem
 
             foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> kvp in GetParticipants())
             {
-                BaseGump.SendGump(new OfferDuelGump(kvp.Key, this, Arena, false, true));
+                BaseGump.SendGump(new OfferDuelGump(kvp.Key, this, Arena, false, true), true);
             }
 
             HasBegun = true;
@@ -842,7 +842,7 @@ namespace Server.Engines.ArenaSystem
         {
             foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> part in GetParticipants())
             {
-                BaseGump.SendGump(new DuelResultsGump(part.Key, this, winner));
+                BaseGump.SendGump(new DuelResultsGump(part.Key, this, winner), true);
             }
         }
 

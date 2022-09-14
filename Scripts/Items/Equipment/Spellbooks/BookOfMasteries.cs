@@ -50,7 +50,9 @@ namespace Server.Items
             SimpleContextMenuEntry menu = new SimpleContextMenuEntry(from, 1151948, m =>
                 {
                     if (m is PlayerMobile mobile && IsChildOf(mobile.Backpack) && CheckCooldown(mobile))
-                        BaseGump.SendGump(new MasterySelectionGump(mobile, this));
+                    {
+                        BaseGump.SendGump(new MasterySelectionGump(mobile, this), true);
+                    }
                 });
 
             if (!IsChildOf(from.Backpack) || !CheckCooldown(from))

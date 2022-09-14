@@ -56,7 +56,7 @@ namespace Server.Items
                     }
                 }
 
-                BaseGump.SendGump(new CircuitTrapGump(mobile, this));
+                BaseGump.SendGump(new CircuitTrapGump(mobile, this), true);
             }
         }
 

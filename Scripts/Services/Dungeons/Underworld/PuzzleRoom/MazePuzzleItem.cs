@@ -39,7 +39,7 @@ namespace Server.Items
             {
                 pm.CloseGump(typeof(PuzzleChest.PuzzleGump));
                 pm.CloseGump(typeof(PuzzleChest.StatusGump));
-                BaseGump.SendGump(new CircuitTrapGump(pm, this));
+                BaseGump.SendGump(new CircuitTrapGump(pm, this), true);
             }
         }
 

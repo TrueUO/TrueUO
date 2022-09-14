@@ -340,7 +340,7 @@ namespace Server.Gumps
 
                 case 10099: // Back
                     {
-                        SendGump(new ImbueSelectGump(User, context.LastImbued));
+                        SendGump(new ImbueSelectGump(User, context.LastImbued), true);
                         break;
                     }
                 case 10100:  // Imbue the Item
@@ -360,7 +360,7 @@ namespace Server.Gumps
         {
             Timer.DelayCall(TimeSpan.FromSeconds(1.5), () =>
             {
-                SendGump(new ImbuingGump(pm));
+                SendGump(new ImbuingGump(pm), true);
             });
         }
 

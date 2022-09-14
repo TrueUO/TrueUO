@@ -444,7 +444,7 @@ namespace Server.Engines.UOStore
 
             if (!user.HasGump(typeof(UltimaStoreGump)))
             {
-                BaseGump.SendGump(new UltimaStoreGump(user, forcedEntry));
+                BaseGump.SendGump(new UltimaStoreGump(user, forcedEntry), true);
             }
         }
 
@@ -867,7 +867,7 @@ namespace Server.Engines.UOStore
             {
                 if (m is PlayerMobile mobile)
                 {
-                    BaseGump.SendGump(new NoFundsGump(mobile));
+                    BaseGump.SendGump(new NoFundsGump(mobile), true);
                 }
             }
             else

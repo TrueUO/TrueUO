@@ -16,8 +16,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (!from.HasGump(typeof(BountyBoardGump)))
-                BaseGump.SendGump(new BountyBoardGump(from));
+            BaseGump.SendGump(new BountyBoardGump(from), true);
         }
 
         public ProfessionalBountyBoard(Serial serial) : base(serial) { }

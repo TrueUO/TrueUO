@@ -368,7 +368,7 @@ namespace Server.Services.TownCryer
 
                             if (id >= 0 && id < TownCryerSystem.NewsEntries.Count)
                             {
-                                SendGump(new TownCryerNewsGump(User, Cryer, TownCryerSystem.NewsEntries[id]));
+                                SendGump(new TownCryerNewsGump(User, Cryer, TownCryerSystem.NewsEntries[id]), true);
                             }
                         }
                         else if (id < 300)
@@ -377,7 +377,7 @@ namespace Server.Services.TownCryer
 
                             if (id >= 0 && id < TownCryerSystem.ModeratorEntries.Count)
                             {
-                                SendGump(new TownCryerEventModeratorGump(User, Cryer, TownCryerSystem.ModeratorEntries[id]));
+                                SendGump(new TownCryerEventModeratorGump(User, Cryer, TownCryerSystem.ModeratorEntries[id]), true);
                             }
                         }
                         else if (id < 400)
@@ -386,7 +386,7 @@ namespace Server.Services.TownCryer
 
                             if (id >= 0 && id < TownCryerSystem.CityEntries.Count)
                             {
-                                SendGump(new TownCryerCityGump(User, Cryer, TownCryerSystem.CityEntries[id]));
+                                SendGump(new TownCryerCityGump(User, Cryer, TownCryerSystem.CityEntries[id]), true);
                             }
                         }
                         else if (id < 600)
@@ -395,7 +395,7 @@ namespace Server.Services.TownCryer
 
                             if (id >= 0 && id < TownCryerSystem.GuildEntries.Count)
                             {
-                                SendGump(new TownCryerGuildGump(User, Cryer, TownCryerSystem.GuildEntries[id]));
+                                SendGump(new TownCryerGuildGump(User, Cryer, TownCryerSystem.GuildEntries[id]), true);
                             }
                         }
                         else if (id < 3000)
@@ -406,7 +406,7 @@ namespace Server.Services.TownCryer
 
                                 if (id >= 0 && id < TownCryerSystem.ModeratorEntries.Count)
                                 {
-                                    SendGump(new CreateEMEntryGump(User, Cryer, TownCryerSystem.ModeratorEntries[id]));
+                                    SendGump(new CreateEMEntryGump(User, Cryer, TownCryerSystem.ModeratorEntries[id]), true);
                                 }
                             }
                             else
@@ -433,7 +433,7 @@ namespace Server.Services.TownCryer
 
                                     if (id >= 0 && id < TownCryerSystem.CityEntries.Count)
                                     {
-                                        SendGump(new CreateCityEntryGump(User, Cryer, City, TownCryerSystem.CityEntries[id]));
+                                        SendGump(new CreateCityEntryGump(User, Cryer, City, TownCryerSystem.CityEntries[id]), true);
                                     }
                                 }
                                 else
@@ -457,7 +457,7 @@ namespace Server.Services.TownCryer
 
                                 if (id >= 0 && id < TownCryerSystem.GuildEntries.Count)
                                 {
-                                    SendGump(new CreateGuildEntryGump(User, Cryer, TownCryerSystem.GuildEntries[id]));
+                                    SendGump(new CreateGuildEntryGump(User, Cryer, TownCryerSystem.GuildEntries[id]), true);
                                 }
                             }
                             else

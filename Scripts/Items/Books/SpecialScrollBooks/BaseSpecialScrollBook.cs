@@ -61,7 +61,7 @@ namespace Server.Items
             }
             else if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2))
             {
-                BaseGump.SendGump(new SpecialScrollBookGump(mobile, this));
+                BaseGump.SendGump(new SpecialScrollBookGump(mobile, this), true);
             }
             else if (m.AccessLevel > AccessLevel.Player)
             {

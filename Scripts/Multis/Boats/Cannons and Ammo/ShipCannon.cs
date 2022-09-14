@@ -1150,11 +1150,11 @@ namespace Server.Items
                     {
                         if (delay != TimeSpan.Zero)
                         {
-                            Timer.DelayCall(delay, () => BaseGump.SendGump(new ShipCannonGump(pm, this)));
+                            Timer.DelayCall(delay, () => BaseGump.SendGump(new ShipCannonGump(pm, this), true));
                         }
                         else
                         {
-                            BaseGump.SendGump(new ShipCannonGump(pm, this));
+                            BaseGump.SendGump(new ShipCannonGump(pm, this), true);
                         }
                     }
                 }

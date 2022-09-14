@@ -19,7 +19,7 @@ namespace Server.Engines.Astronomy
         {
             if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 3))
             {
-                BaseGump.SendGump(new ConstellationLedgerGump(mobile));
+                BaseGump.SendGump(new ConstellationLedgerGump(mobile), true);
             }
         }
 

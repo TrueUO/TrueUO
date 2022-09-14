@@ -22,7 +22,7 @@ namespace Server.Items
         {
             if (IsChildOf(m.Backpack))
             {
-                BaseGump.SendGump(new HairDyeConfirmGump(m as PlayerMobile, Hue, this));
+                BaseGump.SendGump(new HairDyeConfirmGump(m as PlayerMobile, Hue, this), true);
             }
             else
             {

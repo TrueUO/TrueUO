@@ -244,8 +244,8 @@ namespace Server.AccountVault
 
             InvalidateProperties();
 
-            BaseGump.SendGump(new VaultActionsGump(from, this));
-            BaseGump.SendGump(new NewVaultPurchaseGump(from, this));
+            BaseGump.SendGump(new VaultActionsGump(from, this), true);
+            BaseGump.SendGump(new NewVaultPurchaseGump(from, this), true);
         }
 
         public void MoveTo(Mobile from)
@@ -610,7 +610,7 @@ namespace Server.AccountVault
 
                             if (entry != null)
                             {
-                                BaseGump.SendGump(new PromoItemGump(pm, entry, 0x9CCB));
+                                BaseGump.SendGump(new PromoItemGump(pm, entry, 0x9CCB), true);
                             }
                         }
                         else if (manager != null)
@@ -630,7 +630,7 @@ namespace Server.AccountVault
                             {
                                 vault.TakeOwnership(pm);
                             }
-                        }));
+                        }), true);
                     }
                 }
                 else
@@ -847,7 +847,7 @@ namespace Server.AccountVault
             {
                 if (Owner.From is PlayerMobile pm && Container != null && !Container.Deleted)
                 {
-                    BaseGump.SendGump(new ContainerDisplayGump(pm, Container, 1158005));
+                    BaseGump.SendGump(new ContainerDisplayGump(pm, Container, 1158005), true);
                 }
             }
         }

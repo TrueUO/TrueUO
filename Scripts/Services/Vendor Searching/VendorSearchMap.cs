@@ -315,7 +315,7 @@ namespace Server.Items
             {
                 if (VendorMap.IsSale())
                 {
-                    BaseGump.SendGump(new ConfirmTeleportGump(VendorMap, (PlayerMobile)Clicker));
+                    BaseGump.SendGump(new ConfirmTeleportGump(VendorMap, (PlayerMobile)Clicker), true);
                 }
                 else
                 {
@@ -340,7 +340,7 @@ namespace Server.Items
             {
                 if (Clicker is PlayerMobile mobile)
                 {
-                    BaseGump.SendGump(new ConfirmTeleportGump(VendorMap, mobile));
+                    BaseGump.SendGump(new ConfirmTeleportGump(VendorMap, mobile), true);
                 }
             }
         }

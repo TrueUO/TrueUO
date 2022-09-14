@@ -37,7 +37,7 @@ namespace Server.Engines.TreasuresOfDoom
                     new PageData(5, 1155674, new SelectionEntry(1155675, 7)),
                     new PageData(6, 1155676, new SelectionEntry(1155677, 8)),
                     new PageData(7, 1155678),
-                    new PageData(8, 1155679)));
+                    new PageData(8, 1155679)), true);
             }
         }
 

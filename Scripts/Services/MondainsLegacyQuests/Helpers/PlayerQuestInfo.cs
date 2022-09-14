@@ -49,7 +49,7 @@ namespace Server.Engines.Quests
                         var chains = subject.Chains;
                         var done = subject.DoneQuests;
 
-                        SendGump(new PlayerQuestInfoGump(pm, subject));
+                        SendGump(new PlayerQuestInfoGump(pm, subject), true);
                     }
                 });
             }
@@ -219,7 +219,7 @@ namespace Server.Engines.Quests
                                     {
                                         Subject.DoneQuests.Remove(restart);
                                         User.SendMessage("Restart info removed.");
-                                    }));
+                                    }), true);
                             }
                         }
                     }

@@ -51,11 +51,11 @@ namespace Server.Items
             {
                 if (Pending != null)
                 {
-                    BaseGump.SendGump(new GreaterBraceletOfBindingGump(mobile, this, Pending));
+                    BaseGump.SendGump(new GreaterBraceletOfBindingGump(mobile, this, Pending), true);
                 }
                 else
                 {
-                    BaseGump.SendGump(new GreaterBraceletOfBindingGump(mobile, this));
+                    BaseGump.SendGump(new GreaterBraceletOfBindingGump(mobile, this), true);
                 }
             }
             else
@@ -232,7 +232,7 @@ namespace Server.Items
                                             User.SendLocalizedMessage(1151777, pm.Name); // Waiting for ~1_val~ to respond.
                                             Refresh();
 
-                                            SendGump(new ConfirmBindGump(pm, User, id, Bracelet, false));
+                                            SendGump(new ConfirmBindGump(pm, User, id, Bracelet, false), true);
                                         }
                                     }
                                     else
@@ -254,7 +254,7 @@ namespace Server.Items
 
                     if (id >= 0 && id < Bracelet.Friends.Length && Bracelet.Friends[id] != null)
                     {
-                        SendGump(new ConfirmBindGump(User, Bracelet.Friends[id].Mobile, id, Bracelet.Friends[id].Bracelet as GreaterBraceletOfBinding, true));
+                        SendGump(new ConfirmBindGump(User, Bracelet.Friends[id].Mobile, id, Bracelet.Friends[id].Bracelet as GreaterBraceletOfBinding, true), true);
                     }
                 }
             }
@@ -329,7 +329,7 @@ namespace Server.Items
                                 }
 
                                 bracelet.Remove(entry.Mobile);
-                                SendGump(new GreaterBraceletOfBindingGump(User, bracelet));
+                                SendGump(new GreaterBraceletOfBindingGump(User, bracelet), true);
                             }
                         }
                         else
@@ -351,7 +351,7 @@ namespace Server.Items
                                     entry = new BindEntry(From, Bracelet);
                                     binding.Pending = entry;
 
-                                    SendGump(new GreaterBraceletOfBindingGump(User, binding, entry));
+                                    SendGump(new GreaterBraceletOfBindingGump(User, binding, entry), true);
                                 }
                                 else
                                 {

@@ -459,11 +459,9 @@ namespace Server.Mobiles
                     User.CloseGump(typeof(PetTrainingConfirmationGump));
                     break;
                 case 1: // training tracker
-                    User.CloseGump(typeof(PetTrainingProgressGump));
-
                     Timer.DelayCall(TimeSpan.FromSeconds(.5), () =>
                         {
-                            SendGump(new PetTrainingProgressGump(User, Creature));
+                            SendGump(new PetTrainingProgressGump(User, Creature), true);
                         });
                     break;
                 case 2: // pet training options
@@ -489,9 +487,8 @@ namespace Server.Mobiles
                                     SendGump(new PetTrainingStyleConfirmGump(User, 1157571, 1157572, () =>
                                     {
                                         Refresh();
-                                        User.CloseGump(typeof(PetTrainingOptionsGump));
-                                        SendGump(new PetTrainingOptionsGump(User, Creature));
-                                    }));
+                                        SendGump(new PetTrainingOptionsGump(User, Creature), true);
+                                    }), true);
                                 });
                         }
                         else
@@ -499,8 +496,7 @@ namespace Server.Mobiles
                             Timer.DelayCall(TimeSpan.FromSeconds(.5), () =>
                                 {
                                     Refresh();
-                                    User.CloseGump(typeof(PetTrainingOptionsGump));
-                                    SendGump(new PetTrainingOptionsGump(User, Creature));
+                                    SendGump(new PetTrainingOptionsGump(User, Creature), true);
                                 });
                         }
                     }
@@ -514,7 +510,7 @@ namespace Server.Mobiles
                             {
                                 trainProfile1.EndTraining();
                             }
-                        }));
+                        }), true);
                     break;
                 case 4: // begin training
                     TrainingProfile trainProfile2 = PetTrainingHelper.GetTrainingProfile(Creature, true);
@@ -1127,8 +1123,7 @@ namespace Server.Mobiles
                         if (User.HasGump(typeof(NewAnimalLoreGump)))
                         {
                             Refresh();
-                            User.CloseGump(typeof(PetTrainingPlanningGump));
-                            SendGump(new PetTrainingPlanningGump(User, Creature));
+                            SendGump(new PetTrainingPlanningGump(User, Creature), true);
                         }
                     });
                 return;
@@ -1141,8 +1136,7 @@ namespace Server.Mobiles
                         if (User.HasGump(typeof(NewAnimalLoreGump)))
                         {
                             Refresh();
-                            User.CloseGump(typeof(PetTrainingInfoGump));
-                            SendGump(new PetTrainingInfoGump(User));
+                            SendGump(new PetTrainingInfoGump(User), true);
                         }
                     });
                 return;
@@ -1203,8 +1197,7 @@ namespace Server.Mobiles
                     {
                         if (User.HasGump(typeof(NewAnimalLoreGump)))
                         {
-                            User.CloseGump(typeof(PetTrainingConfirmationGump));
-                            SendGump(new PetTrainingConfirmationGump(User, Creature, tp));
+                            SendGump(new PetTrainingConfirmationGump(User, Creature, tp), true);
                         }
                     });
             }
@@ -1497,7 +1490,7 @@ namespace Server.Mobiles
                         {
                             if (User.HasGump(typeof(NewAnimalLoreGump)))
                             {
-                                SendGump(new PetTrainingOptionsGump(User, Creature));
+                                SendGump(new PetTrainingOptionsGump(User, Creature), true);
                             }
                         });
                     break;
@@ -1660,7 +1653,7 @@ namespace Server.Mobiles
                             () =>
                             {
                                 ResendGumps(profile.HasBegunTraining);
-                            }));
+                            }), true);
                     }
                     else
                     {
@@ -1689,7 +1682,7 @@ namespace Server.Mobiles
                             }
                             else
                             {
-                                SendGump(new PetTrainingPlanningGump(User, Creature));
+                                SendGump(new PetTrainingPlanningGump(User, Creature), true);
                             }
                         }
                     });
@@ -1709,7 +1702,7 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    SendGump(new NewAnimalLoreGump(User, Creature));
+                    SendGump(new NewAnimalLoreGump(User, Creature), true);
                 }
 
                 if (sendOptions)
@@ -1722,7 +1715,7 @@ namespace Server.Mobiles
                     }
                     else
                     {
-                        SendGump(new PetTrainingOptionsGump(User, Creature));
+                        SendGump(new PetTrainingOptionsGump(User, Creature), true);
                     }
                 }
             });

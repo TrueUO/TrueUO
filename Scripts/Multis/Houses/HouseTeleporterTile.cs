@@ -304,10 +304,7 @@ namespace Server.Multis
                 if (Item == null || Item.Deleted)
                     return;
 
-                if (!Mobile.HasGump(typeof(HouseTeleporterTypeGump)))
-                {
-                    BaseGump.SendGump(new HouseTeleporterTypeGump((PlayerMobile)Mobile, Item));
-                }
+                BaseGump.SendGump(new HouseTeleporterTypeGump((PlayerMobile)Mobile, Item), true);
             }
         }
 

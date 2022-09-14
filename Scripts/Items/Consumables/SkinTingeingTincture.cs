@@ -24,10 +24,7 @@ namespace Server.Items
         {
             if (IsChildOf(m.Backpack) && m is PlayerMobile mobile)
             {
-                if (!mobile.HasGump(typeof(InternalGump)))
-                {
-                    BaseGump.SendGump(new InternalGump(mobile, this));
-                }
+                BaseGump.SendGump(new InternalGump(mobile, this), true);
             }
         }
 

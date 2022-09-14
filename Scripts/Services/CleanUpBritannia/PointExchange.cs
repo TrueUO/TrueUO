@@ -28,8 +28,7 @@ namespace Server.Engines.Points
             {
                 if (m is PlayerMobile pm)
                 {
-                    pm.CloseGump(typeof(InternalGump));
-                    BaseGump.SendGump(new InternalGump(pm));
+                    BaseGump.SendGump(new InternalGump(pm), true);
                 }
             }
             else

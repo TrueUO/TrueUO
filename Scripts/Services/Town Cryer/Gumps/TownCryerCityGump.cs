@@ -33,7 +33,7 @@ namespace Server.Services.TownCryer
                 {
                     Category = TownCryerGump.GumpCategory.City
                 };
-                SendGump(gump);
+                SendGump(gump, true);
             }
         }
     }

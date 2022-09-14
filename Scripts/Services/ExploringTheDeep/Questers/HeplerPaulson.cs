@@ -71,7 +71,7 @@ namespace Server.Mobiles
             {
                 if (!m.HasGump(typeof(HeplerPaulsonGump)))
                 {
-                    BaseGump.SendGump(new HeplerPaulsonGump((PlayerMobile) m));
+                    BaseGump.SendGump(new HeplerPaulsonGump((PlayerMobile) m), true);
                     pm.ExploringTheDeepQuest = ExploringTheDeepQuestChain.HeplerPaulson;
                 }
             }
@@ -82,13 +82,13 @@ namespace Server.Mobiles
             }
             else if (pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponentComplete)
             {
-                BaseGump.SendGump(new HeplerPaulsonCollectCompleteGump((PlayerMobile) m));
+                BaseGump.SendGump(new HeplerPaulsonCollectCompleteGump((PlayerMobile) m), true);
             }
             else
             {
                 if (!m.HasGump(typeof(HeplerPaulsonCompleteGump)))
                 {
-                    BaseGump.SendGump(new HeplerPaulsonCompleteGump((PlayerMobile) m));
+                    BaseGump.SendGump(new HeplerPaulsonCompleteGump((PlayerMobile) m), true);
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace Server.Mobiles
                     if (m.ExploringTheDeepQuest == ExploringTheDeepQuestChain.HeplerPaulson)
                     {
                         dropped.Delete();
-                        BaseGump.SendGump(new HeplerPaulsonCompleteGump(m));
+                        BaseGump.SendGump(new HeplerPaulsonCompleteGump(m), true);
                         m.ExploringTheDeepQuest = ExploringTheDeepQuestChain.HeplerPaulsonComplete;
                     }
                     else if (m.ExploringTheDeepQuest >= ExploringTheDeepQuestChain.HeplerPaulsonComplete)
@@ -144,7 +144,7 @@ namespace Server.Mobiles
 
         private static void HeplerPaulsonGump_OnCommand(CommandEventArgs e)
         {
-            SendGump(new HeplerPaulsonGump(e.Mobile as PlayerMobile));
+            SendGump(new HeplerPaulsonGump(e.Mobile as PlayerMobile), true);
         }
 
         private static readonly PageData[] GumpInfo =
@@ -178,7 +178,7 @@ namespace Server.Mobiles
 
         private static void HeplerPaulsonCompleteGump_OnCommand(CommandEventArgs e)
         {
-            SendGump(new HeplerPaulsonCompleteGump(e.Mobile as PlayerMobile));
+            SendGump(new HeplerPaulsonCompleteGump(e.Mobile as PlayerMobile), true);
         }
 
         public HeplerPaulsonCompleteGump(PlayerMobile pm)
@@ -196,7 +196,7 @@ namespace Server.Mobiles
 
         private static void HeplerPaulsonCollectCompleteGump_OnCommand(CommandEventArgs e)
         {
-            SendGump(new HeplerPaulsonCollectCompleteGump(e.Mobile as PlayerMobile));
+            SendGump(new HeplerPaulsonCollectCompleteGump(e.Mobile as PlayerMobile), true);
         }
 
         private static readonly PageData[] GumpInfo =

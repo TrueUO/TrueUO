@@ -64,7 +64,7 @@ namespace Server.Gumps
                     (m, gump) =>
                     {
                         gump.Refresh();
-                    }));
+                    }), true);
                 }
             }
         }

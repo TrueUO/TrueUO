@@ -28,7 +28,7 @@ namespace Server.Engines.CityLoyalty
         {
             if (CityLoyaltySystem.Enabled && CityLoyaltySystem.IsSetup() && from is PlayerMobile pm && pm.InRange(pm.Location, 3))
             {
-                BaseGump.SendGump(new CityStoneGump(pm, City));
+                BaseGump.SendGump(new CityStoneGump(pm, City), true);
             }
         }
 
@@ -96,7 +96,7 @@ namespace Server.Engines.CityLoyalty
                                 {
                                     if (City.IsCitizen(pm))
                                     {
-                                        BaseGump.SendGump(new PlayerTitleGump(mob as PlayerMobile, pm, City));
+                                        BaseGump.SendGump(new PlayerTitleGump(mob as PlayerMobile, pm, City), true);
                                     }
                                     else
                                         mob.SendLocalizedMessage(1154029); // You may only bestow a title on citizens of this city!
@@ -111,7 +111,7 @@ namespace Server.Engines.CityLoyalty
             {
                 if (City.IsGovernor(m))
                 {
-                    BaseGump.SendGump(new ChooseTradeDealGump(m as PlayerMobile, City));
+                    BaseGump.SendGump(new ChooseTradeDealGump(m as PlayerMobile, City), true);
                 }
             }, enabled: City.IsGovernor(from)));
 
@@ -119,7 +119,7 @@ namespace Server.Engines.CityLoyalty
             {
                 if (m is PlayerMobile mobile && City.IsGovernor(mobile))
                 {
-                    BaseGump.SendGump(new OpenInventoryGump(mobile, City));
+                    BaseGump.SendGump(new OpenInventoryGump(mobile, City), true);
                 }
             }, enabled: City.IsGovernor(from)));
 
@@ -185,7 +185,7 @@ namespace Server.Engines.CityLoyalty
             {
                 if (m is PlayerMobile mobile && m == City.GovernorElect && City.Governor == null)
                 {
-                    BaseGump.SendGump(new AcceptOfficeGump(mobile, City));
+                    BaseGump.SendGump(new AcceptOfficeGump(mobile, City), true);
                 }
             }, enabled: City.GovernorElect == from && City.Governor == null && City.GetLoyaltyRating(from) >= LoyaltyRating.Unknown));
         }

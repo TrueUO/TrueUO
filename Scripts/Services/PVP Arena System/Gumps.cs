@@ -127,7 +127,7 @@ namespace Server.Engines.ArenaSystem
                     (m, d) =>
                     {
                         SendGump(m as PlayerMobile);
-                    }));
+                    }), true);
             }
         }
 
@@ -140,7 +140,7 @@ namespace Server.Engines.ArenaSystem
 
             if (gump == null)
             {
-                SendGump(new PVPArenaSystemSetupGump(pm));
+                SendGump(new PVPArenaSystemSetupGump(pm), true);
             }
             else
             {
@@ -297,7 +297,7 @@ namespace Server.Engines.ArenaSystem
             switch (info.ButtonID)
             {
                 case 1: // host
-                    SendGump(new CreateDuelGump(User, Arena));
+                    SendGump(new CreateDuelGump(User, Arena), true);
                     break;
                 case 2: // join
                     List<ArenaDuel> list = Arena.GetPendingPublic();
@@ -306,7 +306,7 @@ namespace Server.Engines.ArenaSystem
                     {
                         if (list.Count < ArenaDuel.MaxEntries)
                         {
-                            SendGump(new JoinDuelGump(User, list, Arena));
+                            SendGump(new JoinDuelGump(User, list, Arena), true);
                         }
                         else
                         {
@@ -319,13 +319,13 @@ namespace Server.Engines.ArenaSystem
                     }
                     break;
                 case 3: // see booked
-                    SendGump(new BookedDuelsGump(User, Arena));
+                    SendGump(new BookedDuelsGump(User, Arena), true);
                     break;
                 case 4: // check stats
-                    SendGump(new IndividualStatsGump(User, Arena, User));
+                    SendGump(new IndividualStatsGump(User, Arena, User), true);
                     break;
                 case 5: // arena rankings
-                    SendGump(new ArenaRankingsGump(User, Arena));
+                    SendGump(new ArenaRankingsGump(User, Arena), true);
                     break;
                 case 6: // ignore invites
                     PlayerStatsEntry entry = PVPArenaSystem.Instance.GetPlayerEntry<PlayerStatsEntry>(User);
@@ -418,7 +418,7 @@ namespace Server.Engines.ArenaSystem
         {
             if (info.ButtonID == 0)
             {
-                SendGump(new ArenaStoneGump(User, Arena));
+                SendGump(new ArenaStoneGump(User, Arena), true);
             }
             else
             {
@@ -501,7 +501,7 @@ namespace Server.Engines.ArenaSystem
                         break;
                     case 50:
                         Arena.AddPendingDuel(Duel);
-                        SendGump(new PendingDuelGump(User, Duel, Arena));
+                        SendGump(new PendingDuelGump(User, Duel, Arena), true);
                         PVPArenaSystem.SendMessage(User, 1115800); // You have created a new duel session.
 
                         PlayerStatsEntry entry = PVPArenaSystem.Instance.GetPlayerEntry<PlayerStatsEntry>(User);
@@ -576,7 +576,7 @@ namespace Server.Engines.ArenaSystem
 
         public override void OnResponse(RelayInfo info)
         {
-            SendGump(new PendingDuelGump(User, Duel, Arena));
+            SendGump(new PendingDuelGump(User, Duel, Arena), true);
         }
     }
 
@@ -707,7 +707,7 @@ namespace Server.Engines.ArenaSystem
                         if (id >= 0 && id < Participants.Count)
                         {
                             Refresh();
-                            SendGump(new IndividualStatsGump(User, Arena, Participants[id]));
+                            SendGump(new IndividualStatsGump(User, Arena, Participants[id]), true);
                         }
                     }
                     else if (info.ButtonID < 200)
@@ -797,10 +797,10 @@ namespace Server.Engines.ArenaSystem
                     }
                     break;
                 case 4:
-                    SendGump(new BookedDuelsGump(User, Arena));
+                    SendGump(new BookedDuelsGump(User, Arena), true);
                     break;
                 case 5:
-                    SendGump(new DuelRulesGump(User, Arena, Duel));
+                    SendGump(new DuelRulesGump(User, Arena, Duel), true);
                     break;
             }
         }
@@ -813,8 +813,7 @@ namespace Server.Engines.ArenaSystem
 
                 if (pm.HasGump(typeof(PendingDuelGump)))
                 {
-                    pm.CloseGump(typeof(PendingDuelGump));
-                    SendGump(new PendingDuelGump(pm, duel, duel.Arena));
+                    SendGump(new PendingDuelGump(pm, duel, duel.Arena), true);
                 }
             }
         }
@@ -878,7 +877,7 @@ namespace Server.Engines.ArenaSystem
                         PVPArenaSystem.SendMessage(from, 1116152); // You have sent the invitation to the player.
                         PVPArenaSystem.SendMessage(pm, 1116212); // You have been invited to a duel.  Select the “OK” button to join this duel.
 
-                        SendGump(new OfferDuelGump(pm, Duel, Arena, true));
+                        SendGump(new OfferDuelGump(pm, Duel, Arena, true), true);
                     }
                 }
                 else
@@ -891,7 +890,7 @@ namespace Server.Engines.ArenaSystem
             {
                 if (from is PlayerMobile mobile)
                 {
-                    SendGump(new PendingDuelGump(mobile, Duel, Arena));
+                    SendGump(new PendingDuelGump(mobile, Duel, Arena), true);
                 }
             }
         }
@@ -982,7 +981,7 @@ namespace Server.Engines.ArenaSystem
         {
             if (info.ButtonID == 0)
             {
-                SendGump(new ArenaStoneGump(User, Arena));
+                SendGump(new ArenaStoneGump(User, Arena), true);
             }
             else
             {
@@ -998,7 +997,7 @@ namespace Server.Engines.ArenaSystem
                     }
                     else
                     {
-                        SendGump(new OfferDuelGump(User, duel, Arena, false));
+                        SendGump(new OfferDuelGump(User, duel, Arena, false), true);
                     }
                 }
             }
@@ -1114,7 +1113,7 @@ namespace Server.Engines.ArenaSystem
 
                         if (list != null && list.Count > 0)
                         {
-                            SendGump(new JoinDuelGump(User, list, Arena));
+                            SendGump(new JoinDuelGump(User, list, Arena), true);
                         }
                     }
                     break;
@@ -1122,7 +1121,7 @@ namespace Server.Engines.ArenaSystem
                     if (Duel.TryAddPlayer(User))
                     {
                         PendingDuelGump.RefreshAll(Duel);
-                        SendGump(new PendingDuelGump(User, Duel, Arena));
+                        SendGump(new PendingDuelGump(User, Duel, Arena), true);
                     }
                     break;
             }
@@ -1207,11 +1206,11 @@ namespace Server.Engines.ArenaSystem
 
                 if (duel == null)
                 {
-                    SendGump(new ArenaStoneGump(User, Arena));
+                    SendGump(new ArenaStoneGump(User, Arena), true);
                 }
                 else
                 {
-                    SendGump(new PendingDuelGump(User, duel, Arena));
+                    SendGump(new PendingDuelGump(User, duel, Arena), true);
                 }
             }
         }
@@ -1358,11 +1357,11 @@ namespace Server.Engines.ArenaSystem
 
                 if (duel == null)
                 {
-                    SendGump(new ArenaStoneGump(User, Arena));
+                    SendGump(new ArenaStoneGump(User, Arena), true);
                 }
                 else
                 {
-                    SendGump(new PendingDuelGump(User, duel, Arena));
+                    SendGump(new PendingDuelGump(User, duel, Arena), true);
                 }
             }
             else if (info.ButtonID == 1)
@@ -1471,11 +1470,11 @@ namespace Server.Engines.ArenaSystem
 
                 if (duel == null)
                 {
-                    SendGump(new ArenaStoneGump(User, Arena));
+                    SendGump(new ArenaStoneGump(User, Arena), true);
                 }
                 else
                 {
-                    SendGump(new PendingDuelGump(User, duel, Arena));
+                    SendGump(new PendingDuelGump(User, duel, Arena), true);
                 }
             }
             else

@@ -26,7 +26,7 @@ namespace Server.Items
         {
             if (IsChildOf(m.Backpack) && m is PlayerMobile mobile && !HasSkillBonus)
             {
-                BaseGump.SendGump(new ApplySkillBonusGump(mobile, SkillBonuses, Skills, 20, 1));
+                BaseGump.SendGump(new ApplySkillBonusGump(mobile, SkillBonuses, Skills, 20, 1), true);
             }
             else
             {

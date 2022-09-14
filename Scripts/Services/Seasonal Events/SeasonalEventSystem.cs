@@ -89,7 +89,7 @@ namespace Server.Engines.SeasonalEvents
         {
             if (e.Mobile is PlayerMobile mobile)
             {
-                BaseGump.SendGump(new SeasonalEventGump(mobile));
+                BaseGump.SendGump(new SeasonalEventGump(mobile), true);
             }
         }
 
@@ -160,7 +160,7 @@ namespace Server.Engines.SeasonalEvents
 
                 if (from is PlayerMobile mobile)
                 {
-                    BaseGump.SendGump(new SeasonalEventGump(mobile));
+                    BaseGump.SendGump(new SeasonalEventGump(mobile), true);
                 }
             }
         }

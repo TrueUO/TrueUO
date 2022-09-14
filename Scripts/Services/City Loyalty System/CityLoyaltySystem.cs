@@ -685,7 +685,7 @@ namespace Server.Engines.CityLoyalty
             EventSink.Login += OnLogin;
             Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), OnTick);
 
-            CommandSystem.Register("ElectionStartTime", AccessLevel.Administrator, e => Gumps.BaseGump.SendGump(new ElectionStartTimeGump(e.Mobile as PlayerMobile)));
+            CommandSystem.Register("ElectionStartTime", AccessLevel.Administrator, e => Gumps.BaseGump.SendGump(new ElectionStartTimeGump(e.Mobile as PlayerMobile), true));
             CommandSystem.Register("RemoveWait", AccessLevel.Administrator, e =>
             {
                 for (var index = 0; index < Cities.Count; index++)
@@ -700,8 +700,7 @@ namespace Server.Engines.CityLoyalty
             {
                 if (e.Mobile is PlayerMobile mobile)
                 {
-                    mobile.CloseGump(typeof(SystemInfoGump));
-                    Gumps.BaseGump.SendGump(new SystemInfoGump(mobile));
+                    Gumps.BaseGump.SendGump(new SystemInfoGump(mobile), true);
                 }
             });
         }

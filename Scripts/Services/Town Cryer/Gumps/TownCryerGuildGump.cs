@@ -49,7 +49,7 @@ namespace Server.Services.TownCryer
                 {
                     Category = TownCryerGump.GumpCategory.Guild
                 };
-                SendGump(gump);
+                SendGump(gump, true);
             }
         }
     }

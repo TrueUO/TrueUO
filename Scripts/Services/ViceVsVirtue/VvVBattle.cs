@@ -1047,10 +1047,7 @@ namespace Server.Engines.VvV
         {
             if (m is PlayerMobile mobile && OnGoing)
             {
-                if (mobile.HasGump(typeof(VvVBattleStatusGump)))
-                    mobile.CloseGump(typeof(VvVBattleStatusGump));
-
-                BaseGump.SendGump(new VvVBattleStatusGump(mobile, this));
+                BaseGump.SendGump(new VvVBattleStatusGump(mobile, this), true);
             }
         }
 
@@ -1058,7 +1055,7 @@ namespace Server.Engines.VvV
         {
             if (m is PlayerMobile mobile && OnGoing)
             {
-                BaseGump.SendGump(new VvVBattleStatusGump(mobile, this));
+                BaseGump.SendGump(new VvVBattleStatusGump(mobile, this), true);
             }
         }
 
@@ -1079,7 +1076,7 @@ namespace Server.Engines.VvV
 
                     if (g == null)
                     {
-                        BaseGump.SendGump(new VvVBattleStatusGump(m, this));
+                        BaseGump.SendGump(new VvVBattleStatusGump(m, this), true);
                     }
                     else
                     {

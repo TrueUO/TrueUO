@@ -53,7 +53,7 @@ namespace Server.Services.TownCryer
                     {
                         Category = TownCryerGump.GumpCategory.News
                     };
-                    SendGump(gump);
+                    SendGump(gump, true);
                     break;
                 case 1:
                     User.LaunchBrowser(Entry.InfoUrl);

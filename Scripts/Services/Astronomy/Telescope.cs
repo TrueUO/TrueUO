@@ -76,7 +76,7 @@ namespace Server.Items
                     }
                     else
                     {
-                        BaseGump.SendGump(new TelescopeGump((PlayerMobile)m, this));
+                        BaseGump.SendGump(new TelescopeGump((PlayerMobile)m, this), true);
                     }
                 }
             }
@@ -165,8 +165,6 @@ namespace Server.Items
             : base(pm, 200, 200)
         {
             Tele = tele;
-
-            pm.CloseGump(typeof(TelescopeGump));
         }
 
         public override void AddGumpLayout()

@@ -162,7 +162,7 @@ namespace Server.Services.TownCryer
                 case 7:
                     if (Entry != null)
                     {
-                        SendGump(new CreateGreetingEntryGump(User, Cryer, Entry));
+                        SendGump(new CreateGreetingEntryGump(User, Cryer, Entry), true);
                     }
                     else
                     {
@@ -170,7 +170,7 @@ namespace Server.Services.TownCryer
                     }
                     break;
                 case 8:
-                    SendGump(new CreateGreetingEntryGump(User, Cryer));
+                    SendGump(new CreateGreetingEntryGump(User, Cryer), true);
                     break;
                 case 9:
                     Refresh();

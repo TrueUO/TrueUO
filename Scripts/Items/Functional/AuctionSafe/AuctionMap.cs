@@ -254,7 +254,7 @@ namespace Server.Items
             {
                 if (Clicker is PlayerMobile mobile)
                 {
-                    BaseGump.SendGump(new ConfirmTeleportGump(VendorMap, mobile));
+                    BaseGump.SendGump(new ConfirmTeleportGump(VendorMap, mobile), true);
                 }
             }
         }

@@ -164,12 +164,12 @@ namespace Server.Services.TownCryer
 
         public static void CompleteQuest(PlayerMobile pm, BaseQuest quest)
         {
-            BaseGump.SendGump(new TownCrierQuestCompleteGump(pm, quest));
+            BaseGump.SendGump(new TownCrierQuestCompleteGump(pm, quest), true);
         }
 
         public static void CompleteQuest(PlayerMobile pm, object title, object body, int gumpID)
         {
-            BaseGump.SendGump(new TownCrierQuestCompleteGump(pm, title, body, gumpID));
+            BaseGump.SendGump(new TownCrierQuestCompleteGump(pm, title, body, gumpID), true);
         }
 
         public static void OnLogin(LoginEventArgs e)
@@ -180,7 +180,7 @@ namespace Server.Services.TownCryer
                 {
                     if (HasCustomEntries())
                     {
-                        BaseGump.SendGump(new TownCryerGreetingsGump(player, null));
+                        BaseGump.SendGump(new TownCryerGreetingsGump(player, null), true);
                     }
                     else
                     {
@@ -190,7 +190,7 @@ namespace Server.Services.TownCryer
                         {
                             if (m is TownCrier crier)
                             {
-                                BaseGump.SendGump(new TownCryerGreetingsGump(player, crier));
+                                BaseGump.SendGump(new TownCryerGreetingsGump(player, crier), true);
                                 break;
                             }
                         }
@@ -727,7 +727,7 @@ namespace Server.Services.TownCryer
         {
             if (Owner.From is PlayerMobile pm && pm.AccessLevel >= AccessLevel.GameMaster)
             {
-                BaseGump.SendGump(new TownCryerGreetingsGump(pm, Cryer));
+                BaseGump.SendGump(new TownCryerGreetingsGump(pm, Cryer), true);
             }
         }
     }
@@ -749,7 +749,7 @@ namespace Server.Services.TownCryer
             {
                 if (TownCryerSystem.ModeratorEntries.Count < TownCryerSystem.MaxEMEntries)
                 {
-                    BaseGump.SendGump(new CreateEMEntryGump(pm, Cryer));
+                    BaseGump.SendGump(new CreateEMEntryGump(pm, Cryer), true);
                 }
                 else
                 {
@@ -779,7 +779,7 @@ namespace Server.Services.TownCryer
                 {
                     if (TownCryerSystem.CityEntryCount(system.City) < TownCryerSystem.MaxPerCityGoverrnorEntries)
                     {
-                        BaseGump.SendGump(new CreateCityEntryGump(pm, Cryer, system.City));
+                        BaseGump.SendGump(new CreateCityEntryGump(pm, Cryer, system.City), true);
                     }
                     else
                     {
@@ -813,7 +813,7 @@ namespace Server.Services.TownCryer
                     }
                     else
                     {
-                        BaseGump.SendGump(new CreateGuildEntryGump(pm, Cryer));
+                        BaseGump.SendGump(new CreateGuildEntryGump(pm, Cryer), true);
                     }
                 }
                 else

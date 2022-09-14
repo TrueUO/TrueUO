@@ -599,7 +599,7 @@ namespace Server.Mobiles
         {
             if (from is PlayerMobile mobile && TownCryerSystem.Enabled)
             {
-                BaseGump.SendGump(new TownCryerGump(mobile, this));
+                BaseGump.SendGump(new TownCryerGump(mobile, this), true);
             }
 
             if (from.AccessLevel >= AccessLevel.GameMaster)
@@ -648,7 +648,7 @@ namespace Server.Mobiles
 
                 if (e.Mobile is PlayerMobile mobile && TownCryerSystem.Enabled)
                 {
-                    BaseGump.SendGump(new TownCryerGump(mobile, this));
+                    BaseGump.SendGump(new TownCryerGump(mobile, this), true);
                 }
             }
         }

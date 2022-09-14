@@ -34,8 +34,7 @@ namespace Server.Items
                         return;
                     }
 
-                    mobile.CloseGump(typeof(RunicAtlasGump));
-                    BaseGump.SendGump(new RunicAtlasGump(mobile, this));
+                    BaseGump.SendGump(new RunicAtlasGump(mobile, this), true);
                     Openers.Add(mobile);
                 }
                 else
@@ -78,14 +77,11 @@ namespace Server.Items
                 }
                 else
                 {
-                    if (g != null)
-                        mobile.CloseGump(typeof(RunicAtlasGump));
-
                     g = new RunicAtlasGump(mobile, this)
                     {
                         Page = newPage
                     };
-                    BaseGump.SendGump(g);
+                    BaseGump.SendGump(g, true);
                 }
             }
 
@@ -543,8 +539,8 @@ namespace Server.Items
                 {
                     Atlas.Description = Utility.FixHtml(text.Trim());
 
-                    from.CloseGump(typeof(RunicAtlasGump));
-                    SendGump(new RunicAtlasGump((PlayerMobile)from, Atlas));
+                    SendGump(new RunicAtlasGump((PlayerMobile)from, Atlas), true);
+
                     from.SendLocalizedMessage(1041531); // You have changed the title of the rune book.
                 }
                 else
@@ -560,8 +556,7 @@ namespace Server.Items
 
                 if (from is PlayerMobile mobile && !Atlas.Deleted && mobile.InRange(Atlas.GetWorldLocation(), 3))
                 {
-                    mobile.CloseGump(typeof(RunicAtlasGump));
-                    SendGump(new RunicAtlasGump(mobile, Atlas));
+                    SendGump(new RunicAtlasGump(mobile, Atlas), true);
                 }
             }
         }

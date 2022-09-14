@@ -74,7 +74,7 @@ namespace Server.Engines.Plants
             {
                 if (CheckAccessible(m, this))
                 {
-                    BaseGump.SendGump(new SeedBoxGump(mobile, this));
+                    BaseGump.SendGump(new SeedBoxGump(mobile, this), true);
                 }
                 else
                 {
@@ -214,7 +214,7 @@ namespace Server.Engines.Plants
                             gump = new SeedBoxGump(mobile, this);
                             gump.CheckPage(entry);
 
-                            BaseGump.SendGump(gump);
+                            BaseGump.SendGump(gump, true);
                         }
                     }
 

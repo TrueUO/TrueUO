@@ -62,12 +62,15 @@ namespace Server.Gumps
             Dispose();
         }
 
-        public static BaseGump SendGump(BaseGump gump)
+        public static BaseGump SendGump(BaseGump gump, bool closeOtherInstances)
         {
             if (gump == null)
                 return null;
 
             BaseGump g = gump.User.FindGump(gump.GetType()) as BaseGump;
+
+            if (closeOtherInstances)
+                gump.Close();
 
             if (g == gump)
                 gump.Refresh();

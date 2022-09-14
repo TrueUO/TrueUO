@@ -21,8 +21,6 @@ namespace Server.Engines.Plants
         {
             Box = box;
             Page = page;
-
-            user.CloseGump(GetType());
         }
 
         public override void AddGumpLayout()
@@ -151,7 +149,7 @@ namespace Server.Engines.Plants
                             return;
 
                         Refresh();
-                        SendGump(new SeedInfoGump(User, Box, entry, this));
+                        SendGump(new SeedInfoGump(User, Box, entry, this), true);
                     }
                     break;
             }
@@ -263,7 +261,7 @@ namespace Server.Engines.Plants
                     from.SendLocalizedMessage(1158426, amount.ToString()); // You remove ~1_quant~ seed(s) from the seedbox.
 
                     if (from is PlayerMobile pm)
-                        SendGump(new SeedBoxGump(pm, m_Box));
+                        SendGump(new SeedBoxGump(pm, m_Box), true);
                 }
             }
         }

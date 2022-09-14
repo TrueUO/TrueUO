@@ -43,7 +43,6 @@ namespace Server.Gumps
             : base(from, 5, 30)
         {
             Trap = item;
-            from.CloseGump(GetType());
         }
 
         public override void AddGumpLayout()

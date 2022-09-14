@@ -628,7 +628,7 @@ namespace Server.Engines.VeteranRewards
 
             if (e.Mobile is PlayerMobile && !((PlayerMobile)e.Mobile).HasStatReward && HasHalfLevel(e.Mobile))
             {
-                Gumps.BaseGump.SendGump(new StatRewardGump((PlayerMobile)e.Mobile));
+                Gumps.BaseGump.SendGump(new StatRewardGump((PlayerMobile)e.Mobile), true);
             }
 
             if (cur < max)

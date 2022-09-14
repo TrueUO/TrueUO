@@ -23,7 +23,7 @@ namespace Server.Items
         {
             if (IsChildOf(from.Backpack))
             {
-                BaseGump.SendGump(new HairDyeConfirmGump(from as PlayerMobile, Hue, this));
+                BaseGump.SendGump(new HairDyeConfirmGump(from as PlayerMobile, Hue, this), true);
             }
             else
                 from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.

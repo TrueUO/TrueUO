@@ -71,7 +71,7 @@ namespace Server.Engines.Points
         {
             if (CityLoyaltySystem.Enabled && CityLoyaltySystem.Cities != null && state.Mobile is PlayerMobile pm && info.ButtonID == 1)
             {
-                BaseGump.SendGump(new CityLoyaltyGump(pm));
+                BaseGump.SendGump(new CityLoyaltyGump(pm), true);
             }
         }
     }

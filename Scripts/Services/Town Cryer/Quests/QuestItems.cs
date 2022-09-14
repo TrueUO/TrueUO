@@ -142,8 +142,7 @@ namespace Server.Engines.Quests
         {
             if (m is PlayerMobile mobile && IsChildOf(mobile.Backpack))
             {
-                mobile.CloseGump(typeof(InternalGump));
-                BaseGump.SendGump(new InternalGump(mobile));
+                BaseGump.SendGump(new InternalGump(mobile), true);
             }
         }
 
@@ -225,8 +224,7 @@ namespace Server.Engines.Quests
 
             if (m is PlayerMobile mobile && Level == 0)
             {
-                mobile.CloseGump(typeof(InternalGump));
-                BaseGump.SendGump(new InternalGump(mobile, this));
+                BaseGump.SendGump(new InternalGump(mobile, this), true);
             }
         }
 

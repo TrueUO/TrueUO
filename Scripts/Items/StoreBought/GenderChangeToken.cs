@@ -33,8 +33,7 @@ namespace Server.Items
                 _HairID = 0;
                 _BeardID = 0;
 
-                mobile.CloseGump(typeof(GenderChangeConfirmGump));
-                BaseGump.SendGump(new GenderChangeConfirmGump(mobile, this));
+                BaseGump.SendGump(new GenderChangeConfirmGump(mobile, this), true);
             }
         }
 

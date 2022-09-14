@@ -35,7 +35,7 @@ namespace Server.Services.TownCryer
                 {
                     Category = TownCryerGump.GumpCategory.EventModerator
                 };
-                SendGump(gump);
+                SendGump(gump, true);
             }
         }
     }

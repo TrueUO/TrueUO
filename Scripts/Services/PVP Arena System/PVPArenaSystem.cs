@@ -424,7 +424,7 @@ namespace Server.Engines.ArenaSystem
         {
             if (e.Mobile is PlayerMobile pm)
             {
-                BaseGump.SendGump(new PVPArenaSystemSetupGump(pm));
+                BaseGump.SendGump(new PVPArenaSystemSetupGump(pm), true);
             }
         }
 
@@ -450,7 +450,7 @@ namespace Server.Engines.ArenaSystem
                                 ColUtility.Free(a.TeamRankings);
                                 ColUtility.Free(a.SurvivalRankings);
                                 from.SendMessage("Arena stats cleared.");
-                            }));
+                            }), true);
                     }
                 });
         }

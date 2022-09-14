@@ -243,7 +243,7 @@ namespace Server.Engines.VendorSearching
 
                         if (Criteria.IsEmpty)
                         {
-                            SendGump(new VendorSearchGump(User, 1154586)); // Please select some criteria to search for.
+                            SendGump(new VendorSearchGump(User, 1154586), true); // Please select some criteria to search for.
                         }
                         else
                         {
@@ -255,19 +255,19 @@ namespace Server.Engines.VendorSearching
 
                                 if (results == null || results.Count == 0)
                                 {
-                                    SendGump(new VendorSearchGump(User, 1154587)); // No items matched your search.                                     
+                                    SendGump(new VendorSearchGump(User, 1154587), true); // No items matched your search.                                     
                                 }
                                 else
                                 {
                                     Refresh();
-                                    SendGump(new SearchResultsGump(User, results));
+                                    SendGump(new SearchResultsGump(User, results), true);
                                 }
                             });
 
                             resultsTask.Start();
                             pollingTimer.Start();
 
-                            SendGump(new SearchWaitGump(User, pollingTimer));
+                            SendGump(new SearchWaitGump(User, pollingTimer), true);
                         }
                         break;
                     }
@@ -349,7 +349,7 @@ namespace Server.Engines.VendorSearching
                     {
                         if (Criteria.Details.Count >= 20)
                         {
-                            SendGump(new VendorSearchGump(User, 1154681)); // You may not add any more search criteria items.
+                            SendGump(new VendorSearchGump(User, 1154681), true); // You may not add any more search criteria items.
                         }
 
                         var criteria = SearchCriteriaCategory.AllCategories.SelectMany(x => x.Criteria, (x, c) => new { x.Category, c.Object, c.Cliloc, c.PropCliloc }).ToList()[info.ButtonID - 50];

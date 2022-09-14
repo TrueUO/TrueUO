@@ -50,7 +50,7 @@ namespace Server.Items
             {
                 if (from is PlayerMobile mobile && EditEnd > DateTime.UtcNow)
                 {
-                    BaseGump.SendGump(new AddCustomizableMessageGump(mobile, this, 1150294, 1150293));
+                    BaseGump.SendGump(new AddCustomizableMessageGump(mobile, this, 1150294, 1150293), true);
                 }
             }
             else

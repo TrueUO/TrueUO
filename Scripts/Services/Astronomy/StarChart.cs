@@ -85,7 +85,7 @@ namespace Server.Items
         {
             if (m is PlayerMobile pm && IsChildOf(pm.Backpack) && _Constellation > -1)
             {
-                BaseGump.SendGump(new InternalGump(pm, this));
+                BaseGump.SendGump(new InternalGump(pm, this), true);
             }
         }
 
@@ -111,8 +111,6 @@ namespace Server.Items
             public InternalGump(PlayerMobile pm, StarChart chart)
                 : base(pm)
             {
-                pm.CloseGump(typeof(InternalGump));
-
                 Chart = chart;
             }
 

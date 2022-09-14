@@ -284,7 +284,7 @@ namespace Server.Mobiles
             }
             else
             {
-                BaseGump.SendGump(new SpawnerGump(from, this));
+                BaseGump.SendGump(new SpawnerGump(from, this), true);
             }
         }
 

@@ -97,7 +97,7 @@ namespace Server.Items
         {
             if (IsChildOf(m.Backpack))
             {
-                BaseGump.SendGump(new HairDyeConfirmGump(m as PlayerMobile, Hue, this));
+                BaseGump.SendGump(new HairDyeConfirmGump(m as PlayerMobile, Hue, this), true);
             }
             else
             {
@@ -166,8 +166,6 @@ namespace Server.Items
         {
             Hue = hue;
             Dye = dye;
-
-            pm.CloseGump(typeof(HairDyeConfirmGump));
         }
 
         public override void AddGumpLayout()

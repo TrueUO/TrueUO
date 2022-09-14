@@ -16,7 +16,7 @@ namespace Server.Engines.SorcerersDungeon
                     {
                         if (Instance != null)
                         {
-                            BaseGump.SendGump(new TOSDSpawnerGump(mobile));
+                            BaseGump.SendGump(new TOSDSpawnerGump(mobile), true);
                         }
                         else
                         {

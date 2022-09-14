@@ -166,8 +166,7 @@ namespace Server.Items
             {
                 if (from is PlayerMobile pm && UsesRemaining > 0)
                 {
-                    from.CloseGump(typeof(AnvilofArtifactsGump));
-                    BaseGump.SendGump(new AnvilofArtifactsGump(pm, this));
+                    BaseGump.SendGump(new AnvilofArtifactsGump(pm, this), true);
                 }
             }
             else

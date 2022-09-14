@@ -147,10 +147,10 @@ namespace Server.Engines.CityLoyalty
             {
                 case 0: break;
                 case 1:
-                    SendGump(new CityTitlesGump(User));
+                    SendGump(new CityTitlesGump(User), true);
                     break;
                 case 2:
-                    SendGump(new RenounceCitizenshipGump(User));
+                    SendGump(new RenounceCitizenshipGump(User), true);
                     break;
                 case 3:
                 default:
@@ -158,7 +158,7 @@ namespace Server.Engines.CityLoyalty
                     if (id >= 0 && id < CityLoyaltySystem.Cities.Count)
                     {
                         if (Citizenship == null)
-                            SendGump(new DeclareCitizenshipGump(CityLoyaltySystem.Cities[id], User));
+                            SendGump(new DeclareCitizenshipGump(CityLoyaltySystem.Cities[id], User), true);
                     }
                     break;
             }
@@ -209,7 +209,9 @@ namespace Server.Engines.CityLoyalty
                 }
             }
             else if (info.ButtonID == 2)
-                SendGump(new CityLoyaltyGump(User));
+            {
+                SendGump(new CityLoyaltyGump(User), true);
+            }
         }
     }
 
@@ -255,7 +257,9 @@ namespace Server.Engines.CityLoyalty
                 }
             }
             else if (info.ButtonID == 2)
-                SendGump(new CityLoyaltyGump(User));
+            {
+                SendGump(new CityLoyaltyGump(User), true);
+            }
         }
     }
 
@@ -320,7 +324,7 @@ namespace Server.Engines.CityLoyalty
                 CityTitle t = (CityTitle)info.ButtonID - 1;
 
                 if (!Citizenship.HasTitle(User, t))
-                    SendGump(new CityTitlesInfoGump(User, t));
+                    SendGump(new CityTitlesInfoGump(User, t), true);
             }
         }
     }
@@ -386,7 +390,7 @@ namespace Server.Engines.CityLoyalty
             }
             else if (info.ButtonID == 2)
             {
-                SendGump(new CityTitlesGump(User));
+                SendGump(new CityTitlesGump(User), true);
             }
         }
     }
@@ -399,8 +403,6 @@ namespace Server.Engines.CityLoyalty
             : base(pm)
         {
             City = city;
-
-            pm.CloseGump(typeof(CityStoneGump));
         }
 
         public override void AddGumpLayout()
@@ -445,8 +447,8 @@ namespace Server.Engines.CityLoyalty
             {
                 case 0: break;
                 case 1: City.Election.TryNominate(User); break;
-                case 2: SendGump(new NomineesGump(User, City)); break;
-                case 3: SendGump(new CandidatesGump(User, City)); break;
+                case 2: SendGump(new NomineesGump(User, City), true); break;
+                case 3: SendGump(new CandidatesGump(User, City), true); break;
             }
         }
     }
@@ -459,8 +461,6 @@ namespace Server.Engines.CityLoyalty
             : base(pm)
         {
             City = city;
-
-            pm.CloseGump(typeof(NomineesGump));
         }
 
         public override void AddGumpLayout()
@@ -518,7 +518,7 @@ namespace Server.Engines.CityLoyalty
         public override void OnResponse(RelayInfo info)
         {
             if (info.ButtonID == 1)
-                SendGump(new CityStoneGump(User, City));
+                SendGump(new CityStoneGump(User, City), true);
             else if (info.ButtonID == 2)
                 City.Election.TryWithdraw(User);
             else if (info.ButtonID >= 100)
@@ -612,7 +612,7 @@ namespace Server.Engines.CityLoyalty
         public override void OnResponse(RelayInfo info)
         {
             if (info.ButtonID == 1)
-                SendGump(new CityStoneGump(User, City));
+                SendGump(new CityStoneGump(User, City), true);
             else if (info.ButtonID == 2)
                 City.Election.TryWithdraw(User);
             else if (info.ButtonID >= 100)
@@ -723,8 +723,6 @@ namespace Server.Engines.CityLoyalty
         {
             Citizen = citizen;
             City = sys;
-
-            pm.CloseGump(typeof(PlayerTitleGump));
         }
 
         public override void AddGumpLayout()
@@ -794,8 +792,6 @@ namespace Server.Engines.CityLoyalty
         public AcceptOfficeGump(PlayerMobile pm, CityLoyaltySystem city) : base(pm)
         {
             City = city;
-
-            pm.CloseGump(typeof(AcceptOfficeGump));
         }
 
         public override void AddGumpLayout()
@@ -845,7 +841,6 @@ namespace Server.Engines.CityLoyalty
     {
         public ElectionStartTimeGump(PlayerMobile pm) : base(pm)
         {
-            pm.CloseGump(typeof(ElectionStartTimeGump));
         }
 
         public override void AddGumpLayout()
@@ -1052,8 +1047,7 @@ namespace Server.Engines.CityLoyalty
                                 m.SendMessage("Ballot box deleted.");
                             }
 
-                            m.CloseGump(typeof(OpenInventoryGump));
-                            SendGump(new OpenInventoryGump(User, City));
+                            SendGump(new OpenInventoryGump(User, City), true);
                         }, box, true));
                 }
             }
@@ -1093,7 +1087,7 @@ namespace Server.Engines.CityLoyalty
             int id = info.ButtonID - 100;
 
             if (id >= 0 && id < CityLoyaltySystem.Cities.Count)
-                SendGump(new CityMessageGump(User, CityLoyaltySystem.Cities[id]));
+                SendGump(new CityMessageGump(User, CityLoyaltySystem.Cities[id]), true);
         }
     }
 
@@ -1160,7 +1154,7 @@ namespace Server.Engines.CityLoyalty
 
             if (id >= 0 && id < CityLoyaltySystem.Cities.Count)
             {
-                SendGump(new CityInfoGump(User, CityLoyaltySystem.Cities[id]));
+                SendGump(new CityInfoGump(User, CityLoyaltySystem.Cities[id]), true);
             }
         }
     }
@@ -1233,7 +1227,7 @@ namespace Server.Engines.CityLoyalty
 
             if (info.ButtonID == 1)
             {
-                SendGump(new SystemInfoGump(User));
+                SendGump(new SystemInfoGump(User), true);
                 return;
             }
 

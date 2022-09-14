@@ -96,7 +96,7 @@ namespace Server.Commands
             if (string.IsNullOrEmpty(e.ArgString))
             {
                 if (e.Mobile is PlayerMobile mobile)
-                    BaseGump.SendGump(new NewCreateWorldGump(mobile, GumpType.Create));
+                    BaseGump.SendGump(new NewCreateWorldGump(mobile, GumpType.Create), true);
                 else
                     e.Mobile.SendGump(new CreateWorldGump(e, GumpType.Create));
             }
@@ -118,7 +118,7 @@ namespace Server.Commands
             if (string.IsNullOrEmpty(e.ArgString))
             {
                 if (e.Mobile is PlayerMobile mobile)
-                    BaseGump.SendGump(new NewCreateWorldGump(mobile, GumpType.Delete));
+                    BaseGump.SendGump(new NewCreateWorldGump(mobile, GumpType.Delete), true);
                 else
                     e.Mobile.SendGump(new CreateWorldGump(e, GumpType.Delete));
             }

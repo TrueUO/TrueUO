@@ -407,7 +407,7 @@ namespace Server.Engines.NewMagincia
 
                 if (messages != null)
                 {
-                    BaseGump.SendGump(new NewMaginciaMessageGump(mobile, messages));
+                    BaseGump.SendGump(new NewMaginciaMessageGump(mobile, messages), true);
                 }
             }
         }
@@ -473,8 +473,7 @@ namespace Server.Engines.NewMagincia
 
             if (messages != null)
             {
-                from.CloseGump(typeof(NewMaginciaMessageGump));
-                BaseGump.SendGump(new NewMaginciaMessageGump((PlayerMobile)from, messages));
+                BaseGump.SendGump(new NewMaginciaMessageGump((PlayerMobile)from, messages), true);
             }
             else if (from.Account != null)
             {

@@ -45,7 +45,7 @@ namespace Server.Engines.ArenaSystem
                     {
                         if (Arena.CurrentDuel.InPreFight)
                         {
-                            BaseGump.SendGump(new OfferDuelGump(pm, Arena.CurrentDuel, Arena, false, true));
+                            BaseGump.SendGump(new OfferDuelGump(pm, Arena.CurrentDuel, Arena, false, true), true);
                         }
                         else
                         {
@@ -62,16 +62,16 @@ namespace Server.Engines.ArenaSystem
 
                             if (booked != null)
                             {
-                                BaseGump.SendGump(new OfferDuelGump(pm, booked, booked.Arena, true));
+                                BaseGump.SendGump(new OfferDuelGump(pm, booked, booked.Arena, true), true);
                             }
                             else
                             {
-                                BaseGump.SendGump(new ArenaStoneGump(pm, Arena));
+                                BaseGump.SendGump(new ArenaStoneGump(pm, Arena), true);
                             }
                         }
                         else
                         {
-                            BaseGump.SendGump(new PendingDuelGump(pm, duel, Arena));
+                            BaseGump.SendGump(new PendingDuelGump(pm, duel, Arena), true);
                         }
                     }
                 }

@@ -304,7 +304,7 @@ namespace Server.Mobiles
                         {
                             if (mobile.InRange(Creature.Location, 12))
                             {
-                                BaseGump.SendGump(new PetTrainingProgressGump(mobile, Creature));
+                                BaseGump.SendGump(new PetTrainingProgressGump(mobile, Creature), true);
                             }
                         }
 
@@ -350,7 +350,7 @@ namespace Server.Mobiles
 
             if (!(m.FindGump(typeof(PetTrainingProgressGump)) is PetTrainingProgressGump g))
             {
-                BaseGump.SendGump(new PetTrainingProgressGump((PlayerMobile)m, Creature));
+                BaseGump.SendGump(new PetTrainingProgressGump((PlayerMobile)m, Creature), true);
             }
             else
             {

@@ -413,7 +413,7 @@ namespace Server.Engines.UOStore
                 case 106:
                     {
                         Refresh();
-                        SendGump(new PromoCodeGump(User, this));
+                        SendGump(new PromoCodeGump(User, this), true);
                         return;
                     }
 
@@ -512,11 +512,11 @@ namespace Server.Engines.UOStore
 
                         if (total <= UltimaStore.GetCurrency(User, true))
                         {
-                            SendGump(new ConfirmPurchaseGump(User));
+                            SendGump(new ConfirmPurchaseGump(User), true);
                         }
                         else
                         {
-                            SendGump(new NoFundsGump(User));
+                            SendGump(new NoFundsGump(User), true);
                         }
 
                         return;
@@ -549,7 +549,7 @@ namespace Server.Engines.UOStore
 
                 if (Cart == null || Cart.Count < 10)
                 {
-                    SendGump(new ConfirmCartGump(User, this, entry));
+                    SendGump(new ConfirmCartGump(User, this, entry), true);
                     return;
                 }
 
@@ -561,7 +561,7 @@ namespace Server.Engines.UOStore
 
                 StoreEntry entry = UltimaStore.Entries[id - 2000];
 
-                SendGump(new ConfirmCartGump(User, this, entry, Cart != null && Cart.ContainsKey(entry) ? Cart[entry] : 0));
+                SendGump(new ConfirmCartGump(User, this, entry, Cart != null && Cart.ContainsKey(entry) ? Cart[entry] : 0), true);
                 return;
             }
             else if (id < 4000) // Remove From Cart
@@ -593,8 +593,6 @@ namespace Server.Engines.UOStore
             Gump = gump;
             Entry = entry;
             Current = current;
-
-            pm.CloseGump(typeof(ConfirmCartGump));
         }
 
         public override void AddGumpLayout()
@@ -681,7 +679,6 @@ namespace Server.Engines.UOStore
         public ConfirmPurchaseGump(PlayerMobile pm)
             : base(pm, 150, 150)
         {
-            pm.CloseGump(typeof(ConfirmPurchaseGump));
         }
 
         public override void AddGumpLayout()
@@ -731,7 +728,6 @@ namespace Server.Engines.UOStore
         public NoFundsGump(PlayerMobile pm)
             : base(pm, 150, 150)
         {
-            pm.CloseGump(typeof(NoFundsGump));
         }
 
         public override void AddGumpLayout()
@@ -791,8 +787,6 @@ namespace Server.Engines.UOStore
             : base(pm, 10, 10)
         {
             Gump = gump;
-
-            pm.CloseGump(typeof(PromoCodeGump));
         }
 
         public override void AddGumpLayout()

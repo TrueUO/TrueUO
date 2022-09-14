@@ -15,8 +15,6 @@ namespace Server.Gumps
             : base(pm, 150, 200)
         {
             Book = book;
-
-            pm.CloseGump(typeof(SpecialScrollBookGump));
         }
 
         public override void AddGumpLayout()

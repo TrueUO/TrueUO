@@ -31,8 +31,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    mobile.CloseGump(typeof(MythicCharacterGump));
-                    BaseGump.SendGump(new MythicCharacterGump(mobile, this));
+                    BaseGump.SendGump(new MythicCharacterGump(mobile, this), true);
                 }
             }
         }

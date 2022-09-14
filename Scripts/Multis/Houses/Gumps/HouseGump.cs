@@ -840,7 +840,7 @@ namespace Server.Gumps
 
                 if (entries != null)
                 {
-                    BaseGump.SendGump(new HouseSwapGump(from, house, entries));
+                    BaseGump.SendGump(new HouseSwapGump(from, house, entries), true);
                 }
             }
         }

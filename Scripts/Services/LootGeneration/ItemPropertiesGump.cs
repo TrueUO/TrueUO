@@ -12,7 +12,7 @@ namespace Server.Gumps
         {
             CommandSystem.Register("ItemProps", AccessLevel.GameMaster, e =>
             {
-                SendGump(new ItemPropertiesGump((PlayerMobile)e.Mobile));
+                SendGump(new ItemPropertiesGump((PlayerMobile)e.Mobile), true);
             });
         }
 
@@ -280,7 +280,7 @@ namespace Server.Gumps
                 {
                     ItemPropertyInfo propInfo = Infos[id];
 
-                    SendGump(new InfoSpecificGump(User, propInfo, TypeFilter));
+                    SendGump(new InfoSpecificGump(User, propInfo, TypeFilter), true);
                 }
             }
         }

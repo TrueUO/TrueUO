@@ -24,7 +24,7 @@ namespace Server.Items
             if (IsChildOf(from.Backpack))
             {
                 if (from is PlayerMobile mobile)
-                    BaseGump.SendGump(new AddCustomizableMessageGump(mobile, this));
+                    BaseGump.SendGump(new AddCustomizableMessageGump(mobile, this), true);
             }
             else
             {

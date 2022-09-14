@@ -35,14 +35,14 @@ namespace Server.Engines.NewMagincia
                     {
                         if (Messages.Count != 0)
                         {
-                            SendGump(new NewMaginciaMessageGump(User, Messages));
+                            SendGump(new NewMaginciaMessageGump(User, Messages), true);
                         }
 
                         break;
                     }
                 case 1:
                     {
-                        SendGump(new NewMaginciaMessageListGump(User, Messages));
+                        SendGump(new NewMaginciaMessageListGump(User, Messages), true);
                         break;
                     }
             }
@@ -146,12 +146,12 @@ namespace Server.Engines.NewMagincia
             {
                 case 0:
                     {
-                        SendGump(new NewMaginciaMessageGump(User, Messages));
+                        SendGump(new NewMaginciaMessageGump(User, Messages), true);
                         break;
                     }
                 case 1:
                     {
-                        SendGump(new NewMaginciaMessageListGump(User, Messages, !Widescreen));
+                        SendGump(new NewMaginciaMessageListGump(User, Messages, !Widescreen), true);
                         break;
                     }
                 default:
@@ -160,7 +160,7 @@ namespace Server.Engines.NewMagincia
 
                         if (id >= 0 && id < Messages.Count)
                         {
-                            SendGump(new NewMaginciaMessageDetailGump(User, Messages, id));
+                            SendGump(new NewMaginciaMessageDetailGump(User, Messages, id), true);
                         }
 
                         break;
@@ -253,13 +253,13 @@ namespace Server.Engines.NewMagincia
             {
                 case 0:
                     {
-                        SendGump(new NewMaginciaMessageGump(User, Messages));
+                        SendGump(new NewMaginciaMessageGump(User, Messages), true);
 
                         break;
                     }
                 case 1:
                     {
-                        SendGump(new NewMaginciaMessageListGump(User, Messages));
+                        SendGump(new NewMaginciaMessageListGump(User, Messages), true);
                     }
                     break;
                 case 2:
@@ -273,7 +273,7 @@ namespace Server.Engines.NewMagincia
 
                         if (messages != null)
                         {
-                            SendGump(new NewMaginciaMessageListGump(User, messages));
+                            SendGump(new NewMaginciaMessageListGump(User, messages), true);
                         }
 
                         break;

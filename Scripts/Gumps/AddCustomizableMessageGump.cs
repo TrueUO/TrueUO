@@ -128,7 +128,7 @@ namespace Server.Items
             {
                 if (item is BaseAddon || item.IsChildOf(_From.Backpack))
                 {
-                    BaseGump.SendGump(new AddCustomizableMessageGump(_From, _MessageItem));
+                    BaseGump.SendGump(new AddCustomizableMessageGump(_From, _MessageItem), true);
                 }
                 else
                 {

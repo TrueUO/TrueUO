@@ -9,7 +9,6 @@ namespace Server.Engines.SeasonalEvents
         public SeasonalEventGump(PlayerMobile pm)
             : base(pm, 100, 100)
         {
-            pm.CloseGump(typeof(SeasonalEventGump));
         }
 
         public override void AddGumpLayout()
@@ -95,7 +94,7 @@ namespace Server.Engines.SeasonalEvents
                     }
                     else
                     {
-                        SendGump(new EditEventGump(User, entry));
+                        SendGump(new EditEventGump(User, entry), true);
                     }
                 }
             }
@@ -122,8 +121,6 @@ namespace Server.Engines.SeasonalEvents
         public EditEventGump(PlayerMobile pm, SeasonalEvent entry)
             : base(pm, 100, 100)
         {
-            pm.CloseGump(typeof(EditEventGump));
-
             Entry = entry;
 
             _Month = entry.MonthStart;
@@ -238,11 +235,11 @@ namespace Server.Engines.SeasonalEvents
 
                     Entry.Duration = _Duration;
 
-                    SendGump(new SeasonalEventGump(User));
+                    SendGump(new SeasonalEventGump(User), true);
 
                     return;
                 case 10:
-                    SendGump(new SeasonalEventGump(User));
+                    SendGump(new SeasonalEventGump(User), true);
                     return;
             }
 

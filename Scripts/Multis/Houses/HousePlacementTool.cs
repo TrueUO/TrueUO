@@ -967,7 +967,6 @@ namespace Server.Items
 
             from.CloseGump(typeof(HousePlacementCategoryGump));
             from.CloseGump(typeof(HousePlacementListGump));
-            from.CloseGump(typeof(HouseSwapGump));
         }
 
         public override void AddGumpLayout()

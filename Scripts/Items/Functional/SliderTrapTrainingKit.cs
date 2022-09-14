@@ -133,7 +133,7 @@ namespace Server.Items
         {
             if (from is PlayerMobile mobile)
             {
-                BaseGump.SendGump(new SliderTrapGump(mobile, this));
+                BaseGump.SendGump(new SliderTrapGump(mobile, this), true);
             }
         }
 
@@ -210,7 +210,6 @@ namespace Server.Items
         public SliderTrapGump(PlayerMobile pm, ISliderKit kit)
             : base(pm, 100, 100)
         {
-            pm.CloseGump(GetType());
             Kit = kit;
         }
 

@@ -568,7 +568,7 @@ namespace Server.Engines.NewMagincia
                         {
                             Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
                             {
-                                BaseGump.SendGump(new NewAnimalLoreGump((PlayerMobile)from, entry.Pet));
+                                BaseGump.SendGump(new NewAnimalLoreGump((PlayerMobile)from, entry.Pet), true);
                             });
                         }
                     }

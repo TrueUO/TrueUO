@@ -191,7 +191,7 @@ namespace Server.AccountVault
                         BaseGump.SendGump(new PetTrainingStyleConfirmGump(pm, 1074974, 1158037, () =>
                         {
                             vault.ClaimVault(pm);
-                        }));
+                        }), true);
                     }
                     else
                     {
@@ -217,7 +217,7 @@ namespace Server.AccountVault
             {
                 if (Owner.From is PlayerMobile pm && Vault != null)
                 {
-                    BaseGump.SendGump(new VaultActionsGump(pm, Vault));
+                    BaseGump.SendGump(new VaultActionsGump(pm, Vault), true);
                 }
             }
         }
@@ -236,7 +236,7 @@ namespace Server.AccountVault
             {
                 if (Owner.From is PlayerMobile pm)
                 {
-                    BaseGump.SendGump(new VaultLocationsGump(pm));
+                    BaseGump.SendGump(new VaultLocationsGump(pm), true);
                 }
             }
         }

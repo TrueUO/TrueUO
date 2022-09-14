@@ -37,7 +37,7 @@ namespace Server.SkillHandlers
                 {
                     Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
                         {
-                            BaseGump.SendGump(new NewAnimalLoreGump((PlayerMobile)from, c));
+                            BaseGump.SendGump(new NewAnimalLoreGump((PlayerMobile)from, c), true);
                         });
                 }
             }

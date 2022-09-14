@@ -104,7 +104,7 @@ namespace Server.AccountVault
                     User.Prompt = new InternalPrompt(User, Vault);
                     break;
                 case 103:
-                    SendGump(new VaultLocationsGump(User));
+                    SendGump(new VaultLocationsGump(User), true);
                     break;
             }
         }
@@ -122,7 +122,7 @@ namespace Server.AccountVault
 
             public override void OnCancel(Mobile from)
             {
-                SendGump(new VaultActionsGump(From, Vault));
+                SendGump(new VaultActionsGump(From, Vault), true);
             }
 
             public override void OnResponse(Mobile from, string text)
@@ -142,7 +142,7 @@ namespace Server.AccountVault
                     Vault.Balance += num;
                 }
 
-                SendGump(new VaultActionsGump(From, Vault));
+                SendGump(new VaultActionsGump(From, Vault), true);
             }
         }
     }
