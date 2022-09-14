@@ -31,24 +31,21 @@ namespace Server.Engines.Quests.Hag
             {
                 QuestSystem qs = player.Quest;
 
-                if (qs is WitchApprenticeQuest)
+                if (qs is WitchApprenticeQuest && qs.FindObjective(typeof(FindZeefzorpulObjective)) is FindZeefzorpulObjective obj && !obj.Completed)
                 {
-                    if (qs.FindObjective(typeof(FindZeefzorpulObjective)) is FindZeefzorpulObjective obj && !obj.Completed)
+                    if (player.Map != Map.Trammel && player.Map != Map.Felucca || !player.InRange(obj.ImpLocation, 8))
                     {
-                        if (player.Map != Map.Trammel && player.Map != Map.Felucca || !player.InRange(obj.ImpLocation, 8))
-                        {
-                            player.SendLocalizedMessage(1055053); // Nothing happens. Zeefzorpul must not be hiding in this area.
-                        }
-                        else if (player.InRange(obj.ImpLocation, 4))
-                        {
-                            Delete();
+                        player.SendLocalizedMessage(1055053); // Nothing happens. Zeefzorpul must not be hiding in this area.
+                    }
+                    else if (player.InRange(obj.ImpLocation, 4))
+                    {
+                        Delete();
 
-                            obj.Complete();
-                        }
-                        else
-                        {
-                            player.SendLocalizedMessage(1055052); // The flute sparkles. Zeefzorpul must be in a good hiding place nearby.
-                        }
+                        obj.Complete();
+                    }
+                    else
+                    {
+                        player.SendLocalizedMessage(1055052); // The flute sparkles. Zeefzorpul must be in a good hiding place nearby.
                     }
                 }
             }

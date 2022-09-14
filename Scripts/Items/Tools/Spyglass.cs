@@ -48,23 +48,21 @@ namespace Server.Items
             {
                 QuestSystem qs = player.Quest;
 
-                if (qs is WitchApprenticeQuest)
+                if (qs is WitchApprenticeQuest && qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.StarChart)
                 {
-                    if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.StarChart)
+                    int hours, minutes;
+
+                    Clock.GetTime(from.Map, from.X, from.Y, out hours, out minutes);
+
+                    if (hours < 5 || hours > 17)
                     {
-                        int hours, minutes;
-                        Clock.GetTime(from.Map, from.X, from.Y, out hours, out minutes);
+                        player.SendLocalizedMessage(1055040); // You gaze up into the glittering night sky.  With great care, you compose a chart of the most prominent star patterns.
 
-                        if (hours < 5 || hours > 17)
-                        {
-                            player.SendLocalizedMessage(1055040); // You gaze up into the glittering night sky.  With great care, you compose a chart of the most prominent star patterns.
-
-                            obj.Complete();
-                        }
-                        else
-                        {
-                            player.SendLocalizedMessage(1055039); // You gaze up into the sky, but it is not dark enough to see any stars.
-                        }
+                        obj.Complete();
+                    }
+                    else
+                    {
+                        player.SendLocalizedMessage(1055039); // You gaze up into the sky, but it is not dark enough to see any stars.
                     }
                 }
             }
