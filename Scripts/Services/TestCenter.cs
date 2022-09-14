@@ -131,9 +131,7 @@ namespace Server.Misc
 
         private static bool CanGive(Mobile m, string tagName)
         {
-            Account a = m.Account as Account;
-
-            if (a != null)
+            if (m.Account is Account a)
             {
                 var tag = a.GetTag(m.Serial.ToString() + ' ' + tagName);
 
@@ -781,9 +779,7 @@ namespace Server.Misc
             m.AddToBackpack(book);
 
             #region Gold
-            var account = m.Account as Account;
-
-            if (account != null && account.GetTag("TCGold") == null)
+            if (m.Account is Account account && account.GetTag("TCGold") == null)
             {
                 account.AddTag("TCGold", "Gold Given");
 

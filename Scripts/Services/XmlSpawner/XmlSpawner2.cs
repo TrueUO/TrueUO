@@ -1765,10 +1765,8 @@ namespace Server.Mobiles
 
             int x = 0;
             int y = 0;
-            
-            Account acct = from.Account as Account; // read the text entries for default values
 
-            if (acct != null)
+            if (from.Account is Account acct)
             {
                 XmlSpawnerDefaults.DefaultEntry defs = XmlSpawnerDefaults.GetDefaults(acct.ToString(), from.Name);
                 if (defs != null)

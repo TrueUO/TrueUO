@@ -602,8 +602,7 @@ namespace Server.Mobiles
             m_From = from;
 
             // read the text entries for default values
-            Account acct = from.Account as Account;
-            if (acct != null)
+            if (from.Account is Account acct)
                 defs = XmlSpawnerDefaults.GetDefaults(acct.ToString(), from.Name);
 
             if (defs == null) return;
@@ -959,8 +958,7 @@ namespace Server.Mobiles
             // read the text entries for default values
             XmlSpawnerDefaults.DefaultEntry defs = null;
 
-            Account acct = from.Account as Account;
-            if (acct != null)
+            if (from.Account is Account acct)
                 defs = XmlSpawnerDefaults.GetDefaults(acct.ToString(), from.Name);
 
             if (defs == null) return;
@@ -994,8 +992,7 @@ namespace Server.Mobiles
                 // read the text entries for default values
                 defs = null;
 
-                Account acct = state.Mobile.Account as Account;
-                if (acct != null)
+                if (state.Mobile.Account is Account acct)
                     defs = XmlSpawnerDefaults.GetDefaults(acct.ToString(), state.Mobile.Name);
 
                 if (defs == null) return;

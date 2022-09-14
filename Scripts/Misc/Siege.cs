@@ -126,9 +126,7 @@ namespace Server
 
         public static void OnLogin(LoginEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null && pm.Map == Map.Trammel && pm.AccessLevel == AccessLevel.Player)
+            if (e.Mobile is PlayerMobile pm && pm.Map == Map.Trammel && pm.AccessLevel == AccessLevel.Player)
             {
                 pm.MoveToWorld(new Point3D(989, 519, -50), Map.Malas);
                 pm.SendMessage("You have been removed from Trammel.");
@@ -430,9 +428,7 @@ namespace Server
 
         public static void TryBlessItem(PlayerMobile pm, object targeted)
         {
-            Item item = targeted as Item;
-
-            if (item != null)
+            if (targeted is Item item)
             {
                 if (CanBlessItem(pm, item))
                 {
@@ -480,9 +476,7 @@ namespace Server
 
         public static void CheckUsesRemaining(Mobile from, Item item)
         {
-            IUsesRemaining uses = item as IUsesRemaining;
-
-            if (uses != null)
+            if (item is IUsesRemaining uses)
             {
                 uses.ShowUsesRemaining = true;
                 uses.UsesRemaining--;

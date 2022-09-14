@@ -61,9 +61,7 @@ namespace Server.Engines.Quests.Hag
 
             if (qs is WitchApprenticeQuest)
             {
-                FindIngredientObjective obj = qs.FindObjective(typeof(FindIngredientObjective)) as FindIngredientObjective;
-
-                if (obj != null && !obj.Completed && obj.Ingredient == Ingredient.Whiskey)
+                if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.Whiskey)
                 {
                     PlaySound(Utility.RandomBool() ? 0x42E : 0x43F);
 

@@ -199,9 +199,7 @@ namespace Server.Engines.NewMagincia
 
         public void SendMessage_Callback(object o)
         {
-            object[] obj = o as object[];
-
-            if (obj != null)
+            if (o is object[] obj)
             {
                 Mobile winner = obj[0] as Mobile;
                 NewMaginciaMessage message = obj[1] as NewMaginciaMessage;

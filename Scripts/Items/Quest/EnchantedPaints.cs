@@ -33,9 +33,7 @@ namespace Server.Engines.Quests.Collector
 
         public override void OnDoubleClick(Mobile from)
         {
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
+            if (from is PlayerMobile player)
             {
                 QuestSystem qs = player.Quest;
 
@@ -81,17 +79,13 @@ namespace Server.Engines.Quests.Collector
                 if (m_Paints.Deleted || !m_Paints.IsChildOf(from.Backpack))
                     return;
 
-                PlayerMobile player = from as PlayerMobile;
-
-                if (player != null)
+                if (from is PlayerMobile player)
                 {
                     QuestSystem qs = player.Quest;
 
                     if (qs is CollectorQuest)
                     {
-                        CaptureImagesObjective obj = qs.FindObjective(typeof(CaptureImagesObjective)) as CaptureImagesObjective;
-
-                        if (obj != null && !obj.Completed)
+                        if (qs.FindObjective(typeof(CaptureImagesObjective)) is CaptureImagesObjective obj && !obj.Completed)
                         {
                             if (targeted is Mobile)
                             {
