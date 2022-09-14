@@ -4826,7 +4826,7 @@ namespace Server
 
 				if (MutateSpeech(hears, ref mutatedText, ref mutateContext))
 				{
-					mutatedArgs = new SpeechEventArgs(this, mutatedText, type, hue, new int[0]);
+					mutatedArgs = new SpeechEventArgs(this, mutatedText, type, hue, Array.Empty<int>());
 				}
 
 				CheckSpeechManifest();

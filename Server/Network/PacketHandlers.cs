@@ -1421,7 +1421,7 @@ namespace Server.Network
 			m.ClearFastwalkStack();
 		}
 
-		private static readonly int[] m_EmptyInts = new int[0];
+		private static readonly int[] m_EmptyInts = Array.Empty<int>();
 
 		public static void AsciiSpeech(NetState state, PacketReader pvSrc)
 		{

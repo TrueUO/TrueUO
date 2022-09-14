@@ -20,7 +20,7 @@ namespace Server.Network
 
 		private readonly AsyncCallback m_OnAccept;
 
-		private static readonly Socket[] m_EmptySockets = new Socket[0];
+		private static readonly Socket[] m_EmptySockets = Array.Empty<Socket>();
 
 		public static IPEndPoint[] EndPoints { get; set; }
 

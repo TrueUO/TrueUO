@@ -1,3 +1,5 @@
+using System;
+
 namespace Server
 {
 	public class Point3DList
@@ -60,7 +62,7 @@ namespace Server
 			++m_Count;
 		}
 
-		private static readonly Point3D[] m_EmptyList = new Point3D[0];
+		private static readonly Point3D[] m_EmptyList = Array.Empty<Point3D>();
 
 		public Point3D[] ToArray()
 		{

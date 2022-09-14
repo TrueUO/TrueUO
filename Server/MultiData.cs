@@ -533,7 +533,7 @@ namespace Server
 					}
 					else
 					{
-						newTiles[x][y] = new StaticTile[0];
+						newTiles[x][y] = Array.Empty<StaticTile>();
 					}
 
 					totalLength += newTiles[x][y].Length;
@@ -895,8 +895,8 @@ namespace Server
 
 		private MultiComponentList()
 		{
-			m_Tiles = new StaticTile[0][][];
-			m_List = new MultiTileEntry[0];
+			m_Tiles = Array.Empty<StaticTile[][]>();
+			m_List = Array.Empty<MultiTileEntry>();
 		}
 	}
 

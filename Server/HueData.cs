@@ -17,7 +17,7 @@ namespace Server
 #else
         public const PixelFormat PixelFormat = System.Drawing.Imaging.PixelFormat.Format16bppArgb1555;
 #endif
-        private static readonly int[] m_Header = new int[0];
+        private static readonly int[] m_Header = Array.Empty<int>();
 
         public static Hue[] List { get; } = new Hue[3000];
 
