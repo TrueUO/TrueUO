@@ -599,6 +599,7 @@ namespace Server.Mobiles
         {
             if (from is PlayerMobile mobile && TownCryerSystem.Enabled)
             {
+                mobile.CloseGump(typeof(TownCryerGump));
                 BaseGump.SendGump(new TownCryerGump(mobile, this));
             }
 
