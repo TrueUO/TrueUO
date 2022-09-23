@@ -1527,10 +1527,13 @@ namespace Server.Mobiles
             }
             else
             {
-                m_Mobile.Home = m_Mobile.Location;
-                m_Mobile.MovementMode = MovementType.Roam;
-                m_Mobile.DebugSay("I have nobody to follow");
-                m_Mobile.FollowTarget = null;
+                if (m_Mobile != null)
+                {
+                    m_Mobile.Home = m_Mobile.Location;
+                    m_Mobile.MovementMode = MovementType.Roam;
+                    m_Mobile.DebugSay("I have nobody to follow");
+                    m_Mobile.FollowTarget = null;
+                }
             }
 
             return true;
