@@ -16,7 +16,7 @@ namespace Server.Multis
         public override int WheelDistance => 7;
         public override int CaptiveOffset => 4;
         public override int MaxCannons => 7;
-        public override double CannonDamageMod => 1.3;
+        public override double CannonDamageMod => 1.5;
 
         public override double TurnDelay => 2;
         public override int MaxHits => 100000;
