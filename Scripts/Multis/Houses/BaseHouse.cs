@@ -3915,7 +3915,7 @@ namespace Server.Multis
 
                 if (m is Mannequin || m is Steward)
                 {
-                    Mannequin.ForceRedeed(m);
+                    m.Delete();
                 }
             }
 
