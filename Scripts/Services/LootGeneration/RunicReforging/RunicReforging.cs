@@ -1965,13 +1965,14 @@ namespace Server.Items
                     if (forcedsuffix == ReforgedSuffix.None && budget >= Utility.Random(2700))
                         suffix = ChooseRandomSuffix(item, budget, prefix);
 
-
+                    
                     if (!IsPowerful(budget))
                     {
                         mods = Math.Max(1, GetProperties(5));
 
                         perchigh = Math.Max(50, Math.Min(550, budget) / mods);
                         perclow = Math.Max(20, Convert.ToInt32(perchigh / 3 * perc));
+                        budget = IsPowerful(basebudget)?basebudget: budget;
                     }
                     else
                     {
