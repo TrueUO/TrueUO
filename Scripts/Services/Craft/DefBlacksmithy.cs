@@ -649,18 +649,18 @@ namespace Server.Engines.Craft
 
             #region High Seas Cannons
 
-            index = AddCraft(typeof(Cannonball), 1116354, 1116029, 10.0, 60.0, typeof(IronIngot), 1044036, 12, 1044037);
+            index = AddCraft(typeof(Cannonball), 1116354, 1116266, 10.0, 60.0, typeof(IronIngot), 1044036, 12, 1044037);
             SetUseAllRes(index, true);
 
             index = AddCraft(typeof(Grapeshot), 1116354, 1116030, 15.0, 70.0, typeof(IronIngot), 1044036, 12, 1044037);
             AddRes(index, typeof(Cloth), 1044286, 2, 1044287);
             SetUseAllRes(index, true);
 
-            index = AddCraft(typeof(LightShipCannonDeed), 1116354, 1095790, 65.0, 120.0, typeof(IronIngot), 1044036, 900, 1044037);
+            index = AddCraft(typeof(CulverinDeed), 1116354, 1095790, 65.0, 120.0, typeof(IronIngot), 1044036, 900, 1044037);
             AddRes(index, typeof(Board), 1044041, 50, 1044351);
             AddSkill(index, SkillName.Carpentry, 65.0, 100.0);
 
-            index = AddCraft(typeof(HeavyShipCannonDeed), 1116354, 1095794, 70.0, 120.0, typeof(IronIngot), 1044036, 1800, 1044037);
+            index = AddCraft(typeof(CarronadeDeed), 1116354, 1095794, 70.0, 120.0, typeof(IronIngot), 1044036, 1800, 1044037);
             AddRes(index, typeof(Board), 1044041, 75, 1044351);
             AddSkill(index, SkillName.Carpentry, 70.0, 100.0);
 
