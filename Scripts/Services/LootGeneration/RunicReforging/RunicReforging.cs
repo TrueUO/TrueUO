@@ -1976,7 +1976,7 @@ namespace Server.Items
                     }
                     else
                     {
-                        int maxmods = Math.Max(5, Math.Min(RandomItemGenerator.MaxProps - 1, (int)Math.Ceiling(budget / (double)Utility.RandomMinMax(100, 140)))) + ;
+                        int maxmods = Math.Max(5, Math.Min(RandomItemGenerator.MaxProps - 1, (int)Math.Ceiling(budget / (double)Utility.RandomMinMax(100, 140)))) + additionalMaxProps;
                         int minmods = Math.Max(4, maxmods - 4);
 
                         mods = Math.Max(minmods, GetProperties(maxmods));
