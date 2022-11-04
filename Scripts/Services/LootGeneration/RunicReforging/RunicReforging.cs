@@ -1854,14 +1854,14 @@ namespace Server.Items
         /// <param name="minBudget"></param>
         /// <param name="maxBudget"></param>
         /// <param name="map"></param>
-        /// <param name="finder">if treasuyre chest then finder is populated</param>
+        /// <param name="finder">if treasure chest then finder is populated</param>
         /// <returns></returns>
-        public static bool GenerateRandomItem(Item item, int luck, int minBudget, int maxBudget, Map map, Mobile finder = null)
+        public static bool GenerateRandomItem(Item item, int luck, int minBudget, int maxBudget, Map map, Mobile finder = null, int additionalMaxProps = 0)
         {
             if (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat)
             {
                 int budget = Utility.RandomMinMax(minBudget, maxBudget);
-                GenerateRandomItem(item, finder, budget, LootPack.GetLuckChance(luck), ReforgedPrefix.None, ReforgedSuffix.None, map);
+                GenerateRandomItem(item, finder, budget, LootPack.GetLuckChance(luck), ReforgedPrefix.None, ReforgedSuffix.None, map, false, additionalMaxProps);
                 return true;
             }
             return false;
@@ -1878,7 +1878,7 @@ namespace Server.Items
         /// <param name="forcedsuffix"></param>
         /// <param name="map"></param>
         /// <param name="artifact"></param>
-        public static void GenerateRandomItem(Item item, Mobile killer, int basebudget, int luckchance, ReforgedPrefix forcedprefix, ReforgedSuffix forcedsuffix, Map map = null, bool artifact = false)
+        public static void GenerateRandomItem(Item item, Mobile killer, int basebudget, int luckchance, ReforgedPrefix forcedprefix, ReforgedSuffix forcedsuffix, Map map = null, bool artifact = false, int additionalMaxProps = 0)
         {
             if (map == null && killer != null)
             {
@@ -1965,18 +1965,18 @@ namespace Server.Items
                     if (forcedsuffix == ReforgedSuffix.None && budget >= Utility.Random(2700))
                         suffix = ChooseRandomSuffix(item, budget, prefix);
 
-                    
+
                     if (!IsPowerful(budget))
                     {
                         mods = Math.Max(1, GetProperties(5));
 
                         perchigh = Math.Max(50, Math.Min(550, budget) / mods);
                         perclow = Math.Max(20, Convert.ToInt32(perchigh / 3 * perc));
-                        budget = IsPowerful(basebudget)?basebudget: budget;
+                        budget = IsPowerful(basebudget) ? basebudget : budget;
                     }
                     else
                     {
-                        int maxmods = Math.Max(5, Math.Min(RandomItemGenerator.MaxProps - 1, (int)Math.Ceiling(budget / (double)Utility.RandomMinMax(100, 140))));
+                        int maxmods = Math.Max(5, Math.Min(RandomItemGenerator.MaxProps - 1, (int)Math.Ceiling(budget / (double)Utility.RandomMinMax(100, 140)))) + ;
                         int minmods = Math.Max(4, maxmods - 4);
 
                         mods = Math.Max(minmods, GetProperties(maxmods));
