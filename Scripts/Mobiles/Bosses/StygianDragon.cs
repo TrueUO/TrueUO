@@ -115,7 +115,7 @@ namespace Server.Mobiles
             c.DropItem(new StygianDragonHead());
 
             if (Paragon.ChestChance > Utility.RandomDouble())
-                c.DropItem(new ParagonChest(Name, 5));
+                c.DropItem(new ParagonChest(Name, 5, this));
         }
 
         public override void Serialize(GenericWriter writer)

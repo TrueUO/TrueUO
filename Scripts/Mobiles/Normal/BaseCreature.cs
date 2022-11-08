@@ -5306,7 +5306,7 @@ namespace Server.Mobiles
                 {
                     if (m_Paragon && Paragon.ChestChance > Utility.RandomDouble())
                     {
-                        PackItem(new ParagonChest(Name, treasureLevel));
+                        PackItem(new ParagonChest(Name, treasureLevel, this));
                     }
                     else if (TreasureMapChance >= Utility.RandomDouble())
                     {

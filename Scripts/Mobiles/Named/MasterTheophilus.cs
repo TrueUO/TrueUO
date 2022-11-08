@@ -56,7 +56,7 @@ namespace Server.Mobiles
             base.OnDeath(c);
 
             if (Paragon.ChestChance > Utility.RandomDouble())
-                c.DropItem(new ParagonChest(Name, 5));
+                c.DropItem(new ParagonChest(Name, 5, this));
         }
 
         public override bool AllureImmune => true;

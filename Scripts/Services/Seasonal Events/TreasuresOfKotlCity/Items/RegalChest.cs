@@ -1,4 +1,5 @@
 using Server.Items;
+using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 
@@ -25,11 +26,9 @@ namespace Server.Engines.TreasuresOfKotlCity
             MaxLockLevel = RequiredSkill;
             TrapType = TrapType.MagicTrap;
             TrapPower = 100;
-
-            Timer.DelayCall(TimeSpan.FromSeconds(1), Fill);
         }
 
-        public virtual void Fill()
+        public virtual void Fill(Mobile finder)
         {
             Reset();
 
@@ -76,7 +75,7 @@ namespace Server.Engines.TreasuresOfKotlCity
 
                     TreasureMapChest.GetRandomItemStat(out min, out max, 1.0);
 
-                    RunicReforging.GenerateRandomItem(item, null, Utility.RandomMinMax(min, max), 0, ReforgedPrefix.None, ReforgedSuffix.Kotl, Map);
+                    RunicReforging.GenerateRandomItem(item, null, Utility.RandomMinMax(min, max), LootPack.GetLuckChance(finder is PlayerMobile pm ? pm.RealLuck : finder.Luck), ReforgedPrefix.None, ReforgedSuffix.Kotl, Map);
 
                     DropItem(item);
                 }
@@ -125,6 +124,7 @@ namespace Server.Engines.TreasuresOfKotlCity
 
         public virtual void OnRevealed(Mobile m)
         {
+            Fill(m);
             Visible = true;
         }
 
@@ -145,6 +145,8 @@ namespace Server.Engines.TreasuresOfKotlCity
 
         public override void LockPick(Mobile from)
         {
+            Fill(from);
+
             TryDelayedLock();
 
             base.LockPick(from);
@@ -164,7 +166,7 @@ namespace Server.Engines.TreasuresOfKotlCity
 
             EndTimer();
 
-            m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(Utility.RandomMinMax(10, 15)), Fill);
+            //m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(Utility.RandomMinMax(10, 15)), Fill);
         }
 
         public void EndTimer()

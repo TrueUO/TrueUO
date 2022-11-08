@@ -1,3 +1,5 @@
+using Server.Mobiles;
+
 namespace Server.Items
 {
     [Flipable]
@@ -17,12 +19,12 @@ namespace Server.Items
         private string m_Name;
 
         [Constructable]
-        public ParagonChest(string name, int level)
+        public ParagonChest(string name, int level, BaseCreature monster)
             : base(Utility.RandomList(m_ItemIDs))
         {
             m_Name = name;
             Hue = Utility.RandomList(m_Hues);
-            Fill(level + 1);
+            Fill(level + 1, monster);
         }
 
         public ParagonChest(Serial serial)
@@ -72,7 +74,7 @@ namespace Server.Items
             m_Name = Utility.Intern(reader.ReadString());
         }
 
-        private void Fill(int level)
+        private void Fill(int level, BaseCreature monster)
         {
             TrapType = TrapType.ExplosionTrap;
             TrapPower = level * 25;
@@ -116,9 +118,14 @@ namespace Server.Items
                 if (item != null)
                 {
                     TreasureMapChest.GetRandomItemStat(out int min, out int max);
-
                     RunicReforging.GenerateRandomItem(item, 0, min, max);
+                    int luckChance = 0;
+                    if (monster.GetHighestDamager() is PlayerMobile pm)
+                    {
+                        luckChance = LootPack.GetLuckChance(pm.RealLuck);
+                    }
 
+                    RunicReforging.GenerateRandomItem(item, monster.GetHighestDamager(), Utility.RandomMinMax(min, max), luckChance, ReforgedPrefix.None, ReforgedSuffix.None);
                     DropItem(item);
                 }
             }

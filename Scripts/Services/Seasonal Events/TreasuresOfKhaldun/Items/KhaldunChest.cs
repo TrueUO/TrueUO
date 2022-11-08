@@ -1,3 +1,4 @@
+using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 
@@ -29,7 +30,7 @@ namespace Server.Items
             TrapPower = 100;
         }
 
-        public virtual void Fill()
+        public virtual void Fill(Mobile finder)
         {
             List<Item> contains = new List<Item>(Items);
 
@@ -105,7 +106,7 @@ namespace Server.Items
 
                     TreasureMapChest.GetRandomItemStat(out min, out max, 1.0);
 
-                    RunicReforging.GenerateRandomItem(item, null, Utility.RandomMinMax(min, max), 0, ReforgedPrefix.None, ReforgedSuffix.Khaldun, Map);
+                    RunicReforging.GenerateRandomItem(item, null, Utility.RandomMinMax(min, max), LootPack.GetLuckChance(finder is PlayerMobile pm ? pm.RealLuck : finder.Luck), ReforgedPrefix.None, ReforgedSuffix.Khaldun, Map);
 
                     DropItem(item);
                 }
@@ -154,7 +155,7 @@ namespace Server.Items
 
         public override void LockPick(Mobile from)
         {
-            Fill();
+            Fill(from);
 
             base.LockPick(from);
 
