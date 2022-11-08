@@ -1979,7 +1979,7 @@ namespace Server.Items
                         int maxmods = Math.Max(5, Math.Min(RandomItemGenerator.MaxProps - 1, (int)Math.Ceiling(budget / (double)Utility.RandomMinMax(100, 140)))) + additionalMaxProps;
                         int minmods = Math.Max(4, maxmods - 4);
 
-                        mods = Math.Max(minmods, GetProperties(maxmods));
+                        mods = Math.Max(minmods, GetProperties(maxmods, additionalMaxProps));
 
                         perchigh = 100;
                         perclow = Convert.ToInt32(Utility.RandomMinMax(50, 70) * perc);
@@ -2079,10 +2079,10 @@ namespace Server.Items
             return budget >= 550;
         }
 
-        public static int GetProperties(int max)
+        public static int GetProperties(int max, int additionalMaxProps = 0)
         {
-            if (max > RandomItemGenerator.MaxProps - 1)
-                max = RandomItemGenerator.MaxProps - 1;
+            if (max > RandomItemGenerator.MaxProps - 1 + additionalMaxProps)
+                max = RandomItemGenerator.MaxProps - 1 + additionalMaxProps;
 
             int p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 0, p5 = 0, p6 = 0, p7 = 0, p8 = 0, p9 = 0, p10 = 0, p11 = 0;
 
