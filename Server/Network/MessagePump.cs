@@ -305,22 +305,19 @@ namespace Server.Network
 
                     bool drop;
 
-					if (throttler != null)
+					if (throttler != null && !throttler((byte)packetID, ns, out drop))
 					{
-                        if (!throttler((byte)packetID, ns, out drop))
+                        if (!drop)
                         {
-							if (!drop)
-							{
-								m_Throttled.Enqueue(ns);
-							}
-							else
-							{
-                                buffer.Dequeue(null, 0, packetLength);
-                            }
+                            m_Throttled.Enqueue(ns);
+                        }
+                        else
+                        {
+                            buffer.Dequeue(null, 0, packetLength);
+                        }
 
-							return;
-						}
-					}
+                        return;
+                    }
 
 					PacketReceiveProfile prof = null;
 
