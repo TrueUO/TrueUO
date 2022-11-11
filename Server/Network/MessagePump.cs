@@ -241,15 +241,19 @@ namespace Server.Network
 
 					PacketHandler handler = NetState.GetHandler(packetID);
 
-					if (handler == null)
-					{
-						byte[] data = new byte[length];
-						length = buffer.Dequeue(data, 0, length);
-						new PacketReader(data, length, false).Trace(ns);
-						return;
-					}
+                    if (handler == null)
+                    {
+#if DEBUG
+                        var data = new byte[length];
+                        length = buffer.Dequeue(data, 0, length);
+                        new PacketReader(data, length, false).Trace(ns);
+#else
+                        buffer.Dequeue(null, 0, length);
+#endif
+                        return;
+                    }
 
-					int packetLength = handler.Length;
+                    int packetLength = handler.Length;
 
 					if (packetLength <= 0)
 					{
@@ -299,19 +303,20 @@ namespace Server.Network
 
 					ThrottlePacketCallback throttler = handler.ThrottleCallback;
 
+                    bool drop;
+
 					if (throttler != null)
 					{
-
-						if (!throttler(ns, out bool drop))
-						{
+                        if (!throttler((byte)packetID, ns, out drop))
+                        {
 							if (!drop)
 							{
 								m_Throttled.Enqueue(ns);
 							}
 							else
 							{
-								buffer.Dequeue(new byte[packetLength], 0, packetLength);
-							}
+                                buffer.Dequeue(null, 0, packetLength);
+                            }
 
 							return;
 						}
@@ -348,7 +353,9 @@ namespace Server.Network
 
 						handler.OnReceive(ns, r);
 
-						if (BufferSize >= packetLength)
+                        ns.SetPacketTime((byte)packetID);
+
+                        if (BufferSize >= packetLength)
 						{
 							m_Buffers.ReleaseBuffer(packetBuffer);
 						}

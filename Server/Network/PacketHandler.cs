@@ -2,9 +2,9 @@ namespace Server.Network
 {
 	public delegate void OnPacketReceive(NetState state, PacketReader pvSrc);
 
-	public delegate bool ThrottlePacketCallback(NetState state, out bool drop);
+    public delegate bool ThrottlePacketCallback(byte packetID, NetState state, out bool drop);
 
-	public class PacketHandler
+    public class PacketHandler
 	{
 		private readonly int m_PacketID;
 		private readonly int m_Length;
