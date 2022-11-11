@@ -115,9 +115,7 @@ namespace Server.Gumps
 
                 if (entry.From != null)
                 {
-                    Account acc = entry.From.Account as Account;
-
-                    if (acc != null)
+                    if (entry.From.Account is Account acc)
                         name = string.Format("{0} ({1})", entry.From.Name, acc);
                     else
                         name = entry.From.Name;

@@ -349,9 +349,7 @@ namespace Server.Mobiles
 
         public MerchantsTrinket GetMerchantsTrinket()
         {
-            var trinket = FindItemOnLayer(Layer.Earrings) as MerchantsTrinket;
-
-            if (trinket != null && trinket.UsesRemaining > 0)
+            if (FindItemOnLayer(Layer.Earrings) is MerchantsTrinket trinket && trinket.UsesRemaining > 0)
             {
                 return trinket;
             }

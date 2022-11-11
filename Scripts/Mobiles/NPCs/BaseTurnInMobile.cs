@@ -82,7 +82,7 @@ namespace Server.Mobiles
 
                 m_Buttons = m_Vendor.FindRedeemableItems(m_Mobile);
 
-                if (m_Buttons.Count() > 0)
+                if (m_Buttons.Any())
                     Enabled = true;
                 else
                     Enabled = false;
@@ -171,7 +171,7 @@ namespace Server.Mobiles
 
             IEnumerable<ItemTileButtonInfo> buttons = m_Collector.FindRedeemableItems(pm);
 
-            if (buttons != null && buttons.Count() > 0)
+            if (buttons != null && buttons.Any())
                 pm.SendGump(new TurnInGump(m_Collector, buttons));
         }
 

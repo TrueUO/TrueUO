@@ -554,7 +554,7 @@ namespace Server.Engines.Quests
 
                     if (item.QuestItem || !questItem)
                     {
-                        if (itemType.IsAssignableFrom(item.GetType()))
+                        if (itemType.IsInstanceOfType(item))
                         {
                             deleted += item.Amount;
 
@@ -680,7 +680,7 @@ namespace Server.Engines.Quests
                     {
                         ObtainObjective obtain = (ObtainObjective)quest.Objectives[j];
 
-                        if (obtain.Obtain != null && obtain.Obtain.IsAssignableFrom(item.GetType()))
+                        if (obtain.Obtain != null && obtain.Obtain.IsInstanceOfType(item))
                         {
                             obtain.CurProgress -= item.Amount;
                             item.QuestItem = false;
@@ -692,7 +692,7 @@ namespace Server.Engines.Quests
                     {
                         DeliverObjective deliver = (DeliverObjective)quest.Objectives[j];
 
-                        if (deliver.Delivery != null && deliver.Delivery.IsAssignableFrom(item.GetType()))
+                        if (deliver.Delivery != null && deliver.Delivery.IsInstanceOfType(item))
                         {
                             from.SendLocalizedMessage(1074813);  // You have failed to complete your delivery.
                             DeleteItems(from, deliver.Delivery, deliver.MaxProgress, false);

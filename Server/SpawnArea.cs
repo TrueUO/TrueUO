@@ -20,7 +20,7 @@ namespace Server
 
 		static SpawnArea()
 		{
-			_EmptyFilters = new TileFlag[0];
+			_EmptyFilters = Array.Empty<TileFlag>();
 
 			_AllFilters = Enum.GetValues(typeof(TileFlag)).Cast<TileFlag>().Where(f => f != TileFlag.None).ToArray();
 

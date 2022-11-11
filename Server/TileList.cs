@@ -1,3 +1,5 @@
+using System;
+
 namespace Server
 {
 	public class TileList
@@ -50,7 +52,7 @@ namespace Server
 			++m_Count;
 		}
 
-		private static readonly StaticTile[] m_EmptyTiles = new StaticTile[0];
+		private static readonly StaticTile[] m_EmptyTiles = Array.Empty<StaticTile>();
 
 		public StaticTile[] ToArray()
 		{

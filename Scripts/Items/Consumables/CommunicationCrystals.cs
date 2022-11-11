@@ -235,9 +235,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    Item targItem = targeted as Item;
-
-                    if (targItem != null && targItem.VerifyMove(from))
+                    if (targeted is Item targItem && targItem.VerifyMove(from))
                     {
                         CrystalRechargeInfo info = CrystalRechargeInfo.Get(targItem.GetType());
 
@@ -423,9 +421,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    Item targItem = targeted as Item;
-
-                    if (targItem != null && targItem.VerifyMove(from))
+                    if (targeted is Item targItem && targItem.VerifyMove(from))
                     {
                         CrystalRechargeInfo info = CrystalRechargeInfo.Get(targItem.GetType());
 

@@ -2160,7 +2160,7 @@ namespace Server
         private uint m_Names;
         private int[] m_Values;
 
-        private static readonly int[] m_Empty = new int[0];
+        private static readonly int[] m_Empty = Array.Empty<int>();
 
         public bool IsEmpty => m_Names == 0;
         public Item Owner => m_Owner;

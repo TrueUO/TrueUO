@@ -22,7 +22,6 @@ namespace Server
         Knights,
         Scout,
         Sorcerer,
-        Initiation,
         Fisherman,
         Luck2,
         Bestial,

@@ -127,9 +127,7 @@ namespace Server.Commands.Generic
 
         public override void Execute(CommandEventArgs e, object obj)
         {
-            Item item = obj as Item;
-
-            if (item != null)
+            if (obj is Item item)
             {
                 if (e.Mobile.PlaceInBackpack(item))
                     AddResponse("The item has been placed in your backpack.");
@@ -1016,9 +1014,7 @@ namespace Server.Commands.Generic
             {
                 if (mob.IsDeadBondedPet)
                 {
-                    BaseCreature bc = mob as BaseCreature;
-
-                    if (bc != null)
+                    if (mob is BaseCreature bc)
                     {
                         CommandLogging.WriteLine(
                             from,

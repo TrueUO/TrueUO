@@ -109,8 +109,7 @@ namespace Server.Engines.Help
             m_PageLocation = sender.Location;
             m_PageMap = sender.Map;
 
-            PlayerMobile pm = sender as PlayerMobile;
-            if (pm != null && pm.SpeechLog != null && Array.IndexOf(SpeechLogAttachment, type) >= 0)
+            if (sender is PlayerMobile pm && pm.SpeechLog != null && Array.IndexOf(SpeechLogAttachment, type) >= 0)
             {
                 m_SpeechLog = new List<SpeechLogEntry>(pm.SpeechLog);
             }
