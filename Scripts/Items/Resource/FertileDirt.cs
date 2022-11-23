@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class FertileDirt : Item
+    public class FertileDirt : Item, ICommodity
     {
         [Constructable]
         public FertileDirt()
@@ -22,6 +22,9 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        TextDefinition ICommodity.Description => LabelNumber;
+        bool ICommodity.IsDeedable => true;
 
         public override void Serialize(GenericWriter writer)
         {
