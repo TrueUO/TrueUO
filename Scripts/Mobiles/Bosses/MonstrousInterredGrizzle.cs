@@ -205,12 +205,16 @@ namespace Server.Mobiles
             {
                 for (int i = 0; i < m.Items.Count; i++)
                 {
-                    if (m.Items[i] is IDurability item && Utility.RandomDouble() < 0.25)
+                    if (m.Items[i] is IDurability item && Utility.RandomDouble() < 0.25 && item.HitPoints > 0)
                     {
                         if (item.HitPoints > 10)
+                        {
                             item.HitPoints -= 10;
+                        }
                         else
+                        {
                             item.HitPoints -= 1;
+                        }
                     }
                 }
             }
