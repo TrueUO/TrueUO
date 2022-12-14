@@ -358,7 +358,7 @@ namespace Server.Mobiles
                         {
                             Item item = null;
 
-                            switch (Utility.Random(13))
+                            switch (Utility.Random(14))
                             {
                                 case 0:
                                     item = new KrampusCoinPurse(m.Karma);
@@ -399,12 +399,14 @@ namespace Server.Mobiles
                                 case 12:
                                     item = new RecipeScroll(468);
                                     break; // bladed whip
+                                case 13:
+                                    item = new RecipeScroll(469);
+                                    break; // candied staff
                             }
 
                             if (item != null)
                             {
-                                m.SendLocalizedMessage(
-                                    1156269); // For your valor in defeating your foe a specialty item has been awarded to you!
+                                m.SendLocalizedMessage(1156269); // For your valor in defeating your foe a specialty item has been awarded to you!
 
                                 if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
                                 {
