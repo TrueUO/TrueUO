@@ -131,9 +131,7 @@ namespace Server.Misc
 
         private static bool CanGive(Mobile m, string tagName)
         {
-            Account a = m.Account as Account;
-
-            if (a != null)
+            if (m.Account is Account a)
             {
                 var tag = a.GetTag(m.Serial.ToString() + ' ' + tagName);
 
@@ -781,9 +779,7 @@ namespace Server.Misc
             m.AddToBackpack(book);
 
             #region Gold
-            var account = m.Account as Account;
-
-            if (account != null && account.GetTag("TCGold") == null)
+            if (m.Account is Account account && account.GetTag("TCGold") == null)
             {
                 account.AddTag("TCGold", "Gold Given");
 
@@ -1009,7 +1005,7 @@ namespace Server.Misc
                     case 3: // Command list
                         {
                             sender.Mobile.SendAsciiMessage(0x482, "The command prefix is \"{0}\"", CommandSystem.Prefix);
-                            CommandHandlers.Help_OnCommand(new CommandEventArgs(sender.Mobile, "help", "", new string[0]));
+                            CommandHandlers.Help_OnCommand(new CommandEventArgs(sender.Mobile, "help", "", Array.Empty<string>()));
 
                             break;
                         }

@@ -687,9 +687,12 @@ namespace Server.Items
                     from.SendLocalizedMessage(1158865); // That is not a valid repair contract or container.
                 }
 
-                m_Gump.StopTimer(from);
-                from.CloseGump(typeof(RepairBenchGump));
-                from.SendGump(new RepairBenchGump(from, m_Addon));
+                if (m_Addon != null && !m_Addon.Deleted && from.InRange(m_Addon.GetWorldLocation(), 2))
+                {
+                    m_Gump.StopTimer(from);
+                    from.CloseGump(typeof(RepairBenchGump));
+                    from.SendGump(new RepairBenchGump(from, m_Addon));
+                }
             }
 
             protected override void OnTargetCancel(Mobile from, TargetCancelType cancelType)
@@ -709,37 +712,54 @@ namespace Server.Items
 
             int index = info.ButtonID;
 
-            if (index == 0)
+            if (m_Addon != null && !m_Addon.Deleted && from.InRange(m_Addon.GetWorldLocation(), 2))
             {
-                m_Addon.User = null;
-            }
-            else if (index == 1)
-            {
-                StopTimer(from);
-                from.SendLocalizedMessage(1158871); // Which repair deed or container of repair deeds do you wish to add to the repair bench?
-                from.Target = new InternalTarget(from, this, m_Addon);
-            }
-            else if (index >= 10 && index < 20)
-            {
-                StopTimer(from);
-                int skillindex = index - 10;
-                Repair.Do(from, RepairSkillInfo.GetInfo((RepairSkillType)skillindex).System, m_Addon);
-            }
-            else
-            {
-                BaseHouse house = BaseHouse.FindHouseAt(m_Addon);
-
-                if (house != null && house.IsOwner(from))
+                if (index == 0)
+                {
+                    m_Addon.User = null;
+                }
+                else if (index == 1)
                 {
                     StopTimer(from);
-                    int skillindex = index - 20;
-                    from.SendGump(new ConfirmRemoveGump(m_Addon, (RepairSkillType)skillindex));
+                    from.SendLocalizedMessage(1158871); // Which repair deed or container of repair deeds do you wish to add to the repair bench?
+                    from.Target = new InternalTarget(from, this, m_Addon);
+                }
+                else if (index >= 10 && index < 20)
+                {
+                    StopTimer(from);
+                    int skillIndex = index - 10;
+                    Repair.Do(from, RepairSkillInfo.GetInfo((RepairSkillType)skillIndex).System, m_Addon);
                 }
                 else
                 {
-                    from.SendLocalizedMessage(1005213); // You can't do that
+                    BaseHouse house = BaseHouse.FindHouseAt(m_Addon);
+
+                    if (house != null && house.IsOwner(from))
+                    {
+                        StopTimer(from);
+                        int skillIndex = index - 20;
+                        from.SendGump(new ConfirmRemoveGump(m_Addon, (RepairSkillType)skillIndex));
+                    }
+                    else
+                    {
+                        from.SendLocalizedMessage(1005213); // You can't do that
+
+                        if (m_Addon != null)
+                        {
+                            m_Addon.User = null;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (m_Addon != null)
+                {
                     m_Addon.User = null;
                 }
+
+                from.CloseGump(typeof(RepairBenchGump));
+                from.SendLocalizedMessage(500295); // You are too far away to do that.
             }
         }
     }

@@ -33,30 +33,23 @@ namespace Server.Engines.Quests.Hag
             if (!from.InRange(GetWorldLocation(), 2))
                 return;
 
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
+            if (from is PlayerMobile player)
             {
                 QuestSystem qs = player.Quest;
 
-                if (qs is WitchApprenticeQuest)
+                if (qs is WitchApprenticeQuest && qs.FindObjective(typeof(FindApprenticeObjective)) is FindApprenticeObjective obj && !obj.Completed)
                 {
-                    FindApprenticeObjective obj = qs.FindObjective(typeof(FindApprenticeObjective)) as FindApprenticeObjective;
-
-                    if (obj != null && !obj.Completed)
+                    if (obj.Corpse == this)
                     {
-                        if (obj.Corpse == this)
-                        {
-                            obj.Complete();
-                            Delete();
-                        }
-                        else
-                        {
-                            SendLocalizedMessageTo(from, 1055047); // You examine the corpse, but it doesn't fit the description of the particular apprentice the Hag tasked you with finding.
-                        }
-
-                        return;
+                        obj.Complete();
+                        Delete();
                     }
+                    else
+                    {
+                        SendLocalizedMessageTo(from, 1055047); // You examine the corpse, but it doesn't fit the description of the particular apprentice the Hag tasked you with finding.
+                    }
+
+                    return;
                 }
             }
 

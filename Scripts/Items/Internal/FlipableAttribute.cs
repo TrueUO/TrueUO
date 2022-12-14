@@ -78,7 +78,7 @@ namespace Server.Items
                 {
                     MethodInfo flipMethod = item.GetType().GetMethod("Flip", Type.EmptyTypes);
                     if (flipMethod != null)
-                        flipMethod.Invoke(item, new object[0]);
+                        flipMethod.Invoke(item, Array.Empty<object>());
                 }
                 catch (Exception e)
                 {

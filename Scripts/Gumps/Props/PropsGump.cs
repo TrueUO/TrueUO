@@ -553,14 +553,14 @@ namespace Server.Gumps
 
             if (attrs.Length == 0)
             {
-                return new string[0];
+                return Array.Empty<string>();
             }
 
             CustomEnumAttribute ce = attrs[0] as CustomEnumAttribute;
 
             if (ce == null)
             {
-                return new string[0];
+                return Array.Empty<string>();
             }
 
             return ce.Names;

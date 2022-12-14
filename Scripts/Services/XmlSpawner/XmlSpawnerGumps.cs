@@ -1108,9 +1108,7 @@ namespace Server.Mobiles
 
                                     if (ValidGotoObject(state.Mobile, so))
                                     {
-                                        IPoint3D o = so as IPoint3D;
-
-                                        if (o != null)
+                                        if (so is IPoint3D o)
                                         {
                                             Map m = m_Spawner.Map;
 

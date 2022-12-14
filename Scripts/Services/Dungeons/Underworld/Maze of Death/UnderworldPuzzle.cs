@@ -54,7 +54,7 @@ namespace Server.Items
 
                 if (item != null)
                 {
-                    if (item is VoidEssence || item is SilverSerpentVenom || item is ToxicVenomSac)
+                    if (item is VoidEssence || item is SilverSerpentVenom || item is ToxicVenomSac || item is ScouringToxin)
                         item.Amount = 30;
 
                     if (item is LuckyCoin)
@@ -254,7 +254,7 @@ namespace Server.Items
                     MaxAttempts = 7;
                     break;
                 case 9: //Good to Go
-                    First = PuzzlePiece.BlueSingle;
+                    First = PuzzlePiece.RedSingle;
                     Second = PuzzlePiece.GreenDouble;
                     Third = PuzzlePiece.None;
                     Fourth = PuzzlePiece.GreenTriple;
@@ -550,7 +550,6 @@ namespace Server.Items
                 m_From.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500446); // That is too far away.
                 return;
             }
-
             switch (info.ButtonID)
             {
                 case 0: break;

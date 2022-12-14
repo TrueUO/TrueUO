@@ -227,9 +227,7 @@ namespace Server.Gumps
 
             protected override void OnTarget(Mobile from, object o)
             {
-                IPoint3D p = o as IPoint3D;
-
-                if (p != null)
+                if (o is IPoint3D p)
                 {
                     if (p is Item item)
                         p = item.GetWorldTop();

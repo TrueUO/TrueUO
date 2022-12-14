@@ -548,9 +548,7 @@ namespace Server.Engines.Quests
 
             public override bool Update(object o)
             {
-                Type t = o as Type;
-
-                if (t != null && t == GameType && Quest != null && Quest.Owner != null && Quest.Owner.Region.IsPartOf("FireIsleCasino"))
+                if (o is Type t && t == GameType && Quest != null && Quest.Owner != null && Quest.Owner.Region.IsPartOf("FireIsleCasino"))
                 {
                     if (t == typeof(ChucklesLuck))
                     {

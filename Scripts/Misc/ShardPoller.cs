@@ -22,8 +22,8 @@ namespace Server.Misc
             : base(0x1047)
         {
             m_Duration = TimeSpan.FromHours(24.0);
-            m_Options = new ShardPollOption[0];
-            m_Addresses = new IPAddress[0];
+            m_Options = Array.Empty<ShardPollOption>();
+            m_Addresses = Array.Empty<IPAddress>();
 
             Movable = false;
         }
@@ -266,7 +266,7 @@ namespace Server.Misc
         {
             m_Title = title;
             m_LineBreaks = GetBreaks(m_Title);
-            m_Voters = new IPAddress[0];
+            m_Voters = Array.Empty<IPAddress>();
         }
 
         public ShardPollOption(GenericReader reader)

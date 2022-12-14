@@ -1,3 +1,5 @@
+using System;
+
 namespace Server
 {
 	public class KeywordList
@@ -41,7 +43,7 @@ namespace Server
 			m_Keywords[m_Count++] = keyword;
 		}
 
-		private static readonly int[] m_EmptyInts = new int[0];
+		private static readonly int[] m_EmptyInts = Array.Empty<int>();
 
 		public int[] ToArray()
 		{

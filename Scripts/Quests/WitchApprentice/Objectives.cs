@@ -103,9 +103,7 @@ namespace Server.Engines.Quests.Hag
 
         private void DeleteImp(object imp)
         {
-            Mobile m = imp as Mobile;
-
-            if (m != null && !m.Deleted)
+            if (imp is Mobile m && !m.Deleted)
             {
                 Effects.SendLocationEffect(m.Location, m.Map, 0x3728, 10, 10);
                 Effects.PlaySound(m.Location, m.Map, 0x1FE);
@@ -247,9 +245,7 @@ namespace Server.Engines.Quests.Hag
 
         private void DeleteImp(object imp)
         {
-            Mobile m = imp as Mobile;
-
-            if (m != null && !m.Deleted)
+            if (imp is Mobile m && !m.Deleted)
             {
                 Effects.SendLocationEffect(m.Location, m.Map, 0x3728, 10, 10);
                 Effects.PlaySound(m.Location, m.Map, 0x1FE);

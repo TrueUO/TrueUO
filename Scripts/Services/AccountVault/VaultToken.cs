@@ -38,9 +38,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    var pm = from as PlayerMobile;
-
-                    if (pm != null)
+                    if (from is PlayerMobile pm)
                     {
                         if (Account != null && (pm.Account == null || pm.Account.Username != Account))
                         {

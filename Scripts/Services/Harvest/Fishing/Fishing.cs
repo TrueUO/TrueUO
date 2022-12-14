@@ -64,7 +64,7 @@ namespace Server.Engines.Harvest
 
                 // The fishing
                 EffectActions = new[] { 6 },
-                EffectSounds = new int[0],
+                EffectSounds = Array.Empty<int>(),
                 EffectCounts = new[] { 1 },
                 EffectDelay = TimeSpan.Zero,
                 EffectSoundDelay = TimeSpan.FromSeconds(8.0),

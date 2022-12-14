@@ -544,7 +544,7 @@ namespace Server.SkillHandlers
                         if (value > 0 && wep.Attributes.CastSpeed >= 0)
                             wep.Attributes.CastSpeed -= 1;
                     }
-                    else if (attr == AosAttribute.CastSpeed)
+                    else if (attr == AosAttribute.CastSpeed && wep.Attributes[AosAttribute.CastSpeed]<1)
                     {
                         wep.Attributes.CastSpeed += value;
                     }
@@ -598,7 +598,7 @@ namespace Server.SkillHandlers
                         if (value > 0 && shield.Attributes.CastSpeed >= 0)
                             shield.Attributes.CastSpeed -= 1;
                     }
-                    else if (aosAttribute == AosAttribute.CastSpeed)
+                    else if (aosAttribute == AosAttribute.CastSpeed && shield.Attributes[AosAttribute.CastSpeed] < 1)
                     {
                         shield.Attributes.CastSpeed += value;
                     }
