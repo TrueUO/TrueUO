@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Xml;
 
@@ -27,7 +28,7 @@ namespace Server.Gumps
 
             if (xml.IsEmptyElement)
             {
-                m_Children = new object[0];
+                m_Children = Array.Empty<object>();
             }
             else
             {

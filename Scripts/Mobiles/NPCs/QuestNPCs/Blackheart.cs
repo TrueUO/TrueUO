@@ -59,39 +59,34 @@ namespace Server.Engines.Quests.Hag
 
             QuestSystem qs = player.Quest;
 
-            if (qs is WitchApprenticeQuest)
+            if (qs is WitchApprenticeQuest && qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.Whiskey)
             {
-                FindIngredientObjective obj = qs.FindObjective(typeof(FindIngredientObjective)) as FindIngredientObjective;
+                PlaySound(Utility.RandomBool() ? 0x42E : 0x43F);
 
-                if (obj != null && !obj.Completed && obj.Ingredient == Ingredient.Whiskey)
+                Item hat = player.FindItemOnLayer(Layer.Helm);
+                bool tricorne = hat is TricorneHat;
+
+                if (tricorne && player.BAC >= 20)
                 {
-                    PlaySound(Utility.RandomBool() ? 0x42E : 0x43F);
+                    obj.Complete();
 
-                    Item hat = player.FindItemOnLayer(Layer.Helm);
-                    bool tricorne = hat is TricorneHat;
-
-                    if (tricorne && player.BAC >= 20)
-                    {
-                        obj.Complete();
-
-                        if (obj.BlackheartMet)
-                            qs.AddConversation(new BlackheartPirateConversation(false));
-                        else
-                            qs.AddConversation(new BlackheartPirateConversation(true));
-                    }
-                    else if (!obj.BlackheartMet)
-                    {
-                        obj.Complete();
-
-                        qs.AddConversation(new BlackheartFirstConversation());
-                    }
+                    if (obj.BlackheartMet)
+                        qs.AddConversation(new BlackheartPirateConversation(false));
                     else
-                    {
-                        qs.AddConversation(new BlackheartNoPirateConversation(tricorne, player.BAC > 0));
-                    }
-
-                    return;
+                        qs.AddConversation(new BlackheartPirateConversation(true));
                 }
+                else if (!obj.BlackheartMet)
+                {
+                    obj.Complete();
+
+                    qs.AddConversation(new BlackheartFirstConversation());
+                }
+                else
+                {
+                    qs.AddConversation(new BlackheartNoPirateConversation(tricorne, player.BAC > 0));
+                }
+
+                return;
             }
 
             PlaySound(0x42C);

@@ -17,7 +17,7 @@ namespace Server.Items
         public BallotBox()
             : base(0x9A8)
         {
-            m_Topic = new string[0];
+            m_Topic = Array.Empty<string>();
             m_Yes = new List<Mobile>();
             m_No = new List<Mobile>();
         }
@@ -33,7 +33,7 @@ namespace Server.Items
         public List<Mobile> No => m_No;
         public void ClearTopic()
         {
-            m_Topic = new string[0];
+            m_Topic = Array.Empty<string>();
 
             ClearVotes();
         }

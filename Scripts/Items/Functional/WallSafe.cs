@@ -266,10 +266,11 @@ namespace Server.Items
             AddHtmlLocalized(0, 10, 400, 16, 1113302, "#1155860", 0xFFFF, false, false);
 
             int secureAmount = 0;
-            Account acct = User.Account as Account;
 
-            if (acct != null)
+            if (User.Account is Account acct)
+            {
                 secureAmount = acct.GetSecureAccountAmount(User);
+            }
 
             AddHtmlLocalized(20, 35, 380, 16, 1155859, Safe.HoldAmount.ToString("N0", CultureInfo.GetCultureInfo("en-US")), 0xFFFF, false, false); // Gold Deposited: ~1_AMOUNT~
             AddHtmlLocalized(20, 65, 380, 16, 1155864, string.Format("{0}\t{1}", User.Name, secureAmount.ToString("N0", CultureInfo.GetCultureInfo("en-US"))), 0xFFFF, false, false); // ~1_NAME~'s Secure Account: ~2_AMOUNT~

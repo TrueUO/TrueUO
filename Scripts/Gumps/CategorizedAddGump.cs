@@ -73,7 +73,7 @@ namespace Server.Gumps
 
             if (xml.IsEmptyElement)
             {
-                m_Nodes = new CAGNode[0];
+                m_Nodes = Array.Empty<CAGNode>();
             }
             else
             {
@@ -99,7 +99,7 @@ namespace Server.Gumps
         private CAGCategory()
         {
             m_Title = "no data";
-            m_Nodes = new CAGNode[0];
+            m_Nodes = Array.Empty<CAGNode>();
         }
 
         public static CAGCategory Root

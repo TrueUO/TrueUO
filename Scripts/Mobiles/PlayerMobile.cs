@@ -848,7 +848,7 @@ namespace Server.Mobiles
 
         public static void EquipMacro(EquipMacroEventArgs e)
         {
-            if (e.Mobile is PlayerMobile pm && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+            if (e.Mobile is PlayerMobile pm && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0 && !pm.HasTrade)
             {
                 if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
@@ -906,7 +906,7 @@ namespace Server.Mobiles
 
         public static void UnequipMacro(UnequipMacroEventArgs e)
         {
-            if (e.Mobile is PlayerMobile pm && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+            if (e.Mobile is PlayerMobile pm && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0 && !pm.HasTrade)
             {
                 if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
@@ -5275,7 +5275,7 @@ namespace Server.Mobiles
             return running ? RunFoot : WalkFoot;
         }
 
-        public static bool MovementThrottle_Callback(NetState ns, out bool drop)
+        public static bool MovementThrottle_Callback(byte packetID, NetState ns, out bool drop)
         {
             drop = false;
 

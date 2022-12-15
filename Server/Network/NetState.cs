@@ -1123,5 +1123,24 @@ namespace Server.Network
 
 			return string.Compare(m_ToString, other.m_ToString, StringComparison.Ordinal);
 		}
-	}
+
+        #region Packet Throttling
+        private readonly long[] _Throttles = new long[Byte.MaxValue];
+
+        public void SetPacketTime(byte packetID)
+        {
+            _Throttles[packetID] = Core.TickCount;
+        }
+
+        public long GetPacketTime(byte packetID)
+        {
+            return _Throttles[packetID];
+        }
+
+        public bool IsThrottled(byte packetID, int delayMS)
+        {
+            return _Throttles[packetID] + delayMS > Core.TickCount;
+        }
+        #endregion
+    }
 }

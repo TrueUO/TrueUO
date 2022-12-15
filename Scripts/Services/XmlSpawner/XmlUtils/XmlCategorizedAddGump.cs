@@ -97,7 +97,7 @@ namespace Server.Gumps
         private XmlAddCAGCategory()
         {
             m_Title = "no data";
-            Nodes = new XmlAddCAGNode[0];
+            Nodes = Array.Empty<XmlAddCAGNode>();
         }
 
         public XmlAddCAGCategory(XmlAddCAGCategory parent, XmlReader xml)
@@ -116,7 +116,7 @@ namespace Server.Gumps
 
             if (xml.IsEmptyElement)
             {
-                Nodes = new XmlAddCAGNode[0];
+                Nodes = Array.Empty<XmlAddCAGNode>();
             }
             else
             {

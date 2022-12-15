@@ -52,7 +52,7 @@ namespace Server
 
             if (!File.Exists(path))
             {
-                m_Table = new int[0];
+                m_Table = Array.Empty<int>();
                 return;
             }
 

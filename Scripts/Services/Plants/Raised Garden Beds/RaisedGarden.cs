@@ -85,6 +85,21 @@ namespace Server.Items
             base.OnChop(from);
         }
 
+        public override void OnDelete() // Used when a house with an active GardenBed decays orphaning the PlantItem(s).
+        {
+            for (var index = 0; index < Components.Count; index++)
+            {
+                AddonComponent comp = Components[index];
+
+                if (comp is GardenAddonComponent component && component.Plant != null)
+                {
+                    component.Plant.Delete();
+                }
+            }
+
+            base.OnDelete();
+        }
+
         public RaisedGardenAddon(Serial serial)
             : base(serial)
         {

@@ -76,17 +76,13 @@ namespace Server.Targets
 
                     if (itemID == 0xD15 || itemID == 0xD16) // red mushroom
                     {
-                        PlayerMobile player = from as PlayerMobile;
-
-                        if (player != null)
+                        if (from is PlayerMobile player)
                         {
                             QuestSystem qs = player.Quest;
 
                             if (qs is WitchApprenticeQuest)
                             {
-                                FindIngredientObjective obj = qs.FindObjective(typeof(FindIngredientObjective)) as FindIngredientObjective;
-
-                                if (obj != null && !obj.Completed && obj.Ingredient == Ingredient.RedMushrooms)
+                                if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.RedMushrooms)
                                 {
                                     player.SendLocalizedMessage(1055036); // You slice a red cap mushroom from its stem.
                                     obj.Complete();

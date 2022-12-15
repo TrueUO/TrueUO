@@ -291,8 +291,8 @@ namespace Server.Commands
         public CategoryEntry()
         {
             m_Title = "(empty)";
-            m_Matches = new Type[0];
-            m_SubCategories = new CategoryEntry[0];
+            m_Matches = Type.EmptyTypes;
+            m_SubCategories = Array.Empty<CategoryEntry>();
             m_Matched = new ArrayList();
         }
 
@@ -301,7 +301,7 @@ namespace Server.Commands
             m_Parent = parent;
             m_Title = title;
             m_SubCategories = subCats;
-            m_Matches = new Type[0];
+            m_Matches = Type.EmptyTypes;
             m_Matched = new ArrayList();
         }
 

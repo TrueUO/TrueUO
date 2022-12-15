@@ -1765,10 +1765,8 @@ namespace Server.Mobiles
 
             int x = 0;
             int y = 0;
-            
-            Account acct = from.Account as Account; // read the text entries for default values
 
-            if (acct != null)
+            if (from.Account is Account acct)
             {
                 XmlSpawnerDefaults.DefaultEntry defs = XmlSpawnerDefaults.GetDefaults(acct.ToString(), from.Name);
                 if (defs != null)
@@ -2877,7 +2875,7 @@ namespace Server.Mobiles
                             }
 
                             // try loading the new spawn specifications first
-                            SpawnObject[] Spawns = new SpawnObject[0];
+                            SpawnObject[] Spawns = Array.Empty<SpawnObject>();
                             bool havenew = true;
                             valid_entry = true;
                             try
@@ -6522,7 +6520,7 @@ namespace Server.Mobiles
                             }
 
                             // try loading the new spawn specifications first
-                            SpawnObject[] Spawns = new SpawnObject[0];
+                            SpawnObject[] Spawns = Array.Empty<SpawnObject>();
                             bool havenew = true;
                             try
                             {
@@ -7874,7 +7872,7 @@ namespace Server.Mobiles
             SpawnRange = defSpawnRange;
 
             InitSpawn(0, 0, m_Width, m_Height, string.Empty, 0, defMinDelay, defMaxDelay, defDuration,
-                defProximityRange, defProximityTriggerSound, defAmount, defTeam, defHomeRange, defRelativeHome, new SpawnObject[0], defMinRefractory, defMaxRefractory,
+                defProximityRange, defProximityTriggerSound, defAmount, defTeam, defHomeRange, defRelativeHome, Array.Empty<SpawnObject>(), defMinRefractory, defMaxRefractory,
                 defTODStart, defTODEnd, null, null, null, null, null, null, null, null, null, defTriggerProbability, null, defIsGroup, defTODMode,
                 defKillReset, false, -1, null, false, false, false, null, defDespawnTime, null, false, null);
         }

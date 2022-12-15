@@ -920,30 +920,23 @@ namespace Server.Items
             {
                 int tileID = target.TileID;
 
-                PlayerMobile player = from as PlayerMobile;
-
-                if (player != null)
+                if (from is PlayerMobile player)
                 {
                     QuestSystem qs = player.Quest;
 
-                    if (qs is WitchApprenticeQuest)
+                    if (qs is WitchApprenticeQuest && qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.SwampWater)
                     {
-                        FindIngredientObjective obj = qs.FindObjective(typeof(FindIngredientObjective)) as FindIngredientObjective;
+                        bool contains = false;
 
-                        if (obj != null && !obj.Completed && obj.Ingredient == Ingredient.SwampWater)
+                        for (int i = 0; !contains && i < m_SwampTiles.Length; i += 2)
+                            contains = tileID >= m_SwampTiles[i] && tileID <= m_SwampTiles[i + 1];
+
+                        if (contains)
                         {
-                            bool contains = false;
+                            Delete();
 
-                            for (int i = 0; !contains && i < m_SwampTiles.Length; i += 2)
-                                contains = tileID >= m_SwampTiles[i] && tileID <= m_SwampTiles[i + 1];
-
-                            if (contains)
-                            {
-                                Delete();
-
-                                player.SendLocalizedMessage(1055035); // You dip the container into the disgusting swamp water, collecting enough for the Hag's vile stew.
-                                obj.Complete();
-                            }
+                            player.SendLocalizedMessage(1055035); // You dip the container into the disgusting swamp water, collecting enough for the Hag's vile stew.
+                            obj.Complete();
                         }
                     }
                 }

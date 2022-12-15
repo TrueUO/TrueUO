@@ -1354,6 +1354,7 @@ namespace Server.Engines.VendorSearching
         {
             if (VendorSearch.CanSearch(Player))
             {
+                Player.CloseGump(typeof(VendorSearchGump));
                 BaseGump.SendGump(new VendorSearchGump(Player));
             }
         }

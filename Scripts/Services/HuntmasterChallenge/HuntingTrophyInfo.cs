@@ -75,9 +75,9 @@ namespace Server.Engines.HuntsmasterChallenge
             m_Infos.Add(new HuntingTrophyInfo(HuntType.BlackTiger, typeof(WildBlackTiger), 0x9F32, 0x9F31, 1156286, 1124777, 350, 700, MeasuredBy.Weight, false));
 
             //Publish 102
-            m_Infos.Add(new HuntingTrophyInfo(HuntType.Raptor, typeof(Raptor), 0xA20E, 0xA20D, 1095923, 1125508, 400, 800, MeasuredBy.Weight, false));
+            m_Infos.Add(new HuntingTrophyInfo(HuntType.Raptor, typeof(Raptor), 0xA20E, 0xA20D, 1095923, 1125509, 400, 800, MeasuredBy.Weight, false));
             m_Infos.Add(new HuntingTrophyInfo(HuntType.SeaSerpent, typeof(SeaSerpent), 0xA20C, 0xA20C, 1018242, 1125508, 200, 600, MeasuredBy.Weight, false));
-            m_Infos.Add(new HuntingTrophyInfo(HuntType.Scorpion, typeof(Scorpion), 0xA210, 0xA20F, 1029657, 1125508, 250, 500, MeasuredBy.Weight, false));
+            m_Infos.Add(new HuntingTrophyInfo(HuntType.Scorpion, typeof(Scorpion), 0xA210, 0xA20F, 1029657, 1125511, 250, 500, MeasuredBy.Weight, false));
         }
 
         private readonly HuntType m_HuntType;

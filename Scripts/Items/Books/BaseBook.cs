@@ -17,7 +17,7 @@ namespace Server.Items
 
         public BookPageInfo()
         {
-            m_Lines = new string[0];
+            m_Lines = Array.Empty<string>();
         }
 
         public BookPageInfo(params string[] lines)
@@ -129,7 +129,7 @@ namespace Server.Items
 
             if (content == null)
             {
-                m_Pages = new BookPageInfo[0];
+                m_Pages = Array.Empty<BookPageInfo>();
             }
             else
             {
@@ -297,7 +297,7 @@ namespace Server.Items
                             if (content != null)
                                 m_Pages = content.Copy();
                             else
-                                m_Pages = new BookPageInfo[0];
+                                m_Pages = Array.Empty<BookPageInfo>();
                         }
 
                         break;
@@ -323,7 +323,7 @@ namespace Server.Items
                             if (content != null)
                                 m_Pages = content.Copy();
                             else
-                                m_Pages = new BookPageInfo[0];
+                                m_Pages = Array.Empty<BookPageInfo>();
                         }
 
                         break;

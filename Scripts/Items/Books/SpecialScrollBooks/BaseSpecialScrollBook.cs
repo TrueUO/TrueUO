@@ -100,6 +100,10 @@ namespace Server.Items
                 {
                     m.SendLocalizedMessage(BadDropMessage);
                 }
+                else if (dropped is ScrollOfTranscendence sot && !ValueInfo.ContainsValue(sot.Value))
+                {
+                    m.SendLocalizedMessage(BadDropMessage);
+                }
                 else if (house == null || !IsLockedDown)
                 {
                     m.SendLocalizedMessage(1151765); // You must lock this book down in a house to add scrolls to it.

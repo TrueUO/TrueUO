@@ -82,9 +82,7 @@ namespace Server.Gumps
 
             if (info.ButtonID == 1)
             {
-                Account acc = from.Account as Account;
-
-                if (acc != null)
+                if (from.Account is Account acc)
                 {
                     acc.RemoveYoungStatus(502085); // You have chosen to renounce your `Young' player status.
                 }

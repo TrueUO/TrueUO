@@ -1,3 +1,4 @@
+using System;
 using Server.Gumps;
 using Server.Mobiles;
 
@@ -168,7 +169,7 @@ namespace Server.Items
                     return GargoyleSkinHues;
                 }
 
-                return new int[0];
+                return Array.Empty<int>();
             }
 
             private static int[] _HumanSkinHues;

@@ -642,12 +642,10 @@ namespace Server.Engines.Quests
                         break;
                 }
 
-                switch (Utility.Random(4))
+                switch (Utility.Random(2))
                 {
-                    case 0: hold.DropItem(new HeavyCannonball(Utility.RandomMinMax(5, 10))); break;
-                    case 1: hold.DropItem(new LightCannonball(Utility.RandomMinMax(5, 10))); break;
-                    case 2: hold.DropItem(new HeavyGrapeshot(Utility.RandomMinMax(5, 10))); break;
-                    case 3: hold.DropItem(new LightGrapeshot(Utility.RandomMinMax(5, 10))); break;
+                    case 0: hold.DropItem(new Cannonball(Utility.RandomMinMax(5, 10))); break;
+                    case 1: hold.DropItem(new Grapeshot(Utility.RandomMinMax(5, 10))); break;
                 }
 
 

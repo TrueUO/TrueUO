@@ -240,7 +240,8 @@ namespace Server.Items
             new RecipeScrollDefinition(172, 467, Expansion.ML, RecipeSkillName.Tinkering),
             new RecipeScrollDefinition(173, 468, Expansion.ML, RecipeSkillName.Tinkering),
             new RecipeScrollDefinition(174, 172, Expansion.HS, RecipeSkillName.Carpentry),
-            new RecipeScrollDefinition(175, 357, Expansion.TOL, RecipeSkillName.Blacksmith)
+            new RecipeScrollDefinition(175, 357, Expansion.TOL, RecipeSkillName.Blacksmith),
+            new RecipeScrollDefinition(176, 469, Expansion.TOL, RecipeSkillName.Tinkering), // Candied Staff
         };
 
         [Constructable]

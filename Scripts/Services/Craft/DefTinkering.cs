@@ -58,21 +58,15 @@ namespace Server.Engines.Craft
 
         private static readonly Type[] m_TinkerColorables =
         {
-            typeof(ForkLeft), typeof(ForkRight),
-            typeof(SpoonLeft), typeof(SpoonRight),
-            typeof(KnifeLeft), typeof(KnifeRight),
-            typeof(Plate),
-            typeof(Goblet), typeof(PewterMug),
-            typeof(KeyRing),
-            typeof(Candelabra), typeof(Scales),
-            typeof(Key), typeof(Globe),
-            typeof(Spyglass), typeof(Lantern),
-            typeof(HeatingStand), typeof(BroadcastCrystal), typeof(TerMurStyleCandelabra),
-            typeof(GorgonLense), typeof(MedusaLightScales), typeof(MedusaDarkScales), typeof(RedScales),
-            typeof(BlueScales), typeof(BlackScales), typeof(GreenScales), typeof(YellowScales), typeof(WhiteScales),
+            typeof(ForkLeft), typeof(ForkRight), typeof(SpoonLeft), typeof(SpoonRight),
+            typeof(KnifeLeft), typeof(KnifeRight), typeof(Plate), typeof(Goblet),
+            typeof(PewterMug), typeof(KeyRing), typeof(Candelabra), typeof(Scales),
+            typeof(Key), typeof(Globe), typeof(Spyglass), typeof(Lantern),
+            typeof(HeatingStand), typeof(BroadcastCrystal), typeof(TerMurStyleCandelabra), typeof(GorgonLense),
+            typeof(MedusaLightScales), typeof(MedusaDarkScales), typeof(RedScales), typeof(BlueScales),
+            typeof(BlackScales), typeof(GreenScales), typeof(YellowScales), typeof(WhiteScales),
             typeof(PlantPigment), typeof(SoftenedReeds), typeof(DryReeds), typeof(PlantClippings),
-
-            typeof(KotlAutomatonHead)
+            typeof(KotlAutomatonHead), typeof(CandiedStaff)
         };
 
         public override bool RetainsColorFrom(CraftItem item, Type type)
@@ -467,6 +461,10 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(BladedWhip), 1044050, 1159283, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
             AddRes(index, typeof(Leather), 1044462, 10, 1044463);
             AddRecipe(index, (int)CraftRecipes.BladedWhip);
+
+            index = AddCraft(typeof(CandiedStaff), 1044050, 1126971, 75.0, 125.0, typeof(IronIngot), 1044036, 12, 1044037);
+            AddRes(index, typeof(Board), 1044041, 10, 1044351);
+            AddRecipe(index, (int)CraftRecipes.CandiedStaff);
 
             #endregion
 
