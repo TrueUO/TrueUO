@@ -149,7 +149,7 @@ namespace Server.Items
 					typeof(CursedMetallicKnight), typeof(CursedMetallicMage)
                 );
 
-            undead.Entries = new SlayerEntry[0];
+            undead.Entries = Array.Empty<SlayerEntry>();
 
             fey.Opposition = new[]
                 {
@@ -175,7 +175,7 @@ namespace Server.Items
                     typeof(FeralTreefellow)
                 );
 
-            fey.Entries = new SlayerEntry[0];
+            fey.Entries = Array.Empty<SlayerEntry>();
 
             elemental.Opposition = new[]
                 {

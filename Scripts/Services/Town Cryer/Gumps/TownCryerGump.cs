@@ -42,7 +42,7 @@ namespace Server.Services.TownCryer
 
         public static Dictionary<PlayerMobile, City> LastCity { get; private set; }
 
-        public TownCryerGump(PlayerMobile pm, TownCrier tc, int page = 0, GumpCategory Cartegory = GumpCategory.News)
+        public TownCryerGump(PlayerMobile pm, TownCrier tc, int page = 0)
             : base(pm, tc)
         {
             Page = page;
@@ -375,7 +375,7 @@ namespace Server.Services.TownCryer
                         {
                             id -= 200;
 
-                            if (id >= 0 && id < TownCryerSystem.ModeratorEntries.Count)
+                            if (id < TownCryerSystem.ModeratorEntries.Count)
                             {
                                 SendGump(new TownCryerEventModeratorGump(User, Cryer, TownCryerSystem.ModeratorEntries[id]));
                             }
@@ -384,7 +384,7 @@ namespace Server.Services.TownCryer
                         {
                             id -= 300;
 
-                            if (id >= 0 && id < TownCryerSystem.CityEntries.Count)
+                            if (id < TownCryerSystem.CityEntries.Count)
                             {
                                 SendGump(new TownCryerCityGump(User, Cryer, TownCryerSystem.CityEntries[id]));
                             }
@@ -393,7 +393,7 @@ namespace Server.Services.TownCryer
                         {
                             id -= 400;
 
-                            if (id >= 0 && id < TownCryerSystem.GuildEntries.Count)
+                            if (id < TownCryerSystem.GuildEntries.Count)
                             {
                                 SendGump(new TownCryerGuildGump(User, Cryer, TownCryerSystem.GuildEntries[id]));
                             }
@@ -413,7 +413,7 @@ namespace Server.Services.TownCryer
                             {
                                 id -= 2500;
 
-                                if (id >= 0 && id < TownCryerSystem.ModeratorEntries.Count)
+                                if (id < TownCryerSystem.ModeratorEntries.Count)
                                 {
                                     TownCryerSystem.ModeratorEntries.RemoveAt(id);
                                 }
@@ -431,7 +431,7 @@ namespace Server.Services.TownCryer
                                 {
                                     id -= 3000;
 
-                                    if (id >= 0 && id < TownCryerSystem.CityEntries.Count)
+                                    if (id < TownCryerSystem.CityEntries.Count)
                                     {
                                         SendGump(new CreateCityEntryGump(User, Cryer, City, TownCryerSystem.CityEntries[id]));
                                     }
@@ -440,7 +440,7 @@ namespace Server.Services.TownCryer
                                 {
                                     id -= 3500;
 
-                                    if (id >= 0 && id < TownCryerSystem.CityEntries.Count)
+                                    if (id < TownCryerSystem.CityEntries.Count)
                                     {
                                         TownCryerSystem.CityEntries.RemoveAt(id);
                                     }
@@ -455,7 +455,7 @@ namespace Server.Services.TownCryer
                             {
                                 id -= 4000;
 
-                                if (id >= 0 && id < TownCryerSystem.GuildEntries.Count)
+                                if (id < TownCryerSystem.GuildEntries.Count)
                                 {
                                     SendGump(new CreateGuildEntryGump(User, Cryer, TownCryerSystem.GuildEntries[id]));
                                 }
@@ -464,7 +464,7 @@ namespace Server.Services.TownCryer
                             {
                                 id -= 4500;
 
-                                if (id >= 0 && id < TownCryerSystem.GuildEntries.Count)
+                                if (id < TownCryerSystem.GuildEntries.Count)
                                 {
                                     TownCryerSystem.GuildEntries.RemoveAt(id);
                                 }

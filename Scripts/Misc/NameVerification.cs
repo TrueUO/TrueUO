@@ -1,3 +1,4 @@
+using System;
 using Server.Commands;
 
 namespace Server.Misc
@@ -8,7 +9,7 @@ namespace Server.Misc
         {
             ' ', '-', '.', '\''
         };
-        public static readonly char[] Empty = new char[0];
+        public static readonly char[] Empty = Array.Empty<char>();
         private static readonly string[] m_StartDisallowed =
         {
             "seer",
