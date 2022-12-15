@@ -358,7 +358,7 @@ namespace Server.Mobiles
                         {
                             Item item = null;
 
-                            switch (Utility.Random(13))
+                            switch (Utility.Random(14))
                             {
                                 case 0:
                                     item = new KrampusCoinPurse(m.Karma);
@@ -376,17 +376,17 @@ namespace Server.Mobiles
                                     item = new PunisherTitleDeed();
                                     break;
                                 case 5:
-                                    item = new RecipeScroll(586);
-                                    break; // minion hat
+                                    item = new RecipeScroll(586); // minion hat
+                                    break; 
                                 case 6:
-                                    item = new RecipeScroll(587);
-                                    break; // minion boots
+                                    item = new RecipeScroll(587); // minion boots
+                                    break; 
                                 case 7:
-                                    item = new KrampusCoinPurse(463);
-                                    break; // minion talons
+                                    item = new RecipeScroll(588); // minion talons
+                                    break; 
                                 case 8:
-                                    item = new KrampusCoinPurse(588);
-                                    break; // minion earrings
+                                    item = new RecipeScroll(463); // minion earrings
+                                    break; 
                                 case 9:
                                     item = new KrampusPunishinList(m.Name);
                                     break;
@@ -399,12 +399,14 @@ namespace Server.Mobiles
                                 case 12:
                                     item = new RecipeScroll(468);
                                     break; // bladed whip
+                                case 13:
+                                    item = new RecipeScroll(469); // candied staff
+                                    break; 
                             }
 
                             if (item != null)
                             {
-                                m.SendLocalizedMessage(
-                                    1156269); // For your valor in defeating your foe a specialty item has been awarded to you!
+                                m.SendLocalizedMessage(1156269); // For your valor in defeating your foe a specialty item has been awarded to you!
 
                                 if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
                                 {

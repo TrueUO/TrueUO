@@ -119,7 +119,8 @@ namespace Server.Engines.Craft
         BarbedWhip = 466,
         SpikedWhip = 467,
         BladedWhip = 468,
-       
+        CandiedStaff = 469,
+
         RotWormStew = 500, // DefCooking
         ElvenQuiver = 501, // DefTailoring
         QuiverOfFire = 502, // DefTailoring
