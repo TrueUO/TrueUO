@@ -134,7 +134,7 @@ namespace Server.Items
 
             foreach (IDamageable indirectTarget in SpellHelper.AcquireIndirectTargets(from, loc, map, ExplosionRange, false))
             {
-                if (indirectTarget is Mobile mobile)
+                if (indirectTarget is Mobile mobile && mobile.InLOS(this))
                 {
                     list.Add(mobile);
                 }
