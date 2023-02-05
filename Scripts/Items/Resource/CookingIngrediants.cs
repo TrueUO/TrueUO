@@ -181,8 +181,16 @@ namespace Server.Items
 
         [Constructable]
         public Salt()
+            : this(1)
+        {
+        }
+
+        [Constructable]
+        public Salt(int amount)
             : base(0x4C09)
         {
+            Stackable = true;
+            Amount = amount;
             Hue = 1150;
         }
 
@@ -200,6 +208,8 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            Stackable = true; // Clean up 2/5/2024
         }
     }
 
