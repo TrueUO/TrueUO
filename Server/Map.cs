@@ -67,13 +67,30 @@ namespace Server
             }
         }
 
-		public static IEnumerable<IEntity> SelectEntities(Sector s, Rectangle2D bounds)
-		{
-			return Enumerable.Empty<IEntity>().Union(s.Mobiles.Where(o => o != null && !o.Deleted))
-                .Union(s.Items.Where(o => o != null && !o.Deleted && o.Parent == null)).Where(bounds.Contains);
-		}
+        public static IEnumerable<IEntity> SelectEntities(Sector s, Rectangle2D bounds)
+        {
+            for (var mob = 0; mob < s.Mobiles.Count; mob++)
+            {
+                Mobile o = s.Mobiles[mob];
 
-		public static IEnumerable<Mobile> SelectMobiles(Sector s, Rectangle2D bounds)
+                if (o != null && !o.Deleted && bounds.Contains(o))
+                {
+                    yield return o;
+                }
+            }
+
+            for (var item = 0; item < s.Items.Count; item++)
+            {
+                Item o = s.Items[item];
+
+                if (o != null && !o.Deleted && o.Parent == null && bounds.Contains(o))
+                {
+                    yield return o;
+                }
+            }
+        }
+
+        public static IEnumerable<Mobile> SelectMobiles(Sector s, Rectangle2D bounds)
         {
             for (var index = 0; index < s.Mobiles.Count; index++)
             {
