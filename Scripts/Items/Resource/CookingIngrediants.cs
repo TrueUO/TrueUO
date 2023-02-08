@@ -65,8 +65,16 @@ namespace Server.Items
 
         [Constructable]
         public DarkTruffle()
+            : this(1)
+        {
+        }
+
+        [Constructable]
+        public DarkTruffle(int amount)
             : base(0xD18)
         {
+            Stackable = true;
+            Amount = amount;
         }
 
         public DarkTruffle(Serial serial)
@@ -84,6 +92,8 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            Stackable = true; // Clean up 2/5/2024
         }
     }
 
@@ -181,8 +191,16 @@ namespace Server.Items
 
         [Constructable]
         public Salt()
+            : this(1)
+        {
+        }
+
+        [Constructable]
+        public Salt(int amount)
             : base(0x4C09)
         {
+            Stackable = true;
+            Amount = amount;
             Hue = 1150;
         }
 
@@ -200,6 +218,8 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            Stackable = true; // Clean up 2/5/2024
         }
     }
 
