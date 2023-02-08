@@ -6866,20 +6866,24 @@ namespace Server.Mobiles
 
             Mobile combatant = Combatant as Mobile;
 
-            if (combatant != null && CanDiscord && !Discordance.UnderEffects(combatant) && tc >= m_NextDiscord && 0.33 > Utility.RandomDouble())
+            if (combatant != null && combatant.Alive)
             {
-                DoDiscord();
-                m_NextDiscord = tc + Utility.RandomMinMax(5000, 12500);
-            }
-            else if (combatant != null && CanPeace && !Peacemaking.UnderEffects(combatant) && tc >= m_NextPeace && 0.33 > Utility.RandomDouble())
-            {
-                DoPeace();
-                m_NextPeace = tc + Utility.RandomMinMax(5000, 12500);
-            }
-            else if (combatant != null && CanProvoke && tc >= m_NextProvoke && 0.33 > Utility.RandomDouble())
-            {
-                DoProvoke();
-                m_NextProvoke = tc + Utility.RandomMinMax(5000, 12500);
+                if (CanDiscord && !Discordance.UnderEffects(combatant) && tc >= m_NextDiscord && 0.33 > Utility.RandomDouble())
+                {
+                    DoDiscord();
+                    m_NextDiscord = tc + Utility.RandomMinMax(5000, 12500);
+                }
+                else if (CanPeace && !Peacemaking.UnderEffects(combatant) && tc >= m_NextPeace && 0.33 > Utility.RandomDouble())
+                {
+                    DoPeace();
+                    m_NextPeace = tc + Utility.RandomMinMax(5000, 12500);
+                }
+                else if (CanProvoke && tc >= m_NextProvoke && 0.33 > Utility.RandomDouble())
+                {
+                    DoProvoke();
+                    m_NextProvoke = tc + Utility.RandomMinMax(5000, 12500);
+                }
+
             }
 
             if (combatant != null && TeleportsTo && tc >= m_NextTeleport)
