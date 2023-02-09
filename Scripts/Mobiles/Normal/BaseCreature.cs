@@ -6210,8 +6210,8 @@ namespace Server.Mobiles
             if (Alive && !IsHealing && !BardPacified)
             {
                 Mobile owner = ControlMaster;
-
-                if (owner != null && tc >= m_NextHealOwnerTime && CanBeBeneficial(owner, true, true) &&
+                
+                if (owner != null && owner.Alive && tc >= m_NextHealOwnerTime && CanBeBeneficial(owner, true, true) &&
                     owner.Map == Map && InRange(owner, 2) && InLOS(owner) && (owner.Poisoned || owner.Hits < .78 * owner.HitsMax))
                 {
                     HealStart(owner);

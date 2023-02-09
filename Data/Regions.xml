@@ -704,9 +704,15 @@
       <go x="5275" y="1163" z="0" />
     </region>
     <region type="GreenAcres" priority="1" name="Green Acres">
-      <rect x="5376" y="512" width="767" height="767" />
+      <rect x="5120" y="256" width=  "256" height="260"/>
+      <rect x="5888" y="512" width=  "256" height="768"/>
+      <rect x="5376" y="1024" width= "512" height="256"/>
+      <rect x="5376" y="1536" width= "768" height="240"/>
+      <rect x="5936" y="1776" width= "208" height="264"/>
+      <rect x="5120" y="2048" width= "1024" height="256"/>
       <go x="5445" y="1153" z="0" />
     </region>
+
     <region type="DungeonRegion" priority="50" name="Shame">
       <rect x="5377" y="2" width="257" height="260" />
       <rect x="5635" y="2" width="260" height="124" />
@@ -1796,7 +1802,12 @@
       <go x="5275" y="1163" z="0" />
     </region>
     <region type="GreenAcres" priority="1" name="Green Acres">
-      <rect x="5376" y="512" width="767" height="767" />
+      <rect x="5120" y="256" width=  "256" height="260"/>
+      <rect x="5888" y="512" width=  "256" height="768"/>
+      <rect x="5376" y="1024" width= "512" height="256"/>
+      <rect x="5376" y="1536" width= "768" height="240"/>
+      <rect x="5936" y="1776" width= "208" height="264"/>
+      <rect x="5120" y="2048" width= "1024" height="256"/>
       <go x="5445" y="1153" z="0" />
     </region>
     <region type="DungeonRegion" priority="50" name="Shame">
