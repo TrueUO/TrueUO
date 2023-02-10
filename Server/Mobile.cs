@@ -9278,6 +9278,26 @@ namespace Server
             }
         }
 
+        //Defined because creating a Region as big as this really impacts the performance of the server start up, and every region would need all its children mapping
+        public bool InOverworld
+        {
+            get
+            {
+                return ((Map == Map.Felucca || Map == Map.Trammel) && X < 5120) ||
+                    (Map == Map.Malas && X > 512) ||
+                    Map == Map.Tokuno ||
+                    (Map == Map.TerMur && Y > 2840);
+
+            }
+        }
+        public bool InLostLands
+        {
+            get
+            {
+                return (Map == Map.Felucca || Map == Map.Trammel) && X > 5120 && Y > 2305;
+
+            }
+        }
         public void FreeCache()
 		{
 			Packet.Release(ref m_RemovePacket);
