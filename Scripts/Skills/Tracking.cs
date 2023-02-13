@@ -674,7 +674,7 @@ namespace Server.SkillHandlers
     {
         private readonly Timer m_Timer;
         private Mobile m_From;
-        private int arrowShowRange;
+        private readonly int arrowShowRange;
 
         public TrackArrow(Mobile from, IEntity target, int range, int arrowRange)
             : base(from, target)
@@ -759,7 +759,7 @@ namespace Server.SkillHandlers
                 || (m_Target is Mobile mt &&
                 (
                     RegionTracking && (
-                        mt.Region != m_From.Region && !(mt.InOverworld & m_From.InOverworld) ||
+                        mt.Region != m_From.Region && !(mt.InOverworld && m_From.InOverworld) ||
                         (mt.InOverworld != m_From.InOverworld) ||
                         (mt.InLostLands != m_From.InLostLands)
                     ) ||
