@@ -41,14 +41,31 @@ namespace Server.Engines.Quests
 
         public override void OnAccept()
         {
-            base.OnAccept();
+            BaseBoat boat = FishQuestHelper.GetBoat(Owner);
 
-            AddPole();
-
-            if (Owner != null)
+            if (boat != null && boat is BaseGalleon galleon)
             {
-                m_Rope = new BindingRope(this);
-                Owner.AddToBackpack(m_Rope);
+                if (galleon.Scuttled)
+                {
+                    Owner.SendLocalizedMessage(1116752); //Your ship is a mess!  Fix it first and then we can talk about catching pirates.
+                }
+                else
+                {
+                    base.OnAccept();
+
+                    AddPole();
+
+                    if (Owner != null)
+                    {
+                        m_Rope = new BindingRope(this);
+                        Owner.AddToBackpack(m_Rope);
+                    }
+                }
+            }
+            else
+            {
+                Owner.SendLocalizedMessage(1116751); //Your ship is a mess!  Fix it first and then we can talk about catching pirates.
+                this.RemoveQuest();
             }
         }
 
