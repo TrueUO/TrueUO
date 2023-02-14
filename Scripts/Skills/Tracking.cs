@@ -741,20 +741,29 @@ namespace Server.SkillHandlers
 
         private bool CanTrackTarget()
         {
-            return RegionTracking && IsInRegion() ||
+            if (m_Target == null)
+                return false;
+
+            return IsInRegion() ||
                     m_Target.GetDistanceToSqrt(trackee_Last) > 10 ||
-                    m_Target.Hidden && m_Target.AccessLevel > AccessLevel.Player;
+                    m_Target.AccessLevel > AccessLevel.Player;
         }
 
         private bool IsInRegion()
         {
-            return m_Target.Region != m_From.Region && !(m_Target.InOverworld && m_From.InOverworld) ||
+            return RegionTracking && (!(m_Target.InOverworld && m_From.InOverworld) ||
                         (m_Target.InOverworld != m_From.InOverworld) ||
-                        (m_Target.InLostLands != m_From.InLostLands);
+                        (m_Target.InLostLands != m_From.InLostLands));
         }
 
         protected override void OnTick()
         {
+            if (m_Target == null)
+            {
+                Stop();
+                return;
+            }
+
             if (RegionTracking)
             {
                 m_newDistance = Math.Max(Math.Abs(m_Target.Location.Y - m_From.Location.Y), Math.Abs(m_Target.Location.X - m_From.Location.X));
@@ -766,11 +775,10 @@ namespace Server.SkillHandlers
                 return;
             }
 
-            if (m_Target != null
-                || m_From.Deleted
+            if (m_From.Deleted
                 || m_Target.Deleted
                 || m_From.Map != m_Target.Map
-                || !RegionTracking && !m_From.InRange(m_Target, m_Range)
+                || (!RegionTracking && !m_From.InRange(m_Target, m_Range))
                 || CanTrackTarget()
                 )
             {
