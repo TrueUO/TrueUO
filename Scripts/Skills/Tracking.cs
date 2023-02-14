@@ -720,7 +720,7 @@ namespace Server.SkillHandlers
         private static readonly bool KeepMarkerOnRangeLost = Config.Get("Tracking.KeepMarkerOnRangeLost", true);
 
         private readonly Mobile m_From;
-        private readonly IEntity m_Target;
+        private readonly Mobile m_Target;
         private readonly int m_Range;
 
         private readonly TrackArrow m_Arrow;
@@ -731,12 +731,26 @@ namespace Server.SkillHandlers
             : base(TimeSpan.FromSeconds(0.25), TimeSpan.FromSeconds(1))
         {
             m_From = from;
-            m_Target = target;
+            m_Target = target as Mobile;
             m_Range = range;
             m_Arrow = arrow;
             tracker_Last = m_From.Location;
             trackee_Last = m_Target.Location;
 
+        }
+
+        private bool CanTrackTarget()
+        {
+            return RegionTracking && IsInRegion() ||
+                    m_Target.GetDistanceToSqrt(trackee_Last) > 10 ||
+                    m_Target.Hidden && m_Target.AccessLevel > AccessLevel.Player;
+        }
+
+        private bool IsInRegion()
+        {
+            return m_Target.Region != m_From.Region && !(m_Target.InOverworld && m_From.InOverworld) ||
+                        (m_Target.InOverworld != m_From.InOverworld) ||
+                        (m_Target.InLostLands != m_From.InLostLands);
         }
 
         protected override void OnTick()
@@ -752,20 +766,12 @@ namespace Server.SkillHandlers
                 return;
             }
 
-            if (m_From.Deleted
+            if (m_Target != null
+                || m_From.Deleted
                 || m_Target.Deleted
                 || m_From.Map != m_Target.Map
                 || !RegionTracking && !m_From.InRange(m_Target, m_Range)
-                || (m_Target is Mobile mt &&
-                (
-                    RegionTracking && (
-                        mt.Region != m_From.Region && !(mt.InOverworld && m_From.InOverworld) ||
-                        (mt.InOverworld != m_From.InOverworld) ||
-                        (mt.InLostLands != m_From.InLostLands)
-                    ) ||
-                    mt.GetDistanceToSqrt(trackee_Last) > 10 ||
-                    mt.Hidden && mt.AccessLevel > AccessLevel.Player)
-                )
+                || CanTrackTarget()
                 )
             {
                 if (!KeepMarkerOnRangeLost)
