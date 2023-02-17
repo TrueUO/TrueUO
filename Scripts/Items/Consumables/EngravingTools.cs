@@ -589,7 +589,11 @@ namespace Server.Items
         {
         }
 
-        public override Type[] Engraves => new[] { typeof(Cake), typeof(CheesePizza), typeof(SausagePizza), typeof(Cookies) };
+        public override Type[] Engraves => new[]
+        {
+            typeof(Cake), typeof(CheesePizza), typeof(SausagePizza), typeof(Cookies),
+            typeof(ThreeTieredCake)
+        };
 
         public override void Serialize(GenericWriter writer)
         {
