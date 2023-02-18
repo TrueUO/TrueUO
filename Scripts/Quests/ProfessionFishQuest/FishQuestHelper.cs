@@ -322,7 +322,7 @@ namespace Server.Engines.Quests
             {
                 BaseBoat boat = BaseBoat.Boats[index];
 
-                if (boat.Owner == from && !boat.IsRowBoat)
+                if (boat.Owner == from && !boat.IsRowBoat && boat.Map != Map.Internal)
                 {
                     boats.Add(boat);
                 }
