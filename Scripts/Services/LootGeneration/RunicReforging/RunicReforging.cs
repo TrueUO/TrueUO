@@ -1937,9 +1937,9 @@ namespace Server.Items
                         }
                     }
 
-                    double perc = (100.0 - Math.Sqrt(luckyRandom)) / 100.0;
-
-                    if (perc > 1.0) perc = 1.0;
+                    double playerLuckPerc = Math.Min(((100.0 - Math.Sqrt(luckyRandom))) / 100.0, 1);
+                    double perc = ((double)(basebudget * playerLuckPerc) / 700);
+                    
                     int toAdd = Math.Min(500, RandomItemGenerator.MaxAdjustedBudget - basebudget);
 
                     budget = Utility.RandomMinMax(basebudget - basebudget / divisor, (int)(basebudget + toAdd * perc)) + budgetBonus;
