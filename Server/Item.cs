@@ -666,13 +666,6 @@ namespace Server
     {
         public static readonly List<Item> EmptyItems = new List<Item>();
 
-        public static void Initialize()
-        {
-            EventSink.TargetedItemUse += ItemTargetRequest;
-        }
-
-        public Mobile CreatedFor { get; set; }
-
         public int CompareTo(IEntity other)
         {
             if (other == null)
@@ -830,6 +823,8 @@ namespace Server
                 }
             }
         }
+
+        public Mobile CreatedFor { get; set; }
 
         [Flags]
         private enum ImplFlag : byte
@@ -5486,13 +5481,6 @@ namespace Server
                 mParent.OnSubItemBounceCleared(item);
             }
         }
-
-        public static void ItemTargetRequest(TargetedItemUseEventArgs e)
-        {
-            //   e.Mobile.Target = e.Target as IEntity;
-            //  (e.Source as Item).OnDoubleClick(e.Mobile);
-        }
-
 
         public virtual bool CheckTarget(Mobile from, Target targ, object targeted)
         {
