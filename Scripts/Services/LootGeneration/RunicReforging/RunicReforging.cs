@@ -1812,16 +1812,6 @@ namespace Server.Items
             return false;
         }
 
-        public static Item GenerateRandomItem(Mobile killer, BaseCreature creature)
-        {
-            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(killer), LootPackEntry.IsMondain(killer), LootPackEntry.IsStygian(killer));
-
-            if (item != null)
-                GenerateRandomItem(item, killer, Math.Max(100, GetDifficultyFor(creature)), LootPack.GetLuckChance(GetLuckForKiller(creature)), ReforgedPrefix.None, ReforgedSuffix.None);
-
-            return item;
-        }
-
         /// <summary>
         /// Called in LootPack.cs
         /// </summary>
@@ -1829,20 +1819,10 @@ namespace Server.Items
         {
             if (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat)
             {
-                GenerateRandomItem(item, killer, Math.Max(100, GetDifficultyFor(creature)), LootPack.GetLuckChance(GetLuckForKiller(creature)), ReforgedPrefix.None, ReforgedSuffix.None);
+                GenerateRandomItem(item, killer, Math.Max(100, GetDifficultyFor(creature)), LootPack.GetLuckChance(GetLuckForMobile(killer)), ReforgedPrefix.None, ReforgedSuffix.None);
                 return true;
             }
 
-            return false;
-        }
-
-        public static bool GenerateRandomItem(Item item, Mobile killer, BaseCreature creature, ReforgedPrefix prefix, ReforgedSuffix suffix)
-        {
-            if (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat)
-            {
-                GenerateRandomItem(item, killer, Math.Max(100, GetDifficultyFor(creature)), LootPack.GetLuckChance(GetLuckForKiller(creature)), prefix, suffix);
-                return true;
-            }
             return false;
         }
 
@@ -1939,7 +1919,7 @@ namespace Server.Items
 
                     double playerLuckPerc = Math.Min(((100.0 - Math.Sqrt(luckyRandom))) / 100.0, 1);
                     double perc = ((double)(basebudget * playerLuckPerc) / 700);
-                    
+
                     int toAdd = Math.Min(500, RandomItemGenerator.MaxAdjustedBudget - basebudget);
 
                     budget = Utility.RandomMinMax(basebudget - basebudget / divisor, (int)(basebudget + toAdd * perc)) + budgetBonus;
@@ -2189,13 +2169,11 @@ namespace Server.Items
             return 2;
         }
 
-        public static int GetLuckForKiller(BaseCreature dead)
+        public static int GetLuckForMobile(Mobile attacker)
         {
-            Mobile highest = dead.GetHighestDamager();
-
-            if (highest != null)
+            if (attacker != null)
             {
-                return highest is PlayerMobile pm ? pm.RealLuck : highest.Luck;
+                return attacker is PlayerMobile pm ? pm.RealLuck : attacker.Luck;
             }
 
             return 0;
