@@ -1873,7 +1873,7 @@ namespace Server.Items
         /// <param name="maxBudget"></param>
         /// <param name="map"></param>
         /// <returns></returns>
-        public static bool GenerateRandomItem(Item item, int luck, int minBudget, int maxBudget, Map map)
+        public static bool GenerateRandomTreasureMapItem(Item item, int luck, int minBudget, int maxBudget, Map map)
         {
             if (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat)
             {

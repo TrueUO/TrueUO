@@ -126,10 +126,10 @@ namespace Server.Items
                         weapon.ExtendedWeaponAttributes.AssassinHoned = 1;
                     }
 
-                    int min = 400;
-                    int max = 1400;
+                    const int min = 400;
+                    const int max = 1400;
 
-                    RunicReforging.GenerateRandomItem(item, 0, min, max, Map);
+                    RunicReforging.GenerateRandomItem(item, 0, min, max);
 
                     item.Hue = 1258;
                     item.AttachSocket(new EnchantedHotItemSocket(this));
