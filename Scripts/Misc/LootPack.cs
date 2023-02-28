@@ -606,7 +606,7 @@ namespace Server
 
         public static readonly LootPack PeculiarSeed1 = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(1), 1) }, 33.3, 1) });
         public static readonly LootPack PeculiarSeed2 = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(2), 1) }, 33.3, 1) });
-        public static readonly LootPack PeculiarSeed3 = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(3), 1) }, 33.3, 1) });
+        public static readonly LootPack PeculiarSeed3 = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(3), 1)}, 33.3, 1) });
         public static readonly LootPack PeculiarSeed4 = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(4), 1) }, 33.3, 1) });
         public static readonly LootPack BonsaiSeed = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomBonsaiSeed(), 1) }, 25.0, 1) });
 
@@ -848,7 +848,7 @@ namespace Server
                 {
                     Item loot = null;
 
-                    if (item.ConstructCallback != null)
+                    if(item.ConstructCallback != null)
                     {
                         loot = item.ConstructCallback(from);
                     }
@@ -885,8 +885,7 @@ namespace Server
                     // Try to generate a random item based on the creature killed
                     if (from is BaseCreature creature)
                     {
-                        item.CreatedFor = creature.GetRandomDamagerByDamage();
-                        if (RandomItemGenerator.GenerateRandomItem(item, item.CreatedFor, creature))
+                        if (RandomItemGenerator.GenerateRandomItem(item, creature.LastKiller, creature))
                         {
                             return item;
                         }

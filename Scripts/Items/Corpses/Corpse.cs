@@ -277,8 +277,8 @@ namespace Server.Items
 
             for (int i = 0; i < unstackables.Count; i++)
             {
+                Mobile m = attackers[i % attackers.Count];
                 Item item = unstackables[i];
-                Mobile m = item.CreatedFor != null ? item.CreatedFor : attackers[i % attackers.Count];
 
                 if (!m_InstancedItems.ContainsKey(item))
                 {
@@ -326,39 +326,27 @@ namespace Server.Items
         public bool Devoured => m_Devourer != null;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Carved
-        {
-            get => GetFlag(CorpseFlag.Carved); set => SetFlag(CorpseFlag.Carved, value);
+        public bool Carved { get => GetFlag(CorpseFlag.Carved); set => SetFlag(CorpseFlag.Carved, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool VisitedByTaxidermist
-        {
-            get => GetFlag(CorpseFlag.VisitedByTaxidermist); set => SetFlag(CorpseFlag.VisitedByTaxidermist, value);
+        public bool VisitedByTaxidermist { get => GetFlag(CorpseFlag.VisitedByTaxidermist); set => SetFlag(CorpseFlag.VisitedByTaxidermist, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Channeled
-        {
-            get => GetFlag(CorpseFlag.Channeled); set => SetFlag(CorpseFlag.Channeled, value);
+        public bool Channeled { get => GetFlag(CorpseFlag.Channeled); set => SetFlag(CorpseFlag.Channeled, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Animated
-        {
-            get => GetFlag(CorpseFlag.Animated); set => SetFlag(CorpseFlag.Animated, value);
+        public bool Animated { get => GetFlag(CorpseFlag.Animated); set => SetFlag(CorpseFlag.Animated, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool SelfLooted
-        {
-            get => GetFlag(CorpseFlag.SelfLooted); set => SetFlag(CorpseFlag.SelfLooted, value);
+        public bool SelfLooted { get => GetFlag(CorpseFlag.SelfLooted); set => SetFlag(CorpseFlag.SelfLooted, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool LootCriminal
-        {
-            get => GetFlag(CorpseFlag.LootCriminal); set => SetFlag(CorpseFlag.LootCriminal, value);
+        public bool LootCriminal { get => GetFlag(CorpseFlag.LootCriminal); set => SetFlag(CorpseFlag.LootCriminal, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -381,15 +369,11 @@ namespace Server.Items
         public int Kills { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Criminal
-        {
-            get => GetFlag(CorpseFlag.Criminal); set => SetFlag(CorpseFlag.Criminal, value);
+        public bool Criminal { get => GetFlag(CorpseFlag.Criminal); set => SetFlag(CorpseFlag.Criminal, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Murderer
-        {
-            get => GetFlag(CorpseFlag.Murderer); set => SetFlag(CorpseFlag.Murderer, value);
+        public bool Murderer { get => GetFlag(CorpseFlag.Murderer); set => SetFlag(CorpseFlag.Murderer, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
