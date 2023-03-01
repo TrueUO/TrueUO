@@ -48,6 +48,8 @@ namespace Server.Items
 
     public static class TreasureMapInfo
     {
+        private static readonly bool TreasureAdditionalLoot = Config.Get("TreasureMaps.AdditionalProperties", false);
+
         /// <summary>
         /// This is called from BaseCreature. Instead of editing EVERY creature that drops a map, we'll simply convert it here.
         /// </summary>
@@ -434,10 +436,10 @@ namespace Server.Items
             return amount;
         }
 
-        public static void GetMinMaxBudget(TreasureLevel level, Item item, out int min, out int max)
+        public static Tuple<int,int> GetMinMaxBudget(TreasureLevel level, Item item)
         {
             int preArtifact = Imbuing.GetMaxWeight(item) + 100;
-            min = max = 0;
+            int min, max;
 
             switch (level)
             {
@@ -448,6 +450,7 @@ namespace Server.Items
                 case TreasureLevel.Hoard:
                 case TreasureLevel.Trove: min = 500; max = 1300; break;
             }
+            return new Tuple<int, int>(min, max);
         }
 
         private static readonly Type[][][] _WeaponTable =
@@ -970,10 +973,8 @@ namespace Server.Items
                             }
                             else
                             {
-                                int min, max;
-
-                                GetMinMaxBudget(level, deco, out min, out max);
-                                RunicReforging.GenerateRandomItem(deco, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map);
+                                Tuple<int,int> minMax = GetMinMaxBudget(level, deco);
+                                RunicReforging.GenerateRandomItem(deco, from is PlayerMobile pm ? pm.RealLuck : from.Luck, minMax.Item1, minMax.Item2, chest.Map, from, AdditionalProperties(level));
                             }
                         }
 
@@ -1017,18 +1018,22 @@ namespace Server.Items
             foreach (Type type in GetRandomEquipment(package, facet, amount))
             {
                 Item item = Loot.Construct(type);
-                int min, max;
-                GetMinMaxBudget(level, item, out min, out max);
+                Tuple<int, int> minMax = GetMinMaxBudget(level, item);
 
                 if (item != null)
                 {
-                    RunicReforging.GenerateRandomItem(item, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map);
+                    RunicReforging.GenerateRandomItem(item, from is PlayerMobile pm ? pm.RealLuck : from.Luck, minMax.Item1, minMax.Item2, chest.Map, from, AdditionalProperties(level));
                     chest.DropItem(item);
                 }
             }
 
             list = null;
             #endregion
+        }
+
+        private static int AdditionalProperties(TreasureLevel level)
+        {
+            return TreasureAdditionalLoot ? (int)level/2 : 0;
         }
 
         private static Type MutateType(Type type)
