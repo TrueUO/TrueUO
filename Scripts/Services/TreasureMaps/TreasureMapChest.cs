@@ -3,6 +3,7 @@ using Server.Engines.PartySystem;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
+using Server.Misc;
 using System;
 using System.Collections.Generic;
 
@@ -10,6 +11,8 @@ namespace Server.Items
 {
     public class TreasureMapChest : LockableContainer
     {
+        private static readonly bool TreasureAdditionalLoot = Config.Get("TreasureMaps.AdditionalProperties", false);
+
         public static Type[] SOSArtifacts => m_SOSArtifacts;
         private static readonly Type[] m_SOSArtifacts =
         {
@@ -235,10 +238,9 @@ namespace Server.Items
 
                     if (item != null && RandomItemGenerator.Enabled)
                     {
-                        int min, max;
-                        GetRandomItemStat(out min, out max, propsScale);
+                        Range propertyRange = GetRandomItemStat(propsScale);
 
-                        RunicReforging.GenerateRandomItem(item, luck, min, max, map);
+                        RunicReforging.GenerateRandomItem(item, luck, propertyRange.Min, propertyRange.Max, map, from, AdditionalProperties(level));
 
                         cont.DropItem(item);
                     }
@@ -410,10 +412,10 @@ namespace Server.Items
             RefinementComponent.Roll(cont, rolls, 0.10);
         }
 
-        public static void GetRandomItemStat(out int min, out int max, double scale = 1.0)
+        public static Range GetRandomItemStat(double scale = 1.0)
         {
             int rnd = Utility.Random(100);
-
+            int min, max;
             if (rnd <= 1)
             {
                 min = 500; max = 1300;
@@ -437,6 +439,8 @@ namespace Server.Items
 
             min = (int)(min * scale);
             max = (int)(max * scale);
+
+            return new Range(min, max);
         }
 
         public static Item GetRandomRecipe()
@@ -789,6 +793,11 @@ namespace Server.Items
 
             m.SendLocalizedMessage(1010631); // You did not discover this chest!
             return false;
+        }
+
+        private static int AdditionalProperties(int level)
+        {
+            return TreasureAdditionalLoot ? level / 2 : 0;
         }
 
         private class RemoveGump : Gump

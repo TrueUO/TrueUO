@@ -1,3 +1,5 @@
+using Server.Misc;
+
 namespace Server.Items
 {
     [Flipable]
@@ -115,9 +117,8 @@ namespace Server.Items
 
                 if (item != null)
                 {
-                    TreasureMapChest.GetRandomItemStat(out int min, out int max);
-
-                    RunicReforging.GenerateRandomItem(item, 0, min, max);
+                    Range propertyRange = TreasureMapChest.GetRandomItemStat();
+                    RunicReforging.GenerateRandomItem(item, 0, propertyRange.Min, propertyRange.Max);
 
                     DropItem(item);
                 }

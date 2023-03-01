@@ -1,3 +1,4 @@
+using Server.Misc;
 using System;
 
 namespace Server.Items
@@ -80,10 +81,9 @@ namespace Server.Items
 
             if (RandomItemGenerator.Enabled)
             {
-                int min, max;
-                TreasureMapChest.GetRandomItemStat(out min, out max);
+                Range propertyRange = TreasureMapChest.GetRandomItemStat();
 
-                RunicReforging.GenerateRandomItem(item, 0, min, max);
+                RunicReforging.GenerateRandomItem(item, 0, propertyRange.Min, propertyRange.Max);
             }
 
             DropItem(item);

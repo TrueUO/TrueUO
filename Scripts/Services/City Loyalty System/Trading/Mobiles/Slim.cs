@@ -2,6 +2,7 @@ using Server.ContextMenus;
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
+using Server.Misc;
 using Server.Targeting;
 using System.Collections.Generic;
 
@@ -128,10 +129,9 @@ namespace Server.Engines.CityLoyalty
                 case 1:
                     Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(false, false, true);
 
-                    int min, max;
-                    TreasureMapChest.GetRandomItemStat(out min, out max);
+                    Range propertyRange = TreasureMapChest.GetRandomItemStat();
 
-                    RunicReforging.GenerateRandomItem(item, 0, min, max, Map);
+                    RunicReforging.GenerateRandomItem(item, 0, propertyRange.Min, propertyRange.Max, Map);
                     return item;
                 case 2:
                     return ScrollOfTranscendence.CreateRandom(1, 10);

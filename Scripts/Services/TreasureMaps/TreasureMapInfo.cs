@@ -1,6 +1,7 @@
 using Server.Engines.Craft;
 using Server.Engines.PartySystem;
 using Server.Mobiles;
+using Server.Misc;
 using Server.SkillHandlers;
 using Server.Spells;
 using System;
@@ -436,7 +437,7 @@ namespace Server.Items
             return amount;
         }
 
-        public static Tuple<int,int> GetMinMaxBudget(TreasureLevel level, Item item)
+        public static Range GetMinMaxBudget(TreasureLevel level, Item item)
         {
             int preArtifact = Imbuing.GetMaxWeight(item) + 100;
             int min, max;
@@ -450,7 +451,7 @@ namespace Server.Items
                 case TreasureLevel.Hoard:
                 case TreasureLevel.Trove: min = 500; max = 1300; break;
             }
-            return new Tuple<int, int>(min, max);
+            return new Range(min, max);
         }
 
         private static readonly Type[][][] _WeaponTable =
@@ -973,8 +974,8 @@ namespace Server.Items
                             }
                             else
                             {
-                                Tuple<int,int> minMax = GetMinMaxBudget(level, deco);
-                                RunicReforging.GenerateRandomItem(deco, from is PlayerMobile pm ? pm.RealLuck : from.Luck, minMax.Item1, minMax.Item2, chest.Map, from, AdditionalProperties(level));
+                                Range propRange = GetMinMaxBudget(level, deco);
+                                RunicReforging.GenerateRandomItem(deco, from is PlayerMobile pm ? pm.RealLuck : from.Luck, propRange.Min, propRange.Max, chest.Map, from, AdditionalProperties(level));
                             }
                         }
 
@@ -1018,11 +1019,11 @@ namespace Server.Items
             foreach (Type type in GetRandomEquipment(package, facet, amount))
             {
                 Item item = Loot.Construct(type);
-                Tuple<int, int> minMax = GetMinMaxBudget(level, item);
+                Range propRange = GetMinMaxBudget(level, item);
 
                 if (item != null)
                 {
-                    RunicReforging.GenerateRandomItem(item, from is PlayerMobile pm ? pm.RealLuck : from.Luck, minMax.Item1, minMax.Item2, chest.Map, from, AdditionalProperties(level));
+                    RunicReforging.GenerateRandomItem(item, from is PlayerMobile pm ? pm.RealLuck : from.Luck, propRange.Min, propRange.Max, chest.Map, from, AdditionalProperties(level));
                     chest.DropItem(item);
                 }
             }
