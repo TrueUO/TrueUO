@@ -502,7 +502,7 @@ namespace Server.Engines.Quests
                             steaks.Hue = 2302;
                             break;
                         case 4:
-                            steaks.Name = "Spiced Salmon";
+                            steaks.Name = "Smoked Cod";
                             steaks.Hue = 1637;
                             break;
                     }
