@@ -812,7 +812,7 @@ namespace Server.Spells
                         return false;
                     }
 
-                    if (caster.Region is GreenAcres)
+                    if (Region.Find(loc, map) is GreenAcres) 
                     {
                         caster.SendLocalizedMessage(502360); // You cannot teleport into that area.
                         return false;

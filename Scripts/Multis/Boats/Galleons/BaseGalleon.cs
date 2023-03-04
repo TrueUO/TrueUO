@@ -941,7 +941,7 @@ namespace Server.Multis
 
             if (CapturedCaptain != null)
             {
-                CapturedCaptain.Kill();
+                CapturedCaptain.Delete();
             }
 
             base.OnAfterDelete();

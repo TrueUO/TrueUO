@@ -62,7 +62,7 @@ namespace Server.Spells.Third
             {
                 Caster.SendLocalizedMessage(502831); // Cannot teleport to that spot.
             }
-            else if (Region.Find(to, map).GetRegion(typeof(HouseRegion)) != null)
+            else if (Region.Find(to, map).GetRegion(typeof(HouseRegion)) != null || Region.Find(to, map).GetRegion(typeof(GreenAcres)) != null)
             {
                 Caster.SendLocalizedMessage(502829); // Cannot teleport to that spot.
             }
