@@ -83,11 +83,7 @@ namespace Server.Mobiles
         {
             if (dropped is BowlOfBlackrockStew)
             {
-                if (PowerLevel >= MaxPower)
-                {
-                    from.SendLocalizedMessage(1115755); // The creature looks at you strangely and shakes its head no.
-                }
-                else
+                if (PowerLevel < MaxPower)
                 {
                     PowerLevel++;
 
@@ -102,6 +98,8 @@ namespace Server.Mobiles
 
                     return base.CheckFeed(from, dropped);
                 }
+
+                return base.CheckFeed(from, dropped);
             }
 
             return false;
