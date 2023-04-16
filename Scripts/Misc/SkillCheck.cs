@@ -49,15 +49,15 @@ namespace Server.Misc
             if (skillName == SkillName.Fishing && BaseGalleon.FindGalleonAt(from, from.Map) is TokunoGalleon)
                 value += 1;
 
+            double chance = (value - minSkill) / (maxSkill - minSkill);
+
+            CrystalBallOfKnowledge.TellSkillDifficulty(from, skillName, chance);
+
             if (value < minSkill)
                 return false; // Too difficult
 
             if (value >= maxSkill)
                 return true; // No challenge
-
-            double chance = (value - minSkill) / (maxSkill - minSkill);
-
-            CrystalBallOfKnowledge.TellSkillDifficulty(from, skillName, chance);
 
             return CheckSkill(from, skill, chance);
         }

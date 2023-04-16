@@ -230,7 +230,7 @@ namespace Server.Items
             get => m_East;
             set
             {
-                m_IsRewardItem = value;
+                m_East = value;
                 InvalidateProperties();
             }
         }
