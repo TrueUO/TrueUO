@@ -981,7 +981,7 @@ namespace Server.Mobiles
                     continue;
                 }
 
-                if (Definition.HasAreaEffect(abil) || AbilityProfile.HasAbility(MagicalAbility.Poisoning) && abil is PoisonBreath)
+                if (Definition.HasAreaEffect(abil) || AbilityProfile.HasAbility(MagicalAbility.Poisoning) && (abil is PoisonBreath || abil is AuraOfNausea || abil is EssenceOfDisease))
                 {
                     TrainingPoint tp = PetTrainingHelper.GetTrainingPoint(abil);
 

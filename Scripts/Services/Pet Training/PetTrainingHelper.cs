@@ -1315,7 +1315,7 @@ namespace Server.Mobiles
 
             AbilityProfile profile = GetAbilityProfile(bc);
 
-            return profile != null && ability == AreaEffect.PoisonBreath && profile.HasAbility(MagicalAbility.Poisoning);
+            return profile != null && (ability == AreaEffect.PoisonBreath || ability == AreaEffect.AuraOfNausea || ability == AreaEffect.EssenceOfDisease) && profile.HasAbility(MagicalAbility.Poisoning);
         }
 
         public static bool ValidateTrainingPoint(BaseCreature bc, WeaponAbility ability)
