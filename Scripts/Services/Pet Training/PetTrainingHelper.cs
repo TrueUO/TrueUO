@@ -111,7 +111,8 @@ namespace Server.Mobiles
         CoconutCrab = GreaterDragon | BattleDefense | Bashing | Piercing | Slashing | WrestlingMastery,
         Vollem = Variety1 | Chivalry | Discordance | MageryMastery | Mysticism | Poisoning | Spellweaving | BattleDefense | Tokuno,
         Capybara = Poisoning | Piercing | Bashing | Slashing | WrestlingMastery,
-        WildfireOstard = Chivalry | Discordance | Poisoning | Mysticism | Spellweaving | MageryMastery | Piercing | Bashing | Slashing | WrestlingMastery
+        WildfireOstard = Chivalry | Discordance | Poisoning | Mysticism | Spellweaving | MageryMastery | Piercing | Bashing | Slashing | WrestlingMastery,
+        Beetle = Bashing | Piercing | Poisoning | Slashing | WrestlingMastery | BattleDefense
     }
 
     public static class PetTrainingHelper
@@ -667,7 +668,7 @@ namespace Server.Mobiles
                 new TrainingDefinition(typeof(DreadWarhorse), Class.MagicalAndNecromantic, MagicalAbility.DreadWarhorse, new[] { SpecialAbility.DragonBreath }, WepAbility2, AreaEffectArea2, 3, 5),
                 new TrainingDefinition(typeof(Eagle), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3),
                 new TrainingDefinition(typeof(Ferret), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 2),
-                new TrainingDefinition(typeof(FireBeetle), Class.MagicalAndInsectoid, MagicalAbility.StandardClawedOrTailed, specialAbilityMagicalInsectoid, WepAbility1, AreaEffectArea5, 1 ,5),
+                new TrainingDefinition(typeof(FireBeetle), Class.MagicalAndInsectoid, MagicalAbility.Beetle, specialAbilityMagicalInsectoid, WepAbility1, AreaEffectArea5, 1 ,5),
                 new TrainingDefinition(typeof(FireSteed), Class.Magical, MagicalAbility.Dragon2, SpecialAbilityNone, WepAbility2, AreaEffectArea1, 2, 5),
                 new TrainingDefinition(typeof(ForestOstard), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3),
                 new TrainingDefinition(typeof(FrenziedOstard), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3),
@@ -677,7 +678,7 @@ namespace Server.Mobiles
                 new TrainingDefinition(typeof(FrostSpider), Class.None, MagicalAbility.StandardClawedOrTailed, specialAbilityAnimalStandard, WepAbility2, AreaEffectNone, 1, 4),
                 new TrainingDefinition(typeof(Gallusaurus), Class.None, MagicalAbility.Poisoning, SpecialAbilityNone, WepAbility1, AreaEffectNone, 3, 5),
                 new TrainingDefinition(typeof(Gaman), Class.Tailed, MagicalAbility.Poisoning, specialAbilityTailed, WepAbility1, AreaEffectNone, 1, 4),
-                new TrainingDefinition(typeof(Beetle), Class.Insectoid, MagicalAbility.StandardClawedOrTailed, specialAbilityMagicalInsectoid, WepAbility1, AreaEffectNone, 1, 5),
+                new TrainingDefinition(typeof(Beetle), Class.Insectoid, MagicalAbility.Beetle, specialAbilityMagicalInsectoid, WepAbility1, AreaEffectNone, 1, 5),
                 new TrainingDefinition(typeof(GiantIceWorm), Class.Tailed, MagicalAbility.Variety1, specialAbilityBitingTailed, WepAbility2, AreaEffectArea3, 1, 2),
                 new TrainingDefinition(typeof(GiantRat), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3),
                 new TrainingDefinition(typeof(GiantSpider), Class.None, MagicalAbility.Variety1, specialAbilityBitingAnimal, WepAbility1, AreaEffectArea3, 1, 3),
@@ -1315,7 +1316,7 @@ namespace Server.Mobiles
 
             AbilityProfile profile = GetAbilityProfile(bc);
 
-            return profile != null && ability == AreaEffect.PoisonBreath && profile.HasAbility(MagicalAbility.Poisoning);
+            return profile != null && (ability == AreaEffect.PoisonBreath || ability == AreaEffect.AuraOfNausea || ability == AreaEffect.EssenceOfDisease) && profile.HasAbility(MagicalAbility.Poisoning);
         }
 
         public static bool ValidateTrainingPoint(BaseCreature bc, WeaponAbility ability)
