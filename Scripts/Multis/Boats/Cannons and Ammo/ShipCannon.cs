@@ -208,20 +208,6 @@ namespace Server.Items
                 {
                     ammo = grapeshot;
                 }
-                else
-                {
-                    cannon = m.Backpack.FindItemByType<BaseCannonball>();
-                    grapeshot = m.Backpack.FindItemByType<Grapeshot>();
-
-                    if (cannon != null)
-                    {
-                        ammo = cannon;
-                    }
-                    else if (grapeshot != null)
-                    {
-                        ammo = grapeshot;
-                    }
-                }
 
                 if (ammo != null)
                 {
