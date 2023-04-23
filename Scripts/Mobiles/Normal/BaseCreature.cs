@@ -673,10 +673,9 @@ namespace Server.Mobiles
         public static Type[] SlotLowerables => _SlotLowerables;
         private static readonly Type[] _SlotLowerables =
         {
-            typeof(Nightmare), typeof(Najasaurus), typeof(RuneBeetle), typeof(GreaterDragon), typeof(FrostDragon),
-            typeof(WhiteWyrm), typeof(Reptalon), typeof(DragonTurtleHatchling), typeof(Phoenix), typeof(FrostMite),
-            typeof(DireWolf), typeof(Skree), typeof(HighPlainsBoura), typeof(LesserHiryu), typeof(DragonWolf),
-            typeof(BloodFox)
+            typeof(Nightmare), typeof(Najasaurus), typeof(RuneBeetle), typeof(GreaterDragon), typeof(WhiteWyrm),
+            typeof(Reptalon), typeof(DragonTurtleHatchling), typeof(Phoenix), typeof(FrostMite), typeof(Skree),
+            typeof(HighPlainsBoura), typeof(LesserHiryu), typeof(DragonWolf), typeof(BloodFox)
         };
 
         private bool CanLowerSlot()
