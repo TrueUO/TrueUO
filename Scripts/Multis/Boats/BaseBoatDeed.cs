@@ -61,25 +61,32 @@ namespace Server.Multis
 
         public override void OnDoubleClick(Mobile from)
         {
-            BaseBoat boat = BaseBoat.FindBoatAt(from, from.Map);
+            if (IsChildOf(from.Backpack))
+            {
+                BaseBoat boat = BaseBoat.FindBoatAt(from, from.Map);
 
-            if (from.AccessLevel < AccessLevel.GameMaster && (from.Map == Map.Ilshenar || from.Map == Map.Malas))
-            {
-                from.SendLocalizedMessage(1010567, null, 0x25); // You may not place a boat from this location.
-            }
-            else if (BaseBoat.HasBoat(from) && !Boat.IsRowBoat)
-            {
-                from.SendLocalizedMessage(1116758); // You already have a ship deployed!
-            }
-            else if (from.Region.IsPartOf(typeof(HouseRegion)) || boat != null && (boat.GetType() == Boat.GetType() || !boat.IsRowBoat && !IsRowBoatDeed))
-            {
-                from.SendLocalizedMessage(1010568, null, 0x25); // You may not place a ship while on another ship or inside a house.
-            }
-            else if (!from.HasGump(typeof(BoatPlacementGump)))
-            {
-                from.SendLocalizedMessage(502482); // Where do you wish to place the ship?
+                if (from.AccessLevel < AccessLevel.GameMaster && (from.Map == Map.Ilshenar || from.Map == Map.Malas))
+                {
+                    from.SendLocalizedMessage(1010567, null, 0x25); // You may not place a boat from this location.
+                }
+                else if (BaseBoat.HasBoat(from) && !Boat.IsRowBoat)
+                {
+                    from.SendLocalizedMessage(1116758); // You already have a ship deployed!
+                }
+                else if (from.Region.IsPartOf(typeof(HouseRegion)) || boat != null && (boat.GetType() == Boat.GetType() || !boat.IsRowBoat && !IsRowBoatDeed))
+                {
+                    from.SendLocalizedMessage(1010568, null, 0x25); // You may not place a ship while on another ship or inside a house.
+                }
+                else if (!from.HasGump(typeof(BoatPlacementGump)))
+                {
+                    from.SendLocalizedMessage(502482); // Where do you wish to place the ship?
 
-                from.SendGump(new BoatPlacementGump(this, from));
+                    from.SendGump(new BoatPlacementGump(this, from));
+                }
+            }
+            else
+            {
+                from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
             }
         }
 

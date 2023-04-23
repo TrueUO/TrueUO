@@ -70,26 +70,11 @@ namespace Server.Multis
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 6:
-                    {
-                        MultiID = reader.ReadInt();
-                        Offset = reader.ReadPoint3D();
-                        BoatItem = reader.ReadItem() as BaseBoat;
-                        break;
-                    }
-                case 5:
-                    {
-                        MultiID = reader.ReadInt();
-                        Offset = reader.ReadPoint3D();
-                        reader.ReadString();
-                        BoatItem = reader.ReadItem() as BaseBoat;
-                        break;
-                    }
-            }
+            MultiID = reader.ReadInt();
+            Offset = reader.ReadPoint3D();
+            BoatItem = reader.ReadItem() as BaseBoat;
         }
 
         public override void OnDoubleClick(Mobile from)
