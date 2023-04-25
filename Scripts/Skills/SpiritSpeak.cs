@@ -64,13 +64,18 @@ namespace Server.SkillHandlers
             if (Table != null && Table.ContainsKey(m))
             {
                 if (Table[m] != null)
+                {
                     Table[m].Stop();
+                }
 
-                m.SendSpeedControl(SpeedControlType.Disable);
+                m.SendSpeedControl(m.Region is Regions.TwistedWealdDesert ? SpeedControlType.WalkSpeed : SpeedControlType.Disable);
+
                 Table.Remove(m);
 
                 if (Table.Count == 0)
+                {
                     Table = null;
+                }
             }
         }
 
