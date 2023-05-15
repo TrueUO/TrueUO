@@ -114,7 +114,6 @@ namespace Server.Engines.Harvest
                 new BonusHarvestResource(100, .1, 1113344, typeof(CrystallineBlackrock), Map.TerMur)
             };
 
-            oreAndStone.RaceBonus = true;
             oreAndStone.RandomizeVeins = true;
 
             Definitions.Add(oreAndStone);

@@ -146,7 +146,6 @@ namespace Server.Regions
         {
             CheckBabble(m_Region1);
             CheckBabble(m_Region2);
-            CheckBabble(TokunoDocksRegion.Instance);
         }
 
         public static void CheckBabble(Region r)

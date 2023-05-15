@@ -799,11 +799,6 @@ namespace Server.Items
                 }
             }
 
-            if (!RaceDefinitions.ValidateEquipment(from, this))
-            {
-                return false;
-            }
-
             if (from.Dex < DexRequirement)
             {
                 from.SendLocalizedMessage(1071936); // You cannot equip that.
@@ -1123,8 +1118,8 @@ namespace Server.Items
                 bonus = Math.Max(bonus, 45);
             }
 
-            //SA Gargoyle cap is 50, else 45
-            bonus = Math.Min(attacker.Race == Race.Gargoyle ? 50 : 45, bonus);
+            //SA cap is 45
+            bonus = Math.Min(45, bonus);
 
             var ourValue = (atkValue + 20.0) * (100 + bonus);
 
@@ -4462,15 +4457,6 @@ namespace Server.Items
             if (m_AosSkillBonuses != null)
             {
                 m_AosSkillBonuses.GetProperties(list);
-            }
-
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
             }
 
             if (ArtifactRarity > 0)

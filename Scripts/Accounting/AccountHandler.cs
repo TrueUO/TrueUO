@@ -37,14 +37,7 @@ namespace Server.Misc
             new CityInfo("Trinsic", "The Traveler's Inn",   1075076, 1845,  2745,   0),
             new CityInfo("Jhelom", "The Mercenary Inn", 1075078, 1374,  3826,   0),
             new CityInfo("Skara Brae",  "The Falconer's Inn",   1075079, 618,   2234,   0),
-            new CityInfo("Vesper", "The Ironwood Inn",  1075080, 2771,  976,    0),
-            new CityInfo("Royal City", "Royal City Inn", 1150169, 738, 3486, -19, Map.TerMur)
-        };
-
-        private static readonly CityInfo[] SiegeStartingCities =
-        {
-            new CityInfo("Britain", "The Wayfarer's Inn",   1075074, 1602,  1591,   20, Map.Felucca),
-            new CityInfo("Royal City", "Royal City Inn", 1150169, 738, 3486, -19, Map.TerMur)
+            new CityInfo("Vesper", "The Ironwood Inn",  1075080, 2771,  976,    0)
         };
 
         private static readonly bool PasswordCommandEnabled = Config.Get("Accounts.PasswordCommandEnabled", false);
@@ -341,18 +334,13 @@ namespace Server.Misc
                 e.State.Account = acct;
                 e.Accepted = true;
 
-                if (Siege.SiegeShard)
-                {
-                    e.CityInfo = SiegeStartingCities;
-                }
-                else
-                {
-                    e.CityInfo = StartingCities;
-                }
+                e.CityInfo = StartingCities;
             }
 
             if (!e.Accepted)
+            {
                 AccountAttackLimiter.RegisterInvalidAccess(e.State);
+            }
         }
 
         public static bool CheckAccount(Mobile mobCheck, Mobile accCheck)

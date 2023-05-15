@@ -456,9 +456,6 @@ namespace Server.Mobiles
         public virtual void CheckMorph()
         {
             if (!ChangeRace)
-                return;
-
-            if (CheckTerMur())
             {
                 return;
             }
@@ -511,21 +508,6 @@ namespace Server.Mobiles
                 Name = NameList.RandomName("tokuno male");
             }
         }      
-
-        #region SA Change
-        public virtual bool CheckTerMur()
-        {
-            Map map = Map;
-
-            if (map != Map.TerMur || Spells.SpellHelper.IsEodon(map, Location))
-                return false;
-
-            if (Body != 0x29A && Body != 0x29B)
-                TurnToGargRace();
-
-            return true;
-        }
-        #endregion
 
         public virtual bool CheckNecromancer()
         {
@@ -593,53 +575,6 @@ namespace Server.Mobiles
 
             Hue = 0x83E8;
         }
-
-        #region SA
-        public virtual void TurnToGargRace()
-        {
-            for (int i = 0; i < Items.Count; ++i)
-            {
-                Item item = Items[i];
-
-                if (item is BaseClothing)
-                {
-                    item.Delete();
-                }
-            }
-
-            Race = Race.Gargoyle;
-
-            Hue = Race.RandomSkinHue();
-
-            HairItemID = Race.RandomHair(Female);
-            HairHue = Race.RandomHairHue();
-
-            FacialHairItemID = Race.RandomFacialHair(Female);
-            if (FacialHairItemID != 0)
-            {
-                FacialHairHue = Race.RandomHairHue();
-            }
-            else
-            {
-                FacialHairHue = 0;
-            }
-
-            InitGargOutfit();
-
-            if (Female = GetGender())
-            {
-                Body = 0x29B;
-                Name = NameList.RandomName("gargoyle female");
-            }
-            else
-            {
-                Body = 0x29A;
-                Name = NameList.RandomName("gargoyle male");
-            }
-
-            CapitalizeTitle();
-        }
-        #endregion
 
         public virtual void CapitalizeTitle()
         {

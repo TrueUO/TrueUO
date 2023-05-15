@@ -60,7 +60,7 @@ namespace Server.Engines.Quests
             InitStats(100, 100, 25);
 
             Female = true;
-            Race = Race.Gargoyle;
+            Race = Race.Human;
 
             Hue = 0x86EA;
             HairItemID = 0x4273;

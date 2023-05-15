@@ -421,27 +421,19 @@ namespace Server.Engines.Points
             Entries[typeof(SurgeShield)] = 100.0;
             Entries[typeof(HeartOfTheLion)] = 100.0;
             Entries[typeof(ShieldOfInvulnerability)] = 100.0;
-            Entries[typeof(AegisOfGrace)] = 100.0;
             Entries[typeof(BladeDance)] = 100.0;
             Entries[typeof(BloodwoodSpirit)] = 100.0;
             Entries[typeof(Bonesmasher)] = 100.0;
             Entries[typeof(Boomstick)] = 100.0;
-            Entries[typeof(BrightsightLenses)] = 100.0;
-            Entries[typeof(FeyLeggings)] = 100.0;
             Entries[typeof(FleshRipper)] = 100.0;
-            Entries[typeof(HelmOfSwiftness)] = 100.0;
             Entries[typeof(PadsOfTheCuSidhe)] = 100.0;
             Entries[typeof(QuiverOfRage)] = 100.0;
             Entries[typeof(QuiverOfElements)] = 100.0;
             Entries[typeof(RaedsGlory)] = 100.0;
             Entries[typeof(RighteousAnger)] = 100.0;
-            Entries[typeof(RobeOfTheEclipse)] = 100.0;
-            Entries[typeof(RobeOfTheEquinox)] = 100.0;
             Entries[typeof(SoulSeeker)] = 100.0;
             Entries[typeof(TalonBite)] = 100.0;
             Entries[typeof(TotemOfVoid)] = 100.0;
-            Entries[typeof(WildfireBow)] = 100.0;
-            Entries[typeof(Windsong)] = 100.0;
             Entries[typeof(CrimsonCincture)] = 100.0;
             Entries[typeof(DreadFlute)] = 100.0;
             Entries[typeof(DreadsRevenge)] = 100.0;
@@ -520,9 +512,6 @@ namespace Server.Engines.Points
             Entries[typeof(RaptorClaw)] = 5000.0;
             Entries[typeof(ResonantStaffofEnlightenment)] = 5000.0;
             Entries[typeof(ShroudOfTheCondemned)] = 500.0;
-            Entries[typeof(GargishSignOfOrder)] = 5000.0;
-            Entries[typeof(HumanSignOfOrder)] = 5000.0;
-            Entries[typeof(GargishSignOfChaos)] = 5000.0;
             Entries[typeof(HumanSignOfChaos)] = 5000.0;
             Entries[typeof(Slither)] = 5000.0;
             Entries[typeof(SpinedBloodwormBracers)] = 5000.0;
@@ -534,7 +523,6 @@ namespace Server.Engines.Points
             Entries[typeof(StormCaller)] = 5000.0;
             Entries[typeof(SwordOfShatteredHopes)] = 5000.0;
             Entries[typeof(SummonersKilt)] = 5000.0;
-            Entries[typeof(Tangle1)] = 5000.0;
             Entries[typeof(TheImpalersPick)] = 5000.0;
             Entries[typeof(TorcOfTheGuardians)] = 5000.0;
             Entries[typeof(TokenOfHolyFavor)] = 5000.0;
@@ -600,7 +588,6 @@ namespace Server.Engines.Points
             Entries[typeof(DetectiveBoots)] = 5000.0;
             Entries[typeof(EmbroideredOakLeafCloak)] = 5000.0;
             Entries[typeof(JadeArmband)] = 5000.0;
-            Entries[typeof(LieutenantOfTheBritannianRoyalGuard)] = 5000.0;
             Entries[typeof(MagicalDoor)] = 5000.0;
             Entries[typeof(RoyalGuardInvestigatorsCloak)] = 5000.0;
             Entries[typeof(SamaritanRobe)] = 5000.0;
@@ -647,7 +634,6 @@ namespace Server.Engines.Points
             Entries[typeof(ConjurersTrinket)] = 10000.0;
 
             Entries[typeof(CorgulsHandbookOnMysticism)] = 250.0;
-            Entries[typeof(CrownOfArcaneTemperament)] = 5000.0;
             Entries[typeof(DeadWood)] = 1.0;
             Entries[typeof(DustyPillow)] = 250.0;
             Entries[typeof(EndlessDecanter)] = 10.0;

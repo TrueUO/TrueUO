@@ -1,5 +1,3 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
     public abstract class BaseMiddleTorso : BaseClothing
@@ -32,7 +30,6 @@ namespace Server.Items
         }
     }
 
-    [Alterable(typeof(DefTailoring), typeof(GargishSash))]
     [Flipable(0x1541, 0x1542)]
     public class BodySash : BaseMiddleTorso
     {
@@ -68,7 +65,6 @@ namespace Server.Items
     }
 
     [Flipable(0x153d, 0x153e)]
-    [Alterable(typeof(DefTailoring), typeof(GargoyleHalfApron))]
     public class FullApron : BaseMiddleTorso
     {
         [Constructable]

@@ -3,7 +3,6 @@ using Server.Engines.InstancedPeerless;
 using Server.Items;
 using Server.Mobiles;
 using System;
-using Server.Misc;
 
 namespace Server
 {
@@ -12,12 +11,10 @@ namespace Server
         public static Type[] Artifacts => m_Artifacts;
         private static readonly Type[] m_Artifacts = new Type[]
         {
-            typeof(AegisOfGrace), typeof(BladeDance), typeof(BloodwoodSpirit), typeof(Bonesmasher),
-            typeof(Boomstick), typeof(BrightsightLenses), typeof(FeyLeggings), typeof(FleshRipper),
-            typeof(HelmOfSwiftness), typeof(PadsOfTheCuSidhe), typeof(QuiverOfRage), typeof(QuiverOfElements),
-            typeof(RaedsGlory), typeof(RighteousAnger), typeof(RobeOfTheEclipse), typeof(RobeOfTheEquinox),
-            typeof(SoulSeeker), typeof(TalonBite), typeof(TotemOfVoid), typeof(WildfireBow),
-            typeof(Windsong)
+            typeof(BladeDance), typeof(BloodwoodSpirit), typeof(Bonesmasher), typeof(Boomstick),
+            typeof(FleshRipper), typeof(PadsOfTheCuSidhe), typeof(QuiverOfRage), typeof(QuiverOfElements),
+            typeof(RaedsGlory), typeof(RighteousAnger), typeof(SoulSeeker), typeof(TalonBite),
+            typeof(TotemOfVoid)
         };
 
         public static void Initialize()
@@ -119,14 +116,7 @@ namespace Server
 
         public static void DropPeerlessMinor(Container peerlessCorpse)
         {
-            Item item = Activator.CreateInstance(m_Artifacts[Utility.Random(m_Artifacts.Length)]) as Item;
-
-            if (item is ICanBeElfOrHuman canBeElfOrHuman)
-            {
-                canBeElfOrHuman.ElfOnly = false;
-            }
-
-            peerlessCorpse.DropItem(item);
+            peerlessCorpse.DropItem(Activator.CreateInstance(m_Artifacts[Utility.Random(m_Artifacts.Length)]) as Item);
         }
 
         public static bool IsMLRegion(Region region)

@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(DiscMace))]
     [Flipable(0x1407, 0x1406)]
     public class WarMace : BaseBashing
     {

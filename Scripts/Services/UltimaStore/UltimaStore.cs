@@ -97,8 +97,7 @@ namespace Server.Engines.UOStore
             Register<GreyGoblinStatuette>(1125135, 1158015, 0xA097, 0, 0, 600, cat);
             Register<StableSlotIncreaseToken>(1157608, 1157609, 0x2AAA, 0, 0, 500, cat);
             Register<MythicCharacterToken>(new TextDefinition[] { 1156614, 1156615 }, 1156679, 0x2AAA, 0, 0, 2500, cat);
-            Register<CharacterReincarnationToken>(new TextDefinition[] { 1156612, 1156615 }, 1156677, 0x2AAA, 0, 0, 2000, cat);
-
+            
             Register<AbyssalHairDye>(1149822, 1156676, 0, 0x9C7A, 0, 400, cat);
             Register<SpecialHairDye>(new TextDefinition[] { 1071387, 1071439 }, 1156676, 0, 0x9C78, 0, 400, cat, ConstructHairDye); // Lemon Lime
             Register<SpecialHairDye>(new TextDefinition[] { 1071387, 1071470 }, 1156676, 0, 0x9C6D, 0, 400, cat, ConstructHairDye); // Yew Brown 

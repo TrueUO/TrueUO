@@ -411,11 +411,6 @@ namespace Server.Items
                     return false;
                 }
 
-                if (!RaceDefinitions.ValidateEquipment(from, this))
-                {
-                    return false;
-                }
-
                 if (!AllowMaleWearer && !from.Female)
                 {
                     if (AllowFemaleWearer)
@@ -515,31 +510,37 @@ namespace Server.Items
             for (int i = m.Items.Count - 1; i >= 0; --i)
             {
                 if (i >= m.Items.Count)
+                {
                     continue;
+                }
 
                 Item item = m.Items[i];
 
                 if (item is BaseClothing clothing)
                 {
-                    if (!RaceDefinitions.ValidateEquipment(m, clothing))
-                    {
-                        m.AddToBackpack(clothing);
-                    }
-                    else if (!clothing.AllowMaleWearer && !m.Female && m.AccessLevel < AccessLevel.GameMaster)
+                    if (!clothing.AllowMaleWearer && !m.Female && m.AccessLevel < AccessLevel.GameMaster)
                     {
                         if (clothing.AllowFemaleWearer)
+                        {
                             m.SendLocalizedMessage(1010388); // Only females can wear this.
+                        }
                         else
+                        {
                             m.SendLocalizedMessage(1071936); // You cannot equip that.
+                        }
 
                         m.AddToBackpack(clothing);
                     }
                     else if (!clothing.AllowFemaleWearer && m.Female && m.AccessLevel < AccessLevel.GameMaster)
                     {
                         if (clothing.AllowMaleWearer)
+                        {
                             m.SendLocalizedMessage(1063343); // Only males can wear this.
+                        }
                         else
+                        {
                             m.SendLocalizedMessage(1071936); // You cannot equip that.
+                        }
 
                         m.AddToBackpack(clothing);
                     }
@@ -924,20 +925,15 @@ namespace Server.Items
                 }
             }
 
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
-            }
-
             if (m_NegativeAttributes != null)
+            {
                 m_NegativeAttributes.GetProperties(list, this);
+            }
 
             if (m_AosSkillBonuses != null)
+            {
                 m_AosSkillBonuses.GetProperties(list);
+            }
 
             int prop;
 

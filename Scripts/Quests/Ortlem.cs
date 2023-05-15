@@ -98,7 +98,7 @@ namespace Server.Engines.Quests
         {
             Female = false;
             CantWalk = true;
-            Race = Race.Gargoyle;
+            Race = Race.Human;
 
             Hue = 0x86ED;
             HairItemID = 0x4258;

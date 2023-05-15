@@ -1,9 +1,7 @@
-using Server.Engines.Craft;
 using Server.Engines.Harvest;
 
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(DiscMace))]
     [Flipable(0x13B0, 0x13AF)]
     public class WarAxe : BaseAxe
     {

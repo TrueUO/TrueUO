@@ -66,28 +66,6 @@ namespace Server.Mobiles
                 new[] {From, Vendor, Price, false, true, ChangeHairHueEntry.BrightEntries})
         };
 
-        private static readonly HairstylistBuyInfo[] m_SellListElf =
-        {
-            new HairstylistBuyInfo(
-                1018357,
-                50000,
-                false,
-                typeof(ChangeHairstyleGump),
-                new[] {From, Vendor, Price, false, ChangeHairstyleEntry.HairEntriesElf}),
-            new HairstylistBuyInfo(
-                1018359,
-                50,
-                false,
-                typeof(ChangeHairHueGump),
-                new[] {From, Vendor, Price, true, true, ChangeHairHueEntry.RegularEntries}),
-            new HairstylistBuyInfo(
-                1018360,
-                500000,
-                false,
-                typeof(ChangeHairHueGump),
-                new[] {From, Vendor, Price, true, true, ChangeHairHueEntry.BrightEntries})
-        };
-
         private readonly List<SBInfo> m_SBInfos = new List<SBInfo>();
 
         [Constructable]
@@ -112,14 +90,7 @@ namespace Server.Mobiles
 
         public override void VendorBuy(Mobile from)
         {
-            if (from.Race == Race.Human)
-            {
-                from.SendGump(new HairstylistBuyGump(from, this, m_SellList));
-            }
-            else if (from.Race == Race.Elf)
-            {
-                from.SendGump(new HairstylistBuyGump(from, this, m_SellListElf));
-            }
+            from.SendGump(new HairstylistBuyGump(from, this, m_SellList));
         }
 
         public override int GetHairHue()
@@ -132,14 +103,6 @@ namespace Server.Mobiles
             base.InitOutfit();
 
             AddItem(new Robe(Utility.RandomPinkHue()));
-        }
-
-        public override bool CheckVendorAccess(Mobile from)
-        {
-            if (from.Race == Race.Gargoyle)
-                return false;
-
-            return base.CheckVendorAccess(from);
         }
 
         public override void InitSBInfo()
@@ -511,43 +474,6 @@ namespace Server.Mobiles
             new ChangeHairstyleEntry(50802, 120 - 187, 173 - 220, 0x203F),
             new ChangeHairstyleEntry(50905, 243 - 310, 165 - 220, 0x204C),
             new ChangeHairstyleEntry(50808, 120 - 187, 242 - 290, 0x2041), new ChangeHairstyleEntry(0, 0, 0, 0)
-        };
-
-        public static readonly ChangeHairstyleEntry[] HairEntriesElf =
-        {
-            new ChangeHairstyleEntry( 0xEDF5, 0xC6E5, 70 - 137,   20 -  60,  0x2FC0, 0x2FC0 ),
-            new ChangeHairstyleEntry( 0xEDF6, 0xC6E6, 198 - 260,  18 -  60,  0x2FC1, 0x2FC1 ),
-            new ChangeHairstyleEntry( 0xEDF7, 0xC6E7, 316 - 383,  20 -  60,  0x2FC2, 0x2FC2 ),
-            new ChangeHairstyleEntry( 0xEDDC, 0xC6CC, 70 - 137,   80 - 125,  0x2FCE, 0x2FCE ),
-            new ChangeHairstyleEntry( 0xEDDD, 0xC6CD, 193 - 260,  85 - 125,  0x2FCF, 0x2FCF ),
-            new ChangeHairstyleEntry( 0xEDDF, 0xC6CF, 320 - 383,  85 - 125,  0x2FD1, 0x2FD1 ),
-            new ChangeHairstyleEntry( 0xEDDA, 0xC6E4, 70 - 137,   147 - 190, 0x2FCC, 0x2FBF ),
-            new ChangeHairstyleEntry( 0xEDDE, 0xC6CB, 196 - 260,  142 - 190, 0x2FD0, 0x2FCD ),
-            new ChangeHairstyleEntry( -1, -1, -1, -1 ),
-            new ChangeHairstyleEntry( 0, 0, 0, 0 )
-        };
-
-        public static readonly ChangeHairstyleEntry[] HairEntriesGargoyle =
-        {
-            new ChangeHairstyleEntry( 0x7A0, 0x76C, 47 - 137,   12 -  60,  0x4261, 0x4258  ),
-            new ChangeHairstyleEntry( 0x7A1, 0x76D, 170 - 260,  12 -  60,  0x4262, 0x4259 ),
-            new ChangeHairstyleEntry( 0x79E, 0x773, 295 - 383,  12 -  60,  0x4273, 0x425A ),
-            new ChangeHairstyleEntry( 0x7A2, 0x76E, 50 - 137,   68 - 125,  0x4274, 0x425B ),
-            new ChangeHairstyleEntry( 0x79F, 0x774, 172 - 260,  70 - 125,  0x4275, 0x425C ),
-            new ChangeHairstyleEntry( 0x77C, 0x775, 295 - 383,  81 - 125,  0x42AA, 0x425D ),
-            new ChangeHairstyleEntry( 0x77D, 0x776, 47 - 137,   142 - 190, 0x42AB, 0x425E ),
-            new ChangeHairstyleEntry( 0x77E, 0x777, 172 - 260,  142 - 190, 0x42B1, 0x425F ),
-            new ChangeHairstyleEntry( -1, -1, -1, -1 ),
-            new ChangeHairstyleEntry( 0, 0, 0, 0 )
-        };
-
-        public static readonly ChangeHairstyleEntry[] BeardEntriesGargoyle =
-        {
-            new ChangeHairstyleEntry( 0xC5E9, 120 - 187,  30 -  80, 0x42AD ),
-            new ChangeHairstyleEntry( 0x770,  220 - 310,  23 -  80, 0x42AE ),
-            new ChangeHairstyleEntry( 0xC5DA, 120 - 187, 100 - 150, 0x42AF ),
-            new ChangeHairstyleEntry( 0xC5D7, 243 - 310,  95 - 150, 0x42B0 ),
-            new ChangeHairstyleEntry( 0, 0, 0, 0 )
         };
 
         private readonly int m_ItemID_Male;

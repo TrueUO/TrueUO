@@ -57,7 +57,6 @@ namespace Server.Mobiles
                 {
                     typeof(RoyalGuardSurvivalKnife),
                     typeof(DjinnisRing),
-                    typeof(LieutenantOfTheBritannianRoyalGuard),
                     typeof(SamaritanRobe),
                     typeof(DetectiveBoots),
                     typeof(TheMostKnowledgePerson)

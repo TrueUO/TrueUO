@@ -59,8 +59,7 @@ namespace Server.Mobiles
                 {
                     typeof(BraveKnightOfTheBritannia),
                     typeof(DetectiveBoots),
-                    typeof(EmbroideredOakLeafCloak),
-                    typeof(LieutenantOfTheBritannianRoyalGuard)
+                    typeof(EmbroideredOakLeafCloak)
                 };
         public override Type[] DecorativeList => new[] { typeof(Futon), typeof(SwampTile) };
         public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };

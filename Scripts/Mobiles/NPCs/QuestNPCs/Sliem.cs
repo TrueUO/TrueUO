@@ -23,7 +23,7 @@ namespace Server.Engines.Quests
 
         public override void InitBody()
         {
-            Race = Race.Gargoyle;
+            Race = Race.Human;
             InitStats(100, 100, 25);
             Female = false;
             Body = 666;

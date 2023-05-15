@@ -65,7 +65,6 @@ namespace Server.Mobiles
         public override Type[] SharedList => new Type[]
                 {
                     typeof(ANecromancerShroud),
-                    typeof(LieutenantOfTheBritannianRoyalGuard),
                     typeof(OblivionsNeedle),
                     typeof(TheRobeOfBritanniaAri)
                 };

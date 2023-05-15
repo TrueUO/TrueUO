@@ -120,7 +120,7 @@ namespace Server.Engines.Quests
 
             Female = false;
             CantWalk = true;
-            Race = Race.Gargoyle;
+            Race = Race.Human;
 
             Body = 666;
             Utility.AssignRandomHair(this);
@@ -185,11 +185,6 @@ namespace Server.Engines.Quests
             AddItem(new ShortPants(Utility.RandomNeutralHue()));
             AddItem(new Boots());
             AddItem(new Halberd());
-        }
-
-        public override bool CheckTerMur()
-        {
-            return false;
         }
 
         public override void Serialize(GenericWriter writer)

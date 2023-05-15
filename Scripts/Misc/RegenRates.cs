@@ -152,9 +152,6 @@ namespace Server.Misc
             if (from is BaseCreature creature)
                 points += creature.DefaultHitsRegen;
 
-            if (from is PlayerMobile && from.Race == Race.Human)	//Is this affected by the cap?
-                points += 2;
-
             if (points < 0)
                 points = 0;
 
@@ -219,15 +216,18 @@ namespace Server.Misc
             double points = AosAttributes.GetValue(from, AosAttribute.RegenMana);
 
             if (from is BaseCreature creature)
+            {
                 points += creature.DefaultManaRegen;
+            }
 
             if (CheckTransform(from, typeof(VampiricEmbraceSpell)))
+            {
                 points += 3;
+            }
             else if (CheckTransform(from, typeof(LichFormSpell)))
+            {
                 points += 13;
-
-            if (from is PlayerMobile && from.Race == Race.Gargoyle)
-                points += 2;
+            }
 
             for (var index = 0; index < ManaBonusHandlers.Count; index++)
             {

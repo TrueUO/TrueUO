@@ -200,13 +200,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(VoidCore), 1113334, 5, 1044253);
             AddRecipe(index, (int)CraftRecipes.MagesHood);
 
-            index = AddCraft(typeof(CowlOfTheMaceAndShield), 1011375, 1159228, 120.0, 215.0, typeof(Cloth), 1044455, 5, 1044287);
-            AddRes(index, typeof(Leather), 1044462, 5, 1044463);
-            AddRes(index, typeof(MaceAndShieldGlasses), 1073381, 1, 1044253);
-            AddRes(index, typeof(VileTentacles), 1113333, 10, 1044253);
-            AddRecipe(index, (int)CraftRecipes.CowlOfTheMaceAndShield);
-            ForceExceptional(index);
-
             index = AddCraft(typeof(MagesHoodOfScholarlyInsight), 1011375, 1159229, 120.0, 215.0, typeof(Cloth), 1044455, 5, 1044287);
             AddRes(index, typeof(Leather), 1044462, 5, 1044463);
             AddRes(index, typeof(TheScholarsHalo), 1157354, 1, 1044253);
@@ -631,7 +624,6 @@ namespace Server.Engines.Craft
             MarkOption = true;
             Repair = true;
             CanEnhance = true;
-            CanAlter = true;
         } 
         #endregion
 

@@ -1,5 +1,3 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
     public abstract class BaseWaist : BaseClothing
@@ -32,7 +30,6 @@ namespace Server.Items
         }
     }
 
-    [Alterable(typeof(DefTailoring), typeof(GargoyleHalfApron))]
     [Flipable(0x153b, 0x153c)]
     public class HalfApron : BaseWaist
     {

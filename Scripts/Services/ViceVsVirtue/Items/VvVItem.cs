@@ -44,11 +44,6 @@ namespace Server.Items
                     fey.EnergyBonus = 3;
             }
 
-            if (item is FoldedSteelGlasses steelGlasses && steelGlasses.Attributes.DefendChance != 25)
-            {
-                steelGlasses.Attributes.DefendChance = 25;
-            }
-
             if (item is HeartOfTheLion lion)
             {
                 if (lion.PhysicalBonus != 5)
@@ -88,11 +83,6 @@ namespace Server.Items
             if (item is KasaOfTheRajin kasa && kasa.Attributes.DefendChance != 10)
             {
                 kasa.Attributes.DefendChance = 10;
-            }
-
-            if (item is MaceAndShieldGlasses shieldGlasses && shieldGlasses.Attributes.WeaponDamage != 10)
-            {
-                shieldGlasses.Attributes.WeaponDamage = 10;
             }
 
             if (item is VesperOrderShield shield && shield.Attributes.CastSpeed != 0)
@@ -172,24 +162,6 @@ namespace Server.Items
             if (item is TomeOfLostKnowledge knowledge && knowledge.Attributes.RegenMana != 3)
             {
                 knowledge.Attributes.RegenMana = 3;
-            }
-
-            if (item is WizardsCrystalGlasses glasses)
-            {
-                if (glasses.PhysicalBonus != 5)
-                    glasses.PhysicalBonus = 5;
-
-                if (glasses.FireBonus != 5)
-                    glasses.FireBonus = 5;
-
-                if (glasses.ColdBonus != 5)
-                    glasses.ColdBonus = 5;
-
-                if (glasses.PoisonBonus != 5)
-                    glasses.PoisonBonus = 5;
-
-                if (glasses.EnergyBonus != 5)
-                    glasses.EnergyBonus = 5;
             }
         }
     }

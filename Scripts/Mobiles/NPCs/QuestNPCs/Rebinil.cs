@@ -30,7 +30,7 @@ namespace Server.Mobiles
             InitStats(100, 100, 25);
 
             Female = true;
-            Race = Race.Elf;
+            Race = Race.Human;
 
             Hue = 0x83E7;
             HairItemID = 0x2FD0;

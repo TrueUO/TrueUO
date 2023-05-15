@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(GargishDagger))]
     [Flipable(0xF52, 0xF51)]
     public class Dagger : BaseKnife
     {

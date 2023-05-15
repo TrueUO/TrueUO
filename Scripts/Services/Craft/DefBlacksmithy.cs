@@ -744,7 +744,6 @@ namespace Server.Engines.Craft
             Repair = true;
             MarkOption = true;
             CanEnhance = true;
-            CanAlter = true;
         }
     }
 

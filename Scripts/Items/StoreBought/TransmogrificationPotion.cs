@@ -1,5 +1,4 @@
 using Server.Gumps;
-using Server.Misc;
 using Server.Mobiles;
 using Server.Mobiles.MannequinProperty;
 using Server.Network;
@@ -314,10 +313,6 @@ namespace Server.Items
                         if (Potion.Destination.Item == Potion.Source.Item)
                         {
                             message = 1159518; // You may not set the source and destination objects to the same object!
-                        }
-                        else if (RaceDefinitions.GetRequiredRace(Potion.Destination.Item) != RaceDefinitions.GetRequiredRace(Potion.Source.Item))
-                        {
-                            message = 1159560; // You may not set the source and destination objects to objects of different race requirements.
                         }
                         else if (!Potion.CheckRules())
                         {

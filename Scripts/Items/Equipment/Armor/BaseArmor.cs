@@ -1039,11 +1039,7 @@ namespace Server.Items
 
                 if (item is BaseArmor armor)
                 {
-                    if (!RaceDefinitions.ValidateEquipment(m, armor))
-                    {
-                        m.AddToBackpack(armor);
-                    }
-                    else if (!armor.AllowMaleWearer && !m.Female && m.AccessLevel < AccessLevel.GameMaster)
+                    if (!armor.AllowMaleWearer && !m.Female && m.AccessLevel < AccessLevel.GameMaster)
                     {
                         if (armor.AllowFemaleWearer)
                             m.SendLocalizedMessage(1010388); // Only females can wear this.
@@ -1792,11 +1788,6 @@ namespace Server.Items
                     return false;
                 }
 
-                if (!RaceDefinitions.ValidateEquipment(from, this))
-                {
-                    return false;
-                }
-
                 if (!AllowMaleWearer && !from.Female)
                 {
                     if (AllowFemaleWearer)
@@ -2146,15 +2137,6 @@ namespace Server.Items
             }
 
             AddDamageTypeProperty(list);
-
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
-            }
 
             if (this is SurgeShield && ((SurgeShield) this).Surge > SurgeType.None)
             {

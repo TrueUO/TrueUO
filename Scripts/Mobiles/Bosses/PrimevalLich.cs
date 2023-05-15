@@ -77,7 +77,7 @@ namespace Server.Mobiles
         public override ChampionSkullType SkullType => ChampionSkullType.None;
 
         public override Type[] UniqueList => new[] { typeof(BansheesCall), typeof(CastOffZombieSkin), typeof(ChannelersDefender), typeof(LightsRampart) };
-        public override Type[] SharedList => new[] { typeof(TokenOfHolyFavor), typeof(TheMostKnowledgePerson), typeof(LieutenantOfTheBritannianRoyalGuard), typeof(ProtectoroftheBattleMage) };
+        public override Type[] SharedList => new[] { typeof(TokenOfHolyFavor), typeof(ProtectoroftheBattleMage) };
         public override Type[] DecorativeList => new[] { typeof(MummifiedCorpse) };
         public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
 

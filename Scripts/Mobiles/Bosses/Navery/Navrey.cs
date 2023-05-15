@@ -15,8 +15,7 @@ namespace Server.Mobiles
 
         private static readonly Type[] m_Artifact =
         {
-            typeof(NightEyes),
-            typeof(Tangle1)
+            typeof(NightEyes)
         };
 
         [Constructable]

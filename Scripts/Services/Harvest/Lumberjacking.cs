@@ -106,7 +106,6 @@ namespace Server.Engines.Harvest
             lumber.Resources = res;
             lumber.Veins = veins;
 
-            lumber.RaceBonus = true;
             lumber.RandomizeVeins = true;
 
             m_Definition = lumber;

@@ -33,30 +33,6 @@ namespace Server.Engines.VoidPool
                 Movable = false
             };
             PackItem(item);
-
-            item = new Hephaestus
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishHephaestus
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new BlightOfTheTundra
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishBlightOfTheTundra
-            {
-                Movable = false
-            };
-            PackItem(item);
         }
 
         public override void OnDoubleClick(Mobile from)

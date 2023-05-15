@@ -273,14 +273,13 @@ namespace Server.Mobiles
                 }
 
                 if (from.InRange(this, 4))
+                {
                     list.Add(new CustomizeBodyEntry(from, this));
+                }
 
                 if (from.Alive && from.InRange(this, 2))
                 {
-                    if (from.Race == Race || from.Race == Race.Elf && Race == Race.Human || from.Race == Race.Human && Race == Race.Elf)
-                    {
-                        list.Add(new SwitchClothesEntry(from, this));
-                    }
+                    list.Add(new SwitchClothesEntry(from, this));
 
                     list.Add(new RotateEntry(from, this));
                     list.Add(new RedeedEntry(from, this));

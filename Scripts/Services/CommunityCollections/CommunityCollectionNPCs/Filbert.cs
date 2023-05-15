@@ -94,7 +94,6 @@ namespace Server.Items
             Rewards.Add(new CollectionItem(typeof(TheLifeOfTravelingMinstrelTalisman), 0x2F5A, 1073360, 0x0, 550000.0));
             Rewards.Add(new CollectionTitle(1073344, 1073862, 550000.0)); // Prominent Library Contributor
             Rewards.Add(new CollectionTitle(1073345, 1073863, 800000.0)); // Eminent Library Contributor
-            Rewards.Add(new CollectionItem(typeof(WizardsCrystalGlasses), 0x2FB8, 1073374, 0x2B0, 800000.0));
         }
 
         public override bool CanDonate(PlayerMobile player)

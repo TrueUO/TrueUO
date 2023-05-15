@@ -56,16 +56,12 @@ namespace Server.Engines.VvV
             Rewards.Add(new CollectionItem(typeof(ShameTileDeed), 5360, 1155522, 0, 10000)); // Shame Tile
             Rewards.Add(new CollectionItem(typeof(WrongTileDeed), 5360, 1155523, 0, 10000)); // Wrong Tile
 
-            Rewards.Add(new CollectionItem(typeof(MorphEarrings), 4231, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(MaceAndShieldGlasses), 12216, 0, 477, 500));
             Rewards.Add(new CollectionItem(typeof(InquisitorsResolution), 5140, 0, 1266, 500));
             Rewards.Add(new CollectionItem(typeof(OrnamentOfTheMagician), 4230, 0, 1364, 500));
             Rewards.Add(new CollectionItem(typeof(VesperOrderShield), 7108, 0, 0, 500)); // Needs 0 FC
             Rewards.Add(new CollectionItem(typeof(ClaininsSpellbook), 3834, 0, 2125, 500));
-            Rewards.Add(new CollectionItem(typeof(FoldedSteelGlasses), 12216, 0, 1150, 500));
             Rewards.Add(new CollectionItem(typeof(CrystallineRing), 4234, 0, 1152, 500));
             Rewards.Add(new CollectionItem(typeof(SpiritOfTheTotem), 5445, 0, 1109, 500));
-            Rewards.Add(new CollectionItem(typeof(WizardsCrystalGlasses), 12216, 0, 688, 500));
             Rewards.Add(new CollectionItem(typeof(PrimerOnArmsTalisman), 12121, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(TomeOfLostKnowledge), 3834, 0, 1328, 500));
             Rewards.Add(new CollectionItem(typeof(HuntersHeaddress), 5447, 0, 1428, 500));

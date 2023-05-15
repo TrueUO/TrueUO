@@ -836,7 +836,6 @@ namespace Server.Engines.Craft
             MarkOption = true;
             Repair = true;
             CanEnhance = true;
-            CanAlter = true;
 
             SetSubRes(typeof(Board), 1072643);
 

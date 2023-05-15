@@ -22,8 +22,7 @@ namespace Server.Engines.Craft
             typeof(Blight), typeof(Corruption), typeof(Muculent), typeof(Scourge), typeof(Putrefaction), typeof(Taint),
 
             // Tailoring
-            typeof(MidnightBracers), typeof(CrimsonCincture), typeof(GargishCrimsonCincture), typeof(LeurociansMempoOfFortune), typeof(TheScholarsHalo),
-            typeof(MaceAndShieldGlasses),
+            typeof(MidnightBracers), typeof(CrimsonCincture), typeof(LeurociansMempoOfFortune), typeof(TheScholarsHalo),
 
             // Blacksmithy
             typeof(LeggingsOfBane), typeof(GauntletsOfNobility),
@@ -90,8 +89,6 @@ namespace Server.Engines.Craft
         public CraftSubResCol CraftSubRes2 { get; }
 
         public bool CanEnhance { get; set; }
-
-        public bool CanAlter { get; set; }
 
         public bool Resmelt { get; set; }
 

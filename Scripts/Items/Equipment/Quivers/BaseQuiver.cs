@@ -13,13 +13,11 @@ namespace Server.Items
         void AlterRangedDamage(ref int phys, ref int fire, ref int cold, ref int pois, ref int nrgy, ref int chaos, ref int direct);
     }
 
-    [Alterable(typeof(DefTailoring), typeof(GargishLeatherWingArmor), true)]
-    public class BaseQuiver : Container, ICraftable, ISetItem, IVvVItem, IOwnerRestricted, IRangeDamage, IArtifact, ICanBeElfOrHuman
+    public class BaseQuiver : Container, ICraftable, ISetItem, IVvVItem, IOwnerRestricted, IRangeDamage, IArtifact
     {
         private bool _VvVItem;
         private Mobile _Owner;
         private string _OwnerName;
-        private bool _ElvesOnly;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsVvVItem { get => _VvVItem; set { _VvVItem = value; InvalidateProperties(); } }
@@ -28,9 +26,6 @@ namespace Server.Items
         public Mobile Owner { get => _Owner; set { _Owner = value; if (_Owner != null) _OwnerName = _Owner.Name; InvalidateProperties(); } }
 
         public virtual string OwnerName { get => _OwnerName; set { _OwnerName = value; InvalidateProperties(); } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool ElfOnly { get => _ElvesOnly; set => _ElvesOnly = value; }
 
         public override int DefaultGumpID => 0x108;
 
@@ -349,11 +344,6 @@ namespace Server.Items
 
         public override bool CanEquip(Mobile m)
         {
-            if (!RaceDefinitions.ValidateEquipment(m, this))
-            { 
-                return false;
-            }
-
             if (m.IsPlayer())
             {
                 if (_Owner != null && m != _Owner)
@@ -625,8 +615,7 @@ namespace Server.Items
             SetFire = 0x00008000,
             SetCold = 0x00010000,
             SetPoison = 0x00020000,
-            SetEnergy = 0x00040000,
-            ElvesOnly = 0x00080000
+            SetEnergy = 0x00040000
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -673,7 +662,6 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.SetCold, m_SetColdBonus != 0);
             SetSaveFlag(ref flags, SaveFlag.SetPoison, m_SetPoisonBonus != 0);
             SetSaveFlag(ref flags, SaveFlag.SetEnergy, m_SetEnergyBonus != 0);
-            SetSaveFlag(ref flags, SaveFlag.ElvesOnly, _ElvesOnly);
             #endregion
 
             writer.WriteEncodedInt((int)flags);
@@ -725,9 +713,6 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.SetEquipped))
                 writer.Write(m_SetEquipped);
-
-            if (GetSaveFlag(flags, SaveFlag.ElvesOnly))
-                writer.Write(_ElvesOnly);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -812,9 +797,6 @@ namespace Server.Items
 
                         if (GetSaveFlag(flags, SaveFlag.SetEquipped))
                             m_SetEquipped = reader.ReadBool();
-
-                        if (GetSaveFlag(flags, SaveFlag.ElvesOnly))
-                            _ElvesOnly = reader.ReadBool();
                         #endregion
 
                         break;

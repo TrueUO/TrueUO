@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefCarpentry), typeof(GargishSkullGnarledStaff))]
     [Flipable(41795, 41796)]
     public class SkullGnarledStaff : GnarledStaff
     {
