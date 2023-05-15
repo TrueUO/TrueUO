@@ -2399,7 +2399,7 @@ namespace Server.Items
             #region Bracers Of Alchemical Devastation
             var arms = attacker.FindItemOnLayer(Layer.Arms);
 
-            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms != null && (arms is BracersofAlchemicalDevastation || arms is GargishBracersofAlchemicalDevastation))
+            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms is BracersofAlchemicalDevastation)
             {
                 DoLightning(attacker, defender);
             }

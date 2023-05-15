@@ -463,7 +463,7 @@ namespace Server.Engines.Blackthorn
 
         public static Item CreateItem(Mobile damager)
         {
-            Item i = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(damager), LootPackEntry.IsMondain(damager), LootPackEntry.IsStygian(damager));
+            Item i = Loot.RandomArmorOrShieldOrWeaponOrJewelry();
 
             if (i != null)
             {

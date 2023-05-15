@@ -72,8 +72,8 @@ namespace Server.Mobiles
         {
         }
 
-        public override Type[] UniqueSAList => new[] { typeof(ClawsOfTheBerserker), typeof(StandardOfChaosG), typeof(StandardOfChaos) };
-        public override Type[] SharedSAList => new[] { typeof(AxesOfFury), typeof(BladeOfBattle), typeof(DemonBridleRing), typeof(PetrifiedSnake), typeof(PillarOfStrength), typeof(SwordOfShatteredHopes), typeof(SummonersKilt) };
+        public override Type[] UniqueSAList => new[] { typeof(ClawsOfTheBerserker) };
+        public override Type[] SharedSAList => new Type[] { };
 
         public override bool Unprovokable => false;
         public override bool BardImmune => false;

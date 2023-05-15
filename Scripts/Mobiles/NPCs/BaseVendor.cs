@@ -363,9 +363,6 @@ namespace Server.Mobiles
 
         public abstract void InitSBInfo();
 
-        public virtual bool IsTokunoVendor => Map == Map.Tokuno;
-        public virtual bool IsStygianVendor => Map == Map.TerMur;
-
         protected void LoadSBInfo()
         {
             if (SBInfos == null)
@@ -693,34 +690,6 @@ namespace Server.Mobiles
                 }
             }
         }
-
-        #region SA
-        public virtual void InitGargOutfit()
-        {
-            for (int i = 0; i < Items.Count; ++i)
-            {
-                Item item = Items[i];
-
-                if (item is BaseClothing)
-                {
-                    item.Delete();
-                }
-            }
-
-            switch (Utility.Random(2))
-            {
-                case 0:
-                    SetWearable(new GargishClothLegs(GetRandomHue()));
-                    SetWearable(new GargishClothKilt(GetRandomHue()));
-                    SetWearable(new GargishClothChest(GetRandomHue()));
-                    break;
-                case 1:
-                    SetWearable(new GargishClothKilt(GetRandomHue()));
-                    SetWearable(new GargishClothChest(GetRandomHue()));
-                    break;
-            }
-        }
-        #endregion
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool ForceRestock

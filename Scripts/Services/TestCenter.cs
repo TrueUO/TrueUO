@@ -608,11 +608,8 @@ namespace Server.Misc
                 Name = "Doom Upgrade Arties"
             };
 
-            bag.DropItem(new BritchesOfWarding());
             bag.DropItem(new BowOfTheInfiniteSwarm());
-            bag.DropItem(new GlovesOfFeudalGrip());
             bag.DropItem(new Glenda());
-            bag.DropItem(new CuffsOfTheArchmage());
             bag.DropItem(new TheScholarsHalo());
             bag.DropItem(new TheDeceiver());
             bag.DropItem(new BraceletOfPrimalConsumption());

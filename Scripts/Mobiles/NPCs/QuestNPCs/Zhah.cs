@@ -27,24 +27,6 @@ namespace Server.Mobiles
             HairHue = Race.RandomHairHue();
         }
 
-        public override void InitOutfit()
-        {
-            ColorItem(new LeatherTalons()); // Bright Blue
-            ColorItem(new GargishLeatherChest()); // Bright Blue
-            ColorItem(new GargishLeatherLegs()); // Bright Blue
-            ColorItem(new GargishClothWingArmor()); // Bright Blue
-            ColorItem(new GargishLeatherArms()); // Bright Blue
-            ColorItem(new GargishLeatherKilt()); // Bright Blue
-
-            AddItem(new SerpentStoneStaff());
-        }
-
-        private void ColorItem(Item item)
-        {
-            item.Hue = 0x4F2;
-            AddItem(item);
-        }
-
         public override void Advertise()
         {
             Say(1150932);

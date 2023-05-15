@@ -150,8 +150,6 @@ namespace Server.Misc
 
             newChar.Hunger = 20;
 
-            bool young = false;
-
             if (newChar is PlayerMobile pm)
             {
                 pm.AutoRenewInsurance = true;
@@ -165,9 +163,6 @@ namespace Server.Misc
                 }
 
                 pm.Profession = args.Profession;
-
-                if (pm.IsPlayer() && pm.Account.Young && !Siege.SiegeShard)
-                    young = pm.Young = true;
             }
 
             SetName(newChar, args.Name);
@@ -212,16 +207,8 @@ namespace Server.Misc
             }
 
             if (TestCenter.Enabled)
-                TestCenter.FillBankbox(newChar);
-
-            if (young)
             {
-                NewPlayerTicket ticket = new NewPlayerTicket
-                {
-                    Owner = newChar
-                };
-
-                newChar.BankBox.DropItem(ticket);
+                TestCenter.FillBankbox(newChar);
             }
 
             CityInfo city = args.City;

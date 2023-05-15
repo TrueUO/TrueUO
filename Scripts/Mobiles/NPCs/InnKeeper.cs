@@ -21,9 +21,6 @@ namespace Server.Mobiles
         public override void InitSBInfo()
         {
             m_SBInfos.Add(new SBInnKeeper());
-
-            if (IsTokunoVendor)
-                m_SBInfos.Add(new SBSEFood());
         }
 
         public override void Serialize(GenericWriter writer)

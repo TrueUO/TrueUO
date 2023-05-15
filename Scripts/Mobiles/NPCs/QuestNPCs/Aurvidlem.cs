@@ -32,14 +32,6 @@ namespace Server.Engines.Quests
             HairHue = 0x0;
         }
 
-        public override void InitOutfit()
-        {
-            AddItem(new SerpentStoneStaff());
-            AddItem(new GargishClothChest(1307));
-            AddItem(new GargishClothArms(1330));
-            AddItem(new GargishClothKilt(1307));
-        }
-
         public override void Advertise()
         {
             Say(1112525);  // Come to be Artificer. I have a task for you. 

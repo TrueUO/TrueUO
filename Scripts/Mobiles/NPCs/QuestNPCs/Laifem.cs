@@ -202,15 +202,6 @@ namespace Server.Engines.Quests
             HairHue = Race.RandomHairHue();
         }
 
-        public override void InitOutfit()
-        {
-            AddItem(new Backpack());
-
-            AddItem(new GargishClothChest(Utility.RandomNeutralHue()));
-            AddItem(new GargishClothKilt(Utility.RandomNeutralHue()));
-            AddItem(new GargishClothLegs(Utility.RandomNeutralHue()));
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

@@ -20,14 +20,7 @@ namespace Server.Mobiles
 
         public override void InitSBInfo()
         {
-            if (!IsStygianVendor)
-            {
-                m_SBInfos.Add(new SBTailor());
-            }
-            else
-            {
-                m_SBInfos.Add(new SBSATailor());
-            }
+            m_SBInfos.Add(new SBTailor());
         }
 
         public override VendorShoeType ShoeType => Utility.RandomBool() ? VendorShoeType.Sandals : VendorShoeType.Shoes;

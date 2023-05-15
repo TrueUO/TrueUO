@@ -32,14 +32,6 @@ namespace Server.Engines.Quests
             HairHue = 0x31D;
         }
 
-        public override void InitOutfit()
-        {
-            AddItem(new SerpentStoneStaff());
-            AddItem(new GargishClothChest(1609));
-            AddItem(new GargishClothArms(1651));
-            AddItem(new GargishClothKilt(1649));
-        }
-
         public override void Advertise()
         {
             Say(1112521);  // Know the secrets. Learn of the soulforge.

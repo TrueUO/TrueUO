@@ -62,7 +62,7 @@ namespace Server.Engines.Craft
             typeof(KnifeLeft), typeof(KnifeRight), typeof(Plate), typeof(Goblet),
             typeof(PewterMug), typeof(KeyRing), typeof(Candelabra), typeof(Scales),
             typeof(Key), typeof(Globe), typeof(Spyglass), typeof(Lantern),
-            typeof(HeatingStand), typeof(BroadcastCrystal), typeof(TerMurStyleCandelabra), typeof(GorgonLense),
+            typeof(HeatingStand), typeof(TerMurStyleCandelabra), typeof(GorgonLense),
             typeof(MedusaLightScales), typeof(MedusaDarkScales), typeof(RedScales), typeof(BlueScales),
             typeof(BlackScales), typeof(GreenScales), typeof(YellowScales), typeof(WhiteScales),
             typeof(PlantPigment), typeof(SoftenedReeds), typeof(DryReeds), typeof(PlantClippings),
@@ -151,14 +151,6 @@ namespace Server.Engines.Craft
             #region Jewelry
             AddCraft(typeof(GoldRing), 1044049, 1024234, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
             AddCraft(typeof(GoldBracelet), 1044049, 1024230, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishNecklace), 1044049, 1095784, 60.0, 110.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishBracelet), 1044049, 1095785, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishRing), 1044049, 1095786, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishEarrings), 1044049, 1095787, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
 
             AddJewelrySet(GemType.StarSapphire, typeof(StarSapphire));
             AddJewelrySet(GemType.Emerald, typeof(Emerald));
@@ -317,10 +309,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(Goblet), 1044048, 1022458, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(PewterMug), 1044048, 1024097, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(SkinningKnife), 1044048, 1023781, 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
-
-            AddCraft(typeof(GargishCleaver), 1044048, 1097478, 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            AddCraft(typeof(GargishButcherKnife), 1044048, 1097486, 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
             #endregion
 
             #region Misc
@@ -347,11 +335,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(FancyWindChimes), 1044050, 1030291, 80.0, 130.0, typeof(IronIngot), 1044036, 15, 1044037);
 
             AddCraft(typeof(TerMurStyleCandelabra), 1044050, 1095313, 55.0, 105.0, typeof(IronIngot), 1044036, 4, 1044037);
-
-            index = AddCraft(typeof(BroadcastCrystal), 1044050, 1153097, 80.0, 130.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(Emerald), 1062601, 10, 1044240);
-            AddRes(index, typeof(Ruby), 1062603, 10, 1044240);
-            AddRes(index, typeof(CopperWire), 1026265, 1, 1150700);
 
             index = AddCraft(typeof(GorgonLense), 1044050, 1112625, 90.0, 120.0, typeof(MedusaDarkScales), 1112626, 2, 1053097);
             AddRes(index, typeof(CrystalDust), 1112328, 3, 1044253);

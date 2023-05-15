@@ -38,11 +38,6 @@ namespace Server.Engines.Quests.RitualQuest
             HairHue = Race.RandomHairHue();
         }
 
-        public override void InitOutfit()
-        {
-            SetWearable(new GargishFancyRobe(), 1345);
-        }
-
         public Prugyilonus(Serial serial) : base(serial)
         {
         }
@@ -97,12 +92,6 @@ namespace Server.Engines.Quests.RitualQuest
             Hue = 34529;
             HairItemID = Race.RandomHair(false);
             HairHue = Race.RandomHairHue();
-        }
-
-        public override void InitOutfit()
-        {
-            SetWearable(new GargishPlateChest(), 2501);
-            SetWearable(new CrescentBlade(), 2501);
         }
 
         public override void OnTalk(PlayerMobile player)

@@ -661,19 +661,7 @@ namespace Server.Mobiles
             typeof(GauntletsOfVillainousRegeneration),
             typeof(GauntletsOfVirtuousRegeneration),
             typeof(LegsOfVillainousRegeneration),
-            typeof(LegsOfVirtuousRegeneration),
-            typeof(KiltOfVillainousRegeneration),
-            typeof(KiltOfVirtuousRegeneration),
-            typeof(EarringsOfVillainousRegeneration),
-            typeof(EarringsOfVirtuousRegeneration),
-            typeof(GargishBreastplateOfVillainousRegeneration),
-            typeof(GargishBreastplateOfVirtuousRegeneration),
-            typeof(GargishArmsOfVillainousRegeneration),
-            typeof(GargishArmsOfVirtuousRegeneration),
-            typeof(NecklaceOfVillainousRegeneration),
-            typeof(NecklaceOfVirtuousRegeneration),
-            typeof(GargishLegsOfVillainousRegeneration),
-            typeof(GargishLegsOfVirtuousRegeneration)
+            typeof(LegsOfVirtuousRegeneration)
         };
 
         public override void GenerateLoot()

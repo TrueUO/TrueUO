@@ -40,9 +40,6 @@ namespace Server.Mobiles
         {
             m_SBInfos.Add(new SBBowyer());
             m_SBInfos.Add(new SBRangedWeapon());
-
-            if (IsTokunoVendor)
-                m_SBInfos.Add(new SBSEBowyer());
         }
 
         #region Bulk Orders

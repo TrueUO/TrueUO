@@ -47,8 +47,8 @@ namespace Server.Mobiles
         {
         }
 
-        public override Type[] UniqueSAList => new Type[] { typeof(BasiliskHideBreastplate) };
-        public override Type[] SharedSAList => new Type[] { typeof(LegacyOfDespair), typeof(MysticsGarb) };
+        public override Type[] UniqueSAList => new Type[] { };
+        public override Type[] SharedSAList => new Type[] { };
 
         public override InhumanSpeech SpeechType => InhumanSpeech.Ratman;
         public override bool CanRummageCorpses => true;

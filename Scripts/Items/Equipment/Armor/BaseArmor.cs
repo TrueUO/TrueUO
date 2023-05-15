@@ -971,8 +971,10 @@ namespace Server.Items
         {
             int bonus = 0;
 
-            if (m_Quality == ItemQuality.Exceptional && !(this is GargishLeatherWingArmor))
+            if (m_Quality == ItemQuality.Exceptional)
+            {
                 bonus += 20;
+            }
 
             bonus += m_AosArmorAttributes.DurabilityBonus;
 

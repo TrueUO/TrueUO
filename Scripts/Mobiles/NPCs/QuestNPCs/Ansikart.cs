@@ -36,14 +36,6 @@ namespace Server.Engines.Quests
             HairHue = 0x321;
         }
 
-        public override void InitOutfit()
-        {
-            AddItem(new SerpentStoneStaff());
-            AddItem(new GargishClothChest(1428));
-            AddItem(new GargishClothArms(1445));
-            AddItem(new GargishClothKilt(1443));
-        }
-
         public override void Advertise()
         {
             Say(1112528);  // Master the art of unraveling magic.

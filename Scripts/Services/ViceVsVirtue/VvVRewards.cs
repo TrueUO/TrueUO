@@ -78,13 +78,10 @@ namespace Server.Engines.VvV
             Rewards.Add(new CollectionItem(typeof(VvVWizardsHat), 5912, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVWoodlandArms), 11116, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVDragonArms), 9815, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVGargishPlateArms), 776, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVPlateArms), 5136, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVEpaulette), 0x9985, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVGargishEpaulette), 0x9986, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVGargishStoneChest), 0x286, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVStuddedChest), 5083, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVGargishEarrings), 16915, 0, 0, 500));
 
             Rewards.Add(new CollectionItem(typeof(CompassionBanner), 39351, 1123375, 0, 10000)); // Compassion Banner
             Rewards.Add(new CollectionItem(typeof(HonestyBanner), 39353, 1123377, 0, 10000)); // Honesty Banner
