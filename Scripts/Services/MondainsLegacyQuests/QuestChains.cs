@@ -14,7 +14,6 @@ namespace Server.Engines.Quests
         LibraryFriends = 7,
         Marauders = 8,
         MiniBoss = 9,
-        SummonFey = 10,
         SummonFiend = 11,
         Spellweaving = 13,
         SpellweavingS = 14,
@@ -40,7 +39,7 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[25][];
+            Chains = new Type[24][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
@@ -50,7 +49,6 @@ namespace Server.Engines.Quests
             Chains[(int)QuestChain.LibraryFriends] = new[] { typeof(FriendsOfTheLibraryQuest), typeof(BureaucraticDelayQuest), typeof(TheSecretIngredientQuest), typeof(SpecialDeliveryQuest), typeof(AccessToTheStacksQuest) };
             Chains[(int)QuestChain.Marauders] = new[] { typeof(MaraudersQuest), typeof(TheBrainsOfTheOperationQuest), typeof(TheBrawnQuest), typeof(TheBiggerTheyAreQuest) };
             Chains[(int)QuestChain.MiniBoss] = new[] { typeof(MougGuurMustDieQuest), typeof(LeaderOfThePackQuest), typeof(SayonaraSzavetraQuest) };
-            Chains[(int)QuestChain.SummonFey] = new[] { typeof(FirendOfTheFeyQuest), typeof(TokenOfFriendshipQuest), typeof(AllianceQuest) };
             Chains[(int)QuestChain.SummonFiend] = new[] { typeof(FiendishFriendsQuest), typeof(CrackingTheWhipQuest), typeof(IronWillQuest) };
             Chains[(int)QuestChain.Spellweaving] = new[] { typeof(PatienceQuest), typeof(NeedsOfManyHeartwoodQuest), typeof(NeedsOfManyPartHeartwoodQuest), typeof(MakingContributionHeartwoodQuest), typeof(UnnaturalCreationsQuest) };
             Chains[(int)QuestChain.SpellweavingS] = new[] { typeof(DisciplineQuest), typeof(NeedsOfTheManySanctuaryQuest), typeof(MakingContributionSanctuaryQuest), typeof(SuppliesForSanctuaryQuest), typeof(TheHumanBlightQuest) };

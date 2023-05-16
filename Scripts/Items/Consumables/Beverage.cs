@@ -2,7 +2,6 @@ using Server.Engines.Craft;
 using Server.Engines.Plants;
 using Server.Engines.Quests;
 using Server.Engines.Quests.Hag;
-using Server.Engines.Quests.Matriarch;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
@@ -1180,35 +1179,6 @@ namespace Server.Items
             else if (targ is ChickenLizardEgg egg)
             {
                 egg.Pour(from, this);
-            }
-            else if (targ is AddonComponent addonComponent && (addonComponent.Addon is WaterVatEast || addonComponent.Addon is WaterVatSouth) &&
-                     Content == BeverageType.Water)
-            {
-                if (from is PlayerMobile player && player.Quest is SolenMatriarchQuest qs)
-                {
-                    QuestObjective obj = qs.FindObjective(typeof(GatherWaterObjective));
-
-                    if (obj != null && !obj.Completed)
-                    {
-                        BaseAddon vat = addonComponent.Addon;
-
-                        if (vat.X > 5784 && vat.X < 5814 && vat.Y > 1903 && vat.Y < 1934 && (qs.RedSolen && vat.Map == Map.Trammel || !qs.RedSolen && vat.Map == Map.Felucca))
-                        {
-                            if (obj.CurProgress + Quantity > obj.MaxProgress)
-                            {
-                                int delta = obj.MaxProgress - obj.CurProgress;
-
-                                Quantity -= delta;
-                                obj.CurProgress = obj.MaxProgress;
-                            }
-                            else
-                            {
-                                obj.CurProgress += Quantity;
-                                Quantity = 0;
-                            }
-                        }
-                    }
-                }
             }
             else if (targ is WaterElemental elemental)
             {

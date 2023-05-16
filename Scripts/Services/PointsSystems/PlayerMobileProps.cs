@@ -65,13 +65,6 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double DespiseCrystals
-        {
-            get => (int)PointsSystem.DespiseCrystals.GetPoints(Player);
-            set => PointsSystem.DespiseCrystals.SetPoints(Player, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public double ViceVsVirtue
         {
             get => (int)PointsSystem.ViceVsVirtue.GetPoints(Player);
