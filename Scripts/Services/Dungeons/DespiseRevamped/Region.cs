@@ -83,8 +83,6 @@ namespace Server.Engines.Despise
 
                 if (controller != null && controller.Boss == m)
                 {
-                    Quests.WhisperingWithWispsQuest.OnBossSlain(boss);
-
                     controller.OnBossSlain();
                 }
             }

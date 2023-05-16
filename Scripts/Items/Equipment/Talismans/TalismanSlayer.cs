@@ -37,7 +37,7 @@ namespace Server.Items
             {
                 typeof(GrizzlyBear), typeof(BlackBear),
                 typeof(BrownBear), typeof(PolarBear),
-                typeof(Grobu), typeof(RagingGrizzlyBear)
+                typeof(RagingGrizzlyBear)
             };
 
             m_Table[TalismanSlayerName.Vermin] = new[]

@@ -14,7 +14,6 @@ namespace Server.Engines.Quests
             AddReward(new BaseReward(typeof(DryadsBlessing), 1074345));
         }
 
-        public override QuestChain ChainID => QuestChain.BlightedGrove;
         /* Bound to the Land */
         public override object Title => 1074433;
         /* Oh help! Help me!  I don't want to end up like my sisters, enslaved by the cruel Melisande.  I cannot flee, I am bound 

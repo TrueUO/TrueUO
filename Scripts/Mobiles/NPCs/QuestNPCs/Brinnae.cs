@@ -367,7 +367,6 @@ namespace Server.Engines.Quests
             typeof(GargoylesWrathQuest),
             typeof(ThreeWishesQuest),
             typeof(ForkedTongueQuest),
-            typeof(CircleOfLifeQuest),
             typeof(MongbatMenaceQuest)
         };
 

@@ -450,7 +450,7 @@ namespace Server.Items
                     typeof(StoneSlith), typeof(ToxicSlith),
                     typeof(Raptor), typeof(Kepetch),
                     typeof(KepetchAmbusher), typeof(FrostDragon),
-                    typeof(ColdDrake), typeof(FrostDrake), typeof(Coil),
+                    typeof(ColdDrake), typeof(FrostDrake), 
                     typeof(SkeletalDrake), typeof(CoralSnake)
                 );
 
@@ -496,7 +496,7 @@ namespace Server.Items
                     (
                         SlayerName.SnakesBane,
 
-                        typeof(CrystalSeaSerpent),  typeof(Coil),
+                        typeof(CrystalSeaSerpent),  
                         typeof(CoralSnake),         typeof(DeepSeaSerpent),
                         typeof(GiantIceWorm),       typeof(GiantSerpent),
                         typeof(IceSerpent),         typeof(IceSnake),

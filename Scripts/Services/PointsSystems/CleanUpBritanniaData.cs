@@ -579,7 +579,6 @@ namespace Server.Engines.Points
             Entries[typeof(Flowstone)] = 250.0;
             Entries[typeof(GlacialStaff)] = 500.0;
             Entries[typeof(GrapeVine)] = 500.0;
-            Entries[typeof(GrobusFur)] = 20.0;
             Entries[typeof(HorseShoes)] = 200.0;
 
             Entries[typeof(Whip)] = 200.0;

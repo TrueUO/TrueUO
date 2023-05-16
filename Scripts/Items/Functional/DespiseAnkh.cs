@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Items;
 using Server.Mobiles;
 
@@ -62,42 +61,11 @@ namespace Server.Engines.Despise
                     WispOrb orb = new WispOrb(from, alignment);
                     from.Backpack.DropItem(orb);
                     from.SendLocalizedMessage(1153355); // I will follow thy guidance.
-
-                    if (from is PlayerMobile mobile && QuestHelper.HasQuest<WhisperingWithWispsQuest>(mobile))
-                    {
-                        mobile.SendLocalizedMessage(1158304); // The Ankh pulses with energy in front of you! You are drawn to it! As you
-                                                            // place your hand on the ankh an inner voice speaks to you as you are joined to your Wisp companion...
-                        mobile.SendLocalizedMessage(1158320, null, 0x23); // You've completed a quest objective!
-                        mobile.PlaySound(0x5B5);
-
-                        Services.TownCryer.TownCryerSystem.CompleteQuest(mobile, 1158303, 1158308, 0x65C);
-                    }
                 }
                 else
                 {
                     LabelTo(from, 1153350); // Thy spirit be not compatible with our goals!
                 }
-            }
-        }
-
-        public override void OnMovement(Mobile m, Point3D oldLocation)
-        {
-            bool any = false;
-
-            for (var index = 0; index < WispOrb.Orbs.Count; index++)
-            {
-                var x = WispOrb.Orbs[index];
-
-                if (x.Owner == m)
-                {
-                    any = true;
-                    break;
-                }
-            }
-
-            if (m is PlayerMobile pm && !any && QuestHelper.HasQuest<WhisperingWithWispsQuest>(pm) && InRange(pm.Location, 5) && !InRange(oldLocation, 5))
-            {
-                pm.SendLocalizedMessage(1158311); // You have found an ankh. Use the ankh to continue your journey.
             }
         }
 

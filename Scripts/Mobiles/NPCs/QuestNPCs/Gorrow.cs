@@ -54,7 +54,6 @@ namespace Server.Engines.Quests
 
         public override Type[] Quests => new[]
         {
-            typeof(CommonBrigandsQuest),
             typeof(ForkedTongueQuest),
             typeof(PointyEarsQuest)
         };

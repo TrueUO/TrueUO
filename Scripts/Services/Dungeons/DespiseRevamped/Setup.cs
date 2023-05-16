@@ -40,18 +40,12 @@ namespace Server.Engines.Despise
 
                 //Teleporters
                 IPooledEnumerable eable = Map.Trammel.GetItemsInRange(new Point3D(5588, 631, 30), 2);
-                DespiseTeleporter tele = null;
-
-                //Wisp
-                MysteriousWisp wisp = new MysteriousWisp();
-                WeakEntityCollection.Add("despise", wisp);
-                wisp.MoveToWorld(new Point3D(1303, 1088, 0), Map.Trammel);
 
                 foreach (Item item in eable)
                 {
                     if (item is Teleporter old)
                     {
-                        tele = new DespiseTeleporter();
+                        DespiseTeleporter tele = new DespiseTeleporter();
                         WeakEntityCollection.Add("despise", tele);
                         tele.PointDest = old.PointDest;
                         tele.MapDest = old.MapDest;
