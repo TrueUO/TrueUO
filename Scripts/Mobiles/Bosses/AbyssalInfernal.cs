@@ -369,7 +369,7 @@ namespace Server.Mobiles
 
                         if (s != null && s.Combatant != null)
                         {
-                            if (!(s.Combatant is PlayerMobile) || !((PlayerMobile)s.Combatant).HonorActive)
+                            if (!(s.Combatant is PlayerMobile))
                             {
                                 s.Combatant = Combatant;
                             }

@@ -3,7 +3,6 @@ using Server.ContextMenus;
 using Server.Engines.Craft;
 using Server.Mobiles;
 using Server.Network;
-using Server.Services.Virtues;
 using Server.Spells;
 using Server.Spells.Bushido;
 using Server.Spells.Chivalry;
@@ -12,8 +11,6 @@ using Server.Spells.Ninjitsu;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
 using Server.Spells.Spellweaving;
-using Server.Misc;
-
 using System;
 using System.Collections.Generic;
 #endregion
@@ -1989,19 +1986,6 @@ namespace Server.Items
                 percentageBonus += 25;
             }
 
-            if (attacker is PlayerMobile pmAttacker && !(defender is PlayerMobile))
-            {
-                if (pmAttacker.HonorActive && pmAttacker.InRange(defender, 1))
-                {
-                    percentageBonus += 25;
-                }
-
-                if (pmAttacker.SentHonorContext != null && pmAttacker.SentHonorContext.Target == defender)
-                {
-                    percentageBonus += pmAttacker.SentHonorContext.PerfectionDamageBonus;
-                }
-            }
-
             percentageBonus -= Block.GetMeleeReduction(defender);
 
             percentageBonus += BattleLust.GetBonus(attacker, defender);
@@ -2425,11 +2409,6 @@ namespace Server.Items
             if (move != null)
             {
                 move.OnHit(attacker, defender, damage);
-            }
-
-            if (defender is IHonorTarget target && target.ReceivedHonorContext != null)
-            {
-                target.ReceivedHonorContext.OnTargetHit(attacker);
             }
 
             if (!ranged)
@@ -3005,11 +2984,6 @@ namespace Server.Items
             if (move != null)
             {
                 move.OnMiss(attacker, defender);
-            }
-
-            if (defender is IHonorTarget target && target.ReceivedHonorContext != null)
-            {
-                target.ReceivedHonorContext.OnTargetMissed(attacker);
             }
 
             SkillMasterySpell.OnMiss(attacker, defender);

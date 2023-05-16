@@ -429,8 +429,6 @@ namespace Server.Engines.Points
             Entries[typeof(PadsOfTheCuSidhe)] = 100.0;
             Entries[typeof(QuiverOfRage)] = 100.0;
             Entries[typeof(QuiverOfElements)] = 100.0;
-            Entries[typeof(RaedsGlory)] = 100.0;
-            Entries[typeof(RighteousAnger)] = 100.0;
             Entries[typeof(SoulSeeker)] = 100.0;
             Entries[typeof(TalonBite)] = 100.0;
             Entries[typeof(TotemOfVoid)] = 100.0;

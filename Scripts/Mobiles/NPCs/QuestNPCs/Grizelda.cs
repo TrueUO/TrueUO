@@ -1,6 +1,5 @@
 using Server.Items;
 using Server.Mobiles;
-using Server.Services.Virtues;
 
 namespace Server.Engines.Quests.Hag
 {
@@ -141,11 +140,6 @@ namespace Server.Engines.Quests.Hag
 
                                 if (player.PlaceInBackpack(cont))
                                 {
-                                    bool gainedPath = false;
-
-                                    if (VirtueHelper.Award(player, VirtueName.Sacrifice, 250, ref gainedPath)) // TODO: Check amount on OSI.
-                                        player.SendLocalizedMessage(1054160); // You have gained in sacrifice.
-
                                     PlaySound(0x253);
                                     PlaySound(0x20);
                                     obj.Complete();

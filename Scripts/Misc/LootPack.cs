@@ -10,11 +10,6 @@ namespace Server
         {
             int luck = killer is PlayerMobile mobile ? mobile.RealLuck : killer.Luck;
 
-            if (killer is PlayerMobile pmKiller && pmKiller.SentHonorContext != null && pmKiller.SentHonorContext.Target == victim)
-            {
-                luck += pmKiller.SentHonorContext.PerfectionLuckBonus;
-            }
-
             if (luck < 0)
             {
                 return 0;

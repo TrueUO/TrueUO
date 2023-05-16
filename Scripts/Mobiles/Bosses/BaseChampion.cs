@@ -1,6 +1,5 @@
 using Server.Engines.CannedEvil;
 using Server.Items;
-using Server.Services.Virtues;
 using System;
 using System.Collections.Generic;
 
@@ -105,31 +104,14 @@ namespace Server.Mobiles
                 DamageStore ds = rights[i];
 
                 if (ds.m_HasRight && InRange(ds.m_Mobile, 100) && ds.m_Mobile.Map == Map)
+                {
                     toGive.Add(ds.m_Mobile);
+                }
             }
 
             if (toGive.Count == 0)
-                return;
-
-            for (int i = 0; i < toGive.Count; i++)
             {
-                Mobile m = toGive[i];
-
-                if (!(m is PlayerMobile))
-                    continue;
-
-                bool gainedPath = false;
-
-                int pointsToGain = 800;
-
-                if (VirtueHelper.Award(m, VirtueName.Valor, pointsToGain, ref gainedPath))
-                {
-                    if (gainedPath)
-                        m.SendLocalizedMessage(1054032); // You have gained a path in Valor!
-                    else
-                        m.SendLocalizedMessage(1054030); // You have gained in Valor!
-                    //No delay on Valor gains
-                }
+                return;
             }
 
             // Randomize - PowerScrolls
@@ -205,49 +187,6 @@ namespace Server.Mobiles
                     m.Corpse.DropItem(item);
                 else
                     m.AddToBackpack(item);
-            }
-
-            if (item is PowerScroll && m is PlayerMobile pm)
-            {
-                for (int j = 0; j < pm.JusticeProtectors.Count; ++j)
-                {
-                    Mobile prot = pm.JusticeProtectors[j];
-
-                    if (prot.Map != pm.Map || prot.Murderer || prot.Criminal || !JusticeVirtue.CheckMapRegion(pm, prot) || !prot.InRange(this, 100))
-                        continue;
-
-                    int chance = 0;
-
-                    switch (VirtueHelper.GetLevel(prot, VirtueName.Justice))
-                    {
-                        case VirtueLevel.Seeker:
-                            chance = 60;
-                            break;
-                        case VirtueLevel.Follower:
-                            chance = 80;
-                            break;
-                        case VirtueLevel.Knight:
-                            chance = 100;
-                            break;
-                    }
-
-                    if (chance > Utility.Random(100))
-                    {
-                        var powerScroll = GetJusticePowerScroll();
-
-                        prot.SendLocalizedMessage(1049368); // You have been rewarded for your dedication to Justice!
-
-                        if (prot.Alive)
-                            prot.AddToBackpack(powerScroll);
-                        else
-                        {
-                            if (prot.Corpse != null && !prot.Corpse.Deleted)
-                                prot.Corpse.DropItem(powerScroll);
-                            else
-                                prot.AddToBackpack(powerScroll);
-                        }
-                    }
-                }
             }
         }
 

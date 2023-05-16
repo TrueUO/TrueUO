@@ -135,32 +135,6 @@ namespace Server.SkillHandlers
                     else if (skill < 41.0)
                     {
                         from.SendLocalizedMessage(501001);//You cannot determain anything useful.
-                        return;
-                    }
-
-                    HonestyItemSocket honestySocket = item.GetSocket<HonestyItemSocket>();
-
-                    if (honestySocket != null)
-                    {
-                        if (honestySocket.HonestyOwner == null)
-                            Services.Virtues.HonestyVirtue.AssignOwner(honestySocket);
-
-                        if (from.CheckTargetSkill(SkillName.Forensics, item, 41.0, 100.0))
-                        {
-                            string region = honestySocket.HonestyRegion == null ? "an unknown place" : honestySocket.HonestyRegion;
-
-                            if (from.Skills.Forensics.Value >= 61.0)
-                            {
-                                if (honestySocket.HonestyOwner != null)
-								{
-                                    from.SendLocalizedMessage(1151521, string.Format("{0}\t{1}", honestySocket.HonestyOwner.Name, region)); // This item belongs to ~1_val~ who lives in ~2_val~.
-								}
-                            }
-                            else
-                            {
-                                from.SendLocalizedMessage(1151522, region); // You find seeds from a familiar plant stuck to the item which suggests that this item is from ~1_val~.
-                            }
-                        }
                     }
                 }
             }

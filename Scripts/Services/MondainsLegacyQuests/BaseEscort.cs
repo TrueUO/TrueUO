@@ -1,6 +1,5 @@
 using Server.ContextMenus;
 using Server.Mobiles;
-using Server.Services.Virtues;
 using System;
 using System.Collections.Generic;
 
@@ -324,44 +323,6 @@ namespace Server.Engines.Quests
 
                         // fame
                         Misc.Titles.AwardFame(escorter, escort.Fame, true);
-
-                        // compassion
-                        bool gainedPath = false;
-
-                        if (escorter is PlayerMobile pm)
-                        {
-                            if (pm.CompassionGains > 0 && DateTime.UtcNow > pm.NextCompassionDay)
-                            {
-                                pm.NextCompassionDay = DateTime.MinValue;
-                                pm.CompassionGains = 0;
-                            }
-
-                            if (pm.CompassionGains >= 5) // have already gained 5 times in one day, can gain no more
-                            {
-                                pm.SendLocalizedMessage(1053004); // You must wait about a day before you can gain in compassion again.
-                            }
-                            else if (VirtueHelper.Award(pm, VirtueName.Compassion, escort.Compassion, ref gainedPath))
-                            {
-                                pm.SendLocalizedMessage(1074949, null, 0x2A);  // You have demonstrated your compassion!  Your kind actions have been noted.
-
-                                if (gainedPath)
-                                {
-                                    pm.SendLocalizedMessage(1053005); // You have achieved a path in compassion!
-                                }
-                                else
-                                {
-                                    pm.SendLocalizedMessage(1053002); // You have gained in compassion.
-                                }
-
-                                pm.NextCompassionDay = DateTime.UtcNow + TimeSpan.FromDays(1.0); // in one day CompassionGains gets reset to 0
-
-                                ++pm.CompassionGains;
-                            }
-                            else
-                            {
-                                pm.SendLocalizedMessage(1053003); // You have achieved the highest path of compassion and can no longer gain any further.
-                            }
-                        }
                     }
                     else
                     {

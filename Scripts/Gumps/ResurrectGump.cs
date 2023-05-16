@@ -1,9 +1,6 @@
-using Server.Items;
 using Server.Mobiles;
 using Server.Network;
-using Server.Services.Virtues;
 using System;
-using System.Collections.Generic;
 
 namespace Server.Gumps
 {
@@ -206,50 +203,6 @@ namespace Server.Gumps
                 from.FixedEffect(0x376A, 10, 16);
 
                 from.Resurrect();
-
-                if (m_Healer != null && from != m_Healer)
-                {
-                    VirtueLevel level = VirtueHelper.GetLevel(m_Healer, VirtueName.Compassion);
-
-                    switch (level)
-                    {
-                        case VirtueLevel.Seeker:
-                            from.Hits = AOS.Scale(from.HitsMax, 20);
-                            break;
-                        case VirtueLevel.Follower:
-                            from.Hits = AOS.Scale(from.HitsMax, 40);
-                            break;
-                        case VirtueLevel.Knight:
-                            from.Hits = AOS.Scale(from.HitsMax, 80);
-                            break;
-                    }
-                }
-
-                if (m_FromSacrifice && from is PlayerMobile mobile)
-                {
-                    mobile.AvailableResurrects -= 1;
-
-                    Container pack = mobile.Backpack;
-                    Container corpse = mobile.Corpse;
-
-                    if (pack != null && corpse != null)
-                    {
-                        List<Item> items = new List<Item>(corpse.Items);
-
-                        for (int i = 0; i < items.Count; ++i)
-                        {
-                            Item item = items[i];
-
-                            if (item.Layer != Layer.Hair && item.Layer != Layer.FacialHair && item.Movable)
-                                pack.DropItem(item);
-                        }
-                    }
-                }
-
-                if (m_Healer != from && m_Healer is PlayerMobile && from is PlayerMobile)
-                {
-                    SpiritualityVirtue.OnHeal(m_Healer, 50);
-                }
 
                 if (from.Fame > 0)
                 {

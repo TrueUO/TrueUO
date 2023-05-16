@@ -33,7 +33,7 @@ namespace Server
             IceHoundRemoval = 0x00000004,
             PaladinAndKrakin = 0x00000008,
             TrinsicPaladins = 0x00000010,
-            HonestyItems = 0x00000020,
+            UNUSED4 = 0x00000020,
             TramKhaldun = 0x00000040,
             FixAddonDeco = 0x00000080,
             LifeStealers = 0x00000100,
@@ -220,12 +220,6 @@ namespace Server
                     {
                         GenerateTramKhaldun();
                         VersionFlag |= SpawnerVersion.TramKhaldun;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.HonestyItems) == 0)
-                    {
-                        ConvertHonestyItems();
-                        VersionFlag |= SpawnerVersion.HonestyItems;
                     }
 
                     if ((VersionFlag & SpawnerVersion.TrinsicPaladins) == 0)
@@ -485,27 +479,6 @@ namespace Server
 
             tele = new Teleporter(new Point3D(5572, 1299, 0), Map.Trammel);
             tele.MoveToWorld(new Point3D(6014, 3787, 23), Map.Trammel);
-        }
-        #endregion
-
-        #region Honesty Item Conversion
-        public static void ConvertHonestyItems()
-        {
-            int convert = 0;
-
-            foreach (Item item in World.Items.Values)
-            {
-                if (item.HonestyItem)
-                {
-                    if (!item.HasSocket<HonestyItemSocket>())
-                    {
-                        item.AttachSocket(new HonestyItemSocket());
-                        convert++;
-                    }
-                }
-            }
-
-            ToConsole(string.Format("Converted {0} honesty items and attached Honesty Item Socket!", convert));
         }
         #endregion
 

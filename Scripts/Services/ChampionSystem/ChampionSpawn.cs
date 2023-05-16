@@ -2,7 +2,6 @@ using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Regions;
-using Server.Services.Virtues;
 using Server.Spells.Necromancy;
 using System;
 using System.Collections.Generic;
@@ -418,50 +417,6 @@ namespace Server.Engines.CannedEvil
                 else
                     killer.AddToBackpack(scroll);
             }
-
-            // Justice reward
-            PlayerMobile pm = (PlayerMobile)killer;
-            for (int j = 0; j < pm.JusticeProtectors.Count; ++j)
-            {
-                Mobile prot = pm.JusticeProtectors[j];
-
-                if (prot.Map != killer.Map || prot.Murderer || prot.Criminal || !JusticeVirtue.CheckMapRegion(killer, prot))
-                    continue;
-
-                int chance = 0;
-
-                switch (VirtueHelper.GetLevel(prot, VirtueName.Justice))
-                {
-                    case VirtueLevel.Seeker:
-                        chance = 60;
-                        break;
-                    case VirtueLevel.Follower:
-                        chance = 80;
-                        break;
-                    case VirtueLevel.Knight:
-                        chance = 100;
-                        break;
-                }
-
-                if (chance > Utility.Random(100))
-                {
-                    try
-                    {
-                        prot.SendLocalizedMessage(1049368); // You have been rewarded for your dedication to Justice!
-
-                        if (Activator.CreateInstance(scroll.GetType()) is SpecialScroll scrollDupe)
-                        {
-                            scrollDupe.Skill = scroll.Skill;
-                            scrollDupe.Value = scroll.Value;
-                            prot.AddToBackpack(scrollDupe);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Diagnostics.ExceptionLogging.LogException(e);
-                    }
-                }
-            }
         }
 
         private DateTime _NextGhostCheck;
@@ -561,21 +516,9 @@ namespace Server.Engines.CannedEvil
                             }
 
                             int mobSubLevel = rankOfMob + 1;
+
                             if (mobSubLevel >= 0)
                             {
-                                bool gainedPath = false;
-
-                                int pointsToGain = mobSubLevel * 40;
-
-                                if (VirtueHelper.Award(pm, VirtueName.Valor, pointsToGain, ref gainedPath))
-                                {
-                                    if (gainedPath)
-                                        pm.SendLocalizedMessage(1054032); // You have gained a path in Valor!
-                                    else
-                                        pm.SendLocalizedMessage(1054030); // You have gained in Valor!
-                                    //No delay on Valor gains
-                                }
-
                                 PlayerMobile.ChampionTitleInfo info = pm.ChampionTitles;
 
                                 info.Award(m_Type, mobSubLevel);
