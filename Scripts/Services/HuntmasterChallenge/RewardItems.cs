@@ -58,34 +58,6 @@ namespace Server.Items
         }
     }
 
-    public class GargishRangersGuildSash : GargishSash
-    {
-        public override int LabelNumber => 1155744;  // Member of the Skara Brae Ranger's Guild
-
-        [Constructable]
-        public GargishRangersGuildSash()
-        {
-            LootType = LootType.Blessed;
-        }
-
-        public GargishRangersGuildSash(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class HuntmastersRewardTitleDeed : BaseRewardTitleDeed
     {
         public override TextDefinition Title => new TextDefinition(1155727);  // Huntmaster's Champion

@@ -304,10 +304,7 @@ namespace Server.Items
 				new PMEntry(new Point3D(2701, 692, 5), 1012007), // Minoc
 				new PMEntry(new Point3D(1828, 2948, -20), 1012008), // Trinsic
 				new PMEntry(new Point3D(643, 2067, 5), 1012009), // Skara Brae
-				/* Dynamic Z for Magincia to support both old and new maps. */
-				new PMEntry(new Point3D(3563, 2139, Map.Trammel.GetAverageZ(3563, 2139)), 1012010), // (New) Magincia
-				new PMEntry(new Point3D(3450, 2677, 25), 1078098) // New Haven
-			});
+            });
 
         public static readonly PMList[] Lists = { Trammel };
         public static readonly PMList[] RedLists = { };

@@ -31,7 +31,6 @@ namespace Server.Engines.Craft
         WallMountedAquarium = 154,
         LargeElegantAquarium = 155,
         KotlBlackRod = 170,
-        KotlAutomaton = 171,
         PirateShield = 172,
 
         // DefBowFletching
@@ -91,9 +90,7 @@ namespace Server.Engines.Craft
         ColdForgedBlade = 351,
         OverseerSunderedBlade = 352,
         LuminousRuneBlade = 353,
-        ShardTrasher = 354, 
-        BritchesOfWarding = 355,
-        GlovesOfFeudalGrip = 356,
+        ShardTrasher = 354,
         ShieldOrb = 357,  
 
         // DefTinkering
@@ -104,7 +101,6 @@ namespace Server.Engines.Craft
         PendantOfTheMagi = 451,
         ResilientBracer = 452,
         ScrappersCompendium = 453,
-        HoveringWisp = 454, // Removed at OSI Publish 103
         KotlPowerCore = 455,
         BraceletOfPrimalConsumption = 456,
         DrSpectorLenses = 457,
@@ -113,23 +109,15 @@ namespace Server.Engines.Craft
         WeatheredBronzeFairySculpture = 460,
         WeatheredBronzeGlobeSculpture = 461,
         WeatheredBronzeManOnABench = 462,
-        KrampusMinionEarrings = 463,
         EnchantedPicnicBasket = 464,
         Telescope = 465,
-        BarbedWhip = 466,
-        SpikedWhip = 467,
-        BladedWhip = 468,
-        CandiedStaff = 469,
-
+        
         RotWormStew = 500, // DefCooking
         ElvenQuiver = 501, // DefTailoring
         QuiverOfFire = 502, // DefTailoring
         QuiverOfIce = 503, // DefTailoring
         QuiverOfBlight = 504, // DefTailoring
         QuiverOfLightning = 505, // DefTailoring
-        SongWovenMantle = 550, // DefTailoring
-        SpellWovenBritches = 551, // DefTailoring
-        StitchersMittens = 552, // DefTailoring
         JesterShoes = 560, // DefTailoring
         ChefsToque = 561, // DefTailoring
         GuildedKilt = 562, // DefTailoring
@@ -137,23 +125,9 @@ namespace Server.Engines.Craft
         FancyKilt = 564, // DefTailoring
         FloweredDress = 565, // DefTailoring
         EveningGown = 566, // DefTailoring
-        TigerPeltChest = 570, // DefTailoring
-        TigerPeltCollar = 571, // DefTailoring
-        TigerPeltHelm = 572, // DefTailoring
-        TigerPeltLegs = 573, // DefTailoring
-        TigerPeltShorts = 574, // DefTailoring
-        TigerPeltBustier = 575, // DefTailoring
-        TigerPeltLongSkirt = 576, // DefTailoring
-        TigerPeltSkirt = 577, // DefTailoring
-        DragonTurtleHideArms = 580, // DefTailoring
-        DragonTurtleHideChest = 581, // DefTailoring
-        DragonTurtleHideHelm = 582, // DefTailoring
-        DragonTurtleHideLegs = 583, // DefTailoring
         DragonTurtleHideBustier = 584, // DefTailoring
-        CuffsOfTheArchmage = 585, // DefTailoring
         KrampusMinionHat = 586, // DefTailoring
         KrampusMinionBoots = 587, // DefTailoring
-        KrampusMinionTalons = 588, // DefTailoring
         GingerbreadCookie = 599, // DefCooking
         DarkChocolateNutcracker = 600, // DefCooking
         MilkChocolateNutcracker = 601, // DefCooking

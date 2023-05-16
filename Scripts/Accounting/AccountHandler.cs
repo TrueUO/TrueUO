@@ -29,7 +29,6 @@ namespace Server.Misc
 
         private static readonly CityInfo[] StartingCities =
         {
-            new CityInfo("New Haven",   "New Haven Bank",   1150168, 3503,  2574,   14),
             new CityInfo("Yew", "The Empath Abbey", 1075072, 633,   858,    0),
             new CityInfo("Minoc", "The Barnacle", 1075073, 2476,    413,    15),
             new CityInfo("Britain", "The Wayfarer's Inn",   1075074, 1602,  1591,   20),

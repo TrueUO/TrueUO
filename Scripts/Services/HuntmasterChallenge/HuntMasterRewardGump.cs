@@ -102,8 +102,7 @@ namespace Server.Engines.HuntsmasterChallenge
             new CollectionItem(typeof(CrabLobsterBushel), 0xA7AE, 1159780, 0, 1.0),
             new CollectionItem(typeof(HarvestersAxe), 0x1443, 1158774, 0, 1.0),
             new CollectionItem(typeof(BakeKitsuneHat), 0xA42B, 1126051, 0, 1.0),
-            new CollectionItem(typeof(HuntmastersRewardTitleDeed), 0x14EF, 0, 0, 1.0),            
-            new CollectionItem(typeof(GargishRangersGuildSash), 0x46B5, 0, 0, 1.0),
+            new CollectionItem(typeof(HuntmastersRewardTitleDeed), 0x14EF, 0, 0, 1.0),
             new CollectionItem(typeof(RangersGuildSash), 0x1541, 0, 0, 1.0)
         };
     }

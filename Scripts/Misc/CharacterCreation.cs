@@ -48,7 +48,7 @@ namespace Server.Misc
             PackItem(new Gold(1000)); // Starting gold can be customized here
         }
 
-        private static void AddShirt(Mobile m, int shirtHue)
+        private static void AddShirt(int shirtHue)
         {
             int hue = Utility.ClipDyedHue(shirtHue & 0x3FFF);
 
@@ -96,7 +96,7 @@ namespace Server.Misc
             }
         }
 
-        private static void AddShoes(Mobile m)
+        private static void AddShoes()
         {
             EquipItem(new Shoes(Utility.RandomYellowHue()), true);
         }
@@ -167,10 +167,10 @@ namespace Server.Misc
 
             SetName(newChar, args.Name);
 
-            AddBackpack(newChar);
-
             SetStats(newChar, state, args.Profession, args.Str, args.Dex, args.Int);
             SetSkills(newChar, args.Skills, args.Profession);
+
+            AddBackpack(newChar);
 
             Race race = newChar.Race;
 
@@ -201,9 +201,9 @@ namespace Server.Misc
 
             if (args.Profession <= 3)
             {
-                AddShirt(newChar, args.ShirtHue);
+                AddShirt(args.ShirtHue);
                 AddPants(newChar, args.PantsHue);
-                AddShoes(newChar);
+                AddShoes();
             }
 
             if (TestCenter.Enabled)
@@ -212,7 +212,7 @@ namespace Server.Misc
             }
 
             CityInfo city = args.City;
-            Map map = Siege.SiegeShard && city.Map == Map.Trammel ? Map.Felucca : city.Map;
+            Map map = Map.Trammel;
 
             newChar.MoveToWorld(city.Location, map);
 
@@ -477,70 +477,18 @@ namespace Server.Misc
                     }
                 case 4: // Necromancer
                     {
-                        PackItem(new BagOfNecroReagents(50));
-
-                        EquipItem(new BoneHelm());
-                        EquipItem(new BoneHarvester());
-                        EquipItem(NecroHue(new LeatherChest()));
-                        EquipItem(NecroHue(new LeatherArms()));
-                        EquipItem(NecroHue(new LeatherGloves()));
-                        EquipItem(NecroHue(new LeatherGorget()));
-                        EquipItem(NecroHue(new LeatherLegs()));
-                        EquipItem(NecroHue(new Skirt()));
-                        EquipItem(new Sandals(0x8FD));
-
-                        PackItem(new NecromancerSpellbook((ulong)0x8981)); // animate dead, evil omen, pain spike, summon familiar, wraith form
-
-                        addSkillItems = false;
                         break;
                     }
                 case 5: // Paladin
                     {
-                        EquipItem(new Broadsword());
-                        EquipItem(new Helmet());
-                        EquipItem(new PlateGorget());
-                        EquipItem(new RingmailArms());
-                        EquipItem(new RingmailChest());
-                        EquipItem(new RingmailLegs());
-                        EquipItem(new ThighBoots(0x748));
-                        EquipItem(new Cloak(0xCF));
-                        EquipItem(new BodySash(0xCF));
-
-                        PackItem(new BookOfChivalry());
-
-                        addSkillItems = false;
                         break;
                     }
                 case 6: // Samurai
                     {
-                        EquipItem(new HakamaShita(0x2C3));
-                        EquipItem(new Hakama(0x2C3));
-                        EquipItem(new SamuraiTabi(0x2C3));
-                        EquipItem(new TattsukeHakama(0x22D));
-                        EquipItem(new Bokuto());
-                        EquipItem(new LeatherJingasa());
-
-                        PackItem(new Scissors());
-                        PackItem(new Bandage(50));
-                        PackItem(new BookOfBushido());
-
-                        addSkillItems = false;
                         break;
                     }
                 case 7: // Ninja
                     {
-                        int[] hues = { 0x1A8, 0xEC, 0x99, 0x90, 0xB5, 0x336, 0x89 };
-
-                        EquipItem(new Kasa());
-                        EquipItem(new TattsukeHakama(hues[Utility.Random(hues.Length)]));
-                        EquipItem(new HakamaShita(0x2C3));
-                        EquipItem(new NinjaTabi(0x2C3));
-                        EquipItem(new Tekagi());
-
-                        PackItem(new SmokeBomb());
-                        PackItem(new BookOfNinjitsu());
-
-                        addSkillItems = false;
                         break;
                     }
             }
@@ -591,117 +539,6 @@ namespace Server.Misc
                 pack.DropItem(item);
             else
                 item.Delete();
-        }
-
-        private static void PackInstrument()
-        {
-            switch (Utility.Random(6))
-            {
-                case 0:
-                    PackItem(new Drums());
-                    break;
-                case 1:
-                    PackItem(new Harp());
-                    break;
-                case 2:
-                    PackItem(new LapHarp());
-                    break;
-                case 3:
-                    PackItem(new Lute());
-                    break;
-                case 4:
-                    PackItem(new Tambourine());
-                    break;
-                case 5:
-                    PackItem(new TambourineTassel());
-                    break;
-            }
-        }
-
-        private static void PackScroll(int circle)
-        {
-            switch (Utility.Random(8) * (circle + 1))
-            {
-                case 0:
-                    PackItem(new ClumsyScroll());
-                    break;
-                case 1:
-                    PackItem(new CreateFoodScroll());
-                    break;
-                case 2:
-                    PackItem(new FeeblemindScroll());
-                    break;
-                case 3:
-                    PackItem(new HealScroll());
-                    break;
-                case 4:
-                    PackItem(new MagicArrowScroll());
-                    break;
-                case 5:
-                    PackItem(new NightSightScroll());
-                    break;
-                case 6:
-                    PackItem(new ReactiveArmorScroll());
-                    break;
-                case 7:
-                    PackItem(new WeakenScroll());
-                    break;
-                case 8:
-                    PackItem(new AgilityScroll());
-                    break;
-                case 9:
-                    PackItem(new CunningScroll());
-                    break;
-                case 10:
-                    PackItem(new CureScroll());
-                    break;
-                case 11:
-                    PackItem(new HarmScroll());
-                    break;
-                case 12:
-                    PackItem(new MagicTrapScroll());
-                    break;
-                case 13:
-                    PackItem(new MagicUnTrapScroll());
-                    break;
-                case 14:
-                    PackItem(new ProtectionScroll());
-                    break;
-                case 15:
-                    PackItem(new StrengthScroll());
-                    break;
-                case 16:
-                    PackItem(new BlessScroll());
-                    break;
-                case 17:
-                    PackItem(new FireballScroll());
-                    break;
-                case 18:
-                    PackItem(new MagicLockScroll());
-                    break;
-                case 19:
-                    PackItem(new PoisonScroll());
-                    break;
-                case 20:
-                    PackItem(new TelekinisisScroll());
-                    break;
-                case 21:
-                    PackItem(new TeleportScroll());
-                    break;
-                case 22:
-                    PackItem(new UnlockScroll());
-                    break;
-                case 23:
-                    PackItem(new WallOfStoneScroll());
-                    break;
-            }
-        }
-
-        private static Item NecroHue(Item item)
-        {
-            item.Hue = 0x2C3;
-
-            return item;
         }
 
         private static void AddSkillItems(SkillName skill, Mobile m)
@@ -825,11 +662,6 @@ namespace Server.Misc
                         EquipItem(new Cloak(0x455));
                         break;
                     }
-                case SkillName.Discordance:
-                    {
-                        PackInstrument();
-                        break;
-                    }
                 case SkillName.Fencing:
                     {
                         EquipItem(new Kryss());
@@ -884,41 +716,9 @@ namespace Server.Misc
 
                         break;
                     }
-                case SkillName.Magery:
-                    {
-                        PackItem(new BagOfReagents(50));
-
-                        PackScroll(0);
-                        PackScroll(1);
-                        PackScroll(2);
-
-                        EquipItem(new Spellbook((ulong)0x382A8C38));
-                        EquipItem(new WizardsHat());
-                        EquipItem(new Robe(Utility.RandomBlueHue()));
-                        break;
-                    }
                 case SkillName.Mining:
                     {
                         PackItem(new Pickaxe());
-                        break;
-                    }
-                case SkillName.Musicianship:
-                    {
-                        PackInstrument();
-                        break;
-                    }
-                case SkillName.Necromancy:
-                    {
-                        PackItem(new BagOfNecroReagents(50));
-                        PackItem(new NecromancerSpellbook((ulong)0x8981)); // animate dead, evil omen, pain spike, summon familiar, wraith form
-
-                        break;
-                    }
-                case SkillName.Ninjitsu:
-                    {
-                        EquipItem(new Hakama(0x2C3));
-                        EquipItem(new Kasa());
-                        EquipItem(new BookOfNinjitsu());
                         break;
                     }
                 case SkillName.Parry:
@@ -926,20 +726,10 @@ namespace Server.Misc
                         EquipItem(new WoodenShield());
                         break;
                     }
-                case SkillName.Peacemaking:
-                    {
-                        PackInstrument();
-                        break;
-                    }
                 case SkillName.Poisoning:
                     {
                         PackItem(new LesserPoisonPotion());
                         PackItem(new LesserPoisonPotion());
-                        break;
-                    }
-                case SkillName.Provocation:
-                    {
-                        PackInstrument();
                         break;
                     }
                 case SkillName.Snooping:

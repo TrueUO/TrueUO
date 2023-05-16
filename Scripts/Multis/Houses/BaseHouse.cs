@@ -536,8 +536,10 @@ namespace Server.Multis
             {
                 foreach (Item item in Addons.Keys)
                 {
-                    if (item is BaseAddonContainer || item is RaisedGardenAddon || item is WallSafe)
+                    if (item is BaseAddonContainer || item is RaisedGardenAddon)
+                    {
                         return true;
+                    }
                 }
 
                 return false;
