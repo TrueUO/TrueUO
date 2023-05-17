@@ -45,7 +45,7 @@ namespace Server.Items
                 typeof(RatmanMage), typeof(RatmanArcher),
                 typeof(Barracoon), typeof(Ratman),
                 typeof(Sewerrat), typeof(Rat),
-                typeof(GiantRat), typeof(Chiikkaha),
+                typeof(GiantRat), 
                 typeof(ClanRibbonPlagueRat), typeof(ClanRS),
                 typeof(ClanRC), typeof(VitaviRenowned),
                 typeof(ClanCA), typeof(ClanCT),

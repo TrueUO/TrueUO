@@ -767,13 +767,7 @@ namespace Server.Mobiles
                 GenericBuyInfo gbi = (GenericBuyInfo)buyItem;
                 IEntity disp = gbi.GetDisplayEntity();
 
-                if (Siege.SiegeShard && !Siege.VendorCanSell(gbi.Type))
-                {
-                    continue;
-                }
-
-                list.Add(
-                    new BuyItemState(
+                list.Add(new BuyItemState(
                         buyItem.Name,
                         cont.Serial,
                         disp == null ? (Serial)0x7FC0FFEE : disp.Serial,
@@ -818,11 +812,6 @@ namespace Server.Mobiles
             for (int i = 0; i < playerItems.Count; ++i)
             {
                 Item item = playerItems[i];
-
-                if (Siege.SiegeShard && !Siege.VendorCanSell(item.GetType()))
-                {
-                    continue;
-                }
 
                 int price = 0;
                 string name = null;

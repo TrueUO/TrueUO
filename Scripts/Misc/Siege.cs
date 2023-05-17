@@ -220,29 +220,6 @@ namespace Server
                 Utility.PopColor();
 
                 ColUtility.Free(toReset);
-
-                EventSink.ContainerDroppedTo += OnDropped;
-            }
-        }
-
-        public static void OnDropped(ContainerDroppedToEventArgs e)
-        {
-            if (!SiegeShard)
-                return;
-
-            Item item = e.Dropped;
-            Mobile from = e.Mobile;
-            Container cont = e.Container;
-
-            if (item != null)
-            {
-                if (cont != from.Backpack && from is PlayerMobile mobile && mobile.BlessedItem != null && mobile.BlessedItem == item)
-                {
-                    mobile.BlessedItem = null;
-                    item.LootType = LootType.Regular;
-
-                    mobile.SendLocalizedMessage(1075292, item.Name != null ? item.Name : "#" + item.LabelNumber); // ~1_NAME~ has been unblessed.
-                }
             }
         }
 
@@ -397,81 +374,6 @@ namespace Server
             {
                 StatsTable[m]++;
             }
-        }
-
-        public static bool VendorCanSell(Type t)
-        {
-            if (t == null)
-            {
-                return false;
-            }
-
-            for (var index = 0; index < _NoSellList.Length; index++)
-            {
-                Type type = _NoSellList[index];
-
-                if (t == type || t.IsSubclassOf(type))
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private static readonly Type[] _NoSellList =
-        {
-            typeof(BaseIngot), typeof(BaseWoodBoard), typeof(BaseLog), typeof(BaseLeather), typeof(BaseHides), typeof(Cloth),
-            typeof(BoltOfCloth), typeof(UncutCloth), typeof(Wool), typeof(Cotton), typeof(Flax), typeof(SpoolOfThread),
-            typeof(Feather), typeof(Shaft), typeof(Arrow), typeof(Bolt)
-        };
-
-        public static void TryBlessItem(PlayerMobile pm, object targeted)
-        {
-            if (targeted is Item item)
-            {
-                if (CanBlessItem(pm, item))
-                {
-                    if (pm.BlessedItem != null && pm.BlessedItem == item)
-                    {
-                        pm.BlessedItem.LootType = LootType.Regular;
-
-                        pm.SendLocalizedMessage(
-                            1075292,
-                            pm.BlessedItem.Name ?? "#" + pm.BlessedItem.LabelNumber); // ~1_NAME~ has been unblessed.
-
-                        pm.BlessedItem = null;
-                    }
-                    else if (item.LootType == LootType.Regular && !(item is Container))
-                    {
-                        Item old = pm.BlessedItem;
-
-                        pm.BlessedItem = item;
-                        pm.BlessedItem.LootType = LootType.Blessed;
-
-                        pm.SendLocalizedMessage(
-                            1075293,
-                            pm.BlessedItem.Name ?? "#" + pm.BlessedItem.LabelNumber); // ~1_NAME~ has been blessed.
-
-                        if (old != null)
-                        {
-                            old.LootType = LootType.Regular;
-
-                            pm.SendLocalizedMessage(1075292, old.Name ?? "#" + old.LabelNumber); // ~1_NAME~ has been unblessed.
-                        }
-                    }
-                }
-                else
-                {
-                    pm.SendLocalizedMessage(1045114); // You cannot bless that item
-                }
-            }
-        }
-
-        public static bool CanBlessItem(PlayerMobile pm, Item item)
-        {
-            return pm.Items.Contains(item) || pm.Backpack != null && pm.Backpack.Items.Contains(item) && !item.Stackable &&
-                (item is BaseArmor || item is BaseJewel || item is BaseClothing || item is BaseWeapon);
         }
 
         public static void CheckUsesRemaining(Mobile from, Item item)

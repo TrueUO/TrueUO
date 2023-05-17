@@ -595,7 +595,6 @@ namespace Server.Engines.Points
             Entries[typeof(WhiteClothDyeTub)] = 300.0;
             Entries[typeof(Lodestone)] = 75.0;
             Entries[typeof(FeyWings)] = 75.0;
-            Entries[typeof(StoutWhip)] = 3.0;
             Entries[typeof(PlantClippings)] = 1.0;
             Entries[typeof(BasketOfRolls)] = 5.0;
             Entries[typeof(Yeast)] = 10.0;

@@ -56,7 +56,7 @@ namespace Server.Mobiles
         KarmaLocked = 0x00000020,
         AutoRenewInsurance = 0x00000040,
         UseOwnFilter = 0x00000080,
-        PublicMyRunUO = 0x00000100,
+        UNUSED = 0x00000100,
         PagingSquelched = 0x00000200,
         Young = 0x00000400,
         AcceptGuildInvites = 0x00000800,
@@ -894,11 +894,6 @@ namespace Server.Mobiles
 
         public override int GetMaxResistance(ResistanceType type)
         {
-            if (IsStaff())
-            {
-                return 100;
-            }
-
             int max = base.GetMaxResistance(type);
             int refineBonus = BaseArmor.GetRefinedResist(this, type);
 
@@ -1000,7 +995,7 @@ namespace Server.Mobiles
             UpdateResistances();
         }
 
-        public override int MaxWeight => (Race == Race.Human ? 100 : 40) + (int)(3.5 * Str);
+        public override int MaxWeight => 40 + (int)(3.5 * Str);
 
         private int m_LastGlobalLight = -1, m_LastPersonalLight = -1;
 
@@ -1153,11 +1148,6 @@ namespace Server.Mobiles
                 ReportMurdererGump.CheckMurderer(pm);
 
                 QuestHelper.QuestionQuestCheck(pm);
-            }
-
-            if (Siege.SiegeShard && from.Map == Map.Trammel && from.AccessLevel == AccessLevel.Player)
-            {
-                from.Map = Map.Felucca;
             }
 
             if (from.NetState != null && from.NetState.IsEnhancedClient && from.Mount is EtherealMount fromMount)
@@ -1536,7 +1526,9 @@ namespace Server.Mobiles
         public override void OnSubItemRemoved(Item item)
         {
             if (Engines.UOStore.UltimaStore.HasPendingItem(this))
+            {
                 Timer.DelayCall(TimeSpan.FromSeconds(1.5), Engines.UOStore.UltimaStore.CheckPendingItem, this);
+            }
         }
 
         public override void AggressiveAction(Mobile aggressor, bool criminal)
@@ -2178,11 +2170,7 @@ namespace Server.Mobiles
                     list.Add(new CallbackEntry(1114299, OpenItemInsuranceMenu));
                     list.Add(new CallbackEntry(6201, ToggleItemInsurance));
                 }
-                else if (Siege.SiegeShard)
-                {
-                    list.Add(new CallbackEntry(3006168, SiegeBlessItem));
-                }
-
+                
                 if (Alive)
                 {
                     QuestHelper.GetContextMenuEntries(list);
@@ -2423,43 +2411,6 @@ namespace Server.Mobiles
             SendLocalizedMessage(1060881, "", 0x23); // You have selected to automatically reinsure all insured items upon death
             AutoRenewInsurance = true;
         }
-
-        #region Siege Bless Item
-        private Item _BlessedItem;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Item BlessedItem { get => _BlessedItem; set => _BlessedItem = value; }
-
-        private void SiegeBlessItem()
-        {
-            if (_BlessedItem != null && _BlessedItem.Deleted)
-                _BlessedItem = null;
-
-            BeginTarget(2, false, TargetFlags.None, (from, targeted) =>
-            {
-                Siege.TryBlessItem(this, targeted);
-            });
-        }
-
-        public override bool Drop(Point3D loc)
-        {
-            if (!Siege.SiegeShard || _BlessedItem == null)
-                return base.Drop(loc);
-
-            Item item = Holding;
-            bool drop = base.Drop(loc);
-
-            if (item != null && drop && item.Parent == null && _BlessedItem != null && _BlessedItem == item)
-            {
-                _BlessedItem = null;
-                item.LootType = LootType.Regular;
-
-                SendLocalizedMessage(1075292, item.Name != null ? item.Name : "#" + item.LabelNumber); // ~1_NAME~ has been unblessed.
-            }
-
-            return drop;
-        }
-        #endregion
 
         private class CancelRenewInventoryInsuranceGump : Gump
         {
@@ -2970,17 +2921,11 @@ namespace Server.Mobiles
             return base.OnDragLift(item);
         }
 
-        public override bool CheckTrade(
-            Mobile to, Item item, SecureTradeContainer cont, bool message, bool checkItems, int plusItems, int plusWeight)
+        public override bool CheckTrade(Mobile to, Item item, SecureTradeContainer cont, bool message, bool checkItems, int plusItems, int plusWeight)
         {
             int msgNum = 0;
 
-            if (_BlessedItem != null && _BlessedItem == item)
-            {
-                msgNum = 1075282; // You cannot trade a blessed item.
-            }
-
-            if (msgNum == 0 && cont == null)
+            if (cont == null)
             {
                 if (to.Holding != null)
                 {
@@ -3410,9 +3355,6 @@ namespace Server.Mobiles
 
         private bool CheckInsuranceOnDeath(Item item)
         {
-            if (Young)
-                return false;
-
             if (InsuranceEnabled && item.Insured)
             {
                 int insuredAmount = GetInsuranceCost(item);
@@ -3566,14 +3508,6 @@ namespace Server.Mobiles
             if (m_InsuranceAward is PlayerMobile pm && pm.m_InsuranceBonus > 0)
             {
                 pm.SendLocalizedMessage(1060397, pm.m_InsuranceBonus.ToString()); // ~1_AMOUNT~ gold has been deposited into your bank box.
-            }
-
-            if (Young)
-            {
-                if (YoungDeathTeleport())
-                {
-                    Timer.DelayCall(TimeSpan.FromSeconds(2.5), SendYoungDeathNotice);
-                }
             }
 
             Guilds.Guild.HandleDeath(this, killer);
@@ -3943,15 +3877,14 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
             {
-                case 42: // upgraded quest serialization
-                case 41: // removed PeacedUntil - no need to serialize this
-                case 40: // Version 40, moved gauntlet points, virtua artys and TOT convert to PointsSystem
-                case 39: // Version 39, removed ML quest save/load
+                case 42: 
+                case 41: 
+                case 40: 
+                case 39: 
                 case 38:
                     NextGemOfSalvationUse = reader.ReadDateTime();
                     goto case 37;
@@ -3961,10 +3894,7 @@ namespace Server.Mobiles
                 case 36:
                     RewardStableSlots = reader.ReadInt();
                     goto case 35;
-                case 35: // Siege Blessed Item
-                    _BlessedItem = reader.ReadItem();
-                    goto case 34;
-                // Version 34 - new BOD System
+                case 35:
                 case 34:
                 case 33:
                     {
@@ -3974,7 +3904,7 @@ namespace Server.Mobiles
                 case 32:
                 case 31:
                     {
-                        DisplayGuildTitle = version > 31 && reader.ReadBool();
+                        DisplayGuildTitle = reader.ReadBool();
                         m_FameKarmaTitle = reader.ReadString();
                         m_PaperdollSkillTitle = reader.ReadString();
                         m_OverheadTitle = reader.ReadString();
@@ -4099,16 +4029,8 @@ namespace Server.Mobiles
 
                             for (int i = 0; i < count; ++i)
                             {
-                                Type questType;
-
-                                if (version >= 42)
-                                    questType = reader.ReadObjectType();
-                                else
-                                    questType = QuestSerializer.ReadQuestType(reader);
-
-                                DateTime restartTime;
-
-                                restartTime = reader.ReadDateTime();
+                                Type questType = reader.ReadObjectType();
+                                DateTime restartTime = reader.ReadDateTime();
 
                                 m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
                             }
@@ -4244,19 +4166,6 @@ namespace Server.Mobiles
             {
                 AddBuff(new BuffInfo(BuffIcon.HidingAndOrStealth, 1075655));
             }
-
-            if (_BlessedItem != null)
-            {
-                Timer.DelayCall(
-                b =>
-                {
-                    if (_BlessedItem == b && b.RootParent != this)
-                    {
-                        _BlessedItem = null;
-                    }
-                },
-                _BlessedItem);
-            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -4273,13 +4182,6 @@ namespace Server.Mobiles
 
             writer.Write(RewardStableSlots);
 
-            if (_BlessedItem != null && _BlessedItem.RootParent != this)
-            {
-                _BlessedItem = null;
-            }
-
-            writer.Write(_BlessedItem);
-
             writer.Write((int)ExploringTheDeepQuest);
 
             // Version 31/32 Titles
@@ -4290,8 +4192,6 @@ namespace Server.Mobiles
             writer.Write(m_SubtitleSkillTitle);
             writer.Write(m_CurrentChampTitle);
             writer.Write(m_CurrentVeteranTitle);
-
-            // Version 30 open to take out old Queens Loyalty Info
 
             #region Plant System
             writer.Write(m_SSNextSeed);
@@ -5212,104 +5112,6 @@ namespace Server.Mobiles
             }
 
             return false;
-        }
-
-        private static readonly Point3D[] m_TrammelDeathDestinations =
-        {
-            new Point3D(1481, 1612, 20), new Point3D(2708, 2153, 0), new Point3D(2249, 1230, 0), new Point3D(5197, 3994, 37),
-            new Point3D(1412, 3793, 0), new Point3D(3688, 2232, 20), new Point3D(2578, 604, 0), new Point3D(4397, 1089, 0),
-            new Point3D(5741, 3218, -2), new Point3D(2996, 3441, 15), new Point3D(624, 2225, 0), new Point3D(1916, 2814, 0),
-            new Point3D(2929, 854, 0), new Point3D(545, 967, 0), new Point3D(3469, 2559, 36)
-        };
-
-        private static readonly Point3D[] m_IlshenarDeathDestinations =
-        {
-            new Point3D(1216, 468, -13), new Point3D(723, 1367, -60), new Point3D(745, 725, -28), new Point3D(281, 1017, 0),
-            new Point3D(986, 1011, -32), new Point3D(1175, 1287, -30), new Point3D(1533, 1341, -3), new Point3D(529, 217, -44),
-            new Point3D(1722, 219, 96)
-        };
-
-        private static readonly Point3D[] m_MalasDeathDestinations =
-        {
-            new Point3D(2079, 1376, -70), new Point3D(944, 519, -71)
-        };
-
-        private static readonly Point3D[] m_TokunoDeathDestinations =
-        {
-            new Point3D(1166, 801, 27), new Point3D(782, 1228, 25), new Point3D(268, 624, 15)
-        };
-
-        public bool YoungDeathTeleport()
-        {
-            if (Region.IsPartOf<Jail>() || Region.IsPartOf("Samurai start location") ||
-                Region.IsPartOf("Ninja start location") || Region.IsPartOf("Ninja cave"))
-            {
-                return false;
-            }
-
-            Point3D loc;
-            Map map;
-
-            DungeonRegion dungeon = (DungeonRegion)Region.GetRegion(typeof(DungeonRegion));
-            if (dungeon != null && dungeon.EntranceLocation != Point3D.Zero)
-            {
-                loc = dungeon.EntranceLocation;
-                map = dungeon.EntranceMap;
-            }
-            else
-            {
-                loc = Location;
-                map = Map;
-            }
-
-            Point3D[] list;
-
-            if (map == Map.Trammel)
-            {
-                list = m_TrammelDeathDestinations;
-            }
-            else if (map == Map.Ilshenar)
-            {
-                list = m_IlshenarDeathDestinations;
-            }
-            else if (map == Map.Malas)
-            {
-                list = m_MalasDeathDestinations;
-            }
-            else if (map == Map.Tokuno)
-            {
-                list = m_TokunoDeathDestinations;
-            }
-            else
-            {
-                return false;
-            }
-
-            Point3D dest = Point3D.Zero;
-            int sqDistance = int.MaxValue;
-
-            for (int i = 0; i < list.Length; i++)
-            {
-                Point3D curDest = list[i];
-
-                int width = loc.X - curDest.X;
-                int height = loc.Y - curDest.Y;
-                int curSqDistance = width * width + height * height;
-
-                if (curSqDistance < sqDistance)
-                {
-                    dest = curDest;
-                    sqDistance = curSqDistance;
-                }
-            }
-
-            MoveToWorld(dest, map);
-            return true;
-        }
-
-        private void SendYoungDeathNotice()
-        {
-            SendGump(new YoungDeathNotice());
         }
         #endregion
 
