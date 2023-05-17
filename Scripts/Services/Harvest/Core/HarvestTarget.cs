@@ -1,7 +1,5 @@
 using Server.Engines.Quests;
-using Server.Engines.Quests.Hag;
 using Server.Items;
-using Server.Mobiles;
 using Server.Targeting;
 
 namespace Server.Engines.Harvest
@@ -24,34 +22,12 @@ namespace Server.Engines.Harvest
         {
             if (m_System is Mining)
             {
-                if (targeted is StaticTarget target)
-                {
-                    int itemID = target.ItemID;
-
-                    // grave
-                    if (itemID == 0xED3 || itemID == 0xEDF || itemID == 0xEE0 || itemID == 0xEE1 || itemID == 0xEE2 || itemID == 0xEE8)
-                    {
-                        if (from is PlayerMobile player)
-                        {
-                            QuestSystem qs = player.Quest;
-
-                            if (qs is WitchApprenticeQuest)
-                            {
-                                if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.Bones)
-                                {
-                                    player.SendLocalizedMessage(1055037); // You finish your grim work, finding some of the specific bones listed in the Hag's recipe.
-                                    obj.Complete();
-
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (targeted is LandTarget landTarget && landTarget.TileID >= 113 && landTarget.TileID <= 120)
+                if (targeted is LandTarget landTarget && landTarget.TileID >= 113 && landTarget.TileID <= 120)
                 {
                     if (TheGreatVolcanoQuest.OnHarvest(from, m_Tool))
+                    {
                         return;
+                    }
                 }
             }
 

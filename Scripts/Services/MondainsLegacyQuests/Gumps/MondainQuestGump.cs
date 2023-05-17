@@ -594,15 +594,6 @@ namespace Server.Engines.Quests
                             }
                         }
                     }
-                    else if (objective is ApprenticeObjective apprentice)
-                    {
-                        if (apprentice != null)
-                        {
-                            AddHtmlLocalized(98, offset, 200, 16, 1077485, "#" + (1044060 + (int)apprentice.Skill) + "\t" + apprentice.MaxProgress, 0x15F90, false, false); // Increase ~1_SKILL~ to ~2_VALUE~
-
-                            offset += 16;
-                        }
-                    }
                     else if (objective is SimpleObjective obj && obj.Descriptions != null)
                     {
                         for (int j = 0; j < obj.Descriptions.Count; j++)

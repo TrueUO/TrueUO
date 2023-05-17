@@ -1,7 +1,5 @@
 using Server.Engines.Craft;
 using Server.Engines.Plants;
-using Server.Engines.Quests;
-using Server.Engines.Quests.Hag;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
@@ -915,43 +913,7 @@ namespace Server.Items
                     from.SendLocalizedMessage(1080197); // You fill the container with milk.
                 }
             }
-            else if (targ is LandTarget target)
-            {
-                int tileID = target.TileID;
-
-                if (from is PlayerMobile player)
-                {
-                    QuestSystem qs = player.Quest;
-
-                    if (qs is WitchApprenticeQuest && qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.SwampWater)
-                    {
-                        bool contains = false;
-
-                        for (int i = 0; !contains && i < m_SwampTiles.Length; i += 2)
-                            contains = tileID >= m_SwampTiles[i] && tileID <= m_SwampTiles[i + 1];
-
-                        if (contains)
-                        {
-                            Delete();
-
-                            player.SendLocalizedMessage(1055035); // You dip the container into the disgusting swamp water, collecting enough for the Hag's vile stew.
-                            obj.Complete();
-                        }
-                    }
-                }
-            }
         }
-
-        private static readonly int[] m_SwampTiles =
-        {
-            0x9C4, 0x9EB,
-            0x3D65, 0x3D65,
-            0x3DC0, 0x3DD9,
-            0x3DDB, 0x3DDC,
-            0x3DDE, 0x3EF0,
-            0x3FF6, 0x3FF6,
-            0x3FFC, 0x3FFE
-        };
 
         #region Effects of achohol
         private static readonly Hashtable m_Table = new Hashtable();

@@ -1,5 +1,4 @@
 using Server.Mobiles;
-using Server.Regions;
 using System;
 using System.Collections.Generic;
 
@@ -534,91 +533,6 @@ namespace Server.Engines.Quests
         {
             base.Serialize(writer);
             writer.WriteEncodedInt(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadEncodedInt();
-        }
-    }
-
-    public class ApprenticeObjective : BaseObjective
-    {
-        private SkillName m_Skill;
-        private string m_Region;
-        private object m_Enter;
-        private object m_Leave;
-
-        public ApprenticeObjective(SkillName skill, int cap)
-            : this(skill, cap, null, null, null)
-        {
-        }
-
-        public ApprenticeObjective(SkillName skill, int cap, string region, object enterRegion, object leaveRegion)
-            : base(cap)
-        {
-            m_Skill = skill;
-
-            if (region != null)
-            {
-                m_Region = QuestHelper.ValidateRegion(region) ? region : null;
-                m_Enter = enterRegion;
-                m_Leave = leaveRegion;
-
-                if (m_Region == null)
-                    Console.WriteLine("Invalid region name ('{0}') in '{1}' objective!", region, GetType());
-            }
-        }
-
-        public SkillName Skill { get => m_Skill; set => m_Skill = value; }
-
-        public string Region { get => m_Region; set => m_Region = value; }
-        public object Enter { get => m_Enter; set => m_Enter = value; }
-        public object Leave { get => m_Leave; set => m_Leave = value; }
-
-        public override bool Update(object obj)
-        {
-            if (Completed)
-                return false;
-
-            if (obj is Skill skill)
-            {
-                if (skill.SkillName != m_Skill)
-                    return false;
-
-                if (Quest.Owner.Skills[m_Skill].Base >= MaxProgress)
-                {
-                    Complete();
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public override void OnAccept()
-        {
-            Region region = Quest.Owner.Region;
-
-            while (region != null)
-            {
-                if (region is ApprenticeRegion)
-                    region.OnEnter(Quest.Owner);
-
-                region = region.Parent;
-            }
-        }
-
-        public override void OnCompleted()
-        {
-            QuestHelper.RemoveAcceleratedSkillgain(Quest.Owner);
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.WriteEncodedInt(1); // version
         }
 
         public override void Deserialize(GenericReader reader)

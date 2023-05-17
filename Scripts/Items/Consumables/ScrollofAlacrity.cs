@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Mobiles;
 using Server.Network;
 using System;
@@ -47,25 +46,13 @@ namespace Server.Items
         public override bool CanUse(Mobile from)
         {
             if (!base.CanUse(from))
+            {
                 return false;
+            }
 
             if (!(from is PlayerMobile pm))
-                return false;
-
-            for (int i = pm.Quests.Count - 1; i >= 0; i--)
             {
-                BaseQuest quest = pm.Quests[i];
-
-                for (int j = quest.Objectives.Count - 1; j >= 0; j--)
-                {
-                    BaseObjective objective = quest.Objectives[j];
-
-                    if (objective is ApprenticeObjective)
-                    {
-                        from.SendLocalizedMessage(1079254); // You may not use your Scroll of Alacrity while your character is on a new player skill quest.
-                        return false;
-                    }
-                }
+                return false;
             }
 
             if (pm.AcceleratedStart > DateTime.UtcNow)

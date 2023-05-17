@@ -467,8 +467,6 @@ namespace Server.Engines.Quests
                 QuestHelper.Delay(Owner, type, RestartDelay);
             }
 
-            QuestHelper.RemoveAcceleratedSkillgain(Owner);
-
             if (m_Owner.Quests.Contains(this))
             {
                 m_Owner.Quests.Remove(this);

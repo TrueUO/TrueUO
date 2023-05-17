@@ -16,21 +16,6 @@ namespace Server.Items
         {
         }
 
-        public override bool OnMoveOver(Mobile m)
-        {
-            if (m is PlayerMobile player)
-            {
-                if (QuestHelper.GetQuest(player, typeof(DreadhornQuest)) != null)
-                {
-                    return base.OnMoveOver(player);
-                }
-
-                player.SendLocalizedMessage(1074274); // You dance in the fairy ring, but nothing happens.
-            }
-
-            return true;
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

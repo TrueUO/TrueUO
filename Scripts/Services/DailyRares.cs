@@ -4,7 +4,7 @@ namespace Server.Items
 {
     public class DailyRaresSpawner
     {
-        public static readonly bool Enabled = Config.Get("DailyRares.Enabled", true);
+        public static readonly bool Enabled = false;
 
         public static void Initialize()
         {

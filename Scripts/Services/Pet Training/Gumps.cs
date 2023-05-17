@@ -520,8 +520,6 @@ namespace Server.Mobiles
                     TrainingProfile trainProfile2 = PetTrainingHelper.GetTrainingProfile(Creature, true);
                     trainProfile2.BeginTraining();
                     Refresh();
-
-                    Engines.Quests.UsingAnimalLoreQuest.CheckComplete(User);
                     break;
             }
         }
@@ -1653,8 +1651,6 @@ namespace Server.Mobiles
                                     profile.OnTrain(User, cost);
 
                                     ResendGumps(profile.HasBegunTraining);
-
-                                    Engines.Quests.TeachingSomethingNewQuest.CheckComplete(User);
                                 }
                             },
                             () =>

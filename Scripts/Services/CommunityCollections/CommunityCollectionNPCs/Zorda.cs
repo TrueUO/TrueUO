@@ -96,16 +96,6 @@ namespace Server.Items
             Rewards.Add(new CollectionTitle(1073345, 1073863, 800000.0));
         }
 
-        public override bool CanDonate(PlayerMobile player)
-        {
-            bool can = player.LibraryFriend;
-
-            if (!can)
-                player.SendLocalizedMessage(1074273); // You must speak with Librarian Verity before you can donate to this collection. 
-
-            return can;
-        }
-
         public override void IncreaseTier()
         {
             base.IncreaseTier();

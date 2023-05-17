@@ -1,6 +1,5 @@
 using Server.ContextMenus;
 using Server.Mobiles;
-using Server.Regions;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
@@ -12,22 +11,6 @@ namespace Server.Engines.Quests
         public static void Initialize()
         {
             EventSink.OnKilledBy += OnKilledBy;
-        }
-
-        public static void RemoveAcceleratedSkillgain(PlayerMobile from)
-        {
-            Region region = from.Region;
-
-            while (region != null)
-            {
-                if (region is ApprenticeRegion apprenticeRegion && apprenticeRegion.Table[from] is BuffInfo)
-                {
-                    BuffInfo.RemoveBuff(from, (BuffInfo)apprenticeRegion.Table[from]);
-                    apprenticeRegion.Table[from] = null;
-                }
-
-                region = region.Parent;
-            }
         }
 
         public static BaseQuest RandomQuest(PlayerMobile from, Type[] quests, object quester)
@@ -799,59 +782,6 @@ namespace Server.Engines.Quests
                         }
 
                         break;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public static bool CheckSkill(PlayerMobile player, Skill skill)
-        {
-            for (int i = player.Quests.Count - 1; i >= 0; i--)
-            {
-                BaseQuest quest = player.Quests[i];
-
-                for (int j = quest.Objectives.Count - 1; j >= 0; j--)
-                {
-                    BaseObjective objective = quest.Objectives[j];
-
-                    if (objective is ApprenticeObjective apprentice && apprentice.Update(skill))
-                    {
-                        if (quest.Completed)
-                        {
-                            quest.OnCompleted();
-                        }
-                        else if (apprentice.Completed)
-                        {
-                            player.PlaySound(quest.UpdateSound);
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public static bool EnhancedSkill(PlayerMobile player, Skill skill)
-        {
-            if (player == null || player.Region == null || skill == null)
-                return false;
-
-            for (int i = player.Quests.Count - 1; i >= 0; i--)
-            {
-                BaseQuest quest = player.Quests[i];
-
-                for (int j = quest.Objectives.Count - 1; j >= 0; j--)
-                {
-                    BaseObjective objective = quest.Objectives[j];
-
-                    if (objective is ApprenticeObjective apprentice && !apprentice.Completed && apprentice.Region != null)
-                    {
-                        if (player.Region.IsPartOf(apprentice.Region) && skill.SkillName == apprentice.Skill)
-                        {
-                            return true;
-                        }
                     }
                 }
             }

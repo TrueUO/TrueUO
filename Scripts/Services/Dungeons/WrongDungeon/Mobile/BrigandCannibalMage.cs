@@ -40,11 +40,6 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.LifeLeech);
         }
 
-        public override void GenerateLoot()
-        {
-            AddLoot(LootPack.LootItem<SeveredHumanEars>(75.0));
-        }
-
         public BrigandCannibalMage(Serial serial)
             : base(serial)
         {

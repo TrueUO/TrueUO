@@ -310,7 +310,7 @@ namespace Server.Items
                     }
                 }
 
-                if (skill == SkillName.Spellweaving && !User.Spellweaving)
+                if (skill == SkillName.Spellweaving)
                     return false;
 
                 if (skill == SkillName.Throwing)

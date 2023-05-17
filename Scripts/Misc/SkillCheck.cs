@@ -1,4 +1,3 @@
-using Server.Engines.Quests;
 using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
@@ -288,11 +287,6 @@ namespace Server.Misc
                     toGain = Utility.Random(4) + 1;
                 }
 
-                if (from is PlayerMobile playerMobile && QuestHelper.EnhancedSkill(playerMobile, skill))
-                {
-                    toGain *= Utility.RandomMinMax(2, 4);
-                }
-
                 #region Scroll of Alacrity
                 if (from is PlayerMobile pm && skill.SkillName == pm.AcceleratedSkill && pm.AcceleratedStart > DateTime.UtcNow)
                 {
@@ -331,11 +325,6 @@ namespace Server.Misc
                         UpdateGGS(from, skill);
                     }
                 }
-            }
-
-            if (from is PlayerMobile mobileFrom)
-            {
-                QuestHelper.CheckSkill(mobileFrom, skill);
             }
 
             if (skill.Lock == SkillLock.Up && (!Siege.SiegeShard || !(from is PlayerMobile) || Siege.CanGainStat((PlayerMobile)from)))

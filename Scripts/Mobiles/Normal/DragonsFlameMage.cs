@@ -71,14 +71,6 @@ namespace Server.Mobiles
                 from.Damage(damage / 2, from);
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (Utility.RandomDouble() < 0.3)
-                c.DropItem(new DragonFlameSectBadge());
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

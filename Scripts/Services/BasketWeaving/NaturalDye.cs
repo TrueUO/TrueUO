@@ -127,7 +127,7 @@ namespace Server.Items
                                  item is Spellbook || item is DecorativePlant || item is ShoulderParrot || item.IsArtifact ||
                                  item is ThreeTieredCake || BasePigmentsOfTokuno.IsValidItem(item);
 
-                    if (item is HoodedShroudOfShadows || item is MonkRobe)
+                    if (item is HoodedShroudOfShadows)
                     {
                         from.SendLocalizedMessage(1042083); // You cannot dye that.
                         return;

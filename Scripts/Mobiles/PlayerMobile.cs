@@ -63,8 +63,8 @@ namespace Server.Mobiles
         DisplayChampionTitle = 0x00001000,
         HasStatReward = 0x00002000,
         Bedlam = 0x00010000,
-        LibraryFriend = 0x00020000,
-        Spellweaving = 0x00040000,
+        UNUSED2 = 0x00020000,
+        UNUSED3 = 0x00040000,
         GemMining = 0x00080000,
         ToggleMiningGem = 0x00100000,
         BasketWeaving = 0x00200000,
@@ -530,16 +530,8 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime NextGemOfSalvationUse { get; set; }
 
-        #region Mondain's Legacy
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Bedlam { get => GetFlag(PlayerFlag.Bedlam); set => SetFlag(PlayerFlag.Bedlam, value); }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool LibraryFriend { get => GetFlag(PlayerFlag.LibraryFriend); set => SetFlag(PlayerFlag.LibraryFriend, value); }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Spellweaving { get => GetFlag(PlayerFlag.Spellweaving); set => SetFlag(PlayerFlag.Spellweaving, value); }
-        #endregion
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan DisguiseTimeLeft => DisguiseTimers.TimeRemaining(this);
