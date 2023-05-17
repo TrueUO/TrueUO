@@ -15,7 +15,7 @@ namespace Server.Misc
         private static readonly int _PlayerChanceToGainStats;
         private static readonly int _PetChanceToGainStats;
 
-        public static bool GGSActive => !Siege.SiegeShard;
+        public static bool GGSActive => false;
 
         static SkillCheck()
         {
@@ -227,6 +227,11 @@ namespace Server.Misc
             if (from is PlayerMobile)
             {
                 if (skill.Info.SkillID == (int)SkillName.Throwing)
+                {
+                    return false;
+                }
+
+                if (skill.Info.SkillID == (int)SkillName.Focus)
                 {
                     return false;
                 }

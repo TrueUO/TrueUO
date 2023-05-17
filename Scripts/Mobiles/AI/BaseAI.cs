@@ -331,12 +331,6 @@ namespace Server.Mobiles
                     m_Mobile.SayTo(from, "Your pet refuses to attack this creature!");
                     return;
                 }
-
-                if (bc is IBlackSolen && SolenHelper.CheckBlackFriendship(from) || bc is IRedSolen && SolenHelper.CheckRedFriendship(from))
-                {
-                    from.SendAsciiMessage("You can not force your pet to attack a creature you are protected from.");
-                    return;
-                }
             }
 
             if (order == LastOrderType.Follow && target is Mobile && m_Mobile.CheckControlChance(from))

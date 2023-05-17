@@ -3,7 +3,7 @@ using Server.Items;
 namespace Server.Mobiles
 {
     [CorpseName("a solen worker corpse")]
-    public class BlackSolenWorker : BaseCreature, IBlackSolen
+    public class BlackSolenWorker : BaseCreature
     {
         [Constructable]
         public BlackSolenWorker()
@@ -43,7 +43,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Gems, 1, 2);
             AddLoot(LootPack.LootGold(100, 180));
             AddLoot(LootPack.LootItem<ZoogiFungus>(100.0, 1, false, true));
-            AddLoot(LootPack.LootItemCallback(SolenHelper.PackPicnicBasket, 1.0, 1, false, false));
         }
 
         public BlackSolenWorker(Serial serial)
@@ -74,23 +73,6 @@ namespace Server.Mobiles
         public override int GetDeathSound()
         {
             return 0x8E;
-        }
-
-        public override bool IsEnemy(Mobile m)
-        {
-            if (SolenHelper.CheckBlackFriendship(m))
-            {
-                return false;
-            }
-
-            return base.IsEnemy(m);
-        }
-
-        public override void OnDamage(int amount, Mobile from, bool willKill)
-        {
-            SolenHelper.OnBlackDamage(from);
-
-            base.OnDamage(amount, from, willKill);
         }
 
         public override void Serialize(GenericWriter writer)

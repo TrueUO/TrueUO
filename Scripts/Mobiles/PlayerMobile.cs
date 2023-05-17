@@ -56,13 +56,13 @@ namespace Server.Mobiles
         KarmaLocked = 0x00000020,
         AutoRenewInsurance = 0x00000040,
         UseOwnFilter = 0x00000080,
-        UNUSED = 0x00000100,
-        PagingSquelched = 0x00000200,
-        Young = 0x00000400,
-        AcceptGuildInvites = 0x00000800,
-        DisplayChampionTitle = 0x00001000,
-        HasStatReward = 0x00002000,
-        Bedlam = 0x00010000,
+        PagingSquelched = 0x00000100,
+        Young = 0x00000200,
+        AcceptGuildInvites = 0x00000400,
+        DisplayChampionTitle = 0x00000800,
+        HasStatReward = 0x00001000,
+        Bedlam = 0x00002000,
+        UNUSED1 = 0x00010000,
         UNUSED2 = 0x00020000,
         UNUSED3 = 0x00040000,
         GemMining = 0x00080000,
@@ -84,8 +84,7 @@ namespace Server.Mobiles
         Unused = 0x00000001,
         ToggleStoneOnly = 0x00000002,
         CanBuyCarpets = 0x00000004,
-        VoidPool = 0x00000008,
-        DisabledPvpWarning = 0x00000010
+        DisabledPvpWarning = 0x00000008
     }
 
     public enum NpcGuild
@@ -103,13 +102,6 @@ namespace Server.Mobiles
         FishermensGuild,
         BardsGuild,
         BlacksmithsGuild
-    }
-
-    public enum SolenFriendship
-    {
-        None,
-        Red,
-        Black
     }
     #endregion
 
@@ -143,7 +135,6 @@ namespace Server.Mobiles
         private TimeSpan m_NpcGuildGameTime;
         private PlayerFlag m_Flags;
         private ExtendedPlayerFlag m_ExtendedFlags;
-        private int m_Profession;
 
         private int m_NonAutoreinsuredItems;
         // number of items that could not be automaitically reinsured because gold in bank was not enough
@@ -305,9 +296,6 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public int AllianceMessageHue { get => m_AllianceMessageHue; set => m_AllianceMessageHue = value; }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int Profession { get => m_Profession; set => m_Profession = value; }
-
         public int StepsTaken { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -405,13 +393,6 @@ namespace Server.Mobiles
         {
             get => GetFlag(ExtendedPlayerFlag.CanBuyCarpets);
             set => SetFlag(ExtendedPlayerFlag.CanBuyCarpets, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool VoidPool
-        {
-            get => GetFlag(ExtendedPlayerFlag.VoidPool);
-            set => SetFlag(ExtendedPlayerFlag.VoidPool, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -2183,17 +2164,12 @@ namespace Server.Mobiles
                 list.Add(new CallbackEntry(RefuseTrades ? 1154112 : 1154113, ToggleTrades)); // Allow Trades / Refuse Trades				
 
                 #region Void Pool
-                if (VoidPool || Region.IsPartOf<VoidPoolRegion>())
+                if (Region.IsPartOf<VoidPoolRegion>())
                 {
                     VoidPoolController controller = Map == Map.Felucca ? VoidPoolController.InstanceFel : VoidPoolController.InstanceTram;
 
                     if (controller != null)
                     {
-                        if (!VoidPool)
-                        {
-                            VoidPool = true;
-                        }
-
                         list.Add(new VoidPoolInfo(this, controller));
                     }
                 }
@@ -3998,11 +3974,6 @@ namespace Server.Mobiles
                         goto case 18;
                     }
                 case 18:
-                    {
-                        m_SolenFriendship = (SolenFriendship)reader.ReadEncodedInt();
-
-                        goto case 17;
-                    }
                 case 17: 
                 case 16:
                     {
@@ -4027,8 +3998,6 @@ namespace Server.Mobiles
                                 m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
                             }
                         }
-
-                        m_Profession = reader.ReadEncodedInt();
                         goto case 15;
                     }
                 case 15:
@@ -4112,12 +4081,6 @@ namespace Server.Mobiles
             if (m_RewardTitles == null)
             {
                 m_RewardTitles = new List<object>();
-            }
-
-            // Professions weren't verified on 1.0 RC0
-            if (!CharacterCreation.VerifyProfession(m_Profession))
-            {
-                m_Profession = 0;
             }
 
             if (m_PermaFlags == null)
@@ -4253,8 +4216,6 @@ namespace Server.Mobiles
             writer.WriteEncodedInt(m_GuildRank.Rank);
             writer.Write(m_LastOnline);
 
-            writer.WriteEncodedInt((int)m_SolenFriendship);
-
             QuestSerializer.Serialize(m_Quest, writer);
 
             if (m_DoneQuests == null)
@@ -4273,8 +4234,6 @@ namespace Server.Mobiles
                     writer.Write(restartInfo.RestartTime);
                 }
             }
-
-            writer.WriteEncodedInt(m_Profession);
 
             bool useMods = m_HairModID != -1 || m_BeardModID != -1;
 
@@ -4554,14 +4513,9 @@ namespace Server.Mobiles
         #region Quests
         private QuestSystem m_Quest;
         private List<QuestRestartInfo> m_DoneQuests;
-        private SolenFriendship m_SolenFriendship;
 
         public QuestSystem Quest { get => m_Quest; set => m_Quest = value; }
-
         public List<QuestRestartInfo> DoneQuests { get => m_DoneQuests; set => m_DoneQuests = value; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public SolenFriendship SolenFriendship { get => m_SolenFriendship; set => m_SolenFriendship = value; }
         #endregion
 
         #region Mondain's Legacy

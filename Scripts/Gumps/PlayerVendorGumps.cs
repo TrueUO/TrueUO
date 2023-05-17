@@ -1034,7 +1034,7 @@ namespace Server.Gumps
                         {
                             int index = info.ButtonID & 0xFF;
 
-                            if (index >= m_HairStyles.Length && m_Vendor.Race == Race.Human)
+                            if (index >= m_HairStyles.Length)
                             {
                                 return;
                             }
