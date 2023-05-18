@@ -54,14 +54,6 @@ namespace Server.Mobiles
         {
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (!Controlled && 0.2 > Utility.RandomDouble())
-                c.DropItem(new LeatherWolfSkin());
-        }
-
         public override void OnCombatantChange()
         {
             if (Combatant != null && m_FellowsTimer == null)

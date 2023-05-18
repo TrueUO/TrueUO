@@ -27,24 +27,13 @@ namespace Server.Engines.Quests
         }
 
         public static TierQuestInfo Percolem { get; }
-        public static TierQuestInfo Thepem { get; }
-        public static TierQuestInfo Zosilem { get; }
-
+        
         static TierQuestInfo()
         {
             Percolem = new TierQuestInfo(typeof(Percolem),
                 new TierInfo(0, TimeSpan.FromMinutes(30), typeof(BouraBouraQuest), typeof(RaptorliciousQuest), typeof(TheSlithWarsQuest)),
                 new TierInfo(5, TimeSpan.FromMinutes(120), typeof(AmbushingTheAmbushersQuest), typeof(BouraBouraAndMoreBouraQuest), typeof(RevengeOfTheSlithQuest), typeof(WeveGotAnAntProblemQuest)),
                 new TierInfo(10, TimeSpan.FromMinutes(1440), typeof(ItMakesMeSickQuest), typeof(ItsAMadMadWorldQuest), typeof(TheDreamersQuest)));
-
-            Thepem = new TierQuestInfo(typeof(Thepem),
-                new TierInfo(0, TimeSpan.FromMinutes(30), typeof(AllThatGlitters), typeof(TastyTreats)),
-                new TierInfo(5, TimeSpan.FromMinutes(120), typeof(MetalHead), typeof(PinkistheNewBlack)));
-
-            Zosilem = new TierQuestInfo(typeof(Zosilem),
-                new TierInfo(0, TimeSpan.FromMinutes(30), typeof(DabblingontheDarkSide), typeof(TheBrainyAlchemist)),
-                new TierInfo(5, TimeSpan.FromMinutes(120), typeof(ArmorUp), typeof(ToTurnBaseMetalIntoVerite)),
-                new TierInfo(10, TimeSpan.FromMinutes(1440), typeof(PureValorite), typeof(TheForbiddenFruit)));
         }
 
         public static TimeSpan GetCooldown(TierQuestInfo tierInfo, Type questType)

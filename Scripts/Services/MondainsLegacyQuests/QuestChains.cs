@@ -8,16 +8,15 @@ namespace Server.Engines.Quests
     {
         None = 0,
 
-        Marauders = 1,
-        UnfadingMemories = 2,
-        DoughtyWarriors = 3,
-        LaifemTheWeaver = 4,
-        CloakOfHumility = 5,
-        ValleyOfOne = 6,
-        MyrmidexAlliance = 7,
-        EodonianAlliance = 8,
-        FlintTheQuartermaster = 9,
-        RightingWrong = 10
+        UnfadingMemories = 1,
+        DoughtyWarriors = 2,
+        LaifemTheWeaver = 3,
+        CloakOfHumility = 4,
+        ValleyOfOne = 5,
+        MyrmidexAlliance = 6,
+        EodonianAlliance = 7,
+        FlintTheQuartermaster = 8,
+        RightingWrong = 9
     }
 
     public class BaseChain
@@ -26,11 +25,10 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[11][];
+            Chains = new Type[10][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
-            Chains[(int)QuestChain.Marauders] = new[] { typeof(MaraudersQuest), typeof(TheBrainsOfTheOperationQuest), typeof(TheBrawnQuest), typeof(TheBiggerTheyAreQuest) };
             Chains[(int)QuestChain.UnfadingMemories] = new[] { typeof(UnfadingMemoriesOneQuest), typeof(UnfadingMemoriesTwoQuest), typeof(UnfadingMemoriesThreeQuest) };
             Chains[(int)QuestChain.DoughtyWarriors] = new[] { typeof(DoughtyWarriorsQuest), typeof(DoughtyWarriors2Quest), typeof(DoughtyWarriors3Quest) };
             Chains[(int)QuestChain.LaifemTheWeaver] = new[] { typeof(ShearingKnowledgeQuest), typeof(WeavingFriendshipsQuest), typeof(NewSpinQuest)};

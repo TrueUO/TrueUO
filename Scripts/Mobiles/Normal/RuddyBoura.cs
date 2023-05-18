@@ -112,14 +112,6 @@ namespace Server.Mobiles
             return 1505;
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (!Controlled)
-                c.DropItem(new BouraSkin());
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
