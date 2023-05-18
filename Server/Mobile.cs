@@ -744,7 +744,6 @@ namespace Server
         private DateTime m_NextWarmodeChange;
         private WarmodeTimer m_WarmodeTimer;
         private int m_Thirst, m_BAC;
-        private VirtueInfo m_Virtues;
         private object m_Party;
         private List<SkillMod> m_SkillMods;
         private Body m_BodyMod;
@@ -1119,9 +1118,6 @@ namespace Server
         { }
 
         public List<Mobile> Stabled => m_Stabled;
-
-        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public VirtueInfo Virtues { get => m_Virtues; set { } }
 
         public object Party { get => m_Party; set => m_Party = value; }
         public List<SkillMod> SkillMods => m_SkillMods;
@@ -5489,15 +5485,7 @@ namespace Server
 					goto case 28;
 				}
 				case 28:
-				{
-					if (version <= 30)
-					{
-						LastStatGain = reader.ReadDeltaTime();
-					}
-
-					goto case 27;
-				}
-				case 27:
+                case 27:
 				{
 					m_TithingPoints = reader.ReadInt();
 
@@ -5517,7 +5505,7 @@ namespace Server
 
 					goto case 22;
 				}
-				case 22: // Just removed followers
+				case 22: 
 				case 21:
 				{
 					m_Stabled = reader.ReadStrongMobileList();
@@ -5530,14 +5518,9 @@ namespace Server
 
 					goto case 19;
 				}
-				case 19: // Just removed variables
+				case 19: 
 				case 18:
-				{
-					m_Virtues = new VirtueInfo(reader);
-
-					goto case 17;
-				}
-				case 17:
+                case 17:
 				{
 					m_Thirst = reader.ReadInt();
 					m_BAC = reader.ReadInt();
@@ -5548,22 +5531,11 @@ namespace Server
 				{
 					m_ShortTermMurders = reader.ReadInt();
 
-					if (version <= 24)
-					{
-						reader.ReadDateTime();
-						reader.ReadDateTime();
-					}
-
 					goto case 15;
 				}
 				case 15:
 				{
-					if (version < 22)
-					{
-						reader.ReadInt(); // followers
-					}
-
-					m_FollowersMax = reader.ReadInt();
+                    m_FollowersMax = reader.ReadInt();
 
 					goto case 14;
 				}
@@ -5622,25 +5594,8 @@ namespace Server
 					goto case 5;
 				}
 				case 5:
-				{
-                    if (version < 38)
-                    {
-                        reader.ReadBool();
-                        reader.ReadBool();
-                    }
-
-					goto case 4;
-				}
-				case 4:
-				{
-					if (version <= 25)
-					{
-						Poison.Deserialize(reader);
-					}
-
-					goto case 3;
-				}
-				case 3:
+                case 4:
+                case 3:
 				{
 					m_StatCap = reader.ReadInt();
 
@@ -5660,48 +5615,7 @@ namespace Server
 				}
 				case 0:
 				{
-					if (version < 37)
-					{
-						m_DisplayGuildAbbr = true;
-					}
-
-					if (version < 34)
-					{
-						m_StrCap = Config.Get("PlayerCaps.StrCap", 125);
-						m_DexCap = Config.Get("PlayerCaps.DexCap", 125);
-						m_IntCap = Config.Get("PlayerCaps.IntCap", 125);
-						m_StrMaxCap = Config.Get("PlayerCaps.StrMaxCap", 150);
-						m_DexMaxCap = Config.Get("PlayerCaps.DexMaxCap", 150);
-						m_IntMaxCap = Config.Get("PlayerCaps.IntMaxCap", 150);
-					}
-
-					if (version < 21)
-					{
-						m_Stabled = new List<Mobile>();
-					}
-
-					if (version < 18)
-					{
-						m_Virtues = new VirtueInfo();
-					}
-
-					if (version < 11)
-					{
-						m_DisplayGuildTitle = true;
-					}
-
-					if (version < 3)
-					{
-						m_StatCap = Config.Get("PlayerCaps.TotalStatCap", 225);
-					}
-
-					if (version < 15)
-					{
-						m_Followers = 0;
-						m_FollowersMax = 5;
-					}
-
-					m_Location = reader.ReadPoint3D();
+                    m_Location = reader.ReadPoint3D();
 					m_Body = new Body(reader.ReadInt());
 					m_Name = reader.ReadString();
 					m_GuildTitle = reader.ReadString();
@@ -5737,13 +5651,6 @@ namespace Server
 					m_Title = reader.ReadString();
 					m_Profile = reader.ReadString();
 					m_ProfileLocked = reader.ReadBool();
-
-					if (version <= 18)
-					{
-						reader.ReadInt();
-						reader.ReadInt();
-						reader.ReadInt();
-					}
 
 					m_AutoPageNotify = reader.ReadBool();
 
@@ -5982,16 +5889,11 @@ namespace Server
 
 			writer.Write(m_CantWalk);
 
-			VirtueInfo.Serialize(writer, m_Virtues);
-
-			writer.Write(m_Thirst);
+            writer.Write(m_Thirst);
 			writer.Write(m_BAC);
 
 			writer.Write(m_ShortTermMurders);
-			//writer.Write( m_ShortTermElapse );
-			//writer.Write( m_LongTermElapse );
-
-			//writer.Write( m_Followers );
+			
 			writer.Write(m_FollowersMax);
 
 			writer.Write(m_MagicDamageAbsorb);
@@ -10570,8 +10472,7 @@ namespace Server
 			m_AutoPageNotify = true;
 			m_Aggressors = new List<AggressorInfo>();
 			m_Aggressed = new List<AggressorInfo>();
-			m_Virtues = new VirtueInfo();
-			m_Stabled = new List<Mobile>();
+            m_Stabled = new List<Mobile>();
 			m_DamageEntries = new List<DamageEntry>();
 
 			m_NextSkillTime = Core.TickCount;

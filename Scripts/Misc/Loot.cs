@@ -109,9 +109,6 @@ namespace Server
         public static Type[] NecroRegTypes => m_NecroRegTypes;
         private static readonly Type[] m_NecroRegTypes = { typeof(BatWing), typeof(GraveDust), typeof(DaemonBlood), typeof(NoxCrystal), typeof(PigIron) };
 
-        public static Type[] MysticRegTypes => m_MysticRegTypes;
-        private static readonly Type[] m_MysticRegTypes = { typeof(Bone), typeof(DragonBlood), typeof(FertileDirt), typeof(DaemonBone) };
-
         private static readonly Type[] m_PotionTypes =
         {
             typeof(AgilityPotion), typeof(StrengthPotion), typeof(RefreshPotion), typeof(LesserCurePotion),
@@ -197,35 +194,6 @@ namespace Server
         public static Type[] ArcanistScrollTypes => m_ArcanistScrollTypes;
         #endregion
 
-        #region Journals/Books
-        private static readonly Type[] m_GrimmochJournalTypes =
-        {
-            typeof(GrimmochJournal1), typeof(GrimmochJournal2), typeof(GrimmochJournal3), typeof(GrimmochJournal6),
-            typeof(GrimmochJournal7), typeof(GrimmochJournal11), typeof(GrimmochJournal14), typeof(GrimmochJournal17),
-            typeof(GrimmochJournal23)
-        };
-
-        public static Type[] GrimmochJournalTypes => m_GrimmochJournalTypes;
-
-        private static readonly Type[] m_LysanderNotebookTypes =
-        {
-            typeof(LysanderNotebook1), typeof(LysanderNotebook2), typeof(LysanderNotebook3), typeof(LysanderNotebook7),
-            typeof(LysanderNotebook8), typeof(LysanderNotebook11)
-        };
-
-        public static Type[] LysanderNotebookTypes => m_LysanderNotebookTypes;
-
-        private static readonly Type[] m_TavarasJournalTypes =
-        {
-            typeof(TavarasJournal1), typeof(TavarasJournal2), typeof(TavarasJournal3), typeof(TavarasJournal6),
-            typeof(TavarasJournal7), typeof(TavarasJournal8), typeof(TavarasJournal9), typeof(TavarasJournal11),
-            typeof(TavarasJournal14), typeof(TavarasJournal16), typeof(TavarasJournal16b), typeof(TavarasJournal17),
-            typeof(TavarasJournal19)
-        };
-
-        public static Type[] TavarasJournalTypes => m_TavarasJournalTypes;
-		#endregion
-		
         private static readonly Type[] m_WandTypes =
         {
             typeof(FireballWand), typeof(LightningWand), typeof(MagicArrowWand), typeof(GreaterHealWand), typeof(HarmWand),
@@ -396,16 +364,6 @@ namespace Server
             }
 
             return Construct(types, Utility.RandomMinMax(minIndex, maxIndex)) as SpellScroll;
-        }
-
-        public static BaseBook RandomLysanderNotebook()
-        {
-            return Construct(m_LysanderNotebookTypes) as BaseBook;
-        }
-
-        public static BaseBook RandomTavarasJournal()
-        {
-            return Construct(m_TavarasJournalTypes) as BaseBook;
         }
 
         public static BaseTalisman RandomTalisman()

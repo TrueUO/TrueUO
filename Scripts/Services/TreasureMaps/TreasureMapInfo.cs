@@ -286,7 +286,6 @@ namespace Server.Items
                 case TreasureFacet.Felucca:
                 case TreasureFacet.Trammel: return Loot.RegTypes;
                 case TreasureFacet.Malas: return Loot.NecroRegTypes;
-                case TreasureFacet.TerMur: return Loot.MysticRegTypes;
             }
 
             return null;
