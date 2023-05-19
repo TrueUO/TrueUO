@@ -145,61 +145,11 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(RunedPrism), 1073465, 1, 1053098);
             AddRes(index, typeof(JeweledFiligree), 1072894, 1, 1053098);
 
-            index = AddCraft(typeof(ArcanistStatueSouthDeed), 1044294, 1072885, 0.0, 35.0, typeof(Board), 1044041, 250, 1044351);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(ArcanistStatueEastDeed), 1044294, 1072886, 0.0, 35.0, typeof(Board), 1044041, 250, 1044351);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(WarriorStatueSouthDeed), 1044294, 1072887, 0.0, 35.0, typeof(Board), 1044041, 250, 1044351);
-            AddRecipe(index, (int)CraftRecipes.WarriorStatueSouth);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(WarriorStatueEastDeed), 1044294, 1072888, 0.0, 35.0, typeof(Board), 1044041, 250, 1044351);
-            AddRecipe(index, (int)CraftRecipes.WarriorStatueEast);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(SquirrelStatueSouthDeed), 1044294, 1072884, 0.0, 35.0, typeof(Board), 1044041, 250, 1044351);
-            AddRecipe(index, (int)CraftRecipes.SquirrelStatueSouth);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(SquirrelStatueEastDeed), 1044294, 1073398, 0.0, 35.0, typeof(Board), 1044041, 250, 1044351);
-            AddRecipe(index, (int)CraftRecipes.SquirrelStatueEast);
-            ForceNonExceptional(index);
-
-            AddCraft(typeof(GiantReplicaAcorn), 1044294, 1072889, 80.0, 105.0, typeof(Board), 1044041, 35, 1044351);
-
-            index = AddCraft(typeof(MountedDreadHorn), 1044294, 1032632, 90.0, 115.0, typeof(Board), 1044041, 50, 1044351);
-            AddRes(index, typeof(PristineDreadHorn), 1032634, 1, 1053098);
-            ForceNonExceptional(index);
-
             index = AddCraft(typeof(AcidProofRope), 1044294, 1074886, 80, 130.0, typeof(GreaterStrengthPotion), 1073466, 2, 1044253);
             AddRes(index, typeof(ProtectionScroll), 1044395, 1, 1053098);
             AddRes(index, typeof(SwitchItem), 1032127, 1, 1053098);
             AddRecipe(index, (int)CraftRecipes.AcidProofRope);
             ForceNonExceptional(index);
-
-            index = AddCraft(typeof(GargishBanner), 1044294, 1095312, 94.7, 115.0, typeof(Board), 1044041, 50, 1044351);
-            AddSkill(index, SkillName.Tailoring, 75.0, 105.0);
-            AddRes(index, typeof(Cloth), 1044286, 50, 1044287);
-
-            AddCraft(typeof(Incubator), 1044294, 1112479, 90.0, 115.0, typeof(Board), 1044041, 100, 1044351);
-
-            AddCraft(typeof(ChickenCoop), 1044294, 1112570, 90.0, 115.0, typeof(Board), 1044041, 150, 1044351);
-
-            index = AddCraft(typeof(ExodusSummoningAlter), 1044294, 1153502, 95.0, 120.0, typeof(Board), 1044041, 100, 1044351);
-            AddSkill(index, SkillName.Magery, 75.0, 120.0);
-            AddRes(index, typeof(Granite), 1044607, 10, 1044253);
-            AddRes(index, typeof(SmallPieceofBlackrock), 1150016, 10, 1044253);
-            AddRes(index, typeof(NexusCore), 1153501, 1, 1044253);
-
-            index = AddCraft(typeof(CraftableHouseItem), 1044294, 1155849, 42.1, 77.7, typeof(Board), 1044041, 5, 1044351);
-            SetData(index, CraftableItemType.DarkWoodenSignHanger);
-            SetDisplayID(index, 2967);
-
-            index = AddCraft(typeof(CraftableHouseItem), 1044294, 1155850, 42.1, 77.7, typeof(Board), 1044041, 5, 1044351);
-            SetData(index, CraftableItemType.LightWoodenSignHanger);
-            SetDisplayID(index, 2969);
 
             // Furniture
             AddCraft(typeof(FootStool), 1044291, 1022910, 11.0, 36.0, typeof(Board), 1044041, 9, 1044351);
@@ -338,121 +288,11 @@ namespace Server.Engines.Craft
             AddCraft(typeof(QuarterStaff), 1044566, 1023721, 73.6, 98.6, typeof(Board), 1044041, 6, 1044351);
             AddCraft(typeof(GnarledStaff), 1044566, 1025112, 78.9, 103.9, typeof(Board), 1044041, 7, 1044351);
 
-            AddCraft(typeof(Bokuto), 1044566, 1030227, 70.0, 95.0, typeof(Board), 1044041, 6, 1044351);
-            AddCraft(typeof(Fukiya), 1044566, 1030229, 60.0, 85.0, typeof(Board), 1044041, 6, 1044351);
-            AddCraft(typeof(Tetsubo), 1044566, 1030225, 80.0, 105.0, typeof(Board), 1044041, 10, 1044351);
-
-            AddCraft(typeof(WildStaff), 1044566, 1031557, 63.8, 113.8, typeof(Board), 1044041, 16, 1044351);
-
-            index = AddCraft(typeof(PhantomStaff), 1044566, 1072919, 90.0, 130.0, typeof(Board), 1044041, 16, 1044351);
-            AddRes(index, typeof(DiseasedBark), 1032683, 1, 1053098);
-            AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
-            AddRes(index, typeof(Taint), 1032679, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.PhantomStaff);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(ArcanistsWildStaff), 1044566, 1073549, 63.8, 113.8, typeof(Board), 1044041, 16, 1044351);
-            AddRes(index, typeof(WhitePearl), 1026253, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.ArcanistsWildStaff);
-
-            index = AddCraft(typeof(AncientWildStaff), 1044566, 1073550, 63.8, 113.8, typeof(Board), 1044041, 16, 1044351);
-            AddRes(index, typeof(PerfectEmerald), 1026251, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.AncientWildStaff);
-
-            index = AddCraft(typeof(ThornedWildStaff), 1044566, 1073551, 63.8, 113.8, typeof(Board), 1044041, 16, 1044351);
-            AddRes(index, typeof(FireRuby), 1026254, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.ThornedWildStaff);
-
-            index = AddCraft(typeof(HardenedWildStaff), 1044566, 1073552, 63.8, 113.8, typeof(Board), 1044041, 16, 1044351);
-            AddRes(index, typeof(Turquoise), 1026250, 1, 1053098);
-            AddRecipe(index, (int)CraftRecipes.HardenedWildStaff);
-
             AddCraft(typeof(Club), 1044566, 1025043, 65.0, 90.0, typeof(Board), 1044041, 9, 1044351);
             AddCraft(typeof(BlackStaff), 1044566, 1023568, 81.5, 106.5, typeof(Board), 1044041, 9, 1044351);
 
             // Armor
             AddCraft(typeof(WoodenShield), 1062760, 1027034, 52.6, 77.6, typeof(Board), 1044041, 9, 1044351);
-
-            index = AddCraft(typeof(WoodlandChest), 1062760, 1031111, 90.0, 115.0, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(BarkFragment), 1032687, 6, 1053098);
-
-            index = AddCraft(typeof(WoodlandArms), 1062760, 1031116, 80.0, 105.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(BarkFragment), 1032687, 4, 1053098);
-
-            index = AddCraft(typeof(WoodlandGloves), 1062760, 1031114, 85.0, 110.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(BarkFragment), 1032687, 4, 1053098);
-
-            index = AddCraft(typeof(WoodlandLegs), 1062760, 1031115, 85.0, 110.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(BarkFragment), 1032687, 4, 1053098);
-
-            index = AddCraft(typeof(WoodlandGorget), 1062760, 1031113, 85.0, 110.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(BarkFragment), 1032687, 4, 1053098);
-
-            index = AddCraft(typeof(RavenHelm), 1062760, 1031121, 65.0, 115.0, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(BarkFragment), 1032687, 4, 1053098);
-            AddRes(index, typeof(Feather), 1027123, 25, 1053098);
-
-            index = AddCraft(typeof(VultureHelm), 1062760, 1031122, 63.9, 113.9, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(BarkFragment), 1032687, 4, 1053098);
-            AddRes(index, typeof(Feather), 1027123, 25, 1053098);
-
-            index = AddCraft(typeof(WingedHelm), 1062760, 1031123, 58.4, 108.4, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(BarkFragment), 1032687, 4, 1053098);
-            AddRes(index, typeof(Feather), 1027123, 60, 1053098);
-
-            index = AddCraft(typeof(IronwoodCrown), 1062760, 1072924, 85.0, 120.0, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(DiseasedBark), 1032683, 1, 1053098);
-            AddRes(index, typeof(Corruption), 1032676, 10, 1053098);
-            AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.IronwoodCrown);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(BrambleCoat), 1062760, 1072925, 85.0, 120.0, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(DiseasedBark), 1032683, 1, 1053098);
-            AddRes(index, typeof(Taint), 1032679, 10, 1053098);
-            AddRes(index, typeof(Scourge), 1032677, 10, 1053098);
-            AddRecipe(index, (int)CraftRecipes.BrambleCoat);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(DarkwoodCrown), 1062760, 1073481, 85.0, 120.0, typeof(Board), 1044041, 10, 1044351);
-            AddRes(index, typeof(LardOfParoxysmus), 1032681, 1, 1053098);
-            AddRes(index, typeof(Blight), 1032675, 10, 1053098);
-            AddRes(index, typeof(Taint), 1032679, 10, 1053098);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(DarkwoodChest), 1062760, 1073482, 85.0, 120.0, typeof(Board), 1044041, 20, 1044351);
-            AddRes(index, typeof(DreadHornMane), 1032682, 1, 1053098);
-            AddRes(index, typeof(Corruption), 1032676, 10, 1053098);
-            AddRes(index, typeof(Muculent), 1032680, 10, 1053098);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(DarkwoodGorget), 1062760, 1073483, 85.0, 120.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(DiseasedBark), 1032683, 1, 1053098);
-            AddRes(index, typeof(Blight), 1032675, 10, 1053098);
-            AddRes(index, typeof(Scourge), 1032677, 10, 1053098);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(DarkwoodLegs), 1062760, 1073484, 85.0, 120.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(GrizzledBones), 1032684, 1, 1053098);
-            AddRes(index, typeof(Corruption), 1032676, 10, 1053098);
-            AddRes(index, typeof(Putrefaction), 1072137, 10, 1053098);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(DarkwoodPauldrons), 1062760, 1073485, 85.0, 120.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(EyeOfTheTravesty), 1032685, 1, 1053098);
-            AddRes(index, typeof(Scourge), 1032677, 10, 1053098);
-            AddRes(index, typeof(Taint), 1032679, 10, 1053098);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(DarkwoodGloves), 1062760, 1073486, 85.0, 120.0, typeof(Board), 1044041, 15, 1044351);
-            AddRes(index, typeof(CapturedEssence), 1032686, 1, 1053098);
-            AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
-            AddRes(index, typeof(Muculent), 1032680, 10, 1053098);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(PirateShield), 1062760, 1159585, 70.0, 90.0, typeof(Board), 1044041, 12, 1044351);
-            AddRes(index, typeof(IronIngot), 1044036, 8, 1044037);
-            AddRecipe(index, (int)CraftRecipes.PirateShield);
 
             // Instruments
             index = AddCraft(typeof(LapHarp), 1044293, 1023762, 63.1, 88.1, typeof(Board), 1044041, 20, 1044351);

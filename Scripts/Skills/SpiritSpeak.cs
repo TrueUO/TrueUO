@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using Server.Engines.Khaldun;
 
 #endregion
 
@@ -120,14 +119,6 @@ namespace Server.SkillHandlers
                     {
                         toChannel = corpse;
                         break;
-                    }
-
-                    if (objs is SageHumbolt humbolt && humbolt.OnSpiritSpeak(Caster))
-                    {
-                        eable.Free();
-                        Remove(Caster);
-                        Stop();
-                        return;
                     }
                 }
 

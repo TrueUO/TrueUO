@@ -3,7 +3,7 @@ using Server.Network;
 using Server.Targeting;
 using System.Collections.Generic;
 
-namespace Server.Engines.Quests.Collector
+namespace Server.Items
 {
     public class Obsidian : Item
     {

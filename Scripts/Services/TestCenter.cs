@@ -612,7 +612,6 @@ namespace Server.Misc
             bag.DropItem(new Glenda());
             bag.DropItem(new TheScholarsHalo());
             bag.DropItem(new TheDeceiver());
-            bag.DropItem(new BraceletOfPrimalConsumption());
 
             PlaceItemIn(box, 17, 83, bag);
             PlaceItemIn(from.BankBox, 63, 106, box);

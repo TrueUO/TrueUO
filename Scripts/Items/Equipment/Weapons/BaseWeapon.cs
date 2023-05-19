@@ -900,11 +900,6 @@ namespace Server.Items
                     }
                 }
 
-                if (HasSocket<Caddellite>())
-                {
-                    Caddellite.UpdateBuff(from);
-                }
-
                 if (ExtendedWeaponAttributes.Focus > 0)
                 {
                     Focus.UpdateBuff(from);
@@ -952,11 +947,6 @@ namespace Server.Items
                 if (IsSetItem && m_SetEquipped)
                 {
                     SetHelper.RemoveSetBonus(m, SetID, this);
-                }
-
-                if (HasSocket<Caddellite>())
-                {
-                    Caddellite.UpdateBuff(m);
                 }
 
                 if (SearingWeapon)
@@ -4440,9 +4430,7 @@ namespace Server.Items
 
             if (m_Poison != null && m_PoisonCharges > 0 && CanShowPoisonCharges())
             {
-                #region Mondain's Legacy mod
                 list.Add(m_Poison.LabelNumber, m_PoisonCharges.ToString());
-                #endregion
             }
 
             if (m_Slayer != SlayerName.None)
@@ -4463,7 +4451,6 @@ namespace Server.Items
                 }
             }
 
-            #region Mondain's Legacy
             if (m_Slayer3 != TalismanSlayerName.None)
             {
                 if (m_Slayer3 == TalismanSlayerName.Wolf)
@@ -4482,12 +4469,6 @@ namespace Server.Items
                 {
                     list.Add(1072503 + (int)m_Slayer3);
                 }
-            }
-            #endregion
-
-            if (HasSocket<Caddellite>())
-            {
-                list.Add(1158662); // Caddellite Infused
             }
 
             double focusBonus = 1;

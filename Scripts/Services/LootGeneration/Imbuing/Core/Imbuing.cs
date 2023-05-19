@@ -227,7 +227,7 @@ namespace Server.SkillHandlers
             typeof(VirtuososTunic), typeof(BestialGloves), typeof(BestialGorget),
             typeof(BestialHelm), typeof(BestialLegs), typeof(BarbedWhip), typeof(BladedWhip),
             typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(JukaBow),
-            typeof(SlayerLongbow), typeof(JackOLanternHelm), typeof(BakeKitsuneHat)
+            typeof(JackOLanternHelm), typeof(BakeKitsuneHat)
         };
 
         private static readonly Type[] _NonCraftables =

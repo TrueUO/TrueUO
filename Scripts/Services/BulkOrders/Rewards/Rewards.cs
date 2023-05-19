@@ -1210,7 +1210,7 @@ namespace Server.Engines.BulkOrders
             new RewardType(250, typeof(TallCabinet), typeof(ShortCabinet)),
             new RewardType(250, typeof(RedArmoire), typeof(ElegantArmoire), typeof(MapleArmoire), typeof(CherryArmoire)),
             new RewardType(300, typeof(PlainWoodenChest), typeof(OrnateWoodenChest), typeof(GildedWoodenChest), typeof(WoodenFootLocker), typeof(FinishedWoodenChest)),
-            new RewardType(350, typeof(WildStaff), typeof(ArcanistsWildStaff), typeof(AncientWildStaff), typeof(ThornedWildStaff), typeof(HardenedWildStaff)),
+            new RewardType(350, typeof(WildStaff)),
             new RewardType(250, typeof(LapHarp), typeof(Lute), typeof(Drums), typeof(Harp)),
             new RewardType(200, typeof(GnarledStaff), typeof(QuarterStaff), typeof(ShepherdsCrook), typeof(Tetsubo), typeof(Bokuto)),
             new RewardType(300, typeof(WoodenBox), typeof(EmptyBookcase), typeof(WoodenBench), typeof(WoodenThrone))
@@ -1650,8 +1650,8 @@ namespace Server.Engines.BulkOrders
             new RewardType(200, typeof(Arrow), typeof(Bolt)),
             new RewardType(300, typeof(Bow), typeof(CompositeBow), typeof(Yumi)),
             new RewardType(300, typeof(Crossbow), typeof(HeavyCrossbow), typeof(RepeatingCrossbow)),
-            new RewardType(350, typeof(MagicalShortbow), typeof(RangersShortbow), typeof(LightweightShortbow), typeof(MysticalShortbow), typeof(AssassinsShortbow)),
-            new RewardType(250, typeof(ElvenCompositeLongbow), typeof(BarbedLongbow), typeof(SlayerLongbow), typeof(FrozenLongbow), typeof(LongbowOfMight))
+            new RewardType(350, typeof(MagicalShortbow)),
+            new RewardType(250, typeof(ElvenCompositeLongbow))
         };
 
         private static readonly int[][][] m_GoldTable =

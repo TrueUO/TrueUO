@@ -11,7 +11,7 @@ namespace Server.Engines.ArenaSystem
     public class PVPArenaSystem : PointsSystem
     {
         public static PVPArenaSystem Instance { get; set; }
-        public static bool Enabled => true;
+        public static bool Enabled => false; // Turn ON and OFF here.
         public static bool BlockSameIP => true;
 
         public override PointsType Loyalty => PointsType.PVPArena;

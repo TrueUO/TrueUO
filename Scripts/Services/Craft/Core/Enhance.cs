@@ -268,11 +268,6 @@ namespace Server.Engines.Craft
                         if (!craftItem.ConsumeRes(from, resType, craftSystem, ref resHue, ref maxAmount, ConsumeType.All, ref resMessage))
                             return EnhanceResult.NoResources;
 
-                        if (craftItem.CaddelliteCraft)
-                        {
-                            Caddellite.TryInfuse(from, item, craftSystem);
-                        }
-
                         if (item is IResource resour)
                             resour.Resource = resource;
 

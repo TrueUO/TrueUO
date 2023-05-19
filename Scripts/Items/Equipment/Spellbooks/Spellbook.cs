@@ -683,11 +683,6 @@ namespace Server.Items
                     }
                 }
 
-                if (HasSocket<Caddellite>())
-                {
-                    Caddellite.UpdateBuff(from);
-                }
-
                 from.CheckStatTimers();
             }
         }
@@ -697,11 +692,6 @@ namespace Server.Items
             if (parent is Mobile from)
             {
                 m_AosSkillBonuses.Remove();
-
-                if (HasSocket<Caddellite>())
-                {
-                    Caddellite.UpdateBuff(from);
-                }
 
                 string modName = Serial.ToString();
 
@@ -801,11 +791,6 @@ namespace Server.Items
                 {
                     list.Add(entry.Title);
                 }
-            }
-
-            if (HasSocket<Caddellite>())
-            {
-                list.Add(1158662); // Caddellite Infused
             }
 
             int prop;

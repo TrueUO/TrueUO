@@ -106,23 +106,18 @@ namespace Server.SkillHandlers
 
                     foreach (Item item in itemsInRange)
                     {
-                        if (item is LibraryBookcase && Engines.Khaldun.GoingGumshoeQuest3.CheckBookcase(src, item))
+                        IRevealableItem dItem = item as IRevealableItem;
+
+                        if (dItem == null || item.Visible && dItem.CheckWhenHidden)
                         {
-                            foundAnyone = true;
+                            continue;
                         }
-                        else
+
+                        if (dItem.CheckReveal(src))
                         {
-                            IRevealableItem dItem = item as IRevealableItem;
+                            dItem.OnRevealed(src);
 
-                            if (dItem == null || item.Visible && dItem.CheckWhenHidden)
-                                continue;
-
-                            if (dItem.CheckReveal(src))
-                            {
-                                dItem.OnRevealed(src);
-
-                                foundAnyone = true;
-                            }
+                            foundAnyone = true;
                         }
                     }
 

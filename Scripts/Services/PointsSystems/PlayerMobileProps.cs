@@ -72,13 +72,6 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Khaldun
-        {
-            get => (int)PointsSystem.Khaldun.GetPoints(Player);
-            set => PointsSystem.Khaldun.SetPoints(Player, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public double Doom
         {
             get => (int)PointsSystem.TreasuresOfDoom.GetPoints(Player);

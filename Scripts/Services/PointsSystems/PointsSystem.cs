@@ -39,7 +39,6 @@ namespace Server.Engines.Points
         ViceVsVirtue,
         TreasuresOfKotlCity,
         PVPArena,
-        Khaldun,
         Doom,
         SorcerersDungeon,
         RisingTide,
@@ -410,7 +409,6 @@ namespace Server.Engines.Points
         public static ViceVsVirtueSystem ViceVsVirtue { get; set; }
         public static KotlCityData TreasuresOfKotlCity { get; set; }
         public static PVPArenaSystem ArenaSystem { get; set; }
-        public static KhaldunData Khaldun { get; set; }
         public static DoomData TreasuresOfDoom { get; set; }
         public static SorcerersDungeonData SorcerersDungeon { get; set; }
         public static RisingTide RisingTide { get; set; }
@@ -440,7 +438,6 @@ namespace Server.Engines.Points
 
             CityLoyaltySystem.ConstructSystems();
             ArenaSystem = new PVPArenaSystem();
-            Khaldun = new KhaldunData();
             TreasuresOfDoom = new DoomData();
             SorcerersDungeon = new SorcerersDungeonData();
             RisingTide = new RisingTide();

@@ -29,11 +29,6 @@ namespace Server.Items
                 newItem = new RawFishSteak();
             }
 
-            if (HasSocket<Caddellite>())
-            {
-                newItem.AttachSocket(new Caddellite());
-            }
-
             base.ScissorHelper(from, newItem, GetCarvedAmount);
 
             return true;
