@@ -59,8 +59,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.LowScrolls, 4);
             AddLoot(LootPack.MedScrolls, 4);
             AddLoot(LootPack.HighScrolls, 4);
-            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
-            AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<DreadHornMane>());
             AddLoot(LootPack.LootItem<TaintedMushroom>(60.0));

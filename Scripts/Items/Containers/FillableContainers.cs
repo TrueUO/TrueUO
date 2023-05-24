@@ -288,11 +288,6 @@ namespace Server.Items
             CheckRespawn();
         }
 
-        public virtual bool CanSpawnRefinement()
-        {
-            return Map == Map.Felucca && (ContentType == FillableContentType.Clothier || ContentType == FillableContentType.Blacksmith || ContentType == FillableContentType.Carpenter);
-        }
-
         public virtual void GenerateContent(bool all)
         {
             if (m_Content == null || Deleted)
@@ -300,16 +295,8 @@ namespace Server.Items
 
             int toSpawn = GetSpawnCount(all);
 
-            bool canspawnRefinement = GetAmount(typeof(RefinementComponent)) == 0 && CanSpawnRefinement();
-
             for (int i = 0; i < toSpawn; ++i)
             {
-                if (canspawnRefinement && RefinementComponent.Roll(this, 1, 0.08))
-                {
-                    canspawnRefinement = false;
-                    continue;
-                }
-
                 Item item = m_Content.Construct();
 
                 if (item != null)

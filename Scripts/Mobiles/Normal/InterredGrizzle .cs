@@ -53,7 +53,6 @@ namespace Server.Mobiles
         public override void GenerateLoot() // -- Need to verify
         {
             AddLoot(LootPack.FilthyRich);
-            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)

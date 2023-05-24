@@ -201,49 +201,6 @@ namespace Server.Items
                 return 50;
             }
         }
-
-        #region Personal Bless Deed
-        private Mobile m_BlessedBy;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile BlessedBy
-        {
-            get => m_BlessedBy;
-            set
-            {
-                m_BlessedBy = value;
-                InvalidateProperties();
-            }
-        }
-
-        private class UnBlessEntry : ContextMenuEntry
-        {
-            private readonly Mobile m_From;
-            private readonly BaseWeapon m_Weapon; // BaseArmor, BaseWeapon or BaseClothing
-
-            public UnBlessEntry(Mobile from, BaseWeapon weapon)
-                : base(6208, -1)
-            {
-                m_From = from;
-                m_Weapon = weapon;
-            }
-
-            public override void OnClick()
-            {
-                m_Weapon.BlessedFor = null;
-                m_Weapon.BlessedBy = null;
-
-                Container pack = m_From.Backpack;
-
-                if (pack != null)
-                {
-                    pack.DropItem(new PersonalBlessDeed(m_From));
-                    m_From.SendLocalizedMessage(1062200); // A personal bless deed has been placed in your backpack.
-                }
-            }
-        }
-        #endregion
-
         #endregion
 
         #region Getters & Setters
@@ -605,11 +562,6 @@ namespace Server.Items
             {
                 list.Add(new SearingWeapon.ToggleExtinguishEntry(from, this));
             }
-
-            if (BlessedFor == from && BlessedBy == from && RootParent == from)
-            {
-                list.Add(new UnBlessEntry(from, this));
-            }
         }
 
         public override void OnAfterDuped(Item newItem)
@@ -817,13 +769,6 @@ namespace Server.Items
             if (!from.CanBeginAction(typeof(BaseWeapon)))
             {
                 from.SendLocalizedMessage(3000201); // You must wait to perform another action.
-                return false;
-            }
-
-            if (BlessedBy != null && BlessedBy != from)
-            {
-                from.SendLocalizedMessage(1075277); // That item is blessed by another player.
-
                 return false;
             }
 
@@ -1119,7 +1064,7 @@ namespace Server.Items
                 bonus -= info.DefenseChanceMalus;
             }
 
-            int max = 45 + BaseArmor.GetRefinedDefenseChance(defender) + WhiteTigerFormSpell.GetDefenseCap(defender);
+            int max = 45 + WhiteTigerFormSpell.GetDefenseCap(defender);
 
             // Defense Chance Increase = 45%
             if (bonus > max)
@@ -3150,12 +3095,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(20); // version
-
-            // Version 20 - Removes all era checks and old code
-            // Version 19 - Removes m_SearingWeapon as its handled as a socket now
-            // Version 18 - removed VvV Item (handled in VvV System) and BlockRepair (Handled as negative attribute)
 
             writer.Write(m_UsesRemaining);
             writer.Write(m_ShowUsesRemaining);
@@ -3163,9 +3103,6 @@ namespace Server.Items
             writer.Write(_Owner);
             writer.Write(_OwnerName);
 
-            // Version 15 converts old leech to new leech
-
-            //Version 14
             writer.Write(m_IsImbued);
 
             //version 13, converted SaveFlags to long, added negative attributes
@@ -3181,9 +3118,7 @@ namespace Server.Items
 
             // Version 11
             writer.Write(m_TimesImbued);
-            // Version 10
-            writer.Write(m_BlessedBy); // Bless Deed
-
+            
             #region Veteran Rewards
             writer.Write(m_EngravedText);
             #endregion
@@ -3268,9 +3203,6 @@ namespace Server.Items
             // Version 9
             SaveFlag flags = SaveFlag.None;
 
-            //SetSaveFlag(ref flags, SaveFlag.DamageLevel, m_DamageLevel != WeaponDamageLevel.Regular);
-            //SetSaveFlag(ref flags, SaveFlag.AccuracyLevel, m_AccuracyLevel != WeaponAccuracyLevel.Regular);
-            //SetSaveFlag(ref flags, SaveFlag.DurabilityLevel, m_DurabilityLevel != WeaponDurabilityLevel.Regular);
             SetSaveFlag(ref flags, SaveFlag.Quality, m_Quality != ItemQuality.Normal);
             SetSaveFlag(ref flags, SaveFlag.Hits, m_Hits != 0);
             SetSaveFlag(ref flags, SaveFlag.MaxHits, m_MaxHits != 0);
@@ -3536,8 +3468,8 @@ namespace Server.Items
 
             switch (version)
             {
-                case 20: // Removed Eras
-                case 19: // Removed SearingWeapon
+                case 20: 
+                case 19: 
                 case 18:
                 case 17:
                     {
@@ -3547,9 +3479,6 @@ namespace Server.Items
                     }
                 case 16:
                     {
-                        if (version == 17)
-                            reader.ReadBool();
-
                         _Owner = reader.ReadMobile();
                         _OwnerName = reader.ReadString();
                         goto case 15;
@@ -3567,42 +3496,18 @@ namespace Server.Items
                         m_ReforgedPrefix = (ReforgedPrefix)reader.ReadInt();
                         m_ReforgedSuffix = (ReforgedSuffix)reader.ReadInt();
                         m_ItemPower = (ItemPower)reader.ReadInt();
-
-                        if (version < 18 && reader.ReadBool())
-                        {
-                            Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
-                            {
-                                m_NegativeAttributes.NoRepair = 1;
-                            });
-                        }
                         #endregion
 
-                        #region Stygian Abyss
                         m_DImodded = reader.ReadBool();
-
-                        if (version == 18)
-                        {
-                            if (reader.ReadBool())
-                            {
-                                Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
-                                {
-                                    AttachSocket(new SearingWeapon(this));
-                                });
-                            }
-                        }
                         goto case 11;
                     }
                 case 11:
                     {
                         m_TimesImbued = reader.ReadInt();
-
-                        #endregion
-
                         goto case 10;
                     }
                 case 10:
                     {
-                        m_BlessedBy = reader.ReadMobile();
                         m_EngravedText = reader.ReadString();
                         m_Slayer3 = (TalismanSlayerName)reader.ReadInt();
 
@@ -3683,27 +3588,7 @@ namespace Server.Items
                 case 6:
                 case 5:
                     {
-                        SaveFlag flags;
-
-                        if (version < 13)
-                            flags = (SaveFlag)reader.ReadInt();
-                        else
-                            flags = (SaveFlag)reader.ReadLong();
-
-                        if (version < 20 && GetSaveFlag(flags, SaveFlag.Empty1))
-                        {
-                            reader.ReadInt();
-                        }
-
-                        if (version < 20 && GetSaveFlag(flags, SaveFlag.Empty2))
-                        {
-                            reader.ReadInt();
-                        }
-
-                        if (version < 20 && GetSaveFlag(flags, SaveFlag.Empty3))
-                        {
-                            reader.ReadInt();
-                        }
+                        SaveFlag flags = (SaveFlag)reader.ReadLong();
 
                         if (GetSaveFlag(flags, SaveFlag.Quality))
                         {
@@ -3814,14 +3699,7 @@ namespace Server.Items
 
                         if (GetSaveFlag(flags, SaveFlag.Speed))
                         {
-                            if (version < 9)
-                            {
-                                m_Speed = reader.ReadInt();
-                            }
-                            else
-                            {
-                                m_Speed = reader.ReadFloat();
-                            }
+                            m_Speed = reader.ReadFloat();
                         }
                         else
                         {
@@ -3891,11 +3769,6 @@ namespace Server.Items
                             m_AosWeaponAttributes = new AosWeaponAttributes(this);
                         }
 
-                        if (version < 7 && m_AosWeaponAttributes.MageWeapon != 0)
-                        {
-                            m_AosWeaponAttributes.MageWeapon = 30 - m_AosWeaponAttributes.MageWeapon;
-                        }
-
                         if (m_AosWeaponAttributes.MageWeapon != 0 && m_AosWeaponAttributes.MageWeapon != 30 && Parent is Mobile)
                         {
                             m_MageMod = new DefaultSkillMod(SkillName.Magery, true, -30 + m_AosWeaponAttributes.MageWeapon);
@@ -3935,7 +3808,6 @@ namespace Server.Items
                             m_EngravedText = reader.ReadString();
                         }
 
-                        #region Stygian Abyss
                         if (version > 9 && GetSaveFlag(flags, SaveFlag.xAbsorptionAttributes))
                         {
                             m_SAAbsorptionAttributes = new SAAbsorptionAttributes(this, reader);
@@ -3953,8 +3825,7 @@ namespace Server.Items
                         {
                             m_NegativeAttributes = new NegativeAttributes(this);
                         }
-                        #endregion
-
+                        
                         if (GetSaveFlag(flags, SaveFlag.Altered))
                         {
                             m_Altered = true;

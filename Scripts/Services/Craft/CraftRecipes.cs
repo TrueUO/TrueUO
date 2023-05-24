@@ -54,16 +54,12 @@ namespace Server.Engines.Craft
         SingingAxe = 329,
         ThunderingAxe = 330,
         HeavyOrnateAxe = 331,
-        RubyMace = 332, 
-        EmeraldMace = 333, 
-        SapphireMace = 334, 
         SilverEtchedMace = 335, 
         BoneMachete = 336,
         RuneCarvingKnife = 350,
         ColdForgedBlade = 351,
         OverseerSunderedBlade = 352,
         LuminousRuneBlade = 353,
-        ShardTrasher = 354,
         ShieldOrb = 357,  
 
         // DefTinkering

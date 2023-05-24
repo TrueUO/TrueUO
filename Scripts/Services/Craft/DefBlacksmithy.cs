@@ -553,29 +553,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(Cloth), 1044286, 10, 1044287);
 
             index = AddCraft(typeof(DiamondMace), 1011084, 1031568, 70.0, 120.0, typeof(IronIngot), 1044036, 20, 1044037);
-
-            index = AddCraft(typeof(ShardThrasher), 1011084, 1072918, 70.0, 120.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(EyeOfTheTravesty), 1073126, 1, 1042081);
-            AddRes(index, typeof(Muculent), 1072139, 10, 1042081);
-            AddRes(index, typeof(Corruption), 1072135, 10, 1042081);
-            AddRecipe(index, (int)CraftRecipes.ShardTrasher);
-            ForceNonExceptional(index);
-
-            index = AddCraft(typeof(RubyMace), 1011084, 1073529, 75.0, 125.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(FireRuby), 1032695, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.RubyMace);
-
-            index = AddCraft(typeof(EmeraldMace), 1011084, 1073530, 75.0, 125.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(PerfectEmerald), 1032692, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.EmeraldMace);
-
-            index = AddCraft(typeof(SapphireMace), 1011084, 1073531, 75.0, 125.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(DarkSapphire), 1032690, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.SapphireMace);
-
-            index = AddCraft(typeof(SilverEtchedMace), 1011084, 1073532, 75.0, 125.0, typeof(IronIngot), 1044036, 20, 1044037);
-            AddRes(index, typeof(BlueDiamond), 1032696, 1, 1044240);
-            AddRecipe(index, (int)CraftRecipes.SilverEtchedMace);
             #endregion
 
             #region High Seas Cannons

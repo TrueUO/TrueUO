@@ -56,7 +56,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Meager, 2);
-            AddLoot(LootPack.LootItem<EvilOrcHelm>(10.0));
             AddLoot(LootPack.LootItem<Yeast>(50.0, true));
             AddLoot(LootPack.LootItem<Log>(1, 10, true));
             AddLoot(LootPack.LootItem<Board>(10, 20, true));

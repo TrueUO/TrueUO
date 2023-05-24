@@ -83,8 +83,7 @@ namespace Server.Items
                 typeof(Chicken), typeof(Crane),
                 typeof(DesertOstard), typeof(Eagle),
                 typeof(ForestOstard), typeof(FrenziedOstard),
-                typeof(Phoenix), typeof(Pyre),
-                typeof(Swoop), typeof(Saliva),
+                typeof(Phoenix), typeof(Saliva),
                 typeof(GreaterPhoenix), typeof(Turkey),
                 typeof(GiantTurkey)
             };
@@ -108,7 +107,7 @@ namespace Server.Items
                 typeof(FireElementalRenowned), typeof(FlameElemental),
                 typeof(PredatorHellCat), typeof(Phoenix),
                 typeof(FireGargoyle), typeof(HellCat),
-                typeof(Pyre), typeof(FireSteed),
+                typeof(FireSteed),
                 typeof(LavaLizard), typeof(LavaSnake),
                 typeof(FireRabbit), typeof(LavaElemental)
             };

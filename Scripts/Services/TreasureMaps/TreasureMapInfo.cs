@@ -359,17 +359,6 @@ namespace Server.Items
             }
         }
 
-        public static int GetRefinementRolls(ChestQuality quality)
-        {
-            switch (quality)
-            {
-                default:
-                case ChestQuality.Rusty: return 2;
-                case ChestQuality.Standard: return 4;
-                case ChestQuality.Gold: return 6;
-            }
-        }
-
         public static int GetResourceAmount(TreasureLevel level)
         {
             switch (level)
@@ -591,7 +580,7 @@ namespace Server.Items
 
         private static readonly Type[] _SpecialCacheHordeAndTrove =
         {
-            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword)
+            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(SkullLongsword)
         };
 
         private static readonly Type[] _DecorativeMinorArtifacts =
@@ -691,13 +680,6 @@ namespace Server.Items
             {
                 chest.DropItem(new MysteriousFragment());
             }
-
-            #region Refinements
-            if (level == TreasureLevel.Stash)
-            {
-                RefinementComponent.Roll(chest, GetRefinementRolls(quality), 0.9);
-            }
-            #endregion
 
             #region TMaps
             bool dropMap = false;
@@ -961,7 +943,7 @@ namespace Server.Items
                             deco = Loot.Construct(type);
                         }
 
-                        if (deco is SkullGnarledStaff || deco is GargishSkullGnarledStaff || deco is SkullLongsword)
+                        if (deco is SkullGnarledStaff || deco is SkullLongsword)
                         {
                             if (package == TreasurePackage.Artisan)
                             {

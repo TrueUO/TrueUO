@@ -254,18 +254,22 @@ namespace Server.Mobiles
                     DamageStore ds = rights[i];
 
                     if (ds.m_HasRight)
+                    {
                         toGive.Add(ds.m_Mobile);
+                    }
                 }
 
                 if (SkullType != ChampionSkullType.None)
                 {
                     if (toGive.Count > 0)
+                    {
                         toGive[Utility.Random(toGive.Count)].AddToBackpack(new ChampionSkull(SkullType));
+                    }
                     else
+                    {
                         c.DropItem(new ChampionSkull(SkullType));
+                    }
                 }
-
-                RefinementComponent.Roll(c, 3, 0.10);
             }
 
             base.OnDeath(c);

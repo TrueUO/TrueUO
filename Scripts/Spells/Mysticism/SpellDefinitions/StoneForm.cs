@@ -150,14 +150,13 @@ namespace Server.Spells.Mysticism
 
         private static int GetMaxResistance(Mobile m)
         {
-            if (Items.BaseArmor.HasRefinedResist(m))
-                return 0;
-
             int prim = (int)m.Skills[SkillName.Mysticism].Value;
             int sec = (int)m.Skills[SkillName.Imbuing].Value;
 
             if (m.Skills[SkillName.Focus].Value > sec)
+            {
                 sec = (int)m.Skills[SkillName.Focus].Value;
+            }
 
             return Math.Max(2, (prim + sec) / 48);
         }

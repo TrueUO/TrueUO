@@ -33,8 +33,6 @@ using Server.Spells.Ninjitsu;
 using Server.Spells.Seventh;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
-using Server.Targeting;
-
 using System;
 using System.Collections.Generic;
 
@@ -862,16 +860,8 @@ namespace Server.Mobiles
         public override int GetMaxResistance(ResistanceType type)
         {
             int max = base.GetMaxResistance(type);
-            int refineBonus = BaseArmor.GetRefinedResist(this, type);
 
-            if (refineBonus != 0)
-            {
-                max += refineBonus;
-            }
-            else
-            {
-                max += Spells.Mysticism.StoneFormSpell.GetMaxResistBonus(this);
-            }
+            max += Spells.Mysticism.StoneFormSpell.GetMaxResistBonus(this);
 
             if (type != ResistanceType.Physical && 60 < max && CurseSpell.UnderEffect(this))
             {
@@ -2693,13 +2683,6 @@ namespace Server.Mobiles
 
             if (Alive && !wasAlive)
             {
-                Item deathRobe = new DeathRobe();
-
-                if (!EquipItem(deathRobe))
-                {
-                    deathRobe.Delete();
-                }
-
                 if (NetState != null)
                 {
                     Waypoints.RemoveHealers(this, Map);

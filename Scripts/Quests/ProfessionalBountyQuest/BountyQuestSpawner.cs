@@ -674,8 +674,6 @@ namespace Server.Engines.Quests
                         hold.DropItem(PermanentBoatPaint.DropRandom());
                 }
 
-                RefinementComponent.Roll(hold, 3, 0.25);
-
                 if (RisingTideEvent.Instance.Running)
                 {
                     hold.DropItem(new MaritimeCargo());

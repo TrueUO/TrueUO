@@ -12,11 +12,6 @@ namespace Server.Items
             {
                 DropItemStacked(Loot.RandomGem());
             }
-
-            for (int i = 0; i < Utility.RandomMinMax(1, 3); i++)
-            {
-                DropItemStacked(Loot.RandomMLResource());
-            }
         }
 
         public MeagerMuseumBag(Serial serial)

@@ -226,7 +226,7 @@ namespace Server.SkillHandlers
             typeof(VirtuososCap), typeof(VirtuososCollar), typeof(VirtuososKidGloves), 
             typeof(VirtuososTunic), typeof(BestialGloves), typeof(BestialGorget),
             typeof(BestialHelm), typeof(BestialLegs), typeof(BarbedWhip), typeof(BladedWhip),
-            typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(JukaBow),
+            typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(SkullLongsword), typeof(JukaBow),
             typeof(JackOLanternHelm), typeof(BakeKitsuneHat)
         };
 

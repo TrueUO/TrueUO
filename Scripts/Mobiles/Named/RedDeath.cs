@@ -58,7 +58,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.UltraRich, 3);
             AddLoot(LootPack.MedScrolls, 2);
             AddLoot(LootPack.HighScrolls, 2);
-            AddLoot(LootPack.ArcanistScrolls);
         }
 
         public override void Serialize(GenericWriter writer)

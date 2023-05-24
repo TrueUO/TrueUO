@@ -1,4 +1,3 @@
-using Server.Items;
 using Server.Mobiles;
 using System;
 
@@ -33,7 +32,7 @@ namespace Server.Misc
                     break;
             }
 
-            double reduction = BaseArmor.GetInherentStaminaLossReduction(m) + 1;
+            double reduction = 1;
 
             if (reduction > 1)
             {

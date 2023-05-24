@@ -50,11 +50,6 @@ namespace Server.Items
             };
 
             Rewards.Add(new CollectionItem(typeof(ForTheLifeOfBritanniaSash), 0x1541, 1075792, 183, 5000.0, true));
-            Rewards.Add(new CollectionHuedItem(typeof(ZooMemberCloak), 0x1515, 1073221, 0x555, 100000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(ZooMemberRobe), 0x1F03, 1073221, 0x555, 100000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(ZooMemberSkirt), 0x1F01, 1073221, 0x555, 100000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(ZooMemberBodySash), 0x1541, 1073221, 0x555, 100000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(ZooMemberThighBoots), 0x1711, 1073221, 0x555, 100000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(ZooMemberFloppyHat), 0x1713, 1073221, 0x555, 100000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(ZooMemberBonnet), 0x1719, 1073221, 0x555, 100000.0, hues));
             Rewards.Add(new CollectionTitle(1073201, 1073624, 100000.0)); // Britannia Zoo Contributor
@@ -81,28 +76,6 @@ namespace Server.Items
             Rewards.Add(new CollectionHuedItem(typeof(ChangelingZooStatuette), 0x2D8A, 1074850, 0x34, 350000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(ReptalonZooStatuette), 0x2D95, 1074852, 0x34, 350000.0, hues));
             Rewards.Add(new CollectionTitle(1073203, 1073628, 350000.0)); // Honored Britannia Zoo Contributor
-
-            Rewards.Add(new CollectionItem(typeof(RoyalZooLeatherLegs), 0x13CB, 1073222, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooLeatherGloves), 0x13C6, 1073222, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooLeatherGorget), 0x13C7, 1073222, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooLeatherArms), 0x13CD, 1073222, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooLeatherChest), 0x13CC, 1073222, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooLeatherFemaleChest), 0x1C06, 1073222, 0x109, 550000.0));
-
-            Rewards.Add(new CollectionItem(typeof(RoyalZooStuddedLegs), 0x13DA, 1073223, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooStuddedGloves), 0x13D5, 1073223, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooStuddedGorget), 0x13D6, 1073223, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooStuddedArms), 0x13DC, 1073223, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooStuddedChest), 0x13DB, 1073223, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooStuddedFemaleChest), 0x1C02, 1073223, 0x109, 550000.0));
-
-            Rewards.Add(new CollectionItem(typeof(RoyalZooPlateLegs), 0x1411, 1073224, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooPlateGloves), 0x1414, 1073224, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooPlateGorget), 0x1413, 1073224, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooPlateArms), 0x1410, 1073224, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooPlateChest), 0x1415, 1073224, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooPlateFemaleChest), 0x1C04, 1073224, 0x109, 550000.0));
-            Rewards.Add(new CollectionItem(typeof(RoyalZooPlateHelm), 0x1412, 1073224, 0x109, 550000.0));
 
             Rewards.Add(new CollectionTitle(1073204, 1073629, 550000.0)); // Prominent Britannia Zoo Contributor
             Rewards.Add(new CollectionItem(typeof(SpecialAchievementZooStatuette), 0x2FF6, 1073226, 0x109, 800000.0));

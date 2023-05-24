@@ -17,8 +17,7 @@ namespace Server
             typeof(WizardsHat), typeof(BodySash), typeof(Doublet), typeof(Boots), typeof(FullApron), typeof(JesterSuit),
             typeof(Sandals), typeof(Tunic), typeof(Shoes), typeof(Shirt), typeof(Kilt), typeof(Skirt), typeof(FancyShirt),
             typeof(FancyDress), typeof(ThighBoots), typeof(LongPants), typeof(PlainDress), typeof(Robe), typeof(ShortPants),
-            typeof(HalfApron), typeof(FurSarong), typeof(FurCape), typeof(FlowerGarland), typeof(GildedDress), typeof(FurBoots), 
-			typeof(FormalShirt)
+            typeof(HalfApron)
         };
         public static Type[] ClothingTypes => m_ClothingTypes;
 		
@@ -26,7 +25,7 @@ namespace Server
         {
             typeof(SkullCap), typeof(Bandana), typeof(FloppyHat), typeof(Cap), typeof(WideBrimHat), typeof(StrawHat),
             typeof(TallStrawHat), typeof(WizardsHat), typeof(Bonnet), typeof(FeatheredHat), typeof(TricorneHat),
-            typeof(JesterHat), typeof(OrcMask), typeof(TribalMask), typeof(FlowerGarland), typeof(BearMask), typeof(DeerMask)
+            typeof(JesterHat), typeof(OrcMask), typeof(TribalMask), typeof(BearMask), typeof(DeerMask)
         };
         public static Type[] HatTypes => m_HatTypes;
 		
@@ -37,15 +36,13 @@ namespace Server
             typeof(Bardiche), typeof(Halberd), typeof(Spear), typeof(ShortSpear), typeof(Pitchfork), typeof(WarFork),
             typeof(BlackStaff), typeof(GnarledStaff), typeof(QuarterStaff), typeof(Broadsword), typeof(Cutlass), typeof(Katana),
             typeof(Kryss), typeof(Longsword), typeof(Scimitar), typeof(VikingSword), typeof(Pickaxe), typeof(HammerPick),
-            typeof(ButcherKnife), typeof(Cleaver), typeof(Dagger), typeof(SkinningKnife), typeof(ShepherdsCrook),
-			typeof(Scythe), typeof(BoneHarvester), typeof(Scepter), typeof(BladedStaff), typeof(Pike), typeof(DoubleBladedStaff),
-            typeof(Lance), typeof(CrescentBlade), typeof(SmithyHammer), typeof(SledgeHammerWeapon)
+            typeof(ButcherKnife), typeof(Cleaver), typeof(Dagger), typeof(SkinningKnife), typeof(ShepherdsCrook)
         };	
         public static Type[] WeaponTypes => m_WeaponTypes;
 
         private static readonly Type[] m_RangedWeaponTypes =
         { 
-			typeof(Bow), typeof(Crossbow), typeof(HeavyCrossbow), typeof(CompositeBow), typeof(RepeatingCrossbow)
+			typeof(Bow), typeof(Crossbow), typeof(HeavyCrossbow)
 		};
         public static Type[] RangedWeaponTypes => m_RangedWeaponTypes;
 
@@ -71,33 +68,23 @@ namespace Server
         private static readonly Type[] m_ShieldTypes =
         {
             typeof(BronzeShield), typeof(Buckler), typeof(HeaterShield), typeof(MetalShield), typeof(MetalKiteShield),
-            typeof(WoodenKiteShield), typeof(WoodenShield), typeof(ChaosShield), typeof(OrderShield)
+            typeof(WoodenKiteShield), typeof(WoodenShield)
         };
         public static Type[] ShieldTypes => m_ShieldTypes;
-		#endregion
-		
+        #endregion
+
+        public static Type[] GemTypes => m_GemTypes;
         private static readonly Type[] m_GemTypes =
         {
             typeof(Amber), typeof(Amethyst), typeof(Citrine), typeof(Diamond), typeof(Emerald), typeof(Ruby), typeof(Sapphire),
             typeof(StarSapphire), typeof(Tourmaline)
         };
 
-        public static Type[] GemTypes => m_GemTypes;
-
+        public static Type[] RareGemTypes => m_RareGemTypes;
         private static readonly Type[] m_RareGemTypes =
         {
             typeof(BlueDiamond), typeof(DarkSapphire), typeof(EcruCitrine), typeof(FireRuby), typeof(PerfectEmerald), typeof(Turquoise), typeof(WhitePearl), typeof(BrilliantAmber)
         };
-
-        public static Type[] RareGemTypes => m_RareGemTypes;
-
-        private static readonly Type[] m_MLResources =
-		{
-            typeof(BlueDiamond), typeof(DarkSapphire), typeof(EcruCitrine), typeof(FireRuby), typeof(PerfectEmerald), typeof(Turquoise), typeof(WhitePearl), typeof(BrilliantAmber),
-            typeof(LuminescentFungi), typeof(BarkFragment), typeof(SwitchItem), typeof(ParasiticPlant)
-        };
-
-        public static Type[] MLResources => m_MLResources;
 
         public static Type[] RegTypes => m_RegTypes;
         private static readonly Type[] m_RegTypes =
@@ -109,38 +96,22 @@ namespace Server
         public static Type[] NecroRegTypes => m_NecroRegTypes;
         private static readonly Type[] m_NecroRegTypes = { typeof(BatWing), typeof(GraveDust), typeof(DaemonBlood), typeof(NoxCrystal), typeof(PigIron) };
 
+        public static Type[] PotionTypes => m_PotionTypes;
         private static readonly Type[] m_PotionTypes =
         {
             typeof(AgilityPotion), typeof(StrengthPotion), typeof(RefreshPotion), typeof(LesserCurePotion),
             typeof(LesserHealPotion), typeof(LesserPoisonPotion)
         };
 
-        public static Type[] PotionTypes => m_PotionTypes;
-
-        private static readonly Type[] m_ImbuingEssenceIngreds =
-        {
-            typeof(EssencePrecision), typeof(EssenceAchievement), typeof(EssenceBalance), typeof(EssenceControl), typeof(EssenceDiligence),
-            typeof(EssenceDirection),   typeof(EssenceFeeling), typeof(EssenceOrder),   typeof(EssencePassion),   typeof(EssencePersistence),
-            typeof(EssenceSingularity)
-        };
-
-        public static Type[] ImbuingEssenceIngreds => m_ImbuingEssenceIngreds;
-
-        private static readonly Type[] m_SEInstrumentTypes = { typeof(BambooFlute) };
-
-        public static Type[] SEInstrumentTypes => m_SEInstrumentTypes;
-
+        public static Type[] InstrumentTypes => m_InstrumentTypes;
         private static readonly Type[] m_InstrumentTypes = { typeof(Drums), typeof(Harp), typeof(LapHarp), typeof(Lute), typeof(Tambourine), typeof(TambourineTassel) };
 
-        public static Type[] InstrumentTypes => m_InstrumentTypes;
-
+        public static Type[] StatueTypes => m_StatueTypes;
         private static readonly Type[] m_StatueTypes =
         {
             typeof(StatueSouth), typeof(StatueSouth2), typeof(StatueNorth), typeof(StatueWest), typeof(StatueEast),
             typeof(StatueEast2), typeof(StatueSouthEast), typeof(BustSouth), typeof(BustEast)
         };
-
-        public static Type[] StatueTypes => m_StatueTypes;
 
         #region Spell Scrolls
         private static readonly Type[] m_MageryScrollTypes =
@@ -172,26 +143,8 @@ namespace Server
             typeof(ExorcismScroll)
         };
 
-        private static readonly Type[] m_ArcanistScrollTypes =
-        {
-            typeof(ArcaneCircleScroll), typeof(GiftOfRenewalScroll), typeof(ImmolatingWeaponScroll), typeof(AttuneWeaponScroll),
-            typeof(ThunderstormScroll), typeof(NatureFuryScroll),
-			typeof(ReaperFormScroll), typeof(WildfireScroll), typeof(EssenceOfWindScroll), typeof(DryadAllureScroll),
-            typeof(EtherealVoyageScroll), typeof(WordOfDeathScroll), typeof(GiftOfLifeScroll), typeof(ArcaneEmpowermentScroll)
-        };
-
-        private static readonly Type[] m_MysticismScrollTypes =
-        {
-            typeof(NetherBoltScroll), typeof(HealingStoneScroll), typeof(PurgeMagicScroll), typeof(EagleStrikeScroll),
-            typeof(AnimatedWeaponScroll), typeof(StoneFormScroll), typeof(SpellTriggerScroll), typeof(CleansingWindsScroll),
-            typeof(BombardScroll), typeof(SpellPlagueScroll), typeof(HailStormScroll), typeof(NetherCycloneScroll),
-            typeof(RisingColossusScroll), typeof(SleepScroll), typeof(MassSleepScroll), typeof(EnchantScroll)
-        };
-
         public static Type[] MageryScrollTypes => m_MageryScrollTypes;
         public static Type[] NecromancyScrollTypes => m_NecromancyScrollTypes;
-        public static Type[] MysticismScrollTypes => m_MysticismScrollTypes;
-        public static Type[] ArcanistScrollTypes => m_ArcanistScrollTypes;
         #endregion
 
         private static readonly Type[] m_WandTypes =
@@ -213,11 +166,6 @@ namespace Server
         };
         public static Type[] LibraryBookTypes => m_LibraryBookTypes;
         #endregion
-
-        public static Item RandomEssence()
-        {
-            return Construct(m_ImbuingEssenceIngreds);
-        }
 
         #region Accessors
         public static BaseWand RandomWand()
@@ -265,11 +213,6 @@ namespace Server
             return Construct(m_ArmorTypes, m_ShieldTypes) as BaseArmor;
         }
 
-        public static Item RandomArmorOrShieldOrJewelry()
-        {
-            return Construct(m_ArmorTypes, m_HatTypes, m_ShieldTypes, m_JewelryTypes);
-        }
-
         public static Item RandomArmorOrShieldOrWeapon()
         {
             return Construct(
@@ -291,12 +234,10 @@ namespace Server
                 m_JewelryTypes);
         }
 
-        #region Chest of Heirlooms
         public static Item ChestOfHeirloomsContains()
         {
             return Construct(m_ArmorTypes, m_HatTypes, m_WeaponTypes, m_RangedWeaponTypes, m_JewelryTypes);
         }
-        #endregion
 
         public static Item RandomGem()
         {
@@ -308,19 +249,9 @@ namespace Server
             return Construct(m_RareGemTypes);
         }
 
-        public static Item RandomMLResource()
-        {
-            return Construct(m_MLResources);
-        }
-
         public static Item RandomReagent()
         {
             return Construct(m_RegTypes);
-        }
-
-        public static Item RandomNecromancyReagent()
-        {
-            return Construct(m_NecroRegTypes);
         }
 
         public static Item RandomPossibleReagent()
@@ -335,12 +266,7 @@ namespace Server
 
         public static BaseInstrument RandomInstrument()
         {
-            return Construct(m_InstrumentTypes, m_SEInstrumentTypes) as BaseInstrument;
-        }
-
-        public static Item RandomStatue()
-        {
-            return Construct(m_StatueTypes);
+            return Construct(m_InstrumentTypes) as BaseInstrument;
         }
 
         public static SpellScroll RandomScroll(int minIndex, int maxIndex, SpellbookType type)
@@ -354,12 +280,6 @@ namespace Server
                     break;
                 case SpellbookType.Necromancer:
                     types = m_NecromancyScrollTypes;
-                    break;
-                case SpellbookType.Arcanist:
-                    types = m_ArcanistScrollTypes;
-                    break;
-                case SpellbookType.Mystic:
-                    types = m_MysticismScrollTypes;
                     break;
             }
 

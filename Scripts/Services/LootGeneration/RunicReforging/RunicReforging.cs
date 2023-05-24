@@ -1122,7 +1122,6 @@ namespace Server.Items
             m_AllowableTable[typeof(RingmailGlovesOfMining)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(StuddedGlovesOfMining)] = DefTailoring.CraftSystem;
             m_AllowableTable[typeof(JukaBow)] = DefBowFletching.CraftSystem;
-            m_AllowableTable[typeof(TribalSpear)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(Pickaxe)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(Cleaver)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(SkinningKnife)] = DefBlacksmithy.CraftSystem;

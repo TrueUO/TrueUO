@@ -56,7 +56,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.Rich, 2);
             AddLoot(LootPack.LootItem<Carrot>(100.0, Utility.RandomMinMax(5, 10), false, true));
             AddLoot(LootPack.LootItem<BrightlyColoredEggs>(20.0, 1, false, true));
-            AddLoot(LootPack.RandomLootItem(Loot.StatueTypes, false, true));
         }
 
         public override bool CheckFlee()

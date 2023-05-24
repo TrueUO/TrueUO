@@ -12,11 +12,6 @@ namespace Server.Items
             {
                 DropItemStacked(Loot.RandomGem());
             }
-
-            for (int i = 0; i < Utility.RandomMinMax(5, 7); i++)
-            {
-                DropItemStacked(Loot.RandomMLResource());
-            }
         }
 
         public BulgingMuseumBag(Serial serial)

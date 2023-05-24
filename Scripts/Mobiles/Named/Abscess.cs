@@ -55,7 +55,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 4);
-            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 2));
         }
 
         public override void OnDeath(Container c)

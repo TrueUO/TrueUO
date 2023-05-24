@@ -52,7 +52,6 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 2);
-            AddLoot(LootPack.ArcanistScrolls);
             AddLoot(LootPack.LootItem<IrksBrain>(25.0));
             AddLoot(LootPack.LootItem<PaladinGloves>(2.5));
         }

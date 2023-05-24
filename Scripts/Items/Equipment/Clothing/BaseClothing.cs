@@ -1,4 +1,3 @@
-using Server.ContextMenus;
 using Server.Engines.Craft;
 using Server.Network;
 using System;
@@ -255,58 +254,6 @@ namespace Server.Items
             set { m_ItemPower = value; InvalidateProperties(); }
         }
 
-        #region Personal Bless Deed
-        private Mobile m_BlessedBy;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile BlessedBy
-        {
-            get => m_BlessedBy;
-            set
-            {
-                m_BlessedBy = value;
-                InvalidateProperties();
-            }
-        }
-
-        public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
-        {
-            base.GetContextMenuEntries(from, list);
-
-            if (BlessedFor == from && BlessedBy == from && RootParent == from)
-            {
-                list.Add(new UnBlessEntry(from, this));
-            }
-        }
-
-        private class UnBlessEntry : ContextMenuEntry
-        {
-            private readonly Mobile m_From;
-            private readonly BaseClothing m_Item;
-
-            public UnBlessEntry(Mobile from, BaseClothing item)
-                : base(6208, -1)
-            {
-                m_From = from;
-                m_Item = item; // BaseArmor, BaseWeapon or BaseClothing
-            }
-
-            public override void OnClick()
-            {
-                m_Item.BlessedFor = null;
-                m_Item.BlessedBy = null;
-
-                Container pack = m_From.Backpack;
-
-                if (pack != null)
-                {
-                    pack.DropItem(new PersonalBlessDeed(m_From));
-                    m_From.SendLocalizedMessage(1062200); // A personal bless deed has been placed in your backpack.
-                }
-            }
-        }
-        #endregion
-
         public virtual CraftResource DefaultResource => CraftResource.None;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -425,13 +372,6 @@ namespace Server.Items
                         from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1063343); // Only males can wear this.
                     else
                         from.SendLocalizedMessage(1071936); // You cannot equip that.
-
-                    return false;
-                }
-
-                if (BlessedBy != null && BlessedBy != from)
-                {
-                    from.SendLocalizedMessage(1075277); // That item is blessed by another player.
 
                     return false;
                 }
@@ -1234,13 +1174,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(12); // version
 
-            // Embroidery Tool version 11
             writer.Write(m_EngravedText);
-
-            // Version 10 - removed VvV Item (handled in VvV System) and BlockRepair (Handled as negative attribute)
 
             writer.Write(_Owner);
             writer.Write(_OwnerName);
@@ -1271,8 +1207,6 @@ namespace Server.Items
             writer.Write(m_TimesImbued);
 
             #endregion
-
-            writer.Write(m_BlessedBy);
 
             #region Mondain's Legacy Sets
             SetFlag sflags = SetFlag.None;
@@ -1388,7 +1322,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
@@ -1402,9 +1335,6 @@ namespace Server.Items
                 case 10:
                 case 9:
                     {
-                        if (version == 9)
-                            reader.ReadBool();
-
                         _Owner = reader.ReadMobile();
                         _OwnerName = reader.ReadString();
                         goto case 8;
@@ -1422,17 +1352,8 @@ namespace Server.Items
                         m_ReforgedPrefix = (ReforgedPrefix)reader.ReadInt();
                         m_ReforgedSuffix = (ReforgedSuffix)reader.ReadInt();
                         m_ItemPower = (ItemPower)reader.ReadInt();
-
-                        if (version == 9 && reader.ReadBool())
-                        {
-                            Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
-                                {
-                                    m_NegativeAttributes.NoRepair = 1;
-                                });
-                        }
                         #endregion
 
-                        #region Stygian Abyss
                         m_GorgonLenseCharges = reader.ReadInt();
                         m_GorgonLenseType = (LenseType)reader.ReadInt();
 
@@ -1445,14 +1366,7 @@ namespace Server.Items
                     }
                 case 6:
                     {
-                        if (version == 6)
-                            m_SAAbsorptionAttributes = new SAAbsorptionAttributes(this);
-
                         m_TimesImbued = reader.ReadInt();
-
-                        #endregion
-
-                        m_BlessedBy = reader.ReadMobile();
 
                         #region Mondain's Legacy Sets
                         SetFlag sflags = (SetFlag)reader.ReadEncodedInt();
@@ -1504,13 +1418,10 @@ namespace Server.Items
                     {
                         SaveFlag flags = (SaveFlag)reader.ReadEncodedInt();
 
-                        if (version > 11)
-                        {
-                            if (GetSaveFlag(flags, SaveFlag.xWeaponAttributes))
-                                m_AosWeaponAttributes = new AosWeaponAttributes(this, reader);
-                            else
-                                m_AosWeaponAttributes = new AosWeaponAttributes(this);
-                        }
+                        if (GetSaveFlag(flags, SaveFlag.xWeaponAttributes))
+                            m_AosWeaponAttributes = new AosWeaponAttributes(this, reader);
+                        else
+                            m_AosWeaponAttributes = new AosWeaponAttributes(this);
 
                         if (GetSaveFlag(flags, SaveFlag.NegativeAttributes))
                             m_NegativeAttributes = new NegativeAttributes(this, reader);

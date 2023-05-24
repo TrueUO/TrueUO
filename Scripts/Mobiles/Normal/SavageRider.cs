@@ -33,7 +33,7 @@ namespace Server.Mobiles
             Fame = 1000;
             Karma = -1000;
 
-            AddItem(new TribalSpear());
+            AddItem(new Spear());
             AddItem(new BoneArms());
             AddItem(new BoneLegs());
             AddItem(new BearMask());

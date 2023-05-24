@@ -162,13 +162,6 @@ namespace Server.Items
                 DropItem(item);
             }
 
-            if (0.2 > Utility.RandomDouble())
-            {
-                item = Loot.RandomEssence();
-                item.Amount = Utility.Random(3, 6);
-                DropItem(item);
-            }
-
             if (0.1 > Utility.RandomDouble())
             {
                 switch (Utility.Random(4))

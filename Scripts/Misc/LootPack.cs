@@ -289,24 +289,6 @@ namespace Server
             new LootPackItem(typeof(ExorcismScroll), 1)
         };
 
-        public static readonly LootPackItem[] ArcanistScrollItems =
-        {
-            new LootPackItem(typeof(ArcaneCircleScroll), 1),
-            new LootPackItem(typeof(GiftOfRenewalScroll), 1),
-            new LootPackItem(typeof(ImmolatingWeaponScroll), 1),
-            new LootPackItem(typeof(AttuneWeaponScroll), 1),
-            new LootPackItem(typeof(ThunderstormScroll), 1),
-            new LootPackItem(typeof(NatureFuryScroll), 1),
-            new LootPackItem(typeof(ReaperFormScroll), 1),
-            new LootPackItem(typeof(WildfireScroll), 1),
-            new LootPackItem(typeof(EssenceOfWindScroll), 1),
-            new LootPackItem(typeof(DryadAllureScroll), 1),
-            new LootPackItem(typeof(EtherealVoyageScroll), 1),
-            new LootPackItem(typeof(WordOfDeathScroll), 1),
-            new LootPackItem(typeof(GiftOfLifeScroll), 1),
-            new LootPackItem(typeof(ArcaneEmpowermentScroll), 1)
-        };
-
         public static readonly LootPackItem[] GemItems = { new LootPackItem(typeof(Amber), 1) };
         public static readonly LootPackItem[] RareGemItems = { new LootPackItem(typeof(BlueDiamond), 1) };
 
@@ -329,16 +311,6 @@ namespace Server
             new LootPackItem(typeof(DaemonBlood), 1),
             new LootPackItem(typeof(NoxCrystal), 1),
             new LootPackItem(typeof(PigIron), 1)
-        };
-
-        public static readonly LootPackItem[] PeerlessResourceItems =
-        {
-            new LootPackItem(typeof(Blight), 1),
-            new LootPackItem(typeof(Scourge), 1),
-            new LootPackItem(typeof(Taint), 1),
-            new LootPackItem(typeof(Putrefaction), 1),
-            new LootPackItem(typeof(Corruption), 1),
-            new LootPackItem(typeof(Muculent), 1)
         };
 
         public static readonly LootPackItem[] PotionItems =
@@ -552,12 +524,10 @@ namespace Server
         public static readonly LootPack HighScrolls = new LootPack(new[] { new LootPackEntry(false, true, HighScrollItems, 100.00, 1) });
         public static readonly LootPack MageryScrolls = new LootPack(new[] { new LootPackEntry(false, true, MageryScrollItems, 100.00, 1) });
         public static readonly LootPack NecroScrolls = new LootPack(new[] { new LootPackEntry(false, true, NecroScrollItems, 100.00, 1) });
-        public static readonly LootPack ArcanistScrolls = new LootPack(new[] { new LootPackEntry(false, true, ArcanistScrollItems, 100.00, 1) });
-        
+       
         public static readonly LootPack MageryRegs = new LootPack(new[] { new LootPackEntry(false, true, MageryRegItems, 100.00, 1) });
         public static readonly LootPack NecroRegs = new LootPack(new[] { new LootPackEntry(false, true, NecroRegItems, 100.00, 1) });
-        public static readonly LootPack PeerlessResource = new LootPack(new[] { new LootPackEntry(false, true, PeerlessResourceItems, 100.00, 1) });
-
+        
         public static readonly LootPack Gems = new LootPack(new[] { new LootPackEntry(false, true, GemItems, 100.00, 1) });
         public static readonly LootPack RareGems = new LootPack(new[] { new LootPackEntry(false, true, RareGemItems, 100.00, 1) });
 
@@ -735,44 +705,6 @@ namespace Server
 
         public bool StandardLootItem { get; }
 
-        public static bool IsInTokuno(IEntity e)
-        {
-            if (e == null)
-            {
-                return false;
-            }
-
-            Region r = Region.Find(e.Location, e.Map);
-
-            if (r.IsPartOf("Fan Dancer's Dojo"))
-            {
-                return true;
-            }
-
-            if (r.IsPartOf("Yomotsu Mines"))
-            {
-                return true;
-            }
-
-            return e.Map == Map.Tokuno;
-        }
-
-        public static bool IsMondain(IEntity e)
-        {
-            if (e == null)
-                return false;
-
-            return MondainsLegacy.IsMLRegion(Region.Find(e.Location, e.Map));
-        }
-
-        public static bool IsStygian(IEntity e)
-        {
-            if (e == null)
-                return false;
-
-            return e.Map == Map.TerMur || !IsInTokuno(e) && !IsMondain(e) && Utility.RandomBool();
-        }
-
         public bool CanGenerate(LootStage stage, bool hasBeenStolenFrom)
         {
             switch (stage)
@@ -819,7 +751,7 @@ namespace Server
                     }
                     else
                     {
-                        loot = item.Construct(IsInTokuno(from), IsMondain(from), IsStygian(from));
+                        loot = item.Construct();
                     }
 
                     if (loot != null)
@@ -921,7 +853,7 @@ namespace Server
 
         public Func<IEntity, Item> ConstructCallback { get; }
 
-        public Item Construct(bool inTokuno, bool isMondain, bool isStygian)
+        public Item Construct()
         {
             try
             {

@@ -168,7 +168,6 @@ namespace Server.Engines.Points
             Entries[typeof(TheExchangeQuest)] = new Tuple<double, double>(35, 3.5);
             Entries[typeof(YeOldeGargishQuest)] = new Tuple<double, double>(50, 5.0);
             Entries[typeof(AWorthyPropositionQuest)] = new Tuple<double, double>(50, 5.0);
-            Entries[typeof(UnusualGoods)] = new Tuple<double, double>(75, 7.5);
         }
 
         public override void Serialize(GenericWriter writer)

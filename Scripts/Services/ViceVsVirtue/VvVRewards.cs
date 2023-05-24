@@ -80,7 +80,6 @@ namespace Server.Engines.VvV
             Rewards.Add(new CollectionItem(typeof(VvVDragonArms), 9815, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVPlateArms), 5136, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVEpaulette), 0x9985, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVGargishEpaulette), 0x9986, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVStuddedChest), 5083, 0, 0, 500));
 
             Rewards.Add(new CollectionItem(typeof(CompassionBanner), 39351, 1123375, 0, 10000)); // Compassion Banner

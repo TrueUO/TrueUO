@@ -28,8 +28,6 @@ namespace Server.Items
                 case 1: DropItem(new BeverageBottle(BeverageType.Wine)); break;
                 case 2: DropItem(new BeverageBottle(BeverageType.Liquor)); break;
             }
-
-            DropItem(Loot.RandomInstrument());
         }
 
         public UnknownBardSkeleton(Serial serial)

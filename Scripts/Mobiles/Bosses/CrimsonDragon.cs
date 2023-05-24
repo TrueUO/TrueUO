@@ -75,7 +75,6 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.SuperBoss, 8);
             AddLoot(LootPack.Gems, 12);
-            AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.LootItem<ParrotItem>(25.0));
             AddLoot(LootPack.LootItem<CrimsonCincture>(2.5));
         }
