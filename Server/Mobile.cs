@@ -4060,9 +4060,7 @@ namespace Server
 			return true;
 		}
 
-		public static bool InsuranceEnabled { get; set; }
-
-		public virtual void Use(Item item)
+        public virtual void Use(Item item)
 		{
 			if (item == null || item.Deleted || item.QuestItem || Deleted)
 			{

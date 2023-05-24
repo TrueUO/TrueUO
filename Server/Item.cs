@@ -1186,7 +1186,12 @@ namespace Server
 		/// </summary>
 		public virtual void AddLootTypeProperty(ObjectPropertyList list)
 		{
-			if (DisplayLootType)
+            if (Stackable)
+            {
+                list.Add("(stackable)");
+            }
+
+            if (DisplayLootType)
 			{
 				if (m_LootType == LootType.Blessed)
 				{
@@ -5805,7 +5810,7 @@ namespace Server
 
 		public virtual bool CheckBlessed(Mobile m)
 		{
-			if (m_LootType == LootType.Blessed || Mobile.InsuranceEnabled && Insured)
+			if (m_LootType == LootType.Blessed)
 			{
 				return true;
 			}
@@ -5815,12 +5820,7 @@ namespace Server
 
         public virtual bool IsStandardLoot()
 		{
-			if (Mobile.InsuranceEnabled && Insured)
-			{
-				return false;
-			}
-
-			if (BlessedFor != null)
+            if (BlessedFor != null)
 			{
 				return false;
 			}

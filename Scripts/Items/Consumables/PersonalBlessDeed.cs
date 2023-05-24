@@ -105,7 +105,7 @@ namespace Server.Items
             {
                 Item item = (Item)target;
 
-                if (item.LootType == LootType.Blessed || item.BlessedFor != null || Mobile.InsuranceEnabled && item.Insured) // Check if its already newbied (blessed)
+                if (item.LootType == LootType.Blessed || item.BlessedFor != null) // Check if its already newbied (blessed)
                     from.SendLocalizedMessage(1045113); // That item is already blessed
                 else if (item.LootType != LootType.Regular)
                     from.SendLocalizedMessage(500509); // You can't bless this object!
