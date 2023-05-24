@@ -8,6 +8,9 @@ namespace Server.Items
             : base(0x1411)
         {
             Weight = 7.0;
+
+            Attributes.BonusHits = 25;
+            Attributes.BonusDex = -5;
         }
 
         public PlateLegs(Serial serial)
@@ -15,14 +18,12 @@ namespace Server.Items
         {
         }
 
-        public override int BasePhysicalResistance => 5;
-        public override int BaseFireResistance => 3;
-        public override int BaseColdResistance => 2;
-        public override int BasePoisonResistance => 3;
-        public override int BaseEnergyResistance => 2;
+        public override int BasePhysicalResistance => Quality == ItemQuality.Exceptional ? 11 : 10;
+
         public override int InitMinHits => 50;
         public override int InitMaxHits => 65;
-        public override int StrReq => 90;
+        public override int StrReq => 60;
+
         public override ArmorMaterialType MaterialType => ArmorMaterialType.Plate;
 
         public override void Serialize(GenericWriter writer)
