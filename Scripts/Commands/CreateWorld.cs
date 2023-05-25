@@ -530,14 +530,10 @@ namespace Server.Gumps
                         }
                     }
                     return count > 1000;
-                case 117:
-                    return WeakEntityCollection.HasCollection("despise");
                 case 118:
                     return WeakEntityCollection.HasCollection("newcovetous");
                 case 119:
                     return WeakEntityCollection.HasCollection("newshame");
-                case 120:
-                    return Engines.NewMagincia.MaginciaBazaar.Instance != null;
                 case 121:
                     return WeakEntityCollection.HasCollection("highseas") || CharydbisSpawner.SpawnInstance != null;
                 case 122:

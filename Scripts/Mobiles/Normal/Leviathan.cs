@@ -19,20 +19,13 @@ namespace Server.Mobiles
 
             // Equipment
             typeof(AlchemistsBauble),
-            typeof(ArcticDeathDealer),
-            typeof(BlazeOfDeath),
             typeof(BurglarsBandana),
             typeof(CaptainQuacklebushsCutlass),
-            typeof(CavortingClub),
             typeof(DreadPirateHat),
-            typeof(EnchantedTitanLegBone),
             typeof(GwennosHarp),
             typeof(IolosLute),
             typeof(LunaLance),
-            typeof(NightsKiss),
-            typeof(NoxRangersHeavyCrossbow),
-            typeof(PolarBearMask),
-            typeof(VioletCourage)
+            typeof(PolarBearMask)
         };
 
         private Mobile m_Fisher;

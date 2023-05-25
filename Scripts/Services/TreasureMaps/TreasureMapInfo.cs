@@ -595,13 +595,9 @@ namespace Server.Items
 
         private static readonly Type[] _FunctionalMinorArtifacts =
         {
-            typeof(ArcticDeathDealer), typeof(BlazeOfDeath), typeof(BurglarsBandana),
-            typeof(CavortingClub), typeof(DreadPirateHat),
-            typeof(EnchantedTitanLegBone), typeof(GwennosHarp), typeof(IolosLute),
-            typeof(LunaLance), typeof(NightsKiss), typeof(NoxRangersHeavyCrossbow),
-            typeof(PolarBearMask), typeof(VioletCourage), typeof(HeartOfTheLion),
-            typeof(ColdBlood), typeof(AlchemistsBauble), typeof(CaptainQuacklebushsCutlass),
-            typeof(ShieldOfInvulnerability)
+            typeof(BurglarsBandana), typeof(DreadPirateHat), typeof(GwennosHarp), typeof(IolosLute),
+            typeof(LunaLance), typeof(PolarBearMask), typeof(HeartOfTheLion), typeof(ColdBlood),
+            typeof(AlchemistsBauble), typeof(CaptainQuacklebushsCutlass), typeof(ShieldOfInvulnerability)
         };
 
         private static readonly SkillName[][] _TranscendenceTable =
