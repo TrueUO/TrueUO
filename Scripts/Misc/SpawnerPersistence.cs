@@ -29,7 +29,7 @@ namespace Server
         {
             None = 0x00000000,
             Initial = 0x00000001,
-            Sphinx = 0x00000002,
+            UNUSED6 = 0x00000002,
             IceHoundRemoval = 0x00000004,
             PaladinAndKrakin = 0x00000008,
             TrinsicPaladins = 0x00000010,
@@ -37,7 +37,7 @@ namespace Server
             UNUSED5 = 0x00000040,
             FixAddonDeco = 0x00000080,
             LifeStealers = 0x00000100,
-            LootNerf2 = 0x00000200,
+            UNUSED7 = 0x00000200,
             RemoveUnused = 0x00000400,
             RemoveUnused2 = 0x00000800,
             RemoveTeleporters = 0x00001000,
@@ -198,12 +198,6 @@ namespace Server
                         VersionFlag |= SpawnerVersion.RemoveUnused;
                     }
 
-                    if ((VersionFlag & SpawnerVersion.LootNerf2) == 0)
-                    {
-                        LootNerf2();
-                        VersionFlag |= SpawnerVersion.LootNerf2;
-                    }
-
                     if ((VersionFlag & SpawnerVersion.LifeStealers) == 0)
                     {
                         SpawnLifeStealers();
@@ -233,12 +227,6 @@ namespace Server
                         RemoveIceHounds();
                         VersionFlag |= SpawnerVersion.IceHoundRemoval;
                     }
-
-                    if ((VersionFlag & SpawnerVersion.Sphinx) == 0)
-                    {
-                        AddSphinx();
-                        VersionFlag |= SpawnerVersion.Sphinx;
-                    }
                     goto case 10;
                 case 10:
                     if ((VersionFlag & SpawnerVersion.Initial) == 0)
@@ -257,7 +245,6 @@ namespace Server
                 case 7:
                 case 6:
                     ReplaceTwistedWealdVersion7();
-                    RunicReforging.ItemNerfVersion6();
                     break;
                 case 5:
                     HonestyItemsVersion5();
@@ -377,13 +364,6 @@ namespace Server
         }
         #endregion
 
-        #region Loot Nerf 2
-        public static void LootNerf2()
-        {
-            RunicReforging.LootNerf2();
-        }
-        #endregion
-
         #region Spawn Lifestealers
         public static void SpawnLifeStealers()
         {
@@ -427,14 +407,6 @@ namespace Server
         {
             Remove("icehound");
             ToConsole("Ice Hounds removed from spawners.");
-        }
-        #endregion
-
-        #region Version 11
-        public static void AddSphinx()
-        {
-            Engines.GenerateForgottenPyramid.Generate(null);
-            ToConsole("Generated Fortune Sphinx.");
         }
         #endregion
 

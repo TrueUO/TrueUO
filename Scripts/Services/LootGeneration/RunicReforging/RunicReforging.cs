@@ -2383,13 +2383,12 @@ namespace Server.Items
                         if (0.95 >= chance)
                             return 0;
 
-                        switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                        switch (Utility.Random(item is BaseJewel ? 2 : 4))
                         {
-                            case 0: neg.Prized = 1; break;
-                            case 1: neg.Antique = 1; break;
-                            case 2: item.LootType = LootType.Cursed; break;
-                            case 3: neg.Unwieldly = 1; break;
-                            case 4: neg.Massive = 1; break;
+                            case 0: neg.Antique = 1; break;
+                            case 1: item.LootType = LootType.Cursed; break;
+                            case 2: neg.Unwieldly = 1; break;
+                            case 3: neg.Massive = 1; break;
                         }
 
                         return 100;
@@ -2403,21 +2402,14 @@ namespace Server.Items
 
                         if (0.75 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                            switch (Utility.Random(item is BaseJewel ? 2 : 4))
                             {
-                                case 0: neg.Prized = 1; break;
-                                case 1: neg.Antique = 1; break;
-                                case 2: item.LootType = LootType.Cursed; break;
-                                case 3: neg.Unwieldly = 1; break;
-                                case 4: neg.Massive = 1; break;
+                                case 0: neg.Antique = 1; break;
+                                case 1: item.LootType = LootType.Cursed; break;
+                                case 2: neg.Unwieldly = 1; break;
+                                case 3: neg.Massive = 1; break;
                             }
 
-                            return 100;
-                        }
-
-                        if (0.5 > chance)
-                        {
-                            neg.Prized = 1;
                             return 100;
                         }
 
@@ -2441,21 +2433,14 @@ namespace Server.Items
 
                         chance = Utility.RandomDouble();
 
-                        if (0.4 > chance)
-                        {
-                            neg.Prized = 1;
-                            return 100;
-                        }
-
                         if (0.6 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 3 : 5))
+                            switch (Utility.Random(item is BaseJewel ? 2 : 4))
                             {
-                                case 0: neg.Prized = 1; break;
-                                case 1: neg.Antique = 1; break;
-                                case 2: item.LootType = LootType.Cursed; break;
-                                case 3: neg.Unwieldly = 1; break;
-                                case 4: neg.Massive = 1; break;
+                                case 0: neg.Antique = 1; break;
+                                case 1: item.LootType = LootType.Cursed; break;
+                                case 2: neg.Unwieldly = 1; break;
+                                case 3: neg.Massive = 1; break;
                             }
 
                             return 100;
@@ -2490,13 +2475,7 @@ namespace Server.Items
                             return 150;
                         }
 
-                        if (0.85 > chance)
-                        {
-                            neg.Antique = 1;
-                            return 150;
-                        }
-
-                        neg.Prized = 1;
+                        neg.Antique = 1;
                         return 100;
                     }
                 case ItemPower.MajorArtifact:
@@ -3230,93 +3209,6 @@ namespace Server.Items
             new[] { 25, 30, 30, 30, 30, 30, 30 }
         };
         #endregion
-        #endregion
-
-        #region Updates
-        public static void LootNerf2()
-        {
-            int fix = 0;
-
-            foreach (Item item in World.Items.Values)
-            {
-                NegativeAttributes neg = GetNegativeAttributes(item);
-
-                if (neg != null && (neg.Brittle > 0 || neg.Antique > 0 || neg.NoRepair > 0))
-                {
-                    AosWeaponAttributes wep = GetAosWeaponAttributes(item);
-                    AosArmorAttributes armor = GetAosArmorAttributes(item);
-
-                    if (wep != null && wep.SelfRepair > 0)
-                    {
-                        wep.SelfRepair = 0;
-                        fix++;
-                    }
-
-                    if (armor != null && armor.SelfRepair > 0)
-                    {
-                        armor.SelfRepair = 0;
-                        fix++;
-                    }
-                }
-            }
-
-            SpawnerPersistence.ToConsole($"Removed Self Repair from {fix} items.");
-        }
-
-        public static void ItemNerfVersion6()
-        {
-            int fc2 = 0;
-            int eater = 0;
-            int focus = 0;
-            int brittle = 0;
-
-            foreach (Item value in World.Items.Values)
-            {
-                if (value is BaseJewel jewel && (jewel.ItemPower > ItemPower.None))
-                {
-                    if (jewel.Attributes.CastSpeed > 1)
-                    {
-                        jewel.Attributes.CastSpeed = 1;
-                        fc2++;
-                    }
-
-                    SAAbsorptionAttributes attr = GetSAAbsorptionAttributes(jewel);
-                    NegativeAttributes neg = GetNegativeAttributes(jewel);
-
-                    if (ItemPropertyInfo.HasEater(jewel) && attr != null)
-                    {
-                        if (attr.EaterKinetic > 0) attr.EaterKinetic = 0;
-
-                        if (attr.EaterFire > 0) attr.EaterFire = 0;
-
-                        if (attr.EaterCold > 0) attr.EaterCold = 0;
-
-                        if (attr.EaterPoison > 0) attr.EaterPoison = 0;
-
-                        if (attr.EaterEnergy > 0) attr.EaterEnergy = 0;
-
-                        if (attr.EaterDamage > 0) attr.EaterDamage = 0;
-
-                        eater++;
-                    }
-
-                    if (attr != null && attr.CastingFocus > 0)
-                    {
-                        attr.CastingFocus = 0;
-                        focus++;
-                    }
-
-                    if (neg != null && neg.Brittle > 0)
-                    {
-                        neg.Brittle = 0;
-                        neg.Antique = 1;
-                        brittle++;
-                    }
-                }
-            }
-
-            SpawnerPersistence.ToConsole(string.Format("Cleauned up {0} items: {1} fc2, {2} non-Armor eater, {3} non armor casting focus, {4} brittle jewels converted to Antique.", fc2 + eater + focus + brittle, fc2, eater, focus, brittle));
-        }
         #endregion
     }
 

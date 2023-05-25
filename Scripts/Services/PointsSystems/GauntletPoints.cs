@@ -61,7 +61,7 @@ namespace Server.Engines.Points
 
                     if (attrs != null)
                     {
-                        attrs.Prized = 1;
+                        attrs.Brittle = 1;
                     }
                 }
                 else

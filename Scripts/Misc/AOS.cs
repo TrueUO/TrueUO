@@ -1,5 +1,4 @@
 using Server.Engines.CityLoyalty;
-using Server.Engines.SphynxFortune;
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
@@ -560,9 +559,6 @@ namespace Server
             }
 
             int value = 0;
-
-            if (attribute == AosAttribute.Luck || attribute == AosAttribute.RegenMana || attribute == AosAttribute.DefendChance || attribute == AosAttribute.EnhancePotions)
-                value += SphynxFortune.GetAosAttributeBonus(m, attribute);
 
             value += Enhancement.GetValue(m, attribute);
 
@@ -2006,11 +2002,10 @@ namespace Server
     public enum NegativeAttribute
     {
         Brittle = 0x00000001,
-        Prized = 0x00000002,
-        Massive = 0x00000004,
-        Unwieldly = 0x00000008,
-        Antique = 0x00000010,
-        NoRepair = 0x00000020
+        Massive = 0x00000002,
+        Unwieldly = 0x00000004,
+        Antique = 0x00000008,
+        NoRepair = 0x00000010
     }
 
     public sealed class NegativeAttributes : BaseAttributes
@@ -2038,9 +2033,6 @@ namespace Server
             if (Brittle > 0 || item is BaseWeapon weapon && weapon.Attributes.Brittle > 0 || item is BaseArmor armor && armor.Attributes.Brittle > 0 ||
                 item is BaseJewel jewel && jewel.Attributes.Brittle > 0 || item is BaseClothing clothing && clothing.Attributes.Brittle > 0)
                 list.Add(1116209);
-
-            if (Prized > 0)
-                list.Add(1154910);
 
             if (Antique > 0)
                 list.Add(1076187);
@@ -2124,9 +2116,6 @@ namespace Server
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Brittle { get => this[NegativeAttribute.Brittle]; set => this[NegativeAttribute.Brittle] = value; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int Prized { get => this[NegativeAttribute.Prized]; set => this[NegativeAttribute.Prized] = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Massive { get => this[NegativeAttribute.Massive]; set => this[NegativeAttribute.Massive] = value; }
