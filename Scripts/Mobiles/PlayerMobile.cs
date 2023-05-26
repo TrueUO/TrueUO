@@ -51,28 +51,24 @@ namespace Server.Mobiles
         StoneMining = 0x00000008,
         ToggleMiningStone = 0x00000010,
         KarmaLocked = 0x00000020,
-        UNUSED4 = 0x00000040,
-        UseOwnFilter = 0x00000080,
-        PagingSquelched = 0x00000100,
-        Young = 0x00000200,
-        AcceptGuildInvites = 0x00000400,
-        DisplayChampionTitle = 0x00000800,
-        HasStatReward = 0x00001000,
-        Bedlam = 0x00002000,
-        UNUSED1 = 0x00010000,
-        UNUSED2 = 0x00020000,
-        UNUSED3 = 0x00040000,
-        GemMining = 0x00080000,
-        ToggleMiningGem = 0x00100000,
-        BasketWeaving = 0x00200000,
-        AbyssEntry = 0x00400000,
-        ToggleClippings = 0x00800000,
-        ToggleCutClippings = 0x01000000,
-        ToggleCutReeds = 0x02000000,
-        MechanicalLife = 0x04000000,
-        ToggleCutTopiaries = 0x08000000,
-        HasValiantStatReward = 0x10000000,
-        RefuseTrades = 0x20000000
+        UseOwnFilter = 0x00000040,
+        PagingSquelched = 0x00000080,
+        Young = 0x00000100,
+        AcceptGuildInvites = 0x00000200,
+        DisplayChampionTitle = 0x00000400,
+        HasStatReward = 0x00000800,
+        Bedlam = 0x00001000,
+        GemMining = 0x00002000,
+        ToggleMiningGem = 0x00010000,
+        BasketWeaving = 0x00020000,
+        AbyssEntry = 0x00040000,
+        ToggleClippings = 0x00080000,
+        ToggleCutClippings = 0x00100000,
+        ToggleCutReeds = 0x00200000,
+        MechanicalLife = 0x00400000,
+        ToggleCutTopiaries = 0x00800000,
+        HasValiantStatReward = 0x01000000,
+        RefuseTrades = 0x02000000
     }
 
     [Flags]
@@ -3296,10 +3292,6 @@ namespace Server.Mobiles
                 case 35:
                 case 34:
                 case 33:
-                    {
-                        ExploringTheDeepQuest = (ExploringTheDeepQuestChain)reader.ReadInt();
-                        goto case 31;
-                    }
                 case 32:
                 case 31:
                     {
@@ -3567,8 +3559,6 @@ namespace Server.Mobiles
             writer.Write((int)m_ExtendedFlags);
 
             writer.Write(RewardStableSlots);
-
-            writer.Write((int)ExploringTheDeepQuest);
 
             // Version 31/32 Titles
             writer.Write(DisplayGuildTitle);
@@ -5014,9 +5004,6 @@ namespace Server.Mobiles
             }
         }
         #endregion
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public ExploringTheDeepQuestChain ExploringTheDeepQuest { get; set; }
 
         public void AutoStablePets()
         {
