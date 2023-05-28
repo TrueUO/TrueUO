@@ -121,7 +121,7 @@ namespace Server.Misc
 
             if (!from.Player && !(from is BaseCreature bc && bc.GetMaster() != null && bc.GetMaster().IsPlayer()))
             {
-                if (!CheckAggressor(from.Aggressors, target) && !CheckAggressed(from.Aggressed, target) && target is PlayerMobile pm && pm.CheckYoungProtection(from))
+                if (!CheckAggressor(from.Aggressors, target) && !CheckAggressed(from.Aggressed, target) && target is PlayerMobile pm && pm.CheckYoungProtection())
                 {
                     return false;
                 }

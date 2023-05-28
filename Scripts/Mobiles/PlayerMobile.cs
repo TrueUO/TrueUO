@@ -3184,29 +3184,6 @@ namespace Server.Mobiles
 
             return result;
         }
-
-        public override bool CheckPoisonImmunity(Mobile from, Poison poison)
-        {
-            if (Young)
-            {
-                return true;
-            }
-
-            return base.CheckPoisonImmunity(from, poison);
-        }
-
-        public override void OnPoisonImmunity(Mobile from, Poison poison)
-        {
-            if (Young)
-            {
-                SendLocalizedMessage(502808);
-                // You would have been poisoned, were you not new to the land of Britannia. Be careful in the future.
-            }
-            else
-            {
-                base.OnPoisonImmunity(from, poison);
-            }
-        }
         #endregion
 
         public PlayerMobile(Serial s)
@@ -4414,19 +4391,9 @@ namespace Server.Mobiles
             }
         }
 
-        public override string ApplyNameSuffix(string suffix)
-        {
-            if (Young)
-            {
-                suffix = suffix.Length == 0 ? "(Young)" : string.Concat(suffix, " (Young)");
-            }
-
-            return base.ApplyNameSuffix(suffix);
-        }
-
         public override TimeSpan GetLogoutDelay()
         {
-            if (Young || BedrollLogout || TestCenter.Enabled)
+            if (BedrollLogout || TestCenter.Enabled)
             {
                 return TimeSpan.Zero;
             }
@@ -4434,50 +4401,8 @@ namespace Server.Mobiles
             return base.GetLogoutDelay();
         }
 
-        private DateTime m_LastYoungMessage = DateTime.MinValue;
-
-        public bool CheckYoungProtection(Mobile from)
+        public bool CheckYoungProtection()
         {
-            if (!Young)
-            {
-                return false;
-            }
-
-            if (Region is BaseRegion region && !region.YoungProtected)
-            {
-                return false;
-            }
-
-            if (from is BaseCreature creature && creature.IgnoreYoungProtection)
-            {
-                return false;
-            }
-
-            if (Quest != null && Quest.IgnoreYoungProtection(from))
-            {
-                return false;
-            }
-
-            if (DateTime.UtcNow - m_LastYoungMessage > TimeSpan.FromMinutes(1.0))
-            {
-                m_LastYoungMessage = DateTime.UtcNow;
-                SendLocalizedMessage(1019067);
-                // A monster looks at you menacingly but does not attack.  You would be under attack now if not for your status as a new citizen of Britannia.
-            }
-
-            return true;
-        }
-
-        private DateTime m_LastYoungHeal = DateTime.MinValue;
-
-        public bool CheckYoungHealTime()
-        {
-            if (DateTime.UtcNow - m_LastYoungHeal > TimeSpan.FromMinutes(5.0))
-            {
-                m_LastYoungHeal = DateTime.UtcNow;
-                return true;
-            }
-
             return false;
         }
         #endregion

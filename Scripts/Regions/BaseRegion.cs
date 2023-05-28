@@ -1,6 +1,4 @@
-using Server.Gumps;
 using Server.Items;
-using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.Xml;
@@ -134,9 +132,6 @@ namespace Server.Regions
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool YoungProtected => true;
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public string RuneName { get => m_RuneName; set => m_RuneName = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -240,17 +235,6 @@ namespace Server.Regions
             }
 
             return base.GetLogoutDelay(m);
-        }
-
-        public override void OnEnter(Mobile m)
-        {
-            if (m is PlayerMobile mobile && mobile.Young)
-            {
-                if (!YoungProtected)
-                {
-                    mobile.SendGump(new YoungDungeonWarning());
-                }
-            }
         }
 
         public override bool AcceptsSpawnsFrom(Region region)

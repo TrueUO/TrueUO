@@ -20,9 +20,6 @@ namespace Server.Regions
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public override bool YoungProtected => false;
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public Point3D EntranceLocation { get => m_EntranceLocation; set => m_EntranceLocation = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]

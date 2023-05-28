@@ -29,7 +29,7 @@ namespace Server.Mobiles
             set => m_Price = value;
         }
         public override bool IsInvulnerable => true;
-        public override bool HealsYoungPlayers => false;
+        
         public override void InitSBInfo()
         {
         }

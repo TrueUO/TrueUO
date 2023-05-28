@@ -57,7 +57,7 @@ namespace Server.Mobiles
         public override bool IsActiveVendor => false;
         public override bool IsInvulnerable => false;
         public override VendorShoeType ShoeType => VendorShoeType.Sandals;
-        public virtual bool HealsYoungPlayers => true;
+       
         protected override List<SBInfo> SBInfos => m_SBInfos;
         public override void InitSBInfo()
         {
@@ -91,25 +91,6 @@ namespace Server.Mobiles
             m.SendGump(new ResurrectGump(m, ResurrectMessage.Healer));
         }
 
-        public virtual void OfferHeal(PlayerMobile m)
-        {
-            Direction = GetDirectionTo(m);
-
-            if (m.CheckYoungHealTime())
-            {
-                Say(501229); // You look like you need some healing my child.
-
-                m.PlaySound(0x1F2);
-                m.FixedEffect(0x376A, 9, 32);
-
-                m.Hits = m.HitsMax;
-            }
-            else
-            {
-                Say(501228); // I can do no more for you at this time.
-            }
-        }
-
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
             if (!m.Frozen && DateTime.UtcNow >= m_NextResurrect && InRange(m, 2) && !InRange(oldLocation, 2) && InLOS(m))
@@ -126,10 +107,6 @@ namespace Server.Mobiles
                     {
                         OfferResurrection(m);
                     }
-                }
-                else if (HealsYoungPlayers && m.Hits < m.HitsMax && m is PlayerMobile mobile && mobile.Young)
-                {
-                    OfferHeal(mobile);
                 }
             }
         }
