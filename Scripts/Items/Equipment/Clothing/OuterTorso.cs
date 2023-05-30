@@ -165,6 +165,11 @@ namespace Server.Items
 
         #endregion
 
+        public override int BasePhysicalResistance => 1;
+
+        public override int InitMinHits => 20;
+        public override int InitMaxHits => 30;
+
         [Constructable]
         public Robe()
             : this(0)

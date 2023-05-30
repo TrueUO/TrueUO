@@ -32,9 +32,11 @@ namespace Server.Misc
 
             PackItem(new Gold(100)); // Starting gold can be customized here
             PackItem(new Bandage(25));
+            PackItem(new SkinningKnife());
 
             EquipItem(new SkinningKnife());
 
+            EquipItem(new Robe());
             EquipItem(new Shoes(Utility.RandomYellowHue()));
         }
 

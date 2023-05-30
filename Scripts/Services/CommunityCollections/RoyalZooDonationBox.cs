@@ -44,13 +44,7 @@ namespace Server.Items
             Donations.Add(new CollectionItem(typeof(Drake), 0x20D6, 1073119, 0x0, 400.0));
             Donations.Add(new CollectionItem(typeof(Reptalon), 0x2D95, 1073121, 0x0, 550.0));
 
-            int[] hues = new int[]
-            {
-                0x555, 0xAE, 0x94, 0x278, 0x32, 0x28, 0x327, 0x41A
-            };
-
-            Rewards.Add(new CollectionHuedItem(typeof(ZooMemberFloppyHat), 0x1713, 1073221, 0x555, 100000.0, hues));
-            Rewards.Add(new CollectionHuedItem(typeof(ZooMemberBonnet), 0x1719, 1073221, 0x555, 100000.0, hues));
+            int[] hues = new int[] { 0x34, 0x1C2, 0x2A3 };
             Rewards.Add(new CollectionTitle(1073201, 1073624, 100000.0)); // Britannia Zoo Contributor
             Rewards.Add(new CollectionItem(typeof(QuagmireStatue), 0x2614, 1073195, 0x0, 200000.0));
             Rewards.Add(new CollectionItem(typeof(BakeKitsuneStatue), 0x2763, 1073189, 0x0, 200000.0));
@@ -60,12 +54,6 @@ namespace Server.Items
             Rewards.Add(new CollectionItem(typeof(PolarBearStatue), 0x20E1, 1073193, 0x0, 200000.0));
             Rewards.Add(new CollectionItem(typeof(SnakeStatue), 0x25C2, 1073194, 0x0, 200000.0));
             Rewards.Add(new CollectionTitle(1073202, 1073627, 200000.0)); // Distinguished Britannia Zoo Contributor
-
-            hues = new int[]
-            {
-                0x34, 0x1C2, 0x2A3
-            };
-
             Rewards.Add(new CollectionItem(typeof(SilverSteedZooStatuette), 0x259D, 1073219, 0x0, 350000.0));
             Rewards.Add(new CollectionHuedItem(typeof(QuagmireZooStatuette), 0x2614, 1074848, 0x34, 350000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(BakeKitsuneZooStatuette), 0x2763, 1074849, 0x34, 350000.0, hues));
@@ -75,7 +63,6 @@ namespace Server.Items
             Rewards.Add(new CollectionHuedItem(typeof(ChangelingZooStatuette), 0x2D8A, 1074850, 0x34, 350000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(ReptalonZooStatuette), 0x2D95, 1074852, 0x34, 350000.0, hues));
             Rewards.Add(new CollectionTitle(1073203, 1073628, 350000.0)); // Honored Britannia Zoo Contributor
-
             Rewards.Add(new CollectionTitle(1073204, 1073629, 550000.0)); // Prominent Britannia Zoo Contributor
             Rewards.Add(new CollectionItem(typeof(SpecialAchievementZooStatuette), 0x2FF6, 1073226, 0x109, 800000.0));
             Rewards.Add(new CollectionTitle(1073205, 1073630, 800000.0)); // Eminent Britannia Zoo Contribuer

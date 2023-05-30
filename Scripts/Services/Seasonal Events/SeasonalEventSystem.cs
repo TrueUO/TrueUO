@@ -1,5 +1,4 @@
 using Server.Commands;
-using Server.Engines.Fellowship;
 using Server.Engines.JollyRoger;
 using Server.Engines.RisingTide;
 using Server.Engines.SorcerersDungeon;

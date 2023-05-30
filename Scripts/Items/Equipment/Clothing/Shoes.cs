@@ -249,7 +249,12 @@ namespace Server.Items
     [Flipable(0x170f, 0x1710)]
     public class Shoes : BaseShoes
     {
-        public override CraftResource DefaultResource => CraftResource.RegularLeather;
+        public override CraftResource DefaultResource => CraftResource.RegularLeather; // Why?
+
+        public override int BasePhysicalResistance => 1;
+
+        public override int InitMinHits => 20;
+        public override int InitMaxHits => 30;
 
         [Constructable]
         public Shoes()

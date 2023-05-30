@@ -3253,25 +3253,12 @@ namespace Server.Mobiles
 
             switch (version)
             {
-                case 42: 
-                case 41: 
-                case 40: 
-                case 39: 
-                case 38:
-                    NextGemOfSalvationUse = reader.ReadDateTime();
-                    goto case 37;
-                case 37:
-                    m_ExtendedFlags = (ExtendedPlayerFlag)reader.ReadInt();
-                    goto case 36;
-                case 36:
-                    RewardStableSlots = reader.ReadInt();
-                    goto case 35;
-                case 35:
-                case 34:
-                case 33:
-                case 32:
-                case 31:
+                case 20:
                     {
+                        NextGemOfSalvationUse = reader.ReadDateTime();
+                        m_ExtendedFlags = (ExtendedPlayerFlag)reader.ReadInt();
+                        RewardStableSlots = reader.ReadInt();
+
                         DisplayGuildTitle = reader.ReadBool();
                         m_FameKarmaTitle = reader.ReadString();
                         m_PaperdollSkillTitle = reader.ReadString();
@@ -3280,11 +3267,7 @@ namespace Server.Mobiles
 
                         m_CurrentChampTitle = reader.ReadString();
                         m_CurrentVeteranTitle = reader.ReadInt();
-                        goto case 30;
-                    }
-                case 30: goto case 29;
-                case 29:
-                    {
+
                         m_SSNextSeed = reader.ReadDateTime();
                         m_SSSeedExpire = reader.ReadDateTime();
                         m_SSSeedLocation = reader.ReadPoint3D();
@@ -3304,27 +3287,9 @@ namespace Server.Mobiles
                         }
 
                         m_SelectedTitle = reader.ReadInt();
-
-                        goto case 28;
-                    }
-                case 28:
-                    {
-                        goto case 27;
-                    }
-                case 27:
-                    {
                         m_AnkhNextUse = reader.ReadDateTime();
-
-                        goto case 26;
-                    }
-                case 26:
-                    {
                         m_AutoStabled = reader.ReadStrongMobileList();
 
-                        goto case 25;
-                    }
-                case 25:
-                    {
                         int recipeCount = reader.ReadInt();
 
                         if (recipeCount > 0)
@@ -3340,21 +3305,9 @@ namespace Server.Mobiles
                                 }
                             }
                         }
-                        goto case 24;
-                    }
-                case 24:
-                case 23:
-                    {
+
                         m_ChampionTitles = new ChampionTitleInfo(reader);
-                        goto case 22;
-                    }
-                case 22:
-                case 21:
-                    {
-                        goto case 20;
-                    }
-                case 20:
-                    {
+
                         m_AllianceMessageHue = reader.ReadEncodedInt();
                         m_GuildMessageHue = reader.ReadEncodedInt();
 
@@ -3529,15 +3482,12 @@ namespace Server.Mobiles
             CheckAtrophies(this);
 
             base.Serialize(writer);
-            writer.Write(42); // version
+            writer.Write(20); // version
 
             writer.Write(NextGemOfSalvationUse);
-
             writer.Write((int)m_ExtendedFlags);
-
             writer.Write(RewardStableSlots);
 
-            // Version 31/32 Titles
             writer.Write(DisplayGuildTitle);
             writer.Write(m_FameKarmaTitle);
             writer.Write(m_PaperdollSkillTitle);
@@ -3546,14 +3496,10 @@ namespace Server.Mobiles
             writer.Write(m_CurrentChampTitle);
             writer.Write(m_CurrentVeteranTitle);
 
-            #region Plant System
             writer.Write(m_SSNextSeed);
             writer.Write(m_SSSeedExpire);
             writer.Write(m_SSSeedLocation);
             writer.Write(m_SSSeedMap);
-            #endregion
-
-            #region Mondain's Legacy
 
             if (m_Collections == null)
             {
@@ -3585,9 +3531,7 @@ namespace Server.Mobiles
             }
 
             writer.Write(m_SelectedTitle);
-            #endregion
 
-            // Version 28
             writer.Write(m_AnkhNextUse);
             writer.Write(m_AutoStabled, true);
 
