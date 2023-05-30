@@ -829,50 +829,6 @@ namespace Server.Mobiles
         }
         #endregion
 
-        #region Soulbound
-        private bool _IsSoulBound;
-
-        public bool IsSoulBound
-        {
-            get
-            {
-                if (!IsSoulboundEnemies)
-                {
-                    return false;
-                }
-
-                bool any = false;
-
-                for (var index = 0; index < _SoulboundCreatures.Length; index++)
-                {
-                    var c = _SoulboundCreatures[index];
-
-                    if (c == GetType())
-                    {
-                        any = true;
-                        break;
-                    }
-                }
-
-                return _IsSoulBound || any;
-            }
-            set
-            {
-                if (IsSoulboundEnemies)
-                {
-                    _IsSoulBound = value;
-                }
-            }
-        }
-
-        public static bool IsSoulboundEnemies => Engines.Fellowship.ForsakenFoesEvent.Instance.Running;
-
-        public static readonly Type[] _SoulboundCreatures =
-        {
-            typeof(MerchantCaptain), typeof(PirateCrew), typeof(PirateCaptain), typeof(MerchantCrew), typeof(Osiredon), typeof(Charydbis), typeof(CorgulTheSoulBinder)
-        };
-        #endregion
-
         public virtual double WeaponAbilityChance => 0.4;
 
         public virtual WeaponAbility GetWeaponAbility()
@@ -5238,13 +5194,10 @@ namespace Server.Mobiles
                 }
             }
 
-            if (IsSoulBound)
-            {
-                list.Add(1159188); // <BASEFONT COLOR=#FF8300>Soulbound<BASEFONT COLOR=#FFFFFF>
-            }
-
             if (IsAmbusher)
+            {
                 list.Add(1155480); // Ambusher
+            }
         }
 
         public virtual double TreasureMapChance => TreasureMap.LootChance;

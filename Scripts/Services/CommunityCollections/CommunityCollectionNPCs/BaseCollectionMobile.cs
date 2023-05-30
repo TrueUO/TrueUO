@@ -300,9 +300,6 @@ namespace Server.Mobiles
                 player.SendLocalizedMessage(1073621); // Your reward has been placed in your backpack.
                 player.PlaySound(0x5A7);
 
-                if (reward.QuestItem)
-                    CollectionsObtainObjective.CheckReward(player, item);
-
                 reward.OnGiveReward(player, item, this, hue);
             }
             else if (item != null)

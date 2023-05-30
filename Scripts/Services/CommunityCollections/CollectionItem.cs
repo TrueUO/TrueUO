@@ -66,7 +66,6 @@ namespace Server
         public TextDefinition Tooltip => m_Tooltip;
         public int Hue => m_Hue;
         public double Points => m_Points;
-        public bool QuestItem => m_QuestItem;
 
         public virtual bool Validate(PlayerMobile from, Item item)
         {

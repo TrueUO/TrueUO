@@ -42,7 +42,6 @@ namespace Server.Items
             Donations.Add(new CollectionItem(typeof(SmoothingPlane), 0x1032, 1075061, 0x0, 4));
 
             int[] hues = new int[] { 0x2A, 0x27D, 0xF7, 0x236 };
-            Rewards.Add(new CollectionItem(typeof(ShepherdsCrookOfHumility), 0xE81, 1075791, 902, 5000.0, true));
             Rewards.Add(new CollectionTitle(1073235, 1073637, 100000.0)); // Vesper Museum Contributor
             Rewards.Add(new CollectionHuedItem(typeof(VesperCollectionRing), 0x108A, 1073234, 0x2A, 200000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(VesperCollectionNecklace), 0x1088, 1073234, 0x2A, 200000.0, hues));

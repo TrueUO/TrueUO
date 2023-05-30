@@ -49,7 +49,6 @@ namespace Server.Items
                 0x555, 0xAE, 0x94, 0x278, 0x32, 0x28, 0x327, 0x41A
             };
 
-            Rewards.Add(new CollectionItem(typeof(ForTheLifeOfBritanniaSash), 0x1541, 1075792, 183, 5000.0, true));
             Rewards.Add(new CollectionHuedItem(typeof(ZooMemberFloppyHat), 0x1713, 1073221, 0x555, 100000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(ZooMemberBonnet), 0x1719, 1073221, 0x555, 100000.0, hues));
             Rewards.Add(new CollectionTitle(1073201, 1073624, 100000.0)); // Britannia Zoo Contributor

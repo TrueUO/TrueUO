@@ -57,7 +57,6 @@ namespace Server.Items
             Donations.Add(new CollectionItem(typeof(BaseScales), 0x26B4, 1053137, 0x0, 20));
 
             int[] hues = new int[] { 0x1E0, 0x190, 0x151 };
-            Rewards.Add(new CollectionItem(typeof(SpecialPrintingOfVirtue), 0xFF0, 1075793, 0x47E, 5000.0, true));
             Rewards.Add(new CollectionHuedItem(typeof(LibraryFriendFeatheredHat), 0x171A, 1073347, 0x190, 100000.0, hues));
             Rewards.Add(new CollectionTitle(1073341, 1073859, 100000.0)); // Britain Public Library Contributor
 

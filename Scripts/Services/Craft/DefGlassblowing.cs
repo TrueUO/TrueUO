@@ -27,10 +27,9 @@ namespace Server.Engines.Craft
         public override double GetChanceAtMin(CraftItem item)
         {
             if (item.ItemType == typeof(HollowPrism))
+            {
                 return 0.5; // 50%
-
-            if (item.ItemType == typeof(EtherealSoulbinder))
-                return 0.1; // 10%
+            }
 
             return 0.0; // 0%
         }
@@ -132,9 +131,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(EmptyOilFlask), 1044050, 1150866, 60.0, 110.0, typeof(Sand), 1044625, 5, 1044627);
 
             AddCraft(typeof(WorkableGlass), 1044050, 1154170, 55.0, 105.0, typeof(Sand), 1044625, 10, 1044627);
-
-            index = AddCraft(typeof(EtherealSoulbinder), 1044050, 1159167, 100.0, 190.0, typeof(Sand), 1044625, 20, 1044627);
-            AddRes(index, typeof(EtherealSand), 1125984, 5, 1159169);
 
             Repair = true;
             MarkOption = true;

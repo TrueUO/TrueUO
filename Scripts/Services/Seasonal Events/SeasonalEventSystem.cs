@@ -25,7 +25,6 @@ namespace Server.Engines.SeasonalEvents
         TreasuresOfDoom,
         KrampusEncounter,
         RisingTide,
-        Fellowship,
         JollyRoger,
         ArtisanFestival
     }
@@ -70,7 +69,6 @@ namespace Server.Engines.SeasonalEvents
             Entries.Add(new TreasuresOfDoomEvent(EventType.TreasuresOfDoom, "Treasures of Doom", EventStatus.Inactive, 10, 1, 60));
             Entries.Add(new KrampusEvent(EventType.KrampusEncounter, "Krampus Encounter", EventStatus.Inactive, 12, 1, 60));
             Entries.Add(new RisingTideEvent(EventType.RisingTide, "Rising Tide", EventStatus.Inactive));
-            Entries.Add(new ForsakenFoesEvent(EventType.Fellowship, "Fellowship", EventStatus.Inactive));
             Entries.Add(new JollyRogerEvent(EventType.JollyRoger, "Jolly Roger", EventStatus.Inactive));
             Entries.Add(new ArtisanFestivalEvent(EventType.ArtisanFestival, "Artisan Festival", EventStatus.Inactive, 12, 1, -1));
         }

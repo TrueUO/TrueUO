@@ -668,11 +668,6 @@ namespace Server.Items
                 {
                     bc.Title = "(Guardian)";
                     bc.Tamable = false;
-
-                    if (BaseCreature.IsSoulboundEnemies)
-                    {
-                        bc.IsSoulBound = true;
-                    }
                 }
 
                 return bc;
