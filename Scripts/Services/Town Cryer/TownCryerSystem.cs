@@ -37,8 +37,6 @@ namespace Server.Services.TownCryer
         public static List<TownCryerGuildEntry> GuildEntries { get; private set; }
         public static List<PlayerMobile> TownCryerExempt { get; private set; }
 
-        public static Dictionary<Mobile, DateTime> MysteriousPotionEffects { get; private set; }
-
         public static Timer Timer { get; private set; }
         public static bool NewGreeting { get; private set; }
 
@@ -91,10 +89,8 @@ namespace Server.Services.TownCryer
                 EventSink.Login += OnLogin;
 
                 NewsEntries.Add(new TownCryerNewsEntry(1158092, 1158094, 0x651, typeof(HuntmastersChallengeQuest), "https://uo.com/wiki/ultima-online-wiki/gameplay/huntmasters-challenge/")); // Huntsmaster Challenge 
-                NewsEntries.Add(new TownCryerNewsEntry(1158107, 1158109, 0x61A, typeof(RightingWrongQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-wrong/")); // New Wrong
                 NewsEntries.Add(new TownCryerNewsEntry(1158113, 1158115, 0x64C, typeof(BuriedRichesQuest), "https://uo.com/wiki/ultima-online-wiki/gameplay/treasure-maps/")); // New TMaps
-                NewsEntries.Add(new TownCryerNewsEntry(1158119, 1158121, 0x64D, typeof(APleaFromMinocQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-covetous/")); // New Covetous
-                
+
                 // New greeting, resets all TC hiding
                 if (NewGreeting)
                 {
@@ -254,7 +250,7 @@ namespace Server.Services.TownCryer
                 }
             }
 
-            if (any || ModeratorEntries.Count > 0 || CityEntries.Count > 0 || GuildEntries.Count > 0 || MysteriousPotionEffects != null)
+            if (any || ModeratorEntries.Count > 0 || CityEntries.Count > 0 || GuildEntries.Count > 0)
             {
                 if (Timer == null || !Timer.Running)
                 {
@@ -293,28 +289,6 @@ namespace Server.Services.TownCryer
             {
                 if (GuildEntries[i].Expired)
                     GuildEntries.RemoveAt(i);
-            }
-
-            if (MysteriousPotionEffects != null)
-            {
-                List<Mobile> list = new List<Mobile>(MysteriousPotionEffects.Keys);
-
-                for (var index = 0; index < list.Count; index++)
-                {
-                    Mobile m = list[index];
-
-                    if (MysteriousPotionEffects != null && MysteriousPotionEffects.ContainsKey(m) && MysteriousPotionEffects[m] < DateTime.UtcNow)
-                    {
-                        MysteriousPotionEffects.Remove(m);
-
-                        if (MysteriousPotionEffects.Count == 0)
-                        {
-                            MysteriousPotionEffects = null;
-                        }
-                    }
-                }
-
-                ColUtility.Free(list);
             }
 
             CheckTimer();
@@ -364,24 +338,6 @@ namespace Server.Services.TownCryer
                 case City.Vesper: return 1158050;
                 case City.Yew: return 1158051;
             }
-        }
-
-        public static bool UnderMysteriousPotionEffects(Mobile m, bool checkQuest = false)
-        {
-            return MysteriousPotionEffects != null && MysteriousPotionEffects.ContainsKey(m) && MysteriousPotionEffects[m] > DateTime.UtcNow &&
-                   (!checkQuest || m is PlayerMobile mobile && QuestHelper.HasQuest<AForcedSacraficeQuest2>(mobile));
-        }
-
-        public static void AddMysteriousPotionEffects(Mobile m)
-        {
-            if (MysteriousPotionEffects == null)
-            {
-                MysteriousPotionEffects = new Dictionary<Mobile, DateTime>();
-            }
-
-            MysteriousPotionEffects[m] = DateTime.UtcNow + TimeSpan.FromDays(3);
-
-            CheckTimer();
         }
 
         #region Pre-Loaded 
@@ -593,17 +549,6 @@ namespace Server.Services.TownCryer
 
                 e.Serialize(writer);
             }
-
-            writer.Write(MysteriousPotionEffects != null ? MysteriousPotionEffects.Count : 0);
-
-            if (MysteriousPotionEffects != null)
-            {
-                foreach (KeyValuePair<Mobile, DateTime> kvp in MysteriousPotionEffects)
-                {
-                    writer.Write(kvp.Key);
-                    writer.Write(kvp.Value);
-                }
-            }
         }
 
         public static void Load(GenericReader reader)
@@ -672,20 +617,6 @@ namespace Server.Services.TownCryer
                         }
                     }
 
-                    count = reader.ReadInt();
-                    for (int i = 0; i < count; i++)
-                    {
-                        Mobile m = reader.ReadMobile();
-                        DateTime dt = reader.ReadDateTime();
-
-                        if (m != null)
-                        {
-                            if (MysteriousPotionEffects == null)
-                                MysteriousPotionEffects = new Dictionary<Mobile, DateTime>();
-
-                            MysteriousPotionEffects[m] = dt;
-                        }
-                    }
                     break;
             }
 

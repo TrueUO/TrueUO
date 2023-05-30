@@ -9,12 +9,10 @@ namespace Server.Engines.Quests
         None = 0,
 
         UnfadingMemories = 1,
-        LaifemTheWeaver = 2,
-        ValleyOfOne = 3,
-        MyrmidexAlliance = 4,
-        EodonianAlliance = 5,
-        FlintTheQuartermaster = 6,
-        RightingWrong = 7
+        ValleyOfOne = 2,
+        MyrmidexAlliance = 3,
+        EodonianAlliance = 4,
+        FlintTheQuartermaster = 5
     }
 
     public class BaseChain
@@ -23,17 +21,15 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[8][];
+            Chains = new Type[6][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
             Chains[(int)QuestChain.UnfadingMemories] = new[] { typeof(UnfadingMemoriesOneQuest), typeof(UnfadingMemoriesTwoQuest), typeof(UnfadingMemoriesThreeQuest) };
-            Chains[(int)QuestChain.LaifemTheWeaver] = new[] { typeof(ShearingKnowledgeQuest), typeof(WeavingFriendshipsQuest), typeof(NewSpinQuest)};
             Chains[(int)QuestChain.ValleyOfOne] = new[] { typeof(TimeIsOfTheEssenceQuest), typeof(UnitingTheTribesQuest) };
             Chains[(int)QuestChain.MyrmidexAlliance] = new[] { typeof(TheZealotryOfZipactriotlQuest), typeof(DestructionOfZipactriotlQuest) };
             Chains[(int)QuestChain.EodonianAlliance] = new[] { typeof(ExterminatingTheInfestationQuest), typeof(InsecticideAndRegicideQuest) };
             Chains[(int)QuestChain.FlintTheQuartermaster] = new[] { typeof(ThievesBeAfootQuest), typeof(BibliophileQuest) };
-            Chains[(int)QuestChain.RightingWrong] = new[] { typeof(RightingWrongQuest2), typeof(RightingWrongQuest3), typeof(RightingWrongQuest4) };
         }
 
         public Type CurrentQuest { get; set; }

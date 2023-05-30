@@ -65,16 +65,11 @@ namespace Server.Mobiles
 
         public void AuraEffect(Mobile m)
         {
-            if (m is PlayerMobile mobile && Services.TownCryer.TownCryerSystem.UnderMysteriousPotionEffects(mobile, true))
-            {
-                mobile.SayTo(mobile, 1158288, 1154); // *You resist Cora's attack!*
-            }
-            else
-            {
-                int mana = Utility.Random(1, m.Mana);
-                m.Mana -= mana;
-                m.SendLocalizedMessage(1153114, mana.ToString()); // Cora drains ~1_VAL~ points of your mana!
-            }
+            int mana = Utility.Random(1, m.Mana);
+
+            m.Mana -= mana;
+
+            m.SendLocalizedMessage(1153114, mana.ToString()); // Cora drains ~1_VAL~ points of your mana!
         }
 
         public override bool TeleportsTo => true;
@@ -256,15 +251,9 @@ namespace Server.Mobiles
             {
                 if ((m is PlayerMobile || m is BaseCreature bc && !bc.IsMonster) && m.CanBeHarmful(Owner, false))
                 {
-                    if (m is PlayerMobile mobile && Services.TownCryer.TownCryerSystem.UnderMysteriousPotionEffects(mobile, true))
-                    {
-                        mobile.SayTo(mobile, 1158288, 1154); // *You resist Cora's attack!*
-                    }
-                    else
-                    {
-                        m.FixedParticles(0x3779, 10, 25, 5002, EffectLayer.Head);
-                        m.Mana = 0;
-                    }
+                    m.FixedParticles(0x3779, 10, 25, 5002, EffectLayer.Head);
+
+                    m.Mana = 0;
                 }
 
                 return true;

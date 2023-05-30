@@ -438,16 +438,6 @@ namespace Server.Engines.VoidPool
                 if (CurrentScore.ContainsKey(m))
                 {
                     m.SendLocalizedMessage(1152650, $"{GetTotalWaves(m)}\t{Wave.ToString()}\t{Wave.ToString()}\t{CurrentScore[m]}"); // During the battle, you helped fight back ~1_COUNT~ out of ~2_TOTAL~ waves of enemy forces. Your final wave was ~3_MAX~. Your total score for the battle was ~4_SCORE~ points.
-
-                    if (m is PlayerMobile mobile)
-                    {
-                        AForcedSacraficeQuest quest = QuestHelper.GetQuest<AForcedSacraficeQuest>(mobile);
-
-                        if (quest != null)
-                        {
-                            quest.CompleteQuest();
-                        }
-                    }
                 }
             }
 

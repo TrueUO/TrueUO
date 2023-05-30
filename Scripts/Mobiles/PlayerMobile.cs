@@ -59,16 +59,16 @@ namespace Server.Mobiles
         HasStatReward = 0x00000800,
         Bedlam = 0x00001000,
         GemMining = 0x00002000,
-        ToggleMiningGem = 0x00010000,
-        BasketWeaving = 0x00020000,
-        AbyssEntry = 0x00040000,
-        ToggleClippings = 0x00080000,
-        ToggleCutClippings = 0x00100000,
-        ToggleCutReeds = 0x00200000,
-        MechanicalLife = 0x00400000,
-        ToggleCutTopiaries = 0x00800000,
-        HasValiantStatReward = 0x01000000,
-        RefuseTrades = 0x02000000
+        ToggleMiningGem = 0x00004000,
+        BasketWeaving = 0x00008000,
+        AbyssEntry = 0x00010000,
+        ToggleClippings = 0x00020000,
+        ToggleCutClippings = 0x00040000,
+        ToggleCutReeds = 0x00080000,
+        MechanicalLife = 0x00100000,
+        ToggleCutTopiaries = 0x00200000,
+        HasValiantStatReward = 0x00400000,
+        RefuseTrades = 0x00800000
     }
 
     [Flags]
@@ -76,8 +76,7 @@ namespace Server.Mobiles
     {
         Unused = 0x00000001,
         ToggleStoneOnly = 0x00000002,
-        CanBuyCarpets = 0x00000004,
-        DisabledPvpWarning = 0x00000008
+        DisabledPvpWarning = 0x00000004
     }
 
     public enum NpcGuild
@@ -373,13 +372,6 @@ namespace Server.Mobiles
         {
             get => GetFlag(ExtendedPlayerFlag.DisabledPvpWarning);
             set => SetFlag(ExtendedPlayerFlag.DisabledPvpWarning, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool CanBuyCarpets
-        {
-            get => GetFlag(ExtendedPlayerFlag.CanBuyCarpets);
-            set => SetFlag(ExtendedPlayerFlag.CanBuyCarpets, value);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -3253,7 +3245,7 @@ namespace Server.Mobiles
 
             switch (version)
             {
-                case 20:
+                case 1:
                     {
                         NextGemOfSalvationUse = reader.ReadDateTime();
                         m_ExtendedFlags = (ExtendedPlayerFlag)reader.ReadInt();
@@ -3311,10 +3303,6 @@ namespace Server.Mobiles
                         m_AllianceMessageHue = reader.ReadEncodedInt();
                         m_GuildMessageHue = reader.ReadEncodedInt();
 
-                        goto case 19;
-                    }
-                case 19:
-                    {
                         int rank = reader.ReadEncodedInt();
                         int maxRank = RankDefinition.Ranks.Length - 1;
                         if (rank > maxRank)
@@ -3324,12 +3312,7 @@ namespace Server.Mobiles
 
                         m_GuildRank = RankDefinition.Ranks[rank];
                         m_LastOnline = reader.ReadDateTime();
-                        goto case 18;
-                    }
-                case 18:
-                case 17: 
-                case 16:
-                    {
+
                         m_Quest = QuestSerializer.DeserializeQuest(reader);
 
                         if (m_Quest != null)
@@ -3351,15 +3334,7 @@ namespace Server.Mobiles
                                 m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
                             }
                         }
-                        goto case 15;
-                    }
-                case 15:
-                case 14:
-                case 13: 
-                case 12:
-                case 11:
-                case 10:
-                    {
+
                         if (reader.ReadBool())
                         {
                             m_HairModID = reader.ReadInt();
@@ -3368,10 +3343,6 @@ namespace Server.Mobiles
                             m_BeardModHue = reader.ReadInt();
                         }
 
-                        goto case 9;
-                    }
-                case 9:
-                    {
                         SavagePaintExpiration = reader.ReadTimeSpan();
 
                         if (SavagePaintExpiration > TimeSpan.Zero)
@@ -3380,38 +3351,21 @@ namespace Server.Mobiles
                             HueMod = 0;
                         }
 
-                        goto case 8;
-                    }
-                case 8:
-                    {
                         m_NpcGuild = (NpcGuild)reader.ReadInt();
                         m_NpcGuildJoinTime = reader.ReadDateTime();
                         m_NpcGuildGameTime = reader.ReadTimeSpan();
-                        goto case 7;
-                    }
-                case 7:
-                    {
+
                         m_PermaFlags = reader.ReadStrongMobileList();
-                        goto case 6;
-                    }
-                case 6:                   
-                case 5:                   
-                case 4:
-                case 3:
-                case 2:
-                    {
                         m_Flags = (PlayerFlag)reader.ReadInt();
-                        goto case 1;
+
+                        goto case 0;
                     }
-                case 1:
+                case 0:
                     {
                         m_LongTermElapse = reader.ReadTimeSpan();
                         m_ShortTermElapse = reader.ReadTimeSpan();
                         m_GameTime = reader.ReadTimeSpan();
-                        goto case 0;
-                    }
-                case 0:
-                    {                      
+
                         break;
                     }
             }
@@ -3482,7 +3436,7 @@ namespace Server.Mobiles
             CheckAtrophies(this);
 
             base.Serialize(writer);
-            writer.Write(20); // version
+            writer.Write(1); // version
 
             writer.Write(NextGemOfSalvationUse);
             writer.Write((int)m_ExtendedFlags);
