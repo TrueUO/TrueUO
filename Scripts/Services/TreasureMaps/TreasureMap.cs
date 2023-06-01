@@ -2,6 +2,7 @@
 using Server.ContextMenus;
 using Server.Engines.CannedEvil;
 using Server.Engines.Harvest;
+using Server.Misc;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
@@ -789,6 +790,20 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
+            if(TestCenter.Enabled)
+            {
+                TreasureMapChest m_Chest = new TreasureMapChest(from, this.Level, true);
+
+                m_Chest.MoveToWorld(from.Location, from.Map);
+                TreasureMapInfo.Fill(from, m_Chest, this);
+                m_Chest.Movable = true;
+                m_Chest.Locked = false;
+                m_Chest.TrapType = TrapType.None;
+                m_Chest.TrapPower = 0;
+                m_Chest.TrapLevel = 0;
+                m_Chest.Temporary = false;
+            }
+
             if (!from.InRange(GetWorldLocation(), 2))
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
