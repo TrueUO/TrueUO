@@ -1927,6 +1927,7 @@ namespace Server.Items
                     int rerolls = 1 + rawLuck / 600;
                     double percOfFreeRoll = (double)(rawLuck % 600) / 600;
 
+                    //luckrandom reduced on each luck reroll, so all luck yields better loot
                     for (int i = 0; i < rerolls; i++)
                     {
                         int newRandom = Utility.RandomMinMax(0, luckyRandom);
@@ -1940,11 +1941,13 @@ namespace Server.Items
                     }
 
                     double playerLuckPerc = Math.Min(((100.0 - Math.Sqrt(luckyRandom))) / 100.0, 1);
+
+                    //perc - luck scale calculated 0(bad) - 1.00(good)
                     double perc = Math.Min(1.0, (double)(basebudget * playerLuckPerc) / 700);
 
                     int toAdd = Math.Min(500, RandomItemGenerator.MaxAdjustedBudget - basebudget);
 
-                    budget = Utility.RandomMinMax(basebudget - basebudget / divisor, (int)((basebudget + toAdd) * perc)) + budgetBonus;
+                    budget = Utility.RandomMinMax(basebudget - basebudget / divisor, (int)(basebudget + toAdd * perc)) + budgetBonus;
 
                     // Gives a rare chance for a high end item to drop on a low budgeted monster
                     if (rawLuck > 0 && !IsPowerful(budget) && LootPack.CheckLuck(luckchance / 6))
