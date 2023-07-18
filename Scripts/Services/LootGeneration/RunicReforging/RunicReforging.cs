@@ -1940,10 +1940,10 @@ namespace Server.Items
                         }
                     }
 
-                    double playerLuckPerc = Math.Min(((100.0 - Math.Sqrt(luckyRandom))) / 100.0, 1);
+                    double playerLuckPerc = Math.Min((100.0 - Math.Sqrt(luckyRandom)) / 100.0, 1);
 
                     //perc - luck scale calculated 0(bad) - 1.00(good)
-                    double perc = Math.Min(1.0, (double)(basebudget * playerLuckPerc) / 700);
+                    double perc = Math.Min(1.0, basebudget * playerLuckPerc / 700);
 
                     int toAdd = Math.Min(500, RandomItemGenerator.MaxAdjustedBudget - basebudget);
 
