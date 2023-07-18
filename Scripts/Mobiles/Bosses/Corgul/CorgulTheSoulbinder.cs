@@ -418,7 +418,7 @@ namespace Server.Mobiles
                 m_Altar.OnBossKilled();
             }
 
-            c.DropItem(new MessageInABottle(c.Map));
+            c.DropItem(new MessageInABottle(c.Map == Map.Felucca ? Map.Felucca : Map.Trammel));
             c.DropItem(new SpecialFishingNet());
             c.DropItem(new SpecialFishingNet());
 
