@@ -245,7 +245,7 @@ namespace Server.Mobiles
             BaseRunicTool.ApplyAttributesTo(pole, false, 0, Utility.RandomMinMax(2, 5), 50, 100);
             c.DropItem(pole);
 
-            c.DropItem(new MessageInABottle(c.Map));
+            c.DropItem(new MessageInABottle(c.Map == Map.Felucca ? Map.Felucca : Map.Trammel));
             c.DropItem(new SpecialFishingNet());
             c.DropItem(new SpecialFishingNet());
 
