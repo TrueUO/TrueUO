@@ -1,5 +1,4 @@
 using Server.Gumps;
-using Server.Misc;
 using System;
 
 namespace Server.Items
@@ -171,20 +170,6 @@ namespace Server.Items
 
                 from.CloseGump(typeof(MessageGump));
                 from.SendGump(new MessageGump(entry, m_TargetMap, m_TargetLocation));
-
-                if (TestCenter.Enabled)
-                {
-                    LockableContainer chest = new SOSChest(Level);
-                    TreasureMapChest.Fill(from, chest, Math.Max(1, Math.Min(Level, 4)), true);
-                    chest.Movable = true;
-                    chest.Locked = false;
-                    chest.TrapType = TrapType.None;
-                    chest.TrapPower = 0;
-                    chest.TrapLevel = 0;
-
-                    chest.IsShipwreckedItem = true;
-                    chest.MoveToWorld(from.Location, from.Map);
-                }
             }
             else
             {
