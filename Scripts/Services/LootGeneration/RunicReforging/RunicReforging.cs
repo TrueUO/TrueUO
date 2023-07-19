@@ -1974,7 +1974,7 @@ namespace Server.Items
                     {
                         mods = Math.Max(1, GetProperties(5));
 
-                        perchigh = Math.Max(50, Math.Min(550, budget) / mods);
+                        perchigh = Math.Max(50, Math.Min(500, budget) / mods);
                         perclow = Math.Max(20, Convert.ToInt32(perchigh / 3 * perc));
                         budget = IsPowerful(basebudget) ? basebudget : budget;
                     }
