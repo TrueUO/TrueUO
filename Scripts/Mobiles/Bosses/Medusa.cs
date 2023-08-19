@@ -15,9 +15,9 @@ namespace Server.Mobiles
         private DateTime m_NextCarve;
         private DateTime m_GazeDelay;
 
-        public override Type[] UniqueSAList => new[] { typeof(Slither), typeof(IronwoodCompositeBow), typeof(Venom), typeof(PetrifiedSnake), typeof(StoneDragonsTooth), typeof(MedusaFloorTileAddonDeed) };
+        public override Type[] UniqueSAList => new[] { typeof(Slither), typeof(IronwoodCompositeBow), typeof(Venom), typeof(PetrifiedSnake), typeof(StoneDragonsTooth), typeof(MedusaFloorTileAddonDeed), typeof(EternalGuardianStaff) };
 
-        public override Type[] SharedSAList => new[] { typeof(SummonersKilt) };
+        public override Type[] SharedSAList => new Type[] { };
 
         [Constructable]
         public Medusa()
