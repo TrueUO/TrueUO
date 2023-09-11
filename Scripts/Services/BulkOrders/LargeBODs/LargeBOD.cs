@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace Server.Engines.BulkOrders
 {
-    [TypeAlias("Scripts.Engines.BulkOrders.LargeBOD")]
     public abstract class LargeBOD : Item, IBOD
     {
         public abstract BODType BODType { get; }
@@ -129,22 +128,6 @@ namespace Server.Engines.BulkOrders
             reward = null;
             gold = ComputeGold();
             fame = ComputeFame();
-
-            if (!BulkOrderSystem.NewSystemEnabled)
-            {
-                List<Item> rewards = ComputeRewards(false);
-
-                if (rewards.Count > 0)
-                {
-                    reward = rewards[Utility.Random(rewards.Count)];
-
-                    for (int i = 0; i < rewards.Count; ++i)
-                    {
-                        if (rewards[i] != reward)
-                            rewards[i].Delete();
-                    }
-                }
-            }
         }
 
         public override void GetProperties(ObjectPropertyList list)
