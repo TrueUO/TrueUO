@@ -7,6 +7,7 @@ using Server.Spells.Ninjitsu;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
+using Server.Engines.Despise;
 
 namespace Server.Items
 {
