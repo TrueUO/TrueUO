@@ -667,7 +667,7 @@ namespace Server.Misc
         public static Type[] AllRaceTypes => _AllRaceTypes;
         private static Type[] _AllRaceTypes =
         {
-            typeof(BootsOfBallast), typeof(DetectiveCredentials)
+            typeof(BootsOfBallast), typeof(AquaPendant), typeof(DetectiveCredentials)
         };
 
         public static int[] AllRaceIDs => _AllRaceIDs;
