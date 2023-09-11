@@ -262,80 +262,64 @@ namespace Server.Engines.BulkOrders
     {
         public SmithRewardCalculator()
         {
-            if (BulkOrderSystem.NewSystemEnabled)
-            {
-                RewardCollection = new List<CollectionItem>();
+            RewardCollection = new List<CollectionItem>();
 
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157219, 0, 10, SmithHammer));
-                RewardCollection.Add(new BODCollectionItem(0xF39, 1157084, 0x973, 10, SturdyShovel));
-                RewardCollection.Add(new BODCollectionItem(0xE86, 1157085, 0x973, 25, SturdyPickaxe));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157181, 0, 25, RewardTitle, 0));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157182, 0, 100, RewardTitle, 1));
-                RewardCollection.Add(new BODCollectionItem(0x13C6, 1157086, 0, 100, MiningGloves, 1));
-                RewardCollection.Add(new BODCollectionItem(0x13D5, 1157087, 0, 200, MiningGloves, 3));
-                RewardCollection.Add(new BODCollectionItem(0xFB4, 1157090, 0, 200, ProspectorsTool));
-                RewardCollection.Add(new BODCollectionItem(0xE86, 1157089, 0, 200, GargoylesPickaxe));
-                RewardCollection.Add(new BODCollectionItem(0x2F5B, 1152674, CraftResources.GetHue(CraftResource.Gold), 350, SmeltersTalisman, (int)CraftResource.Gold));
-                RewardCollection.Add(new BODCollectionItem(0x9E2A, 1157264, 0, 400, CraftsmanTalisman, 10));
-                RewardCollection.Add(new BODCollectionItem(0x13EB, 1157088, 0, 450, MiningGloves, 5));
-                RewardCollection.Add(new BODCollectionItem(4102, 1157091, 0, 450, PowderOfTemperament));
-                RewardCollection.Add(new BODCollectionItem(0x2F5B, 1152675, CraftResources.GetHue(CraftResource.Agapite), 475, SmeltersTalisman, (int)CraftResource.Agapite));
-                RewardCollection.Add(new BODCollectionItem(0x9E7E, 1157216, 0, 500, RockHammer));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157092, CraftResources.GetHue(CraftResource.DullCopper), 500, RunicHammer, 1));
-                RewardCollection.Add(new BODCollectionItem(0x2F5B, 1152676, CraftResources.GetHue(CraftResource.Verite), 525, SmeltersTalisman, (int)CraftResource.Verite));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157093, CraftResources.GetHue(CraftResource.ShadowIron), 550, RunicHammer, 2));
-                RewardCollection.Add(new BODCollectionItem(0x9E2A, 1157218, 0, 550, CraftsmanTalisman, 25));
-                RewardCollection.Add(new BODCollectionItem(0x2F5B, 1152677, CraftResources.GetHue(CraftResource.Valorite), 575, SmeltersTalisman, (int)CraftResource.Valorite));
-                RewardCollection.Add(new BODCollectionItem(0x14EC, 1152665, CraftResources.GetHue(CraftResource.Gold), 600, HarvestMap, (int)CraftResource.Gold));
-                RewardCollection.Add(new BODCollectionItem(0xFAF, 1157100, 0, 625, ColoredAnvil));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157105, 0x481, 625, PowerScroll, 5));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157094, CraftResources.GetHue(CraftResource.Copper), 650, RunicHammer, 3));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157106, 0x481, 675, PowerScroll, 10));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157095, CraftResources.GetHue(CraftResource.Bronze), 700, RunicHammer, 4));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157101, 0x482, 750, AncientHammer, 10));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157107, 0x481, 800, PowerScroll, 15));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157102, 0x482, 850, AncientHammer, 15));
-                RewardCollection.Add(new BODCollectionItem(0x14EC, 1152666, CraftResources.GetHue(CraftResource.Agapite), 850, HarvestMap, (int)CraftResource.Agapite));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157108, 0x481, 900, PowerScroll, 20));
-                RewardCollection.Add(new BODCollectionItem(0x9E2A, 1157265, 0, 900, CraftsmanTalisman, 50));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157096, CraftResources.GetHue(CraftResource.Gold), 950, RunicHammer, 5));
-                RewardCollection.Add(new BODCollectionItem(0x14EC, 1152667, CraftResources.GetHue(CraftResource.Verite), 950, HarvestMap, (int)CraftResource.Verite));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157103, 0x482, 1000, AncientHammer, 30));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157097, CraftResources.GetHue(CraftResource.Agapite), 1050, RunicHammer, 6));
-                RewardCollection.Add(new BODCollectionItem(0x14EC, 1152668, CraftResources.GetHue(CraftResource.Valorite), 1050, HarvestMap, (int)CraftResource.Valorite));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157104, 0x482, 1100, AncientHammer, 60));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157098, CraftResources.GetHue(CraftResource.Verite), 1150, RunicHammer, 7));
-                RewardCollection.Add(new BODCollectionItem(0x13E3, 1157099, CraftResources.GetHue(CraftResource.Valorite), 1200, RunicHammer, 8));
-            }
-            else
-            {
-                Groups = new[]
-                {
-                    new RewardGroup(0, new RewardItem(1, SturdyShovel)),
-                    new RewardGroup(25, new RewardItem(1, SturdyPickaxe)),
-                    new RewardGroup(50, new RewardItem(45, SturdyShovel), new RewardItem(45, SturdyPickaxe), new RewardItem(10, MiningGloves, 1)),
-                    new RewardGroup(200, new RewardItem(45, GargoylesPickaxe), new RewardItem(45, ProspectorsTool), new RewardItem(10, MiningGloves, 3)),
-                    new RewardGroup(400, new RewardItem(2, GargoylesPickaxe), new RewardItem(2, ProspectorsTool), new RewardItem(1, PowderOfTemperament)),
-                    new RewardGroup(450, new RewardItem(9, PowderOfTemperament), new RewardItem(1, MiningGloves, 5)),
-                    new RewardGroup(500, new RewardItem(1, RunicHammer, 1)),
-                    new RewardGroup(550, new RewardItem(3, RunicHammer, 1), new RewardItem(2, RunicHammer, 2)),
-                    new RewardGroup(600, new RewardItem(1, RunicHammer, 2)),
-                    new RewardGroup(625, new RewardItem(3, RunicHammer, 2), new RewardItem(6, PowerScroll, 5), new RewardItem(1, ColoredAnvil)),
-                    new RewardGroup(650, new RewardItem(1, RunicHammer, 3)),
-                    new RewardGroup(675, new RewardItem(1, ColoredAnvil), new RewardItem(6, PowerScroll, 10), new RewardItem(3, RunicHammer, 3)),
-                    new RewardGroup(700, new RewardItem(1, RunicHammer, 4)),
-                    new RewardGroup(750, new RewardItem(1, AncientHammer, 10)),
-                    new RewardGroup(800, new RewardItem(1, PowerScroll, 15)),
-                    new RewardGroup(850, new RewardItem(1, AncientHammer, 15)),
-                    new RewardGroup(900, new RewardItem(1, PowerScroll, 20)),
-                    new RewardGroup(950, new RewardItem(1, RunicHammer, 5)),
-                    new RewardGroup(1000, new RewardItem(1, AncientHammer, 30)),
-                    new RewardGroup(1050, new RewardItem(1, RunicHammer, 6)),
-                    new RewardGroup(1100, new RewardItem(1, AncientHammer, 60)),
-                    new RewardGroup(1150, new RewardItem(1, RunicHammer, 7)),
-                    new RewardGroup(1200, new RewardItem(1, RunicHammer, 8))
-                };
-            }
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157219, 0, 10, SmithHammer));
+            RewardCollection.Add(new BODCollectionItem(0xF39, 1157084, 0x973, 10, SturdyShovel));
+            RewardCollection.Add(new BODCollectionItem(0xE86, 1157085, 0x973, 25, SturdyPickaxe));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157181, 0, 25, RewardTitle, 0));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157182, 0, 100, RewardTitle, 1));
+            RewardCollection.Add(new BODCollectionItem(0x13C6, 1157086, 0, 100, MiningGloves, 1));
+            RewardCollection.Add(new BODCollectionItem(0x13D5, 1157087, 0, 200, MiningGloves, 3));
+            RewardCollection.Add(new BODCollectionItem(0xFB4, 1157090, 0, 200, ProspectorsTool));
+            RewardCollection.Add(new BODCollectionItem(0xE86, 1157089, 0, 200, GargoylesPickaxe));
+            RewardCollection.Add(new BODCollectionItem(0x2F5B, 1152674, CraftResources.GetHue(CraftResource.Gold), 350,
+                SmeltersTalisman, (int)CraftResource.Gold));
+            RewardCollection.Add(new BODCollectionItem(0x9E2A, 1157264, 0, 400, CraftsmanTalisman, 10));
+            RewardCollection.Add(new BODCollectionItem(0x13EB, 1157088, 0, 450, MiningGloves, 5));
+            RewardCollection.Add(new BODCollectionItem(4102, 1157091, 0, 450, PowderOfTemperament));
+            RewardCollection.Add(new BODCollectionItem(0x2F5B, 1152675, CraftResources.GetHue(CraftResource.Agapite),
+                475, SmeltersTalisman, (int)CraftResource.Agapite));
+            RewardCollection.Add(new BODCollectionItem(0x9E7E, 1157216, 0, 500, RockHammer));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157092, CraftResources.GetHue(CraftResource.DullCopper),
+                500, RunicHammer, 1));
+            RewardCollection.Add(new BODCollectionItem(0x2F5B, 1152676, CraftResources.GetHue(CraftResource.Verite),
+                525, SmeltersTalisman, (int)CraftResource.Verite));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157093, CraftResources.GetHue(CraftResource.ShadowIron),
+                550, RunicHammer, 2));
+            RewardCollection.Add(new BODCollectionItem(0x9E2A, 1157218, 0, 550, CraftsmanTalisman, 25));
+            RewardCollection.Add(new BODCollectionItem(0x2F5B, 1152677, CraftResources.GetHue(CraftResource.Valorite),
+                575, SmeltersTalisman, (int)CraftResource.Valorite));
+            RewardCollection.Add(new BODCollectionItem(0x14EC, 1152665, CraftResources.GetHue(CraftResource.Gold), 600,
+                HarvestMap, (int)CraftResource.Gold));
+            RewardCollection.Add(new BODCollectionItem(0xFAF, 1157100, 0, 625, ColoredAnvil));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157105, 0x481, 625, PowerScroll, 5));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157094, CraftResources.GetHue(CraftResource.Copper),
+                650, RunicHammer, 3));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157106, 0x481, 675, PowerScroll, 10));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157095, CraftResources.GetHue(CraftResource.Bronze),
+                700, RunicHammer, 4));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157101, 0x482, 750, AncientHammer, 10));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157107, 0x481, 800, PowerScroll, 15));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157102, 0x482, 850, AncientHammer, 15));
+            RewardCollection.Add(new BODCollectionItem(0x14EC, 1152666, CraftResources.GetHue(CraftResource.Agapite),
+                850, HarvestMap, (int)CraftResource.Agapite));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157108, 0x481, 900, PowerScroll, 20));
+            RewardCollection.Add(new BODCollectionItem(0x9E2A, 1157265, 0, 900, CraftsmanTalisman, 50));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157096, CraftResources.GetHue(CraftResource.Gold), 950,
+                RunicHammer, 5));
+            RewardCollection.Add(new BODCollectionItem(0x14EC, 1152667, CraftResources.GetHue(CraftResource.Verite),
+                950, HarvestMap, (int)CraftResource.Verite));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157103, 0x482, 1000, AncientHammer, 30));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157097, CraftResources.GetHue(CraftResource.Agapite),
+                1050, RunicHammer, 6));
+            RewardCollection.Add(new BODCollectionItem(0x14EC, 1152668, CraftResources.GetHue(CraftResource.Valorite),
+                1050, HarvestMap, (int)CraftResource.Valorite));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157104, 0x482, 1100, AncientHammer, 60));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157098, CraftResources.GetHue(CraftResource.Verite),
+                1150, RunicHammer, 7));
+            RewardCollection.Add(new BODCollectionItem(0x13E3, 1157099, CraftResources.GetHue(CraftResource.Valorite),
+                1200, RunicHammer, 8));
         }
 
         #region Constructors
@@ -587,7 +571,7 @@ namespace Server.Engines.BulkOrders
         {
             int gold = 0;
 
-            if (itemCount == 1 && BulkOrderSystem.NewSystemEnabled && BulkOrderSystem.ComputeGold(type, quantity, out gold))
+            if (itemCount == 1 && BulkOrderSystem.ComputeGold(type, quantity, out gold))
             {
                 return gold;
             }
@@ -616,57 +600,36 @@ namespace Server.Engines.BulkOrders
     {
         public TailorRewardCalculator()
         {
-            if (BulkOrderSystem.NewSystemEnabled)
-            {
-                RewardCollection = new List<CollectionItem>();
+            RewardCollection = new List<CollectionItem>();
 
-                RewardCollection.Add(new BODCollectionItem(0xF9D, 1157219, 0, 10, SewingKit));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157183, 0, 10, RewardTitle, 2));
-                RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 10, Cloth, 0));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157184, 0, 25, RewardTitle, 3));
-                RewardCollection.Add(new BODCollectionItem(0x1761, 1157109, 0, 50, Cloth, 1));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157185, 0, 100, RewardTitle, 4));
-                RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 100, Cloth, 2));
-                RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 150, Cloth, 3));
-                RewardCollection.Add(new BODCollectionItem(0x170D, 1157110, 0, 150, Sandals, 3));
-                RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 200, Cloth, 4));
-                RewardCollection.Add(new BODCollectionItem(0x9E25, 1157264, 0, 200, CraftsmanTalisman, 10)); // todo: Get id
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157111, 0, 300, StretchedHide));
-                RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 300, Cloth, 5)); // TODO: Get other 4 colors
-                RewardCollection.Add(new BODCollectionItem(0x9E25, 1157218, 0, 300, CraftsmanTalisman, 25)); // todo: Get id
-                RewardCollection.Add(new BODCollectionItem(0xF9D, 1157115, CraftResources.GetHue(CraftResource.SpinedLeather), 350, RunicKit, 1));
-                RewardCollection.Add(new BODCollectionItem(0x9E25, 1157265, 0, 350, CraftsmanTalisman, 50)); // todo: Get id
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157118, 0x481, 400, PowerScroll, 5));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157112, 0, 400, Tapestry));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157113, 0, 450, BearRug));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157119, 0x481, 500, PowerScroll, 10));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157114, 0, 550, ClothingBlessDeed));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157120, 0x481, 575, PowerScroll, 15));
-                RewardCollection.Add(new BODCollectionItem(0xF9D, 1157116, CraftResources.GetHue(CraftResource.HornedLeather), 600, RunicKit, 2));
-                RewardCollection.Add(new BODCollectionItem(0x14F0, 1157121, 0x481, 650, PowerScroll, 20));
-                RewardCollection.Add(new BODCollectionItem(0xF9D, 1157117, CraftResources.GetHue(CraftResource.BarbedLeather), 700, RunicKit, 3));
-            }
-            else
-            {
-                Groups = new[]
-                {
-                    new RewardGroup(0, new RewardItem(1, Cloth, 0)),
-                    new RewardGroup(50, new RewardItem(1, Cloth, 1)),
-                    new RewardGroup(100, new RewardItem(1, Cloth, 2)),
-                    new RewardGroup(150, new RewardItem(9, Cloth, 3), new RewardItem(1, Sandals)),
-                    new RewardGroup(200, new RewardItem(4, Cloth, 4), new RewardItem(1, Sandals)),
-                    new RewardGroup(300, new RewardItem(1, StretchedHide)),
-                    new RewardGroup(350, new RewardItem(1, RunicKit, 1)),
-                    new RewardGroup(400, new RewardItem(2, PowerScroll, 5), new RewardItem(3, Tapestry)),
-                    new RewardGroup(450, new RewardItem(1, BearRug)),
-                    new RewardGroup(500, new RewardItem(1, PowerScroll, 10)),
-                    new RewardGroup(550, new RewardItem(1, ClothingBlessDeed)),
-                    new RewardGroup(575, new RewardItem(1, PowerScroll, 15)),
-                    new RewardGroup(600, new RewardItem(1, RunicKit, 2)),
-                    new RewardGroup(650, new RewardItem(1, PowerScroll, 20)),
-                    new RewardGroup(700, new RewardItem(1, RunicKit, 3))
-                };
-            }
+            RewardCollection.Add(new BODCollectionItem(0xF9D, 1157219, 0, 10, SewingKit));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157183, 0, 10, RewardTitle, 2));
+            RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 10, Cloth, 0));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157184, 0, 25, RewardTitle, 3));
+            RewardCollection.Add(new BODCollectionItem(0x1761, 1157109, 0, 50, Cloth, 1));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157185, 0, 100, RewardTitle, 4));
+            RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 100, Cloth, 2));
+            RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 150, Cloth, 3));
+            RewardCollection.Add(new BODCollectionItem(0x170D, 1157110, 0, 150, Sandals, 3));
+            RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 200, Cloth, 4));
+            RewardCollection.Add(new BODCollectionItem(0x9E25, 1157264, 0, 200, CraftsmanTalisman, 10)); // todo: Get id
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157111, 0, 300, StretchedHide));
+            RewardCollection.Add(new BODCollectionItem(0x1765, 1157109, 0, 300, Cloth, 5)); // TODO: Get other 4 colors
+            RewardCollection.Add(new BODCollectionItem(0x9E25, 1157218, 0, 300, CraftsmanTalisman, 25)); // todo: Get id
+            RewardCollection.Add(new BODCollectionItem(0xF9D, 1157115,
+                CraftResources.GetHue(CraftResource.SpinedLeather), 350, RunicKit, 1));
+            RewardCollection.Add(new BODCollectionItem(0x9E25, 1157265, 0, 350, CraftsmanTalisman, 50)); // todo: Get id
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157118, 0x481, 400, PowerScroll, 5));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157112, 0, 400, Tapestry));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157113, 0, 450, BearRug));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157119, 0x481, 500, PowerScroll, 10));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157114, 0, 550, ClothingBlessDeed));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157120, 0x481, 575, PowerScroll, 15));
+            RewardCollection.Add(new BODCollectionItem(0xF9D, 1157116,
+                CraftResources.GetHue(CraftResource.HornedLeather), 600, RunicKit, 2));
+            RewardCollection.Add(new BODCollectionItem(0x14F0, 1157121, 0x481, 650, PowerScroll, 20));
+            RewardCollection.Add(new BODCollectionItem(0xF9D, 1157117,
+                CraftResources.GetHue(CraftResource.BarbedLeather), 700, RunicKit, 3));
         }
 
         #region Constructors
@@ -892,7 +855,7 @@ namespace Server.Engines.BulkOrders
         {
             int gold = 0;
 
-            if (itemCount == 1 && BulkOrderSystem.NewSystemEnabled && BulkOrderSystem.ComputeGold(type, quantity, out gold))
+            if (itemCount == 1 && BulkOrderSystem.ComputeGold(type, quantity, out gold))
             {
                 return gold;
             }
@@ -1077,7 +1040,7 @@ namespace Server.Engines.BulkOrders
         {
             int gold = 0;
 
-            if (itemCount == 1 && BulkOrderSystem.NewSystemEnabled && BulkOrderSystem.ComputeGold(type, quantity, out gold))
+            if (itemCount == 1 && BulkOrderSystem.ComputeGold(type, quantity, out gold))
             {
                 return gold;
             }
@@ -1272,7 +1235,7 @@ namespace Server.Engines.BulkOrders
         {
             int gold = 0;
 
-            if (itemCount == 1 && BulkOrderSystem.NewSystemEnabled && BulkOrderSystem.ComputeGold(type, quantity, out gold))
+            if (itemCount == 1 && BulkOrderSystem.ComputeGold(type, quantity, out gold))
             {
                 return gold;
             }
@@ -1400,7 +1363,7 @@ namespace Server.Engines.BulkOrders
         {
             int gold = 0;
 
-            if (itemCount == 1 && BulkOrderSystem.NewSystemEnabled && BulkOrderSystem.ComputeGold(type, quantity, out gold))
+            if (itemCount == 1 && BulkOrderSystem.ComputeGold(type, quantity, out gold))
             {
                 return gold;
             }
@@ -1536,7 +1499,7 @@ namespace Server.Engines.BulkOrders
         {
             int gold = 0;
 
-            if (itemCount == 1 && BulkOrderSystem.NewSystemEnabled && BulkOrderSystem.ComputeGold(type, quantity, out gold))
+            if (itemCount == 1 && BulkOrderSystem.ComputeGold(type, quantity, out gold))
             {
                 return gold;
             }
@@ -1698,7 +1661,7 @@ namespace Server.Engines.BulkOrders
         {
             int gold = 0;
 
-            if (itemCount == 1 && BulkOrderSystem.NewSystemEnabled && BulkOrderSystem.ComputeGold(type, quantity, out gold))
+            if (itemCount == 1 && BulkOrderSystem.ComputeGold(type, quantity, out gold))
             {
                 return gold;
             }
@@ -1840,7 +1803,7 @@ namespace Server.Engines.BulkOrders
         {
             int gold = 0;
 
-            if (itemCount == 1 && BulkOrderSystem.NewSystemEnabled && BulkOrderSystem.ComputeGold(type, quantity, out gold))
+            if (itemCount == 1 && BulkOrderSystem.ComputeGold(type, quantity, out gold))
             {
                 return gold;
             }
