@@ -829,21 +829,12 @@ namespace Server
 			}
 		}
 
-		internal static int m_Saves;
-
-		public static void Save()
-		{
-			Save(true, false);
-		}
-
-		public static void Save(bool message, bool permitBackgroundWrite)
+		public static void Save(bool message)
 		{
 			if (Saving)
 			{
 				return;
 			}
-
-			++m_Saves;
 
 			NetState.FlushAll();
 			NetState.Pause();
@@ -889,7 +880,7 @@ namespace Server
 				throw new Exception("FATAL: Exception in EventSink.BeforeWorldSave", e);
 			}
 
-            strategy.Save(permitBackgroundWrite);
+            strategy.Save();
 
             try
 			{
@@ -904,13 +895,9 @@ namespace Server
 
 			Saving = false;
 
-			if (!permitBackgroundWrite)
-			{
-				NotifyDiskWriteComplete();
-				//Sets the DiskWriteHandle.  If we allow background writes, we leave this upto the individual save strategies.
-			}
+            NotifyDiskWriteComplete();
 
-			ProcessSafetyQueues();
+            ProcessSafetyQueues();
 
 			strategy.ProcessDecay();
 

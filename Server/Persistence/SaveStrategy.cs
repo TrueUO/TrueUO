@@ -13,7 +13,7 @@ namespace Server
             return new StandardSaveStrategy();
         }
 
-		public abstract void Save(bool permitBackgroundWrite);
+		public abstract void Save();
 
 		public abstract void ProcessDecay();
 	}
