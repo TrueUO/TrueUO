@@ -76,7 +76,7 @@ namespace Server.Misc
                 Diagnostics.ExceptionLogging.LogException(e);
             }
 
-            World.Save(true, permitBackgroundWrite);
+            World.Save(true);
         }
 
         private static void Tick()

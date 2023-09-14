@@ -6,11 +6,9 @@ namespace Server
 	{
         public override string Name => "Dual";
 
-		public override void Save(bool permitBackgroundWrite)
+		public override void Save()
 		{
-			PermitBackgroundWrite = permitBackgroundWrite;
-
-			Thread saveItemsThread = new Thread(SaveItems)
+            Thread saveItemsThread = new Thread(SaveItems)
 			{
 				Name = "Item Save Subset"
 			};
@@ -21,11 +19,6 @@ namespace Server
 			SaveGuilds();
 
 			saveItemsThread.Join();
-
-			if (permitBackgroundWrite && UseSequentialWriters)  // If we're permitted to write in the background, but we don't anyways, then notify.
-            {
-                World.NotifyDiskWriteComplete();
-            }
         }
 	}
 }

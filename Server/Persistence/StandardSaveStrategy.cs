@@ -22,21 +22,15 @@ namespace Server
 		}
 		
 		public override string Name => "Standard";
-		
-		protected bool PermitBackgroundWrite { get; set; }
-		protected bool UseSequentialWriters => SaveType == SaveOption.Normal || !PermitBackgroundWrite;
+        
+		protected bool UseSequentialWriters => SaveType == SaveOption.Normal;
 
-		public override void Save(bool permitBackgroundWrite)
+		public override void Save()
 		{
-			PermitBackgroundWrite = permitBackgroundWrite;
-
-			SaveMobiles();
+            SaveMobiles();
 			SaveItems();
 			SaveGuilds();
-
-			if (permitBackgroundWrite && UseSequentialWriters)  //If we're permitted to write in the background, but we don't anyways, then notify.
-				World.NotifyDiskWriteComplete();
-		}
+        }
 
 		public override void ProcessDecay()
 		{
