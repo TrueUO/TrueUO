@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Server.Items;
 using Server.Network;
@@ -1605,83 +1606,40 @@ namespace Server
         {
             public static readonly NullEnumerable<T> Instance = new NullEnumerable<T>();
 
-            private readonly IEnumerable<T> _Empty = new EmptyEnumerable<T>();
+            private NullEnumerable()
+            { }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
-                return _Empty.GetEnumerator();
+                yield break;
             }
 
             public IEnumerator<T> GetEnumerator()
             {
-                return _Empty.GetEnumerator();
+                yield break;
             }
 
             public void Free()
             { }
-
-            private class EmptyEnumerable<TInner> : IEnumerable<TInner>
-            {
-                public IEnumerator<TInner> GetEnumerator()
-                {
-                    return new EmptyEnumerator<TInner>();
-                }
-
-                IEnumerator IEnumerable.GetEnumerator()
-                {
-                    return GetEnumerator();
-                }
-            }
-
-            private class EmptyEnumerator<TInner> : IEnumerator<TInner>
-            {
-                public TInner Current => default(TInner);
-
-                object IEnumerator.Current => Current;
-
-                public void Dispose() { }
-
-                public bool MoveNext()
-                {
-                    return false;
-                }
-
-                public void Reset() { }
-            }
         }
 
         public sealed class PooledEnumerable<T> : IPooledEnumerable<T>, IDisposable
 		{
-			private static readonly Queue<PooledEnumerable<T>> _Buffer = new Queue<PooledEnumerable<T>>(0x400);
+            private static readonly ConcurrentQueue<PooledEnumerable<T>> _Buffer = new ConcurrentQueue<PooledEnumerable<T>>();
 
             public static PooledEnumerable<T> Instantiate(Map map, Rectangle2D bounds, PooledEnumeration.Selector<T> selector)
             {
-                PooledEnumerable<T> e = null;
-
-                lock (((ICollection)_Buffer).SyncRoot)
+                if (!_Buffer.TryDequeue(out var e))
                 {
-                    if (_Buffer.Count > 0)
+                    e = new PooledEnumerable<T>();
+                }
+
+                foreach (Sector s in PooledEnumeration.EnumerateSectors(map, bounds))
+                {
+                    foreach (T obj in selector(s, bounds))
                     {
-                        e = _Buffer.Dequeue();
+                        e._Pool.Add(obj);
                     }
-                }
-
-                List<T> resultList = new List<T>();
-                foreach (var sector in PooledEnumeration.EnumerateSectors(map, bounds))
-                {
-                    foreach (var item in selector(sector, bounds))
-                    {
-                        resultList.Add(item);
-                    }
-                }
-
-                if (e != null)
-                {
-                    e._Pool.AddRange(resultList);
-                }
-                else
-                {
-                    e = new PooledEnumerable<T>(resultList);
                 }
 
                 return e;
@@ -1689,37 +1647,19 @@ namespace Server
 
             private bool _IsDisposed;
 
-			private List<T> _Pool = new List<T>(0x40);
+            private HashSet<T> _Pool = new HashSet<T>(0x40);
 
-			private IEnumerable<T> InternalPool
+            private PooledEnumerable()
+            { }
+
+            IEnumerator IEnumerable.GetEnumerator()
 			{
-				get
-				{
-					int i = _Pool.Count;
-
-					while (--i >= 0)
-					{
-						if (i < _Pool.Count)
-						{
-							yield return _Pool[i];
-						}
-					}
-				}
-			}
-
-			public PooledEnumerable(IEnumerable<T> pool)
-			{
-				_Pool.AddRange(pool);
-			}
-
-			IEnumerator IEnumerable.GetEnumerator()
-			{
-				return InternalPool.GetEnumerator();
+				return _Pool.GetEnumerator();
 			}
 
 			public IEnumerator<T> GetEnumerator()
 			{
-				return InternalPool.GetEnumerator();
+				return _Pool.GetEnumerator();
 			}
 
 			public void Free()
@@ -1731,16 +1671,8 @@ namespace Server
 
 				_Pool.Clear();
 
-				if (_Pool.Capacity > 0x100)
-				{
-					_Pool.Capacity = 0x100;
-				}
-
-				lock (((ICollection)_Buffer).SyncRoot)
-				{
-					_Buffer.Enqueue(this);
-				}
-			}
+                _Buffer.Enqueue(this);
+            }
 
 			public void Dispose()
 			{
