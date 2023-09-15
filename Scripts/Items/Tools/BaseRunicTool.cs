@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -1082,7 +1081,12 @@ namespace Server.Items
 
                 List<SkillName> list = new List<SkillName>();
 
-                foreach (var name in m_PossibleSpellbookSkills.Concat(booktypeskills))
+                foreach (SkillName name in m_PossibleSpellbookSkills)
+                {
+                    list.Add(name);
+                }
+
+                foreach (SkillName name in booktypeskills)
                 {
                     list.Add(name);
                 }

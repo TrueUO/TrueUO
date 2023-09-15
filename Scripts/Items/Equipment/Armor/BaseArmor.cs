@@ -7,7 +7,6 @@ using AMT = Server.Items.ArmorMaterialType;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -468,10 +467,24 @@ namespace Server.Items
             double toReduce = 0.0;
             int count = 0;
 
-            foreach (BaseArmor armor in from.Items.OfType<BaseArmor>().OrderBy(arm => -GetArmorRatingReduction(arm)))
+            List<BaseArmor> armors = new List<BaseArmor>();
+
+            foreach (Item item in from.Items)
+            {
+                if (item is BaseArmor armor)
+                {
+                    armors.Add(armor);
+                }
+            }
+
+            armors.Sort((a, b) => GetArmorRatingReduction(b).CompareTo(GetArmorRatingReduction(a))); // Sort descending
+
+            foreach (BaseArmor armor in armors)
             {
                 if (count == 5)
+                {
                     break;
+                }
 
                 toReduce += GetArmorRatingReduction(armor);
                 count++;

@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -264,9 +263,17 @@ namespace Server.Items
         {
             if (AccountGold.Enabled && bank.Owner == from && from.Account != null)
             {
-                List<BankCheck> checks = new List<BankCheck>(Items.OfType<BankCheck>());
+                List<BankCheck> checks = new List<BankCheck>();
 
-                for (var index = 0; index < checks.Count; index++)
+                foreach (Item item in Items)
+                {
+                    if (item is BankCheck check)
+                    {
+                        checks.Add(check);
+                    }
+                }
+
+                for (int index = 0; index < checks.Count; index++)
                 {
                     BankCheck check = checks[index];
 
