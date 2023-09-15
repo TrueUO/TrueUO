@@ -144,9 +144,17 @@ namespace Server.Engines.Shadowguard
         {
             if (Bottles != null)
             {
-                List<ShadowguardBottleOfLiquor> list = new List<ShadowguardBottleOfLiquor>(Bottles.Where(b => b != null && !b.Deleted));
+                List<ShadowguardBottleOfLiquor> list = new List<ShadowguardBottleOfLiquor>();
 
-                for (var index = 0; index < list.Count; index++)
+                foreach (ShadowguardBottleOfLiquor bottle in Bottles)
+                {
+                    if (bottle != null && !bottle.Deleted)
+                    {
+                        list.Add(bottle);
+                    }
+                }
+
+                for (int index = 0; index < list.Count; index++)
                 {
                     ShadowguardBottleOfLiquor bottle = list[index];
 
@@ -154,14 +162,15 @@ namespace Server.Engines.Shadowguard
                 }
 
                 ColUtility.Free(list);
-
                 ColUtility.Free(Bottles);
+
                 Bottles = null;
             }
 
             if (Pirates != null)
             {
                 ColUtility.Free(Pirates);
+
                 Pirates = null;
             }
         }
@@ -640,12 +649,19 @@ namespace Server.Engines.Shadowguard
         {
             if (Spawn != null)
             {
-                List<BaseCreature> list = new List<BaseCreature>(Spawn.Where(s => s != null && !s.Deleted));
+                List<BaseCreature> list = new List<BaseCreature>();
 
-                for (var index = 0; index < list.Count; index++)
+                foreach (BaseCreature spawn in Spawn)
+                {
+                    if (spawn != null && !spawn.Deleted)
+                    {
+                        list.Add(spawn);
+                    }
+                }
+
+                for (int index = 0; index < list.Count; index++)
                 {
                     BaseCreature spawn = list[index];
-
                     spawn.Delete();
                 }
 

@@ -2,7 +2,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Server.Gumps
@@ -86,8 +85,11 @@ namespace Server.Gumps
 
         public void Dispose()
         {
-            ColUtility.ForEach(Children.AsEnumerable(), child => Children.Remove(child));
-            Children = null;
+            while (Children.Count > 0)
+            {
+                BaseGump child = Children[0];
+                Children.Remove(child);
+            }
 
             Children = null;
             Parent = null;
