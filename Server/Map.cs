@@ -1629,7 +1629,7 @@ namespace Server
 
             public static PooledEnumerable<T> Instantiate(Map map, Rectangle2D bounds, PooledEnumeration.Selector<T> selector)
             {
-                if (!_Buffer.TryDequeue(out var e))
+                if (!_Buffer.TryDequeue(out var e) || e._Pool == null)
                 {
                     e = new PooledEnumerable<T>();
                 }
@@ -1662,19 +1662,18 @@ namespace Server
 				return _Pool.GetEnumerator();
 			}
 
-			public void Free()
-			{
-				if (_IsDisposed)
-				{
-					return;
-				}
+            public void Free()
+            {
+                if (_IsDisposed || _Pool == null)
+                {
+                    return;
+                }
 
-				_Pool.Clear();
-
+                _Pool.Clear();
                 _Buffer.Enqueue(this);
             }
 
-			public void Dispose()
+            public void Dispose()
 			{
 				_IsDisposed = true;
 
