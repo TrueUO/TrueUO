@@ -20,7 +20,6 @@ using Server.Spells.Spellweaving;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
@@ -1574,7 +1573,27 @@ namespace Server.Mobiles
             typeof(BoneKnight), typeof(Mummy), typeof(SkeletalMage), typeof(BoneMagi), typeof(PatchworkSkeleton)
         };
 
-        public virtual bool IsAnimatedDead => Summoned && m_AnimateDeadTypes.Any(t => t == GetType());
+        public virtual bool IsAnimatedDead
+        {
+            get
+            {
+                if (!Summoned)
+                {
+                    return false;
+                }
+
+                Type currentType = GetType();
+                foreach (Type type in m_AnimateDeadTypes)
+                {
+                    if (type == currentType)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
 
         public virtual bool IsNecroFamiliar
         {
@@ -6602,7 +6621,13 @@ namespace Server.Mobiles
             {
                 List<AggressorInfo> list = new List<AggressorInfo>();
 
-                list.AddRange(Aggressors.Where(info => !creaturesOnly || info.Attacker is PlayerMobile));
+                foreach (var info in Aggressors)
+                {
+                    if (!creaturesOnly || info.Attacker is PlayerMobile)
+                    {
+                        list.Add(info);
+                    }
+                }
 
                 if (list.Count > 0)
                 {

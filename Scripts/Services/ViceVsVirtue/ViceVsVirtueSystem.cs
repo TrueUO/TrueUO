@@ -641,7 +641,23 @@ namespace Server.Engines.VvV
         {
             CheckTempCombatants();
 
-            return IsVvV(mobile) || TempCombatants != null && TempCombatants.Any(c => c.From == mobile);
+            if (IsVvV(mobile))
+            {
+                return true;
+            }
+
+            if (TempCombatants != null)
+            {
+                foreach (var combatant in TempCombatants)
+                {
+                    if (combatant.From == mobile)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public static void CheckHarmful(Mobile attacker, Mobile defender)
@@ -681,9 +697,35 @@ namespace Server.Engines.VvV
                 return;
             }
 
-            if (!IsVvV(from) && IsVvV(target) && (target.Aggressors.Any(info => IsVvV(info.Attacker)) || target.Aggressed.Any(info => IsVvV(info.Defender))))
+            if (!IsVvV(from) && IsVvV(target))
             {
-                AddTempParticipant(from, target);
+                bool shouldAddParticipant = false;
+
+                foreach (var info in target.Aggressors)
+                {
+                    if (IsVvV(info.Attacker))
+                    {
+                        shouldAddParticipant = true;
+                        break;
+                    }
+                }
+
+                if (!shouldAddParticipant)
+                {
+                    foreach (var info in target.Aggressed)
+                    {
+                        if (IsVvV(info.Defender))
+                        {
+                            shouldAddParticipant = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (shouldAddParticipant)
+                {
+                    AddTempParticipant(from, target);
+                }
             }
         }
 
@@ -778,13 +820,21 @@ namespace Server.Engines.VvV
                 return;
             }
 
-            TempCombatants.Where(t => t.From == pm).IterateReverse(RemoveTempCombatant);
+            for (int i = TempCombatants.Count - 1; i >= 0; i--)
+            {
+                if (TempCombatants[i].From == pm)
+                {
+                    RemoveTempCombatant(TempCombatants[i]);
+                }
+            }
         }
 
         public static void RemoveTempCombatant(TemporaryCombatant tempCombatant)
         {
             if (TempCombatants == null)
+            {
                 return;
+            }
 
             TempCombatants.Remove(tempCombatant);
             tempCombatant.From.Delta(MobileDelta.Noto);
@@ -994,12 +1044,19 @@ namespace Server.Engines.VvV
 
         public static void DeleteSilverTraders()
         {
-            List<Mobile> list = new List<Mobile>(World.Mobiles.Values.Where(m => m is SilverTrader));
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (Mobile mob in World.Mobiles.Values)
+            {
+                if (mob is SilverTrader)
+                {
+                    list.Add(mob);
+                }
+            }
 
             for (var index = 0; index < list.Count; index++)
             {
                 Mobile mob = list[index];
-
                 mob.Delete();
             }
 
