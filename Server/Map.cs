@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Server.Items;
 using Server.Network;
 using Server.Targeting;
@@ -969,41 +968,57 @@ namespace Server
 
 		private static readonly List<Item> _EmptyFixItems = new List<Item>();
 
-		private static List<Item> AcquireFixItems(Map map, int x, int y)
-		{
-			if (map == null || map == Internal || x < 0 || x > map.Width || y < 0 || y > map.Height)
-			{
-				return _EmptyFixItems;
-			}
+        private static List<Item> AcquireFixItems(Map map, int x, int y)
+        {
+            if (map == null || map == Internal || x < 0 || x > map.Width || y < 0 || y > map.Height)
+            {
+                return _EmptyFixItems;
+            }
 
-			List<Item> pool = null;
+            List<Item> pool = null;
 
-			lock (_FixPool)
-			{
-				if (_FixPool.Count > 0)
-				{
-					pool = _FixPool.Dequeue();
-				}
-			}
+            lock (_FixPool)
+            {
+                if (_FixPool.Count > 0)
+                {
+                    pool = _FixPool.Dequeue();
+                }
+            }
 
-			if (pool == null)
-			{
-				pool = new List<Item>(128); // Arbitrary limit
-			}
+            if (pool == null)
+            {
+                pool = new List<Item>(128); // Arbitrary limit
+            }
 
-			IPooledEnumerable<Item> eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
+            IPooledEnumerable<Item> eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
 
-			pool.AddRange(
-				eable.Where(item => item.ItemID <= TileData.MaxItemValue && !(item is BaseMulti))
-					 .OrderBy(item => item.Z)
-					 .Take(pool.Capacity));
+            foreach (Item item in eable)
+            {
+                if (item.ItemID <= TileData.MaxItemValue && !(item is BaseMulti))
+                {
+                    // Insert the item into the sorted pool
+                    int index = pool.BinarySearch(item, Comparer<Item>.Create((a, b) => a.Z.CompareTo(b.Z)));
+                    if (index < 0)
+                    {
+                        index = ~index; // BinarySearch returns a negative number for non-matching items. This line converts it to a proper insertion index.
+                    }
 
-			eable.Free();
+                    pool.Insert(index, item);
 
-			return pool;
-		}
+                    // Ensure we don't exceed the pool capacity
+                    if (pool.Count > pool.Capacity)
+                    {
+                        pool.RemoveAt(pool.Count - 1);
+                    }
+                }
+            }
 
-		private static void FreeFixItems(List<Item> pool)
+            eable.Free();
+
+            return pool;
+        }
+
+        private static void FreeFixItems(List<Item> pool)
 		{
 			if (pool == _EmptyFixItems)
 			{
@@ -1586,62 +1601,93 @@ namespace Server
 
 		public string Name { get; }
 
-		public class NullEnumerable<T> : IPooledEnumerable<T>
-		{
-			public static readonly NullEnumerable<T> Instance = new NullEnumerable<T>();
+        public class NullEnumerable<T> : IPooledEnumerable<T>
+        {
+            public static readonly NullEnumerable<T> Instance = new NullEnumerable<T>();
 
-			private readonly IEnumerable<T> _Empty;
+            private readonly IEnumerable<T> _Empty = new EmptyEnumerable<T>();
 
-			private NullEnumerable()
-			{
-				_Empty = Enumerable.Empty<T>();
-			}
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return _Empty.GetEnumerator();
+            }
 
-			IEnumerator IEnumerable.GetEnumerator()
-			{
-				return _Empty.GetEnumerator();
-			}
+            public IEnumerator<T> GetEnumerator()
+            {
+                return _Empty.GetEnumerator();
+            }
 
-			public IEnumerator<T> GetEnumerator()
-			{
-				return _Empty.GetEnumerator();
-			}
+            public void Free()
+            { }
 
-			public void Free()
-			{ }
-		}
+            private class EmptyEnumerable<TInner> : IEnumerable<TInner>
+            {
+                public IEnumerator<TInner> GetEnumerator()
+                {
+                    return new EmptyEnumerator<TInner>();
+                }
 
-		public sealed class PooledEnumerable<T> : IPooledEnumerable<T>, IDisposable
+                IEnumerator IEnumerable.GetEnumerator()
+                {
+                    return GetEnumerator();
+                }
+            }
+
+            private class EmptyEnumerator<TInner> : IEnumerator<TInner>
+            {
+                public TInner Current => default(TInner);
+
+                object IEnumerator.Current => Current;
+
+                public void Dispose() { }
+
+                public bool MoveNext()
+                {
+                    return false;
+                }
+
+                public void Reset() { }
+            }
+        }
+
+        public sealed class PooledEnumerable<T> : IPooledEnumerable<T>, IDisposable
 		{
 			private static readonly Queue<PooledEnumerable<T>> _Buffer = new Queue<PooledEnumerable<T>>(0x400);
 
-			public static PooledEnumerable<T> Instantiate(Map map, Rectangle2D bounds, PooledEnumeration.Selector<T> selector)
-			{
-				PooledEnumerable<T> e = null;
+            public static PooledEnumerable<T> Instantiate(Map map, Rectangle2D bounds, PooledEnumeration.Selector<T> selector)
+            {
+                PooledEnumerable<T> e = null;
 
-				lock (((ICollection)_Buffer).SyncRoot)
-				{
-					if (_Buffer.Count > 0)
-					{
-						e = _Buffer.Dequeue();
-					}
-				}
+                lock (((ICollection)_Buffer).SyncRoot)
+                {
+                    if (_Buffer.Count > 0)
+                    {
+                        e = _Buffer.Dequeue();
+                    }
+                }
 
-				IEnumerable<T> pool = PooledEnumeration.EnumerateSectors(map, bounds).SelectMany(s => selector(s, bounds));
+                List<T> resultList = new List<T>();
+                foreach (var sector in PooledEnumeration.EnumerateSectors(map, bounds))
+                {
+                    foreach (var item in selector(sector, bounds))
+                    {
+                        resultList.Add(item);
+                    }
+                }
 
-				if (e != null)
-				{
-					e._Pool.AddRange(pool);
-				}
-				else
-				{
-					e = new PooledEnumerable<T>(pool);
-				}
+                if (e != null)
+                {
+                    e._Pool.AddRange(resultList);
+                }
+                else
+                {
+                    e = new PooledEnumerable<T>(resultList);
+                }
 
-				return e;
-			}
+                return e;
+            }
 
-			private bool _IsDisposed;
+            private bool _IsDisposed;
 
 			private List<T> _Pool = new List<T>(0x40);
 
