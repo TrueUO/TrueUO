@@ -959,9 +959,11 @@ namespace Server
 			public int Compare(Item x, Item y)
 			{
 				if (x == null || y == null)
-					return 0;
+                {
+                    return 0;
+                }
 
-				return x.Z.CompareTo(y.Z);
+                return x.Z.CompareTo(y.Z);
 			}
 		}
 
@@ -979,9 +981,9 @@ namespace Server
                 pool = new SortedSet<Item>(ZComparer.Default);
             }
 
-            var eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
+            IPooledEnumerable<Item> eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
 
-            foreach (var item in eable)
+            foreach (Item item in eable)
             {
                 if (item is BaseMulti || item.ItemID > TileData.MaxItemValue)
                 {
