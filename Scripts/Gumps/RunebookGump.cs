@@ -187,42 +187,39 @@ namespace Server.Gumps
                 // Use charge button
                 AddButton(130 + (half * 160), 65, 2103, 2104, 10 + index, GumpButtonType.Reply, 0);
 
-                if (index < 16)
+                if (index < 16 && index >= 0 && index < entries.Count) // added bounds check
                 {
-                    if (Book.Entries.ElementAtOrDefault(index) != null)
-                    {
-                        RunebookEntry e = Book.Entries[index];
+                    RunebookEntry e = entries[index];
 
-                        // Description label
-                        AddLabelCroppedIntern(145 + (half * 160), 60, 115, 17, GetMapHue(e.Map), index + 2);
+                    // Description label
+                    AddLabelCroppedIntern(145 + (half * 160), 60, 115, 17, GetMapHue(e.Map), index + 2);
 
-                        // Location label
-                        AddHtmlIntern(135 + (half * 160), 80, 130, 38, index + 23, false, false);
+                    // Location label
+                    AddHtmlIntern(135 + (half * 160), 80, 130, 38, index + 23, false, false);
 
-                        // Drop rune button
-                        AddButton(135 + (half * 160), 115, 2437, 2438, 200 + index, GumpButtonType.Reply, 0);
-                        AddHtmlLocalized(150 + (half * 160), 115, 100, 18, 1011298, false, false); // Drop rune
+                    // Drop rune button
+                    AddButton(135 + (half * 160), 115, 2437, 2438, 200 + index, GumpButtonType.Reply, 0);
+                    AddHtmlLocalized(150 + (half * 160), 115, 100, 18, 1011298, false, false); // Drop rune
 
-                        // Set as default button
-                        int defButtonID = e != Book.Default ? 2361 : 2360;
+                    // Set as default button
+                    int defButtonID = e != Book.Default ? 2361 : 2360;
 
-                        AddButton(160 + (half * 140), 20, defButtonID, defButtonID, 300 + index, GumpButtonType.Reply, 0);
-                        AddHtmlLocalized(175 + (half * 140), 15, 100, 18, 1011300, false, false); // Set default
-                    }
-                    else
-                    {
-                        AddLabelIntern(145 + (half * 160), 60, 0, index + 2);
-                    }
-
-                    AddButton(135 + (half * 160), 140, 2103, 2104, 50 + index, GumpButtonType.Reply, 0);
-                    AddHtmlLocalized(150 + (half * 160), 136, 110, 20, 1062722, false, false); // Recall
-
-                    AddButton(135 + (half * 160), 158, 2103, 2104, 100 + index, GumpButtonType.Reply, 0);
-                    AddHtmlLocalized(150 + (half * 160), 154, 110, 20, 1062723, false, false); // Gate Travel
-
-                    AddButton(135 + (half * 160), 176, 2103, 2104, 75 + index, GumpButtonType.Reply, 0);
-                    AddHtmlLocalized(150 + (half * 160), 172, 110, 20, 1062724, false, false); // Sacred Journey
+                    AddButton(160 + (half * 140), 20, defButtonID, defButtonID, 300 + index, GumpButtonType.Reply, 0);
+                    AddHtmlLocalized(175 + (half * 140), 15, 100, 18, 1011300, false, false); // Set default
                 }
+                else
+                {
+                    AddLabelIntern(145 + (half * 160), 60, 0, index + 2);
+                }
+
+                AddButton(135 + (half * 160), 140, 2103, 2104, 50 + index, GumpButtonType.Reply, 0);
+                AddHtmlLocalized(150 + (half * 160), 136, 110, 20, 1062722, false, false); // Recall
+
+                AddButton(135 + (half * 160), 158, 2103, 2104, 100 + index, GumpButtonType.Reply, 0);
+                AddHtmlLocalized(150 + (half * 160), 154, 110, 20, 1062723, false, false); // Gate Travel
+
+                AddButton(135 + (half * 160), 176, 2103, 2104, 75 + index, GumpButtonType.Reply, 0);
+                AddHtmlLocalized(150 + (half * 160), 172, 110, 20, 1062724, false, false); // Sacred Journey
             }
         }
 
