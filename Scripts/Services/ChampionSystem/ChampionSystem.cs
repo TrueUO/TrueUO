@@ -1,9 +1,9 @@
 using Server.Commands;
 using Server.Gumps;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Engines.CannedEvil
@@ -131,7 +131,15 @@ namespace Server.Engines.CannedEvil
 
                     m_Initialized = reader.ReadBool();
                     m_LastRotate = reader.ReadDateTime();
-                    m_AllSpawns.AddRange(reader.ReadItemList().Cast<ChampionSpawn>());
+
+                    ArrayList itemList = reader.ReadItemList();
+                    foreach (Item item in itemList)
+                    {
+                        if (item is ChampionSpawn spawn)
+                        {
+                            m_AllSpawns.Add(spawn);
+                        }
+                    }
                 });
         }
 

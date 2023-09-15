@@ -6,7 +6,6 @@ using Server.Multis;
 using Server.Regions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VvV
 {
@@ -154,8 +153,38 @@ namespace Server.Engines.VvV
 
         public Timer Timer { get; private set; }
 
-        public int TrapCount => Traps.Count(t => !t.Deleted);
-        public int TurretCount => Turrets.Count(t => !t.Deleted);
+        public int TrapCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (VvVTrap trap in Traps)
+                {
+                    if (!trap.Deleted)
+                    {
+                        count++;
+                    }
+                }
+
+                return count;
+            }
+        }
+
+        public int TurretCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (CannonTurret turret in Turrets)
+                {
+                    if (!turret.Deleted)
+                    {
+                        count++;
+                    }
+                }
+                return count;
+            }
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool InCooldown => CooldownEnds > DateTime.UtcNow;

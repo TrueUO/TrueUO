@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using Server.Items;
 using Server.Network;
 using Server.Targeting;
@@ -959,99 +959,91 @@ namespace Server
 			public int Compare(Item x, Item y)
 			{
 				if (x == null || y == null)
-					return 0;
+                {
+                    return 0;
+                }
 
-				return x.Z.CompareTo(y.Z);
+                return x.Z.CompareTo(y.Z);
 			}
 		}
 
-		private static readonly Queue<List<Item>> _FixPool = new Queue<List<Item>>(128);
+        private static readonly ConcurrentQueue<SortedSet<Item>> _FixPool = new ConcurrentQueue<SortedSet<Item>>();
 
-		private static readonly List<Item> _EmptyFixItems = new List<Item>();
+        private static SortedSet<Item> AcquireFixItems(Map map, int x, int y)
+        {
+            if (map == null || map == Internal || x < 0 || x > map.Width || y < 0 || y > map.Height)
+            {
+                return null;
+            }
 
-		private static List<Item> AcquireFixItems(Map map, int x, int y)
+            if (!_FixPool.TryDequeue(out var pool))
+            {
+                pool = new SortedSet<Item>(ZComparer.Default);
+            }
+
+            IPooledEnumerable<Item> eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
+
+            foreach (Item item in eable)
+            {
+                if (item is BaseMulti || item.ItemID > TileData.MaxItemValue)
+                {
+                    continue;
+                }
+
+                if (item.Movable)
+                {
+                    pool.Add(item);
+                }
+            }
+
+            eable.Free();
+
+            return pool;
+        }
+
+        private static void FreeFixItems(SortedSet<Item> pool)
 		{
-			if (map == null || map == Internal || x < 0 || x > map.Width || y < 0 || y > map.Height)
-			{
-				return _EmptyFixItems;
-			}
-
-			List<Item> pool = null;
-
-			lock (_FixPool)
-			{
-				if (_FixPool.Count > 0)
-				{
-					pool = _FixPool.Dequeue();
-				}
-			}
-
 			if (pool == null)
-			{
-				pool = new List<Item>(128); // Arbitrary limit
-			}
-
-			IPooledEnumerable<Item> eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
-
-			pool.AddRange(
-				eable.Where(item => item.ItemID <= TileData.MaxItemValue && !(item is BaseMulti))
-					 .OrderBy(item => item.Z)
-					 .Take(pool.Capacity));
-
-			eable.Free();
-
-			return pool;
-		}
-
-		private static void FreeFixItems(List<Item> pool)
-		{
-			if (pool == _EmptyFixItems)
 			{
 				return;
 			}
 
 			pool.Clear();
 
-			lock (_FixPool)
-			{
-				if (_FixPool.Count < 128)
-				{
-					_FixPool.Enqueue(pool);
-				}
-			}
-		}
+            if (_FixPool.Count < 128)
+            {
+                _FixPool.Enqueue(pool);
+            }
+        }
 
-		public void FixColumn(int x, int y)
-		{
-			LandTile landTile = Tiles.GetLandTile(x, y);
-			StaticTile[] tiles = Tiles.GetStaticTiles(x, y, true);
+        public void FixColumn(int x, int y)
+        {
+            LandTile landTile = Tiles.GetLandTile(x, y);
+            StaticTile[] tiles = Tiles.GetStaticTiles(x, y, true);
 
-			int landZ = 0, landAvg = 0, landTop = 0;
+            int landZ = 0, landAvg = 0, landTop = 0;
 
-			GetAverageZ(x, y, ref landZ, ref landAvg, ref landTop);
+            GetAverageZ(x, y, ref landZ, ref landAvg, ref landTop);
 
-			List<Item> items = AcquireFixItems(this, x, y);
+            SortedSet<Item> items = AcquireFixItems(this, x, y);
 
-			for (int i = 0; i < items.Count; i++)
-			{
-				Item toFix = items[i];
-
-				if (!toFix.Movable)
-				{
-					continue;
-				}
-
-				int z = int.MinValue;
-				int currentZ = toFix.Z;
-
-				if (!landTile.Ignored && landAvg <= currentZ)
-				{
-					z = landAvg;
-				}
-
-                for (var index = 0; index < tiles.Length; index++)
+            foreach (Item toFix in items)
+            {
+                if (!toFix.Movable)
                 {
-                    StaticTile tile = tiles[index];
+                    continue;
+                }
+
+                int z = int.MinValue;
+                int currentZ = toFix.Z;
+
+                if (!landTile.Ignored && landAvg <= currentZ)
+                {
+                    z = landAvg;
+                }
+
+                foreach (StaticTile tile in tiles)
+                {
                     ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                     int checkZ = tile.Z;
@@ -1068,45 +1060,44 @@ namespace Server
                     }
                 }
 
-                for (int j = 0; j < items.Count; ++j)
-				{
-					if (j == i)
-					{
-						continue;
-					}
+                foreach (Item item in items)
+                {
+                    if (item == toFix)
+                    {
+                        continue;
+                    }
 
-					Item item = items[j];
-					ItemData id = item.ItemData;
+                    ItemData id = item.ItemData;
 
-					int checkZ = item.Z;
-					int checkTop = checkZ + id.CalcHeight;
+                    int checkZ = item.Z;
+                    int checkTop = checkZ + id.CalcHeight;
 
-					if (checkTop == checkZ && !id.Surface)
-					{
-						++checkTop;
-					}
+                    if (checkTop == checkZ && !id.Surface)
+                    {
+                        ++checkTop;
+                    }
 
-					if (checkTop > z && checkTop <= currentZ)
-					{
-						z = checkTop;
-					}
-				}
+                    if (checkTop > z && checkTop <= currentZ)
+                    {
+                        z = checkTop;
+                    }
+                }
 
-				if (z != int.MinValue)
-				{
-					toFix.Location = new Point3D(toFix.X, toFix.Y, z);
-				}
-			}
+                if (z != int.MinValue)
+                {
+                    toFix.Location = new Point3D(toFix.X, toFix.Y, z);
+                }
+            }
 
-			FreeFixItems(items);
-		}
+            FreeFixItems(items);
+        }
 
-		/// <summary>
-		///     Gets the highest surface that is lower than <paramref name="p" />.
-		/// </summary>
-		/// <param name="p">The reference point.</param>
-		/// <returns>A surface <typeparamref><name>IEntity</name></typeparamref> or <typeparamref><name>Item</name></typeparamref>.</returns>
-		public object GetTopSurface(Point3D p)
+        /// <summary>
+        ///     Gets the highest surface that is lower than <paramref name="p" />.
+        /// </summary>
+        /// <param name="p">The reference point.</param>
+        /// <returns>A surface <typeparamref><name>IEntity</name></typeparamref> or <typeparamref><name>Item</name></typeparamref>.</returns>
+        public object GetTopSurface(Point3D p)
 		{
 			if (this == Internal)
 			{
@@ -1586,117 +1577,78 @@ namespace Server
 
 		public string Name { get; }
 
-		public class NullEnumerable<T> : IPooledEnumerable<T>
+        public class NullEnumerable<T> : IPooledEnumerable<T>
+        {
+            public static readonly NullEnumerable<T> Instance = new NullEnumerable<T>();
+
+            private NullEnumerable()
+            { }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                yield break;
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                yield break;
+            }
+
+            public void Free()
+            { }
+        }
+
+        public sealed class PooledEnumerable<T> : IPooledEnumerable<T>, IDisposable
 		{
-			public static readonly NullEnumerable<T> Instance = new NullEnumerable<T>();
+            private static readonly ConcurrentQueue<PooledEnumerable<T>> _Buffer = new ConcurrentQueue<PooledEnumerable<T>>();
 
-			private readonly IEnumerable<T> _Empty;
+            public static PooledEnumerable<T> Instantiate(Map map, Rectangle2D bounds, PooledEnumeration.Selector<T> selector)
+            {
+                if (!_Buffer.TryDequeue(out var e) || e._Pool == null)
+                {
+                    e = new PooledEnumerable<T>();
+                }
 
-			private NullEnumerable()
+                foreach (Sector s in PooledEnumeration.EnumerateSectors(map, bounds))
+                {
+                    foreach (T obj in selector(s, bounds))
+                    {
+                        e._Pool.Add(obj);
+                    }
+                }
+
+                return e;
+            }
+
+            private bool _IsDisposed;
+
+            private HashSet<T> _Pool = new HashSet<T>(0x40);
+
+            private PooledEnumerable()
+            { }
+
+            IEnumerator IEnumerable.GetEnumerator()
 			{
-				_Empty = Enumerable.Empty<T>();
-			}
-
-			IEnumerator IEnumerable.GetEnumerator()
-			{
-				return _Empty.GetEnumerator();
+				return _Pool.GetEnumerator();
 			}
 
 			public IEnumerator<T> GetEnumerator()
 			{
-				return _Empty.GetEnumerator();
+				return _Pool.GetEnumerator();
 			}
 
-			public void Free()
-			{ }
-		}
+            public void Free()
+            {
+                if (_IsDisposed || _Pool == null)
+                {
+                    return;
+                }
 
-		public sealed class PooledEnumerable<T> : IPooledEnumerable<T>, IDisposable
-		{
-			private static readonly Queue<PooledEnumerable<T>> _Buffer = new Queue<PooledEnumerable<T>>(0x400);
+                _Pool.Clear();
+                _Buffer.Enqueue(this);
+            }
 
-			public static PooledEnumerable<T> Instantiate(Map map, Rectangle2D bounds, PooledEnumeration.Selector<T> selector)
-			{
-				PooledEnumerable<T> e = null;
-
-				lock (((ICollection)_Buffer).SyncRoot)
-				{
-					if (_Buffer.Count > 0)
-					{
-						e = _Buffer.Dequeue();
-					}
-				}
-
-				IEnumerable<T> pool = PooledEnumeration.EnumerateSectors(map, bounds).SelectMany(s => selector(s, bounds));
-
-				if (e != null)
-				{
-					e._Pool.AddRange(pool);
-				}
-				else
-				{
-					e = new PooledEnumerable<T>(pool);
-				}
-
-				return e;
-			}
-
-			private bool _IsDisposed;
-
-			private List<T> _Pool = new List<T>(0x40);
-
-			private IEnumerable<T> InternalPool
-			{
-				get
-				{
-					int i = _Pool.Count;
-
-					while (--i >= 0)
-					{
-						if (i < _Pool.Count)
-						{
-							yield return _Pool[i];
-						}
-					}
-				}
-			}
-
-			public PooledEnumerable(IEnumerable<T> pool)
-			{
-				_Pool.AddRange(pool);
-			}
-
-			IEnumerator IEnumerable.GetEnumerator()
-			{
-				return InternalPool.GetEnumerator();
-			}
-
-			public IEnumerator<T> GetEnumerator()
-			{
-				return InternalPool.GetEnumerator();
-			}
-
-			public void Free()
-			{
-				if (_IsDisposed)
-				{
-					return;
-				}
-
-				_Pool.Clear();
-
-				if (_Pool.Capacity > 0x100)
-				{
-					_Pool.Capacity = 0x100;
-				}
-
-				lock (((ICollection)_Buffer).SyncRoot)
-				{
-					_Buffer.Enqueue(this);
-				}
-			}
-
-			public void Dispose()
+            public void Dispose()
 			{
 				_IsDisposed = true;
 
