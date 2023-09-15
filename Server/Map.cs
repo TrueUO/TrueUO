@@ -965,52 +965,32 @@ namespace Server
 			}
 		}
 
-		private static readonly Queue<List<Item>> _FixPool = new Queue<List<Item>>(128);
+        private static readonly ConcurrentQueue<SortedSet<Item>> _FixPool = new ConcurrentQueue<SortedSet<Item>>();
 
-		private static readonly List<Item> _EmptyFixItems = new List<Item>();
-
-        private static List<Item> AcquireFixItems(Map map, int x, int y)
+        private static SortedSet<Item> AcquireFixItems(Map map, int x, int y)
         {
             if (map == null || map == Internal || x < 0 || x > map.Width || y < 0 || y > map.Height)
             {
-                return _EmptyFixItems;
+                return null;
             }
 
-            List<Item> pool = null;
-
-            lock (_FixPool)
+            if (!_FixPool.TryDequeue(out var pool))
             {
-                if (_FixPool.Count > 0)
+                pool = new SortedSet<Item>(ZComparer.Default);
+            }
+
+            var eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
+
+            foreach (var item in eable)
+            {
+                if (item is BaseMulti || item.ItemID > TileData.MaxItemValue)
                 {
-                    pool = _FixPool.Dequeue();
+                    continue;
                 }
-            }
 
-            if (pool == null)
-            {
-                pool = new List<Item>(128); // Arbitrary limit
-            }
-
-            IPooledEnumerable<Item> eable = map.GetItemsInRange(new Point3D(x, y, 0), 0);
-
-            foreach (Item item in eable)
-            {
-                if (item.ItemID <= TileData.MaxItemValue && !(item is BaseMulti))
+                if (item.Movable)
                 {
-                    // Insert the item into the sorted pool
-                    int index = pool.BinarySearch(item, Comparer<Item>.Create((a, b) => a.Z.CompareTo(b.Z)));
-                    if (index < 0)
-                    {
-                        index = ~index; // BinarySearch returns a negative number for non-matching items. This line converts it to a proper insertion index.
-                    }
-
-                    pool.Insert(index, item);
-
-                    // Ensure we don't exceed the pool capacity
-                    if (pool.Count > pool.Capacity)
-                    {
-                        pool.RemoveAt(pool.Count - 1);
-                    }
+                    pool.Add(item);
                 }
             }
 
@@ -1019,55 +999,49 @@ namespace Server
             return pool;
         }
 
-        private static void FreeFixItems(List<Item> pool)
+        private static void FreeFixItems(SortedSet<Item> pool)
 		{
-			if (pool == _EmptyFixItems)
+			if (pool == null)
 			{
 				return;
 			}
 
 			pool.Clear();
 
-			lock (_FixPool)
-			{
-				if (_FixPool.Count < 128)
-				{
-					_FixPool.Enqueue(pool);
-				}
-			}
-		}
+            if (_FixPool.Count < 128)
+            {
+                _FixPool.Enqueue(pool);
+            }
+        }
 
-		public void FixColumn(int x, int y)
-		{
-			LandTile landTile = Tiles.GetLandTile(x, y);
-			StaticTile[] tiles = Tiles.GetStaticTiles(x, y, true);
+        public void FixColumn(int x, int y)
+        {
+            LandTile landTile = Tiles.GetLandTile(x, y);
+            StaticTile[] tiles = Tiles.GetStaticTiles(x, y, true);
 
-			int landZ = 0, landAvg = 0, landTop = 0;
+            int landZ = 0, landAvg = 0, landTop = 0;
 
-			GetAverageZ(x, y, ref landZ, ref landAvg, ref landTop);
+            GetAverageZ(x, y, ref landZ, ref landAvg, ref landTop);
 
-			List<Item> items = AcquireFixItems(this, x, y);
+            SortedSet<Item> items = AcquireFixItems(this, x, y);
 
-			for (int i = 0; i < items.Count; i++)
-			{
-				Item toFix = items[i];
-
-				if (!toFix.Movable)
-				{
-					continue;
-				}
-
-				int z = int.MinValue;
-				int currentZ = toFix.Z;
-
-				if (!landTile.Ignored && landAvg <= currentZ)
-				{
-					z = landAvg;
-				}
-
-                for (var index = 0; index < tiles.Length; index++)
+            foreach (Item toFix in items)
+            {
+                if (!toFix.Movable)
                 {
-                    StaticTile tile = tiles[index];
+                    continue;
+                }
+
+                int z = int.MinValue;
+                int currentZ = toFix.Z;
+
+                if (!landTile.Ignored && landAvg <= currentZ)
+                {
+                    z = landAvg;
+                }
+
+                foreach (StaticTile tile in tiles)
+                {
                     ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                     int checkZ = tile.Z;
@@ -1084,45 +1058,44 @@ namespace Server
                     }
                 }
 
-                for (int j = 0; j < items.Count; ++j)
-				{
-					if (j == i)
-					{
-						continue;
-					}
+                foreach (Item item in items)
+                {
+                    if (item == toFix)
+                    {
+                        continue;
+                    }
 
-					Item item = items[j];
-					ItemData id = item.ItemData;
+                    ItemData id = item.ItemData;
 
-					int checkZ = item.Z;
-					int checkTop = checkZ + id.CalcHeight;
+                    int checkZ = item.Z;
+                    int checkTop = checkZ + id.CalcHeight;
 
-					if (checkTop == checkZ && !id.Surface)
-					{
-						++checkTop;
-					}
+                    if (checkTop == checkZ && !id.Surface)
+                    {
+                        ++checkTop;
+                    }
 
-					if (checkTop > z && checkTop <= currentZ)
-					{
-						z = checkTop;
-					}
-				}
+                    if (checkTop > z && checkTop <= currentZ)
+                    {
+                        z = checkTop;
+                    }
+                }
 
-				if (z != int.MinValue)
-				{
-					toFix.Location = new Point3D(toFix.X, toFix.Y, z);
-				}
-			}
+                if (z != int.MinValue)
+                {
+                    toFix.Location = new Point3D(toFix.X, toFix.Y, z);
+                }
+            }
 
-			FreeFixItems(items);
-		}
+            FreeFixItems(items);
+        }
 
-		/// <summary>
-		///     Gets the highest surface that is lower than <paramref name="p" />.
-		/// </summary>
-		/// <param name="p">The reference point.</param>
-		/// <returns>A surface <typeparamref><name>IEntity</name></typeparamref> or <typeparamref><name>Item</name></typeparamref>.</returns>
-		public object GetTopSurface(Point3D p)
+        /// <summary>
+        ///     Gets the highest surface that is lower than <paramref name="p" />.
+        /// </summary>
+        /// <param name="p">The reference point.</param>
+        /// <returns>A surface <typeparamref><name>IEntity</name></typeparamref> or <typeparamref><name>Item</name></typeparamref>.</returns>
+        public object GetTopSurface(Point3D p)
 		{
 			if (this == Internal)
 			{
