@@ -8,7 +8,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VvV
 {
@@ -80,15 +79,17 @@ namespace Server.Engines.VvV
             return new VvVPlayerEntry(pm);
         }
 
-        public void HandlePlayerDeath(PlayerMobile victim)
+        private void HandlePlayerDeath(PlayerMobile victim)
         {
-            VvVPlayerEntry ventry = GetPlayerEntry<VvVPlayerEntry>(victim);
+            VvVPlayerEntry vVvEntry = GetPlayerEntry<VvVPlayerEntry>(victim);
 
-            if (ventry != null && ventry.Active)
+            if (vVvEntry != null && vVvEntry.Active)
             {
-                List<DamageEntry> list = victim.DamageEntries.OrderBy(d => -d.DamageGiven).ToList();
+                List<DamageEntry> list = new List<DamageEntry>(victim.DamageEntries);
+                list.Sort((a, b) => b.DamageGiven.CompareTo(a.DamageGiven));
+
                 List<Mobile> handled = new List<Mobile>();
-                bool statloss = false;
+                bool statLoss = false;
 
                 for (int i = 0; i < list.Count; i++)
                 {
@@ -113,9 +114,9 @@ namespace Server.Engines.VvV
                             if (Battle.IsInActiveBattle(dam, victim))
                             {
                                 if (i == 0)
-                                    Battle.Update(ventry, kentry, UpdateType.Kill);
+                                    Battle.Update(vVvEntry, kentry, UpdateType.Kill);
                                 else
-                                    Battle.Update(ventry, kentry, UpdateType.Assist);
+                                    Battle.Update(vVvEntry, kentry, UpdateType.Assist);
                             }
 
                             handled.Add(dam);
@@ -129,18 +130,18 @@ namespace Server.Engines.VvV
 
                         if (!handled.Contains(victim))
                         {
-                            ventry.TotalDeaths++;
+                            vVvEntry.TotalDeaths++;
                             handled.Add(victim);
                         }
                     }
 
-                    if (!statloss && isEnemy)
+                    if (!statLoss && isEnemy)
                     {
-                        statloss = true;
+                        statLoss = true;
                     }
                 }
 
-                if (statloss)
+                if (statLoss)
                 {
                     ApplySkillLoss(victim);
                 }
@@ -621,8 +622,27 @@ namespace Server.Engines.VvV
                 return false;
             }
 
-            TemporaryCombatant tempA = TempCombatants.FirstOrDefault(c => c.From == a);
-            TemporaryCombatant tempB = TempCombatants.FirstOrDefault(c => c.From == b);
+            TemporaryCombatant tempA = null;
+            TemporaryCombatant tempB = null;
+
+            foreach (TemporaryCombatant combatant in TempCombatants)
+            {
+                if (tempA == null && combatant.From == a)
+                {
+                    tempA = combatant;
+                }
+
+                if (tempB == null && combatant.From == b)
+                {
+                    tempB = combatant;
+                }
+
+                // If both tempA and tempB are found, exit loop early
+                if (tempA != null && tempB != null)
+                {
+                    break;
+                }
+            }
 
             if (tempA != null && (tempA.Friendly == b || tempA.FriendlyGuild != null && tempA.FriendlyGuild == guildB))
             {
@@ -1034,12 +1054,19 @@ namespace Server.Engines.VvV
 
         public static void DeleteSilverTraders()
         {
-            List<Mobile> list = new List<Mobile>(World.Mobiles.Values.Where(m => m is SilverTrader));
+            List<Mobile> list = new List<Mobile>();
 
-            for (var index = 0; index < list.Count; index++)
+            foreach (Mobile mob in World.Mobiles.Values)
+            {
+                if (mob is SilverTrader)
+                {
+                    list.Add(mob);
+                }
+            }
+
+            for (int index = 0; index < list.Count; index++)
             {
                 Mobile mob = list[index];
-
                 mob.Delete();
             }
 

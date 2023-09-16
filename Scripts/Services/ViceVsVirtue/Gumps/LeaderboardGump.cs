@@ -5,6 +5,7 @@ using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Server.Engines.Points;
 
 namespace Server.Engines.VvV
 {
@@ -62,7 +63,15 @@ namespace Server.Engines.VvV
             AddButton(280, 290, 4005, 4007, 4, GumpButtonType.Reply, 0);
             AddHtmlLocalized(315, 290, 150, 20, 1114923, 0xFFFF, false, false); // Guild Rankings
 
-            List<VvVPlayerEntry> list = new List<VvVPlayerEntry>(ViceVsVirtueSystem.Instance.PlayerTable.OfType<VvVPlayerEntry>());
+            List<VvVPlayerEntry> list = new List<VvVPlayerEntry>();
+
+            foreach (PointsEntry entry in ViceVsVirtueSystem.Instance.PlayerTable)
+            {
+                if (entry is VvVPlayerEntry playerEntry)
+                {
+                    list.Add(playerEntry);
+                }
+            }
 
             switch (Filter)
             {

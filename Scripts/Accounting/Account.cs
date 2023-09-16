@@ -1,4 +1,3 @@
-#region References
 using Server.Commands;
 using Server.Items;
 using Server.Misc;
@@ -7,27 +6,25 @@ using Server.Multis;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
-#endregion
 
 namespace Server.Accounting
 {
     [PropertyObject]
     public class Account : IAccount, IComparable, IComparable<Account>
     {
-        public static readonly TimeSpan YoungDuration = TimeSpan.FromHours(40.0);
-        public static readonly TimeSpan InactiveDuration = TimeSpan.FromDays(180.0);
-        public static readonly TimeSpan EmptyInactiveDuration = TimeSpan.FromDays(30.0);
+        private static readonly TimeSpan _YoungDuration = TimeSpan.FromHours(40.0);
+        private static readonly TimeSpan _InactiveDuration = TimeSpan.FromDays(180.0);
+        private static readonly TimeSpan _EmptyInactiveDuration = TimeSpan.FromDays(30.0);
 
-        private static MD5CryptoServiceProvider m_MD5HashProvider;
-        private static SHA1CryptoServiceProvider m_SHA1HashProvider;
-        private static SHA512CryptoServiceProvider m_SHA512HashProvider;
+        private static MD5CryptoServiceProvider _MD5HashProvider;
+        private static SHA1CryptoServiceProvider _SHA1HashProvider;
+        private static SHA512CryptoServiceProvider _SHA512HashProvider;
 
-        private static byte[] m_HashBuffer;
+        private static byte[] _HashBuffer;
 
         public static void Configure()
         {
@@ -544,7 +541,7 @@ namespace Server.Accounting
 
                 TimeSpan inactiveLength = DateTime.UtcNow - LastLogin;
 
-                return inactiveLength > (Count == 0 ? EmptyInactiveDuration : InactiveDuration);
+                return inactiveLength > (Count == 0 ? _EmptyInactiveDuration : _InactiveDuration);
             }
         }
 
@@ -822,54 +819,54 @@ namespace Server.Accounting
 
         public static string HashMD5(string phrase)
         {
-            if (m_MD5HashProvider == null)
+            if (_MD5HashProvider == null)
             {
-                m_MD5HashProvider = new MD5CryptoServiceProvider();
+                _MD5HashProvider = new MD5CryptoServiceProvider();
             }
 
-            if (m_HashBuffer == null)
+            if (_HashBuffer == null)
             {
-                m_HashBuffer = new byte[256];
+                _HashBuffer = new byte[256];
             }
 
-            int length = Encoding.ASCII.GetBytes(phrase, 0, phrase.Length > 256 ? 256 : phrase.Length, m_HashBuffer, 0);
-            byte[] hashed = m_MD5HashProvider.ComputeHash(m_HashBuffer, 0, length);
+            int length = Encoding.ASCII.GetBytes(phrase, 0, phrase.Length > 256 ? 256 : phrase.Length, _HashBuffer, 0);
+            byte[] hashed = _MD5HashProvider.ComputeHash(_HashBuffer, 0, length);
 
             return BitConverter.ToString(hashed);
         }
 
         public static string HashSHA1(string phrase)
         {
-            if (m_SHA1HashProvider == null)
+            if (_SHA1HashProvider == null)
             {
-                m_SHA1HashProvider = new SHA1CryptoServiceProvider();
+                _SHA1HashProvider = new SHA1CryptoServiceProvider();
             }
 
-            if (m_HashBuffer == null)
+            if (_HashBuffer == null)
             {
-                m_HashBuffer = new byte[256];
+                _HashBuffer = new byte[256];
             }
 
-            int length = Encoding.ASCII.GetBytes(phrase, 0, phrase.Length > 256 ? 256 : phrase.Length, m_HashBuffer, 0);
-            byte[] hashed = m_SHA1HashProvider.ComputeHash(m_HashBuffer, 0, length);
+            int length = Encoding.ASCII.GetBytes(phrase, 0, phrase.Length > 256 ? 256 : phrase.Length, _HashBuffer, 0);
+            byte[] hashed = _SHA1HashProvider.ComputeHash(_HashBuffer, 0, length);
 
             return BitConverter.ToString(hashed);
         }
 
         public static string HashSHA512(string phrase)
         {
-            if (m_SHA512HashProvider == null)
+            if (_SHA512HashProvider == null)
             {
-                m_SHA512HashProvider = new SHA512CryptoServiceProvider();
+                _SHA512HashProvider = new SHA512CryptoServiceProvider();
             }
 
-            if (m_HashBuffer == null)
+            if (_HashBuffer == null)
             {
-                m_HashBuffer = new byte[256];
+                _HashBuffer = new byte[256];
             }
 
-            int length = Encoding.ASCII.GetBytes(phrase, 0, phrase.Length > 256 ? 256 : phrase.Length, m_HashBuffer, 0);
-            byte[] hashed = m_SHA512HashProvider.ComputeHash(m_HashBuffer, 0, length);
+            int length = Encoding.ASCII.GetBytes(phrase, 0, phrase.Length > 256 ? 256 : phrase.Length, _HashBuffer, 0);
+            byte[] hashed = _SHA512HashProvider.ComputeHash(_HashBuffer, 0, length);
 
             return BitConverter.ToString(hashed);
         }
@@ -886,22 +883,24 @@ namespace Server.Accounting
         /// </summary>
         /// <param name="node">The XmlElement from which to deserialize.</param>
         /// <returns>String list. Value will never be null.</returns>
-        public static string[] LoadAccessCheck(XmlElement node)
+        private static string[] LoadAccessCheck(XmlElement node)
         {
-            string[] stringList;
+            List<string> resultList = new List<string>();
             XmlElement accessCheck = node["accessCheck"];
 
             if (accessCheck != null)
             {
-                stringList = accessCheck.GetElementsByTagName("ip").Cast<XmlElement>().Select(ip => Utility.GetText(ip, null))
-                               .Where(text => text != null).ToArray();
-            }
-            else
-            {
-                stringList = Array.Empty<string>();
+                foreach (XmlElement ipElement in accessCheck.GetElementsByTagName("ip"))
+                {
+                    string ipText = Utility.GetText(ipElement, null);
+                    if (ipText != null)
+                    {
+                        resultList.Add(ipText);
+                    }
+                }
             }
 
-            return stringList;
+            return resultList.ToArray();
         }
 
         /// <summary>
@@ -922,7 +921,7 @@ namespace Server.Accounting
 
                 count = 0;
 
-                foreach (XmlElement ip in addressList.GetElementsByTagName("ip").Cast<XmlElement>())
+                foreach (XmlElement ip in addressList.GetElementsByTagName("ip"))
                 {
                     if (count < list.Length)
                     {
@@ -968,10 +967,6 @@ namespace Server.Accounting
         {
             Mobile[] list = new Mobile[7];
             XmlElement chars = node["chars"];
-
-            //int length = Accounts.GetInt32( Accounts.GetAttribute( chars, "length", "6" ), 6 );
-            //list = new Mobile[length];
-            //Above is legacy, no longer used
 
             if (chars == null)
             {
@@ -1270,7 +1265,7 @@ namespace Server.Accounting
 
         public void CheckYoung()
         {
-            if (TotalGameTime >= YoungDuration)
+            if (TotalGameTime >= _YoungDuration)
             {
                 RemoveYoungStatus(1019038);
                 // You are old enough to be considered an adult, and have outgrown your status as a young player!
@@ -1647,7 +1642,7 @@ namespace Server.Accounting
                 return;
             }
 
-            TimeSpan ts = YoungDuration - acc.TotalGameTime;
+            TimeSpan ts = _YoungDuration - acc.TotalGameTime;
             int hours = Math.Max((int)ts.TotalHours, 0);
 
             m.SendAsciiMessage("You will enjoy the benefits and relatively safe status of a young player for {0} more hour{1}.", hours, hours != 1 ? "s" : "");
