@@ -7,7 +7,6 @@ using Server.Mobiles;
 using Server.Spells.SkillMasteries;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Gumps
 {
@@ -963,10 +962,21 @@ namespace Server.Gumps
 
         public override void OnResponse(Network.NetState state, RelayInfo info)
         {
-            GumpButton button = ButtonCallbacks.Keys.FirstOrDefault(b => b.ButtonID == info.ButtonID);
+            GumpButton button = null;
 
-            if (ButtonCallbacks.ContainsKey(button) && ButtonCallbacks[button] != null)
+            foreach (GumpButton b in ButtonCallbacks.Keys)
+            {
+                if (b.ButtonID == info.ButtonID)
+                {
+                    button = b;
+                    break;
+                }
+            }
+
+            if (button != null && ButtonCallbacks.ContainsKey(button) && ButtonCallbacks[button] != null)
+            {
                 ButtonCallbacks[button](button);
+            }
         }
 
         public void CheckPage(ref int index, ref int page, int perpage = 9)
@@ -1161,19 +1171,20 @@ namespace Server.Gumps
 
         public List<int> GetCityTitles()
         {
-            IEnumerable<int> list = User.RewardTitles.OfType<int>().Where(IsCityTitle);
-
             List<int> ownedTitles = new List<int>();
 
-            foreach (var i in list)
+            foreach (object obj in User.RewardTitles)
             {
-                ownedTitles.Add(i);
+                if (obj is int title && IsCityTitle(title))
+                {
+                    ownedTitles.Add(title);
+                }
             }
 
             return ownedTitles;
         }
 
-        public void Refresh(bool recompile = true)
+        private void Refresh(bool recompile = true)
         {
             if (recompile)
             {
