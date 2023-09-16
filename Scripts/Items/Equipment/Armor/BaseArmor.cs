@@ -7,7 +7,6 @@ using AMT = Server.Items.ArmorMaterialType;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -465,13 +464,27 @@ namespace Server.Items
 
         public static double GetInherentStaminaLossReduction(Mobile from)
         {
+            List<BaseArmor> fromsArmor = new List<BaseArmor>();
+
+            foreach (Item item in from.Items)
+            {
+                if (item is BaseArmor armor)
+                {
+                    fromsArmor.Add(armor);
+                }
+            }
+
+            // Sort the armors list based on GetArmorRatingReduction in descending order
+            fromsArmor.Sort((a, b) => GetArmorRatingReduction(b).CompareTo(GetArmorRatingReduction(a)));
+
             double toReduce = 0.0;
             int count = 0;
-
-            foreach (BaseArmor armor in from.Items.OfType<BaseArmor>().OrderBy(arm => -GetArmorRatingReduction(arm)))
+            foreach (BaseArmor armor in fromsArmor)
             {
                 if (count == 5)
+                {
                     break;
+                }
 
                 toReduce += GetArmorRatingReduction(armor);
                 count++;
@@ -480,7 +493,7 @@ namespace Server.Items
             return toReduce;
         }
 
-        public static double GetArmorRatingReduction(BaseArmor armor)
+        private static double GetArmorRatingReduction(BaseArmor armor)
         {
             switch (armor.MaterialType)
             {

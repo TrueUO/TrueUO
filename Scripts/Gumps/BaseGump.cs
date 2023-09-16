@@ -87,8 +87,7 @@ namespace Server.Gumps
         public void Dispose()
         {
             ColUtility.ForEach(Children.AsEnumerable(), child => Children.Remove(child));
-            Children = null;
-
+            
             Children = null;
             Parent = null;
 
