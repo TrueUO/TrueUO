@@ -9,7 +9,6 @@ using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.UOStore
 {
@@ -712,7 +711,14 @@ namespace Server.Engines.UOStore
         {
             List<StoreEntry> list = new List<StoreEntry>();
 
-            list.AddRange(Entries.Where(e => Insensitive.Contains(GetStringName(e.Name), searchString)));
+            for (int index = 0; index < Entries.Count; index++)
+            {
+                StoreEntry entry = Entries[index];
+                if (Insensitive.Contains(GetStringName(entry.Name), searchString))
+                {
+                    list.Add(entry);
+                }
+            }
 
             return list;
         }

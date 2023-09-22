@@ -43,37 +43,8 @@ namespace Server.Regions
         public CorgulRegion(Rectangle2D rec, CorgulAltar altar)
             : base("Corgul Boss Region", altar.Map, DefaultPriority, rec)
         {
-            //MarkBounds(rec);
             m_Altar = altar;
             m_Bounds = rec;
-        }
-
-        public void MarkBounds(Rectangle2D rec)
-        {
-            m_Markers = new List<Item>();
-
-            int w = rec.X + rec.Width;
-            int h = rec.Y + rec.Height;
-            int t = 0;
-
-            for (int x = rec.X; x <= w; x++)
-            {
-                for (int y = rec.Y; y <= h; y++)
-                {
-                    if (x == rec.X || x == rec.X + rec.Width || y == rec.Y || y == rec.Y + rec.Height)
-                    {
-                        if (t >= 10)
-                        {
-                            MarkerItem i = new MarkerItem(14089);
-                            i.MoveToWorld(new Point3D(x, y, 0), Map);
-                            m_Markers.Add(i);
-                            t = 0;
-                        }
-                        else
-                            t++;
-                    }
-                }
-            }
         }
 
         public override void OnUnregister()
@@ -99,7 +70,9 @@ namespace Server.Regions
             {
                 if (s is Spells.Sixth.MarkSpell || s is Spells.Fourth.RecallSpell || s is Spells.Seventh.GateTravelSpell
                 || s is Spells.Chivalry.SacredJourneySpell)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -154,7 +127,9 @@ namespace Server.Regions
         public void RemoveBoat_Callback(object o)
         {
             if (o is BaseBoat boat)
+            {
                 RemoveBoat(boat);
+            }
         }
 
         public void RemoveBoat(BaseBoat boat)
@@ -182,12 +157,16 @@ namespace Server.Regions
                 {
                     boat.Teleport(offsetX, offsetY, offsetZ);
 
-                    //int z = this.Map.GetAverageZ(boat.X, boat.Y);
                     if (boat.Z != -5)
+                    {
                         boat.Z = -5;
+                    }
 
                     if (boat.TillerMan != null)
+                    {
                         boat.TillerManSay(501425); //Ar, turbulent water!
+                    }
+
                     return;
                 }
             }
@@ -207,18 +186,22 @@ namespace Server.Regions
                     boat.Teleport(offsetX, offsetY, -5);
                     boat.SendMessageToAllOnBoard("A rough patch of sea has disoriented the crew!");
 
-                    //int z = this.Map.GetAverageZ(boat.X, boat.Y);
                     if (boat.Z != -5)
+                    {
                         boat.Z = -5;
+                    }
 
                     if (boat.TillerMan != null)
+                    {
                         boat.TillerManSay(501425); //Ar, turbulent water!
+                    }
+
                     break;
                 }
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        private static void OnLogin(LoginEventArgs e)
         {
             Mobile from = e.Mobile;
 
