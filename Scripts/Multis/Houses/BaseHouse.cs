@@ -3864,11 +3864,20 @@ namespace Server.Multis
             protected override void OnTick()
             {
                 if (m_Map == null)
+                {
                     return;
+                }
 
                 for (int x = m_StartX; x <= m_EndX; ++x)
+                {
                     for (int y = m_StartY; y <= m_EndY; ++y)
-                        m_Map.FixColumn(x, y);
+                    {
+                        if (m_Map != null)
+                        {
+                            m_Map.FixColumn(x, y);
+                        }
+                    }
+                }
             }
         }
 
