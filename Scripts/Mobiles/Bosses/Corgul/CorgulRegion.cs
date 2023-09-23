@@ -27,14 +27,16 @@ namespace Server.Regions
 
                         foreach (BaseMulti multi in reg.GetEnumeratedMultis())
                         {
-                            if (multi is BaseBoat boat) reg.RemoveBoat(boat);
+                            if (multi is BaseBoat boat)
+                            {
+                                reg.RemoveBoat(boat);
+                            }
                         }
                     }
                 }
             });
         }
 
-        private List<Item> m_Markers;
         private readonly CorgulAltar m_Altar;
         private Rectangle2D m_Bounds;
 
@@ -45,23 +47,6 @@ namespace Server.Regions
         {
             m_Altar = altar;
             m_Bounds = rec;
-        }
-
-        public override void OnUnregister()
-        {
-            if (m_Markers == null)
-            {
-                return;
-            }
-
-            for (var index = 0; index < m_Markers.Count; index++)
-            {
-                Item i = m_Markers[index];
-
-                i.Delete();
-            }
-
-            m_Markers.Clear();
         }
 
         public override bool OnBeginSpellCast(Mobile m, ISpell s)
@@ -145,7 +130,6 @@ namespace Server.Regions
 
                 int x = boat.X - m_Bounds.X;
                 int y = boat.Y - m_Bounds.Y;
-                int z = map.GetAverageZ(x, y);
 
                 Point3D ePnt = new Point3D(rec.X + x, rec.Y + y, -5);
 
@@ -179,7 +163,6 @@ namespace Server.Regions
 
                 int offsetX = ePnt.X - boat.X;
                 int offsetY = ePnt.Y - boat.Y;
-                int offsetZ = ePnt.Z - boat.Z;
 
                 if (boat.CanFit(ePnt, Map, boat.ItemID))
                 {
