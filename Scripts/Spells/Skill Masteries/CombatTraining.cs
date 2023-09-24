@@ -4,7 +4,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -184,10 +183,23 @@ namespace Server.Spells.SkillMasteries
                 return false;
             }
 
-            if (SpellType == TrainingType.AsOne && Caster is PlayerMobile pm && pm.AllFollowers.Count(m => m.Map != Map.Internal && m.InRange(pm.Location, 15)) < 2)
+            if (SpellType == TrainingType.AsOne && Caster is PlayerMobile pm)
             {
-                Expire();
-                return false;
+                int count = 0; // Counter for matching elements
+
+                foreach (Mobile follower in pm.AllFollowers)
+                {
+                    if (follower.Map != Map.Internal && follower.InRange(pm.Location, 15))
+                    {
+                        count++;
+                    }
+                }
+
+                if (count < 2)
+                {
+                    Expire();
+                    return false;
+                }
             }
 
             return base.OnTick();

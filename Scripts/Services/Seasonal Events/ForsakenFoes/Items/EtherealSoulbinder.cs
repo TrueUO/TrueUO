@@ -1,5 +1,4 @@
 using Server.Mobiles;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -134,14 +133,23 @@ namespace Server.Items
                 killer = kbc.ControlMaster;
             }
 
-            if (e.Creature is BaseCreature bc && bc.IsSoulBound && killer is PlayerMobile && killer.Backpack != null)
+            if (e.Creature is BaseCreature bc && bc.IsSoulBound && killer is PlayerMobile pm && pm.Backpack != null)
             {
-                EtherealSoulbinder es = killer.Backpack.FindItemsByType<EtherealSoulbinder>().OrderByDescending(x => x.SoulPoint < x.MaxSoulPoint).FirstOrDefault();
+                EtherealSoulbinder es = null;
+
+                // Manually searching through items to find EtherealSoulbinder.
+                foreach (EtherealSoulbinder item in pm.Backpack.FindItemsByType<EtherealSoulbinder>())
+                {
+                    if (es == null || item.SoulPoint < es.MaxSoulPoint)
+                    {
+                        es = item;
+                    }
+                }
 
                 if (es != null)
                 {
-                    var hm = bc.HitsMax;
-                    var scaler = hm > 1000 ? 1000 : 100;
+                    int hm = bc.HitsMax;
+                    int scaler = hm > 1000 ? 1000 : 100;
 
                     es.SoulPoint += (double)(hm / scaler) * PotionOfGloriousFortune.GetBonus(killer, PotionEventType.Soulbinder);
                 }
