@@ -1,6 +1,5 @@
 using Server.Targeting;
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -66,15 +65,28 @@ namespace Server.Items
         {
             if (item.Locked)
             {
-                if (item is TreasureMapChest chest && !chest.Guardians.All(g => g.Deleted))
+                if (item is TreasureMapChest chest)
                 {
-                    from.SendLocalizedMessage(1115991); // You must destroy all the guardians before you can unlock the chest.
+                    bool allGuardiansDeleted = true;
+
+                    foreach (Mobile guardian in chest.Guardians)
+                    {
+                        if (!guardian.Deleted)
+                        {
+                            allGuardiansDeleted = false;
+                            break; // Exit the loop as soon as we find a non-deleted guardian
+                        }
+                    }
+
+                    if (!allGuardiansDeleted)
+                    {
+                        from.SendLocalizedMessage(1115991); // You must destroy all the guardians before you can unlock the chest.
+                        return; // Return early to exit the method
+                    }
                 }
-                else
-                {
-                    from.PlaySound(0x241);
-                    Timer.DelayCall(TimeSpan.FromMilliseconds(200.0), EndLockpick, new object[] { item, from });
-                }
+
+                from.PlaySound(0x241);
+                Timer.DelayCall(TimeSpan.FromMilliseconds(200.0), EndLockpick, new object[] { item, from });
             }
             else
             {
