@@ -1,12 +1,11 @@
 using Server.Gumps;
+using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using Server.Spells.Necromancy;
 using System;
 using System.Collections.Generic;
-using Server.Items;
-using System.Linq;
 using System.Drawing;
 
 namespace Server.SkillHandlers
@@ -286,12 +285,17 @@ namespace Server.SkillHandlers
             if (RegionTracking)
             {
                 range = from.Skills[SkillName.Tracking].Fixed;
-
                 range = range < BaseTrackingDetectionRange ? BaseTrackingDetectionRange : range;
+
+                int totalTargets = TotalTargetsBySkill(from);
 
                 if (type == 3)
                 {
-                    list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != null
+                    foreach (NetState netState in NetState.Instances)
+                    {
+                        Mobile m = netState.Mobile;
+
+                        if (m != null
                             && m != from
                             && m.Map == from.Map
                             && m.Alive
@@ -299,21 +303,38 @@ namespace Server.SkillHandlers
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range)
-                            && !(m.Region is Engines.CannedEvil.ChampionSpawnRegion csr && csr.Map == Map.Felucca && csr.ChampionSpawn.GetMobileCurrentDamage(m) > 1000))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
+                            && !(m.Region is Engines.CannedEvil.ChampionSpawnRegion csr && csr.Map == Map.Felucca && csr.ChampionSpawn.GetMobileCurrentDamage(m) > 1000)
+                            && list.Count < totalTargets)
+                        {
+                            list.Add(m);
+                        }
+                    }
                 }
                 else
                 {
                     IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
 
-                    list = mobiles.AsParallel().Where(m => m != null
+                    foreach (Mobile m in mobiles)
+                    {
+                        if (m != null
                             && m != from
                             && m.Alive
                             && m.AccessLevel == AccessLevel.Player
                             && check(m)
                             && CheckDifficulty(from, m)
-                            && ReachableTarget(from, m, range))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
+                            && ReachableTarget(from, m, range)
+                            && list.Count < totalTargets)
+                        {
+                            list.Add(m);
+                        }
+                    }
+                }
+
+                list.Sort((x, y) => x.GetDistanceToSqrt(from).CompareTo(y.GetDistanceToSqrt(from)));
+
+                if (list.Count > totalTargets)
+                {
+                    list = list.GetRange(0, totalTargets);
                 }
             }
             else
