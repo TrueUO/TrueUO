@@ -736,6 +736,12 @@ namespace Server.SkillHandlers
 
         protected override void OnTick()
         {
+            if (m_Target == null)
+            {
+                Stop();
+                return;
+            }
+
             if (RegionTracking)
             {
                 m_newDistance = Math.Max(Math.Abs(m_Target.Location.Y - m_From.Location.Y), Math.Abs(m_Target.Location.X - m_From.Location.X));
