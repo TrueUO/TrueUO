@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Server.Accounting;
 using Server.Diagnostics;
 using Server.Engines.Help;
@@ -13,7 +14,7 @@ namespace Server.Misc
 {
     internal static class ServerConsole
     {
-        private static readonly Func<string> _Listen = Console.ReadLine;
+        private static readonly Func<Task<string>> _ListenAsync = async () => await Task.Run(() => Console.ReadLine());
 
         private static string _Command;
 
@@ -58,11 +59,12 @@ namespace Server.Misc
             };
         }
 
-        private static void PollCommands()
+        private static async void PollCommands()
         {
             _PollTimer = Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromMilliseconds(100), ProcessCommand);
 
-            _Listen.BeginInvoke(r => ProcessInput(_Listen.EndInvoke(r)), null);
+            string result = await _ListenAsync();
+            ProcessInput(result);
         }
 
         private static void ProcessInput(string input)
@@ -73,7 +75,7 @@ namespace Server.Misc
             }
         }
 
-        private static void ProcessCommand()
+        private static async void ProcessCommand()
         {
             if (Core.Crashed || Core.Closing || World.Loading || World.Saving)
             {
@@ -89,7 +91,8 @@ namespace Server.Misc
 
             Interlocked.Exchange(ref _Command, string.Empty);
 
-            _Listen.BeginInvoke(r => ProcessInput(_Listen.EndInvoke(r)), null);
+            string result = await _ListenAsync();
+            ProcessInput(result);
         }
 
         private static PageEntry[] _Pages;
