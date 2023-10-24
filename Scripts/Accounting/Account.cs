@@ -1348,9 +1348,9 @@ namespace Server.Accounting
 
             if (LoginIPs.Length == 0)
             {
-                if (AccountHandler.IPTable.ContainsKey(ipAddress))
+                if (AccountHandler.IPTable.TryGetValue(ipAddress, out int count))
                 {
-                    AccountHandler.IPTable[ipAddress]++;
+                    AccountHandler.IPTable[ipAddress] = count + 1;
                 }
                 else
                 {
@@ -1943,12 +1943,16 @@ namespace Server.Accounting
                 Mobile mob = m_Mobiles[i];
 
                 if (mob == null)
+                {
                     continue;
+                }
 
                 if (mob == m)
                 {
-                    if (SecureAccounts != null && SecureAccounts.ContainsKey(m))
-                        return SecureAccounts[m];
+                    if (SecureAccounts != null && SecureAccounts.TryGetValue(m, out int amount))
+                    {
+                        return amount;
+                    }
                 }
             }
 
