@@ -542,7 +542,7 @@ namespace Server
 			}
 
 			Utility.PushColor(ConsoleColor.Green);
-            Console.WriteLine("Core: Running on {0}\n", Framework);
+            Console.WriteLine($"Core: Running on {Framework}");
             Utility.PopColor();
 
 			if (GCSettings.IsServerGC)
