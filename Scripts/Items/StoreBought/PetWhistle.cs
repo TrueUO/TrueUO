@@ -154,13 +154,13 @@ namespace Server.Items
                         }
                         else
                         {
-                            if ((DateTime.UtcNow - _Item.NextLinkedTime).Seconds > 60)
+                            if ((_Item.NextLinkedTime - DateTime.UtcNow).TotalSeconds > 60)
                             {
-                                from.SendLocalizedMessage(1159391); // You must wait ~1_minutes~ minutes before you can link another pet to this whistle.
+                                from.SendLocalizedMessage(1159391, (_Item.NextLinkedTime - DateTime.UtcNow).TotalMinutes.ToString("####")); // You must wait ~1_minutes~ minutes before you can link another pet to this whistle.
                             }
                             else
                             {
-                                from.SendLocalizedMessage(1159392); // You must wait ~1_seconds~ seconds before you can link another pet to this whistle.
+                                from.SendLocalizedMessage(1159392, (_Item.NextLinkedTime - DateTime.UtcNow).TotalSeconds.ToString("####")); // You must wait ~1_seconds~ seconds before you can link another pet to this whistle.
                             }
                         }
                     }
@@ -259,7 +259,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Account = reader.ReadString();
             NextLinkedTime = reader.ReadDateTime();

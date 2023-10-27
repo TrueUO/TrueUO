@@ -7,7 +7,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.Guilds
@@ -1790,9 +1789,19 @@ namespace Server.Guilds
 
         public List<Mobile> Members { get; private set; }
 
-        public IEnumerable<Mobile> OnlineMembers => Members.Where(o => o.NetState != null && o.NetState.Running);
-
-        public int OnlineMembersCount => Members.Count(o => o.NetState != null && o.NetState.Running);
+        private IEnumerable<Mobile> OnlineMembers
+        {
+            get
+            {
+                foreach (Mobile m in Members)
+                {
+                    if (m.NetState != null && m.NetState.Running)
+                    {
+                        yield return m;
+                    }
+                }
+            }
+        }
         #endregion
     }
 }

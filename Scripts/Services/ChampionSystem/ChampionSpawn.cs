@@ -1478,7 +1478,14 @@ namespace Server.Engines.CannedEvil
             {
                 if (m.Alive && m.Backpack != null)
                 {
-                    List<Item> list = new List<Item>(m.Backpack.Items.Where(i => i.LootType == LootType.Cursed));
+                    List<Item> list = new List<Item>();
+                    foreach (Item i in m.Backpack.Items)
+                    {
+                        if (i.LootType == LootType.Cursed)
+                        {
+                            list.Add(i);
+                        }
+                    }
 
                     for (var index = 0; index < list.Count; index++)
                     {

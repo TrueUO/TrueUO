@@ -1,9 +1,6 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-#endregion
 
 namespace Server
 {
@@ -11,8 +8,33 @@ namespace Server
     {
         public sealed class EntityCollection : List<IEntity>
         {
-            public IEnumerable<Item> Items => this.OfType<Item>();
-            public IEnumerable<Mobile> Mobiles => this.OfType<Mobile>();
+            public IEnumerable<Item> Items
+            {
+                get
+                {
+                    foreach (IEntity entity in this)
+                    {
+                        if (entity is Item item)
+                        {
+                            yield return item;
+                        }
+                    }
+                }
+            }
+
+            public IEnumerable<Mobile> Mobiles
+            {
+                get
+                {
+                    foreach (IEntity entity in this)
+                    {
+                        if (entity is Mobile mobile)
+                        {
+                            yield return mobile;
+                        }
+                    }
+                }
+            }
 
             public EntityCollection()
                 : this(0x400)
@@ -44,7 +66,7 @@ namespace Server
             Load();
         }
 
-        public static void Save()
+        private static void Save()
         {
             Persistence.Serialize(
                 _FilePath,
@@ -70,7 +92,7 @@ namespace Server
                 });
         }
 
-        public static void Load()
+        private static void Load()
         {
             Persistence.Deserialize(
                 _FilePath,

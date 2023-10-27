@@ -641,7 +641,23 @@ namespace Server.Engines.VvV
         {
             CheckTempCombatants();
 
-            return IsVvV(mobile) || TempCombatants != null && TempCombatants.Any(c => c.From == mobile);
+            if (IsVvV(mobile))
+            {
+                return true;
+            }
+
+            if (TempCombatants != null)
+            {
+                foreach (var combatant in TempCombatants)
+                {
+                    if (combatant.From == mobile)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public static void CheckHarmful(Mobile attacker, Mobile defender)
@@ -681,9 +697,25 @@ namespace Server.Engines.VvV
                 return;
             }
 
-            if (!IsVvV(from) && IsVvV(target) && (target.Aggressors.Any(info => IsVvV(info.Attacker)) || target.Aggressed.Any(info => IsVvV(info.Defender))))
+            if (!IsVvV(from) && IsVvV(target))
             {
-                AddTempParticipant(from, target);
+                foreach (AggressorInfo info in target.Aggressors)
+                {
+                    if (IsVvV(info.Attacker))
+                    {
+                        AddTempParticipant(from, target);
+                        return;
+                    }
+                }
+
+                foreach (AggressorInfo info in target.Aggressed)
+                {
+                    if (IsVvV(info.Defender))
+                    {
+                        AddTempParticipant(from, target);
+                        return;
+                    }
+                }
             }
         }
 
@@ -778,7 +810,15 @@ namespace Server.Engines.VvV
                 return;
             }
 
-            TempCombatants.Where(t => t.From == pm).IterateReverse(RemoveTempCombatant);
+            for (int i = TempCombatants.Count - 1; i >= 0; i--)
+            {
+                TemporaryCombatant tempCombatant = TempCombatants[i];
+
+                if (tempCombatant.From == pm)
+                {
+                    RemoveTempCombatant(tempCombatant);
+                }
+            }
         }
 
         public static void RemoveTempCombatant(TemporaryCombatant tempCombatant)
