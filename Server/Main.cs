@@ -184,11 +184,11 @@ namespace Server
 		public static bool HS => Expansion >= Expansion.HS;
 		public static bool TOL => Expansion >= Expansion.TOL;
 		public static bool EJ => Expansion >= Expansion.EJ;
-		#endregion
+        #endregion
 
-		public static string ExePath => _ExePath ?? (_ExePath = Assembly.Location);
+        public static string ExePath => _ExePath ??= Path.ChangeExtension(Assembly.Location, ".exe");
 
-		public static string BaseDirectory
+        public static string BaseDirectory
 		{
 			get
 			{
@@ -336,49 +336,19 @@ namespace Server
 			Kill(false);
 		}
 
-#if MONO
-		private static string[] SupportedTerminals => new string[]
-		{
-			"xfce4-terminal", "gnome-terminal", "xterm"
-		};
-
-		private static void RebootTerminal(int i = 0)
-		{
-			if(SupportedTerminals.Length > i)
-			{
-				try {
-					if(SupportedTerminals[i] != "xterm")
-						Process.Start(SupportedTerminals[i], $"--working-directory={BaseDirectory} -x ./TrueUO.sh");
-					else
-						Process.Start(SupportedTerminals[i], $"-lcc {BaseDirectory} -e ./TrueUO.sh");
-					Thread.Sleep(500); // a sleep here to not close the program to quick, so that the new windows cant start.
-				}
-				catch(System.ComponentModel.Win32Exception)
-				{
-					RebootTerminal(i+1);
-				}
-			}
-		}
-#endif
-
 		public static void Kill(bool restart)
 		{
 			HandleClosed();
 
 			if (restart)
 			{
-#if MONO
-				RebootTerminal();
-				Environment.Exit(0);
-			}
-#else				
-				Process.Start(ExePath, Arguments);
-			}
+                Process.Start(ExePath, Arguments);
+            }
+
 			Process.Kill();
-#endif
 		}
 
-		private static void HandleClosed()
+        private static void HandleClosed()
 		{
 			if (Closing)
 			{
@@ -821,10 +791,7 @@ namespace Server
 						warningSb.AppendLine("       - No serialization constructor");
 					}
 
-					if (
-						t.GetMethod(
-							"Serialize",
-							BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
+					if (t.GetMethod("Serialize", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
 					{
 						if (warningSb == null)
 						{
@@ -834,10 +801,7 @@ namespace Server
 						warningSb.AppendLine("       - No Serialize() method");
 					}
 
-					if (
-						t.GetMethod(
-							"Deserialize",
-							BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
+					if (t.GetMethod("Deserialize", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly) == null)
 					{
 						if (warningSb == null)
 						{
@@ -888,13 +852,9 @@ namespace Server
 		{
 			FileName = file;
 
-			using (
-				StreamWriter writer =
-					new StreamWriter(
-						new FileStream(FileName, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read)))
+			using (StreamWriter writer = new StreamWriter(new FileStream(FileName, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read)))
 			{
 				writer.WriteLine(">>>Logging started on {0:f}.", DateTime.Now);
-				//f = Tuesday, April 10, 2001 3:51 PM 
 			}
 
 			_NewLine = true;

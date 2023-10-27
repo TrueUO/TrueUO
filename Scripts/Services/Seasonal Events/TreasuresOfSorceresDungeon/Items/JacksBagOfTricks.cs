@@ -39,7 +39,7 @@ namespace Server.Items
                             case 2: item = new NamedSeveredElfEars(); break;
                             case 3: item = new SuspiciousGiftBox(); break;
                             case 4: item = new InsultingDoll(); break;
-                            case 5: item = new SpikedEggnog(); break;
+                            case 5: item = new SpikedEggNog(); break;
                         }
                     }
 
@@ -263,35 +263,6 @@ namespace Server.Items
         }
 
         public InsultingDoll(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class SpikedEggnog : Item
-    {
-        public override int LabelNumber => 1157647;  // Spiked Egg Nog
-
-        [Constructable]
-        public SpikedEggnog()
-            : base(0x142A)
-        {
-            Hue = 2711;
-        }
-
-        public SpikedEggnog(Serial serial)
             : base(serial)
         {
         }

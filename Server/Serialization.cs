@@ -79,7 +79,7 @@ namespace Server
 		public abstract bool End();
 	}
 
-	public abstract class GenericWriter
+	public abstract class GenericWriter : IDisposable
 	{
 		public abstract void Close();
 
@@ -170,14 +170,20 @@ namespace Server
 
 		public abstract void WriteGuildSet<T>(HashSet<T> set) where T : BaseGuild;
 		public abstract void WriteGuildSet<T>(HashSet<T> set, bool tidy) where T : BaseGuild;
-	}
 
+        public void Dispose()
+        {
+            Close();
+            GC.SuppressFinalize(this);
+        }
+	}
+    
 	public class BinaryFileWriter : GenericWriter
 	{
 		private readonly bool PrefixStrings;
 		private readonly Stream m_File;
 
-		protected virtual int BufferSize => 64 * 1024;
+		protected virtual int BufferSize => 81920;
 
 		private readonly byte[] m_Buffer;
 
