@@ -13,23 +13,12 @@ namespace Server
 
             if (serializer != null)
             {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    BinaryFileWriter w = new BinaryFileWriter(ms, true);
+                using MemoryStream ms = new MemoryStream();
+                using BinaryFileWriter w = new BinaryFileWriter(ms, true);
 
-                    try
-                    {
-                        serializer(w);
-
-                        w.Flush();
-
-                        data = ms.ToArray();
-                    }
-                    finally
-                    {
-                        w.Close();
-                    }
-                }
+                serializer(w);
+                w.Flush();
+                data = ms.ToArray();
             }
 
             writer.Write(0x0C0FFEE0);
@@ -87,39 +76,23 @@ namespace Server
 			Serialize(new FileInfo(path), serializer);
 		}
 
-		public static void Serialize(FileInfo file, Action<GenericWriter> serializer)
-		{
-			file.Refresh();
+        public static void Serialize(FileInfo file, Action<GenericWriter> serializer)
+        {
+            // Ensure the directory exists (this is a no-op if it already exists).
+            file.Directory?.Create();
 
-			if (file.Directory != null && !file.Directory.Exists)
-			{
-				file.Directory.Create();
-			}
+            // Ensure the file exists (this is a no-op if it already exists).
+            using (file.Create()) { /* just creating the file */ }
 
-			if (!file.Exists)
-			{
-				file.Create().Close();
-			}
+            using (FileStream fs = file.OpenWrite())
+            using (BinaryFileWriter writer = new BinaryFileWriter(fs, true))
+            {
+                serializer(writer);
+                writer.Flush();
+            }
+        }
 
-			file.Refresh();
-
-			using (FileStream fs = file.OpenWrite())
-			{
-				BinaryFileWriter writer = new BinaryFileWriter(fs, true);
-
-				try
-				{
-					serializer(writer);
-				}
-				finally
-				{
-					writer.Flush();
-					writer.Close();
-				}
-			}
-		}
-
-		public static void Deserialize(string path, Action<GenericReader> deserializer)
+        public static void Deserialize(string path, Action<GenericReader> deserializer)
 		{
 			Deserialize(path, deserializer, true);
 		}
