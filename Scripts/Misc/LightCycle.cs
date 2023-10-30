@@ -54,12 +54,12 @@ namespace Server
             Clock.GetTime(from.Map, from.X, from.Y, out hours, out minutes);
 
             /* OSI times:
-            * 
+            *
             * Midnight ->  3:59 AM : Night
             *  4:00 AM -> 11:59 PM : Day
-            * 
+            *
             * RunUO times:
-            * 
+            *
             * 10:00 PM -> 11:59 PM : Scale to night
             * Midnight ->  3:59 AM : Night
             *  4:00 AM ->  5:59 AM : Scale to day
@@ -127,7 +127,7 @@ namespace Server
             {
                 m_Owner = owner;
 
-                Priority = TimerPriority.OneMinute;
+
             }
 
             protected override void OnTick()
@@ -144,7 +144,7 @@ namespace Server
             public LightCycleTimer(double interval)
                 : base(TimeSpan.Zero, TimeSpan.FromSeconds(interval))
             {
-                Priority = TimerPriority.OneSecond;
+
             }
 
             protected override void OnTick()

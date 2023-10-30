@@ -251,7 +251,7 @@ namespace Server.SkillHandlers
                     m_MaxCount = count;
                     m_Paralyzed = creature.Paralyzed;
                     m_StartTime = DateTime.UtcNow;
-                    Priority = TimerPriority.TwoFiftyMS;
+
                 }
 
                 protected override void OnTick()

@@ -34,7 +34,7 @@ namespace Server.Items
 
         public static IFellowshipMedallion CheckMedallion(Mobile from)
         {
-            return from.FindItemOnLayer(Layer.Neck) as IFellowshipMedallion;            
+            return from.FindItemOnLayer(Layer.Neck) as IFellowshipMedallion;
         }
 
         private Timer m_Timer;
@@ -123,8 +123,6 @@ namespace Server.Items
             : base(TimeSpan.FromMinutes(12), TimeSpan.FromMinutes(12))
         {
             _Mobile = m;
-
-            Priority = TimerPriority.OneMinute;
         }
 
         protected override void OnTick()
@@ -167,7 +165,7 @@ namespace Server.Items
         public GargishFellowshipMedallion()
             : base(0xA42A)
         {
-            Weight = 1.0;            
+            Weight = 1.0;
             Layer = Layer.Neck;
         }
 

@@ -152,7 +152,7 @@ namespace Server.Items
                 : base(TimeSpan.FromSeconds(3.0))
             {
                 m_Dip = dip;
-                Priority = TimerPriority.FiftyMS;
+
             }
 
             protected override void OnTick()

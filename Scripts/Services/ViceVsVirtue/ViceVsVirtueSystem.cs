@@ -247,7 +247,7 @@ namespace Server.Engines.VvV
 
                 if (count < 1)
                 {
-                    SendVvVMessageTo(pm, 1154936); // More players are needed before a VvV battle can begin! 
+                    SendVvVMessageTo(pm, 1154936); // More players are needed before a VvV battle can begin!
                 }
                 else if (Battle.InCooldown)
                 {
@@ -347,7 +347,7 @@ namespace Server.Engines.VvV
                 }
             }
 
-            context.m_Timer = Timer.DelayCall(SkillLossPeriod, new TimerStateCallback(ClearSkillLoss_Callback), mob);
+            context.m_Timer = Timer.DelayCall(SkillLossPeriod, ClearSkillLoss_Callback, mob);
         }
 
         private static void ClearSkillLoss_Callback(object state)

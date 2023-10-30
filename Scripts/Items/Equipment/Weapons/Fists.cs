@@ -109,7 +109,7 @@ namespace Server.Items
             {
                 m_Mobile = m;
 
-                Priority = TimerPriority.TwoFiftyMS;
+
 
                 m_Mobile.BeginAction(typeof(Fists));
             }

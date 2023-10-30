@@ -653,7 +653,7 @@ namespace Server.Engines.Craft
                                 double delay = 10 - skillValue / 16.65;
 
                                 from.BeginAction(typeof(IRepairableMobile));
-                                Timer.DelayCall(TimeSpan.FromSeconds(delay), new TimerStateCallback(EndMobileRepair), from);
+                                Timer.DelayCall(TimeSpan.FromSeconds(delay), EndMobileRepair, from);
 
                                 return true;
                             }

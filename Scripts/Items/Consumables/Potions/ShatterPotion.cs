@@ -117,7 +117,7 @@ namespace Server.Items
 
                 if (p > 1)
                 {
-                    from.SendLocalizedMessage(1115762, string.Format("{0}\t{1}", from.Name, p)); // ~1_NAME~'s shatter potion destroys ~2_NUM~ potions in your inventory.                    
+                    from.SendLocalizedMessage(1115762, string.Format("{0}\t{1}", from.Name, p)); // ~1_NAME~'s shatter potion destroys ~2_NUM~ potions in your inventory.
                 }
                 else
                 {
@@ -146,7 +146,7 @@ namespace Server.Items
                 timer.Stop();
             }
 
-            m_Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(60), new TimerStateCallback(EndDelay_Callback), m);
+            m_Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(60), EndDelay_Callback, m);
         }
 
         public static int GetDelay(Mobile m)
@@ -203,7 +203,7 @@ namespace Server.Items
                     from.RevealingAction();
 
                     Effects.SendMovingEffect(from, m, Potion.ItemID, 7, 0, false, false, Potion.Hue, 0);
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(Potion.Explode_Callback), new object[] { from, m, from.Map });
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), Potion.Explode_Callback, new object[] { from, m, from.Map });
                 }
             }
         }

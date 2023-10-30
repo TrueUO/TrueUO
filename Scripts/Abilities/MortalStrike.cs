@@ -5,7 +5,7 @@ namespace Server.Items
 {
     /// <summary>
     /// The assassin's friend.
-    /// A successful Mortal Strike will render its victim unable to heal any damage for several seconds. 
+    /// A successful Mortal Strike will render its victim unable to heal any damage for several seconds.
     /// Use a gruesome follow-up to finish off your foe.
     /// </summary>
     public class MortalStrike : WeaponAbility
@@ -101,7 +101,7 @@ namespace Server.Items
                 : base(duration)
             {
                 m_Mobile = m;
-                Priority = TimerPriority.TwoFiftyMS;
+
             }
 
             protected override void OnTick()

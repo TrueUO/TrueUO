@@ -184,7 +184,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    from.SendLocalizedMessage(1152379); // Someone is currently working at the Nexus. 
+                    from.SendLocalizedMessage(1152379); // Someone is currently working at the Nexus.
                     return;
                 }
             }
@@ -197,7 +197,7 @@ namespace Server.Items
 
         public void DoDamage(Mobile to)
         {
-            to.SendLocalizedMessage(1152372); // The Nexus shoots an arc of energy at you! 
+            to.SendLocalizedMessage(1152372); // The Nexus shoots an arc of energy at you!
             to.BoltEffect(0);
             to.LocalOverheadMessage(MessageType.Regular, 0x21, 1114443); // * Your body convulses from electric shock *
             to.NonlocalOverheadMessage(MessageType.Regular, 0x21, 1114443, to.Name); //  * ~1_NAME~ spasms from electric shock *
@@ -226,7 +226,7 @@ namespace Server.Items
             Effects.SendLocationEffect(new Point3D(X - 1, Y - 1, Z + 2), Map, 0x36B0, 4, 4);
             Effects.SendLocationEffect(new Point3D(X - 2, Y - 1, Z + 2), Map, 0x36B0, 4, 4);
 
-            from.SendLocalizedMessage(1152371); // You repair the mysterious Nexus! As it whirs to life it spits out a punch card! 
+            from.SendLocalizedMessage(1152371); // You repair the mysterious Nexus! As it whirs to life it spits out a punch card!
             from.AddToBackpack(new PunchCard());
 
             Hue = 0;
@@ -246,7 +246,7 @@ namespace Server.Items
                 m_To = to;
                 m_Step = 0;
 
-                Priority = TimerPriority.TwoFiftyMS;
+
             }
 
             protected override void OnTick()

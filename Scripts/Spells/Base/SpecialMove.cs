@@ -311,7 +311,7 @@ namespace Server.Spells
             {
                 m_Mobile = from;
 
-                Priority = TimerPriority.TwentyFiveMS;
+
             }
 
             protected override void OnTick()

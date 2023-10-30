@@ -95,7 +95,7 @@ namespace Server.Items
                 _Item = item;
                 _Mobile = m;
                 _Count = count;
-                Priority = TimerPriority.FiftyMS;
+
             }
 
             protected override void OnTick()

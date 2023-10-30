@@ -118,7 +118,6 @@ namespace Server.Engines.NewMagincia
                 m_Timer.Stop();
 
             m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), ProcessTick);
-            m_Timer.Priority = TimerPriority.OneMinute;
             m_Timer.Start();
         }
 
@@ -261,7 +260,7 @@ namespace Server.Engines.NewMagincia
             new Rectangle2D(3686, 2086, 18, 18), // C2 / Prime
             new Rectangle2D(3686, 2063, 18, 18), // C3 / Prime
 
-            new Rectangle2D(3657, 2036, 18, 18), // N1 / Prime 
+            new Rectangle2D(3657, 2036, 18, 18), // N1 / Prime
             new Rectangle2D(3648, 2058, 18, 18), // N2 / Prime
             new Rectangle2D(3636, 2081, 18, 18), // N3 / Prime
 
@@ -270,19 +269,19 @@ namespace Server.Engines.NewMagincia
             new Rectangle2D(3712, 2172, 18, 16), // SE1
             new Rectangle2D(3729, 2135, 16, 16), // SE4
 
-            new Rectangle2D(3655, 2213, 18, 18), // SW1        
+            new Rectangle2D(3655, 2213, 18, 18), // SW1
             new Rectangle2D(3656, 2191, 18, 16), // SW2
-            new Rectangle2D(3628, 2197, 20, 20), // SW3        
+            new Rectangle2D(3628, 2197, 20, 20), // SW3
             new Rectangle2D(3628, 2175, 18, 18), // SW4
-            new Rectangle2D(3657, 2165, 18, 18), // SW5   
+            new Rectangle2D(3657, 2165, 18, 18), // SW5
 
-            new Rectangle2D(3745, 2122, 16, 18), // E1 / Prime       
+            new Rectangle2D(3745, 2122, 16, 18), // E1 / Prime
             new Rectangle2D(3765, 2122, 18, 18), // E2 / Prime
-            new Rectangle2D(3787, 2130, 18, 18), // E3 / Prime       
+            new Rectangle2D(3787, 2130, 18, 18), // E3 / Prime
             new Rectangle2D(3784, 2108, 18, 17), // E4 / Prime
-            new Rectangle2D(3765, 2086, 18, 18), // E5 / Prime      
+            new Rectangle2D(3765, 2086, 18, 18), // E5 / Prime
             new Rectangle2D(3749, 2065, 18, 18), // E6 / Prime
-            new Rectangle2D(3715, 2090, 18, 18)  // E7 / Prime            
+            new Rectangle2D(3715, 2090, 18, 18)  // E7 / Prime
         };
 
         private static readonly Point3D[] m_StoneLocs =

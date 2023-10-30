@@ -8,7 +8,6 @@ namespace Server.Misc
         public FoodDecayTimer()
             : base(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5))
         {
-            Priority = TimerPriority.OneMinute;
         }
 
         public static void Initialize()

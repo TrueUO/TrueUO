@@ -9,7 +9,6 @@ namespace Server
             : base(delay, TimeSpan.FromDays(1.0))
         {
             m_Collection = collection;
-            Priority = TimerPriority.OneMinute;
         }
 
         protected override void OnTick()

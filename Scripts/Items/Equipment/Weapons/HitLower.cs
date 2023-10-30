@@ -108,7 +108,7 @@ namespace Server.Items
             {
                 m_Player = player;
 
-                Priority = TimerPriority.TwoFiftyMS;
+
 
                 Start();
             }
@@ -130,7 +130,7 @@ namespace Server.Items
                 m_Player = player;
                 DefenseMalus = malus;
 
-                Priority = TimerPriority.TwoFiftyMS;
+
                 Start();
             }
 

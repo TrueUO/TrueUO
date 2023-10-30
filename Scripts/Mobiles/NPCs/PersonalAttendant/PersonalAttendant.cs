@@ -78,7 +78,6 @@ namespace Server.Mobiles
             if (m_Timer != null)
             {
                 m_Timer.Interval = TimeSpan.FromSeconds(2);
-                m_Timer.Priority = TimerPriority.OneSecond;
             }
         }
 
@@ -90,7 +89,6 @@ namespace Server.Mobiles
             if (m_Timer != null)
             {
                 m_Timer.Interval = TimeSpan.FromSeconds(5);
-                m_Timer.Priority = TimerPriority.FiveSeconds;
             }
         }
 
@@ -175,7 +173,7 @@ namespace Server.Mobiles
             {
                 m_Attendant = attendant;
 
-                Priority = TimerPriority.FiveSeconds;
+
             }
 
             protected override void OnTick()
@@ -189,19 +187,19 @@ namespace Server.Mobiles
                         if ((m.NetState == null || !m.Alive) && !m_Attendant.InGreetingMode(m))
                             m_Attendant.Dismiss(m);
                         else if (m_Attendant.MovementMode == MovementType.Follow && !m.InRange(m_Attendant.Location, 12))
-                            DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(CatchUp), m.Location);
+                            DelayCall(TimeSpan.FromSeconds(1), CatchUp, m.Location);
                     }
                 }
             }
 
-            private void CatchUp(object obj)
+            private void CatchUp(Point3D point3D)
             {
                 if (m_Attendant != null && !m_Attendant.Deleted)
                 {
                     m_Attendant.ControlOrder = LastOrderType.Follow;
                     m_Attendant.FollowTarget = m_Attendant.ControlMaster;
 
-                    if (obj is Point3D point3D && m_Attendant.ControlMaster != null)
+                    if (m_Attendant.ControlMaster != null)
                     {
                         m_Attendant.MoveToWorld(point3D, m_Attendant.ControlMaster.Map);
                     }
