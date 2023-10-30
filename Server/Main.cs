@@ -614,38 +614,32 @@ namespace Server
 
 				long sample = 0;
 
-				while (!Closing)
-				{
-					Mobile.ProcessDeltaQueue();
-					Item.ProcessDeltaQueue();
+                while (!Closing)
+                {
+                    Mobile.ProcessDeltaQueue();
+                    Item.ProcessDeltaQueue();
 
-					Timer.Slice(TickCount);
-					MessagePump.Slice();
+                    Timer.Slice(TickCount);
+                    MessagePump.Slice();
 
-					NetState.FlushAll();
-					NetState.ProcessDisposedQueue();
+                    NetState.FlushAll();
+                    NetState.ProcessDisposedQueue();
 
-					if (Slice != null)
-					{
-						Slice();
-					}
+                    if (Slice != null)
+                    {
+                        Slice();
+                    }
 
-					if (sample++ % sampleInterval != 0)
-					{
-						continue;
-					}
+                    if (sample++ % sampleInterval != 0)
+                    {
+                        continue;
+                    }
 
                     now = TickCount;
-                    float cyclesPerSecond = ticksPerSecond / (now - last);
-                    _CyclesPerSecond[_CycleIndex++ % _CyclesPerSecond.Length] = cyclesPerSecond;
+                    _CyclesPerSecond[_CycleIndex++ % _CyclesPerSecond.Length] = ticksPerSecond / (now - last);
                     last = now;
-
-                    if (cyclesPerSecond > 125)
-                    {
-                        Thread.Sleep(1);
-                    }
                 }
-			}
+            }
 			catch (Exception e)
 			{
 				CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(e, true));
