@@ -18,27 +18,24 @@ namespace Server
 
 		public static bool UsingUOPFormat { get; }
 
-		public static MultiComponentList GetComponents(int multiID)
-		{
-			MultiComponentList mcl;
+        public static MultiComponentList GetComponents(int multiID)
+        {
+            multiID &= 0x3FFF; // The value of the actual multi is shifted by 0x4000, so this is left alone.
 
-			multiID &= 0x3FFF; // The value of the actual multi is shifted by 0x4000, so this is left alone.
+            if (m_Components.TryGetValue(multiID, out MultiComponentList mcl))
+            {
+                return mcl;
+            }
 
-			if (m_Components.ContainsKey(multiID))
-			{
-				mcl = m_Components[multiID];
-			}
-			else if (!UsingUOPFormat)
-			{
-				m_Components[multiID] = mcl = Load(multiID);
-			}
-			else
-			{
-				mcl = MultiComponentList.Empty;
-			}
+            if (!UsingUOPFormat)
+            {
+                mcl = Load(multiID);
+                m_Components[multiID] = mcl;
+                return mcl;
+            }
 
-			return mcl;
-		}
+            return MultiComponentList.Empty;
+        }
 
 		public static MultiComponentList Load(int multiID)
 		{

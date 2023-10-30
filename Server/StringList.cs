@@ -26,9 +26,9 @@ namespace Server
         {
             get
             {
-                if (StringTable.ContainsKey(number))
+                if (StringTable.TryGetValue(number, out var value))
                 {
-                    return StringTable[number];
+                    return value;
                 }
 
                 return null;
