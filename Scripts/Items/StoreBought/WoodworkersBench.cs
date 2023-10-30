@@ -79,7 +79,6 @@ namespace Server.Items
             if (_Timer == null)
             {
                 _Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), CheckTable);
-                _Timer.Priority = TimerPriority.FiveSeconds;
                 _Timer.Start();
             }
         }
@@ -213,7 +212,7 @@ namespace Server.Items
                 from.SendGump(new RewardOptionGump(this));
             }
             else
-                from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.       	
+                from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
         }
 
         public override void Serialize(GenericWriter writer)

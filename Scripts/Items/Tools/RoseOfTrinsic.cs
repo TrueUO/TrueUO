@@ -141,7 +141,7 @@ namespace Server.Items
             {
                 m_Rose = rose;
 
-                Priority = TimerPriority.OneMinute;
+
             }
 
             protected override void OnTick()

@@ -65,7 +65,7 @@ namespace Server.Spells.Sixth
 
                 m_Spell?.StartDelayedDamageContext(attacker, this);
 
-                Priority = TimerPriority.FiftyMS;
+
             }
 
             protected override void OnTick()

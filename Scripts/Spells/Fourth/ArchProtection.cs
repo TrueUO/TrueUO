@@ -100,7 +100,7 @@ namespace Server.Spells.Fourth
                 if (time > 144)
                     time = 144;
                 Delay = TimeSpan.FromSeconds(time);
-                Priority = TimerPriority.OneSecond;
+
 
                 m_Owner = target;
             }

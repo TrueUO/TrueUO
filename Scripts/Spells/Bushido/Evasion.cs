@@ -106,11 +106,11 @@ namespace Server.Spells.Bushido
         public static TimeSpan GetEvadeDuration(Mobile m)
         {
             /* Evasion duration now scales with Bushido skill
-            * 
+            *
             * If the player has higher than GM Bushido, and GM Tactics and Anatomy, they get a 1 second bonus
             * Evasion duration range:
             * o 3-6 seconds w/o tactics/anatomy
-            * o 6-7 seconds w/ GM+ Bushido and GM tactics/anatomy 
+            * o 6-7 seconds w/ GM+ Bushido and GM tactics/anatomy
             */
             double seconds = 3;
 
@@ -126,9 +126,9 @@ namespace Server.Spells.Bushido
         public static double GetParryScalar(Mobile m)
         {
             /* Evasion modifier to parry now scales with Bushido skill
-            * 
+            *
             * If the player has higher than GM Bushido, and at least GM Tactics and Anatomy, they get a bonus to their evasion modifier (10% bonus to the evasion modifier to parry NOT 10% to the final parry chance)
-            * 
+            *
             * Bonus modifier to parry range: (these are the ranges for the evasion modifier)
             * o 16-40% bonus w/o tactics/anatomy
             * o 42-50% bonus w/ GM+ bushido and GM tactics/anatomy
@@ -214,7 +214,7 @@ namespace Server.Spells.Bushido
                 : base(delay)
             {
                 m_Mobile = m;
-                Priority = TimerPriority.TwoFiftyMS;
+
             }
 
             protected override void OnTick()

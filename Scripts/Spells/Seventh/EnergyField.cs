@@ -177,7 +177,7 @@ namespace Server.Spells.Seventh
                 public InternalTimer(InternalItem item, TimeSpan duration)
                     : base(duration)
                 {
-                    Priority = TimerPriority.OneSecond;
+
                     m_Item = item;
                 }
 

@@ -59,7 +59,7 @@ namespace Server.Items
             if (IsWorking)
                 return;
 
-            m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), new TimerStateCallback(FinishWorking_Callback), from);
+            m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), FinishWorking_Callback, from);
             UpdateStage();
         }
 
@@ -119,7 +119,7 @@ namespace Server.Items
             UpdateStage();
         }
 
-        private void FinishWorking_Callback(object state)
+        private void FinishWorking_Callback(Mobile from)
         {
             if (m_Timer != null)
             {
@@ -127,7 +127,7 @@ namespace Server.Items
                 m_Timer = null;
             }
 
-            if (state is Mobile from && !from.Deleted && !Deleted && IsFull)
+            if (!from.Deleted && !Deleted && IsFull)
             {
                 SackFlour flour = new SackFlour
                 {

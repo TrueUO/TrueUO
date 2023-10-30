@@ -53,7 +53,7 @@ namespace Server.Items
             if (freeze)
             {
                 m.Frozen = freeze;
-                Timer.DelayCall(TimeSpan.FromSeconds((message == 1095162) ? 2.0 : 1.25), new TimerStateCallback(EndFall_Callback), m);
+                Timer.DelayCall(TimeSpan.FromSeconds((message == 1095162) ? 2.0 : 1.25), EndFall_Callback, m);
             }
 
             m.SendLocalizedMessage(message);
@@ -69,7 +69,7 @@ namespace Server.Items
 
                 if (SpellHelper.FindValidSpawnLocation(Map, ref p, true))
                 {
-                    Timer.DelayCall(TimeSpan.FromSeconds(0), new TimerStateCallback(Relocate_Callback), new object[] { m, p });
+                    Timer.DelayCall(TimeSpan.FromSeconds(0), Relocate_Callback, new object[] { m, p });
                 }
 
                 arg = new object[] { m, (21 + Utility.Random(2)), !m.Female ? 0x426 : 0x317 };
@@ -80,7 +80,7 @@ namespace Server.Items
             }
             if (arg != null)
             {
-                Timer.DelayCall(TimeSpan.FromSeconds(.4), new TimerStateCallback(BeginFall_Callback), arg);
+                Timer.DelayCall(TimeSpan.FromSeconds(.4), BeginFall_Callback, arg);
             }
         }
 

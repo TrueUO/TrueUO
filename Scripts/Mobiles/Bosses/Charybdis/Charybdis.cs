@@ -162,7 +162,7 @@ namespace Server.Mobiles
 
             DoTeleportEffects(newLoc, map);
             Hidden = false;
-            Timer.DelayCall(TimeSpan.FromSeconds(.5), new TimerStateCallback(TimedMoveToWorld), new object[] { newLoc, map });
+            Timer.DelayCall(TimeSpan.FromSeconds(.5), TimedMoveToWorld, new object[] { newLoc, map });
         }
 
         public void TimedMoveToWorld(object o)
@@ -429,7 +429,7 @@ namespace Server.Mobiles
                 m_IMax = imax;
                 m_Path = path;
                 m_Mobile = mobile;
-                Priority = TimerPriority.FiftyMS;
+
                 Start();
             }
 

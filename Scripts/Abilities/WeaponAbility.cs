@@ -106,7 +106,7 @@ namespace Server.Items
             scalar -= (double)lmc / 100;
             mana = (int)(mana * scalar);
 
-            // Using a special move within 3 seconds of the previous special move costs double mana 
+            // Using a special move within 3 seconds of the previous special move costs double mana
             if (GetContext(from) != null)
                 mana *= 2;
 
@@ -160,7 +160,7 @@ namespace Server.Items
             switch (skill)
             {
                 default: return 1157351;
-                // You need ~1_SKILL_REQUIREMENT~ weapon and tactics skill to perform that attack                                                             
+                // You need ~1_SKILL_REQUIREMENT~ weapon and tactics skill to perform that attack
                 // You need ~1_SKILL_REQUIREMENT~ tactics skill to perform that attack
                 case SkillName.Bushido:
                 case SkillName.Ninjitsu: return 1063347;
@@ -458,7 +458,7 @@ namespace Server.Items
             {
                 m_Mobile = from;
 
-                Priority = TimerPriority.TwentyFiveMS;
+
             }
 
             protected override void OnTick()

@@ -48,7 +48,7 @@ namespace Server.Spells.Necromancy
             SpellHelper.CheckReflect(this, Caster, ref m);
 
             /* Temporarily causes intense physical pain to the target, dealing direct damage.
-             * After 10 seconds the spell wears off, and if the target is still alive, 
+             * After 10 seconds the spell wears off, and if the target is still alive,
              * some of the Hit Points lost through Pain Spike are restored.
              */
 
@@ -106,7 +106,7 @@ namespace Server.Spells.Necromancy
             public InternalTimer(Mobile m, double toRestore)
                 : base(TimeSpan.FromMilliseconds(250), TimeSpan.FromMilliseconds(250))
             {
-                Priority = TimerPriority.FiftyMS;
+
 
                 m_Mobile = m;
                 m_ToRestore = (int)toRestore;

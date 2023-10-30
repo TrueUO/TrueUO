@@ -61,7 +61,7 @@ namespace Server.Misc
 
         public virtual void DelayGiveGift(TimeSpan delay, Mobile mob)
         {
-            Timer.DelayCall(delay, new TimerStateCallback(DelayGiveGift_Callback), mob);
+            Timer.DelayCall(delay, DelayGiveGift_Callback, mob);
         }
 
         public virtual GiftResult GiveGift(Mobile mob, Item item)
@@ -76,9 +76,9 @@ namespace Server.Misc
             return GiftResult.BankBox;
         }
 
-        protected virtual void DelayGiveGift_Callback(object state)
+        protected virtual void DelayGiveGift_Callback(Mobile m)
         {
-            GiveGift((Mobile)state);
+            GiveGift(m);
         }
     }
 }

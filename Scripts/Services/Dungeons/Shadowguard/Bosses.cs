@@ -524,7 +524,7 @@ namespace Server.Engines.Shadowguard
             }
         }
 
-       
+
         public override void OnGotMeleeAttack(Mobile m)
         {
             base.OnGotMeleeAttack(m);
@@ -892,7 +892,7 @@ namespace Server.Engines.Shadowguard
             {
                 if ((m is PlayerMobile || m is BaseCreature creature && creature.GetMaster() is PlayerMobile) && CanBeHarmful(m))
                 {
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.75), new TimerStateCallback(DoDamage_Callback), m);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.75), DoDamage_Callback, m);
                 }
             }
 

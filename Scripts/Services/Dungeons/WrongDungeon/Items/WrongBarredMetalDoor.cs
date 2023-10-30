@@ -92,7 +92,7 @@ namespace Server.Items
             public InternalTimer(BaseDoor door)
                 : base(TimeSpan.FromSeconds(10.0))
             {
-                Priority = TimerPriority.OneSecond;
+
                 m_Door = door;
             }
 

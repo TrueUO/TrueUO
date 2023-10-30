@@ -46,7 +46,7 @@ namespace Server.Spells.Bushido
             int anticipateHitBonus = SkillMasteries.MasteryInfo.AnticipateHitBonus(m);
 
             if (anticipateHitBonus > 0)
-                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.AnticipateHit, 1155905, 1156057, TimeSpan.FromSeconds(4), m, $"{anticipateHitBonus.ToString()}\t75")); // ~1_CHANCE~% chance to reduce Confidence heal by ~2_REDUCE~% when hit. 
+                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.AnticipateHit, 1155905, 1156057, TimeSpan.FromSeconds(4), m, $"{anticipateHitBonus.ToString()}\t75")); // ~1_CHANCE~% chance to reduce Confidence heal by ~2_REDUCE~% when hit.
         }
 
         public static void EndConfidence(Mobile m)
@@ -138,7 +138,7 @@ namespace Server.Spells.Bushido
                 : base(TimeSpan.FromSeconds(15.0))
             {
                 m_Mobile = m;
-                Priority = TimerPriority.TwoFiftyMS;
+
             }
 
             protected override void OnTick()
@@ -161,7 +161,7 @@ namespace Server.Spells.Bushido
             {
                 m_Mobile = m;
                 m_Hits = 15 + (m.Skills.Bushido.Fixed * m.Skills.Bushido.Fixed / 57600);
-                Priority = TimerPriority.TwoFiftyMS;
+
             }
 
             protected override void OnTick()

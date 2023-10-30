@@ -1174,8 +1174,8 @@ namespace Server.Items
                 m_NextActionTime = from.NextActionTime;
                 m_LastMoveTime = from.LastMoveTime;
 
-                Priority = TimerPriority.TenMS;
-            }            
+
+            }
 
             protected override void OnTick()
             {
@@ -1277,7 +1277,7 @@ namespace Server.Items
 
                         if (bc != null && guardian && !IsTameable(bc))
                         {
-                            m_Chest.Guardians.Add(bc);                            
+                            m_Chest.Guardians.Add(bc);
                         }
                     }
 
@@ -1360,7 +1360,7 @@ namespace Server.Items
                     m_From = from;
                     m_SoundID = soundID;
 
-                    Priority = TimerPriority.TenMS;
+
                 }
 
                 protected override void OnTick()

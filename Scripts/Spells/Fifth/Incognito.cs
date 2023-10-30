@@ -130,7 +130,7 @@ namespace Server.Spells.Fifth
             {
                 m_Owner = owner;
 
-                Priority = TimerPriority.OneSecond;
+
             }
 
             protected override void OnTick()

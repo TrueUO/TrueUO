@@ -113,7 +113,7 @@ namespace Server.Mobiles
 
             public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(60))
             {
-                Priority = TimerPriority.FiveSeconds;
+
                 Mare = (Djinn)p;
             }
             protected override void OnTick()
@@ -152,7 +152,7 @@ namespace Server.Mobiles
                 : base(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1))
             {
                 m_Owner = owner;
-                Priority = TimerPriority.TwoFiftyMS;
+
             }
             //Type type = m_Owner.GetType();
             protected override void OnTick()

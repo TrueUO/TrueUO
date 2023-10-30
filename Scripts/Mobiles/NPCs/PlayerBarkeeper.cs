@@ -296,7 +296,7 @@ namespace Server.Mobiles
                         m_NewsTimer = Timer.DelayCall(
                             TimeSpan.FromSeconds(1.0),
                             TimeSpan.FromSeconds(3.0),
-                            new TimerStateCallback(ShoutNews_Callback),
+                            ShoutNews_Callback,
                             new object[] { tce, 0 });
 
                         PublicOverheadMessage(MessageType.Regular, 0x3B2, 502978); // Some of the latest news!

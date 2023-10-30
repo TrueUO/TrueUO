@@ -270,7 +270,7 @@ namespace Server.Multis
             {
                 m_Crate = crate;
 
-                Priority = TimerPriority.FiveSeconds;
+
             }
 
             protected override void OnTick()

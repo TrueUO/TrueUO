@@ -77,7 +77,7 @@ namespace Server.Mobiles
                 : base(delay)
             {
                 m_Mobile = mobile;
-                Priority = TimerPriority.OneSecond;
+
             }
 
             protected override void OnTick()

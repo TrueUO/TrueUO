@@ -57,7 +57,7 @@ namespace Server.Gumps
                                 Color = 0x1436
                             };
 
-                            Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(XmlSpawnerGump.Refresh_Callback), new object[] { from });
+                            Timer.DelayCall(TimeSpan.Zero, XmlSpawnerGump.Refresh_Callback, from);
                         }
                     }
                 }
