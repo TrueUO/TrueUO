@@ -96,7 +96,7 @@ namespace Server
 
 		public static MultiTextWriter MultiConsoleOut { get; private set; }
 
-		/* 
+		/*
 		 * DateTime.Now and DateTime.UtcNow are based on actual system clock time.
 		 * The resolution is acceptable but large clock jumps are possible and cause issues.
 		 * GetTickCount and GetTickCount64 have poor resolution.
@@ -369,8 +369,6 @@ namespace Server
 				EventSink.InvokeShutdown(new ShutdownEventArgs());
 			}
 
-			Timer.TimerThread.Set();
-
             if (Debug)
             {
                 Console.WriteLine("done");
@@ -484,11 +482,6 @@ namespace Server
 				Directory.SetCurrentDirectory(BaseDirectory);
 			}
 
-            _TimerThread = new Thread(Timer.TimerThread.TimerMain)
-			{
-				Name = "Timer Thread"
-			};
-
 			Version ver = Assembly.GetName().Version;
 			DateTime buildDate = new DateTime(2000, 1, 1).AddDays(ver.Build).AddSeconds(ver.Revision * 2);
 
@@ -589,6 +582,8 @@ namespace Server
 				}
 			}
 
+            Timer.Init(TickCount);
+
 			ScriptCompiler.Invoke("Configure");
 
 			Region.Load();
@@ -611,8 +606,6 @@ namespace Server
 		{
 			EventSink.InvokeServerStarted();
 
-			_TimerThread.Start();
-
 			try
 			{
 				long now, last = TickCount;
@@ -629,7 +622,7 @@ namespace Server
 					Mobile.ProcessDeltaQueue();
 					Item.ProcessDeltaQueue();
 
-					Timer.Slice();
+					Timer.Slice(TickCount);
 					MessagePump.Slice();
 
 					NetState.FlushAll();
