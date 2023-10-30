@@ -238,14 +238,13 @@ namespace Server
         public static void UnregisterTimer(Timer timer)
         {
             timer.Stop();
-
             var id = GetTimerID(timer);
 
-            if (!string.IsNullOrEmpty(id) && Timers.TryGetValue(id, out var timerList))
+            if (!string.IsNullOrEmpty(id) && Timers.ContainsKey(id))
             {
-                timerList.Remove(timer);
+                Timers[id].Remove(timer);
 
-                if (timerList.Count == 0)
+                if (Timers[id].Count == 0)
                 {
                     if (Debug)
                     {
