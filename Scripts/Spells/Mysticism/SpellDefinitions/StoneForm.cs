@@ -62,7 +62,7 @@ namespace Server.Spells.Mysticism
             Timer.DelayCall(MobileDelta_Callback);
             m_Effected.Add(m);
 
-            string args = $"-10\t-2\t{GetResBonus(m).ToString()}\t{GetMaxResistance(m).ToString()}\t{GetDamBonus(m).ToString()}";
+            string args = $"-10\t-2\t{GetResBonus(m)}\t{GetMaxResistance(m)}\t{GetDamBonus(m)}";
             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.StoneForm, 1080145, 1080146, args));
             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.PoisonImmunity, 1153785, 1153814));
         }
