@@ -371,9 +371,9 @@ namespace Server.Engines.Despise
 
             Timer.DelayCall(TimeSpan.FromSeconds(60), TransportPlayers);
 
-            Timer.DelayCall(TimeSpan.FromSeconds(12), new TimerStateCallback(SendReadyMessage_Callback), 1153339); // You have been called to assist in a fight of good versus evil. Fight your way to the Lake, and defeat the enemy overlord and its lieutenants!
-            Timer.DelayCall(TimeSpan.FromSeconds(24), new TimerStateCallback(SendReadyMessage_Callback), 1153340); // The Overlord is shielded from all attacks by players, but not by creatures possessed by Wisp Orbs. You must protect your controlled creature as it fights.
-            Timer.DelayCall(TimeSpan.FromSeconds(36), new TimerStateCallback(SendReadyMessage_Callback), 1153341); // The Lieutenants are vulnerable to your attacks. If you die during this battle, your possessed creature will fall. Furthermore, your ghost and your corpse will be teleported back to your home base.
+            Timer.DelayCall(TimeSpan.FromSeconds(12), SendReadyMessage_Callback, 1153339); // You have been called to assist in a fight of good versus evil. Fight your way to the Lake, and defeat the enemy overlord and its lieutenants!
+            Timer.DelayCall(TimeSpan.FromSeconds(24), SendReadyMessage_Callback, 1153340); // The Overlord is shielded from all attacks by players, but not by creatures possessed by Wisp Orbs. You must protect your controlled creature as it fights.
+            Timer.DelayCall(TimeSpan.FromSeconds(36), SendReadyMessage_Callback, 1153341); // The Lieutenants are vulnerable to your attacks. If you die during this battle, your possessed creature will fall. Furthermore, your ghost and your corpse will be teleported back to your home base.
         }
 
         private void EndSequence()
@@ -639,10 +639,8 @@ namespace Server.Engines.Despise
             }
         }
 
-        private void SendReadyMessage_Callback(object o)
+        private void SendReadyMessage_Callback(int cliloc)
         {
-            int cliloc = (int)o;
-
             for (var index = 0; index < m_ToTransport.Count; index++)
             {
                 Mobile m = m_ToTransport[index];

@@ -115,7 +115,7 @@ namespace Server.Mobiles
             {
                 m_Inventory = inventory;
 
-                Priority = TimerPriority.OneMinute;
+
             }
 
             protected override void OnTick()

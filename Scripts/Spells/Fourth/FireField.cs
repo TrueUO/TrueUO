@@ -225,7 +225,7 @@ namespace Server.Spells.Fourth
                     m_InLOS = inLOS;
                     m_CanFit = canFit;
 
-                    Priority = TimerPriority.FiftyMS;
+
                 }
 
                 protected override void OnTick()

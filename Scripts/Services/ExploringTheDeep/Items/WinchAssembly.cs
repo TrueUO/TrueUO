@@ -31,7 +31,7 @@ namespace Server.Items
         {
             DeleteWinchAssembly();
 
-            // Winch 
+            // Winch
             WinchAssembly winch = new WinchAssembly();
             WeakEntityCollection.Add(EntityName, winch);
 
@@ -242,7 +242,7 @@ namespace Server.Items
             }
             else
             {
-                Timer.DelayCall(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.0), 3, new TimerStateCallback(Hatch.DoDownEffect), new object[] { Hatch.Location, 0, from });
+                Timer.DelayCall(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.0), 3, Hatch.DoDownEffect, new object[] { Hatch.Location, 0, from });
 
                 Winch.Activate(from);
             }

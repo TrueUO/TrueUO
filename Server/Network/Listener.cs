@@ -1,6 +1,7 @@
 #region References
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -15,10 +16,9 @@ namespace Server.Network
 		private Socket m_Listener;
 		private PingListener _PingListener;
 
-		private readonly Queue<Socket> m_Accepted;
-		private readonly object m_AcceptedSyncRoot;
+        private ConcurrentQueue<Socket> m_Accepted;
 
-		private readonly AsyncCallback m_OnAccept;
+        private readonly AsyncCallback m_OnAccept;
 
 		private static readonly Socket[] m_EmptySockets = Array.Empty<Socket>();
 
@@ -26,8 +26,7 @@ namespace Server.Network
 
 		public Listener(IPEndPoint ipep)
 		{
-			m_Accepted = new Queue<Socket>();
-			m_AcceptedSyncRoot = ((ICollection)m_Accepted).SyncRoot;
+			m_Accepted = new ConcurrentQueue<Socket>();
 
 			m_Listener = Bind(ipep);
 
@@ -205,12 +204,8 @@ namespace Server.Network
 
 		private void Enqueue(Socket socket)
 		{
-			lock (m_AcceptedSyncRoot)
-			{
-				m_Accepted.Enqueue(socket);
-			}
-
-			Core.Set();
+            m_Accepted.Enqueue(socket);
+            Core.Set();
 		}
 
 		private static void Release(Socket socket)
@@ -236,20 +231,16 @@ namespace Server.Network
 
 		public Socket[] Slice()
 		{
-			Socket[] array;
+            if (m_Accepted.Count == 0)
+            {
+                return m_EmptySockets;
+            }
 
-			lock (m_AcceptedSyncRoot)
-			{
-				if (m_Accepted.Count == 0)
-				{
-					return m_EmptySockets;
-				}
+            Socket[] array = m_Accepted.ToArray();
 
-				array = m_Accepted.ToArray();
-				m_Accepted.Clear();
-			}
+            m_Accepted.Clear();
 
-			return array;
+            return array;
 		}
 
 		public void Dispose()

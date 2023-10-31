@@ -313,7 +313,7 @@ namespace Server.Items
             }
 
             BaseCreature.TeleportPets(m, p, map);
-            m.MoveToWorld(p, map);                     
+            m.MoveToWorld(p, map);
 
             if (m_DestEffect && sendEffect)
             {
@@ -480,7 +480,7 @@ namespace Server.Items
                         m.Send(new MessageLocalized(Serial, ItemID, MessageType.Regular, 0x3B2, 3, m_MessageNumber, null, ""));
                     }
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(5.0), new TimerStateCallback(EndMessageLock), m);
+                    Timer.DelayCall(TimeSpan.FromSeconds(5.0), EndMessageLock, m);
                 }
 
                 return false;
@@ -1431,7 +1431,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0); // version           
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)

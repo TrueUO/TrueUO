@@ -182,7 +182,7 @@ namespace Server.Spells.Third
                 public InternalTimer(InternalItem item, TimeSpan duration)
                     : base(duration)
                 {
-                    Priority = TimerPriority.OneSecond;
+
                     m_Item = item;
                 }
 

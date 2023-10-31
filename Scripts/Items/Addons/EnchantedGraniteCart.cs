@@ -149,7 +149,7 @@ namespace Server.Engines.VeteranRewards
             public InternalTimer(EnchantedGraniteCartAddon item)
                 : base(TimeSpan.FromMinutes(10.0), TimeSpan.FromMinutes(10.0))
             {
-                Priority = TimerPriority.OneSecond;
+
                 i_item = item;
             }
 

@@ -130,7 +130,7 @@ namespace Server.Mobiles
             }
             else
             {
-                from.SendLocalizedMessage(1112674); // There's nothing left to harvest from this creature.                
+                from.SendLocalizedMessage(1112674); // There's nothing left to harvest from this creature.
             }
 
             return false;
@@ -249,7 +249,7 @@ namespace Server.Mobiles
                 }
             }
 
-            Timer.DelayCall(TimeSpan.FromSeconds(10.0), new TimerCallback(replica.Unpetrify));
+            Timer.DelayCall(TimeSpan.FromSeconds(10.0), replica.Unpetrify);
         }
         #endregion
 
@@ -478,7 +478,7 @@ namespace Server.Mobiles
                     BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.MedusaStone, 1153790, 1153825));
                 }
 
-                Timer.DelayCall(TimeSpan.FromSeconds(5.0), new TimerStateCallback<Mobile>(RemovePetrification), attacker);
+                Timer.DelayCall(TimeSpan.FromSeconds(5.0), RemovePetrification, attacker);
             }
         }
         #endregion

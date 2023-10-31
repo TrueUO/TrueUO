@@ -301,7 +301,7 @@ namespace Server.Items.MusicBox
                 m_Box = box;
                 m_Until = DateTime.UtcNow + TimeSpan.FromSeconds(duration);
 
-                Priority = TimerPriority.TwoFiftyMS;
+
             }
 
             protected override void OnTick()

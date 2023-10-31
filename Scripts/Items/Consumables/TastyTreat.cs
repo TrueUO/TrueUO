@@ -105,7 +105,7 @@ namespace Server.Items
             bc.Loyalty = BaseCreature.MaxLoyalty;
 
             m_Table.Add(bc, DateTime.UtcNow);
-            Timer.DelayCall(Duration + CoolDown, new TimerStateCallback(RemoveInfluence), bc);
+            Timer.DelayCall(Duration + CoolDown, RemoveInfluence, bc);
 
             Consume();
             return true;

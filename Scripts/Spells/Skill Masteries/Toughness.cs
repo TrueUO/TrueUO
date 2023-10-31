@@ -64,7 +64,7 @@ namespace Server.Spells.SkillMasteries
 
                 BeginTimer();
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Toughness, 1155985, 1155986, $"{_HPBonus.ToString()}\t{ScaleMana((int) UpKeep)}")); // Hit Point Increase: ~1_VAL~.<br>Mana Upkeep Cost: ~2_VAL~.
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Toughness, 1155985, 1155986, $"{_HPBonus}\t{ScaleMana((int) UpKeep)}")); // Hit Point Increase: ~1_VAL~.<br>Mana Upkeep Cost: ~2_VAL~.
             }
 
             FinishSequence();

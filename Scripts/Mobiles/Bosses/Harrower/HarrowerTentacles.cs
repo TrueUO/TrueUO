@@ -151,7 +151,7 @@ namespace Server.Mobiles
                 : base(TimeSpan.FromSeconds(5.0), TimeSpan.FromSeconds(5.0))
             {
                 m_Owner = owner;
-                Priority = TimerPriority.TwoFiftyMS;
+
             }
 
             protected override void OnTick()
@@ -191,12 +191,12 @@ namespace Server.Mobiles
 
                     int drain = Utility.RandomMinMax(14, 30);
 
-                    //Monster Stealables 
+                    //Monster Stealables
                     if (m is PlayerMobile pm)
                     {
                         drain = (int)LifeShieldLotion.HandleLifeDrain(pm, drain);
                     }
-                    //end 
+                    //end
 
                     m_Owner.Hits += drain;
 

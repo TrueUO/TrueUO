@@ -226,8 +226,6 @@ namespace Server.Mobiles
 
         #region Properties
 
-        public TimerPriority BasePriority { get; set; } = TimerPriority.OneSecond;
-
         public bool DebugThis { get; set; } = false;
 
         public int MovingPlayerCount { get; set; } = 0;
@@ -443,7 +441,7 @@ namespace Server.Mobiles
                         }
                     }
 
-                    // find the max detection range by examining both spawnrange 
+                    // find the max detection range by examining both spawnrange
                     // note, sectors will activate when within +-2 sectors
                     int bufferzone = 2 * Map.SectorSize;
                     int x1 = m_X - bufferzone;
@@ -1494,7 +1492,7 @@ namespace Server.Mobiles
         public int m_ProximityTriggerSound { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string ProximityMsg 
+        public string ProximityMsg
         {
             get => m_ProximityTriggerMessage;
             set => m_ProximityTriggerMessage = value;
@@ -1660,7 +1658,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                //IsInactivated = false; 
+                //IsInactivated = false;
             }
         }
 
@@ -3200,7 +3198,7 @@ namespace Server.Mobiles
             public MovementTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
+
                 m_Spawner = spawner;
             }
 
@@ -3342,7 +3340,7 @@ namespace Server.Mobiles
                 case "BlockCommand":
                 case "ChangeCommand":
                     // delay processing of these settings until after all commands have been registered in their Initialize methods
-                    Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(DelayedAssignSettings), new object[] { argname, value });
+                    Timer.DelayCall(TimeSpan.Zero, DelayedAssignSettings, new object[] { argname, value });
                     break;
                 default:
                     return false;
@@ -8546,7 +8544,7 @@ namespace Server.Mobiles
                     return j;
                 }
             }
-            
+
             return -1; // failed to find any spawn entry of the requested subgroup
         }
 
@@ -8568,7 +8566,7 @@ namespace Server.Mobiles
                     return j;
                 }
             }
-            
+
             return -1; // failed to find any spawn entry of the requested subgroup
         }
 
@@ -10200,7 +10198,7 @@ namespace Server.Mobiles
                                 p = new Point3D(x, y, stile.Z + stile.Height);
                             else if (!allok && p.Z - spawnerZ > Math.Abs(stile.Z - spawnerZ))
                                 p = new Point3D(x, y, stile.Z + stile.Height);
-                            else if (Math.Abs(ltile.Z - spawnerZ) > Math.Abs(stile.Z - spawnerZ)) 
+                            else if (Math.Abs(ltile.Z - spawnerZ) > Math.Abs(stile.Z - spawnerZ))
                                 p = new Point3D(x, y, stile.Z + stile.Height);
                             allok = true;
                         }
@@ -10627,7 +10625,7 @@ namespace Server.Mobiles
                     x = packcoord.X - packrange + Utility.Random(packrange * 2 + 1);
                     y = packcoord.Y - packrange + Utility.Random(packrange * 2 + 1);
                 }
-                else if (m_Region != null && HasRegionPoints(m_Region))  
+                else if (m_Region != null && HasRegionPoints(m_Region))
                 {
                     // if region spawning is selected then use that to find an x,y loc instead of the spawn box
 
@@ -11288,7 +11286,7 @@ namespace Server.Mobiles
             public GlobalSectorTimer(TimeSpan delay)
                 : base(delay, delay)
             {
-                Priority = TimerPriority.OneSecond;
+
             }
 
             protected override void OnTick()
@@ -11351,7 +11349,7 @@ namespace Server.Mobiles
             public SectorTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay, delay)
             {
-                Priority = TimerPriority.OneSecond;
+
                 m_Spawner = spawner;
             }
 
@@ -11499,7 +11497,7 @@ namespace Server.Mobiles
             public InternalTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
+
                 m_spawner = spawner;
             }
 
@@ -11521,15 +11519,6 @@ namespace Server.Mobiles
             public SpawnerTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                if (spawner.IsInactivated || spawner.CurrentCount == spawner.MaxCount) // reduce timer priority if spawner is inactivated or spawner is maxed
-                {
-                    Priority = TimerPriority.FiveSeconds;
-                }
-                else
-                {
-                    Priority = spawner.BasePriority;
-                }
-
                 m_Spawner = spawner;
             }
 
@@ -11550,7 +11539,7 @@ namespace Server.Mobiles
             public InternalTimer3(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
+
                 m_spawner = spawner;
             }
 

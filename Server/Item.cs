@@ -180,7 +180,7 @@ namespace Server
 		/// <summary>
 		/// Unused, using this layer makes you invisible to other players. Strange.
 		/// </summary>
-		/// 
+		///
 		Reserved_1 = 0x1E,
 
 		/// <summary>
@@ -1301,7 +1301,7 @@ namespace Server
 		/// </summary>
 		/// <param name="list"></param>
 		public virtual void AddCraftedProperties(ObjectPropertyList list)
-		{            
+		{
         }
 
 		/// <summary>
@@ -1547,7 +1547,7 @@ namespace Server
 		/// 	{
 		/// 		if ( from.Int &gt;= 100 )
 		/// 			return true;
-		/// 		
+		///
 		/// 		return base.AllowEquipedCast( from );
 		///  }</code>
 		///     When placed in an Item script, the item may be cast when equiped if the <paramref name="from" /> has 100 or more intelligence. Otherwise, it will drop to their backpack.
@@ -4126,9 +4126,12 @@ namespace Server
 			{
 				if (i < m_DeltaQueue.Count)
 				{
-					m_DeltaQueue[i].ProcessDelta();
-					m_DeltaQueue.RemoveAt(i);
-				}
+                    if (m_DeltaQueue[i] != null)
+                    {
+                        m_DeltaQueue[i].ProcessDelta();
+                        m_DeltaQueue.RemoveAt(i);
+                    }
+                }
 			}
 
 			_Processing = false;
@@ -6196,8 +6199,6 @@ namespace Server
 			{
 				Instance = this;
 				Start();
-
-                Priority = TimerPriority.FiftyMS;
             }
 
 			public static bool HasTimer(ItemSocket socket)

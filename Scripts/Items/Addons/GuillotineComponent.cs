@@ -55,7 +55,7 @@ namespace Server.Items
                 {
                     from.Location = Location;
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(0.5), new TimerStateCallback(Activate), new object[] { c, from });
+                    Timer.DelayCall(TimeSpan.FromSeconds(0.5), Activate, new object[] { c, from });
                 }
                 else
                     from.LocalOverheadMessage(MessageType.Regular, 0, 501777); // Hmm... you suspect that if you used this again, it might hurt.
@@ -114,7 +114,7 @@ namespace Server.Items
             from.LocalOverheadMessage(MessageType.Regular, 0, 501777); // Hmm... you suspect that if you used this again, it might hurt.
             SpellHelper.Damage(TimeSpan.Zero, from, Utility.Dice(2, 10, 5));
 
-            Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5), 2, new TimerStateCallback(Deactivate), c);
+            Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5), 2, Deactivate, c);
         }
 
         private void Activate(object obj)
