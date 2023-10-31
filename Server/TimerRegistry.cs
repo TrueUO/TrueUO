@@ -69,11 +69,18 @@ namespace Server
 
             var timer = GetTimer(id, instance, true);
 
-            if(Debug) Console.WriteLine("Registering: {0} - {1}...", id, instance);
+            if(Debug)
+            {
+                Console.WriteLine("Registering: {0} - {1}...", id, instance);
+            }
 
             if (timer == null)
             {
-                if (Debug) Console.WriteLine("Timer not Found, creating new one...");
+                if (Debug)
+                {
+                    Console.WriteLine("Timer not Found, creating new one...");
+                }
+
                 timer = new RegistryTimer<T>(delay == TimeSpan.Zero ? ProcessDelay(duration) : delay, callback, removeOnExpire, checkDeleted);
 
                 Timers[id].Add(timer);
@@ -86,7 +93,11 @@ namespace Server
 
             if (!timer.Registry.ContainsKey(instance))
             {
-                if (Debug) Console.WriteLine("Adding {0} to the timer registry!", instance);
+                if (Debug)
+                {
+                    Console.WriteLine("Adding {0} to the timer registry!", instance);
+                }
+
                 timer.Registry[instance] = Core.TickCount + (long)duration.TotalMilliseconds;
             }
             else if (Debug)
@@ -102,7 +113,11 @@ namespace Server
             if (timer != null && timer.Registry.ContainsKey(instance))
             {
                 timer.Registry.Remove(instance);
-                if (Debug) Console.WriteLine("Removing {0} from the registry", instance);
+
+                if (Debug)
+                {
+                    Console.WriteLine("Removing {0} from the registry", instance);
+                }
 
                 if (timer.Registry.Count == 0)
                 {
@@ -141,25 +156,18 @@ namespace Server
 
         public static RegistryTimer<T> GetTimer<T>(string id, T instance, bool create)
         {
-            if (Timers.ContainsKey(id))
+            if (Timers.TryGetValue(id, out var timerList))
             {
-                Timer first = null;
-
-                for (var index = 0; index < Timers[id].Count; index++)
+                for (int index = 0; index < timerList.Count; index++)
                 {
-                    var t = Timers[id][index];
-
+                    Timer t = timerList[index];
                     if (t is RegistryTimer<T> regTimer && regTimer.Registry.Count < _RegistryThreshold)
                     {
-                        first = t;
-                        break;
+                        return regTimer;
                     }
                 }
-
-                return first as RegistryTimer<T>;
             }
-
-            if (create)
+            else if (create)
             {
                 Timers[id] = new List<Timer>();
             }
@@ -169,22 +177,16 @@ namespace Server
 
         public static RegistryTimer<T> GetTimerFor<T>(string id, T instance)
         {
-            if (Timers.ContainsKey(id))
+            if (Timers.TryGetValue(id, out List<Timer> timerList))
             {
-                Timer first = null;
-
-                for (var index = 0; index < Timers[id].Count; index++)
+                for (var index = 0; index < timerList.Count; index++)
                 {
-                    var t = Timers[id][index];
-
+                    Timer t = timerList[index];
                     if (t is RegistryTimer<T> timer && timer.Registry.ContainsKey(instance))
                     {
-                        first = t;
-                        break;
+                        return timer;
                     }
                 }
-
-                return first as RegistryTimer<T>;
             }
 
             return null;
