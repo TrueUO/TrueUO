@@ -156,7 +156,7 @@ namespace Server.Spells.SkillMasteries
 
             BeginTimer();            
 
-            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType.ToString()}\t{Target.Name}\t{ScaleUpkeep().ToString()}"));
+            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType}\t{Target.Name}\t{ScaleUpkeep()}"));
             //You train ~2_NAME~ to use ~1_SKILLNAME~.<br>Mana Upkeep: ~3_COST~
 
             FinishSequence();
