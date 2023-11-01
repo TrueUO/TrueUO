@@ -214,7 +214,7 @@ namespace Server.Misc
             if (m_ActivePollers.Count == 0)
                 return;
 
-            Timer.DelayCall(TimeSpan.FromSeconds(1.0), EventSink_Login_Callback, e.Mobile);
+            Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(EventSink_Login_Callback), e.Mobile);
         }
 
         private static void EventSink_Login_Callback(object state)
@@ -501,7 +501,7 @@ namespace Server.Misc
                 ShardPoller poller = m_Polls.Dequeue();
 
                 if (poller != null)
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), poller.SendQueuedPoll_Callback, new object[] { m_From, m_Polls });
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(poller.SendQueuedPoll_Callback), new object[] { m_From, m_Polls });
             }
 
             if (info.ButtonID == 1)

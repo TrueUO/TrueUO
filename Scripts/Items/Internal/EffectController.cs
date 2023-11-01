@@ -279,13 +279,13 @@ namespace Server.Items
                 return;
 
             if (m_SoundID > 0)
-                Timer.DelayCall(m_SoundDelay, PlaySound, trigger);
+                Timer.DelayCall(m_SoundDelay, new TimerStateCallback(PlaySound), trigger);
 
             if (m_Trigger != null)
-                Timer.DelayCall(m_TriggerDelay, m_Trigger.DoEffect, trigger);
+                Timer.DelayCall(m_TriggerDelay, new TimerStateCallback(m_Trigger.DoEffect), trigger);
 
             if (m_EffectType != ECEffectType.None)
-                Timer.DelayCall(m_EffectDelay, InternalDoEffect, trigger);
+                Timer.DelayCall(m_EffectDelay, new TimerStateCallback(InternalDoEffect), trigger);
         }
 
         public void InternalDoEffect(object trigger)

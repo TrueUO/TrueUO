@@ -54,7 +54,7 @@ namespace Server.Mobiles
 
             public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(10))
             {
-
+                Priority = TimerPriority.FiveSeconds;
                 Mare = (IceWyrm)p;
             }
             protected override void OnTick()
@@ -105,7 +105,7 @@ namespace Server.Mobiles
         public override int Meat => 0;
 		public override int Scales => 0;
         public override int Hides => 0;
-
+		
 		public override void GenerateLoot()
         {
 			// Kept blank to zero out the loot created by it's base class

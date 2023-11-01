@@ -66,19 +66,19 @@ namespace Server.Services.TownCryer
              * on the REPAIR BENCH and TINKER BENCH!*/
 
             GreetingsEntries.Add(new TownCryerGreetingEntry(1158757));
-            /*Fall is approaching and strangeness is afoot in Britannia!<br><br>Britannians are looking skyward in
-             * search of constellations and other celestial objects using the new telescope!<br><br>The pumpkin patches
-             * of Britannia once again bearing fruit as the Grimms hold their carveable pumpkins close!<br><br>Visit a
-             * cemetery to battle against the Butchers and carve new Jack o' Lantern designs!<br><br>Beware the
-             * skeletons! Zombie skeletons roam the cemeteries!<br><br>Trick or Treat? Shopkeepers and citizens
-             * alike have new treats to share!<br><br>Strange events worth investigating? A new article from the
+            /*Fall is approaching and strangeness is afoot in Britannia!<br><br>Britannians are looking skyward in 
+             * search of constellations and other celestial objects using the new telescope!<br><br>The pumpkin patches 
+             * of Britannia once again bearing fruit as the Grimms hold their carveable pumpkins close!<br><br>Visit a 
+             * cemetery to battle against the Butchers and carve new Jack o' Lantern designs!<br><br>Beware the 
+             * skeletons! Zombie skeletons roam the cemeteries!<br><br>Trick or Treat? Shopkeepers and citizens 
+             * alike have new treats to share!<br><br>Strange events worth investigating? A new article from the 
              * Town Cryer on the new Royal Britannian Guard Detective Branch!*/
 
             GreetingsEntries.Add(new TownCryerGreetingEntry(1158388));
-            /* Greetings, Avatar!<br><br>Welcome to Britannia! Whether these are your first steps or you are a
+            /* Greetings, Avatar!<br><br>Welcome to Britannia! Whether these are your first steps or you are a 
              * seasoned veteran King Blackthorn welcomes you! The realm is bustling with opportunities for adventure!
-             * TownCryers can be visited at all banks and points of interest to learn about the latest goings on in
-             * the realm. Many guilds are actively recruiting members, so be sure to check the Town Cryer guild
+             * TownCryers can be visited at all banks and points of interest to learn about the latest goings on in 
+             * the realm. Many guilds are actively recruiting members, so be sure to check the Town Cryer guild 
              * section for the latest recruitment events. <br><br>We wish you the best of luck in your
              * <A HREF="https://uo.com/endless-journey/">Endless Journey</A>*/
 
@@ -102,8 +102,8 @@ namespace Server.Services.TownCryer
                 NewsEntries.Add(new TownCryerNewsEntry(1158116, 1158118, 0x64F, null, "https://uo.com/wiki/ultima-online-wiki/gameplay/the-virtues/")); // Virtues
                 NewsEntries.Add(new TownCryerNewsEntry(1158083, 1158085, 0x617, typeof(TamingPetQuest), "https://uo.com/wiki/ultima-online-wiki/skills/animal-taming/animal-training/")); // Animal Training
                 NewsEntries.Add(new TownCryerNewsEntry(1158086, 1158088, 0x61D, typeof(ExploringTheDeepQuest), null));
-                NewsEntries.Add(new TownCryerNewsEntry(1158092, 1158094, 0x651, typeof(HuntmastersChallengeQuest), "https://uo.com/wiki/ultima-online-wiki/gameplay/huntmasters-challenge/")); // Huntsmaster Challenge
-                NewsEntries.Add(new TownCryerNewsEntry(1158104, 1158106, 0x61C, typeof(PaladinsOfTrinsic), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-shame/")); //  New Shame
+                NewsEntries.Add(new TownCryerNewsEntry(1158092, 1158094, 0x651, typeof(HuntmastersChallengeQuest), "https://uo.com/wiki/ultima-online-wiki/gameplay/huntmasters-challenge/")); // Huntsmaster Challenge 
+                NewsEntries.Add(new TownCryerNewsEntry(1158104, 1158106, 0x61C, typeof(PaladinsOfTrinsic), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-shame/")); //  New Shame 
                 NewsEntries.Add(new TownCryerNewsEntry(1158107, 1158109, 0x61A, typeof(RightingWrongQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-wrong/")); // New Wrong
                 NewsEntries.Add(new TownCryerNewsEntry(1158113, 1158115, 0x64C, typeof(BuriedRichesQuest), "https://uo.com/wiki/ultima-online-wiki/gameplay/treasure-maps/")); // New TMaps
                 NewsEntries.Add(new TownCryerNewsEntry(1158119, 1158121, 0x64D, typeof(APleaFromMinocQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-covetous/")); // New Covetous
@@ -274,6 +274,7 @@ namespace Server.Services.TownCryer
                 if (Timer == null || !Timer.Running)
                 {
                     Timer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), CheckExpiredEntries);
+                    Timer.Priority = TimerPriority.OneMinute;
                 }
             }
             else if (Timer != null)
@@ -398,7 +399,7 @@ namespace Server.Services.TownCryer
             CheckTimer();
         }
 
-        #region Pre-Loaded
+        #region Pre-Loaded 
         private static void LoadPreloadedMessages()
         {
             if (!Enabled || !UsePreloadedMessages)

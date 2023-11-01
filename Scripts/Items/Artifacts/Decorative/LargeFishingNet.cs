@@ -31,7 +31,7 @@ namespace Server.Items
                 if (SOS.ValidateDeepWater(corpse.Map, corpse.X, corpse.Y))
                 {
                     from.Animate(12, 5, 1, true, false, 0);
-                    Timer.DelayCall(TimeSpan.FromSeconds(0.5), MoveCorpse, new object[] { corpse, from });
+                    Timer.DelayCall(TimeSpan.FromSeconds(0.5), new TimerStateCallback(MoveCorpse), new object[] { corpse, from });
                 }
                 else
                     from.SendLocalizedMessage(1010485); // You can only use this in deep water!

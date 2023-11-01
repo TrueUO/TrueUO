@@ -46,7 +46,7 @@ namespace Server.Mobiles
                     false, false, false, false, false, false, 0, 0);
 
                 // display the updated gump synched with the main server thread
-                Timer.DelayCall(TimeSpan.Zero, GumpDisplayCallback, new object[] { m_From, gump, status_str });
+                Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(GumpDisplayCallback), new object[] { m_From, gump, status_str });
 
             }
 
@@ -364,7 +364,7 @@ namespace Server.Mobiles
             }
             else if (o is Item i)
             {
-                // note, in order to test for a vendors display container that contains valid internal map items
+                // note, in order to test for a vendors display container that contains valid internal map items 
                 if (i.Map != Map.Internal || i.Parent != null || i is Fists || i is MountItem || i is EffectItem || i.HeldBy != null ||
                     i is MovingCrate || i is SpawnPersistence || GenericBuyInfo.IsDisplayCache(i) || i.GetType().DeclaringType == typeof(GenericBuyInfo))
                     return true;
@@ -850,7 +850,7 @@ namespace Server.Mobiles
             null, // condition
             type, // type
             null, // name
-            null // entry
+            null // entry 
             ),
 
             null, -1, 0, null, null,

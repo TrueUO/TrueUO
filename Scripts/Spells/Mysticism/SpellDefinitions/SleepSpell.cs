@@ -138,7 +138,7 @@ namespace Server.Spells.Mysticism
                 double immduration = target.Skills[SkillName.MagicResist].Value / 10;
 
                 m_ImmunityList.Add(target);
-                Timer.DelayCall(TimeSpan.FromSeconds(immduration), RemoveImmunity_Callback, target);
+                Timer.DelayCall(TimeSpan.FromSeconds(immduration), new TimerStateCallback(RemoveImmunity_Callback), target);
 
                 target.Delta(MobileDelta.WeaponDamage);
             }

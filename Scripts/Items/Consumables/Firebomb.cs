@@ -230,7 +230,7 @@ namespace Server.Items
 
             Effects.SendMovingEffect(from, to, ItemID, 7, 0, false, false, Hue, 0);
 
-            Timer.DelayCall(TimeSpan.FromSeconds(1.0), FirebombReposition_OnTick, new object[] { p, Map });
+            Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(FirebombReposition_OnTick), new object[] { p, Map });
             Internalize();
         }
 

@@ -1661,7 +1661,7 @@ namespace Server.Accounting
             {
                 _Account = account;
 
-
+                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

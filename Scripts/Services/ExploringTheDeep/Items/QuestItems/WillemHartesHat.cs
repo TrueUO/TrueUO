@@ -77,6 +77,7 @@ namespace Server.Items
                 return;
 
             m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), Slice);
+            m_Timer.Priority = TimerPriority.OneSecond;
         }
 
         public virtual void StopTimer()

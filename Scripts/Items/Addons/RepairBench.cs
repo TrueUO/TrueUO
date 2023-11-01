@@ -510,7 +510,7 @@ namespace Server.Items
 
             StopTimer(from);
 
-            m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), CloseGump, from);
+            m_Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), new TimerStateCallback(CloseGump), from);
 
             AddPage(0);
 

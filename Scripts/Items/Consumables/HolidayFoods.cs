@@ -22,7 +22,7 @@ namespace Server.Items
                 _ToothAches[m].Acidity += acidity;
             }
 
-            _ToothAches[m].Start();
+            _ToothAches[m].Running = true;
 
             return _ToothAches[m];
         }
@@ -98,7 +98,7 @@ namespace Server.Items
                 ConsumedBy = consumedBy;
                 Acidity = acidity;
 
-
+                Priority = TimerPriority.FiveSeconds;
 
                 Start();
             }
@@ -136,7 +136,7 @@ namespace Server.Items
                     return;
                 }
 
-                /*
+                /* 
 				* ARRGH! My tooth hurts sooo much!
 				* You just can't find a good Britannian dentist these days...
 				* My teeth!

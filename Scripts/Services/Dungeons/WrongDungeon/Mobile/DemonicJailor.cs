@@ -88,7 +88,7 @@ namespace Server.Mobiles
                 to.SendLocalizedMessage(500111); // You are frozen and cannot move.
                 to.PlaySound(0x204);
 
-                m_Table[to] = Timer.DelayCall(TimeSpan.FromSeconds(15), EndParalyze_Callback, to);
+                m_Table[to] = Timer.DelayCall(TimeSpan.FromSeconds(15), new TimerStateCallback(EndParalyze_Callback), to);
             }
         }
 
@@ -137,7 +137,7 @@ namespace Server.Mobiles
                 m.Frozen = true;
                 m.SendLocalizedMessage(1080342, Title, 33); // Terror slices into your very being, destroying any chance of resisting ~1_name~ you might have had
 
-                Timer.DelayCall(TimeSpan.FromSeconds(5), Terrorize, m);
+                Timer.DelayCall(TimeSpan.FromSeconds(5), new TimerStateCallback(Terrorize), m);
             }
         }
 

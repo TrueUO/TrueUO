@@ -56,7 +56,7 @@ namespace Server.Items
                 Charges--;
 
                 m_Table[from] = m_Ward;
-                Timer.DelayCall(TimeSpan.FromSeconds(10.0), RemoveEffects, from);
+                Timer.DelayCall(TimeSpan.FromSeconds(10.0), new TimerStateCallback(RemoveEffects), from);
 
                 from.FixedParticles(14154, 1, 30, 9964, 3, 3, EffectLayer.Waist);
 

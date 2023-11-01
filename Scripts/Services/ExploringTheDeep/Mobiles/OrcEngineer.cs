@@ -70,7 +70,7 @@ namespace Server.Mobiles
 
             public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(10))
             {
-
+                Priority = TimerPriority.FiveSeconds;
                 Mare = (OrcEngineer)p;
             }
             protected override void OnTick()
@@ -127,7 +127,7 @@ namespace Server.Mobiles
             : base(serial)
         {
         }
-
+		
 		public override void GenerateLoot()
         {
 			// Kept blank to zero out the loot created by it's base class

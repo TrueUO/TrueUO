@@ -86,7 +86,7 @@ namespace Server.Items
                         TimeSpan.FromSeconds(1.0),
                         TimeSpan.FromSeconds(1.25),
                         5,
-                        Detonate_OnTick,
+                        new TimerStateCallback(Detonate_OnTick),
                         new object[] { from, 3 }); // 3.6 seconds explosion delay
             }
         }
@@ -281,7 +281,7 @@ namespace Server.Items
 
                 m_Potion.Internalize();
                 Timer.DelayCall(
-                    TimeSpan.FromSeconds(1.0), m_Potion.Reposition_OnTick, new object[] { from, point, map });
+                    TimeSpan.FromSeconds(1.0), new TimerStateCallback(m_Potion.Reposition_OnTick), new object[] { from, point, map });
             }
         }
     }

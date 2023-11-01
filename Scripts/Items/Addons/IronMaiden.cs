@@ -26,7 +26,7 @@ namespace Server.Items
                     from.Location = Location;
                     c.ItemID = 0x124A;
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5), 3, Activate, new object[] { c, from });
+                    Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5), 3, new TimerStateCallback(Activate), new object[] { c, from });
                 }
                 else
                     from.LocalOverheadMessage(MessageType.Regular, 0, 501777); // Hmm... you suspect that if you used this again, it might hurt.
@@ -84,7 +84,7 @@ namespace Server.Items
                 from.LocalOverheadMessage(MessageType.Regular, 0, 501777); // Hmm... you suspect that if you used this again, it might hurt.
                 SpellHelper.Damage(TimeSpan.Zero, from, Utility.Dice(2, 10, 5));
 
-                Timer.DelayCall(TimeSpan.FromSeconds(1), Deactivate, c);
+                Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(Deactivate), c);
             }
         }
 

@@ -115,7 +115,7 @@ namespace Server.Items
             {
                 m_Component = c;
 
-
+                Priority = TimerPriority.OneMinute;
             }
 
             protected override void OnTick()

@@ -167,8 +167,8 @@ namespace Server.Mobiles
 
             from.SendMessage("It seems as though you've snagged your hook.");
 
-            Timer.DelayCall(TimeSpan.FromSeconds(11), DoTeleportEffect, new object[] { pnt, map });
-            Timer.DelayCall(TimeSpan.FromSeconds(12), DoDelayedSpawn, new object[] { from, pnt, map, boat });
+            Timer.DelayCall(TimeSpan.FromSeconds(11), new TimerStateCallback(DoTeleportEffect), new object[] { pnt, map });
+            Timer.DelayCall(TimeSpan.FromSeconds(12), new TimerStateCallback(DoDelayedSpawn), new object[] { from, pnt, map, boat });
         }
 
         public void DoTeleportEffect(object o)
