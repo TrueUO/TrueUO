@@ -65,7 +65,7 @@ namespace Server.Gumps
                 BookOfMasteries.AddToCooldown(User);
             }
             else
-                User.SendLocalizedMessage(1156236, $"{MasteryInfo.MinSkillRequirement}\t{User.Skills[n].Info.Name}"); // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that mastery.
+                User.SendLocalizedMessage(1156236, $"{MasteryInfo.MinSkillRequirement.ToString()}\t{User.Skills[n].Info.Name}"); // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that mastery.
         }
     }
 }
