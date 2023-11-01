@@ -60,7 +60,7 @@ namespace Server.Items
                 : base(TimeSpan.FromSeconds(30))
             {
                 stew = ac;
-
+                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()

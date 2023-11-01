@@ -376,7 +376,7 @@ namespace Server.Items
                 : base(delay)
             {
                 m_Player = m;
-
+                Priority = TimerPriority.OneMinute;
 
                 Expires = DateTime.UtcNow + delay;
             }

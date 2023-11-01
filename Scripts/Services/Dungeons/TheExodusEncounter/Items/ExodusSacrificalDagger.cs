@@ -44,7 +44,7 @@ namespace Server.Items
 
             if (Party.Get(from) == null)
             {
-                from.SendLocalizedMessage(1153596); // You must join a party with the players you wish to perform the ritual with.
+                from.SendLocalizedMessage(1153596); // You must join a party with the players you wish to perform the ritual with. 
             }
             else if (robe == null || dagger == null)
             {
@@ -87,11 +87,11 @@ namespace Server.Items
                             Misc.Titles.AwardKarma(from, 10000, true);
                             Effects.SendLocationParticles(EffectItem.Create(altar.Location, altar.Map, TimeSpan.FromSeconds(2)), 0x373A, 10, 10, 2023);
 
-                            from.SendLocalizedMessage(1153598, from.Name); // ~1_PLAYER~ has read the Summoning Rite!
+                            from.SendLocalizedMessage(1153598, from.Name); // ~1_PLAYER~ has read the Summoning Rite! 
                         }
                         else
                         {
-                            from.SendLocalizedMessage(1153599); // You've already used this item in another ritual.
+                            from.SendLocalizedMessage(1153599); // You've already used this item in another ritual. 
                         }
                     }
                     else
@@ -101,7 +101,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    from.SendLocalizedMessage(1153601); // That is not a Summoning Tome.
+                    from.SendLocalizedMessage(1153601); // That is not a Summoning Tome. 
                 }
             }
         }
@@ -154,6 +154,7 @@ namespace Server.Items
                 return;
 
             m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), Slice);
+            m_Timer.Priority = TimerPriority.OneSecond;
         }
 
         public virtual void StopTimer()

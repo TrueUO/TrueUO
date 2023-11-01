@@ -3056,7 +3056,7 @@ namespace Server.Mobiles
             {
                 m_Owner = owner;
 
-
+                Priority = TimerPriority.FiftyMS;
             }
 
             protected override void OnTick()

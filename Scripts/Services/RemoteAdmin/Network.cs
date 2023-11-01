@@ -160,7 +160,7 @@ namespace Server.RemoteAdmin
 
         private static void DelayedDisconnect(NetState state)
         {
-            Timer.DelayCall(TimeSpan.FromSeconds(15.0), Disconnect, state);
+            Timer.DelayCall(TimeSpan.FromSeconds(15.0), new TimerStateCallback(Disconnect), state);
         }
 
         private static void Disconnect(object state)

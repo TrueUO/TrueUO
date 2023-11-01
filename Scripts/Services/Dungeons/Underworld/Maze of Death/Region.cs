@@ -82,7 +82,7 @@ namespace Server.Regions
 
         private static Rectangle2D m_FrontEntrance = new Rectangle2D(1057, 1062, 8, 6);
         private static Rectangle2D m_Room = new Rectangle2D(1065, 1055, 11, 11);
-        private static Rectangle2D m_Corridor = new Rectangle2D(1056, 990, 9, 72);
+        private static Rectangle2D m_Corridor = new Rectangle2D(1056, 990, 9, 72);        
         private static Rectangle2D m_PuzzleRoom = new Rectangle2D(1065, 1023, 8, 8);
         private static Rectangle2D m_RearEntrance = new Rectangle2D(1056, 986, 9, 4);
 
@@ -193,7 +193,7 @@ namespace Server.Regions
             base.OnDeath(m);
 
             if (m.Player && m_TrapCorridor.Contains(m.Location))
-                Timer.DelayCall(TimeSpan.FromSeconds(3), Kick_Callback, m);
+                Timer.DelayCall(TimeSpan.FromSeconds(3), new TimerStateCallback(Kick_Callback), m);
         }
 
         public void SpringTrap(Mobile from)

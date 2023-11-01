@@ -113,6 +113,8 @@ namespace Server.Items
                 m_Item = item;
                 m_CloseTime = DateTime.UtcNow + item.CloseDelay;
                 m_Up = true;
+
+                Priority = TimerPriority.TenMS;
             }
 
             protected override void OnTick()
@@ -139,8 +141,8 @@ namespace Server.Items
                             m_Up = false;
                             m_Step = 0;
 
-                            // This code is terrible
-                            DelayCall(m_CloseTime - DateTime.UtcNow, timer => timer.Start(), this);
+                            TimeSpan delay = m_CloseTime - DateTime.UtcNow;
+                            DelayCall(delay > TimeSpan.Zero ? delay : TimeSpan.Zero, Start);
 
                             return;
                         }

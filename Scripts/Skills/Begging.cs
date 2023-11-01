@@ -104,7 +104,7 @@ namespace Server.SkillHandlers
                 {
                     m_From = from;
                     m_Target = target;
-
+                    Priority = TimerPriority.TwoFiftyMS;
                 }
 
                 protected override void OnTick()

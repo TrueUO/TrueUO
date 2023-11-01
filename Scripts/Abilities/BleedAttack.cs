@@ -10,7 +10,7 @@ namespace Server.Items
     /// <summary>
     /// Make your opponent bleed profusely with this wicked use of your weapon.
     /// When successful, the target will bleed for several seconds, taking damage as time passes for up to ten seconds.
-    /// The rate of damage slows down as time passes, and the blood loss can be completely staunched with the use of bandages.
+    /// The rate of damage slows down as time passes, and the blood loss can be completely staunched with the use of bandages. 
     /// </summary>
     public class BleedAttack : WeaponAbility
     {
@@ -144,7 +144,7 @@ namespace Server.Items
             {
                 m_From = from;
                 m_Mobile = m;
-
+                Priority = TimerPriority.TwoFiftyMS;
                 m_BloodDrinker = blooddrinker;
 
                 m_MaxCount = Spells.SkillMasteries.ResilienceSpell.UnderEffects(m) ? 3 : 5;

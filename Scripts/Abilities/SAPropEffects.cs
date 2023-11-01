@@ -349,11 +349,13 @@ namespace Server.Items
 
         public void DelayHeal(double toHeal)
         {
-            Timer.DelayCall(TimeSpan.FromSeconds(3), DoHeal, toHeal);
+            Timer.DelayCall(TimeSpan.FromSeconds(3), new TimerStateCallback(DoHeal), toHeal);
         }
 
-        public void DoHeal(double dam)
+        public void DoHeal(object obj)
         {
+            double dam = (double)obj;
+
             if (dam < 0)
                 return;
 

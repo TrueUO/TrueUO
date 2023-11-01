@@ -70,7 +70,7 @@ namespace Server.Items
                 : base(delay)
             {
                 m_Item = item;
-
+                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()

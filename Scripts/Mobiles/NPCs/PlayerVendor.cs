@@ -436,7 +436,7 @@ namespace Server.Mobiles
                         {
                             reader.ReadBool();
                         }
-
+                        
                         m_ShopName = reader.ReadString();
                         NextPayTime = reader.ReadDeltaTime();
                         House = (BaseHouse)reader.ReadItem();
@@ -540,7 +540,7 @@ namespace Server.Mobiles
             Return();
 
             /* Possible cases regarding item return:
-            *
+            * 
             * 1. No item must be returned
             *       -> do nothing.
             * 2. ( toBackpack is false OR the vendor is in the internal map ) AND the vendor is associated with a AOS house
@@ -573,7 +573,7 @@ namespace Server.Mobiles
                             {
                                 Banker.Deposit(House.MovingCrate, HoldGold);
                             }
-
+                            
                             HoldGold = 0;
                         }
 
@@ -616,7 +616,7 @@ namespace Server.Mobiles
                         {
                             Banker.Deposit(backpack, HoldGold);
                         }
-
+                        
                         HoldGold = 0;
                     }
 
@@ -644,7 +644,7 @@ namespace Server.Mobiles
             {
                 Placeholder.Delete();
             }
-
+            
             if(PlayerVendors.Contains(this))
             {
                 PlayerVendors.Remove(this);
@@ -768,7 +768,7 @@ namespace Server.Mobiles
                 if (GetVendorItem(item) == null)
                 {
                     // We must wait until the item is added
-                    Timer.DelayCall(TimeSpan.Zero, NonLocalDropCallback, new object[] { from, item });
+                    Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(NonLocalDropCallback), new object[] { from, item });
                 }
 
                 return true;
@@ -1128,7 +1128,7 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    SayTo(from, 503226); // What do you care? You don't run this shop.
+                    SayTo(from, 503226); // What do you care? You don't run this shop.	
                 }
             }
             else if (e.HasKeyword(0x40) || e.HasKeyword(0x175) && WasNamed(e.Speech)) // vendor dismiss, *dismiss
@@ -1577,7 +1577,7 @@ namespace Server.Mobiles
             {
                 m_Placeholder = placeholder;
 
-
+                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()
@@ -1593,7 +1593,7 @@ namespace Server.Mobiles
         {
             var timer = new PayTimer();
             timer.Start();
-        }
+        }  
 
         public PayTimer()
             : base(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1))

@@ -6229,7 +6229,7 @@ namespace Server.Mobiles
             if (Alive && !IsHealing && !BardPacified)
             {
                 Mobile owner = ControlMaster;
-
+                
                 if (owner != null && owner.Alive && tc >= m_NextHealOwnerTime && CanBeBeneficial(owner, true, true) &&
                     owner.Map == Map && InRange(owner, 2) && InLOS(owner) && (owner.Poisoned || owner.Hits < .78 * owner.HitsMax))
                 {
@@ -6267,7 +6267,7 @@ namespace Server.Mobiles
 
             double seconds = 6.5 + (patient.Alive ? 0.0 : 5.0);
 
-            m_HealTimer = Timer.DelayCall(TimeSpan.FromSeconds(seconds), Heal_Callback, patient);
+            m_HealTimer = Timer.DelayCall(TimeSpan.FromSeconds(seconds), new TimerStateCallback(Heal_Callback), patient);
         }
 
         private void Heal_Callback(object state)
@@ -7287,6 +7287,7 @@ namespace Server.Mobiles
             : base(InternalDelay, InternalDelay)
         {
             m_NextHourlyCheck = DateTime.UtcNow + TimeSpan.FromHours(1.0);
+            Priority = TimerPriority.FiveSeconds;
         }
 
         private DateTime m_NextHourlyCheck;
@@ -7431,6 +7432,7 @@ namespace Server.Mobiles
         private CreatureDeleteTimer()
             : base(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5))
         {
+            Priority = TimerPriority.OneMinute;
         }
 
         protected override void OnTick()

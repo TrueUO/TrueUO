@@ -530,7 +530,7 @@ namespace Server.Multis
                 if (percentWorn >= 77) // 7.7% worn
                     return 1043011; // This structure is slightly worn.
 
-                // else
+                // else 
                 return 1043010; // This structure is like new.
             }
         }
@@ -791,9 +791,9 @@ namespace Server.Multis
             Region newReg = Region.Find(Location, Map);
 
             if (oldReg != newReg && oldReg is CorgulRegion)
-                Timer.DelayCall(TimeSpan.FromSeconds(0.5), CheckExit, oldReg);
+                Timer.DelayCall(TimeSpan.FromSeconds(0.5), new TimerStateCallback(CheckExit), oldReg);
             else if (oldReg != newReg && newReg is CorgulWarpRegion)
-                Timer.DelayCall(TimeSpan.FromSeconds(1), CheckEnter, newReg);
+                Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(CheckEnter), newReg);
             #endregion
         }
 
@@ -1612,7 +1612,7 @@ namespace Server.Multis
             {
                 m_Boat = boat;
 
-
+                Priority = TimerPriority.TwoFiftyMS;
             }
 
             protected override void OnTick()
@@ -1790,7 +1790,7 @@ namespace Server.Multis
                     hold.ConsumeTotal(typeof(UncutCloth), toConsume);
                 }
 
-                from.SendLocalizedMessage(1116592, ts.TotalMinutes.ToString()); // Your ship is underway with emergency repairs holding for an estimated ~1_TIME~ more minutes.
+                from.SendLocalizedMessage(1116592, ts.TotalMinutes.ToString()); // Your ship is underway with emergency repairs holding for an estimated ~1_TIME~ more minutes.                
                 m_EmergencyRepairTimer = new EmergencyRepairDamageTimer(this, ts);
 
                 return true;
@@ -2916,7 +2916,7 @@ namespace Server.Multis
             {
                 m_Boat = boat;
                 m_SingleMove = single;
-
+                Priority = TimerPriority.TwentyFiveMS;
             }
 
             protected override void OnTick()
@@ -2948,7 +2948,7 @@ namespace Server.Multis
                 m_ResumeDirection = resumeDir;
                 m_Fast = fast;
 
-
+                Priority = TimerPriority.TenMS;
             }
 
             protected override void OnTick()
@@ -3130,7 +3130,7 @@ namespace Server.Multis
             }
         }
         #endregion
-
+         
         public void CheckExit(object o)
         {
             if (o is CorgulRegion region)

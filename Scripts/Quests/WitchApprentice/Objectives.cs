@@ -52,7 +52,7 @@ namespace Server.Engines.Quests.Hag
                 // * You see a strange imp stealing a scrap of paper from the bloodied corpse *
                 m_Corpse.SendLocalizedMessageTo(player, 1055049);
 
-                Timer.DelayCall(TimeSpan.FromSeconds(3.0), DeleteImp, imp);
+                Timer.DelayCall(TimeSpan.FromSeconds(3.0), new TimerStateCallback(DeleteImp), imp);
             }
         }
 
@@ -226,7 +226,7 @@ namespace Server.Engines.Quests.Hag
 
             imp.Direction = imp.GetDirectionTo(from);
 
-            Timer.DelayCall(TimeSpan.FromSeconds(3.0), DeleteImp, imp);
+            Timer.DelayCall(TimeSpan.FromSeconds(3.0), new TimerStateCallback(DeleteImp), imp);
         }
 
         public override void ChildDeserialize(GenericReader reader)

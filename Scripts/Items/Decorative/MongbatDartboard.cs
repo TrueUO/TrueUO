@@ -41,7 +41,7 @@ namespace Server.Items
             from.Animate(AnimationType.Attack, 4);
             Point3D loc = new Point3D(from.X + 1, from.Y, from.Z + 103);
             Effects.SendPacket(from.Location, from.Map, new GraphicalEffect(EffectType.Moving, from.Serial, Serial.Zero, knife.ItemID, from.Location, loc, 10, 0, true, true));
-
+            
             double rand = Utility.RandomDouble();
 
             int message;
@@ -74,7 +74,7 @@ namespace Server.Items
             if (ItemID == 0x1950 || ItemID == 0x1953)
             {
                 ++ItemID;
-                Timer.DelayCall(TimeSpan.FromSeconds(1), AnimateMongbat);
+                Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerCallback(AnimateMongbat));
             }
             else if (ItemID == 0x1951 || ItemID == 0x1954)
             {

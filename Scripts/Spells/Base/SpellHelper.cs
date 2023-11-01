@@ -116,7 +116,7 @@ namespace Server.Spells
 
             return sdiBonus;
         }
-        #endregion
+        #endregion 
 
         private static readonly TimeSpan AosDamageDelay = TimeSpan.FromSeconds(1.0);
 
@@ -812,7 +812,7 @@ namespace Server.Spells
                         return false;
                     }
 
-                    if (Region.Find(loc, map) is GreenAcres)
+                    if (Region.Find(loc, map) is GreenAcres) 
                     {
                         caster.SendLocalizedMessage(502360); // You cannot teleport into that area.
                         return false;
@@ -1437,7 +1437,7 @@ namespace Server.Spells
                 if (m_Spell != null && m_Spell.DelayedDamage && !m_Spell.DelayedDamageStacking)
                     m_Spell.StartDelayedDamageContext(target, this);
 
-
+                Priority = TimerPriority.TwentyFiveMS;
             }
 
             protected override void OnTick()
@@ -1494,7 +1494,7 @@ namespace Server.Spells
                 if (m_Spell != null && m_Spell.DelayedDamage && !m_Spell.DelayedDamageStacking)
                     m_Spell.StartDelayedDamageContext(target, this);
 
-
+                Priority = TimerPriority.TwentyFiveMS;
             }
 
             protected override void OnTick()

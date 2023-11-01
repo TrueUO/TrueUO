@@ -126,7 +126,7 @@ namespace Server.Items
             {
                 m_Mobile = m;
                 m_Item = item;
-
+                Priority = TimerPriority.TwoFiftyMS;
 
                 m_MaxCount = 6;
             }

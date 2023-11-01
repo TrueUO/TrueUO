@@ -11,13 +11,13 @@ namespace Server.Items
     public class VendorRentalContract : Item
     {
 		public override int LabelNumber => 1062332;// a vendor rental contract
-
+		
         private VendorRentalDuration m_Duration;
         private int m_Price;
         private bool m_LandlordRenew;
         private Mobile m_Offeree;
         private Timer m_OfferExpireTimer;
-
+		
         [Constructable]
         public VendorRentalContract()
             : base(0x14F0)
@@ -33,7 +33,7 @@ namespace Server.Items
             : base(serial)
         {
         }
-
+		
         public VendorRentalDuration Duration
         {
             get => m_Duration;
@@ -43,13 +43,13 @@ namespace Server.Items
                     m_Duration = value;
             }
         }
-
+		
         [CommandProperty(AccessLevel.GameMaster)]
         public int Price { get => m_Price; set => m_Price = value; }
-
+		
         [CommandProperty(AccessLevel.GameMaster)]
         public bool LandlordRenew { get => m_LandlordRenew; set => m_LandlordRenew = value; }
-
+		
         public Mobile Offeree
         {
             get => m_Offeree;
@@ -72,7 +72,7 @@ namespace Server.Items
                 InvalidateProperties();
             }
         }
-
+		
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -226,7 +226,7 @@ namespace Server.Items
         private class ContractOptionEntry : ContextMenuEntry
         {
             private readonly VendorRentalContract m_Contract;
-
+			
             public ContractOptionEntry(VendorRentalContract contract)
                 : base(6209)
             {
@@ -326,13 +326,13 @@ namespace Server.Items
         private class OfferExpireTimer : Timer
         {
             private readonly VendorRentalContract m_Contract;
-
+			
             public OfferExpireTimer(VendorRentalContract contract)
                 : base(TimeSpan.FromSeconds(30.0))
             {
                 m_Contract = contract;
 
-
+                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()

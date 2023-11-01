@@ -69,7 +69,7 @@ namespace Server.Engines.SorcerersDungeon
                 PlaySound(0x491);
 
                 if (0.05 > Utility.RandomDouble())
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), CreatePumpkin_Callback, from);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(CreatePumpkin_Callback), from);
 
                 m_InHere = false;
             }
@@ -201,7 +201,7 @@ namespace Server.Engines.SorcerersDungeon
             public SpawnTimer(Item item)
                 : base(TimeSpan.FromSeconds(Utility.RandomMinMax(5, 10)))
             {
-
+                Priority = TimerPriority.OneSecond;
 
                 m_Item = item;
             }

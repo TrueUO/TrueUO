@@ -82,7 +82,7 @@ namespace Server.Items
 
                     if (m_Open)
                     {
-                        TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(10), false, door => door.InternalClose());
+                        TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(10), false, TimerPriority.OneSecond, door => door.InternalClose());
                     }
                     else
                     {
@@ -328,7 +328,7 @@ namespace Server.Items
 
             if (m_Open)
             {
-                TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(10), false, door => door.InternalClose());
+                TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(10), false, TimerPriority.OneSecond, door => door.InternalClose());
             }
         }
 

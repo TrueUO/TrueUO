@@ -154,7 +154,7 @@ namespace Server.Items
                 Effects.SendLocationEffect(p, map, 0x352D, 16, 4);
                 Effects.PlaySound(p, map, 0x364);
 
-                _EffectTimer = Timer.DelayCall(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.25), DoEffect, new object[] { p, from });
+                _EffectTimer = Timer.DelayCall(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.25), new TimerStateCallback(DoEffect), new object[] { p, from });
                 _EffectTimer.Start();
 
                 from.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1154220); // *You cast the mighty hook into the sea!*

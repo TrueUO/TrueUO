@@ -154,7 +154,7 @@ namespace Server.Mobiles
                 else if (combatant.Player)
                 {
                     Say(true, "I call a plague of insects to sting your flesh!");
-                    m_Table[combatant] = Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(7.0), DoEffect, new object[] { combatant, 0 });
+                    m_Table[combatant] = Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(7.0), new TimerStateCallback(DoEffect), new object[] { combatant, 0 });
                 }
             }
 

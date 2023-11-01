@@ -83,7 +83,7 @@ namespace Server.Items
                             {
                                 m_Hoe.UsesRemaining--;
 
-                                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1150492); // You till a small area to plant.
+                                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1150492); // You till a small area to plant.                                
                                 from.Animate(AnimationType.Attack, 3);
 
                                 MaginciaPlantItem dirt = new MaginciaPlantItem
@@ -94,7 +94,7 @@ namespace Server.Items
 
                                 MaginciaPlantSystem.OnPlantPlanted(from, from.Map);
 
-                                Timer.DelayCall(TimeSpan.FromSeconds(.7), MoveItem_Callback, new object[] { dirt, lt.Location, map });
+                                Timer.DelayCall(TimeSpan.FromSeconds(.7), new TimerStateCallback(MoveItem_Callback), new object[] { dirt, lt.Location, map });
                             }
                         }
                     }

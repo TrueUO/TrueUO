@@ -55,7 +55,7 @@ namespace Server.Spells.Chivalry
                 else if (delay > 24)
                     delay = 24;
 
-                m_Table[Caster] = t = Timer.DelayCall(TimeSpan.FromSeconds(delay), Expire_Callback, Caster);
+                m_Table[Caster] = t = Timer.DelayCall(TimeSpan.FromSeconds(delay), new TimerStateCallback(Expire_Callback), Caster);
                 Caster.Delta(MobileDelta.WeaponDamage);
 
                 string args = $"{GetAttackBonus(Caster).ToString()}\t{GetDamageBonus(Caster).ToString()}\t{GetWeaponSpeedBonus(Caster).ToString()}\t{GetDefendMalus(Caster).ToString()}";
