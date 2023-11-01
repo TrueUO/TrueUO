@@ -343,7 +343,7 @@ namespace Server.Spells.SkillMasteries
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Potency, 1155928, 1156195, NonPoisonConsumeChance(m).ToString(), true)); // ~1_VAL~% chance to not consume poison charges when using infecting strike or injected strike.
                         break;
                     case PassiveSpell.Knockout:
-                        BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Knockout, 1155931, 1156030, $"{GetKnockoutModifier(m)}\t{GetKnockoutModifier(m, true)}")); // Wrestling Damage Bonus:<br>+~1_VAL~% PvM<br>+~2_VAL~% PvP
+                        BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Knockout, 1155931, 1156030, $"{GetKnockoutModifier(m).ToString()}\t{GetKnockoutModifier(m, true).ToString()}")); // Wrestling Damage Bonus:<br>+~1_VAL~% PvM<br>+~2_VAL~% PvP
                         break;
                     case PassiveSpell.Boarding:
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Boarding, 1155934, 1156194, BoardingSlotIncrease(m).ToString(), true)); // Your number of stable slots has been increased by ~1_VAL~.

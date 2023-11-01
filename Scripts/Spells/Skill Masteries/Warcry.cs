@@ -53,7 +53,7 @@ namespace Server.Spells.SkillMasteries
                 Expires = DateTime.UtcNow + TimeSpan.FromSeconds(10);
                 BeginTimer();
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Warcry, 1155906, 1156058, TimeSpan.FromSeconds(10), Caster, $"{_Radius}\t{_DamageMalus}"));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Warcry, 1155906, 1156058, TimeSpan.FromSeconds(10), Caster, $"{_Radius.ToString()}\t{_DamageMalus.ToString()}"));
                 // Reduces all incoming attack damage from opponents who hear the war cry within ~1_RANGE~ tiles by ~2_val~%.
             }
 

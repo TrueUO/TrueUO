@@ -80,7 +80,7 @@ namespace Server.Spells.Spellweaving
                         {
                             m_Table[m] = new EssenceOfWindInfo(m, fcMalus, ssiMalus, duration);
 
-                            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.EssenceOfWind, 1075802, duration, m, $"{fcMalus}\t{ssiMalus}"));
+                            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.EssenceOfWind, 1075802, duration, m, $"{fcMalus.ToString()}\t{ssiMalus.ToString()}"));
 
                             m.Delta(MobileDelta.WeaponDamage);
                         }
