@@ -29,9 +29,10 @@ namespace Server
 		public static Action<CrashedEventArgs> CrashedHandler { get; set; }
 
 		public static bool Crashed => _Crashed;
-		private static bool _Crashed;
 
-        private static string _BaseDirectory;
+		private static bool _Crashed;
+		private static Thread _TimerThread;
+		private static string _BaseDirectory;
 		private static string _ExePath;
 
 		private static bool _Cache = true;
@@ -616,6 +617,8 @@ namespace Server
 
 				while (!Closing)
 				{
+					_Signal.WaitOne();
+
 					Mobile.ProcessDeltaQueue();
 					Item.ProcessDeltaQueue();
 
@@ -635,16 +638,10 @@ namespace Server
 						continue;
 					}
 
-                    now = TickCount;
-                    float cyclesPerSecond = ticksPerSecond / (now - last);
-                    _CyclesPerSecond[_CycleIndex++ % _CyclesPerSecond.Length] = cyclesPerSecond;
-                    last = now;
-
-                    if (cyclesPerSecond > 125)
-                    {
-                        Thread.Sleep(1);
-                    }
-                }
+					now = TickCount;
+					_CyclesPerSecond[_CycleIndex++ % _CyclesPerSecond.Length] = ticksPerSecond / (now - last);
+					last = now;
+				}
 			}
 			catch (Exception e)
 			{
