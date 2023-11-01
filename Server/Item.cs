@@ -4126,12 +4126,9 @@ namespace Server
 			{
 				if (i < m_DeltaQueue.Count)
 				{
-                    if (m_DeltaQueue[i] != null)
-                    {
-                        m_DeltaQueue[i].ProcessDelta();
-                        m_DeltaQueue.RemoveAt(i);
-                    }
-                }
+					m_DeltaQueue[i].ProcessDelta();
+					m_DeltaQueue.RemoveAt(i);
+				}
 			}
 
 			_Processing = false;
