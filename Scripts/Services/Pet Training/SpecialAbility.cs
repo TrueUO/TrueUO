@@ -1636,10 +1636,7 @@ namespace Server.Mobiles
                 {
                     Stop();
 
-                    if (_Table.ContainsKey(Defender))
-                    {
-                        _Table.Remove(Defender);
-                    }
+                    _Table.Remove(Defender);
                 }
                 else
                 {

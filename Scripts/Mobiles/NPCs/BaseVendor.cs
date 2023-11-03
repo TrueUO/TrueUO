@@ -1413,10 +1413,7 @@ namespace Server.Mobiles
 
             SayTo(m, 1152303, 0x3B2); // You'll find this one much more to your liking. It's been a pleasure, and I look forward to you greasing my palm again very soon.
 
-            if (Bribes.ContainsKey(m))
-            {
-                Bribes.Remove(m);
-            }
+            Bribes.Remove(m);
 
             BribeMultiplier++;
             CheckNextMultiplierDecay();

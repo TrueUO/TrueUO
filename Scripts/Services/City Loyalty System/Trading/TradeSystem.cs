@@ -324,10 +324,7 @@ namespace Server.Engines.CityLoyalty
 
         public void RemoveCrate(Mobile from, TradeOrderCrate crate)
         {
-            if (ActiveTrades.ContainsKey(from))
-            {
-                ActiveTrades.Remove(from);
-            }
+            ActiveTrades.Remove(from);
         }
 
         public static void OnQuickTravelUsed(Mobile from)

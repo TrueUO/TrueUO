@@ -300,10 +300,7 @@ namespace Server.Items
                     }
                     else if (addon != null)
                     {
-                        if (house.Addons.ContainsKey(addon))
-                        {
-                            house.Addons.Remove(addon);
-                        }
+                        house.Addons.Remove(addon);
 
                         house.LockDowns.Add(item, house.Owner);
                     }

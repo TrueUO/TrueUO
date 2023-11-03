@@ -222,8 +222,7 @@ namespace Server.Engines.Quests
             if (m_ActiveZones[zone].Contains(pirate))
                 m_ActiveZones[zone].Remove(pirate);
 
-            if (m_Bounties.ContainsKey(pirate))
-                m_Bounties.Remove(pirate);
+            m_Bounties.Remove(pirate);
         }
 
         public void RemoveMerchant(BaseShipCaptain merchant)
