@@ -6223,12 +6223,9 @@ namespace Server
 
 				if (timer != null)
 				{
-					if (timer.TimerRegistry.ContainsKey(socket))
-					{
-						timer.TimerRegistry.Remove(socket);
-					}
+                    timer.TimerRegistry.Remove(socket);
 
-					if (timer.TimerRegistry.Count == 0)
+                    if (timer.TimerRegistry.Count == 0)
 					{
 						timer.Stop();
 						Instance = null;

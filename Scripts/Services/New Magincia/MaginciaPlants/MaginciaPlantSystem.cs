@@ -55,8 +55,7 @@ namespace Server.Engines.Plants
 
         public void OnPlantDelete(Mobile from)
         {
-            if (PlantDelayTable.ContainsKey(from))
-                PlantDelayTable.Remove(from);
+            PlantDelayTable.Remove(from);
         }
 
         public void OnPlantPlanted(Mobile from)

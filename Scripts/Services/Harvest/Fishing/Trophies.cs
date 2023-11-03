@@ -360,10 +360,7 @@ namespace Server.Items
                 {
                     from.AddToBackpack(new FishTrophyDeed(m_FishWeight, m_Fisher, m_DateCaught, info.DeedNumber, info.AddonNumber, info.NorthID));
 
-                    if (house.Addons.ContainsKey(this))
-                    {
-                        house.Addons.Remove(this);
-                    }
+                    house.Addons.Remove(this);
 
                     Delete();
                 }

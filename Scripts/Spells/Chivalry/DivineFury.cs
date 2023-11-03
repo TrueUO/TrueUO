@@ -111,8 +111,7 @@ namespace Server.Spells.Chivalry
         {
             Mobile m = (Mobile)state;
 
-            if (m_Table.ContainsKey(m))
-                m_Table.Remove(m);
+            m_Table.Remove(m);
 
             m.Delta(MobileDelta.WeaponDamage);
             m.PlaySound(0xF8);

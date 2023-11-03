@@ -89,10 +89,7 @@ namespace Server.Spells.Necromancy
             {
                 Effects.PlaySound(Weapon.GetWorldLocation(), Weapon.Map, 0xFA);
 
-                if (m_Table.ContainsKey(Owner))
-                {
-                    m_Table.Remove(Owner);
-                }
+                m_Table.Remove(Owner);
             }
         }
 

@@ -88,8 +88,7 @@ namespace Server.Spells.SkillMasteries
 
         public virtual void RemoveCooldown(Mobile m)
         {
-            if (Cooldown.ContainsKey(m))
-                Cooldown.Remove(m);
+            Cooldown.Remove(m);
         }
 
         public virtual void OnGotHit(Mobile attacker, Mobile defender, ref int damage)

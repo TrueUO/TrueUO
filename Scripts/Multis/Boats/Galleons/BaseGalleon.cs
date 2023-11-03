@@ -1444,10 +1444,7 @@ namespace Server.Multis
 
         public void RemoveAddon(Item item)
         {
-            if (Addons.ContainsKey(item))
-            {
-                Addons.Remove(item);
-            }
+            Addons.Remove(item);
         }
 
         public void OnChop(BaseAddon addon, Mobile from)

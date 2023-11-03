@@ -137,8 +137,7 @@ namespace Server.Items
 
         public void TryEndSummon(Mobile m, List<Corpse> corpses)
         {
-            if (_Timers.ContainsKey(m))
-                _Timers.Remove(m);
+            _Timers.Remove(m);
 
             if (corpses == null || corpses.Count == 0)
             {
