@@ -115,7 +115,7 @@ namespace Server.Items
 
                 Expires = DateTime.UtcNow + Duration;
 
-
+                Priority = TimerPriority.FiftyMS;
                 Start();
             }
 

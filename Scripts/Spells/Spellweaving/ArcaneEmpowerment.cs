@@ -78,7 +78,7 @@ namespace Server.Spells.Spellweaving
 
                 m_Table[Caster] = new EmpowermentInfo(Caster, duration, bonus, level);
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1031616, 1075808, duration, Caster, new TextDefinition($"{bonus}\t10")));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1031616, 1075808, duration, Caster, new TextDefinition($"{bonus.ToString()}\t10")));
 
                 Caster.Delta(MobileDelta.WeaponDamage);
             }

@@ -336,8 +336,7 @@ namespace Server.Items
                     ApplySuffixName(item, suffix);
                 }
 
-                if (_Elements.ContainsKey(item))
-                    _Elements.Remove(item);
+                _Elements.Remove(item);
             }
         }
 

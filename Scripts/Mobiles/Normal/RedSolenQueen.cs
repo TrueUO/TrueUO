@@ -149,7 +149,7 @@ namespace Server.Mobiles
             public EggSacTimer()
                 : base(TimeSpan.FromSeconds(10))
             {
-
+                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()
@@ -278,7 +278,7 @@ namespace Server.Mobiles
             public SpawnTimer(Item item)
                 : base(TimeSpan.FromSeconds(Utility.RandomMinMax(5, 10)))
             {
-
+                Priority = TimerPriority.FiftyMS;
 
                 m_Item = item;
             }

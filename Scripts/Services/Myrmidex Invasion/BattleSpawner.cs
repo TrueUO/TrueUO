@@ -277,8 +277,7 @@ namespace Server.Engines.MyrmidexInvasion
                         if (entry != null && !entry.CanRecieveQuest)
                             entry.CanRecieveQuest = true;
 
-                        if (Players.ContainsKey(pm))
-                            Players.Remove(pm);
+                        Players.Remove(pm);
                     }
                 }
             }
@@ -383,10 +382,7 @@ namespace Server.Engines.MyrmidexInvasion
                 {
                     ColUtility.Free(bcList);
 
-                    if (MyrmidexTeam.ContainsKey(wave))
-                    {
-                        MyrmidexTeam.Remove(wave);
-                    }
+                    MyrmidexTeam.Remove(wave);
 
                     RegionMessage(i == 0 ? 1156604 : 1156605); // The Eodonians have secured new ground, the front line has moved up!
                 }
@@ -426,8 +422,7 @@ namespace Server.Engines.MyrmidexInvasion
                 {
                     ColUtility.Free(bcList);
 
-                    if (TribeTeam.ContainsKey(wave))
-                        TribeTeam.Remove(wave);
+                    TribeTeam.Remove(wave);
 
                     RegionMessage(i == 0 ? 1156602 : 1156603); // The Myrmidex have secured new ground, the front line has moved up!
                 }
@@ -528,8 +523,7 @@ namespace Server.Engines.MyrmidexInvasion
 
         public void OnLeaveRegion(PlayerMobile pm)
         {
-            if (Players.ContainsKey(pm))
-                Players.Remove(pm);
+            Players.Remove(pm);
         }
 
         public bool IsFrontLine(Mobile killer, BaseCreature bc)

@@ -328,7 +328,7 @@ namespace Server.Items
                 double healing = m_Healer.Skills[primarySkill].Value;
                 double anatomy = m_Healer.Skills[secondarySkill].Value;
                 double chance = (healing - 68.0) / 50.0 - m_Slips * 0.02;
-
+                
                 if ((checkSkills = healing >= 80.0 && anatomy >= 80.0) && chance > Utility.RandomDouble() || Engines.VvV.ViceVsVirtueSystem.Enabled && petPatient is Engines.VvV.VvVMount && petPatient.ControlMaster == m_Healer || petPatient is IVanityMount && petPatient.TrainingProfile == null)
                 {
                     if (m_Patient.Map == null || !m_Patient.Map.CanFit(m_Patient.Location, 16, false, false))
@@ -585,7 +585,7 @@ namespace Server.Items
                 : base(TimeSpan.FromMilliseconds(250), TimeSpan.FromMilliseconds(250))
             {
                 m_Context = context;
-
+                Priority = TimerPriority.FiftyMS;
 
                 m_Begin = Core.TickCount;
                 m_Expires = Core.TickCount + (int)delay.TotalMilliseconds;

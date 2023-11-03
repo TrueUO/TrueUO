@@ -41,12 +41,12 @@ namespace Server.Spells.Bushido
             t.Start();
 
             double bushido = m.Skills[SkillName.Bushido].Value;
-            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Confidence, 1060596, 1153809, TimeSpan.FromSeconds(4), m, $"{(int) (bushido / 12)}\t{(int) (bushido / 5)}\t100")); // Successful parry will heal for 1-~1_HEAL~ hit points and refresh for 1-~2_STAM~ stamina points.<br>+~3_HP~ hit point regeneration (4 second duration).
+            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Confidence, 1060596, 1153809, TimeSpan.FromSeconds(4), m, $"{((int) (bushido / 12)).ToString()}\t{((int) (bushido / 5)).ToString()}\t100")); // Successful parry will heal for 1-~1_HEAL~ hit points and refresh for 1-~2_STAM~ stamina points.<br>+~3_HP~ hit point regeneration (4 second duration).
 
             int anticipateHitBonus = SkillMasteries.MasteryInfo.AnticipateHitBonus(m);
 
             if (anticipateHitBonus > 0)
-                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.AnticipateHit, 1155905, 1156057, TimeSpan.FromSeconds(4), m, $"{anticipateHitBonus}\t75")); // ~1_CHANCE~% chance to reduce Confidence heal by ~2_REDUCE~% when hit.
+                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.AnticipateHit, 1155905, 1156057, TimeSpan.FromSeconds(4), m, $"{anticipateHitBonus.ToString()}\t75")); // ~1_CHANCE~% chance to reduce Confidence heal by ~2_REDUCE~% when hit. 
         }
 
         public static void EndConfidence(Mobile m)
@@ -100,8 +100,7 @@ namespace Server.Spells.Bushido
             if (m_RegenTable.TryGetValue(m, out t))
                 t.Stop();
 
-            if (m_RegenTable.ContainsKey(m))
-                m_RegenTable.Remove(m);
+            m_RegenTable.Remove(m);
 
             BuffInfo.RemoveBuff(m, BuffIcon.AnticipateHit);
         }
@@ -138,7 +137,7 @@ namespace Server.Spells.Bushido
                 : base(TimeSpan.FromSeconds(15.0))
             {
                 m_Mobile = m;
-
+                Priority = TimerPriority.TwoFiftyMS;
             }
 
             protected override void OnTick()
@@ -161,7 +160,7 @@ namespace Server.Spells.Bushido
             {
                 m_Mobile = m;
                 m_Hits = 15 + (m.Skills.Bushido.Fixed * m.Skills.Bushido.Fixed / 57600);
-
+                Priority = TimerPriority.TwoFiftyMS;
             }
 
             protected override void OnTick()

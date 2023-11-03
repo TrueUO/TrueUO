@@ -38,9 +38,12 @@ namespace Server.Spells.Chivalry
                 Caster.FixedParticles(0x37C4, 1, 31, 9502, 43, 2, EffectLayer.Waist);
 
                 Caster.Stam = Caster.StamMax;
+                Timer t;
 
-                if (m_Table.TryGetValue(Caster, out Timer t))
+                if (m_Table.ContainsKey(Caster))
                 {
+                    t = m_Table[Caster];
+
                     t?.Stop();
                 }
 
@@ -52,10 +55,10 @@ namespace Server.Spells.Chivalry
                 else if (delay > 24)
                     delay = 24;
 
-                m_Table[Caster] = t = Timer.DelayCall(TimeSpan.FromSeconds(delay), Expire_Callback, Caster);
+                m_Table[Caster] = t = Timer.DelayCall(TimeSpan.FromSeconds(delay), new TimerStateCallback(Expire_Callback), Caster);
                 Caster.Delta(MobileDelta.WeaponDamage);
 
-                string args = $"{GetAttackBonus(Caster)}\t{GetDamageBonus(Caster)}\t{GetWeaponSpeedBonus(Caster)}\t{GetDefendMalus(Caster)}";
+                string args = $"{GetAttackBonus(Caster).ToString()}\t{GetDamageBonus(Caster).ToString()}\t{GetWeaponSpeedBonus(Caster).ToString()}\t{GetDefendMalus(Caster).ToString()}";
 
                 BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DivineFury, 1060589, 1150218, TimeSpan.FromSeconds(delay), Caster, args));
                 // ~1_HCI~% hit chance<br> ~2_DI~% damage<br>~3_SSI~% swing speed increase<br>-~4_DCI~% defense chance
@@ -108,8 +111,7 @@ namespace Server.Spells.Chivalry
         {
             Mobile m = (Mobile)state;
 
-            if (m_Table.ContainsKey(m))
-                m_Table.Remove(m);
+            m_Table.Remove(m);
 
             m.Delta(MobileDelta.WeaponDamage);
             m.PlaySound(0xF8);

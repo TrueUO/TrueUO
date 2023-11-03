@@ -1057,6 +1057,8 @@ namespace Server.Mobiles
             public InternalTimer(Spawner spawner, TimeSpan delay)
                 : base(delay)
             {
+                Priority = spawner.IsFull ? TimerPriority.FiveSeconds : TimerPriority.OneSecond;
+
                 m_Spawner = spawner;
             }
 

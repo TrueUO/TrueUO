@@ -260,6 +260,7 @@ namespace Server.Items
             : base(delay)
         {
             m_Storage = storage;
+            Priority = TimerPriority.FiveSeconds;
         }
 
         protected override void OnTick()

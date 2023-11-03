@@ -1210,7 +1210,7 @@ namespace Server.Mobiles
                 {
                     notice = from.IsPlayer() ? "The server is currently under lockdown. No players are allowed to log in at this time." : "The server is currently under lockdown. You do not have sufficient access level to connect.";
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), Disconnect, from);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(Disconnect), from);
                 }
                 else if (from.AccessLevel >= AccessLevel.Administrator)
                 {
@@ -1517,10 +1517,10 @@ namespace Server.Mobiles
 
                 pm.LastOnline = DateTime.UtcNow;
             }
-
+            
             DisguiseTimers.StartTimer(e.Mobile);
 
-            Timer.DelayCall(TimeSpan.Zero, ClearSpecialMovesCallback, e.Mobile);
+            Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(ClearSpecialMovesCallback), e.Mobile);
         }
 
         private static void ClearSpecialMovesCallback(object state)
@@ -1580,7 +1580,7 @@ namespace Server.Mobiles
                 pm.AutoStablePets();
             }
 
-            DisguiseTimers.StopTimer(from);
+            DisguiseTimers.StopTimer(from);            
         }
 
         public override void RevealingAction()
@@ -2292,7 +2292,7 @@ namespace Server.Mobiles
                     list.Add(new CallbackEntry(6207, LeaveHouse));
                 }
 
-                list.Add(new CallbackEntry(RefuseTrades ? 1154112 : 1154113, ToggleTrades)); // Allow Trades / Refuse Trades
+                list.Add(new CallbackEntry(RefuseTrades ? 1154112 : 1154113, ToggleTrades)); // Allow Trades / Refuse Trades				
 
                 if (m_JusticeProtectors.Count > 0)
                 {
@@ -3128,7 +3128,7 @@ namespace Server.Mobiles
                 }
                 else if (to.Backpack == null || !to.Backpack.CheckHold(to, item, false, checkItems, plusItems, plusWeight))
                 {
-                    msgNum = 1004039; // The recipient of this trade would not be able to carry
+                    msgNum = 1004039; // The recipient of this trade would not be able to carry 
                 }
                 else
                 {
@@ -4265,7 +4265,7 @@ namespace Server.Mobiles
 
                         goto case 17;
                     }
-                case 17:
+                case 17: 
                 case 16:
                     {
                         m_Quest = QuestSerializer.DeserializeQuest(reader);
@@ -4317,7 +4317,7 @@ namespace Server.Mobiles
 
                         goto case 13;
                     }
-                case 13:
+                case 13: 
                 case 12:
                     {
                         goto case 11;
@@ -4359,8 +4359,8 @@ namespace Server.Mobiles
                         m_PermaFlags = reader.ReadStrongMobileList();
                         goto case 6;
                     }
-                case 6:
-                case 5:
+                case 6:                   
+                case 5:                   
                 case 4:
                     {
                         m_LastJusticeLoss = reader.ReadDeltaTime();
@@ -4387,7 +4387,7 @@ namespace Server.Mobiles
                         goto case 0;
                     }
                 case 0:
-                    {
+                    {                      
                         break;
                     }
             }

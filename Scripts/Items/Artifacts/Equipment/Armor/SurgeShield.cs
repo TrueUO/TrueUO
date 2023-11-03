@@ -88,7 +88,7 @@ namespace Server.Items
                 Charges--;
 
                 m_Table[from] = m_Surge;
-                Timer.DelayCall(TimeSpan.FromSeconds(20.0), RemoveEffects, from);
+                Timer.DelayCall(TimeSpan.FromSeconds(20.0), new TimerStateCallback(RemoveEffects), from);
 
                 from.PlaySound(0x0F5);
                 from.PlaySound(0x1ED);
@@ -109,8 +109,7 @@ namespace Server.Items
         {
             Mobile from = (Mobile)obj;
 
-            if (m_Table.ContainsKey(from))
-                m_Table.Remove(from);
+            m_Table.Remove(from);
 
             BuffInfo.RemoveBuff(from, BuffIcon.Surge);
             //TODO: Message?

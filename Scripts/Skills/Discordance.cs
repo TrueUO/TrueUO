@@ -24,10 +24,7 @@ namespace Server.SkillHandlers
 
         public static void RemoveEffects(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
-            {
-                m_Table.Remove(m);
-            }
+            m_Table.Remove(m);
         }
 
         public static void Initialize()

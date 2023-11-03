@@ -112,7 +112,7 @@ namespace Server.Mobiles
                 m.Frozen = true;
                 m.SendLocalizedMessage(1080342, Name, 33); // Terror slices into your very being, destroying any chance of resisting ~1_name~ you might have had
 
-                Timer.DelayCall(TimeSpan.FromSeconds(5), Terrorize, m);
+                Timer.DelayCall(TimeSpan.FromSeconds(5), new TimerStateCallback(Terrorize), m);
             }
         }
 

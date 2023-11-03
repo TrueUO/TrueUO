@@ -58,7 +58,7 @@ namespace Server.Spells.Fourth
                 {
                     m.Mana -= toDrain;
 
-                    m_Table[m] = Timer.DelayCall(TimeSpan.FromSeconds(5.0), AosDelay_Callback, new object[] { m, toDrain });
+                    m_Table[m] = Timer.DelayCall(TimeSpan.FromSeconds(5.0), new TimerStateCallback(AosDelay_Callback), new object[] { m, toDrain });
                 }
 
                 HarmfulSpell(m);

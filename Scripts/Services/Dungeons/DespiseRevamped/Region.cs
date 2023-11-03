@@ -263,7 +263,7 @@ namespace Server.Engines.Despise
                 WispOrb orb = DespiseController.GetWispOrb(m);
 
                 if (orb == null)
-                    Timer.DelayCall(TimeSpan.FromSeconds(1), Kick_Callback, m);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(Kick_Callback), m);
             }
         }
 

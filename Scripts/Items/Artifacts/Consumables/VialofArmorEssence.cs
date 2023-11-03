@@ -76,7 +76,7 @@ namespace Server.Items
             bc.FixedParticles(0x373A, 10, 15, 5018, EffectLayer.Waist);
 
             m_Table.Add(bc, DateTime.Now);
-            Timer.DelayCall(Duration + CoolDown, RemoveInfluence, bc);
+            Timer.DelayCall(Duration + CoolDown, new TimerStateCallback(RemoveInfluence), bc);
 
             bc.TempDamageAbsorb = Bonus;
             bc.Loyalty = BaseCreature.MaxLoyalty;
@@ -105,8 +105,7 @@ namespace Server.Items
         {
             BaseCreature bc = (BaseCreature)obj;
 
-            if (m_Table.ContainsKey(bc))
-                m_Table.Remove(bc);
+            m_Table.Remove(bc);
 
             bc.TempDamageAbsorb = 0;
         }

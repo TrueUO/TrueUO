@@ -239,7 +239,7 @@ namespace Server.Items
             DoAreaMessage(1116080, 10, from);
             AddAction(from, 1149683); //The fuse is lit!
             Effects.PlaySound(Location, Map, 0x666);
-            Timer.DelayCall(TimeSpan.FromSeconds(2), Shoot, from);
+            Timer.DelayCall(TimeSpan.FromSeconds(2), new TimerStateCallback(Shoot), from);
         }
 
         public bool CheckRegion(Mobile from)
@@ -353,12 +353,12 @@ namespace Server.Items
 
                                 if (toHit is Mobile)
                                 {
-                                    Timer.DelayCall(delay, OnMobileHit, new object[] { mobs, newPoint, ammo, shooter });
+                                    Timer.DelayCall(delay, new TimerStateCallback(OnMobileHit), new object[] { mobs, newPoint, ammo, shooter });
                                     hit = true;
                                 }
                                 else if (toHit is BaseGalleon galleon)
                                 {
-                                    Timer.DelayCall(delay, OnShipHit, new object[] { galleon, newPoint, ammo, shooter });
+                                    Timer.DelayCall(delay, new TimerStateCallback(OnShipHit), new object[] { galleon, newPoint, ammo, shooter });
                                     hit = true;
                                 }
                             }
@@ -387,7 +387,7 @@ namespace Server.Items
 
                             if (mobiles.Count > 0)
                             {
-                                Timer.DelayCall(delay, OnMobileHit, new object[] { mobiles, newPoint, ammo, shooter });
+                                Timer.DelayCall(delay, new TimerStateCallback(OnMobileHit), new object[] { mobiles, newPoint, ammo, shooter });
                                 hit = true;
                             }
                         }
@@ -802,7 +802,7 @@ namespace Server.Items
             {
                 AddAction(from, 1149644); //Charging started.
                 DoAreaMessage(1116035, 10, from); //~1_NAME~ begins loading the cannon with a powder charge.
-                Timer.DelayCall(ActionTime, Charge, new object[] { from, typeof(PowderCharge) });
+                Timer.DelayCall(ActionTime, new TimerStateCallback(Charge), new object[] { from, typeof(PowderCharge) });
                 return true;
             }
             else
@@ -849,7 +849,7 @@ namespace Server.Items
             {
                 AddAction(from, 1149650); //Priming started
                 DoAreaMessage(1116038, 10, from); //~1_NAME~ begins priming the cannon with a cannon fuse.
-                Timer.DelayCall(ActionTime, Prime, new object[] { from, typeof(FuseCord) });
+                Timer.DelayCall(ActionTime, new TimerStateCallback(Prime), new object[] { from, typeof(FuseCord) });
                 return true;
             }
             else
@@ -863,7 +863,7 @@ namespace Server.Items
 
         public void DoLoad(Mobile from, Item ammo)
         {
-            Timer.DelayCall(ActionTime, Load, new object[] { from, ammo });
+            Timer.DelayCall(ActionTime, new TimerStateCallback(Load), new object[] { from, ammo });
 
             int cliloc = ammo is ICannonAmmo cannonAmmo && cannonAmmo.AmmoType == AmmunitionType.Cannonball ? 1116036 : 1116037;
 

@@ -1007,7 +1007,7 @@ namespace Server.Items
             {
                 m_Drunk = drunk;
 
-
+                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()

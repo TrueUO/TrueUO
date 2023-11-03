@@ -29,9 +29,10 @@ namespace Server
 		public static Action<CrashedEventArgs> CrashedHandler { get; set; }
 
 		public static bool Crashed => _Crashed;
-		private static bool _Crashed;
 
-        private static string _BaseDirectory;
+		private static bool _Crashed;
+		private static Thread _TimerThread;
+		private static string _BaseDirectory;
 		private static string _ExePath;
 
 		private static bool _Cache = true;
@@ -95,7 +96,7 @@ namespace Server
 
 		public static MultiTextWriter MultiConsoleOut { get; private set; }
 
-		/*
+		/* 
 		 * DateTime.Now and DateTime.UtcNow are based on actual system clock time.
 		 * The resolution is acceptable but large clock jumps are possible and cause issues.
 		 * GetTickCount and GetTickCount64 have poor resolution.
@@ -368,6 +369,8 @@ namespace Server
 				EventSink.InvokeShutdown(new ShutdownEventArgs());
 			}
 
+			Timer.TimerThread.Set();
+
             if (Debug)
             {
                 Console.WriteLine("done");
@@ -481,6 +484,11 @@ namespace Server
 				Directory.SetCurrentDirectory(BaseDirectory);
 			}
 
+            _TimerThread = new Thread(Timer.TimerThread.TimerMain)
+			{
+				Name = "Timer Thread"
+			};
+
 			Version ver = Assembly.GetName().Version;
 			DateTime buildDate = new DateTime(2000, 1, 1).AddDays(ver.Build).AddSeconds(ver.Revision * 2);
 
@@ -581,8 +589,6 @@ namespace Server
 				}
 			}
 
-            Timer.Init(TickCount);
-
 			ScriptCompiler.Invoke("Configure");
 
 			Region.Load();
@@ -605,6 +611,8 @@ namespace Server
 		{
 			EventSink.InvokeServerStarted();
 
+			_TimerThread.Start();
+
 			try
 			{
 				long now, last = TickCount;
@@ -616,10 +624,12 @@ namespace Server
 
 				while (!Closing)
 				{
+					_Signal.WaitOne();
+
 					Mobile.ProcessDeltaQueue();
 					Item.ProcessDeltaQueue();
 
-					Timer.Slice(TickCount);
+					Timer.Slice();
 					MessagePump.Slice();
 
 					NetState.FlushAll();
@@ -635,16 +645,10 @@ namespace Server
 						continue;
 					}
 
-                    now = TickCount;
-                    float cyclesPerSecond = ticksPerSecond / (now - last);
-                    _CyclesPerSecond[_CycleIndex++ % _CyclesPerSecond.Length] = cyclesPerSecond;
-                    last = now;
-
-                    if (cyclesPerSecond > 125)
-                    {
-                        Thread.Sleep(1);
-                    }
-                }
+					now = TickCount;
+					_CyclesPerSecond[_CycleIndex++ % _CyclesPerSecond.Length] = ticksPerSecond / (now - last);
+					last = now;
+				}
 			}
 			catch (Exception e)
 			{

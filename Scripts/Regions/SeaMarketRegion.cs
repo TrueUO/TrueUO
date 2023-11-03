@@ -332,6 +332,7 @@ namespace Server.Regions
             RestrictBoats = m_RestrictBoats;
 
             m_BlabTimer = Timer.DelayCall(TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5), CheckBlab_Callback);
+            m_BlabTimer.Priority = TimerPriority.OneSecond;
         }
         #endregion
 

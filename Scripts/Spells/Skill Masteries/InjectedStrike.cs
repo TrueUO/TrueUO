@@ -64,7 +64,7 @@ namespace Server.Spells.SkillMasteries
                         int bonus = 30;
 
                         // Your next successful attack will poison your target and reduce its poison resist by:<br>~1_VAL~% PvM<br>~2_VAL~% PvP
-                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.InjectedStrike, 1155927, 1156163, $"{bonus}\t{bonus / 2}"));
+                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.InjectedStrike, 1155927, 1156163, $"{bonus.ToString()}\t{(bonus / 2).ToString()}"));
                         Caster.FixedParticles(0x3728, 0x1, 0xA, 0x251E, 0x4F7, 7, (EffectLayer)2, 0);
 
                         weapon.InvalidateProperties();

@@ -82,7 +82,7 @@ namespace Server.Spells.Bushido
                 int swingBonus = Math.Max(1, (int)((bushido * bushido) / 720.0));
 
                 info = new HonorableExecutionInfo(attacker, swingBonus);
-                info.m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(20.0), EndEffect, info);
+                info.m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(20.0), new TimerStateCallback(EndEffect), info);
 
                 BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.HonorableExecution, 1060595, 1153807, TimeSpan.FromSeconds(20.0), attacker, string.Format("{0}", swingBonus)));
 
@@ -104,7 +104,7 @@ namespace Server.Spells.Bushido
                     mods.Add(new DefaultSkillMod(SkillName.MagicResist, true, -resSpells));
 
                 info = new HonorableExecutionInfo(attacker, mods);
-                info.m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(7.0), EndEffect, info);
+                info.m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(7.0), new TimerStateCallback(EndEffect), info);
 
                 BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.HonorableExecution, 1060595, 1153808, TimeSpan.FromSeconds(7.0), attacker, string.Format("{0}\t40\t40\t40\t40\t40", resSpells)));
 

@@ -151,8 +151,7 @@ namespace Server.Spells.Necromancy
                 Stop();
                 BuffInfo.RemoveBuff(m_Mobile, BuffIcon.CorpseSkin);
 
-                if (m_Table.ContainsKey(m_Mobile))
-                    m_Table.Remove(m_Mobile);
+                m_Table.Remove(m_Mobile);
 
                 m_Mobile.UpdateResistances();
 

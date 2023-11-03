@@ -120,7 +120,7 @@ namespace Server.Mobiles
                 PlaySound(0x491);
 
                 if (0.05 > Utility.RandomDouble())
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), CreateBones_Callback, from);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(CreateBones_Callback), from);
 
                 m_InHere = false;
             }

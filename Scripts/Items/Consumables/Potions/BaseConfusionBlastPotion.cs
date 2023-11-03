@@ -98,7 +98,7 @@ namespace Server.Items
 
             Geometry.Circle2D(loc, map, Radius, BlastEffect, 270, 90);
 
-            Timer.DelayCall(TimeSpan.FromSeconds(0.3), CircleEffect2, new object[] { loc, map });
+            Timer.DelayCall(TimeSpan.FromSeconds(0.3), new TimerStateCallback(CircleEffect2), new object[] { loc, map });
             IPooledEnumerable eable = map.GetMobilesInRange(loc, Radius);
 
             foreach (Mobile mobile in eable)
@@ -140,7 +140,7 @@ namespace Server.Items
                 timer.Stop();
             }
 
-            m_Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(60), EndDelay_Callback, m);
+            m_Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(60), new TimerStateCallback(EndDelay_Callback), m);
         }
 
         public static int GetDelay(Mobile m)
@@ -170,7 +170,7 @@ namespace Server.Items
             }
         }
 
-        #endregion
+        #endregion		
 
         private class ThrowTarget : Target
         {
@@ -209,7 +209,7 @@ namespace Server.Items
                     to = new Entity(Serial.Zero, new Point3D(p), from.Map);
 
                 Effects.SendMovingEffect(from, to, 0xF0D, 7, 0, false, false, m_Potion.Hue, 0);
-                Timer.DelayCall(TimeSpan.FromSeconds(1.0), m_Potion.Explode_Callback, new object[] { from, new Point3D(p), from.Map });
+                Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(m_Potion.Explode_Callback), new object[] { from, new Point3D(p), from.Map });
             }
         }
     }

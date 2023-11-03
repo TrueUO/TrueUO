@@ -49,7 +49,7 @@ namespace Server.Engines.Quests
 
     public abstract class HeritageQuester : BaseVendor
     {
-        #region Vendor stuff
+        #region Vendor stuff		
         private readonly List<SBInfo> m_SBInfos = new List<SBInfo>();
         protected override List<SBInfo> SBInfos => m_SBInfos;
         public override bool IsActiveVendor => false;
@@ -136,7 +136,7 @@ namespace Server.Engines.Quests
             SpeechHue = 0x3B2;
 
             if (CheckCompleted(m))
-                Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromSeconds(10), Story.Count + 1, SayStory, m);
+                Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromSeconds(10), Story.Count + 1, new TimerStateCallback(SayStory), m);
             else
             {
                 List<object> incomplete = FindIncompleted(m);
@@ -148,7 +148,7 @@ namespace Server.Engines.Quests
                     delay = TimeSpan.FromSeconds(10);
                 }
 
-                Timer.DelayCall(TimeSpan.Zero, delay, incomplete.Count, SayInstructions, incomplete);
+                Timer.DelayCall(TimeSpan.Zero, delay, incomplete.Count, new TimerStateCallback(SayInstructions), incomplete);
             }
         }
 
@@ -238,10 +238,7 @@ namespace Server.Engines.Quests
 
         public static void RemovePending(Mobile m)
         {
-            if (m_Pending.ContainsKey(m))
-            {
-                m_Pending.Remove(m);
-            }
+            m_Pending.Remove(m);
         }
 
         public static bool IsPending(Mobile m)
@@ -265,17 +262,17 @@ namespace Server.Engines.Quests
         public static bool Check(Mobile m)
         {
             if (!m.Alive)
-                m.SendLocalizedMessage(1073646); // Only the living may proceed...
+                m.SendLocalizedMessage(1073646); // Only the living may proceed...			
             else if (m.Mounted)
-                m.SendLocalizedMessage(1073647); // You may not continue while mounted...
+                m.SendLocalizedMessage(1073647); // You may not continue while mounted...			
             else if (m.IsBodyMod || m.HueMod > 0 || !m.CanBeginAction(typeof(IncognitoSpell)))
-                m.SendLocalizedMessage(1073648); // You may only proceed while in your original state...
+                m.SendLocalizedMessage(1073648); // You may only proceed while in your original state...						
             else if (m.Spell != null && m.Spell.IsCasting)
-                m.SendLocalizedMessage(1073649); // One may not proceed while embracing magic...
+                m.SendLocalizedMessage(1073649); // One may not proceed while embracing magic...			
             else if (IsUnburdened(m))
                 m.SendLocalizedMessage(1073650); // To proceed you must be unburdened by equipment...
             else if (m.Hits < m.HitsMax)
-                m.SendLocalizedMessage(1073652); // You must be healthy to proceed...
+                m.SendLocalizedMessage(1073652); // You must be healthy to proceed...				
             else
                 return true;
 

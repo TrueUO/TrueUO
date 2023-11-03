@@ -150,8 +150,8 @@ namespace Server.Spells.SkillMasteries
                 Caster.SendLocalizedMessage(1049452, "\t" + toGuard.Name); // You are now protecting ~2_NAME~.
                 toGuard.SendLocalizedMessage(1049451, Caster.Name); // You are now being protected by ~1_NAME~.
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Bodyguard, 1155924, 1156061, TimeSpan.FromSeconds(90), Caster, $"{Caster.Name}\t{(int) (_Block + 5)}\t{toGuard.Name}\t{(int) _Block}"));
-                BuffInfo.AddBuff(toGuard, new BuffInfo(BuffIcon.Bodyguard, 1155924, 1156061, TimeSpan.FromSeconds(90), toGuard, $"{Caster.Name}\t{(int) (_Block + 5)}\t{toGuard.Name}\t{(int) _Block}"));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Bodyguard, 1155924, 1156061, TimeSpan.FromSeconds(90), Caster, $"{Caster.Name}\t{((int) (_Block + 5)).ToString()}\t{toGuard.Name}\t{((int) _Block).ToString()}"));
+                BuffInfo.AddBuff(toGuard, new BuffInfo(BuffIcon.Bodyguard, 1155924, 1156061, TimeSpan.FromSeconds(90), toGuard, $"{Caster.Name}\t{((int) (_Block + 5)).ToString()}\t{toGuard.Name}\t{((int) _Block).ToString()}"));
                 //~1_NAME~ receives ~2_DAMAGE~% of all damage dealt to ~3_NAME~. All damage dealt to ~3_NAME~ will be reduced by ~4_DAMAGE~%. Body guard must be within 2 tiles. 
             }
 

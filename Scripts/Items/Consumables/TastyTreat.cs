@@ -105,7 +105,7 @@ namespace Server.Items
             bc.Loyalty = BaseCreature.MaxLoyalty;
 
             m_Table.Add(bc, DateTime.UtcNow);
-            Timer.DelayCall(Duration + CoolDown, RemoveInfluence, bc);
+            Timer.DelayCall(Duration + CoolDown, new TimerStateCallback(RemoveInfluence), bc);
 
             Consume();
             return true;
@@ -120,8 +120,7 @@ namespace Server.Items
         {
             BaseCreature bc = (BaseCreature)obj;
 
-            if (m_Table.ContainsKey(bc))
-                m_Table.Remove(bc);
+            m_Table.Remove(bc);
 
             bc.TempDamageBonus = 0;
         }

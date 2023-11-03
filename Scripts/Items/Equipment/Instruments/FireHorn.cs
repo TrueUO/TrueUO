@@ -37,7 +37,7 @@ namespace Server.Items
                 return;
 
             from.BeginAction(typeof(FireHorn));
-            Timer.DelayCall(TimeSpan.FromSeconds(6.0), EndAction, from);
+            Timer.DelayCall(TimeSpan.FromSeconds(6.0), new TimerStateCallback(EndAction), from);
 
             int music = from.Skills[SkillName.Musicianship].Fixed;
 
