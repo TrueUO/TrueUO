@@ -20,6 +20,7 @@ steps:
   inputs:
     packageType: 'sdk'
     version: '8.x'
+    includePreviewVersions: true
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
 
