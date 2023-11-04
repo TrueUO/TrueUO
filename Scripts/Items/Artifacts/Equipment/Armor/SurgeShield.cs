@@ -109,8 +109,7 @@ namespace Server.Items
         {
             Mobile from = (Mobile)obj;
 
-            if (m_Table.ContainsKey(from))
-                m_Table.Remove(from);
+            m_Table.Remove(from);
 
             BuffInfo.RemoveBuff(from, BuffIcon.Surge);
             //TODO: Message?

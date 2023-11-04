@@ -105,8 +105,7 @@ namespace Server.Items
         {
             BaseCreature bc = (BaseCreature)obj;
 
-            if (m_Table.ContainsKey(bc))
-                m_Table.Remove(bc);
+            m_Table.Remove(bc);
 
             bc.TempDamageAbsorb = 0;
         }

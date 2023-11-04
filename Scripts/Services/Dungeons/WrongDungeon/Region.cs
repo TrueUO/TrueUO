@@ -22,14 +22,10 @@ namespace Server.Engines.Blackthorn
             {
                 m.MoveToWorld(new Point3D(5703, 639, 0), Map);
 
-                if (!DeathList.Contains(m))
+                if (!DeathList.Remove(m))
                 {
                     m.Resurrect();
                     DeathList.Add(m);
-                }
-                else
-                {
-                    DeathList.Remove(m);
                 }
 
                 Timer.DelayCall(TimeSpan.FromSeconds(2), () => m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1152076)); // You are captured by the jailor and returned to your cell.                       
@@ -40,8 +36,7 @@ namespace Server.Engines.Blackthorn
         {
             if (m is PlayerMobile)
             {
-                if (DeathList.Contains(m))
-                    DeathList.Remove(m);
+                DeathList.Remove(m);
             }
 
             base.OnExit(m);

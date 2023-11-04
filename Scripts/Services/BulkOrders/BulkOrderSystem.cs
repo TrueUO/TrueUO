@@ -690,10 +690,7 @@ namespace Server.Engines.BulkOrders
 
         public static void Initialize()
         {
-            if (NewSystemEnabled)
-            {
-                Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), OnTick);
-            }
+            Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), OnTick);
         }
 
         public static void OnSave(WorldSaveEventArgs e)

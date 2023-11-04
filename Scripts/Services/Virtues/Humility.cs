@@ -255,8 +255,7 @@ namespace Server.Services.Virtues
                 TimeSpan.FromSeconds(60),
                 () =>
                 {
-                    if (HuntTable.ContainsKey(m))
-                        HuntTable.Remove(m);
+                    HuntTable.Remove(m);
                 });
         }
 

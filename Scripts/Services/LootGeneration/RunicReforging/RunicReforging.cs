@@ -77,7 +77,7 @@ namespace Server.Items
 
             if (!allowableSpecial)
             {
-                system = CraftSystem.GetSystem(item.GetType());                
+                system = CraftSystem.GetSystem(item.GetType());
             }
             else
             {
@@ -336,8 +336,7 @@ namespace Server.Items
                     ApplySuffixName(item, suffix);
                 }
 
-                if (_Elements.ContainsKey(item))
-                    _Elements.Remove(item);
+                _Elements.Remove(item);
             }
         }
 
@@ -941,30 +940,12 @@ namespace Server.Items
 
         public static int Scale(int min, int max, int perclow, int perchigh, int luckchance, bool reforged)
         {
-            int percent;
-
-            if (reforged)
-            {
-                percent = Utility.RandomMinMax(perclow, perchigh);
-            }
-            else
-            {
-                percent = Utility.RandomMinMax(0, perchigh);
-            }
-
+            decimal percent = Utility.RandomMinMax(perclow, perchigh);
             if (LootPack.CheckLuck(luckchance))
                 percent += 10;
+            percent = percent > perchigh ? perchigh : percent;
 
-            if (percent < perclow) percent = perclow;
-            if (percent > perchigh) percent = perchigh;
-
-            int scaledBy = Math.Abs(min - max) + 1;
-
-            scaledBy = 10000 / scaledBy;
-
-            percent *= 10000 + scaledBy;
-
-            return min + (max - min) * percent / 1000001;
+            return Convert.ToInt32(Math.Round(((max - min) * percent / 100) + min));
         }
 
         private static int CalculateValue(Item item, object attribute, int min, int max, int perclow, int perchigh, ref int budget, int luckchance)
@@ -1139,15 +1120,15 @@ namespace Server.Items
         public static void Configure()
         {
             Commands.CommandSystem.Register("GetCreatureScore", AccessLevel.GameMaster, e =>
+            {
+                e.Mobile.BeginTarget(12, false, TargetFlags.None, (from, targeted) =>
                 {
-                    e.Mobile.BeginTarget(12, false, TargetFlags.None, (from, targeted) =>
-                        {
-                            if (targeted is BaseCreature bc)
-                            {
-                                bc.PrivateOverheadMessage(Network.MessageType.Regular, 0x25, false, GetDifficultyFor(bc).ToString(), e.Mobile.NetState);
-                            }
-                        });
+                    if (targeted is BaseCreature bc)
+                    {
+                        bc.PrivateOverheadMessage(Network.MessageType.Regular, 0x25, false, GetDifficultyFor(bc).ToString(), e.Mobile.NetState);
+                    }
                 });
+            });
 
             // TypeIndex 0 - Weapon; 1 - Armor; 2 - Shield; 3 - Jewels
             // RunicIndex 0 - dullcopper; 1 - shadow; 2 - copper; 3 - spined; 4 - Oak; 5 - ash
@@ -1872,18 +1853,17 @@ namespace Server.Items
         /// <param name="minBudget"></param>
         /// <param name="maxBudget"></param>
         /// <param name="map"></param>
+        /// <param name="finder">if treasure chest then finder is populated</param>
+        /// <param name="additionalMaxProps">Allow generation to overcap the propery count when requested</param>
         /// <returns></returns>
-        public static bool GenerateRandomTreasureMapItem(Item item, int luck, int minBudget, int maxBudget, Map map)
+        public static bool GenerateRandomTreasureMapItem(Item item, int luck, int minBudget, int maxBudget, Map map, Mobile finder = null, int additionalMaxProps = 0)
         {
             if (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat)
             {
                 int budget = Utility.RandomMinMax(minBudget, maxBudget);
-
-                GenerateRandomItem(item, null, budget, LootPack.GetLuckChance(luck), ReforgedPrefix.None, ReforgedSuffix.None, map);
-
+                GenerateRandomItem(item, finder, budget, LootPack.GetLuckChance(luck), ReforgedPrefix.None, ReforgedSuffix.None, map, false, additionalMaxProps);
                 return true;
             }
-
             return false;
         }
 
@@ -1898,7 +1878,8 @@ namespace Server.Items
         /// <param name="forcedsuffix"></param>
         /// <param name="map"></param>
         /// <param name="artifact"></param>
-        public static void GenerateRandomItem(Item item, Mobile killer, int basebudget, int luckchance, ReforgedPrefix forcedprefix, ReforgedSuffix forcedsuffix, Map map = null, bool artifact = false)
+        /// <param name="additionalMaxProps">Allow generation to overcap the propery count when requested</param>
+        public static void GenerateRandomItem(Item item, Mobile killer, int basebudget, int luckchance, ReforgedPrefix forcedprefix, ReforgedSuffix forcedsuffix, Map map = null, bool artifact = false, int additionalMaxProps = 0)
         {
             if (map == null && killer != null)
             {
@@ -1941,20 +1922,28 @@ namespace Server.Items
 
                     int divisor = GetDivisor(basebudget);
 
-                    double perc = 0.0;
-                    double highest = 0.0;
+                    int luckyRandom = 10000;
+                    int rerolls = 1 + rawLuck / 600;
+                    double percOfFreeRoll = (double)(rawLuck % 600) / 600;
 
-                    for (int i = 0; i < 1 + rawLuck / 600; i++)
+                    //luckrandom reduced on each luck reroll, so all luck yields better loot
+                    for (int i = 0; i < rerolls; i++)
                     {
-                        perc = (100.0 - Math.Sqrt(Utility.RandomMinMax(0, 10000))) / 100.0;
+                        int newRandom = Utility.RandomMinMax(0, luckyRandom);
+                        luckyRandom = newRandom;
 
-                        if (perc > highest)
-                            highest = perc;
+                        if (i == rerolls - 1)
+                        {
+                            newRandom = Utility.RandomMinMax(0, luckyRandom);
+                            luckyRandom = luckyRandom + (int)((newRandom - luckyRandom) * percOfFreeRoll);
+                        }
                     }
 
-                    perc = highest;
+                    double playerLuckPerc = Math.Min((100.0 - Math.Sqrt(luckyRandom)) / 100.0, 1);
 
-                    if (perc > 1.0) perc = 1.0;
+                    //perc - luck scale calculated 0(bad) - 1.00(good)
+                    double perc = Math.Min(1.0, basebudget * playerLuckPerc / 700);
+
                     int toAdd = Math.Min(500, RandomItemGenerator.MaxAdjustedBudget - basebudget);
 
                     budget = Utility.RandomMinMax(basebudget - basebudget / divisor, (int)(basebudget + toAdd * perc)) + budgetBonus;
@@ -1985,17 +1974,18 @@ namespace Server.Items
                         mods = Math.Max(1, GetProperties(5));
 
                         perchigh = Math.Max(50, Math.Min(500, budget) / mods);
-                        perclow = Math.Max(20, perchigh / 3);
+                        perclow = Math.Max(20, Convert.ToInt32(perchigh / 3 * perc));
+                        budget = IsPowerful(basebudget) ? basebudget : budget;
                     }
                     else
                     {
-                        int maxmods = Math.Max(5, Math.Min(RandomItemGenerator.MaxProps - 1, (int)Math.Ceiling(budget / (double)Utility.RandomMinMax(100, 140))));
+                        int maxmods = Math.Max(5, Math.Min(RandomItemGenerator.MaxProps - 1, (int)Math.Ceiling(budget / (double)Utility.RandomMinMax(100, 140)))) + additionalMaxProps;
                         int minmods = Math.Max(4, maxmods - 4);
 
-                        mods = Math.Max(minmods, GetProperties(maxmods));
+                        mods = Math.Max(minmods, GetProperties(maxmods, additionalMaxProps));
 
                         perchigh = 100;
-                        perclow = Utility.RandomMinMax(50, 70);
+                        perclow = Convert.ToInt32(Utility.RandomMinMax(50, 70) * perc);
                     }
 
                     if (perchigh > 100) perchigh = 100;
@@ -2092,10 +2082,13 @@ namespace Server.Items
             return budget >= 550;
         }
 
-        public static int GetProperties(int max)
+        public static int GetProperties(int max, int additionalMaxProps = 0)
         {
-            if (max > RandomItemGenerator.MaxProps - 1)
-                max = RandomItemGenerator.MaxProps - 1;
+            if (max > RandomItemGenerator.MaxProps - 1 + additionalMaxProps)
+            {
+                max = RandomItemGenerator.MaxProps - 1 + additionalMaxProps;
+                max = Math.Min(10, max);
+            }
 
             int p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 0, p5 = 0, p6 = 0, p7 = 0, p8 = 0, p9 = 0, p10 = 0, p11 = 0;
 

@@ -3680,8 +3680,8 @@ namespace Server.Network
 			{
 				if (m_MD5Provider == null)
 				{
-					m_MD5Provider = new MD5CryptoServiceProvider();
-				}
+                    m_MD5Provider = MD5.Create();
+                }
 
 				m_Stream.UnderlyingStream.Flush();
 
@@ -3706,9 +3706,9 @@ namespace Server.Network
 			}
 		}
 
-		private static MD5CryptoServiceProvider m_MD5Provider;
+        private static MD5 m_MD5Provider = MD5.Create();
 
-		public static CharacterListFlags AdditionalFlags { get; set; }
+        public static CharacterListFlags AdditionalFlags { get; set; }
 	}
 
 	public sealed class ClearWeaponAbility : Packet
@@ -3844,11 +3844,11 @@ namespace Server.Network
 
 		public IPEndPoint Address { get; set; }
 
-		public ServerInfo(string name, int fullPercent, TimeZone tz, IPEndPoint address)
+		public ServerInfo(string name, int fullPercent, TimeZoneInfo tZi, IPEndPoint address)
 		{
 			Name = name;
 			FullPercent = fullPercent;
-			TimeZone = tz.GetUtcOffset(DateTime.Now).Hours;
+			TimeZone = tZi.GetUtcOffset(DateTime.Now).Hours;
 			Address = address;
 		}
 	}

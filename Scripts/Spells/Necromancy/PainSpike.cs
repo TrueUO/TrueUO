@@ -120,8 +120,7 @@ namespace Server.Spells.Necromancy
             {
                 if (DateTime.UtcNow >= Expires)
                 {
-                    if (m_Table.ContainsKey(m_Mobile))
-                        m_Table.Remove(m_Mobile);
+                    m_Table.Remove(m_Mobile);
 
                     if (m_Mobile.Alive && !m_Mobile.IsDeadBondedPet)
                         m_Mobile.Hits += m_ToRestore;

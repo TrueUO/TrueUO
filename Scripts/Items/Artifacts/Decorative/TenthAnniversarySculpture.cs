@@ -166,8 +166,7 @@ namespace Server.Items
 
         public static void RemoveSculpture(TenthAnniversarySculpture sculpture)
         {
-            if (m_sculptures.Contains(sculpture))
-                m_sculptures.Remove(sculpture);
+            m_sculptures.Remove(sculpture);
 
             if (m_sculptures.Count == 0 && m_Timer != null)
             {

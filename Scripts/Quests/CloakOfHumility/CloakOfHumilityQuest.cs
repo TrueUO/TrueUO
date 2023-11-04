@@ -68,8 +68,7 @@ namespace Server.Engines.Quests
 
             foreach (Mobile m in toRemove)
             {
-                if (m_CooldownTable.ContainsKey(m))
-                    m_CooldownTable.Remove(m);
+                m_CooldownTable.Remove(m);
             }
         }
 
@@ -366,8 +365,7 @@ namespace Server.Engines.Quests
 
         public void RemoveQuestItem(Item item)
         {
-            if (m_QuestItems.Contains(item))
-                m_QuestItems.Remove(item);
+            m_QuestItems.Remove(item);
         }
 
         public void OnGivenTo(Mobile m)

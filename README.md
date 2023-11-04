@@ -8,3 +8,5 @@
 [TrueUO] is a community driven Ultima Online Server Emulator written in C# focused on the current era.
 
 Have a shard you'd like to advertise? Check out https://shardportal.com
+
+TrueUO now requires .NET 7.

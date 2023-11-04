@@ -124,128 +124,127 @@ namespace Server
 		}
 	}
 
-	public sealed class CSPRandom : IRandomImpl
-	{
-		private readonly RNGCryptoServiceProvider _CSP = new RNGCryptoServiceProvider();
+    public sealed class CSPRandom : IRandomImpl
+    {
+        private static readonly RandomNumberGenerator _Rng = RandomNumberGenerator.Create();
 
-        private const int BUFFER_SIZE = 0x4000;
-        private const int LARGE_REQUEST = 0x40;
+        private const int _BufferSize = 0x4000;
+        private const int _LargeRequest = 0x40;
 
-        private byte[] _Working = new byte[BUFFER_SIZE];
-		private byte[] _Buffer = new byte[BUFFER_SIZE];
+        private byte[] _Working = new byte[_BufferSize];
+        private byte[] _Buffer = new byte[_BufferSize];
 
-		private int _Index;
+        private int _Index;
 
-		private readonly object _sync = new object();
-		private readonly object _syncB = new object();
+        private readonly object _Sync = new();
+        private readonly object _SyncB = new();
 
-		public CSPRandom()
-		{
-			_CSP.GetBytes(_Working);
-			ThreadPool.QueueUserWorkItem(Fill);
-		}
+        public CSPRandom()
+        {
+            _Rng.GetBytes(_Working);
+            ThreadPool.QueueUserWorkItem(Fill);
+        }
 
-		private void CheckSwap(int c)
-		{
-			lock (_sync)
-			{
-				if (_Index + c < BUFFER_SIZE)
-				{
-					return;
-				}
-
-				lock (_syncB)
-				{
-					byte[] b = _Working;
-					_Working = _Buffer;
-					_Buffer = b;
-					_Index = 0;
-				}
-			}
-			ThreadPool.QueueUserWorkItem(Fill);
-		}
-
-		private void Fill(object o)
-		{
-			lock (_syncB)
-				lock (_CSP)
-					_CSP.GetBytes(_Buffer);
-		}
-
-		private void _GetBytes(byte[] b, int offset, int count)
-		{
-
-                lock (_sync)
+        private void CheckSwap(int c)
+        {
+            lock (_Sync)
+            {
+                if (_Index + c < _BufferSize)
                 {
-                    CheckSwap(count);
-                    Buffer.BlockCopy(_Working, _Index, b, offset, count);
-                    _Index += count;
+                    return;
                 }
-		}
+
+                lock (_SyncB)
+                {
+                    byte[] b = _Working;
+                    _Working = _Buffer;
+                    _Buffer = b;
+                    _Index = 0;
+                }
+            }
+            ThreadPool.QueueUserWorkItem(Fill);
+        }
+
+        private void Fill(object o)
+        {
+            lock (_SyncB)
+            {
+                _Rng.GetBytes(_Buffer);
+            }
+        }
+
+        private void _GetBytes(byte[] b, int offset, int count)
+        {
+            lock (_Sync)
+            {
+                CheckSwap(count);
+                Buffer.BlockCopy(_Working, _Index, b, offset, count);
+                _Index += count;
+            }
+        }
 
         public int Next(int c)
-		{
-			return (int)(c * NextDouble());
-		}
+        {
+            return (int)(c * NextDouble());
+        }
 
-		public bool NextBool()
-		{
-			return (NextByte() & 1) == 1;
-		}
+        public bool NextBool()
+        {
+            return (NextByte() & 1) == 1;
+        }
 
         private byte NextByte()
         {
-            lock (_sync)
+            lock (_Sync)
             {
                 CheckSwap(1);
                 return _Working[_Index++];
             }
         }
 
-		public void NextBytes(byte[] b)
-		{
-			int c = b.Length;
+        public void NextBytes(byte[] b)
+        {
+            int c = b.Length;
 
-			if (c >= LARGE_REQUEST)
-			{
-				lock (_CSP)
-					_CSP.GetBytes(b);
-				return;
-			}
-			_GetBytes(b, 0, b.Length);
-		}
+            if (c >= _LargeRequest)
+            {
+                _Rng.GetBytes(b);
+                return;
+            }
+            _GetBytes(b, 0, b.Length);
+        }
 
-		public unsafe double NextDouble()
-		{
-			byte[] b = new byte[8];
+        public unsafe double NextDouble()
+        {
+            byte[] b = new byte[8];
 
-			if (BitConverter.IsLittleEndian)
-			{
-				b[7] = 0;
-				_GetBytes(b, 0, 7);
-			}
-			else
-			{
-				b[0] = 0;
-				_GetBytes(b, 1, 7);
-			}
+            if (BitConverter.IsLittleEndian)
+            {
+                b[7] = 0;
+                _GetBytes(b, 0, 7);
+            }
+            else
+            {
+                b[0] = 0;
+                _GetBytes(b, 1, 7);
+            }
 
-			ulong r = 0;
-			fixed (byte* buf = b)
-			{
-				r = *(ulong*)&buf[0] >> 3;
-			}
+            ulong r = 0;
+            fixed (byte* buf = b)
+            {
+                r = *(ulong*)&buf[0] >> 3;
+            }
 
-			/* double: 53 bits of significand precision
-			 * ulong.MaxValue >> 11 = 9007199254740991
-			 * 2^53 = 9007199254740992
-			 */
+            /* double: 53 bits of significand precision
+             * ulong.MaxValue >> 11 = 9007199254740991
+             * 2^53 = 9007199254740992
+             */
 
-			return (double)r / 9007199254740992;
-		}
-	}
+            return (double)r / 9007199254740992;
+        }
+    }
 
-	public sealed class RDRand32 : IRandomImpl, IHardwareRNG
+    public sealed class RDRand32 : IRandomImpl, IHardwareRNG
 	{
         private class SafeNativeMethods
 		{

@@ -11,11 +11,12 @@ namespace Server.Engines.BulkOrders
 {
     public class BulkOrderBook : Item, ISecurable
     {
-        private ArrayList m_Entries;
+        private List<object> m_Entries;
         private BOBFilter m_Filter;
         private string m_BookName;
         private SecureLevel m_Level;
         private int m_ItemCount;
+
         [Constructable]
         public BulkOrderBook()
             : base(0x2259)
@@ -23,7 +24,7 @@ namespace Server.Engines.BulkOrders
             Weight = 1.0;
             LootType = LootType.Blessed;
 
-            m_Entries = new ArrayList();
+            m_Entries = new List<object>();
             m_Filter = new BOBFilter();
 
             m_Level = SecureLevel.CoOwners;
@@ -50,7 +51,7 @@ namespace Server.Engines.BulkOrders
             get => m_Level;
             set => m_Level = value;
         }
-        public ArrayList Entries => m_Entries;
+        public List<object> Entries => m_Entries;
         public BOBFilter Filter => m_Filter;
         public int ItemCount
         {
@@ -180,13 +181,10 @@ namespace Server.Engines.BulkOrders
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2); // version
 
             writer.Write(m_ItemCount);
-
             writer.Write((int)m_Level);
-
             writer.Write(m_BookName);
 
             m_Filter.Serialize(writer);
@@ -217,48 +215,31 @@ namespace Server.Engines.BulkOrders
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
-            switch (version)
+            m_ItemCount = reader.ReadInt();
+            m_Level = (SecureLevel)reader.ReadInt();
+            m_BookName = reader.ReadString();
+
+            m_Filter = new BOBFilter(reader);
+
+            int count = reader.ReadEncodedInt();
+
+            m_Entries = new List<object>(count);
+
+            for (int i = 0; i < count; ++i)
             {
-                case 2:
-                    {
-                        m_ItemCount = reader.ReadInt();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        m_Level = (SecureLevel)reader.ReadInt();
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        m_BookName = reader.ReadString();
+                int v = reader.ReadEncodedInt();
 
-                        m_Filter = new BOBFilter(reader);
-
-                        int count = reader.ReadEncodedInt();
-
-                        m_Entries = new ArrayList(count);
-
-                        for (int i = 0; i < count; ++i)
-                        {
-                            int v = reader.ReadEncodedInt();
-
-                            switch (v)
-                            {
-                                case 0:
-                                    m_Entries.Add(new BOBLargeEntry(reader));
-                                    break;
-                                case 1:
-                                    m_Entries.Add(new BOBSmallEntry(reader));
-                                    break;
-                            }
-                        }
-
+                switch (v)
+                {
+                    case 0:
+                        m_Entries.Add(new BOBLargeEntry(reader));
                         break;
-                    }
+                    case 1:
+                        m_Entries.Add(new BOBSmallEntry(reader));
+                        break;
+                }
             }
         }
 

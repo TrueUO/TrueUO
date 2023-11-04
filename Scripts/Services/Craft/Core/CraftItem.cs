@@ -2220,8 +2220,7 @@ namespace Server.Engines.Craft
 
         public static void RemoveResTarget(Mobile from)
         {
-            if (m_HasTarget.Contains(from))
-                m_HasTarget.Remove(from);
+            m_HasTarget.Remove(from);
         }
 
         public static void AddResTarget(Mobile from)

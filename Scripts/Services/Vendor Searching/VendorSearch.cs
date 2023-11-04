@@ -9,7 +9,6 @@ using Server.Targeting;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace Server.Engines.VendorSearching
@@ -55,8 +54,12 @@ namespace Server.Engines.VendorSearching
 
             switch (criteria.SortBy)
             {
-                case SortBy.LowToHigh: list = list.OrderBy(vi => vi.Price).ToList(); break;
-                case SortBy.HighToLow: list = list.OrderBy(vi => -vi.Price).ToList(); break;
+                case SortBy.LowToHigh:
+                    list.Sort((a, b) => a.Price.CompareTo(b.Price));
+                    break;
+                case SortBy.HighToLow:
+                    list.Sort((a, b) => b.Price.CompareTo(a.Price));
+                    break;
             }
 
             return list;
@@ -129,8 +132,12 @@ namespace Server.Engines.VendorSearching
 
             switch (criteria.SortBy)
             {
-                case SortBy.LowToHigh: list = list.OrderBy(vi => vi.Price).ToList(); break;
-                case SortBy.HighToLow: list = list.OrderBy(vi => -vi.Price).ToList(); break;
+                case SortBy.LowToHigh:
+                    list.Sort((a, b) => a.Price.CompareTo(b.Price));
+                    break;
+                case SortBy.HighToLow:
+                    list.Sort((a, b) => b.Price.CompareTo(a.Price));
+                    break;
             }
 
             return list;

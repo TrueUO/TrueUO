@@ -75,10 +75,7 @@ namespace Server.Engines.NewMagincia
 
         public void RemoveBid(Mobile from)
         {
-            if (m_Auctioners.ContainsKey(from))
-            {
-                m_Auctioners.Remove(from);
-            }
+            m_Auctioners.Remove(from);
         }
 
         public int GetHighestBid()

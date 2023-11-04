@@ -100,8 +100,7 @@ namespace Server.Spells.Bushido
             if (m_RegenTable.TryGetValue(m, out t))
                 t.Stop();
 
-            if (m_RegenTable.ContainsKey(m))
-                m_RegenTable.Remove(m);
+            m_RegenTable.Remove(m);
 
             BuffInfo.RemoveBuff(m, BuffIcon.AnticipateHit);
         }
