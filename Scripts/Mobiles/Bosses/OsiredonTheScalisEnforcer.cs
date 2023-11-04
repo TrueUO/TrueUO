@@ -96,8 +96,7 @@ namespace Server.Mobiles
 
         public void RemoveEel(Mobile eel)
         {
-            if (m_Eels.Contains(eel))
-                m_Eels.Remove(eel);
+            m_Eels.Remove(eel);
         }
 
         public override void DoDamageBoat(BaseBoat boat)

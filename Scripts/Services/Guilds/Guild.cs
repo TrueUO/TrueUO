@@ -235,10 +235,7 @@ namespace Server.Guilds
 
         public void RemoveGuild(Guild g)
         {
-            if (m_PendingMembers.Contains(g))
-            {
-                m_PendingMembers.Remove(g);
-            }
+            m_PendingMembers.Remove(g);
 
             if (Members.Contains(g)) //Sanity, just incase someone with a custom script adds a character to BOTH arrays
             {

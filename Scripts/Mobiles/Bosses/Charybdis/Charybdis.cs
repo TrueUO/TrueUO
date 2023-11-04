@@ -95,8 +95,7 @@ namespace Server.Mobiles
 
         public void RemoveTentacle(Mobile tent)
         {
-            if (m_Tentacles.Contains(tent))
-                m_Tentacles.Remove(tent);
+            m_Tentacles.Remove(tent);
         }
 
         public override void OnThink()

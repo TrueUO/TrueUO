@@ -72,8 +72,7 @@ namespace Server.Multis
 
         public void RemoveArrow(BoatTrackingArrow arrow)
         {
-            if (m_Arrows.Contains(arrow))
-                m_Arrows.Remove(arrow);
+            m_Arrows.Remove(arrow);
 
             if (m_Mobile == null)
                 return;

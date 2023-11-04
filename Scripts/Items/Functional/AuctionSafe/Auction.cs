@@ -531,8 +531,7 @@ namespace Server.Engines.Auction
             if (Viewers == null)
                 return;
 
-            if (Viewers.Contains(pm))
-                Viewers.Remove(pm);
+            Viewers.Remove(pm);
 
             if (Viewers.Count == 0)
             {

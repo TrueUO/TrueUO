@@ -172,8 +172,7 @@ namespace Server.Engines.NewMagincia
             if (plot.Stone != null && !plot.Stone.Deleted)
                 plot.Stone.Delete();
 
-            if (m_Plots.Contains(plot))
-                m_Plots.Remove(plot);
+            m_Plots.Remove(plot);
 
             if (plot.Map != null && m_FreeHousingZones.ContainsKey(plot.Map) && !m_FreeHousingZones[plot.Map].Contains(plot.Bounds))
                 m_FreeHousingZones[plot.Map].Add(plot.Bounds);

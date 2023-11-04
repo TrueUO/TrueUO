@@ -35,9 +35,7 @@ namespace Server.Engines.VvV
 
             VvVCity city = (VvVCity)id - 1;
 
-            if (ViceVsVirtueSystem.Instance.ExemptCities.Contains(city))
-                ViceVsVirtueSystem.Instance.ExemptCities.Remove(city);
-            else
+            if (!ViceVsVirtueSystem.Instance.ExemptCities.Remove(city))
                 ViceVsVirtueSystem.Instance.ExemptCities.Add(city);
 
             if (state.Gumps.Contains(this))
