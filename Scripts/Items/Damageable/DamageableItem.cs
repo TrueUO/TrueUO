@@ -335,8 +335,7 @@ namespace Server.Items
             if (m is BaseCreature creature && creature.GetMaster() is PlayerMobile)
                 m = creature.GetMaster();
 
-            if (!DamageStore.ContainsKey(m))
-                DamageStore[m] = 0;
+            DamageStore.TryAdd(m, 0);
 
             DamageStore[m] += damage;
         }

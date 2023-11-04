@@ -831,9 +831,9 @@ namespace Server.Engines.Points
         {
             Account a = m.Account as Account;
 
-            if (a != null && !PointsExchange.ContainsKey(a.Username))
+            if (a != null)
             {
-                PointsExchange[a.Username] = 0.0;
+                PointsExchange.TryAdd(a.Username, 0.0);
             }
 
             return a == null ? 0.0 : PointsExchange[a.Username];

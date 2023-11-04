@@ -88,8 +88,7 @@ namespace Server.Spells.SkillMasteries
             if (_Table == null)
                 _Table = new Dictionary<Mobile, int>();
 
-            if (!_Table.ContainsKey(defender))
-                _Table[defender] = 0;
+            _Table.TryAdd(defender, 0);
 
             _Table[defender] += Math.Min(_MaxAdd, damage);
 

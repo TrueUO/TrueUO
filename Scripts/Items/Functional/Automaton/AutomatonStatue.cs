@@ -42,9 +42,7 @@ namespace Server.Items
             if (Statues == null)
                 Statues = new Dictionary<KotlAutomaton, AutomatonStatue>();
 
-            if (!Statues.ContainsKey(automaton))
-                Statues[automaton] = statue;
-
+            Statues.TryAdd(automaton, statue);
         }
 
         public static void OnDeath(KotlAutomaton automaton)

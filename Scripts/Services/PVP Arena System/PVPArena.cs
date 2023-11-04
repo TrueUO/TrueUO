@@ -156,10 +156,7 @@ namespace Server.Engines.ArenaSystem
 
         public void AddPendingDuel(ArenaDuel duel)
         {
-            if (!PendingDuels.ContainsKey(duel))
-            {
-                PendingDuels[duel] = DateTime.UtcNow + PendingDuelExpirationTime;
-            }
+            PendingDuels.TryAdd(duel, DateTime.UtcNow + PendingDuelExpirationTime);
         }
 
         public void RemovePendingDuel(ArenaDuel duel, bool cancel = false)
