@@ -111,10 +111,7 @@ namespace Server.Engines.Quests.RitualQuest
 
                 if (quest != null)
                 {
-                    if (!PlayerOrder.ContainsKey(mobile))
-                    {
-                        PlayerOrder[mobile] = new PuzzleTile[Order.Length];
-                    }
+                    PlayerOrder.TryAdd(mobile, new PuzzleTile[Order.Length]);
 
                     PuzzleTile[] list = PlayerOrder[mobile];
 

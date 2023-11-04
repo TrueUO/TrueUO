@@ -202,8 +202,7 @@ namespace Server.Engines.Quests
 
         public static void AddZone(SpawnDefinition def)
         {
-            if (!m_Zones.ContainsKey(def.Zone))
-                m_Zones.Add(def.Zone, def);
+            m_Zones.TryAdd(def.Zone, def);
         }
 
         public void HandleDeath(BaseShipCaptain captain)

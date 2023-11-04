@@ -38,8 +38,7 @@ namespace Server.Engines.Points
 
             if (damager is PlayerMobile mobile && r.IsPartOf("Doom"))
             {
-                if (!DungeonPoints.ContainsKey(mobile))
-                    DungeonPoints[mobile] = 0;
+                DungeonPoints.TryAdd(mobile, 0);
 
                 int luck = Math.Max(0, mobile.RealLuck);
 
