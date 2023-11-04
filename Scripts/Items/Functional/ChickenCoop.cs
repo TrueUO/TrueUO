@@ -210,8 +210,7 @@ namespace Server.Items
                 pet.IsStabled = false;
                 pet.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully Happy
 
-                if (m_Stored.Contains(pet))
-                    m_Stored.Remove(pet);
+                m_Stored.Remove(pet);
 
                 from.SendLocalizedMessage(1042559); // Here you go... and good day to you!
             }

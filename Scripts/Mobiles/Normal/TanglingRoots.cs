@@ -95,8 +95,7 @@ namespace Server.Mobiles
 
         protected void RemoveCooldown(Mobile m)
         {
-            if (m_TangleCooldown.Contains(m))
-                m_TangleCooldown.Remove(m);
+            m_TangleCooldown.Remove(m);
         }
 
         protected void DoDamage(Mobile m)

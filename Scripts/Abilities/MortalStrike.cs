@@ -68,8 +68,7 @@ namespace Server.Items
 
                 Timer.DelayCall(TimeSpan.FromSeconds(8), () =>
                     {
-                        if (m_EffectReduction.Contains(m))
-                            m_EffectReduction.Remove(m);
+                        m_EffectReduction.Remove(m);
                     });
             }
         }

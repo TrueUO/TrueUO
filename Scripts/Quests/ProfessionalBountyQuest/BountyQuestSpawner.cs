@@ -219,8 +219,7 @@ namespace Server.Engines.Quests
         {
             SpawnZone zone = pirate.Zone;
 
-            if (m_ActiveZones[zone].Contains(pirate))
-                m_ActiveZones[zone].Remove(pirate);
+            m_ActiveZones[zone].Remove(pirate);
 
             m_Bounties.Remove(pirate);
         }
@@ -229,8 +228,7 @@ namespace Server.Engines.Quests
         {
             SpawnZone zone = merchant.Zone;
 
-            if (m_ActiveZones[zone].Contains(merchant))
-                m_ActiveZones[zone].Remove(merchant);
+            m_ActiveZones[zone].Remove(merchant);
         }
 
         public void OnTick()

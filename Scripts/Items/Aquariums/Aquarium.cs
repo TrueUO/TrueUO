@@ -1766,10 +1766,7 @@ namespace Server.Items
 
         public static void RemoveTimer(Aquarium aq)
         {
-            if (Aquariums.Contains(aq))
-            {
-                Aquariums.Remove(aq);
-            }
+            Aquariums.Remove(aq);
 
             if (Aquariums.Count == 0 && Instance != null)
             {

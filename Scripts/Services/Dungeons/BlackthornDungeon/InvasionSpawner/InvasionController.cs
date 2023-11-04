@@ -319,10 +319,7 @@ namespace Server.Engines.Blackthorn
             {
                 foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
                 {
-                    if (kvp.Value.Contains(bc))
-                    {
-                        kvp.Value.Remove(bc);
-                    }
+                    kvp.Value.Remove(bc);
 
                     int count = 0;
 
