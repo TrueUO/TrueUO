@@ -973,7 +973,7 @@ namespace Server.Items
                                 int min, max;
 
                                 GetMinMaxBudget(level, deco, out min, out max);
-                                RunicReforging.GenerateRandomItem(deco, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map);
+                                RunicReforging.GenerateRandomTreasureMapItem(deco, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map, from);
                             }
                         }
 
@@ -1022,7 +1022,7 @@ namespace Server.Items
 
                 if (item != null)
                 {
-                    RunicReforging.GenerateRandomItem(item, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map);
+                    RunicReforging.GenerateRandomTreasureMapItem(item, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map, from);
                     chest.DropItem(item);
                 }
             }

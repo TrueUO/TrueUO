@@ -169,10 +169,7 @@ namespace Server.Engines.Shadowguard
             if (Table == null)
                 return;
 
-            if (Table.ContainsKey(m))
-            {
-                Table.Remove(m);
-            }
+            Table.Remove(m);
 
             if (Table.Count == 0)
                 Table = null;

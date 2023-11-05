@@ -238,10 +238,7 @@ namespace Server.Engines.Quests
 
         public static void RemovePending(Mobile m)
         {
-            if (m_Pending.ContainsKey(m))
-            {
-                m_Pending.Remove(m);
-            }
+            m_Pending.Remove(m);
         }
 
         public static bool IsPending(Mobile m)

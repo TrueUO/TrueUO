@@ -673,10 +673,9 @@ namespace Server.Mobiles
         public static Type[] SlotLowerables => _SlotLowerables;
         private static readonly Type[] _SlotLowerables =
         {
-            typeof(Nightmare), typeof(Najasaurus), typeof(RuneBeetle), typeof(GreaterDragon), typeof(FrostDragon),
-            typeof(WhiteWyrm), typeof(Reptalon), typeof(DragonTurtleHatchling), typeof(Phoenix), typeof(FrostMite),
-            typeof(DireWolf), typeof(Skree), typeof(HighPlainsBoura), typeof(LesserHiryu), typeof(DragonWolf),
-            typeof(BloodFox)
+            typeof(Nightmare), typeof(Najasaurus), typeof(RuneBeetle), typeof(GreaterDragon), typeof(WhiteWyrm),
+            typeof(Reptalon), typeof(DragonTurtleHatchling), typeof(Phoenix), typeof(FrostMite), typeof(Skree),
+            typeof(HighPlainsBoura), typeof(LesserHiryu), typeof(DragonWolf), typeof(BloodFox)
         };
 
         private bool CanLowerSlot()
@@ -1568,14 +1567,34 @@ namespace Server.Mobiles
             return true;
         }
 
-        private static readonly Type[] m_AnimateDeadTypes =
+        private static readonly Type[] _AnimateDeadTypes =
         {
             typeof(MoundOfMaggots), typeof(HellSteed), typeof(SkeletalMount), typeof(WailingBanshee), typeof(Wraith),
             typeof(SkeletalDragon), typeof(LichLord), typeof(FleshGolem), typeof(Lich), typeof(SkeletalKnight),
             typeof(BoneKnight), typeof(Mummy), typeof(SkeletalMage), typeof(BoneMagi), typeof(PatchworkSkeleton)
         };
 
-        public virtual bool IsAnimatedDead => Summoned && m_AnimateDeadTypes.Any(t => t == GetType());
+        public virtual bool IsAnimatedDead
+        {
+            get
+            {
+                if (!Summoned)
+                {
+                    return false;
+                }
+
+                Type type = GetType();
+                foreach (Type t in _AnimateDeadTypes)
+                {
+                    if (t == type)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
 
         public virtual bool IsNecroFamiliar
         {
@@ -6210,8 +6229,8 @@ namespace Server.Mobiles
             if (Alive && !IsHealing && !BardPacified)
             {
                 Mobile owner = ControlMaster;
-
-                if (owner != null && tc >= m_NextHealOwnerTime && CanBeBeneficial(owner, true, true) &&
+                
+                if (owner != null && owner.Alive && tc >= m_NextHealOwnerTime && CanBeBeneficial(owner, true, true) &&
                     owner.Map == Map && InRange(owner, 2) && InLOS(owner) && (owner.Poisoned || owner.Hits < .78 * owner.HitsMax))
                 {
                     HealStart(owner);
@@ -6866,20 +6885,24 @@ namespace Server.Mobiles
 
             Mobile combatant = Combatant as Mobile;
 
-            if (combatant != null && CanDiscord && !Discordance.UnderEffects(combatant) && tc >= m_NextDiscord && 0.33 > Utility.RandomDouble())
+            if (combatant != null && combatant.Alive)
             {
-                DoDiscord();
-                m_NextDiscord = tc + Utility.RandomMinMax(5000, 12500);
-            }
-            else if (combatant != null && CanPeace && !Peacemaking.UnderEffects(combatant) && tc >= m_NextPeace && 0.33 > Utility.RandomDouble())
-            {
-                DoPeace();
-                m_NextPeace = tc + Utility.RandomMinMax(5000, 12500);
-            }
-            else if (combatant != null && CanProvoke && tc >= m_NextProvoke && 0.33 > Utility.RandomDouble())
-            {
-                DoProvoke();
-                m_NextProvoke = tc + Utility.RandomMinMax(5000, 12500);
+                if (CanDiscord && !Discordance.UnderEffects(combatant) && tc >= m_NextDiscord && 0.33 > Utility.RandomDouble())
+                {
+                    DoDiscord();
+                    m_NextDiscord = tc + Utility.RandomMinMax(5000, 12500);
+                }
+                else if (CanPeace && !Peacemaking.UnderEffects(combatant) && tc >= m_NextPeace && 0.33 > Utility.RandomDouble())
+                {
+                    DoPeace();
+                    m_NextPeace = tc + Utility.RandomMinMax(5000, 12500);
+                }
+                else if (CanProvoke && tc >= m_NextProvoke && 0.33 > Utility.RandomDouble())
+                {
+                    DoProvoke();
+                    m_NextProvoke = tc + Utility.RandomMinMax(5000, 12500);
+                }
+
             }
 
             if (combatant != null && TeleportsTo && tc >= m_NextTeleport)

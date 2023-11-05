@@ -39,8 +39,7 @@ namespace Server.Engines.Points
 
             if (damager is PlayerMobile mobile && r.IsPartOf("Khaldun"))
             {
-                if (!DungeonPoints.ContainsKey(mobile))
-                    DungeonPoints[mobile] = 0;
+                DungeonPoints.TryAdd(mobile, 0);
 
                 int luck = Math.Max(0, mobile.RealLuck);
 
@@ -58,7 +57,7 @@ namespace Server.Engines.Points
 
                     if (i != null)
                     {
-                        RunicReforging.GenerateRandomItem(i, mobile, Math.Max(100, RunicReforging.GetDifficultyFor(bc)), RunicReforging.GetLuckForKiller(bc), ReforgedPrefix.None, ReforgedSuffix.Khaldun);
+                        RunicReforging.GenerateRandomItem(i, mobile, Math.Max(100, RunicReforging.GetDifficultyFor(bc)), LootPack.GetLuckChance(mobile.RealLuck), ReforgedPrefix.None, ReforgedSuffix.Khaldun);
 
                         mobile.PlaySound(0x5B4);
                         mobile.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special artifact has been bestowed on you.

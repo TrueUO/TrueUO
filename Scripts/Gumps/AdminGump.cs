@@ -269,7 +269,7 @@ namespace Server.Gumps
                         AddLabel(150, 310, LabelHue, FormatByteAmount(GC.GetTotalMemory(false)));
 
                         AddLabel(20, 330, LabelHue, "Framework:");
-                        AddLabel(150, 330, LabelHue, Environment.Version.ToString());
+                        AddLabel(150, 330, LabelHue, $".NET {Environment.Version}");
 
                         AddLabel(20, 350, LabelHue, "Operating System: ");
                         string os = Environment.OSVersion.ToString();

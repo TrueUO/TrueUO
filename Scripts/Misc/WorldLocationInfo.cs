@@ -1,4 +1,3 @@
-using System.Linq;
 using Server.Commands;
 using Server.Regions;
 
@@ -179,7 +178,7 @@ namespace Server
                 return "an unknown location";
             }
 
-            var r = Region.Find(p, map);
+            Region r = Region.Find(p, map);
 		
             if (r != null && r.Name != null)
 	        {
@@ -205,9 +204,12 @@ namespace Server
 
             foreach (WorldLocationInfo info in infos)
             {
-                if (info.m_Bounds.Any(rec => rec.Contains(p)))
+                foreach (Rectangle2D rec in info.m_Bounds) // Iterate over each Rectangle in m_Bounds
                 {
-                    return info.m_RegionName;
+                    if (rec.Contains(p)) // Check if the Rectangle contains the point p
+                    {
+                        return info.m_RegionName;
+                    }
                 }
             }
 

@@ -276,8 +276,7 @@ namespace Server.Items
 
         public static void AddToCooldown(Mobile from)
         {
-            if (m_Table.ContainsKey(from))
-                m_Table.Remove(from);
+            m_Table.Remove(from);
 
             from.Delta(MobileDelta.WeaponDamage);
 

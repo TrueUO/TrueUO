@@ -24,17 +24,14 @@ namespace Server.Engines.BulkOrders
 
             int height = 0;
 
-            if (BulkOrderSystem.NewSystemEnabled)
-            {
-                if (deed.RequireExceptional || deed.Material != BulkMaterialType.None)
-                    height += 24;
+            if (deed.RequireExceptional || deed.Material != BulkMaterialType.None)
+                height += 24;
 
-                if (deed.RequireExceptional)
-                    height += 24;
+            if (deed.RequireExceptional)
+                height += 24;
 
-                if (deed.Material != BulkMaterialType.None)
-                    height += 24;
-            }
+            if (deed.Material != BulkMaterialType.None)
+                height += 24;
 
             AddBackground(50, 10, 455, 245 + height, 5054);
             AddImageTiled(58, 20, 438, 226 + height, 2624);
@@ -78,7 +75,7 @@ namespace Server.Engines.BulkOrders
                 y += 24;
             }
 
-            if (from is PlayerMobile mobile && BulkOrderSystem.NewSystemEnabled)
+            if (from is PlayerMobile mobile)
             {
                 BODContext c = BulkOrderSystem.GetContext(mobile);
 
@@ -102,13 +99,7 @@ namespace Server.Engines.BulkOrders
                 AddHtmlLocalized(160, y, 300, 20, 1157304, 0x7FFF, false, false); // Combine this deed with contained items.
                 y += 24;
             }
-            else
-            {
-                AddButton(125, y, 4005, 4007, 2, GumpButtonType.Reply, 0);
-                AddHtmlLocalized(160, y, 300, 20, 1045154, 0x7FFF, false, false); // Combine this deed with the item requested.
-                y += 24;
-            }
-
+           
             AddButton(125, y, 4005, 4007, 1, GumpButtonType.Reply, 0);
             AddHtmlLocalized(160, y, 120, 20, 1011441, 0x7FFF, false, false); // EXIT
         }

@@ -108,8 +108,7 @@ namespace Server.Items
                 {
                     i.Delete();
 
-                    if (m_Instancing.ContainsKey(i))
-                        m_Instancing.Remove(i);
+                    m_Instancing.Remove(i);
                 }
             }
 

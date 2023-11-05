@@ -2639,43 +2639,20 @@ namespace Server
 
 			writer.Write((int)flags);
 
-			/* begin last moved time optimization */
-			long ticks = m_LastMovedTime.Ticks;
-			long now = DateTime.UtcNow.Ticks;
+            /* begin last moved time optimization */
+            long ticks = m_LastMovedTime.Ticks;
+            long now = DateTime.UtcNow.Ticks;
 
-			TimeSpan d;
+            // Calculate the time difference directly without the need for exception handling
+            TimeSpan d = new TimeSpan(Math.Max(0, ticks - now));
 
-			try
-			{
-				d = new TimeSpan(ticks - now);
-			}
-			catch
-			{
-				if (ticks < now)
-				{
-					d = TimeSpan.MaxValue;
-				}
-				else
-				{
-					d = TimeSpan.MaxValue;
-				}
-			}
+            // No need to catch exceptions or do clamping, as TimeSpan.TotalMinutes is always a valid double
+            int minutes = (int)-d.TotalMinutes;
 
-			double minutes = -d.TotalMinutes;
+            writer.WriteEncodedInt(minutes);
+            /* end */
 
-			if (minutes < int.MinValue)
-			{
-				minutes = int.MinValue;
-			}
-			else if (minutes > int.MaxValue)
-			{
-				minutes = int.MaxValue;
-			}
-
-			writer.WriteEncodedInt((int)minutes);
-			/* end */
-
-			if (GetSaveFlag(flags, SaveFlag.Direction))
+            if (GetSaveFlag(flags, SaveFlag.Direction))
 			{
 				writer.Write((byte)m_Direction);
 			}
@@ -6246,12 +6223,9 @@ namespace Server
 
 				if (timer != null)
 				{
-					if (timer.TimerRegistry.ContainsKey(socket))
-					{
-						timer.TimerRegistry.Remove(socket);
-					}
+                    timer.TimerRegistry.Remove(socket);
 
-					if (timer.TimerRegistry.Count == 0)
+                    if (timer.TimerRegistry.Count == 0)
 					{
 						timer.Stop();
 						Instance = null;

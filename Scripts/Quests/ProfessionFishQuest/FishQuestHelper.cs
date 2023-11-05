@@ -269,10 +269,7 @@ namespace Server.Engines.Quests
             List<FishMonger> mongers = new List<FishMonger>(m_Mongers);
 
             //First, remove quester
-            if (mongers.Contains(monger))
-            {
-                mongers.Remove(monger);
-            }
+            mongers.Remove(monger);
 
             //Next, remove mongers from other facets in same region as quest giver
             for (var index = 0; index < m_Mongers.Count; index++)
@@ -322,7 +319,7 @@ namespace Server.Engines.Quests
             {
                 BaseBoat boat = BaseBoat.Boats[index];
 
-                if (boat.Owner == from && !boat.IsRowBoat)
+                if (boat.Owner == from && !boat.IsRowBoat && boat.Map != Map.Internal)
                 {
                     boats.Add(boat);
                 }

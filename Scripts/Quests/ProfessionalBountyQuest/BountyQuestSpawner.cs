@@ -202,8 +202,7 @@ namespace Server.Engines.Quests
 
         public static void AddZone(SpawnDefinition def)
         {
-            if (!m_Zones.ContainsKey(def.Zone))
-                m_Zones.Add(def.Zone, def);
+            m_Zones.TryAdd(def.Zone, def);
         }
 
         public void HandleDeath(BaseShipCaptain captain)
@@ -219,19 +218,16 @@ namespace Server.Engines.Quests
         {
             SpawnZone zone = pirate.Zone;
 
-            if (m_ActiveZones[zone].Contains(pirate))
-                m_ActiveZones[zone].Remove(pirate);
+            m_ActiveZones[zone].Remove(pirate);
 
-            if (m_Bounties.ContainsKey(pirate))
-                m_Bounties.Remove(pirate);
+            m_Bounties.Remove(pirate);
         }
 
         public void RemoveMerchant(BaseShipCaptain merchant)
         {
             SpawnZone zone = merchant.Zone;
 
-            if (m_ActiveZones[zone].Contains(merchant))
-                m_ActiveZones[zone].Remove(merchant);
+            m_ActiveZones[zone].Remove(merchant);
         }
 
         public void OnTick()
@@ -502,7 +498,7 @@ namespace Server.Engines.Quests
                             steaks.Hue = 2302;
                             break;
                         case 4:
-                            steaks.Name = "Spiced Salmon";
+                            steaks.Name = "Smoked Cod";
                             steaks.Hue = 1637;
                             break;
                     }

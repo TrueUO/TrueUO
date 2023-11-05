@@ -147,10 +147,7 @@ namespace Server.Engines.ArenaSystem
                 {
                     ArenaDuel duel = _Remove[index];
 
-                    if (PendingDuels.ContainsKey(duel))
-                    {
-                        PendingDuels.Remove(duel);
-                    }
+                    PendingDuels.Remove(duel);
                 }
 
                 _Remove.Clear();
@@ -159,10 +156,7 @@ namespace Server.Engines.ArenaSystem
 
         public void AddPendingDuel(ArenaDuel duel)
         {
-            if (!PendingDuels.ContainsKey(duel))
-            {
-                PendingDuels[duel] = DateTime.UtcNow + PendingDuelExpirationTime;
-            }
+            PendingDuels.TryAdd(duel, DateTime.UtcNow + PendingDuelExpirationTime);
         }
 
         public void RemovePendingDuel(ArenaDuel duel, bool cancel = false)
@@ -208,10 +202,7 @@ namespace Server.Engines.ArenaSystem
 
         public void TryBeginDuel(ArenaDuel duel)
         {
-            if (PendingDuels.ContainsKey(duel))
-            {
-                PendingDuels.Remove(duel);
-            }
+            PendingDuels.Remove(duel);
 
             if (CurrentDuel == null && BookedDuels.Count == 0)
             {

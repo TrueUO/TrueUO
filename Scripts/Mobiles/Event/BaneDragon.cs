@@ -5,7 +5,7 @@ namespace Server.Mobiles
 {
     public class BaneDragon : BaseMount
     {
-        public static readonly int MaxPower = 10;
+        private const int _MaxPower = 10;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int PowerLevel { get; set; }
@@ -83,15 +83,11 @@ namespace Server.Mobiles
         {
             if (dropped is BowlOfBlackrockStew)
             {
-                if (PowerLevel >= MaxPower)
-                {
-                    from.SendLocalizedMessage(1115755); // The creature looks at you strangely and shakes its head no.
-                }
-                else
+                if (PowerLevel < _MaxPower)
                 {
                     PowerLevel++;
 
-                    if (PowerLevel >= MaxPower)
+                    if (PowerLevel >= _MaxPower)
                     {
                         from.SendLocalizedMessage(1115753); // Your bane dragon is returned to maximum power by this stew.
                     }
@@ -102,6 +98,13 @@ namespace Server.Mobiles
 
                     return base.CheckFeed(from, dropped);
                 }
+
+                if (PowerLevel >= _MaxPower)
+                {
+                    from.SendLocalizedMessage(1115753); // Your bane dragon is returned to maximum power by this stew.
+                }
+
+                return base.CheckFeed(from, dropped);
             }
 
             return false;
@@ -151,16 +154,10 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 1:
-                    PowerLevel = reader.ReadInt();
-                    PowerDecay = reader.ReadInt();
-                    break;
-                case 0: break;
-            }
+            PowerLevel = reader.ReadInt();
+            PowerDecay = reader.ReadInt();
         }
     }
 }

@@ -67,7 +67,20 @@ namespace Server.Items
             list.Add(1060584, m_UsesRemaining.ToString()); // uses remaining: ~1_val~
 
             if (m_Poison != null && m_PoisonCharges > 0)
-                list.Add(1062412 + m_Poison.Level, m_PoisonCharges.ToString());
+            {
+                if (m_Poison == Poison.Parasitic)
+                {
+                    list.Add(1072852, m_PoisonCharges.ToString()); // parasitic poison charges: ~1_val~
+                }
+                else if (m_Poison == Poison.DarkGlow)
+                {
+                    list.Add(1072853, m_PoisonCharges.ToString()); // darkglow poison charges: ~1_val~
+                }
+                else
+                {
+                    list.Add(1062412 + m_Poison.Level, m_PoisonCharges.ToString());
+                }
+            }
         }
 
         public override void Serialize(GenericWriter writer)

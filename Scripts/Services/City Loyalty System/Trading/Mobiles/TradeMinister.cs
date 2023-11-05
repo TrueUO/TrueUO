@@ -192,10 +192,7 @@ namespace Server.Engines.CityLoyalty
 
             public void StopTimer()
             {
-                if (List.ContainsKey(_Mobile))
-                {
-                    List.Remove(_Mobile);
-                }
+                List.Remove(_Mobile);
 
                 Stop();
             }

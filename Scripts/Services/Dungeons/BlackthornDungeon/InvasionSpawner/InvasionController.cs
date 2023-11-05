@@ -319,10 +319,7 @@ namespace Server.Engines.Blackthorn
             {
                 foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
                 {
-                    if (kvp.Value.Contains(bc))
-                    {
-                        kvp.Value.Remove(bc);
-                    }
+                    kvp.Value.Remove(bc);
 
                     int count = 0;
 
@@ -467,7 +464,7 @@ namespace Server.Engines.Blackthorn
 
             if (i != null)
             {
-                RunicReforging.GenerateRandomItem(i, damager, Utility.RandomMinMax(700, 800), damager is PlayerMobile pm ? pm.RealLuck : 0, ReforgedPrefix.None, ReforgedSuffix.Minax);
+                RunicReforging.GenerateRandomItem(i, damager, Utility.RandomMinMax(700, 800), LootPack.GetLuckChance(damager is PlayerMobile pm ? pm.RealLuck : 0), ReforgedPrefix.None, ReforgedSuffix.Minax);
             }
 
             return i;

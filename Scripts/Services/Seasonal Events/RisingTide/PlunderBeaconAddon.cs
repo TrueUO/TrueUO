@@ -1,9 +1,7 @@
 using Server.Mobiles;
 using Server.Engines.RisingTide;
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -19,7 +17,22 @@ namespace Server.Items
         public Dictionary<BaseCreature, bool> Spawn { get; set; }
         public List<MannedCannon> Cannons { get; set; }
 
-        public bool CannonsOperational => Crew.Any(c => c.Alive && !c.Deleted);
+        public bool CannonsOperational
+        {
+            get
+            {
+                foreach (BaseCreature crewMember in Crew)
+                {
+                    if (crewMember.Alive && !crewMember.Deleted)
+                    {
+                        return true; // Return true as soon as we find a crew member who is alive and not deleted.
+                    }
+                }
+
+                return false; // Return false if no such crew member is found.
+            }
+        }
+
         public bool BeaconVulnerable => !CannonsOperational;
 
         public override BaseAddonDeed Deed => null;

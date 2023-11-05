@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.ArenaSystem
 {
@@ -129,7 +128,19 @@ namespace Server.Engines.ArenaSystem
         public ArenaTeam TeamOrder => Teams != null && Teams.Count > 0 ? Teams[0] : null;
         public ArenaTeam TeamChaos => Teams != null && Teams.Count > 1 ? Teams[1] : null;
 
-        public int ParticipantCount => Teams.Sum(t => t.Count);
+        public int ParticipantCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (ArenaTeam team in Teams)
+                {
+                    count += team.Count; // Sum up the count property of each team in Teams.
+                }
+
+                return count;
+            }
+        }
 
         public ArenaDuel(PVPArena arena, PlayerMobile host)
         {
