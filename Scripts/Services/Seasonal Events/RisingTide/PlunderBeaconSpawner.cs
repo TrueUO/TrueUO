@@ -38,10 +38,7 @@ namespace Server.Items
 
             foreach (KeyValuePair<PlunderZone, List<PlunderBeaconAddon>> kvp in Spawner.PlunderBeacons)
             {
-                if (kvp.Value.Contains(beacon))
-                {
-                    kvp.Value.Remove(beacon);
-                }
+                kvp.Value.Remove(beacon);
             }
         }
 

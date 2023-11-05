@@ -165,8 +165,7 @@ namespace Server.Mobiles
 
         public static void RemoveCrate(ShipCrate crate)
         {
-            if (m_Crates.Contains(crate))
-                m_Crates.Remove(crate);
+            m_Crates.Remove(crate);
         }
 
         private bool CanDropCrate(ref Point3D pnt, Map map)

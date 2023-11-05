@@ -202,8 +202,7 @@ namespace Server.Engines.Quests
 
         public static void AddZone(SpawnDefinition def)
         {
-            if (!m_Zones.ContainsKey(def.Zone))
-                m_Zones.Add(def.Zone, def);
+            m_Zones.TryAdd(def.Zone, def);
         }
 
         public void HandleDeath(BaseShipCaptain captain)
@@ -219,8 +218,7 @@ namespace Server.Engines.Quests
         {
             SpawnZone zone = pirate.Zone;
 
-            if (m_ActiveZones[zone].Contains(pirate))
-                m_ActiveZones[zone].Remove(pirate);
+            m_ActiveZones[zone].Remove(pirate);
 
             m_Bounties.Remove(pirate);
         }
@@ -229,8 +227,7 @@ namespace Server.Engines.Quests
         {
             SpawnZone zone = merchant.Zone;
 
-            if (m_ActiveZones[zone].Contains(merchant))
-                m_ActiveZones[zone].Remove(merchant);
+            m_ActiveZones[zone].Remove(merchant);
         }
 
         public void OnTick()

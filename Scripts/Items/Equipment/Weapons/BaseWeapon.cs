@@ -2402,11 +2402,14 @@ namespace Server.Items
             }
 
             #region Bracers Of Alchemical Devastation
-            var arms = attacker.FindItemOnLayer(Layer.Arms);
+            Item arms = attacker.FindItemOnLayer(Layer.Arms);
 
-            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms != null && (arms is BracersofAlchemicalDevastation || arms is GargishBracersofAlchemicalDevastation))
+            if (arms is BracersofAlchemicalDevastation or GargishBracersofAlchemicalDevastation && 0.35 > Utility.RandomDouble())
             {
-                DoLightning(attacker, defender);
+                if (attacker.FindItemOnLayer(Layer.OneHanded) == null && (attacker.FindItemOnLayer(Layer.TwoHanded) == null || attacker.FindItemOnLayer(Layer.TwoHanded) is BaseShield))
+                {
+                    DoLightning(attacker, defender);
+                }
             }
             #endregion
 

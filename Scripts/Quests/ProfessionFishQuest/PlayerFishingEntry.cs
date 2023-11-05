@@ -189,8 +189,7 @@ namespace Server.Engines.Quests
                 else
                     m_HaveFished.Add(index, 15);
 
-                if (!m_TimesFished.ContainsKey(index))
-                    m_TimesFished[index] = 0;
+                m_TimesFished.TryAdd(index, 0);
 
                 m_TimesFished[index]++;
             }

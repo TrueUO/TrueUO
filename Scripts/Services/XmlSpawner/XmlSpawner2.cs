@@ -2033,10 +2033,7 @@ namespace Server.Mobiles
             if (GlobalSectorTable[s.Owner.MapID].TryGetValue(s, out spawnerlist) && spawnerlist != null)
             {
                 //List<XmlSpawner> spawnerlist = GlobalSectorTable[s.Owner.MapID][s];
-                if (spawnerlist.Contains(spawner))
-                {
-                    spawnerlist.Remove(spawner);
-                }
+                spawnerlist.Remove(spawner);
             }
         }
 
@@ -11173,10 +11170,7 @@ namespace Server.Mobiles
 
         public void RemoveSpawnObject(SpawnObject so)
         {
-            if (m_SpawnObjects.Contains(so))
-            {
-                m_SpawnObjects.Remove(so);
-            }
+            m_SpawnObjects.Remove(so);
         }
 
         #endregion

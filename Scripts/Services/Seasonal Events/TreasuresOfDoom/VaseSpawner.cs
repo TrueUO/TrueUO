@@ -53,10 +53,7 @@ namespace Server.Engines.TreasuresOfDoom
         {
             if (Vases != null)
             {
-                if (Vases.Contains(vase))
-                {
-                    Vases.Remove(vase);
-                }
+                Vases.Remove(vase);
 
                 if (TreasuresOfDoomEvent.Instance.Running && Vases.Count < VaseCount)
                 {

@@ -294,7 +294,6 @@ namespace Server.Engines.Craft
                 consumMana = consume;
             }
 
-
             if (Stam > 0 && from.Stam < Stam)
             {
                 message = "You lack the required stamina to make that.";
@@ -1492,7 +1491,7 @@ namespace Server.Engines.Craft
             return GetSuccessChance(from, typeRes, craftSystem, gainSkills, ref allRequiredSkills, 1);
         }
 
-        public double GetSuccessChance(Mobile from, Type typeRes, CraftSystem craftSystem, bool gainSkills, ref bool allRequiredSkills, int maxAmount)
+        public double GetSuccessChance(Mobile from, Type typeRes, CraftSystem craftSystem, bool gainSkills, ref bool allRequiredSkills, int maxAmount, bool bulkOrderCheck = false)
         {
             if (ForceSuccessChance > -1)
             {
@@ -1509,25 +1508,36 @@ namespace Server.Engines.Craft
             {
                 CraftSkill craftSkill = Skills.GetAt(i);
 
-                double minSkill = craftSkill.MinSkill - MinSkillOffset;
-                double maxSkill = craftSkill.MaxSkill;
-                double valSkill = from.Skills[craftSkill.SkillToMake].Value;
-
-                if (valSkill < minSkill)
+                // Small Carpentry Instrument BODs should not require the music skill to obtain.
+                // Confirmed on OSI on 9/18/2021
+                // It seems to be the only skill that acts this way. Is there a better way to do this?
+                if (bulkOrderCheck && craftSkill.SkillToMake == SkillName.Musicianship)
                 {
-                    allRequiredSkills = false;
+                    craftSkill = null;
                 }
 
-                if (craftSkill.SkillToMake == craftSystem.MainSkill)
+                if (craftSkill != null)
                 {
-                    minMainSkill = minSkill;
-                    maxMainSkill = maxSkill;
-                    valMainSkill = valSkill;
-                }
+                    double minSkill = craftSkill.MinSkill - MinSkillOffset;
+                    double maxSkill = craftSkill.MaxSkill;
+                    double valSkill = from.Skills[craftSkill.SkillToMake].Value;
 
-                if (gainSkills && !UseAllRes) // This is a passive check. Success chance is entirely dependent on the main skill
-                {
-                    from.CheckSkill(craftSkill.SkillToMake, minSkill, maxSkill);
+                    if (valSkill < minSkill)
+                    {
+                        allRequiredSkills = false;
+                    }
+
+                    if (craftSkill.SkillToMake == craftSystem.MainSkill)
+                    {
+                        minMainSkill = minSkill;
+                        maxMainSkill = maxSkill;
+                        valMainSkill = valSkill;
+                    }
+
+                    if (gainSkills && !UseAllRes) // This is a passive check. Success chance is entirely dependent on the main skill
+                    {
+                        from.CheckSkill(craftSkill.SkillToMake, minSkill, maxSkill);
+                    }
                 }
             }
 
@@ -2220,8 +2230,7 @@ namespace Server.Engines.Craft
 
         public static void RemoveResTarget(Mobile from)
         {
-            if (m_HasTarget.Contains(from))
-                m_HasTarget.Remove(from);
+            m_HasTarget.Remove(from);
         }
 
         public static void AddResTarget(Mobile from)
