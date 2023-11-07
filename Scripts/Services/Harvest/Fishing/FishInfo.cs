@@ -23,7 +23,7 @@ namespace Server.Items
             m_FishInfos.Add(new FishInfo(2579, typeof(GreatBarracuda), 1116100, "Felucca", true, RareChance, 89.0)); //Confirmed
             m_FishInfos.Add(new FishInfo(2959, typeof(HolyMackerel), 1116087, "Gravewater Lake", false, RareChance, 102.9)); //Confirmed
             m_FishInfos.Add(new FishInfo(2075, typeof(LavaFish), 1116096, "AbyssAndUnderworld", false, RareChance, 110.0)); //Confirmed
-            m_FishInfos.Add(new FishInfo(2075, typeof(ReaperFish), 1116094, "Doom", false, RareChance, 98.1));  //Confirmed
+            m_FishInfos.Add(new FishInfo(2075, typeof(ReaperFish), 1116094, "DoomAndGauntlet", false, RareChance, 98.1));  //Confirmed
             m_FishInfos.Add(new FishInfo(2539, typeof(SpiderCrab), 1116367, "Terathan Keep", false, RareChance, 103.1)); //Confirmed
             m_FishInfos.Add(new FishInfo(2558, typeof(StoneCrab), 1116365, "T2A", true, RareChance, 103.1)); //Confirmed
             m_FishInfos.Add(new FishInfo(43, typeof(SummerDragonfish), 1116091, "Destard", false, RareChance, 105.2));  //Confirmed
@@ -35,7 +35,7 @@ namespace Server.Items
             m_FishInfos.Add(new FishInfo(2500, typeof(BlackMarlin), 1116099, "Felucca", true, LegendaryChance, 110.1)); //Confirmed
             m_FishInfos.Add(new FishInfo(2117, typeof(BloodLobster), 1116370, "Shame", false, LegendaryChance, 115.1)); //Confirmed
             m_FishInfos.Add(new FishInfo(0, typeof(BlueMarlin), 1116097, "Trammel", true, LegendaryChance, 105.0)); //Confirmed
-            m_FishInfos.Add(new FishInfo(1777, typeof(DreadLobster), 1116371, "Doom", false, LegendaryChance, 115.1));
+            m_FishInfos.Add(new FishInfo(1777, typeof(DreadLobster), 1116371, "DoomAndGauntlet", false, LegendaryChance, 115.1));
             m_FishInfos.Add(new FishInfo(1158, typeof(DungeonPike), 1116107, "Terathan Keep", false, LegendaryChance, 105.1)); //Confirmed
             m_FishInfos.Add(new FishInfo(2576, typeof(GiantSamuraiFish), 1116103, "Tokuno", true, LegendaryChance, 110.1)); //Confirmed
             m_FishInfos.Add(new FishInfo(1281, typeof(GoldenTuna), 1116102, "Tokuno", true, LegendaryChance, 105.0));  //Confirmed
@@ -426,6 +426,12 @@ namespace Server.Items
                                 break;
                             case "AbyssAndUnderworld":
                                 if (fisherMap == Map.TerMur && (Region.Find(fisherLoc, fisherMap).IsPartOf("Abyss") || Region.Find(fisherLoc, fisherMap).IsPartOf("Underworld")))
+                                {
+                                    list.Add(info);
+                                }
+                                break;
+                            case "DoomAndGauntlet":
+                                if (fisherMap == Map.Malas && (Region.Find(fisherLoc, fisherMap).IsPartOf("Doom") || Region.Find(fisherLoc, fisherMap).IsPartOf("Doom Gauntlet")))
                                 {
                                     list.Add(info);
                                 }
