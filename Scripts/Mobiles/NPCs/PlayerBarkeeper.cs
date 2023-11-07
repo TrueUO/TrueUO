@@ -312,14 +312,14 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    string keyword = rumor.Keyword;
+                    string keyword = rumor.Keyword.ToLower();
 
-                    if (keyword == null || (keyword = keyword.Trim()).Length == 0)
+                    if ((keyword = keyword.Trim()).Length == 0)
                     {
                         continue;
                     }
 
-                    if (Insensitive.Equals(keyword, e.Speech))
+                    if (e.Speech.ToLower().Contains(keyword))
                     {
                         string message = rumor.Message;
 
