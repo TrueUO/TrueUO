@@ -623,7 +623,7 @@ namespace Server.Items
                 {
                     case 0: Attributes.Luck += 40; break;
                     case 1: Attributes.Luck += 10; break;
-                    case 2: Attributes.RegenHits += attrInfo.OtherRegenHits; break;
+                    case 2: Attributes.RegenHits = attrInfo.OtherRegenHits; break;
                     case 3: Attributes.SpellChanneling = attrInfo.OtherSpellChanneling; break;
                     case 4: LowerStatReq = attrInfo.OtherLowerRequirements; break;
                 }
