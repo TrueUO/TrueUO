@@ -5198,8 +5198,16 @@ namespace Server.Items
                 m_AosAttributes.WeaponDamage += attrInfo.WeaponDamage;
                 m_AosAttributes.WeaponSpeed += attrInfo.WeaponSwingSpeed;
                 m_AosAttributes.AttackChance += attrInfo.WeaponHitChance;
-                m_AosAttributes.RegenHits = attrInfo.WeaponRegenHits;
-                m_AosWeaponAttributes.HitLeechHits = attrInfo.WeaponHitLifeLeech;
+
+                if (attrInfo.WeaponRegenHits > 0)
+                {
+                    m_AosAttributes.RegenHits = attrInfo.WeaponRegenHits;
+                }
+
+                if (attrInfo.WeaponHitLifeLeech > 0)
+                {
+                    m_AosWeaponAttributes.HitLeechHits = attrInfo.WeaponHitLifeLeech;
+                }
             }
             else
             {
