@@ -8,7 +8,6 @@
     "configProperties": {
       "System.GC.Concurrent": true,
       "System.GC.Server": true,
-      "System.Reflection.Metadata.MetadataUpdater.IsSupported": false,
       "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
     }
   }
