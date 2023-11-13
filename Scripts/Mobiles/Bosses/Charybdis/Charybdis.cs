@@ -33,8 +33,8 @@ namespace Server.Mobiles
         public override int TreasureMapLevel => 5;
         public override bool AlwaysMurderer => true;
 
-        public override Type[] UniqueList => new Type[] { };
-        public override Type[] SharedList => new Type[] { };
+        public override Type[] UniqueList => Array.Empty<Type>();
+        public override Type[] SharedList => Array.Empty<Type>();
         public override Type[] DecorativeList => new[] { typeof(EnchantedBladeDeed), typeof(EnchantedVortexDeed) };
 
         [CommandProperty(AccessLevel.GameMaster)]

@@ -19,8 +19,7 @@ namespace Server.Engines.VendorSearching
 
         public static readonly SearchCriteriaCategory[] AllCategories =
         {
-            new SearchCriteriaCategory(Category.PriceRange, 2, 1154512, new SearchCriterionEntry[] { /* Price Range */
-            }),
+            new SearchCriteriaCategory(Category.PriceRange, 2, 1154512, System.Array.Empty<SearchCriterionEntry>()),
             new SearchCriteriaCategory(Category.Equipment, 3, 1154531, new[] // Equipment
             { 
 				new SearchCriterionEntry(Layer.Shoes, 1154602),
@@ -264,10 +263,8 @@ namespace Server.Engines.VendorSearching
                 new SearchCriterionEntry(SkillName.Snooping, 1044088),
                 new SearchCriterionEntry(SkillName.Mining, 1044105)
             }),
-            new SearchCriteriaCategory(Category.Sort, 25, 1154695, new SearchCriterionEntry[] { /* Sort */
-            }),
-            new SearchCriteriaCategory(Category.Auction, 26, 1159353, new SearchCriterionEntry[] { /* Auction Item */
-            })
+            new SearchCriteriaCategory(Category.Sort, 25, 1154695, System.Array.Empty<SearchCriterionEntry>()),
+            new SearchCriteriaCategory(Category.Auction, 26, 1159353, System.Array.Empty<SearchCriterionEntry>())
         };
     }
 

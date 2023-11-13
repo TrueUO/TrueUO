@@ -17,7 +17,7 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[] { };
+        public override Type[] Quests => Array.Empty<Type>();
 
         public override void InitBody()
         {

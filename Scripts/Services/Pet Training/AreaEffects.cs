@@ -474,7 +474,7 @@ namespace Server.Mobiles
             public Type[] Uses { get; private set; }
 
             public AuraDefinition()
-                : this(TimeSpan.FromSeconds(5), 5, 0, 0, 0, 0, 0, 0, 100, new Type[] { })
+                : this(TimeSpan.FromSeconds(5), 5, 0, 0, 0, 0, 0, 0, 100, Array.Empty<Type>())
             {
             }
 

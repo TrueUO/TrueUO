@@ -118,7 +118,7 @@ namespace Server.Commands
 
         private static void ConsumeType(Type t, ProcessObject proc)
         {
-            ConstructorInfo ctor = t.GetConstructor(new Type[] { });
+            ConstructorInfo ctor = t.GetConstructor(Array.Empty<Type>());
             if (ctor == null)
                 return;
 
@@ -126,7 +126,7 @@ namespace Server.Commands
 
             try
             {
-                obj = ctor.Invoke(new object[] { });
+                obj = ctor.Invoke(Array.Empty<object>());
             }
             catch (Exception e)
             {

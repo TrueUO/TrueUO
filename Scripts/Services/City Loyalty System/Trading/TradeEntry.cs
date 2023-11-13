@@ -134,7 +134,7 @@ namespace Server.Engines.CityLoyalty
                     return true;
                 }
 
-                var list = new Type[] { };
+                var list = Array.Empty<Type>();
 
                 for (var index = 0; index < Interchangeables.Length; index++)
                 {

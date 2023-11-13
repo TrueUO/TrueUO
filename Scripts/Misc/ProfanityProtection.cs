@@ -20,7 +20,7 @@ namespace Server.Misc
         {
             ' ', '-', '.', '\'', '"', ',', '_', '+', '=', '~', '`', '!', '^', '*', '\\', '/', ';', ':', '<', '>', '[', ']', '{', '}', '?', '|', '(', ')', '%', '$', '&', '#', '@'
         };
-        private static readonly string[] m_StartDisallowed = { };
+        private static readonly string[] m_StartDisallowed = System.Array.Empty<string>();
         private static readonly string[] m_Disallowed =
         {
             "jigaboo",

@@ -17,7 +17,7 @@ namespace Server.Mobiles
 
         public override Type[] UniqueSAList => new[] { typeof(Slither), typeof(IronwoodCompositeBow), typeof(Venom), typeof(PetrifiedSnake), typeof(StoneDragonsTooth), typeof(MedusaFloorTileAddonDeed), typeof(EternalGuardianStaff) };
 
-        public override Type[] SharedSAList => new Type[] { };
+        public override Type[] SharedSAList => Array.Empty<Type>();
 
         [Constructable]
         public Medusa()

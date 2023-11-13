@@ -11,10 +11,10 @@ namespace Server.Mobiles
         public override bool DoesGoldShower => false;
         public override bool CanGivePowerscrolls => false;
 
-        public override Type[] UniqueList => new Type[] { };
-        public override Type[] SharedList => new Type[] { };
-        public override Type[] DecorativeList => new Type[] { };
-        public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
+        public override Type[] UniqueList => Array.Empty<Type>();
+        public override Type[] SharedList => Array.Empty<Type>();
+        public override Type[] DecorativeList => Array.Empty<Type>();
+        public override MonsterStatuetteType[] StatueTypes => Array.Empty<MonsterStatuetteType>();
         public override ChampionSkullType SkullType => ChampionSkullType.None;
 
         private DateTime m_NextBoatDamage;
