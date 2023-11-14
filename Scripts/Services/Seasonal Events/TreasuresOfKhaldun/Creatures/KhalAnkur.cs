@@ -77,13 +77,13 @@ namespace Server.Mobiles
 
         public override ChampionSkullType SkullType => ChampionSkullType.None;
 
-        public override Type[] UniqueList => new Type[] { };
+        public override Type[] UniqueList => Array.Empty<Type>();
 
-        public override Type[] SharedList => new Type[] { };
+        public override Type[] SharedList => Array.Empty<Type>();
 
-        public override Type[] DecorativeList => new Type[] { };
+        public override Type[] DecorativeList => Array.Empty<Type>();
 
-        public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
+        public override MonsterStatuetteType[] StatueTypes => Array.Empty<MonsterStatuetteType>();
 
         public override void OnBeforeDamage(Mobile from, ref int totalDamage, DamageType type)
         {

@@ -68,7 +68,7 @@ namespace Server.Mobiles
                     typeof(WindSpirit),
                     typeof(Pier)
                 };
-        public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
+        public override MonsterStatuetteType[] StatueTypes => Array.Empty<MonsterStatuetteType>();
         public override bool AutoDispel => true;
         public override bool CanFly => true;
         public override bool Unprovokable => true;
