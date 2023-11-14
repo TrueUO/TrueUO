@@ -10,10 +10,10 @@ namespace Server.Items
 
         public override int DefaultGumpID => 0x9D54;
 
-        private Mobile m_Owned;
+        private Mobile _Owned;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Owned { get => m_Owned; set { m_Owned = value; InvalidateProperties(); } }
+        public Mobile Owned { get => _Owned; set { _Owned = value; InvalidateProperties(); } }
 
         private bool m_IsRewardItem;
 
@@ -65,28 +65,15 @@ namespace Server.Items
             }
         }
 
-        public bool IsAccept(Item item)
+        private static bool WillAccept(Item item)
         {
-            foreach (Type type in _AcceptList)
+            if (item.GetType() == typeof(SoulStone) || item.GetType().IsSubclassOf(typeof(SoulStone)))
             {
-                if (item.GetType() == type)
-                {
-                    return true;
-                }
-
-                if (item.GetType().IsSubclassOf(type))
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
-
-        private readonly Type[] _AcceptList =
-        {
-            typeof(SoulStone)
-        };
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
@@ -102,9 +89,14 @@ namespace Server.Items
                 return false;
             }
 
-            if (!IsAccept(dropped))
+            if (!WillAccept(dropped))
             {
                 from.SendLocalizedMessage(1074836); // The container cannot hold that type of object.
+                return false;
+            }
+
+            if (IsFull)
+            {
                 return false;
             }
 
@@ -125,9 +117,14 @@ namespace Server.Items
                 return false;
             }
 
-            if (!IsAccept(item))
+            if (!WillAccept(item))
             {
                 from.SendLocalizedMessage(1074836); // The container cannot hold that type of object.
+                return false;
+            }
+
+            if (IsFull)
+            {
                 return false;
             }
 
@@ -152,13 +149,24 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
+            writer.Write(1);
+
+            writer.Write(_Owned);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            reader.ReadInt();
+            int version = reader.ReadInt();
+
+            switch (version)
+            {
+                case 1:
+                {
+                    _Owned = reader.ReadMobile();
+                    break;
+                }
+            }
         }
     }
 }
