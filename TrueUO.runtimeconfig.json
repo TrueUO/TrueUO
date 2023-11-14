@@ -1,14 +1,14 @@
 {
   "runtimeOptions": {
-    "tfm": "net7.0",
+    "tfm": "net8.0",
     "framework": {
       "name": "Microsoft.NETCore.App",
-      "version": "7.0.0"
+      "version": "8.0.0-rc.2.23479.6"
     },
     "configProperties": {
       "System.GC.Concurrent": true,
       "System.GC.Server": true,
-      "System.Reflection.Metadata.MetadataUpdater.IsSupported": false
+      "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
     }
   }
 }

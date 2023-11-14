@@ -1493,7 +1493,7 @@ namespace Server.Multis
                 if (itemID >= 7668 && itemID <= 7675)
                 {
                     int idOffset = itemID <= 7671 ? 101 : 0;
-                    int[][] list = { };
+                    int[][] list = Array.Empty<int[]>();
 
                     switch (itemID)
                     {

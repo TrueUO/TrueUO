@@ -334,8 +334,7 @@ namespace Server.Mobiles
 
         public static void ExpireMountPrevention(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
-                m_Table.Remove(m);
+            m_Table.Remove(m);
 
             BuffInfo.RemoveBuff(m, BuffIcon.DismountPrevention);
         }

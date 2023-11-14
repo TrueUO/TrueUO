@@ -4124,11 +4124,11 @@ namespace Server
 
 			while (--i >= 0)
 			{
-				if (i < m_DeltaQueue.Count)
+				if (i < m_DeltaQueue.Count && m_DeltaQueue[i] != null)
 				{
-					m_DeltaQueue[i].ProcessDelta();
-					m_DeltaQueue.RemoveAt(i);
-				}
+                    m_DeltaQueue[i].ProcessDelta();
+                    m_DeltaQueue.RemoveAt(i);
+                }
 			}
 
 			_Processing = false;
@@ -6223,12 +6223,9 @@ namespace Server
 
 				if (timer != null)
 				{
-					if (timer.TimerRegistry.ContainsKey(socket))
-					{
-						timer.TimerRegistry.Remove(socket);
-					}
+                    timer.TimerRegistry.Remove(socket);
 
-					if (timer.TimerRegistry.Count == 0)
+                    if (timer.TimerRegistry.Count == 0)
 					{
 						timer.Stop();
 						Instance = null;

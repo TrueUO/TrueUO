@@ -336,8 +336,7 @@ namespace Server.Items
                     ApplySuffixName(item, suffix);
                 }
 
-                if (_Elements.ContainsKey(item))
-                    _Elements.Remove(item);
+                _Elements.Remove(item);
             }
         }
 
@@ -1020,8 +1019,8 @@ namespace Server.Items
             else if (attr is AosElementAttribute elementAttribute)
                 id = ItemPropertyInfo.GetIDForAttribute(elementAttribute);
 
-            if (ItemPropertyInfo.Table.ContainsKey(id))
-                return ItemPropertyInfo.Table[id];
+            if (ItemPropertyInfo.Table.TryGetValue(id, out ItemPropertyInfo value))
+                return value;
 
             return null;
         }
@@ -1300,9 +1299,8 @@ namespace Server.Items
                         new NamedInfoCol(AosArmorAttribute.DurabilityBonus, DurabilityTable),
                         new NamedInfoCol(AosArmorAttribute.LowerStatReq, LowerStatReqTable)
                     },
-                    new NamedInfoCol[]
-                    {
-                    }
+
+                    Array.Empty<NamedInfoCol>()
                 };
 
             m_PrefixSuffixInfo[6] = new[] //Vampiric
@@ -1316,15 +1314,9 @@ namespace Server.Items
                         new NamedInfoCol(AosWeaponAttribute.HitFatigue, HitWeaponTable2),
                         new NamedInfoCol(AosWeaponAttribute.BloodDrinker, 1)
                     },
-                    new NamedInfoCol[] // armor
-                    {
-                    },
-                    new NamedInfoCol[]
-                    {
-                    },
-                    new NamedInfoCol[]
-                    {
-                    }
+                    Array.Empty<NamedInfoCol>(),
+                    Array.Empty<NamedInfoCol>(),
+                    Array.Empty<NamedInfoCol>()
                 };
 
             m_PrefixSuffixInfo[7] = new[] // Invigorating
@@ -1427,9 +1419,7 @@ namespace Server.Items
                     {
                         new NamedInfoCol(AosAttribute.EnhancePotions, ArmorEnhancePotsTable)
                     },
-                    new NamedInfoCol[]
-                    {
-                    },
+                    Array.Empty<NamedInfoCol>(),
                     new[]
                     {
                         new NamedInfoCol(AosAttribute.EnhancePotions, ArmorEnhancePotsTable)
@@ -2931,7 +2921,7 @@ namespace Server.Items
             new[] { 60, 70, 80, 100, 100, 100, 100 },
             new[] { 80, 100, 100, 100, 100, 100, 100 },
             new[] { 100, 100, 100, 100, 100, 100, 100 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 100, 100, 100, 100, 100, 100, 100 },
             new[] { 100, 100, 100, 100, 100, 100, 100 }
         };
@@ -2942,7 +2932,7 @@ namespace Server.Items
             new[] { 30, 50, 50, 60, 70, 70, 70 },
             new[] { 50, 60, 70, 70, 70, 70, 70 },
             new[] { 70, 70, 70, 70, 70, 70, 70 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 50, 60, 70, 70, 70, 70, 70 },
             new[] { 70, 70, 70, 70, 70, 70, 70 }
         };
@@ -2953,7 +2943,7 @@ namespace Server.Items
             new[] { 30, 40, 50, 50, 60, 70, 70 },
             new[] { 50, 50, 50, 60, 70, 70, 70 },
             new[] { 50, 60, 70, 70, 70, 70, 70 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 50, 50, 50, 60, 70, 70, 70 },
             new[] { 70, 70, 70, 70, 70, 70, 70 }
         };
@@ -2963,7 +2953,7 @@ namespace Server.Items
             new[] { 25, 35, 40, 40, 40, 45, 50 },
             new[] { 40, 40, 40, 45, 50, 50, 50 },
             new[] { 40, 45, 50, 50, 50, 50, 50 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 40, 40, 40, 45, 50, 50, 50 },
             new[] { 45, 50, 50, 50, 50, 50, 50 }
         };
@@ -2973,7 +2963,7 @@ namespace Server.Items
             new[] { 15, 25, 25, 30, 35, 35, 35 },
             new[] { 25, 25, 30, 35, 35, 35, 35 },
             new[] { 30, 35, 35, 35, 35, 35, 35 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 25, 25, 30, 35, 35, 35, 35 },
             new[] { 35, 35, 35, 35, 35, 35, 35 }
         };
@@ -2983,7 +2973,7 @@ namespace Server.Items
             new[] { 30, 50, 50, 60, 70, 70, 70 },
             new[] { 50, 60, 70, 70, 70, 70, 70 },
             new[] { 70, 70, 70, 70, 70, 70, 70 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 50, 60, 70, 70, 70, 70, 70 },
             new[] { 70, 70, 70, 70, 70, 70, 70 }
         };
@@ -3003,7 +2993,7 @@ namespace Server.Items
             new[] { 15, 10, 10, 10, 10, 5, 5 },
             new[] { 10, 10, 10, 5, 5, 5, 5 },
             new[] { 10, 5, 5, 5, 5, 5, 5 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 10, 10, 10, 5, 5, 5, 5 },
             new[] { 5, 5, 5, 5, 5, 5, 5 }
         };
@@ -3013,7 +3003,7 @@ namespace Server.Items
             new[] { 2, 3, 6, 6, 6, 6, 6 },
             new[] { 3, 6, 6, 6, 6, 6, 6 },
             new[] { 6, 6, 6, 6, 6, 9, 9 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 3, 6, 6, 6, 6, 6, 9 },
             new[] { 6, 9, 9, 9, 9, 9, 9 }
         };
@@ -3023,7 +3013,7 @@ namespace Server.Items
             new[] { 2, 3, 3, 3, 4, 4, 4 },
             new[] { 3, 3, 4, 4, 4, 4, 4 },
             new[] { 4, 4, 4, 4, 4, 4, 4 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 3, 3, 4, 4, 4, 4, 4 },
             new[] { 4, 4, 4, 4, 4, 4, 4 }
         };
@@ -3033,7 +3023,7 @@ namespace Server.Items
             new[] { 2, 4, 4, 4, 5, 5, 5 },
             new[] { 4, 4, 5, 5, 5, 5, 5 },
             new[] { 5, 5, 5, 5, 5, 5, 5 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 4, 4, 5, 5, 5, 5, 5 },
             new[] { 5, 5, 5, 5, 5, 5, 5 }
         };
@@ -3043,7 +3033,7 @@ namespace Server.Items
             new[] { 2, 4, 4, 4, 5, 5, 5 },
             new[] { 4, 4, 5, 5, 5, 5, 5 },
             new[] { 5, 5, 5, 5, 5, 5, 5 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 4, 4, 5, 5, 5, 5, 5 },
             new[] { 5, 5, 5, 5, 5, 5, 5 }
         };
@@ -3053,7 +3043,7 @@ namespace Server.Items
             new[] { 5, 10, 15, 15, 15, 20, 20 },
             new[] { 15, 15, 15, 20, 20, 20, 20 },
             new[] { 15, 20, 20, 20, 20, 20, 20 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 15, 15, 20, 20, 20, 20, 20 },
             new[] { 20, 20, 20, 20, 20, 20, 20 }
         };
@@ -3063,7 +3053,7 @@ namespace Server.Items
             new[] { 10, 15, 15, 15, 20, 20, 20 },
             new[] { 15, 15, 20, 20, 20, 20, 20 },
             new[] { 20, 20, 20, 20, 20, 20, 20 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 15, 15, 20, 20, 20, 20, 20 },
             new[] { 20, 20, 20, 20, 20, 20, 20 }
         };
@@ -3073,7 +3063,7 @@ namespace Server.Items
             new[] { 30, 50, 50, 60, 70, 70, 70 },
             new[] { 50, 60, 70, 70, 70, 70, 70 },
             new[] { 70, 70, 70, 70, 70, 70, 70 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 50, 60, 70, 70, 70, 70, 70 },
             new[] { 70, 70, 70, 70, 70, 70, 70 }
         };
@@ -3083,7 +3073,7 @@ namespace Server.Items
             new[] { 5, 10, 10, 10, 10, 15, 15 },
             new[] { 10, 10, 10, 15, 15, 15, 15 },
             new[] { 10, 15, 15, 15, 15, 15, 15 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 10, 10, 10, 15, 15, 15, 15 },
             new[] { 15, 15, 15, 15, 15, 15, 15 }
         };
@@ -3093,7 +3083,7 @@ namespace Server.Items
             new[] { 20, 30, 30, 35, 40, 40, 40 },
             new[] { 30, 35, 40, 40, 40, 40, 40 },
             new[] { 35, 40, 40, 40, 40, 40, 40 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 30, 35, 40, 40, 40, 40, 40 },
             new[] { 40, 40, 40, 40, 40, 40, 40 }
         };
@@ -3105,7 +3095,7 @@ namespace Server.Items
             new[] { 90, 120, 120, 140, 170, 170, 170 },
             new[] { 120, 140, 160, 170, 170, 170, 170 },
             new[] { 160, 170, 170, 170, 170, 170, 170 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 120, 140, 160, 170, 170, 170, 170 },
             new[] { 170, 170, 170, 170, 170, 170, 170 }
         };
@@ -3115,17 +3105,17 @@ namespace Server.Items
             new[] { 15, 25, 25, 30, 35, 35, 35 },
             new[] { 25, 30, 35, 35, 35, 35, 35 },
             new[] { 35, 35, 35, 35, 35, 35, 35 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 25, 25, 30, 35, 35, 35, 35 },
             new[] { 35, 35, 35, 35, 35, 35, 35 }
         };
 
         public static readonly int[][] RangedDCITable =
         {
-            new int[] { },
-            new int[] { },
-            new int[] { },
-            new int[] { },
+            Array.Empty<int>(),
+            Array.Empty<int>(),
+            Array.Empty<int>(),
+            Array.Empty<int>(),
             new[] { 25, 25, 30, 35, 35, 35, 35 },
             new[] { 35, 35, 35, 35, 35, 35, 35 }
         };
@@ -3217,7 +3207,7 @@ namespace Server.Items
             new[] { 5, 5, 5, 5, 10, 10, 10 },
             new[] { 5, 5, 10, 10, 10, 10, 10 },
             new[] { 10, 10, 10, 10, 10, 10, 10 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 5, 5, 10, 10, 10, 10, 10 },
             new[] { 10, 10, 10, 10, 10, 10, 10 }
         };
@@ -3227,7 +3217,7 @@ namespace Server.Items
             new[] { 15, 20, 20, 20, 25, 25, 25 },
             new[] { 20, 20, 25, 30, 30, 30, 30 },
             new[] { 25, 30, 30, 30, 30, 30, 30 },
-            new int[] { },
+            Array.Empty<int>(),
             new[] { 20, 20, 25, 30, 30, 30, 30 },
             new[] { 25, 30, 30, 30, 30, 30, 30 }
         };

@@ -304,8 +304,7 @@ namespace Server.Items
 
         public static void RemoveFountain(FountainOfFortune fountain)
         {
-            if (m_Fountains.Contains(fountain))
-                m_Fountains.Remove(fountain);
+            m_Fountains.Remove(fountain);
 
             if (m_Fountains.Count == 0 && m_Timer != null)
             {

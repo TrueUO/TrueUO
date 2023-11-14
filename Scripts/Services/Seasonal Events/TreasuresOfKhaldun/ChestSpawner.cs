@@ -54,10 +54,7 @@ namespace Server.Engines.Khaldun
         {
             if (Chests != null)
             {
-                if (Chests.Contains(Chest))
-                {
-                    Chests.Remove(Chest);
-                }
+                Chests.Remove(Chest);
 
                 if (TreasuresOfKhaldunEvent.Instance.Running && Chests.Count < ChestCount)
                 {

@@ -54,10 +54,7 @@ namespace Server.Engines.NewMagincia
 
         public void RemoveEntry(PetBrokerEntry entry)
         {
-            if (m_BrokerEntries.Contains(entry))
-            {
-                m_BrokerEntries.Remove(entry);
-            }
+            m_BrokerEntries.Remove(entry);
         }
 
         public override bool HasValidEntry(Mobile m)

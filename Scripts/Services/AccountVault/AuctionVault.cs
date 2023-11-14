@@ -196,10 +196,7 @@ namespace Server.AccountVault
 
         public static void RemoveVault(AuctionVault vault)
         {
-            if (Vaults.Contains(vault))
-            {
-                Vaults.Remove(vault);
-            }
+            Vaults.Remove(vault);
         }
 
         public static AuctionVault GetFirstAvailable()

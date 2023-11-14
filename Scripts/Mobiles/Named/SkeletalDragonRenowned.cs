@@ -51,7 +51,7 @@ namespace Server.Mobiles
         {
         }
 
-        public override Type[] UniqueSAList => new Type[] { };
+        public override Type[] UniqueSAList => Array.Empty<Type>();
         public override Type[] SharedSAList => new Type[] { typeof(AxeOfAbandon), typeof(DemonBridleRing), typeof(VoidInfusedKilt), typeof(BladeOfBattle) };
         public override bool ReacquireOnMovement => true;
         public override double BonusPetDamageScalar => 3.0;

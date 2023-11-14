@@ -120,10 +120,7 @@ namespace Server.Gumps
             PlayerMobile from = (PlayerMobile)states[0];
             Mobile killer = (Mobile)states[1];
 
-            if (from.RecentlyReported.Contains(killer))
-            {
-                from.RecentlyReported.Remove(killer);
-            }
+            from.RecentlyReported.Remove(killer);
         }
 
         public override void OnResponse(NetState state, RelayInfo info)

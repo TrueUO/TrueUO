@@ -121,9 +121,9 @@ namespace Server.Spells.SkillMasteries
                 {
                     foreach (IDamageable target in AcquireIndirectTargets(item.Location, 1))
                     {
-                        if (target is Mobile m && m.Z + 16 > item.Z && item.Z + 12 > m.Z && !list.ContainsKey(m))
+                        if (target is Mobile m && m.Z + 16 > item.Z && item.Z + 12 > m.Z)
                         {
-                            list.Add(m, item);
+                            list.TryAdd(m, item);
                         }
                     }
                 }

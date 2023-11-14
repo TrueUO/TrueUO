@@ -71,8 +71,10 @@ namespace Server.Spells.Mysticism
             target.Combatant = null;
             target.SendSpeedControl(SpeedControlType.WalkSpeed);
 
-            if (m_Table.ContainsKey(target))
-                m_Table[target].Stop();
+            if (m_Table.TryGetValue(target, out SleepTimer value))
+            {
+                value.Stop();
+            }
 
             m_Table[target] = new SleepTimer(target, duration);
 
@@ -148,8 +150,7 @@ namespace Server.Spells.Mysticism
         {
             Mobile m = (Mobile)state;
 
-            if (m_ImmunityList.Contains(m))
-                m_ImmunityList.Remove(m);
+            m_ImmunityList.Remove(m);
         }
 
         public class InternalTarget : Target

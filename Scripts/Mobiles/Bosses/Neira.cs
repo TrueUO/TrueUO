@@ -79,7 +79,7 @@ namespace Server.Mobiles
                     typeof(DetectiveBoots)
                 };
         public override Type[] DecorativeList => new[] { typeof(WallBlood), typeof(TatteredAncientMummyWrapping) };
-        public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
+        public override MonsterStatuetteType[] StatueTypes => Array.Empty<MonsterStatuetteType>();
         public override bool AlwaysMurderer => true;
         public override bool Unprovokable => true;
         public override bool Uncalmable => true;

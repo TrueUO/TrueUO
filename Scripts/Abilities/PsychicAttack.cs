@@ -47,8 +47,7 @@ namespace Server.Items
 
             BuffInfo.RemoveBuff(defender, BuffIcon.PsychicAttack);
 
-            if (m_Registry.ContainsKey(defender))
-                m_Registry.Remove(defender);
+            m_Registry.Remove(defender);
 
             defender.SendLocalizedMessage(1150292); // You recover from the effects of the psychic attack.
         }

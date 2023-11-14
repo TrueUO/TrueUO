@@ -67,8 +67,7 @@ namespace Server.Engines.NewMagincia
 
         public void RemovePet(BaseCreature pet)
         {
-            if (m_Creatures.Contains(pet))
-                m_Creatures.Remove(pet);
+            m_Creatures.Remove(pet);
         }
 
         public StorageEntry(GenericReader reader)

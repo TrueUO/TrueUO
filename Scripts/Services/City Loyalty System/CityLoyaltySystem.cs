@@ -674,10 +674,7 @@ namespace Server.Engines.CityLoyalty
 
         public void RemoveWaitTime(Mobile from)
         {
-            if (CitizenWait.ContainsKey(from))
-            {
-                CitizenWait.Remove(from);
-            }
+            CitizenWait.Remove(from);
         }
 
         public static void Initialize()

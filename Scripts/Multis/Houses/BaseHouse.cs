@@ -2655,10 +2655,7 @@ namespace Server.Multis
 
                     Secures.Add(info);
 
-                    if (LockDowns.ContainsKey(item))
-                    {
-                        LockDowns.Remove(item);
-                    }
+                    LockDowns.Remove(item);
 
                     item.Movable = false;
 
@@ -2673,10 +2670,7 @@ namespace Server.Multis
 
                         Secures.Add(info2);
 
-                        if (LockDowns.ContainsKey(ad))
-                        {
-                            LockDowns.Remove(ad);
-                        }
+                        LockDowns.Remove(ad);
 
                         ad.Movable = false;
                     }

@@ -2402,11 +2402,14 @@ namespace Server.Items
             }
 
             #region Bracers Of Alchemical Devastation
-            var arms = attacker.FindItemOnLayer(Layer.Arms);
+            Item arms = attacker.FindItemOnLayer(Layer.Arms);
 
-            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms != null && (arms is BracersofAlchemicalDevastation || arms is GargishBracersofAlchemicalDevastation))
+            if (arms is BracersofAlchemicalDevastation or GargishBracersofAlchemicalDevastation && 0.35 > Utility.RandomDouble())
             {
-                DoLightning(attacker, defender);
+                if (attacker.FindItemOnLayer(Layer.OneHanded) == null && (attacker.FindItemOnLayer(Layer.TwoHanded) == null || attacker.FindItemOnLayer(Layer.TwoHanded) is BaseShield))
+                {
+                    DoLightning(attacker, defender);
+                }
             }
             #endregion
 
@@ -5195,8 +5198,16 @@ namespace Server.Items
                 m_AosAttributes.WeaponDamage += attrInfo.WeaponDamage;
                 m_AosAttributes.WeaponSpeed += attrInfo.WeaponSwingSpeed;
                 m_AosAttributes.AttackChance += attrInfo.WeaponHitChance;
-                m_AosAttributes.RegenHits += attrInfo.WeaponRegenHits;
-                m_AosWeaponAttributes.HitLeechHits += attrInfo.WeaponHitLifeLeech;
+
+                if (attrInfo.WeaponRegenHits > 0)
+                {
+                    m_AosAttributes.RegenHits = attrInfo.WeaponRegenHits;
+                }
+
+                if (attrInfo.WeaponHitLifeLeech > 0)
+                {
+                    m_AosWeaponAttributes.HitLeechHits = attrInfo.WeaponHitLifeLeech;
+                }
             }
             else
             {
@@ -5207,7 +5218,7 @@ namespace Server.Items
                     case 2: m_AosAttributes.AttackChance += attrInfo.WeaponHitChance; break;
                     case 3: m_AosAttributes.Luck += attrInfo.WeaponLuck; break;
                     case 4: m_AosWeaponAttributes.LowerStatReq += attrInfo.WeaponLowerRequirements; break;
-                    case 5: m_AosWeaponAttributes.HitLeechHits += attrInfo.WeaponHitLifeLeech; break;
+                    case 5: m_AosWeaponAttributes.HitLeechHits = attrInfo.WeaponHitLifeLeech; break;
                 }
             }
         }

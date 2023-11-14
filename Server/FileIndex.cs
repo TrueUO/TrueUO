@@ -157,11 +157,8 @@ namespace Server
 
 							var hash = UOPHash.HashLittle2(entryName);
 
-							if (!hashes.ContainsKey(hash))
-							{
-								hashes.Add(hash, i);
-							}
-						}
+                            hashes.TryAdd(hash, i);
+                        }
 
 						br.BaseStream.Seek(nextBlock, SeekOrigin.Begin);
 

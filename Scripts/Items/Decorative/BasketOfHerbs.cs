@@ -44,10 +44,7 @@ namespace Server.Items
         {
             if (m_SkillMod != null)
             {
-                if (_Table.ContainsKey(m_SkillMod.Owner))
-                {
-                    _Table.Remove(m_SkillMod.Owner);
-                }
+                _Table.Remove(m_SkillMod.Owner);
 
                 m_SkillMod.Remove();
             }
@@ -83,10 +80,7 @@ namespace Server.Items
         {
             m_SkillMod.Owner.SendLocalizedMessage(1075541); // The scent of herbs gradually fades away...
 
-            if (_Table.ContainsKey(m_SkillMod.Owner))
-            {
-                _Table.Remove(m_SkillMod.Owner);
-            }
+            _Table.Remove(m_SkillMod.Owner);
 
             m_SkillMod.Remove();
             m_SkillMod = null;            

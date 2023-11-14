@@ -82,8 +82,7 @@ namespace Server.Items
 
         public static void RemoveList(BaseJewel jewel)
         {
-            if (JewelryList.Contains(jewel))
-                JewelryList.Remove(jewel);
+            JewelryList.Remove(jewel);
         }
     }
 

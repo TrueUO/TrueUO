@@ -263,7 +263,7 @@ namespace Server.Mobiles
 
             if (m_IsRewardItem)
             {
-                list.Add(RewardSystem.GetRewardYearLabel(this, new object[] { })); // X Year Veteran Reward
+                list.Add(RewardSystem.GetRewardYearLabel(this, Array.Empty<object>())); // X Year Veteran Reward
             }
 
             EtherealRetouchingTool.AddProperty(this, list);

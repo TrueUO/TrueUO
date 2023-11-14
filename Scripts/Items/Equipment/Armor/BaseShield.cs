@@ -166,7 +166,11 @@ namespace Server.Items
                 {
                     Attributes.SpellChanneling += attrInfo.ShieldSpellChanneling;
                     ArmorAttributes.LowerStatReq += attrInfo.ShieldLowerRequirements;
-                    Attributes.RegenHits += attrInfo.ShieldRegenHits;
+
+                    if (attrInfo.ShieldRegenHits > 0)
+                    {
+                        Attributes.RegenHits = attrInfo.ShieldRegenHits;
+                    }
                 }
                 else
                 {

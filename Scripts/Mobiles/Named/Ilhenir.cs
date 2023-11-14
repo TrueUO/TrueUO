@@ -61,7 +61,7 @@ namespace Server.Mobiles
         }
 
         public override ChampionSkullType SkullType => ChampionSkullType.Pain;
-        public override Type[] UniqueList => new Type[] { };
+        public override Type[] UniqueList => Array.Empty<Type>();
         public override Type[] SharedList => new Type[]
                 {
                     typeof(ANecromancerShroud),
@@ -70,7 +70,7 @@ namespace Server.Mobiles
                     typeof(TheRobeOfBritanniaAri)
                 };
         public override Type[] DecorativeList => new Type[] { typeof(MonsterStatuette) };
-        public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
+        public override MonsterStatuetteType[] StatueTypes => Array.Empty<MonsterStatuetteType>();
         public override bool Unprovokable => true;
         public override bool Uncalmable => true;
         public override Poison PoisonImmune => Poison.Lethal;
