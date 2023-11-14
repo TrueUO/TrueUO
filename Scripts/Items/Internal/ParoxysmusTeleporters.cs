@@ -20,7 +20,9 @@ namespace Server.Items
                 Item rope = m.Backpack.FindItemByType(typeof(MagicalRope), true);
 
                 if (rope == null)
+                {
                     rope = m.Backpack.FindItemByType(typeof(AcidProofRope), true);
+                }
 
                 if (rope != null && !rope.Deleted)
                 {
@@ -30,13 +32,15 @@ namespace Server.Items
                         rope.Delete();
                     }
                     else
+                    {
                         m.SendLocalizedMessage(1075098); // Your rope has been weakened by the acidic environment.
+                    }
 
                     return base.OnMoveOver(m);
                 }
-            }
-            else
+
                 m.SendLocalizedMessage(1074272); // You have no way to lower yourself safely into the enormous sinkhole.
+            }
 
             return true;
         }
@@ -74,7 +78,9 @@ namespace Server.Items
                 Item rope = m.Backpack.FindItemByType(typeof(MagicalRope), true);
 
                 if (rope == null)
+                {
                     rope = m.Backpack.FindItemByType(typeof(AcidProofRope), true);
+                }
 
                 if (rope != null && !rope.Deleted)
                 {
@@ -84,13 +90,15 @@ namespace Server.Items
                         rope.Delete();
                     }
                     else
+                    {
                         m.SendLocalizedMessage(1075098); // Your rope has been weakened by the acidic environment.
+                    }
 
                     return base.OnMoveOver(m);
                 }
-            }
-            else
+
                 m.SendLocalizedMessage(1074272); // You have no way to lower yourself safely into the enormous sinkhole.
+            }
 
             return true;
         }

@@ -23,7 +23,7 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[] { };
+        public override Type[] Quests => Array.Empty<Type>();
 
         #region Bulk Orders
         public override BODType BODType => BODType.Alchemy;

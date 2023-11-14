@@ -26,6 +26,11 @@ namespace Server.Spells.Spellweaving
                 return false;
             }
 
+            if (bc.Title == "(Guardian)") // Treasure Map Creatures. Should find a better way to handle this in the future.
+            {
+                return false;
+            }
+
             SlayerEntry slayer = SlayerGroup.GetEntryByName(SlayerName.Repond);
 
             if (slayer != null && slayer.Slays(bc))

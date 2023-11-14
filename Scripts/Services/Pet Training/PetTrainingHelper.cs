@@ -316,7 +316,7 @@ namespace Server.Mobiles
             WeaponAbility.ColdWind
         };
 
-        public static readonly WeaponAbility[] WepAbilityNone = { };
+        public static readonly WeaponAbility[] WepAbilityNone = Array.Empty<WeaponAbility>();
 
         public static readonly WeaponAbility[] WepAbility1 =
         {
@@ -407,7 +407,7 @@ namespace Server.Mobiles
         public static void LoadDefinitions()
         {
             #region SpecialAbility Packages
-            SpecialAbilityNone = new SpecialAbility[] { };
+            SpecialAbilityNone = Array.Empty<SpecialAbility>();
 
             RuleBreakers = new[]
             {
@@ -597,7 +597,7 @@ namespace Server.Mobiles
             #endregion
 
             #region Area Effect Packages
-            AreaEffectNone = new AreaEffect[] { };
+            AreaEffectNone = Array.Empty<AreaEffect>();
 
             AreaEffectExplosiveGoo = new[]
             {

@@ -137,7 +137,9 @@ namespace Server.Mobiles
             if (m == null || Keyword == "")
                 return;
 
-            if (e.Speech.Contains(Keyword))
+            string keyword = Keyword.ToLower();
+
+            if (e.Speech.ToLower().Contains(keyword))
             {
                 if (Backpack == null || Backpack.Items.Count <= 0 || IsInCooldown(m))
                 {
@@ -154,10 +156,9 @@ namespace Server.Mobiles
 
         public bool IsInCooldown(Mobile from)
         {
-            if (_Table.ContainsKey(from))
+            if (_Table.TryGetValue(from, out DateTime value) && value < DateTime.UtcNow)
             {
-                if (_Table[from] < DateTime.UtcNow)
-                    _Table.Remove(from);
+                _Table.Remove(from);
             }
 
             return _Table.ContainsKey(from);

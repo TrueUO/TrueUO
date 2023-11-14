@@ -917,9 +917,7 @@ namespace Server.Items
             });
         public static FillableContent ArtisanGuild = new FillableContent(
             1,
-            new Type[]
-            {
-            },
+            Array.Empty<Type>(),
             new[]
             {
                 new FillableEntry(1, typeof(PaintsAndBrush)),
@@ -1142,9 +1140,7 @@ namespace Server.Items
             });
         public static FillableContent Guard = new FillableContent(
             3,
-            new Type[]
-            {
-            },
+            Array.Empty<Type>(),
             new[]
             {
                 new FillableEntry(12, Loot.ArmorTypes),
@@ -1183,9 +1179,7 @@ namespace Server.Items
             });
         public static FillableContent Inn = new FillableContent(
             1,
-            new Type[]
-            {
-            },
+            Array.Empty<Type>(),
             new[]
             {
                 new FillableEntry(1, typeof(Candle)),
@@ -1301,9 +1295,7 @@ namespace Server.Items
             });
         public static FillableContent Mill = new FillableContent(
             1,
-            new Type[]
-            {
-            },
+            Array.Empty<Type>(),
             new[]
             {
                 new FillableEntry(1, typeof(SackFlour))
@@ -1323,9 +1315,7 @@ namespace Server.Items
             });
         public static FillableContent Observatory = new FillableContent(
             1,
-            new Type[]
-            {
-            },
+            Array.Empty<Type>(),
             new[]
             {
                 new FillableEntry(2, typeof(Sextant)),
@@ -1334,9 +1324,7 @@ namespace Server.Items
             });
         public static FillableContent Painter = new FillableContent(
             1,
-            new Type[]
-            {
-            },
+            Array.Empty<Type>(),
             new[]
             {
                 new FillableEntry(1, typeof(PaintsAndBrush)),

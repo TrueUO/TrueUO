@@ -1342,9 +1342,7 @@ namespace Server.Engines.BulkOrders
             {
                 150, 225, 300
             },
-            new int[] // no 2 piece
-            {
-            },
+            Array.Empty<int>(),
             new[] // 3-part
             {
                 4000, 6000, 8000
@@ -1474,9 +1472,7 @@ namespace Server.Engines.BulkOrders
             {
                 150, 225, 300
             },
-            new int[] // no 2 piece
-            {
-            },
+            Array.Empty<int>(),
             new[] // 3-part
             {
                 4000, 6000, 8000
@@ -1778,9 +1774,7 @@ namespace Server.Engines.BulkOrders
             {
                 150, 225, 300
             },
-            new int[] // no 2 piece
-            {
-            },
+            Array.Empty<int>(),
             new[] // 3-part
             {
                 4000, 6000, 8000

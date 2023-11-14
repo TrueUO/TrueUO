@@ -4124,11 +4124,11 @@ namespace Server
 
 			while (--i >= 0)
 			{
-				if (i < m_DeltaQueue.Count)
+				if (i < m_DeltaQueue.Count && m_DeltaQueue[i] != null)
 				{
-					m_DeltaQueue[i].ProcessDelta();
-					m_DeltaQueue.RemoveAt(i);
-				}
+                    m_DeltaQueue[i].ProcessDelta();
+                    m_DeltaQueue.RemoveAt(i);
+                }
 			}
 
 			_Processing = false;

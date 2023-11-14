@@ -4,26 +4,6 @@ using System;
 
 namespace Server.Items
 {
-    public class UtilityItem
-    {
-        public static int RandomChoice(int itemID1, int itemID2)
-        {
-            int iRet;
-
-            switch (Utility.Random(2))
-            {
-                default:
-                case 0:
-                    iRet = itemID1;
-                    break;
-                case 1:
-                    iRet = itemID2;
-                    break;
-            }
-            return iRet;
-        }
-    }
-
     public class Dough : Item, IQuality
     {
         private ItemQuality _Quality;
@@ -368,33 +348,6 @@ namespace Server.Items
         }
     }
 
-    public class WoodenBowl : Item
-    {
-        [Constructable]
-        public WoodenBowl()
-            : base(0x15f8)
-        {
-            Weight = 1.0;
-        }
-
-        public WoodenBowl(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class SackFlour : Item, IQuality
     {
         private ItemQuality _Quality;
@@ -462,6 +415,16 @@ namespace Server.Items
             {
                 list.Add(1060636); // Exceptional
             }
+        }
+
+        public override bool WillStack(Mobile from, Item item)
+        {
+            if (item is IQuality quality && quality.Quality != _Quality)
+            {
+                return false;
+            }
+
+            return base.WillStack(from, item);
         }
 
         public SackFlour(Serial serial)
