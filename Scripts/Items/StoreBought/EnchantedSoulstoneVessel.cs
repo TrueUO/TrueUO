@@ -68,8 +68,17 @@ namespace Server.Items
         public bool IsAccept(Item item)
         {
             foreach (Type type in _AcceptList)
-                if (item.GetType().IsSubclassOf(type))
+            {
+                if (item.GetType() == type)
+                {
                     return true;
+                }
+
+                if (item.GetType().IsSubclassOf(type))
+                {
+                    return true;
+                }
+            }
 
             return false;
         }
