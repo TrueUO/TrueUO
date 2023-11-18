@@ -480,7 +480,7 @@ namespace Server.Items
                         m.Send(new MessageLocalized(Serial, ItemID, MessageType.Regular, 0x3B2, 3, m_MessageNumber, null, ""));
                     }
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(5.0), new TimerStateCallback(EndMessageLock), m);
+                    Timer.DelayCall(TimeSpan.FromSeconds(5.0), EndMessageLock, m);
                 }
 
                 return false;

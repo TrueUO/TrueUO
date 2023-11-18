@@ -225,9 +225,6 @@ namespace Server.Mobiles
         public override bool IsVirtualItem => true;
 
         #region Properties
-
-        public TimerPriority BasePriority { get; set; } = TimerPriority.OneSecond;
-
         public bool DebugThis { get; set; } = false;
 
         public int MovingPlayerCount { get; set; } = 0;
@@ -3197,7 +3194,6 @@ namespace Server.Mobiles
             public MovementTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
                 m_Spawner = spawner;
             }
 
@@ -3339,7 +3335,7 @@ namespace Server.Mobiles
                 case "BlockCommand":
                 case "ChangeCommand":
                     // delay processing of these settings until after all commands have been registered in their Initialize methods
-                    Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(DelayedAssignSettings), new object[] { argname, value });
+                    Timer.DelayCall(TimeSpan.Zero, DelayedAssignSettings, new object[] { argname, value });
                     break;
                 default:
                     return false;
@@ -11282,7 +11278,6 @@ namespace Server.Mobiles
             public GlobalSectorTimer(TimeSpan delay)
                 : base(delay, delay)
             {
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()
@@ -11345,7 +11340,6 @@ namespace Server.Mobiles
             public SectorTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay, delay)
             {
-                Priority = TimerPriority.OneSecond;
                 m_Spawner = spawner;
             }
 
@@ -11493,7 +11487,6 @@ namespace Server.Mobiles
             public InternalTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
                 m_spawner = spawner;
             }
 
@@ -11515,15 +11508,6 @@ namespace Server.Mobiles
             public SpawnerTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                if (spawner.IsInactivated || spawner.CurrentCount == spawner.MaxCount) // reduce timer priority if spawner is inactivated or spawner is maxed
-                {
-                    Priority = TimerPriority.FiveSeconds;
-                }
-                else
-                {
-                    Priority = spawner.BasePriority;
-                }
-
                 m_Spawner = spawner;
             }
 
@@ -11544,7 +11528,6 @@ namespace Server.Mobiles
             public InternalTimer3(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
                 m_spawner = spawner;
             }
 

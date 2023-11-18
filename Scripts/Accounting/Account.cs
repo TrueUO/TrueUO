@@ -1660,8 +1660,6 @@ namespace Server.Accounting
                 : base(TimeSpan.FromMinutes(1.0), TimeSpan.FromMinutes(1.0))
             {
                 _Account = account;
-
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

@@ -3,7 +3,7 @@
     "tfm": "net8.0",
     "framework": {
       "name": "Microsoft.NETCore.App",
-      "version": "8.0.0-rc.2.23479.6"
+      "version": "8.0.0"
     },
     "configProperties": {
       "System.GC.Concurrent": true,

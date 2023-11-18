@@ -94,7 +94,6 @@ namespace Server.Items
             if (_Timer != null)
             {
                 _Timer = Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), CheckCooldown);
-                _Timer.Priority = TimerPriority.FiveSeconds;
             }
         }
 

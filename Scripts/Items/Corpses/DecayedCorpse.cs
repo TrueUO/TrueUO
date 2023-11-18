@@ -96,7 +96,6 @@ namespace Server.Items
                 : base(delay)
             {
                 m_Corpse = c;
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

@@ -75,7 +75,7 @@ namespace Server.Spells.Ninjitsu
             int malus = ninjitsu / 60 + (int)Tracking.GetStalkingBonus(attacker, defender);
 
             info = new SurpriseAttackInfo(defender, malus);
-            info.m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(8.0), new TimerStateCallback(EndSurprise), info);
+            info.m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(8.0), EndSurprise, info);
 
             m_Table[defender] = info;
 

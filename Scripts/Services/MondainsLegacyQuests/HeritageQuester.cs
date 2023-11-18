@@ -136,7 +136,7 @@ namespace Server.Engines.Quests
             SpeechHue = 0x3B2;
 
             if (CheckCompleted(m))
-                Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromSeconds(10), Story.Count + 1, new TimerStateCallback(SayStory), m);
+                Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromSeconds(10), Story.Count + 1, SayStory, m);
             else
             {
                 List<object> incomplete = FindIncompleted(m);
@@ -148,7 +148,7 @@ namespace Server.Engines.Quests
                     delay = TimeSpan.FromSeconds(10);
                 }
 
-                Timer.DelayCall(TimeSpan.Zero, delay, incomplete.Count, new TimerStateCallback(SayInstructions), incomplete);
+                Timer.DelayCall(TimeSpan.Zero, delay, incomplete.Count, SayInstructions, incomplete);
             }
         }
 

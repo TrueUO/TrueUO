@@ -239,8 +239,8 @@ namespace Server.Items
                         from.DoHarmful(to);
 
                         BaseMount.SetMountPrevention(from, BlockMountType.BolaRecovery, TimeSpan.FromSeconds(10.0));
-                        Timer.DelayCall(TimeSpan.FromSeconds(10.0), new TimerStateCallback(ReleaseBolaLock), from);
-                        Timer.DelayCall(TimeSpan.FromSeconds(3.0), new TimerStateCallback(FinishThrow), new object[] { from, to, m_Bola });
+                        Timer.DelayCall(TimeSpan.FromSeconds(10.0), ReleaseBolaLock, from);
+                        Timer.DelayCall(TimeSpan.FromSeconds(3.0), FinishThrow, new object[] { from, to, m_Bola });
                     }
                     else
                     {

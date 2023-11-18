@@ -105,7 +105,7 @@ namespace Server.Items
 
                             TimeSpan delay = TimeSpan.FromSeconds(t.Range / 10.0);
 
-                            Timer.DelayCall(delay, new TimerStateCallback(OnShipHit), new object[] {galleon, t.Location, AmmoType});
+                            Timer.DelayCall(delay, OnShipHit, new object[] {galleon, t.Location, AmmoType});
                         }
 
                         acquiredTarget = true;
@@ -117,7 +117,7 @@ namespace Server.Items
                             DoShootEffects();
                             TimeSpan delay = TimeSpan.FromSeconds(t.Range / 10.0);
 
-                            Timer.DelayCall(delay, new TimerStateCallback(OnMobileHit),
+                            Timer.DelayCall(delay, OnMobileHit,
                                 new object[] {m, t.Location, AmmoType});
                         }
 

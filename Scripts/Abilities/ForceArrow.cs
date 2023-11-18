@@ -147,8 +147,7 @@ namespace Server.Items
                 : base(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1))
             {
                 m_Info = info;
-                Priority = TimerPriority.OneSecond;
-
+                
                 m_Expires = DateTime.UtcNow + TimeSpan.FromSeconds(10);
 
                 Start();

@@ -67,7 +67,7 @@ namespace Server.Items
             from.Direction = from.GetDirectionTo(Location);
             from.Animate(11, 5, 1, true, false, 0);
 
-            Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(DoMine), new object[] { from, tool });
+            Timer.DelayCall(TimeSpan.FromSeconds(1), DoMine, new object[] { from, tool });
         }
 
         public void DoMine(object obj)

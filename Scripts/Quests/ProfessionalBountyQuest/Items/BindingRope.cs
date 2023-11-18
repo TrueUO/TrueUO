@@ -41,7 +41,7 @@ namespace Server.Items
 
         public void DoDelayedDelete(Mobile from)
         {
-            Timer.DelayCall(TimeSpan.FromSeconds(2.5), new TimerStateCallback(DoDelete), from);
+            Timer.DelayCall(TimeSpan.FromSeconds(2.5), DoDelete, from);
         }
 
         public void DoDelete(object o)

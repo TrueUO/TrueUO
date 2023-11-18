@@ -247,7 +247,6 @@ namespace Server.Items
             public InternalTimer(Item item) : base(TimeSpan.FromMinutes(30))
             {
                 m_Item = item;
-                Priority = TimerPriority.FiveSeconds;
             }
             protected override void OnTick()
             {

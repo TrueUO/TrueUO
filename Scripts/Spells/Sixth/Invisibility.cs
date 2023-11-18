@@ -108,7 +108,6 @@ namespace Server.Spells.Sixth
             public InternalTimer(Mobile m, TimeSpan duration)
                 : base(duration)
             {
-                Priority = TimerPriority.OneSecond;
                 m_Mobile = m;
             }
 

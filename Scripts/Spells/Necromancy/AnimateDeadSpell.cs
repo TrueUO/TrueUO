@@ -190,7 +190,7 @@ namespace Server.Spells.Necromancy
                                 Effects.PlaySound(p, map, 0x1FB);
                                 Effects.SendLocationParticles(EffectItem.Create(p, map, EffectItem.DefaultDuration), 0x3789, 1, 40, 0x3F, 3, 9907, 0);
 
-                                Timer.DelayCall(TimeSpan.FromSeconds(2.0), new TimerStateCallback(SummonDelay_Callback), new object[] { Caster, c, p, map, group });
+                                Timer.DelayCall(TimeSpan.FromSeconds(2.0), SummonDelay_Callback, new object[] { Caster, c, p, map, group });
                             }
                         }
                     }

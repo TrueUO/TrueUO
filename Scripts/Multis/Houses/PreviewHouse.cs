@@ -181,7 +181,6 @@ namespace Server.Multis
                 : base(TimeSpan.FromSeconds(20.0))
             {
                 m_Item = item;
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()
