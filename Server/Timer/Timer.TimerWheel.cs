@@ -52,12 +52,15 @@ public partial class Timer
 
     public static void Slice(long tickCount)
     {
-        var deltaSinceTurn = tickCount - _lastTickTurned;
-        while (deltaSinceTurn >= _tickRate)
+        if (!World.Saving)
         {
-            deltaSinceTurn -= _tickRate;
-            _lastTickTurned += _tickRate;
-            Turn();
+            var deltaSinceTurn = tickCount - _lastTickTurned;
+            while (deltaSinceTurn >= _tickRate)
+            {
+                deltaSinceTurn -= _tickRate;
+                _lastTickTurned += _tickRate;
+                Turn();
+            }
         }
     }
 
