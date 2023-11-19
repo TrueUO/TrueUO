@@ -9,10 +9,10 @@ namespace Server.Mobiles
     [CorpseName("a dragon turtle corpse")]
     public class DragonTurtle : BaseChampion
     {
-        public override Type[] UniqueList => new Type[] { };
-        public override Type[] SharedList => new Type[] { };
-        public override Type[] DecorativeList => new Type[] { };
-        public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
+        public override Type[] UniqueList => Array.Empty<Type>();
+        public override Type[] SharedList => Array.Empty<Type>();
+        public override Type[] DecorativeList => Array.Empty<Type>();
+        public override MonsterStatuetteType[] StatueTypes => Array.Empty<MonsterStatuetteType>();
 
         public override ChampionSkullType SkullType => ChampionSkullType.None;
 

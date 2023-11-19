@@ -459,7 +459,7 @@ namespace Server.Items
                 null, // Malas
                 null, // Tokuno
                 new[] { typeof(HammerPick), typeof(SledgeHammerWeapon), typeof(SmithyHammer), typeof(WarAxe), typeof(WarHammer), typeof(Axe), typeof(BattleAxe), typeof(DoubleAxe), typeof(ExecutionersAxe), typeof(Hatchet), typeof(LargeBattleAxe), typeof(OrnateAxe), typeof(TwoHandedAxe), typeof(Pickaxe), typeof(DualShortAxes) },  // TerMur
-                new Type[] {  }  // Eodon
+                Array.Empty<Type>()  // Eodon
             },
             new[] // Assassin
             {

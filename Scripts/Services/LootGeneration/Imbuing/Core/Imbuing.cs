@@ -1673,7 +1673,7 @@ namespace Server.SkillHandlers
                 }
             }
 
-            return new SkillName[] { };
+            return Array.Empty<SkillName>();
         }
 
         public static int GetAvailableSkillIndex(AosSkillBonuses skills)

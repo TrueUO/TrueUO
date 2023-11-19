@@ -465,7 +465,7 @@ namespace Server.Engines.Shadowguard
                                             new Point3D(-21, 10, 0), new Point3D(-17, 16, 0), new Point3D(-13, 12, 0), new Point3D(-11, 18, 0),
                                             new Point3D(10, -20, 0), new Point3D(10, -11, 0), new Point3D(14, -15, 0), new Point3D(17, -10, 0),
                                             new Point3D(10, 10, 0), new Point3D(9, 16, 0), new Point3D(13, 16, 0), new Point3D(15, 10, 0)},
-                            new Rectangle2D[] { });
+                            Array.Empty<Rectangle2D>());
 
             Defs[EncounterType.Armory] = new EncounterDef(
                             new Point3D(0, 0, 0),
@@ -494,7 +494,7 @@ namespace Server.Engines.Shadowguard
             Defs[EncounterType.Roof] = new EncounterDef(
                             new Point3D(-8, -8, 0),
                             new[] { new Point3D(0, 0, 30) },
-                            new Rectangle2D[] { });
+                            Array.Empty<Rectangle2D>());
         }
 
         public static ShadowguardEncounter ConstructEncounter(EncounterType type)

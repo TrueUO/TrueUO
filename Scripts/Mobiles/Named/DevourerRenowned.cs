@@ -51,7 +51,7 @@ namespace Server.Mobiles
         {
         }
 
-        public override Type[] UniqueSAList => new Type[] { };
+        public override Type[] UniqueSAList => Array.Empty<Type>();
         public override Type[] SharedSAList => new Type[] { typeof(AnimatedLegsoftheInsaneTinker), typeof(StormCaller), typeof(PillarOfStrength) };
         public override Poison PoisonImmune => Poison.Lethal;
         public override int Meat => 3;

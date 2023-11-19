@@ -507,8 +507,8 @@ namespace Server.Items
                     )
             };
 
-            eodon.Opposition = new SlayerGroup[] { };
-            eodon.FoundOn = new Type[] { };
+            eodon.Opposition = Array.Empty<SlayerGroup>();
+            eodon.FoundOn = Array.Empty<Type>();
             eodon.Super =
                 new SlayerEntry(
 
@@ -525,15 +525,15 @@ namespace Server.Items
                     typeof(WildBlackTiger), typeof(WildWhiteTiger),
                     typeof(TRex), typeof(SilverbackGorilla));
 
-            eodon.Entries = new SlayerEntry[] { };
+            eodon.Entries = Array.Empty<SlayerEntry>();
 
-            eodonTribe.Opposition = new SlayerGroup[] { };
-            eodonTribe.FoundOn = new Type[] { };
+            eodonTribe.Opposition = Array.Empty<SlayerGroup>();
+            eodonTribe.FoundOn = Array.Empty<Type>();
             eodonTribe.Super = new SlayerEntry(SlayerName.EodonTribe, typeof(TribeWarrior), typeof(TribeShaman), typeof(TribeChieftan));
-            eodonTribe.Entries = new SlayerEntry[] { };
+            eodonTribe.Entries = Array.Empty<SlayerEntry>();
 
             dino.Opposition = new[] { fey };
-            dino.FoundOn = new Type[] { };
+            dino.FoundOn = Array.Empty<Type>();
             dino.Super =
                 new SlayerEntry(
 
@@ -545,17 +545,17 @@ namespace Server.Items
                     typeof(MyrmidexLarvae), typeof(MyrmidexDrone),
                     typeof(TRex), typeof(MyrmidexWarrior));
 
-            dino.Entries = new SlayerEntry[] { };
+            dino.Entries = Array.Empty<SlayerEntry>();
 
             myrmidex.Opposition = new[] { fey };
-            myrmidex.FoundOn = new Type[] { };
+            myrmidex.FoundOn = Array.Empty<Type>();
             myrmidex.Super = new SlayerEntry(
 
                 SlayerName.Myrmidex,
 
                 typeof(MyrmidexLarvae), typeof(MyrmidexDrone),
                 typeof(MyrmidexWarrior));
-            myrmidex.Entries = new SlayerEntry[] { };
+            myrmidex.Entries = Array.Empty<SlayerEntry>();
 
             m_Groups = new[]
                 {

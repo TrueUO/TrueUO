@@ -47,7 +47,7 @@ namespace Server.Mobiles
         {
         }
 
-        public override Type[] UniqueSAList => new Type[] { };
+        public override Type[] UniqueSAList => Array.Empty<Type>();
         public override Type[] SharedSAList => new[] { typeof(AxeOfAbandon), typeof(DemonBridleRing), typeof(VoidInfusedKilt) };
 
         public override InhumanSpeech SpeechType => InhumanSpeech.Ratman;

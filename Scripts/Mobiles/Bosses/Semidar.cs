@@ -57,7 +57,7 @@ namespace Server.Mobiles
         public override Type[] UniqueList => new[] { typeof(GladiatorsCollar) };
         public override Type[] SharedList => new[] { typeof(RoyalGuardSurvivalKnife), typeof(TheMostKnowledgePerson), typeof(LieutenantOfTheBritannianRoyalGuard) };
         public override Type[] DecorativeList => new[] { typeof(LavaTile), typeof(DemonSkull) };
-        public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
+        public override MonsterStatuetteType[] StatueTypes => Array.Empty<MonsterStatuetteType>();
         public override Poison PoisonImmune => Poison.Lethal;
 
         public override void GenerateLoot()

@@ -9,7 +9,7 @@ namespace Server.Items
     {
         private SecureLevel m_Level;
 
-        public override int[] Contents => new int[] { };
+        public override int[] Contents => System.Array.Empty<int>();
 
         [CommandProperty(AccessLevel.GameMaster)]
         public SecureLevel Level { get => m_Level; set => m_Level = value; }
@@ -57,7 +57,7 @@ namespace Server.Items
 
     public class GargishDocumentNote : Note
     {
-        public override int[] Contents => new int[] { };
+        public override int[] Contents => System.Array.Empty<int>();
         public virtual int Title => 0;
 
         public GargishDocumentNote()

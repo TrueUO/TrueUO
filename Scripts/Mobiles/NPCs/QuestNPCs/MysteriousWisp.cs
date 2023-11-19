@@ -148,7 +148,7 @@ namespace Server.Mobiles
 
         private readonly string[][] m_Keywords =
         {
-            new string[] { },
+            Array.Empty<string>(),
             new[] { "corporeal" },
             new[] { "sentient" },
             new[] { "deal" },

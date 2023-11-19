@@ -2553,7 +2553,11 @@ namespace Server.Items
             {
                 m_AosAttributes.WeaponDamage += attrInfo.ArmorDamage;
                 m_AosAttributes.AttackChance += attrInfo.ArmorHitChance;
-                m_AosAttributes.RegenHits += attrInfo.ArmorRegenHits;
+
+                if (attrInfo.ArmorRegenHits > 0)
+                {
+                    m_AosAttributes.RegenHits = attrInfo.ArmorRegenHits;
+                }
             }
             else
             {
