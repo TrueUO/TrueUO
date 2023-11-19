@@ -6962,8 +6962,6 @@ namespace Server.Mobiles
             return false;
         }
 
-        public Rectangle2D SpawnerBounds => new Rectangle2D(m_X, m_Y, m_Width + 1, m_Height + 1);
-
         private void FindTileLocations(ref List<Point3D> locations, Map map, int startx, int starty, int width, int height, List<int> includetilelist, List<int> excludetilelist, TileFlag tileflag, bool checkitems, int spawnerZ)
         {
             if (width < 0 || height < 0 || map == null) return;
@@ -7992,11 +7990,9 @@ namespace Server.Mobiles
         {
             m_SpawnObjects.Remove(so);
         }
-
         #endregion
 
         #region Object Creation
-
         public static object CreateObject(Type type, string itemtypestring)
         {
             return CreateObject(type, itemtypestring, true);
@@ -8077,11 +8073,9 @@ namespace Server.Mobiles
 
             return o;
         }
-
         #endregion
 
         #region Timers
-
         private static void DoGlobalSectorTimer(TimeSpan delay)
         {
             if (m_GlobalSectorTimer != null)
@@ -8094,7 +8088,6 @@ namespace Server.Mobiles
 
         private class GlobalSectorTimer : Timer
         {
-
             public GlobalSectorTimer(TimeSpan delay)
                 : base(delay, delay)
             {
@@ -8103,8 +8096,6 @@ namespace Server.Mobiles
 
             protected override void OnTick()
             {
-                // check the sectors
-
                 // check all active players
                 if (NetState.Instances != null)
                 {
@@ -8122,7 +8113,7 @@ namespace Server.Mobiles
 
                                 if (s != null && GlobalSectorTable[m.Map.MapID] != null)
                                 {
-                                    List<XmlSpawner> spawnerlist; // = GlobalSectorTable[m.Map.MapID][s];
+                                    List<XmlSpawner> spawnerlist;
                                     if (GlobalSectorTable[m.Map.MapID].TryGetValue(s, out spawnerlist) &&
                                         spawnerlist != null)
                                     {
@@ -8142,16 +8133,6 @@ namespace Server.Mobiles
                     }
                 }
             }
-        }
-
-        public void DoSectorTimer(TimeSpan delay)
-        {
-            if (m_SectorTimer != null)
-                m_SectorTimer.Stop();
-
-            m_SectorTimer = new SectorTimer(this, delay);
-
-            m_SectorTimer.Start();
         }
 
         private class SectorTimer : Timer
@@ -8175,21 +8156,18 @@ namespace Server.Mobiles
                         if (m_Spawner.HasActiveSectors)
                         {
                             Stop();
-
                             m_Spawner.SmartRespawn();
                         }
                     }
                     else
                     {
                         Stop();
-
                         m_Spawner.IsInactivated = false;
                     }
                 }
                 else
                 {
                     Stop();
-
                 }
             }
         }
@@ -8320,7 +8298,6 @@ namespace Server.Mobiles
                     m_spawner.RemoveSpawnObjects();
                     m_spawner.m_durActivated = false;
                 }
-
             }
         }
 
@@ -8595,8 +8572,8 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
+
             bool haveproximityrange = false;
             bool hasnewobjectinfo = false;
             int tmpSpawnListSize = 0;
@@ -9447,7 +9424,6 @@ namespace Server.Mobiles
                 return NewSpawnObjects.ToArray();
             }
         }
-
         #endregion
     }
 }
