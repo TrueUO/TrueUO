@@ -1,13 +1,9 @@
-#region References
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-
 using Server.Diagnostics;
-#endregion
 
 namespace Server
 {
@@ -221,17 +217,30 @@ namespace Server
 				{
 					m_Timer = null;
 
-                    if (_InstancePool.Count < 512) // Arbitrary
+                    lock (_InstancePool)
                     {
-                        _InstancePool.Enqueue(this);
+                        if (_InstancePool.Count < 512) // Arbitrary
+                        {
+                            _InstancePool.Enqueue(this);
+                        }
                     }
                 }
 
-				private static readonly ConcurrentQueue<TimerChangeEntry> _InstancePool = new();
+				private static readonly Queue<TimerChangeEntry> _InstancePool = new();
 
 				public static TimerChangeEntry GetInstance(Timer t, int newIndex, bool isAdd)
 				{
-                    if (_InstancePool.TryDequeue(out var e))
+                    TimerChangeEntry e = null;
+
+                    lock (_InstancePool)
+                    {
+                        if (_InstancePool.Count > 0)
+                        {
+                            e = _InstancePool.Dequeue();
+                        }
+                    }
+
+                    if (e != null)
                     {
                         e.m_Timer = t;
                         e.m_NewIndex = newIndex;
