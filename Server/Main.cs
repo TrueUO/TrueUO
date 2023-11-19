@@ -31,7 +31,6 @@ namespace Server
 		public static bool Crashed => _Crashed;
 
 		private static bool _Crashed;
-		private static Thread _TimerThread;
 		private static string _BaseDirectory;
 		private static string _ExePath;
 
@@ -605,8 +604,6 @@ namespace Server
 		public static void Run()
 		{
 			EventSink.InvokeServerStarted();
-
-			_TimerThread.Start();
 
 			try
 			{
