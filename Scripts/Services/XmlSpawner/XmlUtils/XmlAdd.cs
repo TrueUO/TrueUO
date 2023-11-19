@@ -1002,7 +1002,10 @@ namespace Server.Mobiles
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (from == null) return;
+                if (from == null)
+                {
+                    return;
+                }
 
                 // assign it a unique id
                 Guid SpawnId = Guid.NewGuid();
@@ -1029,10 +1032,7 @@ namespace Server.Mobiles
                     defs.Team, defs.HomeRange, defs.HomeRangeIsRelative, Array.Empty<XmlSpawner.SpawnObject>(), defs.RefractMin, defs.RefractMax,
                     defs.TODStart, defs.TODEnd, null, defs.TriggerObjectProp, defs.ProximityMsg, defs.TriggerOnCarried, defs.NoTriggerOnCarried,
                     defs.SpeechTrigger, null, null, defs.PlayerTriggerProp, defs.TriggerProbability, null, defs.Group, defs.TODMode, defs.KillReset, defs.ExternalTriggering,
-                    defs.SequentialSpawn, null, defs.AllowGhostTrig, defs.AllowNPCTrig, defs.SpawnOnTrigger, null, defs.DespawnTime, defs.SkillTrigger, defs.SmartSpawning, null)
-                {
-                    PlayerCreated = true
-                };
+                    defs.SequentialSpawn, null, defs.AllowGhostTrig, defs.AllowNPCTrig, defs.SpawnOnTrigger, null, defs.DespawnTime, defs.SkillTrigger, defs.SmartSpawning, null);
 
                 // if the object is a container, then place it in the container
                 if (targeted is Container container)

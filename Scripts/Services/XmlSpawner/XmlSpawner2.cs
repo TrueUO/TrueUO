@@ -59,8 +59,6 @@ namespace Server.Mobiles
         private const int MaxSmartSectorListSize = 1024;        // maximum sector list size for use in smart spawning. This gives a 512x512 tile range.
 
         private static string defwaypointname = null;            // default waypoint name will get assigned in Initialize
-        private const string XmlTableName = "Properties";
-        private const string XmlDataSetName = "XmlSpawner";
         public static AccessLevel DiskAccessLevel = AccessLevel.Administrator; // minimum access level required by commands that can access the disk such as XmlLoad, XmlSave, and the Save function of XmlEdit
         private static int MaxMoveCheck = 10; // limit number of players that can be checked for triggering in a single OnMovement tick
 
@@ -101,7 +99,6 @@ namespace Server.Mobiles
 
         // sector hashtable for each map
         private static readonly Dictionary<Sector, List<XmlSpawner>>[] GlobalSectorTable = new Dictionary<Sector, List<XmlSpawner>>[6];
-
         #endregion
 
         #region Variable declarations
@@ -266,16 +263,6 @@ namespace Server.Mobiles
                 return new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay;
             }
         }
-
-        public TimeSpan RealTOD => DateTime.UtcNow.TimeOfDay;
-
-        public int RealDay => DateTime.UtcNow.Day;
-
-        public int RealMonth => DateTime.UtcNow.Month;
-
-        public DayOfWeek RealDayOfWeek => DateTime.UtcNow.DayOfWeek;
-
-        public MoonPhase MoonPhase => Clock.GetMoonPhase(Map, Location.X, Location.Y);
 
         public XmlSpawnerGump SpawnerGump
         {
@@ -586,12 +573,6 @@ namespace Server.Mobiles
             }
         }
 
-        public bool PlayerCreated
-        {
-            get => m_PlayerCreated;
-            set => m_PlayerCreated = value;
-        }
-
         public bool OnHold
         {
             get
@@ -878,7 +859,6 @@ namespace Server.Mobiles
         #endregion
 
         #region Command Properties
-
         [CommandProperty(AccessLevel.GameMaster)]
         public bool GumpReset
         {
@@ -1656,7 +1636,6 @@ namespace Server.Mobiles
         #endregion
 
         #region ISpawner interface support
-
         public bool UnlinkOnTaming => true;
         public Point3D HomeLocation => Location;
         public int Range => HomeRange;
@@ -1721,7 +1700,6 @@ namespace Server.Mobiles
                 }
             }
         }
-
         #endregion
 
         #region Method Overrides
@@ -1906,15 +1884,6 @@ namespace Server.Mobiles
             }
         }
 
-        public static void SpawnerGumpCallback(Mobile from, object invoker, string response)
-        {
-            // assign the response to the gumpstate
-            if (invoker is XmlSpawner xs)
-            {
-                xs.GumpState = response;
-            }
-        }
-
         public void DeleteTextEntryBook()
         {
             if (m_TextEntryBook != null)
@@ -1932,7 +1901,6 @@ namespace Server.Mobiles
         #endregion
 
         #region Utility Methods
-
         private static bool IsConstructable(ConstructorInfo ctor)
         {
             return ctor.IsDefined(typeof(ConstructableAttribute), false);
@@ -1946,68 +1914,6 @@ namespace Server.Mobiles
             }
 
             return Convert.ToInt32(value);
-        }
-
-        public static void ExecuteAction(object attachedto, Mobile trigmob, string action)
-        {
-            Point3D loc = Point3D.Zero;
-            Map map = null;
-
-            if (attachedto is IEntity entity)
-            {
-                loc = entity.Location;
-                map = entity.Map;
-            }
-
-            if (action == null || action.Length <= 0 || attachedto == null || map == null) return;
-            SpawnObject TheSpawn = new SpawnObject(null, 0)
-            {
-                TypeName = action
-            };
-            string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(null, attachedto, action);
-            string typeName = BaseXmlSpawner.ParseObjectType(substitutedtypeName);
-
-
-            string status_str;
-            if (BaseXmlSpawner.IsTypeOrItemKeyword(typeName))
-            {
-                BaseXmlSpawner.SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, trigmob, map, out status_str);
-            }
-            else
-            {
-                // its a regular type descriptor so find out what it is
-                Type type = SpawnerType.GetType(typeName);
-                try
-                {
-                    string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-                    object o = CreateObject(type, arglist[0]);
-
-                    if (o == null)
-                    {
-                        status_str = "invalid type specification: " + arglist[0];
-                    }
-                    else if (o is Mobile m)
-                    {
-                        if (m is BaseCreature bc)
-                        {
-                            bc.Home = loc; // Spawners location is the home point
-                        }
-
-                        m.Location = loc;
-                        m.Map = map;
-
-                        BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
-                    }
-                    else if (o is Item item)
-                    {
-                        BaseXmlSpawner.AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Diagnostics.ExceptionLogging.LogException(e);
-                }
-            }
         }
 
         private static void RemoveFromSectorTable(Sector s, XmlSpawner spawner)
@@ -2071,7 +1977,6 @@ namespace Server.Mobiles
         public static void _TraceEnd(int index) { }
         
         #region Trigger Methods
-
         private bool ValidPlayerTrig(Mobile m)
         {
             if (m == null || m.Deleted) return false;
@@ -2569,84 +2474,8 @@ namespace Server.Mobiles
 
         public delegate bool AssignSettingsHandler(string argname, string value);
 
-        // load in settings from the xmlspawner2.cfg file in the Data directory
-        public static void LoadSettings(AssignSettingsHandler settingshandler, string section)
-        {
-            // Check if the file exists
-            string path = Path.Combine(Core.BaseDirectory, "Data/xmlspawner.cfg");
-
-            if (!File.Exists(path))
-            {
-                return;
-            }
-
-            Console.WriteLine("Loading {0} configuration", section);
-            using (StreamReader ip = new StreamReader(path))
-            {
-                string line;
-                string currentsection = null;
-                int nsettings = 0;
-
-                while ((line = ip.ReadLine()) != null)
-                {
-                    line = line.Trim();
-
-                    // skip comments
-                    if (line.Length == 0 || line.StartsWith("#"))
-                        continue;
-
-                    if (line.StartsWith("["))
-                    {
-                        // parse the section name
-                        string[] args = line.Split("[]".ToCharArray(), 3);
-                        if (args.Length > 2)
-                        {
-                            currentsection = args[1].Trim();
-                        }
-                    }
-
-                    // only process the matching classname section
-                    if (currentsection != section)
-                        continue;
-
-                    string[] split = line.Split('=');
-
-                    if (split.Length >= 2)
-                    {
-                        string argname = split[0].Trim();
-                        string value = split[1].Trim();
-
-                        if (argname.Length == 0 || value.Length == 0)
-                            continue;
-
-                        try
-                        {
-                            if (settingshandler(argname, value))
-                                nsettings++;
-                            else
-                                Console.WriteLine("'{0}' setting is invalid in section [{1}]", argname, currentsection);
-
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("Config error '{0}'='{1}'", argname, value);
-                            Console.WriteLine("Error: {0}", e.Message);
-                            Diagnostics.ExceptionLogging.LogException(e);
-                        }
-                    }
-                }
-
-                if (nsettings > 0)
-                {
-                    Console.WriteLine("{0} settings processed", nsettings);
-                }
-            }
-        }
-
         public static void Initialize()
         {
-            LoadSettings(AssignSettings, "XmlSpawner");
-
             // initialize the default waypoint name
             WayPoint tmpwaypoint = new WayPoint();
             defwaypointname = tmpwaypoint.Name;
@@ -2701,12 +2530,8 @@ namespace Server.Mobiles
             CommandSystem.Register("XmlLoad", DiskAccessLevel, Load_OnCommand);
             CommandSystem.Register("XmlLoadHere", DiskAccessLevel, LoadHere_OnCommand);
             CommandSystem.Register("XmlNewLoad", DiskAccessLevel, NewLoad_OnCommand);
-            CommandSystem.Register("XmlNewLoadHere", DiskAccessLevel, NewLoadHere_OnCommand);
             CommandSystem.Register("XmlSave", DiskAccessLevel, Save_OnCommand);
             CommandSystem.Register("XmlSaveAll", DiskAccessLevel, SaveAll_OnCommand);
-            CommandSystem.Register("XmlSaveOld", DiskAccessLevel, SaveOld_OnCommand);
-            CommandSystem.Register("XmlImportSpawners", DiskAccessLevel, XmlImportSpawners_OnCommand);
-            CommandSystem.Register("XmlImportMap", DiskAccessLevel, XmlImportMap_OnCommand);
             CommandSystem.Register("XmlDefaults", AccessLevel.Administrator, XmlDefaults_OnCommand);
             CommandSystem.Register("XmlGet", AccessLevel.GameMaster, XmlGetValue_OnCommand);
             CommandSystem.Register("OptimalSmartSpawning", AccessLevel.Administrator, OptimalSmartSpawning_OnCommand);
@@ -3960,777 +3785,6 @@ namespace Server.Mobiles
                 e.Mobile.SendMessage("You do not have rights to perform this command.");
         }
 
-        [Usage("XmlImportMap <mapfile or directory>")]
-        [Description("Loads spawner definitions from a .map file")]
-        public static void XmlImportMap_OnCommand(CommandEventArgs e)
-        {
-            if (e.Mobile.AccessLevel >= DiskAccessLevel)
-            {
-                if (e.Arguments.Length >= 1)
-                {
-                    string filename = e.Arguments[0];
-
-                    int processedmaps;
-                    int processedspawners;
-                    XmlImportMap(filename, e.Mobile, out processedmaps, out processedspawners);
-                }
-                else
-                    e.Mobile.SendMessage("Usage:  {0} <MapFile>", e.Command);
-            }
-            else
-                e.Mobile.SendMessage("You do not have rights to perform this command.");
-        }
-
-        public static void XmlImportMap(string filename, Mobile from, out int processedmaps, out int processedspawners)
-        {
-            processedmaps = 0;
-            processedspawners = 0;
-            int total_processed_maps = 0;
-            int total_processed_spawners = 0;
-            if (filename == null || filename.Length <= 0 || from == null || from.Deleted) return;
-            // Check if the file exists
-            if (File.Exists(filename))
-            {
-                int spawnercount = 0;
-                int badspawnercount = 0;
-                int linenumber = 0;
-                // default is no map override, use the map spec from each spawn line
-                int overridemap = -1;
-                double overridemintime = -1;
-                double overridemaxtime = -1;
-                bool newformat = false;
-                try
-                {
-                    // Create an instance of StreamReader to read from a file.
-                    // The using statement also closes the StreamReader.
-                    using (StreamReader sr = new StreamReader(filename))
-                    {
-                        string line;
-                        // Read and display lines from the file until the end of
-                        // the file is reached.
-                        while ((line = sr.ReadLine()) != null)
-                        {
-                            // the old format of each .map line is * Dragon:Wyvern 5209 965 -40 2 2 10 50 30 1
-                            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange maxcount
-                            // * | typename:typename:... |s1 |s2 |s3 |s4 |s5 | x | y | z | map | mindelay maxdelay homerange spawnrange spawnid maxcount | maxcount1 | maxcount2 | maxcount3 | maxcount4 | maxcount5
-                            // where s1-5 are additional spawn type entries with their own maxcounts
-                            // the new format of each .map line is  * |Dragon:Wyvern| spawns:spawns| | | | | 5209 | 965 | -40 | 2 | 2 | 10 | 50 | 30 | 1
-
-                            linenumber++;
-                            // is this the new format?
-                            string[] args;
-                            if (line.IndexOf('|') >= 0)
-                            {
-                                args = line.Trim().Split('|');
-                                newformat = true;
-                            }
-                            else
-                            {
-                                args = line.Trim().Split(' ');
-                            }
-
-                            // determine the format of this line and parse accordingly
-                            if (newformat)
-                            {
-                                ParseNewMapFormat(from, filename, line, args, linenumber, ref spawnercount, ref badspawnercount, ref overridemap, ref overridemintime, ref overridemaxtime);
-                            }
-                            else
-                            {
-                                ParseOldMapFormat(from, filename, line, args, linenumber, ref spawnercount, ref badspawnercount, ref overridemap, ref overridemintime, ref overridemaxtime);
-                            }
-
-                        }
-                        sr.Close();
-                    }
-                }
-                catch (Exception e)
-                {
-                    // Let the user know what went wrong.
-                    from.SendMessage("The file could not be read: {0}", e.Message);
-                }
-                from.SendMessage("Imported {0} spawners from {1}", spawnercount, filename);
-                from.SendMessage("{0} bad spawners detected", badspawnercount);
-                processedmaps = 1;
-                processedspawners = spawnercount;
-            }
-            else
-                // check to see if it is a directory
-                if (Directory.Exists(filename))
-            {
-                // if so then import all of the .map files in the directory
-                string[] files = null;
-                try
-                {
-                    files = Directory.GetFiles(filename, "*.map");
-                }
-                catch { }
-                if (files != null && files.Length > 0)
-                {
-                    from.SendMessage("Importing {0} .map files from directory {1}", files.Length, filename);
-                    for (var index = 0; index < files.Length; index++)
-                    {
-                        string file = files[index];
-
-                        XmlImportMap(file, from, out processedmaps, out processedspawners);
-                        total_processed_maps += processedmaps;
-                        total_processed_spawners += processedspawners;
-                    }
-                }
-                // recursively search subdirectories for more .map files
-                string[] dirs = null;
-                try
-                {
-                    dirs = Directory.GetDirectories(filename);
-                }
-                catch { }
-                if (dirs != null && dirs.Length > 0)
-                {
-                    for (var index = 0; index < dirs.Length; index++)
-                    {
-                        string dir = dirs[index];
-
-                        XmlImportMap(dir, from, out processedmaps, out processedspawners);
-                        total_processed_maps += processedmaps;
-                        total_processed_spawners += processedspawners;
-                    }
-                }
-                from.SendMessage("Imported a total of {0} .map files and {2} spawners from directory {1}", total_processed_maps, filename, total_processed_spawners);
-                processedmaps = total_processed_maps;
-                processedspawners = total_processed_spawners;
-            }
-            else
-            {
-                from.SendMessage("{0} does not exist", filename);
-            }
-        }
-
-        private static void ParseNewMapFormat(Mobile from, string filename, string line, string[] args, int linenumber, ref int spawnercount, ref int badspawnercount, ref int overridemap, ref double overridemintime, ref double overridemaxtime)
-        {
-            // format of each .map line is * Dragon:Wyvern 5209 965 -40 2 2 10 50 30 1
-            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange maxcount
-            // or
-            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange spawnid maxcount
-            // ## are comments
-            // overridemap mapnumber
-            // map 0 is tram+fel
-            // map 1 is fel
-            // map 2 is tram
-            // map 3 is ilsh
-            // map 4 is mal
-            // map 5 is tokuno
-            //
-            // * | typename:typename:... | | | | | | x | y | z | map | mindelay maxdelay homerange spawnrange spawnid maxcount1 | maxcount2 | maxcount2 | maxcount3 | maxcount4 | maxcount5 | maxcount6
-            // the new format of each .map line is  * |Dragon:Wyvern| spawns:spawns| | | | | 5209 | 965 | -40 | 2 | 2 | 10 | 50 | 30 | 1
-
-            if (args == null || from == null) return;
-
-            // look for the override keyword
-            if (args.Length == 2 && args[0].ToLower() == "overridemap")
-            {
-                try
-                {
-                    overridemap = int.Parse(args[1]);
-                }
-                catch { }
-            }
-            else if (args.Length == 2 && args[0].ToLower() == "overridemintime")
-            {
-                try
-                {
-                    overridemintime = double.Parse(args[1]);
-                }
-                catch { }
-            }
-            else if (args.Length == 2 && args[0].ToLower() == "overridemaxtime")
-            {
-                try
-                {
-                    overridemaxtime = double.Parse(args[1]);
-                }
-                catch { }
-            }
-            else if (args.Length > 0 && args[0] == "*")
-            {
-
-                bool badspawn = false;
-                int x = 0;
-                int y = 0;
-                int z = 0;
-                int map = 0;
-                double mindelay = 0;
-                double maxdelay = 0;
-                int homerange = 0;
-                int spawnrange = 0;
-                string[][] typenames = new string[6][];
-
-                int[] maxcount = new int[6];
-
-                // parse the main args
-
-                try
-                {
-                    // get the list of spawns
-                    for (int k = 0; k < 6; k++)
-                        typenames[k] = args[k + 1].Split(':');
-
-                    x = int.Parse(args[7]);
-                    y = int.Parse(args[8]);
-                    z = int.Parse(args[9]);
-                    map = int.Parse(args[10]);
-                    mindelay = double.Parse(args[11]);
-                    maxdelay = double.Parse(args[12]);
-                    homerange = int.Parse(args[13]);
-                    spawnrange = int.Parse(args[14]);
-                    int spawnid = int.Parse(args[15]);
-
-                    for (int k = 0; k < 6; k++)
-                        maxcount[k] = int.Parse(args[k + 16]);
-
-                }
-                catch { from.SendMessage("Parsing error at line {0}", linenumber); badspawn = true; }
-
-                // compute the total number of spawns
-                int totalspawns = 0;
-                int totalmaxcount = 0;
-
-                for (int k = 0; k < 6; k++)
-                {
-                    if (typenames[k] == null) continue;
-
-                    for (int i = 0; i < typenames[k].Length; i++)
-                    {
-                        if (typenames[k][i] == null || typenames[k][i].Length == 0) continue;
-
-                        totalspawns++;
-                    }
-
-                    totalmaxcount += maxcount[k];
-                }
-
-                // apply min/maxdelay overrides
-                if (overridemintime != -1)
-                {
-                    mindelay = overridemintime;
-                }
-                if (overridemaxtime != -1)
-                {
-                    maxdelay = overridemaxtime;
-                }
-                if (mindelay > maxdelay) maxdelay = mindelay;
-
-                if (!badspawn && totalspawns > 0)
-                {
-                    // everything seems ok so go ahead and make the spawner
-                    // check for map override
-                    if (overridemap >= 0) map = overridemap;
-                    Map spawnmap = Map.Internal;
-                    switch (map)
-                    {
-                        case 0:
-                            spawnmap = Map.Felucca;
-                            // note it also does trammel
-                            break;
-                        case 1:
-                            spawnmap = Map.Felucca;
-                            break;
-                        case 2:
-                            spawnmap = Map.Trammel;
-                            break;
-                        case 3:
-                            spawnmap = Map.Ilshenar;
-                            break;
-                        case 4:
-                            spawnmap = Map.Malas;
-                            break;
-                        case 5:
-                            spawnmap = Map.Tokuno;
-                            break;
-                    }
-
-                    if (!IsValidMapLocation(x, y, spawnmap))
-                    {
-                        // invalid so dont spawn it
-                        badspawnercount++;
-                        from.SendMessage("Invalid map/location at line {0}", linenumber);
-                        from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                        return;
-                    }
-
-                    // allow it to make an xmlspawner instead
-                    // first add all of the creatures on the list
-                    SpawnObject[] so = new SpawnObject[totalspawns];
-                    int count = 0;
-                    bool hasvendor = true;
-                    for (int k = 0; k < 6; k++)
-                    {
-                        if (typenames[k] == null) continue;
-
-                        for (int i = 0; i < typenames[k].Length; i++)
-                        {
-                            if (typenames[k][i] == null || typenames[k][i].Length == 0 || count > totalspawns) continue;
-
-                            so[count++] = new SpawnObject(typenames[k][i], maxcount[k]);
-
-                            // check the type to see if there are vendors on it
-                            Type type = SpawnerType.GetType(typenames[k][i]);
-
-                            // check for vendor-only spawners which get special spawnrange treatment
-                            if (type != null && type != typeof(BaseVendor) && !type.IsSubclassOf(typeof(BaseVendor)))
-                            {
-                                hasvendor = false;
-                            }
-
-                        }
-                    }
-
-                    // assign it a unique id
-                    Guid SpawnId = Guid.NewGuid();
-
-                    // and give it a name based on the spawner count and file
-                    string spawnername = string.Format("{0}#{1}", Path.GetFileNameWithoutExtension(filename), spawnercount);
-
-                    // Create the new xml spawner
-                    XmlSpawner spawner = new XmlSpawner(SpawnId, x, y, 0, 0, spawnername, totalmaxcount,
-                            TimeSpan.FromMinutes(mindelay), TimeSpan.FromMinutes(maxdelay), TimeSpan.FromMinutes(0), -1, defaultTriggerSound, 1,
-                            0, homerange, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0),
-                            TimeSpan.FromMinutes(0), null, null, null, null, null,
-                            null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
-                            TimeSpan.FromHours(0), null, false, null);
-
-                    spawner.SpawnRange = hasvendor ? 0 : spawnrange;
-
-                    spawner.m_PlayerCreated = true;
-
-                    spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
-                    if (spawner.Map == Map.Internal)
-                    {
-                        badspawnercount++;
-                        spawner.Delete();
-                        from.SendMessage("Invalid map at line {0}", linenumber);
-                        from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                        return;
-                    }
-                    spawnercount++;
-                    // handle the special case of map 0 that also needs to do trammel
-                    if (map == 0)
-                    {
-                        spawnmap = Map.Trammel;
-                        // assign it a unique id
-                        SpawnId = Guid.NewGuid();
-                        // Create the new xml spawner
-                        spawner = new XmlSpawner(SpawnId, x, y, 0, 0, spawnername, totalmaxcount,
-                            TimeSpan.FromMinutes(mindelay), TimeSpan.FromMinutes(maxdelay), TimeSpan.FromMinutes(0), -1, defaultTriggerSound, 1,
-                            0, homerange, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0),
-                            TimeSpan.FromMinutes(0), null, null, null, null, null,
-                            null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
-                            TimeSpan.FromHours(0), null, false, null)
-                        {
-                            SpawnRange = spawnrange,
-                            m_PlayerCreated = true
-                        };
-
-                        spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
-                        if (spawner.Map == Map.Internal)
-                        {
-                            badspawnercount++;
-                            spawner.Delete();
-                            from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                            return;
-                        }
-                        spawnercount++;
-                    }
-                }
-                else
-                {
-                    badspawnercount++;
-                    from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                }
-            }
-        }
-
-        private static void ParseOldMapFormat(Mobile from, string filename, string line, string[] args, int linenumber, ref int spawnercount, ref int badspawnercount, ref int overridemap, ref double overridemintime, ref double overridemaxtime)
-        {
-            // format of each .map line is * Dragon:Wyvern 5209 965 -40 2 2 10 50 30 1
-            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange maxcount
-            // or
-            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange spawnid maxcount
-            // ## are comments
-            // overridemap mapnumber
-            // map 0 is tram+fel
-            // map 1 is fel
-            // map 2 is tram
-            // map 3 is ilsh
-            // map 4 is mal
-            // map 5 is tokuno
-            //
-            // * | typename:typename:... | | | | | | x | y | z | map | mindelay maxdelay homerange spawnrange spawnid maxcount | maxcount2 | maxcount2 | maxcount3 | maxcount4 | maxcount5
-            // the new format of each .map line is  * |Dragon:Wyvern| spawns:spawns| | | | | 5209 | 965 | -40 | 2 | 2 | 10 | 50 | 30 | 1
-
-            if (args == null || from == null)
-                return;
-
-            // look for the override keyword
-            if (args.Length == 2 && args[0].ToLower() == "overridemap")
-            {
-                try
-                {
-                    overridemap = int.Parse(args[1]);
-                }
-                catch { }
-            }
-            else if (args.Length == 2 && args[0].ToLower() == "overridemintime")
-            {
-                try
-                {
-                    overridemintime = double.Parse(args[1]);
-                }
-                catch { }
-            }
-            else if (args.Length == 2 && args[0].ToLower() == "overridemaxtime")
-            {
-                try
-                {
-                    overridemaxtime = double.Parse(args[1]);
-                }
-                catch { }
-            }
-            else if (args.Length > 0 && args[0] == "*")
-            {
-                bool badspawn = false;
-                int x = 0;
-                int y = 0;
-                int z = 0;
-                int map = 0;
-                double mindelay = 0;
-                double maxdelay = 0;
-                int homerange = 0;
-                int spawnrange = 0;
-                int maxcount = 0;
-                string[] typenames = null;
-                if (args.Length != 11 && args.Length != 12)
-                {
-                    badspawn = true;
-                    from.SendMessage("Invalid arg count {1} at line {0}", linenumber, args.Length);
-                }
-                else
-                {
-                    // get the list of spawns
-                    typenames = args[1].Split(':');
-                    // parse the rest of the args
-
-                    if (args.Length == 11)
-                    {
-
-                        try
-                        {
-                            x = int.Parse(args[2]);
-                            y = int.Parse(args[3]);
-                            z = int.Parse(args[4]);
-                            map = int.Parse(args[5]);
-                            mindelay = double.Parse(args[6]);
-                            maxdelay = double.Parse(args[7]);
-                            homerange = int.Parse(args[8]);
-                            spawnrange = int.Parse(args[9]);
-                            maxcount = int.Parse(args[10]);
-
-                        }
-                        catch { from.SendMessage("Parsing error at line {0}", linenumber); badspawn = true; }
-                    }
-                    else
-                        if (args.Length == 12)
-                    {
-
-                        try
-                        {
-                            x = int.Parse(args[2]);
-                            y = int.Parse(args[3]);
-                            z = int.Parse(args[4]);
-                            map = int.Parse(args[5]);
-                            mindelay = double.Parse(args[6]);
-                            maxdelay = double.Parse(args[7]);
-                            homerange = int.Parse(args[8]);
-                            spawnrange = int.Parse(args[9]);
-                            int spawnid = int.Parse(args[10]);
-                            maxcount = int.Parse(args[11]);
-
-                        }
-                        catch { from.SendMessage("Parsing error at line {0}", linenumber); badspawn = true; }
-                    }
-                }
-
-
-                // apply mi/maxdelay overrides
-                if (overridemintime != -1)
-                {
-                    mindelay = overridemintime;
-                }
-                if (overridemaxtime != -1)
-                {
-                    maxdelay = overridemaxtime;
-                }
-                if (mindelay > maxdelay) maxdelay = mindelay;
-
-                if (!badspawn && typenames.Length > 0)
-                {
-                    // everything seems ok so go ahead and make the spawner
-                    // check for map override
-                    if (overridemap >= 0) map = overridemap;
-                    Map spawnmap = Map.Internal;
-                    switch (map)
-                    {
-                        case 0:
-                            spawnmap = Map.Felucca;
-                            // note it also does trammel
-                            break;
-                        case 1:
-                            spawnmap = Map.Felucca;
-                            break;
-                        case 2:
-                            spawnmap = Map.Trammel;
-                            break;
-                        case 3:
-                            spawnmap = Map.Ilshenar;
-                            break;
-                        case 4:
-                            spawnmap = Map.Malas;
-                            break;
-                        case 5:
-                            spawnmap = Map.Tokuno;
-                            break;
-                    }
-
-                    if (!IsValidMapLocation(x, y, spawnmap))
-                    {
-                        // invalid so dont spawn it
-                        badspawnercount++;
-                        from.SendMessage("Invalid map/location at line {0}", linenumber);
-                        from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                        return;
-                    }
-
-                    // allow it to make an xmlspawner instead
-                    // first add all of the creatures on the list
-                    SpawnObject[] so = new SpawnObject[typenames.Length];
-
-                    bool hasvendor = true;
-                    for (int i = 0; i < typenames.Length; i++)
-                    {
-                        so[i] = new SpawnObject(typenames[i], maxcount);
-
-                        // check the type to see if there are vendors on it
-                        Type type = SpawnerType.GetType(typenames[i]);
-
-                        // check for vendor-only spawners which get special spawnrange treatment
-                        if (type != null && type != typeof(BaseVendor) && !type.IsSubclassOf(typeof(BaseVendor)))
-                        {
-                            hasvendor = false;
-                        }
-
-                    }
-
-                    // assign it a unique id
-                    Guid SpawnId = Guid.NewGuid();
-
-                    // and give it a name based on the spawner count and file
-                    string spawnername = string.Format("{0}#{1}", Path.GetFileNameWithoutExtension(filename), spawnercount);
-
-                    // Create the new xml spawner
-                    XmlSpawner spawner = new XmlSpawner(SpawnId, x, y, 0, 0, spawnername, maxcount,
-                        TimeSpan.FromMinutes(mindelay), TimeSpan.FromMinutes(maxdelay), TimeSpan.FromMinutes(0), -1, defaultTriggerSound, 1,
-                        0, homerange, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0),
-                        TimeSpan.FromMinutes(0), null, null, null, null, null,
-                        null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
-                        TimeSpan.FromHours(0), null, false, null);
-
-                    spawner.SpawnRange = hasvendor ? 0 : spawnrange;
-
-                    spawner.m_PlayerCreated = true;
-
-                    spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
-                    if (spawner.Map == Map.Internal)
-                    {
-                        badspawnercount++;
-                        spawner.Delete();
-                        from.SendMessage("Invalid map at line {0}", linenumber);
-                        from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                        return;
-                    }
-                    spawnercount++;
-                    // handle the special case of map 0 that also needs to do trammel
-                    if (map == 0)
-                    {
-                        spawnmap = Map.Trammel;
-                        // assign it a unique id
-                        SpawnId = Guid.NewGuid();
-                        // Create the new xml spawner
-                        spawner = new XmlSpawner(SpawnId, x, y, 0, 0, spawnername, maxcount,
-                            TimeSpan.FromMinutes(mindelay), TimeSpan.FromMinutes(maxdelay), TimeSpan.FromMinutes(0), -1, defaultTriggerSound, 1,
-                            0, homerange, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0),
-                            TimeSpan.FromMinutes(0), null, null, null, null, null,
-                            null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
-                            TimeSpan.FromHours(0), null, false, null)
-                        {
-                            SpawnRange = spawnrange,
-                            m_PlayerCreated = true
-                        };
-
-                        spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
-                        if (spawner.Map == Map.Internal)
-                        {
-                            badspawnercount++;
-                            spawner.Delete();
-                            from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                            return;
-                        }
-                        spawnercount++;
-                    }
-                }
-                else
-                {
-                    badspawnercount++;
-                    from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                }
-            }
-        }
-
-        [Usage("XmlImportSpawners filename")]
-        [Description("Loads xml files created by Sno's xml exporter as xmlspawners.")]
-        public static void XmlImportSpawners_OnCommand(CommandEventArgs e)
-        {
-            if (e.Arguments.Length >= 1)
-            {
-                string filename = e.GetString(0);
-                string filePath = Path.Combine("Saves/Spawners", filename);
-                if (File.Exists(filePath))
-                {
-                    XmlDocument doc = new XmlDocument();
-                    try
-                    {
-                        doc.Load(filePath);
-                    }
-                    catch
-                    {
-                        e.Mobile.SendMessage("unable to load file {0}.", filePath);
-                        return;
-                    }
-
-                    XmlElement root = doc["spawners"];
-                    int successes = 0, failures = 0;
-                    if (root?.GetElementsByTagName("spawner") != null)
-                    {
-                        var name = root.GetElementsByTagName("spawner");
-
-                        for (var index = 0; index < name.Count; index++)
-                        {
-                            var spawner = (XmlElement) name[index];
-                            try
-                            {
-                                ImportSpawner(spawner, e.Mobile);
-                                successes++;
-                            }
-                            catch (Exception ex)
-                            {
-                                e.Mobile.SendMessage(33, "{0} {1}", ex.Message, spawner.InnerText);
-                                failures++;
-                            }
-                        }
-                    }
-                    e.Mobile.SendMessage("{0} spawners loaded successfully from {1}, {2} failures.", successes, filePath, failures);
-                }
-                else
-                    e.Mobile.SendMessage("File {0} does not exist.", filePath);
-            }
-            else
-                e.Mobile.SendMessage("Usage: [XmlImportSpawners <filename>");
-        }
-
-        private static string GetText(XmlElement node, string defaultValue)
-        {
-            if (node == null)
-                return defaultValue;
-            return node.InnerText;
-        }
-
-        private static void ImportSpawner(XmlElement node, Mobile from)
-        {
-            int count = int.Parse(GetText(node["count"], "1"));
-            int homeRange = int.Parse(GetText(node["homerange"], "4"));
-            int walkingRange = int.Parse(GetText(node["walkingrange"], "-1"));
-            // width of the spawning area
-            int spawnwidth = homeRange * 2;
-            if (walkingRange >= 0) spawnwidth = walkingRange * 2;
-
-            int team = int.Parse(GetText(node["team"], "0"));
-            bool group = bool.Parse(GetText(node["group"], "False"));
-            TimeSpan maxDelay = TimeSpan.Parse(GetText(node["maxdelay"], "10:00"));
-            TimeSpan minDelay = TimeSpan.Parse(GetText(node["mindelay"], "05:00"));
-            List<string> creaturesName = LoadCreaturesName(node["creaturesname"]);
-            string name = GetText(node["name"], "Spawner");
-            Point3D location = Point3D.Parse(GetText(node["location"], "Error"));
-            Map map = Map.Parse(GetText(node["map"], "Error"));
-
-            // allow it to make an xmlspawner instead
-            // first add all of the creatures on the list
-            SpawnObject[] so = new SpawnObject[creaturesName.Count];
-
-            bool hasvendor = false;
-
-            for (int i = 0; i < creaturesName.Count; i++)
-            {
-                so[i] = new SpawnObject(creaturesName[i], count);
-                // check the type to see if there are vendors on it
-                Type type = SpawnerType.GetType(creaturesName[i]);
-
-                // if it has basevendors on it or invalid types, then skip it
-                if (type != null && (type == typeof(BaseVendor) || type.IsSubclassOf(typeof(BaseVendor))))
-                {
-                    hasvendor = true;
-                }
-            }
-
-            // assign it a unique id
-            Guid SpawnId = Guid.NewGuid();
-
-            // Create the new xml spawner
-            XmlSpawner spawner = new XmlSpawner(SpawnId, location.X, location.Y, spawnwidth, spawnwidth, name, count,
-                minDelay, maxDelay, TimeSpan.FromMinutes(0), -1, defaultTriggerSound, 1,
-                team, homeRange, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0),
-                TimeSpan.FromMinutes(0), null, null, null, null, null,
-                null, null, null, null, 1, null, group, defTODMode, defKillReset, false, -1, null, false, false, false, null, defDespawnTime, null, false, null);
-
-            spawner.SpawnRange = hasvendor ? 0 : homeRange;
-            spawner.m_PlayerCreated = true;
-
-            spawner.MoveToWorld(location, map);
-            if (!IsValidMapLocation(location, spawner.Map))
-            {
-                spawner.Delete();
-                throw new Exception("Invalid spawner location.");
-            }
-        }
-
-        private static List<string> LoadCreaturesName(XmlElement node)
-        {
-            List<string> names = new List<string>();
-
-            if (node != null)
-            {
-                var name = node.GetElementsByTagName("creaturename");
-
-                for (var index = 0; index < name.Count; index++)
-                {
-                    var ele = (XmlElement) name[index];
-
-                    if (ele != null)
-                    {
-                        names.Add(ele.InnerText);
-                    }
-                }
-            }
-
-            return names;
-        }
-
         public static void XmlLoadFromFile(string filename, string SpawnerPrefix, Mobile from, Point3D fromloc, Map frommap, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners)
         {
             processedmaps = 0;
@@ -4833,18 +3887,6 @@ namespace Server.Mobiles
             XmlLoadFromFile(filename, SpawnerPrefix, from, from.Location, from.Map, loadrelative, maxrange, loadnew, out processedmaps, out processedspawners);
         }
 
-        public static void XmlLoadFromFile(string filename, string SpawnerPrefix, Point3D fromloc, Map frommap, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners)
-        {
-            XmlLoadFromFile(filename, SpawnerPrefix, null, fromloc, frommap, loadrelative, maxrange, loadnew, out processedmaps, out processedspawners);
-
-        }
-
-        public static void XmlLoadFromFile(string filename, string SpawnerPrefix, bool loadnew, out int processedmaps, out int processedspawners)
-        {
-            XmlLoadFromFile(filename, SpawnerPrefix, null, Point3D.Zero, Map.Internal, false, 0, loadnew, out processedmaps, out processedspawners);
-
-        }
-
         public static void XmlLoadFromStream(Stream fs, string filename, string SpawnerPrefix, Mobile from, Point3D fromloc, Map frommap, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners)
         {
             XmlLoadFromStream(fs, filename, SpawnerPrefix, from, fromloc, frommap, loadrelative, maxrange, loadnew, out processedmaps, out processedspawners, false);
@@ -4860,7 +3902,6 @@ namespace Server.Mobiles
 
             // assign an id that will be used to distinguish the newly loaded spawners by appending it to their name
             Guid newloadid = Guid.NewGuid();
-
 
             int TotalCount = 0;
             int TrammelCount = 0;
@@ -6134,55 +5175,6 @@ namespace Server.Mobiles
             }
         }
 
-        [Usage("XmlNewLoadHere <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]")]
-        [Description("Loads new XmlSpawner objects with new GUIDs (no replacement) to the current map and location of the player. Spawners beyond maxrange (default=48 tiles) are not moved relative to the player")]
-        public static void NewLoadHere_OnCommand(CommandEventArgs e)
-        {
-            if (e.Mobile.AccessLevel >= DiskAccessLevel)
-            {
-                if (e.Arguments.Length >= 1)
-                {
-                    string filename = LocateFile(e.Arguments[0]);
-
-                    // Spawner load criteria (if any)
-                    string SpawnerPrefix = string.Empty;
-                    bool badargs = false;
-                    int maxrange = 48;
-
-                    // Check if there is an argument provided (load criteria)
-                    try
-                    {
-                        // Check if there is an argument provided (load criteria)
-                        for (int nxtarg = 1; nxtarg < e.Arguments.Length; nxtarg++)
-                        {
-                            // is it a maxrange option?
-                            if (e.Arguments[nxtarg].ToLower() == "-maxrange")
-                            {
-                                maxrange = int.Parse(e.Arguments[++nxtarg]);
-                            }
-                            else
-                            {
-                                SpawnerPrefix = e.Arguments[nxtarg];
-                            }
-                        }
-                    }
-                    catch { e.Mobile.SendMessage("Usage:  {0} <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]", e.Command); badargs = true; }
-
-                    if (!badargs)
-                    {
-                        int processedmaps;
-                        int processedspawners;
-
-                        XmlLoadFromFile(filename, SpawnerPrefix, e.Mobile, true, maxrange, true, out processedmaps, out processedspawners);
-                    }
-                }
-                else
-                    e.Mobile.SendMessage("Usage:  {0} <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]", e.Command);
-            }
-            else
-                e.Mobile.SendMessage("You do not have rights to perform this command.");
-        }
-
         [Usage("XmlLoadHere <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]")]
         [Description("Loads XmlSpawner objects to the current map and location of the player. Spawners beyond maxrange (default=48 tiles) are not moved relative to the player")]
         public static void LoadHere_OnCommand(CommandEventArgs e)
@@ -6229,13 +5221,6 @@ namespace Server.Mobiles
             }
             else
                 e.Mobile.SendMessage("You do not have rights to perform this command.");
-        }
-
-        [Usage("XmlSaveOld <SpawnFile> [SpawnerPrefixFilter]")]
-        [Description("Saves all XmlSpawner objects from the current map into the file supplied in the old xmlspawner format.")]
-        public static void SaveOld_OnCommand(CommandEventArgs e)
-        {
-            SaveSpawns(e, false, true);
         }
 
         [Usage("XmlSpawnerSave <SpawnFile> [SpawnerPrefixFilter]")]
@@ -6379,11 +5364,6 @@ namespace Server.Mobiles
             SaveSpawnList(e.Mobile, saveslist, dirname, oldformat, true);
         }
 
-        public static bool SaveSpawnList(List<XmlSpawner> savelist, Stream stream)
-        {
-            return SaveSpawnList(null, savelist, null, stream, false, false);
-        }
-
         public static bool SaveSpawnList(Mobile from, List<XmlSpawner> savelist, string dirname, bool oldformat, bool verbose)
         {
             if (string.IsNullOrEmpty(dirname)) return false;
@@ -6417,7 +5397,6 @@ namespace Server.Mobiles
 
             return save_ok;
         }
-
 
         public static bool SaveSpawnList(Mobile from, List<XmlSpawner> savelist, string dirname, Stream stream, bool oldformat, bool verbose)
         {
@@ -6973,10 +5952,6 @@ namespace Server.Mobiles
             ConfigFile = configfile;
             m_WayPoint = wayPoint;
 
-            // set the totalitem property to -1 so that it doesnt show up in the item count of containers
-            //TotalItems = -1;
-            //UpdateTotal(this, TotalType.Items, -1);
-
             // Create the array of spawned objects
             m_SpawnObjects = new List<SpawnObject>();
 
@@ -6991,11 +5966,9 @@ namespace Server.Mobiles
             : base(serial)
         {
         }
-
         #endregion
 
         #region Defrag methods
-
         public void Defrag(bool killtest)
         {
             if (m_SpawnObjects == null)
@@ -7201,93 +6174,9 @@ namespace Server.Mobiles
             if (removed)
                 InvalidateProperties();
         }
-
-        public void DeleteGumpTags()
-        {
-            if (m_SpawnObjects == null)
-            {
-                return;
-            }
-
-            bool removed = false;
-            List<BaseXmlSpawner.KeywordTag> ToDelete = new List<BaseXmlSpawner.KeywordTag>();
-
-            for (var index = 0; index < m_SpawnObjects.Count; index++)
-            {
-                SpawnObject so = m_SpawnObjects[index];
-                for (int x = 0; x < so.SpawnedObjects.Count; x++)
-                {
-                    object o = so.SpawnedObjects[x];
-
-                    if (o is BaseXmlSpawner.KeywordTag sot && sot.Type == 1) // clear the gump tags
-                    {
-                        ToDelete.Add(sot);
-                        so.SpawnedObjects.Remove(o);
-                        x--;
-                        removed = true;
-                    }
-                }
-            }
-
-            for (int x = ToDelete.Count - 1; x >= 0; --x)//BaseXmlSpawner.KeywordTag i in ToDelete)
-            {
-                BaseXmlSpawner.KeywordTag i = ToDelete[x];
-                if (i != null && !i.Deleted)
-                {
-                    i.Delete();
-                }
-            }
-
-            // Check if anything has been removed
-            if (removed)
-                InvalidateProperties();
-        }
-
-        public void DeleteTag(BaseXmlSpawner.KeywordTag tag)
-        {
-            if (m_SpawnObjects == null)
-            {
-                return;
-            }
-
-            bool removed = false;
-            List<BaseXmlSpawner.KeywordTag> ToDelete = new List<BaseXmlSpawner.KeywordTag>();
-
-            for (var index = 0; index < m_SpawnObjects.Count; index++)
-            {
-                SpawnObject so = m_SpawnObjects[index];
-                for (int x = 0; x < so.SpawnedObjects.Count; x++)
-                {
-                    object o = so.SpawnedObjects[x];
-
-                    if (o is BaseXmlSpawner.KeywordTag sot && sot == tag) // clear the matching tags
-                    {
-                        ToDelete.Add(sot);
-                        so.SpawnedObjects.Remove(o);
-                        x--;
-                        removed = true;
-                    }
-                }
-            }
-
-            for (int x = ToDelete.Count - 1; x >= 0; --x) // BaseXmlSpawner.KeywordTag i in ToDelete)
-            {
-                BaseXmlSpawner.KeywordTag i = ToDelete[x];
-                if (i != null && !i.Deleted)
-                {
-                    i.Delete();
-                }
-            }
-
-            // Check if anything has been removed
-            if (removed)
-                InvalidateProperties();
-        }
-
         #endregion
 
         #region SequentialSpawning methods
-
         private int SubGroupCount(int sgroup)
         {
             if (m_SpawnObjects == null)
@@ -7720,10 +6609,7 @@ namespace Server.Mobiles
             if (SmartSpawning && IsFull && !HasActiveSectors && !HasDamagedOrDistantSpawns /*&& !HasHoldSmartSpawning */ )
             {
                 IsInactivated = true;
-                // for multiple sector spawning ranges use the sector timer, otherwise just rely on OnSectorActivate to detect sector activation
-                //if(!UseSectorActivate)
-                //DoSectorTimer(TimeSpan.FromSeconds(1));
-
+                
                 SmartRemoveSpawnObjects();
 
             }
@@ -7792,7 +6678,6 @@ namespace Server.Mobiles
                 }
                 else
                 {
-
                     if (CheckForSequentialReset())
                     {
                         // it has expired so reset the sequential spawn level
@@ -8558,7 +7443,6 @@ namespace Server.Mobiles
             inrespawn = false;
         }
 
-
         public void SortSpawns()
         {
             if (m_SpawnObjects == null)
@@ -8589,68 +7473,6 @@ namespace Server.Mobiles
 
                 return a.SubGroup - b.SubGroup;
             }
-        }
-
-        public static SpawnObject GetSpawnObject(XmlSpawner spawner, int sgroup)
-        {
-            if (spawner == null || spawner.m_SpawnObjects == null)
-                return null;
-
-            for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
-            {
-                if (spawner.m_SpawnObjects[i].SubGroup == sgroup) // find the first entry with matching subgroup id
-                {
-                    return spawner.m_SpawnObjects[i];
-                }
-            }
-
-            return null;
-        }
-
-        public static object GetSpawned(XmlSpawner spawner, int sgroup)
-        {
-            if (spawner == null || spawner.m_SpawnObjects == null)
-                return null;
-
-            for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
-            {
-                // find the first entry with matching subgroup id
-                if (spawner.m_SpawnObjects[i].SubGroup == sgroup)
-                {
-                    // find the first spawned object in the entry
-                    if (spawner.m_SpawnObjects[i].SpawnedObjects.Count > 0)
-                    {
-                        return spawner.m_SpawnObjects[i].SpawnedObjects[0];
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public static List<object> GetSpawnedList(XmlSpawner spawner, int sgroup)
-        {
-            List<object> newlist = new List<object>();
-
-            if (spawner == null || spawner.m_SpawnObjects == null)
-                return null;
-
-            for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
-            {
-                // find the first entry with matching subgroup id
-                if (spawner.m_SpawnObjects[i].SubGroup == sgroup)
-                {
-                    // find the first spawned object in the entry
-
-                    if (spawner.m_SpawnObjects[i].SpawnedObjects.Count > 0)
-                    {
-                        for (int j = 0; j < spawner.m_SpawnObjects[i].SpawnedObjects.Count; j++)
-                            newlist.Add(spawner.m_SpawnObjects[i].SpawnedObjects[j]);
-                    }
-                }
-            }
-
-            return newlist;
         }
 
         public bool HasSubGroups()
@@ -8739,6 +7561,7 @@ namespace Server.Mobiles
 
             return true;
         }
+
         public static bool IsValidMapLocation(Point3D location, Map map)
         {
             if (map == null || map == Map.Internal)
@@ -8752,6 +7575,7 @@ namespace Server.Mobiles
 
             return true;
         }
+
         public static bool IsValidMapLocation(Point2D location, Map map)
         {
             if (map == null || map == Map.Internal)
@@ -8893,167 +7717,6 @@ namespace Server.Mobiles
 
                 return false;
             }
-        }
-
-        // if a non-null mob argument is passed, then check the canswim and cantwalk props to determine valid placement
-        public bool CanFit(int x, int y, int z, int height, bool checkBlocksFit, bool checkMobiles, bool requireSurface, Mobile mob)
-        {
-            Map map = Map;
-
-            if (DebugThis)
-            {
-                Console.WriteLine("CanFit mob {0}, map={1}", mob, map);
-            }
-            if (map == null || map == Map.Internal)
-                return false;
-
-            if (x < 0 || y < 0 || x >= map.Width || y >= map.Height)
-                return false;
-
-            bool hasSurface = false;
-            bool checkmob = false;
-            bool canswim = false;
-            bool cantwalk = false;
-
-            if (mob != null)
-            {
-                checkmob = true;
-                canswim = mob.CanSwim;
-                cantwalk = mob.CantWalk;
-            }
-            if (DebugThis)
-            {
-                Console.WriteLine("fitting mob {0} checkmob={1} swim={2} walk={3}", mob, checkmob, canswim, cantwalk);
-            }
-            LandTile lt = map.Tiles.GetLandTile(x, y);
-            int lowZ = 0, avgZ = 0, topZ = 0;
-
-            bool surface;
-            bool wet = false;
-
-            map.GetAverageZ(x, y, ref lowZ, ref avgZ, ref topZ);
-            TileFlag landFlags = TileData.LandTable[lt.ID & TileData.MaxLandValue].Flags;
-
-            if (DebugThis)
-            {
-                Console.WriteLine("landtile at {0},{1},{2} lowZ={3} avgZ={4} topZ={5}", x, y, z, lowZ, avgZ, topZ);
-            }
-
-            var impassable = (landFlags & TileFlag.Impassable) != 0;
-            if (checkmob)
-            {
-                wet = (landFlags & TileFlag.Wet) != 0;
-                // dont allow wateronly creatures on land
-                if (cantwalk && !wet)
-                    impassable = true;
-                // allow water creatures on water
-                if (canswim && wet)
-                {
-                    impassable = false;
-                }
-            }
-
-            if (impassable && avgZ > z && (z + height) > lowZ)
-                return false;
-
-            if (!impassable && z == avgZ && !lt.Ignored)
-                hasSurface = true;
-
-            if (DebugThis)
-            {
-                Console.WriteLine("landtile at {0},{1},{2} wet={3} impassable={4} hassurface={5}", x, y, z, wet, impassable, hasSurface);
-            }
-
-            StaticTile[] staticTiles = map.Tiles.GetStaticTiles(x, y, true);
-
-            for (int i = 0; i < staticTiles.Length; ++i)
-            {
-                ItemData id = TileData.ItemTable[staticTiles[i].ID & TileData.MaxItemValue];
-                surface = id.Surface;
-                impassable = id.Impassable;
-                if (checkmob)
-                {
-                    wet = (id.Flags & TileFlag.Wet) != 0;
-                    // dont allow wateronly creatures on land
-                    if (cantwalk && !wet)
-                        impassable = true;
-                    // allow water creatures on water
-                    if (canswim && wet)
-                    {
-                        surface = true;
-                        impassable = false;
-                    }
-                }
-
-                if ((surface || impassable) && staticTiles[i].Z + id.CalcHeight > z && (z + height) > staticTiles[i].Z)
-                    return false;
-
-                if (surface && !impassable && z == staticTiles[i].Z + id.CalcHeight)
-                    hasSurface = true;
-            }
-            if (DebugThis)
-            {
-                Console.WriteLine("statics hassurface={0}", hasSurface);
-            }
-
-            Sector sector = map.GetSector(x, y);
-            List<Item> items = sector.Items;
-            List<Mobile> mobs = sector.Mobiles;
-
-            for (int i = 0; i < items.Count; ++i)
-            {
-                Item item = items[i];
-
-                if (item.ItemID < 0x4000 && item.AtWorldPoint(x, y))
-                {
-                    ItemData id = item.ItemData;
-                    surface = id.Surface;
-                    impassable = id.Impassable;
-                    if (checkmob)
-                    {
-                        wet = (id.Flags & TileFlag.Wet) != 0;
-                        // dont allow wateronly creatures on land
-                        if (cantwalk && !wet)
-                            impassable = true;
-                        // allow water creatures on water
-                        if (canswim && wet)
-                        {
-                            surface = true;
-                            impassable = false;
-                        }
-                    }
-
-                    if ((surface || impassable || checkBlocksFit && item.BlocksFit) && item.Z + id.CalcHeight > z && (z + height) > item.Z)
-                        return false;
-
-                    if (surface && !impassable && !item.Movable && z == item.Z + id.CalcHeight)
-                        hasSurface = true;
-                }
-            }
-
-            if (DebugThis)
-            {
-                Console.WriteLine("items hassurface={0}", hasSurface);
-            }
-
-            if (checkMobiles)
-            {
-                for (int i = 0; i < mobs.Count; ++i)
-                {
-                    Mobile m = mobs[i];
-
-                    if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
-                        if ((m.Z + 16) > z && (z + height) > m.Z)
-                            return false;
-                }
-            }
-
-            if (DebugThis)
-            {
-                Console.WriteLine("return requiresurface={0} hassurface={1}", requireSurface, hasSurface);
-            }
-
-            return !requireSurface || hasSurface;
         }
 
         public bool CanSpawnMobile(int x, int y, int z, Mobile mob)
@@ -9269,20 +7932,6 @@ namespace Server.Mobiles
             }
 
             return new Point2D(x, y);
-        }
-
-        // used for getting non-mobile spawn positions
-        public Point3D GetSpawnPosition(bool requiresurface)
-        {
-            // no pack spawning
-            return GetSpawnPosition(requiresurface, -1, Point3D.Zero, null, null);
-        }
-
-        // used for getting mobile spawn positions
-        public Point3D GetSpawnPosition(bool requiresurface, Mobile mob)
-        {
-            // no pack spawning
-            return GetSpawnPosition(requiresurface, -1, Point3D.Zero, null, mob);
         }
 
         // used for getting non-mobile spawn positions
@@ -9810,18 +8459,6 @@ namespace Server.Mobiles
             return Location;
         }
 
-        public int GetCreatureMax(int index)
-        {
-            Defrag(false);
-
-            if (m_SpawnObjects == null)
-            {
-                return 0;
-            }
-
-            return m_SpawnObjects[index].MaxCount;
-        }
-
         private void DeleteFromList(List<object> list)
         {
             if (list == null)
@@ -9919,7 +8556,6 @@ namespace Server.Mobiles
             Defrag(false); // Defrag again
         }
 
-
         public void RemoveSpawnObjects(SpawnObject so)
         {
             if (so == null) return;
@@ -9934,7 +8570,6 @@ namespace Server.Mobiles
 
                 if (o is Item || o is Mobile)
                     deletelist.Add(o);
-
             }
 
             DeleteFromList(deletelist);
@@ -10520,18 +9155,14 @@ namespace Server.Mobiles
         #endregion
 
         #region Serialization
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
+            writer.Write(32);
 
-            writer.Write(32); // version
-                              // version 31
             writer.Write(m_DisableGlobalAutoReset);
-            // Version 30
             writer.Write(m_AllowNPCTriggering);
 
-            // Version 29
             if (m_SpawnObjects != null)
             {
                 writer.Write(m_SpawnObjects.Count);
@@ -10545,7 +9176,6 @@ namespace Server.Mobiles
                 writer.Write(0);
             }
 
-            // Version 28
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -10554,7 +9184,6 @@ namespace Server.Mobiles
                 }
             }
 
-            // Version 27
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -10563,10 +9192,8 @@ namespace Server.Mobiles
                 }
             }
 
-            // Version 26
             writer.Write(m_SpawnOnTrigger);
 
-            // Version 24
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -10591,17 +9218,14 @@ namespace Server.Mobiles
                 writer.Write(false);
             }
 
-            // Version 23
             writer.Write(IsInactivated);
             writer.Write(m_SmartSpawning);
-            // Version 22
             writer.Write(m_SkillTrigger);
             writer.Write((int)m_skill_that_triggered);
             writer.Write(m_FreeRun);
             writer.Write(m_mob_who_triggered);
-            // Version 21
             writer.Write(m_DespawnTime);
-            // Version 20
+           
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -10609,7 +9233,7 @@ namespace Server.Mobiles
                     writer.Write(m_SpawnObjects[i].RequireSurface);
                 }
             }
-            // Version 19
+            
             writer.Write(m_ConfigFile);
             writer.Write(m_OnHold);
             writer.Write(m_HoldSequence);
@@ -10630,12 +9254,9 @@ namespace Server.Mobiles
                     m_KeywordTagList[i].Serialize(writer);
                 }
             }
-            // Version 18
+            
             writer.Write(m_AllowGhostTriggering);
-            // Version 17
-            // removed in version 25
-            //writer.Write( m_TextEntryBook);
-            // Version 16
+            
             writer.Write(m_SequentialSpawning);
             // write out the remaining time until sequential reset
             writer.Write(NextSeqReset);
@@ -10654,49 +9275,29 @@ namespace Server.Mobiles
             }
             writer.Write(m_RegionName);
 
-            // Version 15
             writer.Write(m_ExternalTriggering);
             writer.Write(m_ExternalTrigger);
-
-            // Version 14
             writer.Write(m_NoItemTriggerName);
 
-            // Version 13
             writer.Write(m_GumpState);
 
-            // Version 12
             int todtype = (int)m_TODMode;
             writer.Write(todtype);
 
-            // Version 11
             writer.Write(m_KillReset);
             writer.Write(m_skipped);
             writer.Write(m_spawncheck);
-
-            // Version 10
             writer.Write(m_SetPropertyItem);
-
-            // Version 9
             writer.Write(m_TriggerProbability);
-
-            // Version 8
             writer.Write(m_MobPropertyName);
             writer.Write(m_MobTriggerName);
             writer.Write(m_PlayerPropertyName);
-
-            // Version 7
             writer.Write(m_SpeechTrigger);
-
-            // Version 6
             writer.Write(m_ItemTriggerName);
-
-            // Version 5
             writer.Write(m_ProximityTriggerMessage);
             writer.Write(m_ObjectPropertyItem);
             writer.Write(m_ObjectPropertyName);
             writer.Write(m_killcount);
-
-            // Version 4
             writer.Write(m_ProximityRange);
             writer.Write(m_ProximityTriggerSound);
             writer.Write(m_proximityActivated);
@@ -10707,20 +9308,16 @@ namespace Server.Mobiles
             writer.Write(m_TODEnd);
             writer.Write(m_MinRefractory);
             writer.Write(m_MaxRefractory);
+
             if (m_refractActivated)
                 writer.Write(m_RefractEnd - DateTime.UtcNow);
             if (m_durActivated)
                 writer.Write(m_DurEnd - DateTime.UtcNow);
-            // Version 3
+            
             writer.Write(m_ShowContainerStatic);
-            // Version 2
             writer.Write(m_Duration);
-
-            // Version 1
             writer.Write(m_UniqueId);
             writer.Write(m_HomeRangeIsRelative);
-
-            // Version 0
             writer.Write(m_Name);
             writer.Write(m_X);
             writer.Write(m_Y);
@@ -10850,12 +9447,6 @@ namespace Server.Mobiles
                     {
                         m_SpawnOnTrigger = reader.ReadBool();
 
-                        if (version < 32)
-                        {
-                            // Delete First & Last Modified
-                            reader.ReadDateTime();
-                            reader.ReadDateTime();
-                        }
                         goto case 25;
                     }
                 case 25:
@@ -10927,14 +9518,6 @@ namespace Server.Mobiles
                         m_ConfigFile = reader.ReadString();
                         m_OnHold = reader.ReadBool();
                         m_HoldSequence = reader.ReadBool();
-
-                        if (version < 32)
-                        {
-                            // // Delete First & Last Modified By
-                            // // Delete First & Last Modified By
-                            reader.ReadString();
-                            reader.ReadString();
-                        }
 
                         // deserialize the keyword tag list
                         int tagcount = reader.ReadInt();
