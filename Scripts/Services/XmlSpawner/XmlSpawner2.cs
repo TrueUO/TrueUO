@@ -306,8 +306,6 @@ namespace Server.Mobiles
             }
         }
 
-        private static int totalSectorsMonitored = 0;
-
         public bool HasActiveSectors
         {
             get
@@ -435,8 +433,6 @@ namespace Server.Mobiles
                                     GlobalSectorTable[Map.MapID][s] = spawnerlist;
                                 }
 
-                                totalSectorsMonitored++;
-
                                 // add some sanity checking here
                                 if (sectorList.Count > MaxSmartSectorListSize)
                                 {
@@ -468,8 +464,8 @@ namespace Server.Mobiles
                 }
 
                 _TraceStart(2);
-                // go through the sectorlist and see if any of the sectors are active
 
+                // go through the sectorlist and see if any of the sectors are active
                 for (var index = 0; index < sectorList.Count; index++)
                 {
                     Sector s = sectorList[index];
@@ -823,7 +819,6 @@ namespace Server.Mobiles
                     {
                         m_Region = region;
                         m_RegionName = region.Name;
-                        //InvalidateProperties();
                         return;
                     }
                 }
@@ -832,7 +827,6 @@ namespace Server.Mobiles
                 m_Region = null;
             }
         }
-
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D X1_Y1
@@ -1971,7 +1965,6 @@ namespace Server.Mobiles
             // wasnt on the list so add it
             if (add)
             {
-
                 // is the list at max throttling length?
                 if (m_MovementList.Count > MaxMoveCheck)
                 {
@@ -1980,7 +1973,6 @@ namespace Server.Mobiles
                 }
                 else
                 {
-
                     m_MovementList.Add(new MovementInfo(m));
                 }
             }
@@ -2046,8 +2038,8 @@ namespace Server.Mobiles
 
                         m_Spawner.MovingPlayerCount = m_Spawner.m_MovementList.Count;
                         m_Spawner.FastestPlayerSpeed = maxspeed;
-
                     }
+
                     m_Spawner.m_MovementList.Clear();
                 }
             }
@@ -2068,10 +2060,6 @@ namespace Server.Mobiles
                 // check to see if player is within range of the spawner
                 if ((Parent == null) && Utility.InRange(m.Location, Location, m_ProximityRange))
                 {
-                    // add some throttling code here.
-                    // add the player to a list that gets cleared every few seconds, checking for redundancy then trigger off of the list instead of off of
-                    // the actual movement stream
-
                     AddToMovementList(m);
                 }
                 else
@@ -2178,8 +2166,8 @@ namespace Server.Mobiles
                 {
                     return;
                 }
-                from.SendMessage("{0}", result);
 
+                from.SendMessage("{0}", result);
             }
         }
 
@@ -2929,7 +2917,6 @@ namespace Server.Mobiles
                     from.SendMessage("{0} does not exist", filename);
                 }
             }
-
         }
 
         public static void XmlUnLoadFromStream(Stream fs, string filename, string SpawnerPrefix, Mobile from, out int processedmaps, out int processedspawners)
@@ -2958,7 +2945,6 @@ namespace Server.Mobiles
             DataSet ds = new DataSet(SpawnDataSetName);
 
             // Read in the file
-            //ds.ReadXml( e.Arguments[0].ToString() );
             bool fileerror = false;
             try
             {
@@ -3253,7 +3239,6 @@ namespace Server.Mobiles
 
         public static void XmlLoadFromStream(Stream fs, string filename, string SpawnerPrefix, Mobile from, Point3D fromloc, Map frommap, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners, bool verbose)
         {
-
             processedmaps = 0;
             processedspawners = 0;
 
@@ -3478,59 +3463,53 @@ namespace Server.Mobiles
 
                             string XmlMapName = frommap.Name;
 
-                            //if(!loadrelative && !loadnew)
+                            // Try to get the "map" field, but in case it doesn't exist, catch and discard the exception
+                            try
                             {
-                                // Try to get the "map" field, but in case it doesn't exist, catch and discard the exception
+                                XmlMapName = (string)dr["Map"];
+                            }
+                            catch
+                            {
+                                questionable_spawner = true;
+                            }
+
+                            // Convert the xml map value to a real map object
+                            if (string.Compare(XmlMapName, Map.Trammel.Name, true) == 0 || XmlMapName == "Trammel")
+                            {
+                                SpawnMap = Map.Trammel;
+                                TrammelCount++;
+                            }
+                            else if (string.Compare(XmlMapName, Map.Felucca.Name, true) == 0 || XmlMapName == "Felucca")
+                            {
+                                SpawnMap = Map.Felucca;
+                                FeluccaCount++;
+                            }
+                            else if (string.Compare(XmlMapName, Map.Ilshenar.Name, true) == 0 || XmlMapName == "Ilshenar")
+                            {
+                                SpawnMap = Map.Ilshenar;
+                                IlshenarCount++;
+                            }
+                            else if (string.Compare(XmlMapName, Map.Malas.Name, true) == 0 || XmlMapName == "Malas")
+                            {
+                                SpawnMap = Map.Malas;
+                                MalasCount++;
+                            }
+                            else if (string.Compare(XmlMapName, Map.Tokuno.Name, true) == 0 || XmlMapName == "Tokuno")
+                            {
+                                SpawnMap = Map.Tokuno;
+                                TokunoCount++;
+                            }
+                            else
+                            {
                                 try
                                 {
-                                    XmlMapName = (string) dr["Map"];
+                                    SpawnMap = Map.Parse(XmlMapName);
                                 }
                                 catch
                                 {
-                                    questionable_spawner = true;
                                 }
 
-                                // Convert the xml map value to a real map object
-                                if (string.Compare(XmlMapName, Map.Trammel.Name, true) == 0 || XmlMapName == "Trammel")
-                                {
-                                    SpawnMap = Map.Trammel;
-                                    TrammelCount++;
-                                }
-                                else if (string.Compare(XmlMapName, Map.Felucca.Name, true) == 0 ||
-                                         XmlMapName == "Felucca")
-                                {
-                                    SpawnMap = Map.Felucca;
-                                    FeluccaCount++;
-                                }
-                                else if (string.Compare(XmlMapName, Map.Ilshenar.Name, true) == 0 ||
-                                         XmlMapName == "Ilshenar")
-                                {
-                                    SpawnMap = Map.Ilshenar;
-                                    IlshenarCount++;
-                                }
-                                else if (string.Compare(XmlMapName, Map.Malas.Name, true) == 0 || XmlMapName == "Malas")
-                                {
-                                    SpawnMap = Map.Malas;
-                                    MalasCount++;
-                                }
-                                else if (string.Compare(XmlMapName, Map.Tokuno.Name, true) == 0 ||
-                                         XmlMapName == "Tokuno")
-                                {
-                                    SpawnMap = Map.Tokuno;
-                                    TokunoCount++;
-                                }
-                                else
-                                {
-                                    try
-                                    {
-                                        SpawnMap = Map.Parse(XmlMapName);
-                                    }
-                                    catch
-                                    {
-                                    }
-
-                                    OtherCount++;
-                                }
+                                OtherCount++;
                             }
 
                             // test to see whether the distance between the relative center point and the spawner is too great.  If so then dont do relative
@@ -4149,10 +4128,7 @@ namespace Server.Mobiles
                                 int NewZ = 0;
 
                                 // Check if relative loading is set.  If so then try loading at the z-offset position first with no surface requirement, then try auto
-                                /*if(loadrelative && SpawnMap.CanFit( SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ, SpawnFitSize,true, false,false )) */
-
-                                if (loadrelative && HasTileSurface(SpawnMap, SpawnCentreX, SpawnCentreY,
-                                    OrigZ - SpawnRelZ))
+                                if (loadrelative && HasTileSurface(SpawnMap, SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ))
                                 {
                                     NewZ = OrigZ - SpawnRelZ;
                                 }
@@ -4197,7 +4173,6 @@ namespace Server.Mobiles
                                 // update subgroup-specific next spawn times
                                 TheSpawn.NextSpawn = TimeSpan.Zero;
                                 TheSpawn.ResetNextSpawnTimes();
-
 
                                 // Send a message to the client that the spawner is created
                                 if (from != null && verbose)
@@ -4340,7 +4315,6 @@ namespace Server.Mobiles
                                             op.WriteLine();
                                         }
                                     }
-
                                     catch
                                     {
                                     }
@@ -4649,8 +4623,10 @@ namespace Server.Mobiles
 
         public static bool SaveSpawnList(Mobile from, List<XmlSpawner> savelist, string dirname, bool oldformat, bool verbose)
         {
-            if (string.IsNullOrEmpty(dirname)) return false;
-
+            if (string.IsNullOrEmpty(dirname))
+            {
+                return false;
+            }
 
             bool save_ok = true;
             FileStream fs = null;
@@ -4692,7 +4668,6 @@ namespace Server.Mobiles
             int MalasCount = 0;
             int TokunoCount = 0;
             int OtherCount = 0;
-
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -4915,10 +4890,10 @@ namespace Server.Mobiles
                 }
 
                 dr["WayPoint"] = waystr;
-
                 dr["IsGroup"] = sp.m_Group;
                 dr["IsRunning"] = sp.m_Running;
                 dr["IsHomeRangeRelative"] = sp.m_HomeRangeIsRelative;
+
                 if (oldformat)
                 {
                     dr["Objects"] = sp.GetSerializedObjectList();
@@ -5160,7 +5135,6 @@ namespace Server.Mobiles
                 despawnTime, skillTrigger, smartSpawning, wayPoint);
         }
 
-
         public void InitSpawn(int x, int y, int width, int height, string name, int maxCount, TimeSpan minDelay, TimeSpan maxDelay, TimeSpan duration,
             int proximityRange, int proximityTriggerSound, int amount, int team, int homeRange, bool isRelativeHomeRange, SpawnObject[] objectsToSpawn,
             TimeSpan minRefractory, TimeSpan maxRefractory, TimeSpan todstart, TimeSpan todend, Item objectPropertyItem, string objectPropertyName, string proximityMessage,
@@ -5168,7 +5142,6 @@ namespace Server.Mobiles
             Item setPropertyItem, bool isGroup, TODModeType todMode, int killReset, bool externalTriggering, int sequentialSpawning, string regionName, bool allowghost, bool allownpc, bool spawnontrigger,
             string configfile, TimeSpan despawnTime, string skillTrigger, bool smartSpawning, WayPoint wayPoint)
         {
-
             Visible = false;
             Movable = false;
             m_X = x;
@@ -5889,7 +5862,6 @@ namespace Server.Mobiles
                 IsInactivated = true;
                 
                 SmartRemoveSpawnObjects();
-
             }
 
             // dont process spawn ticks while inactivated if smart spawning is enabled
@@ -6333,7 +6305,6 @@ namespace Server.Mobiles
                 // dont try to spawn invalid types, or Mobile type spawns in containers
                 if (type != null && !(Parent != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile)))))
                 {
-
                     string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
 
                     object o = CreateObject(type, arglist[0]);
@@ -6663,8 +6634,8 @@ namespace Server.Mobiles
 
                 if (x < m_Count - 1 || OnHold)
                     m_proximityActivated = keepProximityActivated;
-
             }
+
             if (!FreeRun)
             {
                 m_mob_who_triggered = null;
@@ -7459,7 +7430,6 @@ namespace Server.Mobiles
                 else if (m_Region != null && HasRegionPoints(m_Region))  
                 {
                     // if region spawning is selected then use that to find an x,y loc instead of the spawn box
-
                     if (includetilelist != null || excludetilelist != null || tileflag != TileFlag.None)
                     {
                         // use the precalculated tile locations

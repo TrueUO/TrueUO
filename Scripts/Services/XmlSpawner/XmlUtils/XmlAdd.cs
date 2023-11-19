@@ -1,5 +1,4 @@
 using Server.Accounting;
-using Server.Commands;
 using Server.Gumps;
 using Server.Items;
 using Server.Network;
@@ -59,10 +58,6 @@ namespace Server.Mobiles
             public int FindGumpX;
             public int FindGumpY;
 
-            // these are additional defaults that are not set by XmlAdd but can be used by other routines such as the custom properties gump to determine 
-            // whether properties have been changed from spawner default values
-            public bool Running = true;
-
             public bool AutoNumber;
             public int AutoNumberValue;
 
@@ -77,6 +72,7 @@ namespace Server.Mobiles
 
             public bool IgnoreUpdate;
         }
+
         public static ArrayList DefaultEntryList;
 
         public static DefaultEntry GetDefaults(string account, string name)
@@ -265,7 +261,6 @@ namespace Server.Mobiles
             ds.Tables[DefsTablePointName].Columns.Add("TrigProb");
             ds.Tables[DefsTablePointName].Columns.Add("PlayerTrigProp");
             ds.Tables[DefsTablePointName].Columns.Add("TrigObjectProp");
-            //ds.Tables[DefsTablePointName].Columns.Add( "DefsExt" );
             ds.Tables[DefsTablePointName].Columns.Add("NameList");
             ds.Tables[DefsTablePointName].Columns.Add("SelectionList");
             ds.Tables[DefsTablePointName].Columns.Add("AddGumpX");
@@ -281,8 +276,6 @@ namespace Server.Mobiles
             DataRow dr = ds.Tables[DefsTablePointName].NewRow();
 
             // Populate the data
-            //dr["AccountName"] = (string)defs.AccountName;
-            //dr["PlayerName"] = (string)defs.PlayerName;
             dr["SpawnerName"] = defs.SpawnerName;
             dr["MinDelay"] = defs.MinDelay.TotalMinutes;
             dr["MaxDelay"] = defs.MaxDelay.TotalMinutes;
@@ -349,7 +342,6 @@ namespace Server.Mobiles
 
             if (from != null && !from.Deleted)
                 from.SendMessage("Saved defs to file {0}", dirname);
-
         }
 
         private void DoLoadDefs(Mobile from, string filename)
@@ -372,6 +364,7 @@ namespace Server.Mobiles
                 // look in the main installation dir
                 dirname = string.Format("{0}.defs", filename);
             }
+
             // Check if the file exists
             if (File.Exists(dirname))
             {
@@ -547,50 +540,6 @@ namespace Server.Mobiles
                 if (from != null && !from.Deleted)
                     from.SendMessage(33, "File not found: {0}", dirname);
             }
-        }
-
-        public static void Initialize()
-        {
-            CommandSystem.Register("XmlAdd", AccessLevel.GameMaster, XmlAdd_OnCommand);
-        }
-
-        [Usage("XmlAdd [-defaults]")]
-        [Description("Opens a gump that can add Xmlspawners with specified default settings")]
-        public static void XmlAdd_OnCommand(CommandEventArgs e)
-        {
-            Account acct = e.Mobile.Account as Account;
-            int x = 440;
-            int y = 0;
-            XmlSpawnerDefaults.DefaultEntry defs = null;
-            if (acct != null)
-                defs = XmlSpawnerDefaults.GetDefaults(acct.ToString(), e.Mobile.Name);
-            if (defs != null)
-            {
-                x = defs.AddGumpX;
-                y = defs.AddGumpY;
-            }
-            // Check if there is an argument provided (load criteria)
-            try
-            {
-                // Check if there is an argument provided (load criteria)
-                for (int nxtarg = 0; nxtarg < e.Arguments.Length; nxtarg++)
-                {
-                    // is it a defaults option?
-                    if (e.Arguments[nxtarg].ToLower() == "-defaults")
-                    {
-                        XmlSpawnerDefaults.RestoreDefs(defs);
-                        if (defs != null)
-                        {
-                            x = defs.AddGumpX;
-                            y = defs.AddGumpY;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex) { Diagnostics.ExceptionLogging.LogException(ex); }
-
-            e.Mobile.SendGump(new XmlAddGump(e.Mobile, e.Mobile.Location, e.Mobile.Map, true, false, x, y));
-
         }
 
         public XmlAddGump(Mobile from, Point3D startloc, Map startmap, bool firststart, bool extension, int gumpx, int gumpy) : base(gumpx, gumpy)
