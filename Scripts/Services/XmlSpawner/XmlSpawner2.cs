@@ -49,7 +49,6 @@ namespace Server.Mobiles
         }
         #endregion
 
-        #region Constant declarations
         public const byte MaxLoops = 10; //maximum number of recursive calls from spawner to itself. this is to prevent stack overflow from xmlspawner scripting
         private const int ShowBoundsItemId = 14089;             // 14089 Fire Column // 3555 Campfire // 8708 Skull Pole
         private const string SpawnDataSetName = "Spawns";
@@ -62,11 +61,8 @@ namespace Server.Mobiles
         private const int MaxSmartSectorListSize = 1024;        // maximum sector list size for use in smart spawning. This gives a 512x512 tile range.
 
         private static string defwaypointname = null;            // default waypoint name will get assigned in Initialize
-        private const string XmlTableName = "Properties";
-        private const string XmlDataSetName = "XmlSpawner";
         public static AccessLevel DiskAccessLevel = AccessLevel.Administrator; // minimum access level required by commands that can access the disk such as XmlLoad, XmlSave, and the Save function of XmlEdit
         private static int MaxMoveCheck = 10; // limit number of players that can be checked for triggering in a single OnMovement tick
-        #endregion
 
         #region Static variable declarations
         // specifies the level at which smartspawning will be triggered.  Players with AccessLevel above this will not trigger smartspawning unless unhidden.
@@ -371,8 +367,6 @@ namespace Server.Mobiles
             }
         }
 
-        private static int totalSectorsMonitored = 0;
-
         public bool HasActiveSectors
         {
             get
@@ -499,8 +493,6 @@ namespace Server.Mobiles
                                     // add a new entry to the table
                                     GlobalSectorTable[Map.MapID][s] = spawnerlist;
                                 }
-
-                                totalSectorsMonitored++;
 
                                 // add some sanity checking here
                                 if (sectorList.Count > MaxSmartSectorListSize)
