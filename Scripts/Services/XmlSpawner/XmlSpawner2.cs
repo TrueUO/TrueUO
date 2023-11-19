@@ -16,7 +16,6 @@ namespace Server.Mobiles
 {
     public class XmlSpawner : Item, ISpawner
     {
-        #region Type declarations
         public enum TODModeType { Realtime, Gametime }
 
         public enum SpawnPositionType { Random, RowFill, ColFill, Perimeter, Player, Waypoint, RelXY, DeltaLocation, Location, Wet, Tiles, NoTiles, ItemID, NoItemID }
@@ -47,7 +46,6 @@ namespace Server.Mobiles
                     trigLocation = m.Location;
             }
         }
-        #endregion
 
         public const byte MaxLoops = 10; //maximum number of recursive calls from spawner to itself. this is to prevent stack overflow from xmlspawner scripting
         private const int ShowBoundsItemId = 14089;             // 14089 Fire Column // 3555 Campfire // 8708 Skull Pole
@@ -64,7 +62,6 @@ namespace Server.Mobiles
         public static AccessLevel DiskAccessLevel = AccessLevel.Administrator; // minimum access level required by commands that can access the disk such as XmlLoad, XmlSave, and the Save function of XmlEdit
         private static int MaxMoveCheck = 10; // limit number of players that can be checked for triggering in a single OnMovement tick
 
-        #region Static variable declarations
         // specifies the level at which smartspawning will be triggered.  Players with AccessLevel above this will not trigger smartspawning unless unhidden.
         public static AccessLevel SmartSpawnAccessLevel = AccessLevel.Player;
 
@@ -101,8 +98,6 @@ namespace Server.Mobiles
 
         // sector hashtable for each map
         private static readonly Dictionary<Sector, List<XmlSpawner>>[] GlobalSectorTable = new Dictionary<Sector, List<XmlSpawner>>[6];
-
-        #endregion
 
         #region Variable declarations
         private string m_Name = string.Empty;
@@ -6145,89 +6140,6 @@ namespace Server.Mobiles
             if (removed)
                 InvalidateProperties();
         }
-
-        public void DeleteGumpTags()
-        {
-            if (m_SpawnObjects == null)
-            {
-                return;
-            }
-
-            bool removed = false;
-            List<BaseXmlSpawner.KeywordTag> ToDelete = new List<BaseXmlSpawner.KeywordTag>();
-
-            for (var index = 0; index < m_SpawnObjects.Count; index++)
-            {
-                SpawnObject so = m_SpawnObjects[index];
-                for (int x = 0; x < so.SpawnedObjects.Count; x++)
-                {
-                    object o = so.SpawnedObjects[x];
-
-                    if (o is BaseXmlSpawner.KeywordTag sot && sot.Type == 1) // clear the gump tags
-                    {
-                        ToDelete.Add(sot);
-                        so.SpawnedObjects.Remove(o);
-                        x--;
-                        removed = true;
-                    }
-                }
-            }
-
-            for (int x = ToDelete.Count - 1; x >= 0; --x)//BaseXmlSpawner.KeywordTag i in ToDelete)
-            {
-                BaseXmlSpawner.KeywordTag i = ToDelete[x];
-                if (i != null && !i.Deleted)
-                {
-                    i.Delete();
-                }
-            }
-
-            // Check if anything has been removed
-            if (removed)
-                InvalidateProperties();
-        }
-
-        public void DeleteTag(BaseXmlSpawner.KeywordTag tag)
-        {
-            if (m_SpawnObjects == null)
-            {
-                return;
-            }
-
-            bool removed = false;
-            List<BaseXmlSpawner.KeywordTag> ToDelete = new List<BaseXmlSpawner.KeywordTag>();
-
-            for (var index = 0; index < m_SpawnObjects.Count; index++)
-            {
-                SpawnObject so = m_SpawnObjects[index];
-                for (int x = 0; x < so.SpawnedObjects.Count; x++)
-                {
-                    object o = so.SpawnedObjects[x];
-
-                    if (o is BaseXmlSpawner.KeywordTag sot && sot == tag) // clear the matching tags
-                    {
-                        ToDelete.Add(sot);
-                        so.SpawnedObjects.Remove(o);
-                        x--;
-                        removed = true;
-                    }
-                }
-            }
-
-            for (int x = ToDelete.Count - 1; x >= 0; --x) // BaseXmlSpawner.KeywordTag i in ToDelete)
-            {
-                BaseXmlSpawner.KeywordTag i = ToDelete[x];
-                if (i != null && !i.Deleted)
-                {
-                    i.Delete();
-                }
-            }
-
-            // Check if anything has been removed
-            if (removed)
-                InvalidateProperties();
-        }
-
         #endregion
 
         #region SequentialSpawning methods
@@ -6664,10 +6576,6 @@ namespace Server.Mobiles
             if (SmartSpawning && IsFull && !HasActiveSectors && !HasDamagedOrDistantSpawns /*&& !HasHoldSmartSpawning */ )
             {
                 IsInactivated = true;
-                // for multiple sector spawning ranges use the sector timer, otherwise just rely on OnSectorActivate to detect sector activation
-                //if(!UseSectorActivate)
-                //DoSectorTimer(TimeSpan.FromSeconds(1));
-
                 SmartRemoveSpawnObjects();
 
             }
@@ -6736,7 +6644,6 @@ namespace Server.Mobiles
                 }
                 else
                 {
-
                     if (CheckForSequentialReset())
                     {
                         // it has expired so reset the sequential spawn level
@@ -7502,7 +7409,6 @@ namespace Server.Mobiles
             inrespawn = false;
         }
 
-
         public void SortSpawns()
         {
             if (m_SpawnObjects == null)
@@ -7533,68 +7439,6 @@ namespace Server.Mobiles
 
                 return a.SubGroup - b.SubGroup;
             }
-        }
-
-        public static SpawnObject GetSpawnObject(XmlSpawner spawner, int sgroup)
-        {
-            if (spawner == null || spawner.m_SpawnObjects == null)
-                return null;
-
-            for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
-            {
-                if (spawner.m_SpawnObjects[i].SubGroup == sgroup) // find the first entry with matching subgroup id
-                {
-                    return spawner.m_SpawnObjects[i];
-                }
-            }
-
-            return null;
-        }
-
-        public static object GetSpawned(XmlSpawner spawner, int sgroup)
-        {
-            if (spawner == null || spawner.m_SpawnObjects == null)
-                return null;
-
-            for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
-            {
-                // find the first entry with matching subgroup id
-                if (spawner.m_SpawnObjects[i].SubGroup == sgroup)
-                {
-                    // find the first spawned object in the entry
-                    if (spawner.m_SpawnObjects[i].SpawnedObjects.Count > 0)
-                    {
-                        return spawner.m_SpawnObjects[i].SpawnedObjects[0];
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public static List<object> GetSpawnedList(XmlSpawner spawner, int sgroup)
-        {
-            List<object> newlist = new List<object>();
-
-            if (spawner == null || spawner.m_SpawnObjects == null)
-                return null;
-
-            for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
-            {
-                // find the first entry with matching subgroup id
-                if (spawner.m_SpawnObjects[i].SubGroup == sgroup)
-                {
-                    // find the first spawned object in the entry
-
-                    if (spawner.m_SpawnObjects[i].SpawnedObjects.Count > 0)
-                    {
-                        for (int j = 0; j < spawner.m_SpawnObjects[i].SpawnedObjects.Count; j++)
-                            newlist.Add(spawner.m_SpawnObjects[i].SpawnedObjects[j]);
-                    }
-                }
-            }
-
-            return newlist;
         }
 
         public bool HasSubGroups()
@@ -7683,33 +7527,7 @@ namespace Server.Mobiles
 
             return true;
         }
-        public static bool IsValidMapLocation(Point3D location, Map map)
-        {
-            if (map == null || map == Map.Internal)
-                return false;
-
-            // check the location relative to the current map to make sure it is valid
-            if (location.X < 0 || location.X > map.Width || location.Y < 0 || location.Y > map.Height)
-            {
-                return false;
-            }
-
-            return true;
-        }
-        public static bool IsValidMapLocation(Point2D location, Map map)
-        {
-            if (map == null || map == Map.Internal)
-                return false;
-
-            // check the location relative to the current map to make sure it is valid
-            if (location.X < 0 || location.X > map.Width || location.Y < 0 || location.Y > map.Height)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
+        
         private static WayPoint GetWaypoint(string waypointstr)
         {
             WayPoint waypoint = null;
@@ -7813,191 +7631,6 @@ namespace Server.Mobiles
             }
 
             return false;
-        }
-
-        public bool HasHoldSmartSpawning
-        {
-            get
-            {
-                // go through the spawn lists
-                for (var index = 0; index < m_SpawnObjects.Count; index++)
-                {
-                    SpawnObject so = m_SpawnObjects[index];
-
-                    for (int x = 0; x < so.SpawnedObjects.Count; x++)
-                    {
-                        object o = so.SpawnedObjects[x];
-
-                        if (CheckHoldSmartSpawning(o))
-                        {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            }
-        }
-
-        // if a non-null mob argument is passed, then check the canswim and cantwalk props to determine valid placement
-        public bool CanFit(int x, int y, int z, int height, bool checkBlocksFit, bool checkMobiles, bool requireSurface, Mobile mob)
-        {
-            Map map = Map;
-
-            if (DebugThis)
-            {
-                Console.WriteLine("CanFit mob {0}, map={1}", mob, map);
-            }
-            if (map == null || map == Map.Internal)
-                return false;
-
-            if (x < 0 || y < 0 || x >= map.Width || y >= map.Height)
-                return false;
-
-            bool hasSurface = false;
-            bool checkmob = false;
-            bool canswim = false;
-            bool cantwalk = false;
-
-            if (mob != null)
-            {
-                checkmob = true;
-                canswim = mob.CanSwim;
-                cantwalk = mob.CantWalk;
-            }
-            if (DebugThis)
-            {
-                Console.WriteLine("fitting mob {0} checkmob={1} swim={2} walk={3}", mob, checkmob, canswim, cantwalk);
-            }
-            LandTile lt = map.Tiles.GetLandTile(x, y);
-            int lowZ = 0, avgZ = 0, topZ = 0;
-
-            bool surface;
-            bool wet = false;
-
-            map.GetAverageZ(x, y, ref lowZ, ref avgZ, ref topZ);
-            TileFlag landFlags = TileData.LandTable[lt.ID & TileData.MaxLandValue].Flags;
-
-            if (DebugThis)
-            {
-                Console.WriteLine("landtile at {0},{1},{2} lowZ={3} avgZ={4} topZ={5}", x, y, z, lowZ, avgZ, topZ);
-            }
-
-            var impassable = (landFlags & TileFlag.Impassable) != 0;
-            if (checkmob)
-            {
-                wet = (landFlags & TileFlag.Wet) != 0;
-                // dont allow wateronly creatures on land
-                if (cantwalk && !wet)
-                    impassable = true;
-                // allow water creatures on water
-                if (canswim && wet)
-                {
-                    impassable = false;
-                }
-            }
-
-            if (impassable && avgZ > z && (z + height) > lowZ)
-                return false;
-
-            if (!impassable && z == avgZ && !lt.Ignored)
-                hasSurface = true;
-
-            if (DebugThis)
-            {
-                Console.WriteLine("landtile at {0},{1},{2} wet={3} impassable={4} hassurface={5}", x, y, z, wet, impassable, hasSurface);
-            }
-
-            StaticTile[] staticTiles = map.Tiles.GetStaticTiles(x, y, true);
-
-            for (int i = 0; i < staticTiles.Length; ++i)
-            {
-                ItemData id = TileData.ItemTable[staticTiles[i].ID & TileData.MaxItemValue];
-                surface = id.Surface;
-                impassable = id.Impassable;
-                if (checkmob)
-                {
-                    wet = (id.Flags & TileFlag.Wet) != 0;
-                    // dont allow wateronly creatures on land
-                    if (cantwalk && !wet)
-                        impassable = true;
-                    // allow water creatures on water
-                    if (canswim && wet)
-                    {
-                        surface = true;
-                        impassable = false;
-                    }
-                }
-
-                if ((surface || impassable) && staticTiles[i].Z + id.CalcHeight > z && (z + height) > staticTiles[i].Z)
-                    return false;
-
-                if (surface && !impassable && z == staticTiles[i].Z + id.CalcHeight)
-                    hasSurface = true;
-            }
-            if (DebugThis)
-            {
-                Console.WriteLine("statics hassurface={0}", hasSurface);
-            }
-
-            Sector sector = map.GetSector(x, y);
-            List<Item> items = sector.Items;
-            List<Mobile> mobs = sector.Mobiles;
-
-            for (int i = 0; i < items.Count; ++i)
-            {
-                Item item = items[i];
-
-                if (item.ItemID < 0x4000 && item.AtWorldPoint(x, y))
-                {
-                    ItemData id = item.ItemData;
-                    surface = id.Surface;
-                    impassable = id.Impassable;
-                    if (checkmob)
-                    {
-                        wet = (id.Flags & TileFlag.Wet) != 0;
-                        // dont allow wateronly creatures on land
-                        if (cantwalk && !wet)
-                            impassable = true;
-                        // allow water creatures on water
-                        if (canswim && wet)
-                        {
-                            surface = true;
-                            impassable = false;
-                        }
-                    }
-
-                    if ((surface || impassable || checkBlocksFit && item.BlocksFit) && item.Z + id.CalcHeight > z && (z + height) > item.Z)
-                        return false;
-
-                    if (surface && !impassable && !item.Movable && z == item.Z + id.CalcHeight)
-                        hasSurface = true;
-                }
-            }
-
-            if (DebugThis)
-            {
-                Console.WriteLine("items hassurface={0}", hasSurface);
-            }
-
-            if (checkMobiles)
-            {
-                for (int i = 0; i < mobs.Count; ++i)
-                {
-                    Mobile m = mobs[i];
-
-                    if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
-                        if ((m.Z + 16) > z && (z + height) > m.Z)
-                            return false;
-                }
-            }
-
-            if (DebugThis)
-            {
-                Console.WriteLine("return requiresurface={0} hassurface={1}", requireSurface, hasSurface);
-            }
-
-            return !requireSurface || hasSurface;
         }
 
         public bool CanSpawnMobile(int x, int y, int z, Mobile mob)
@@ -8213,20 +7846,6 @@ namespace Server.Mobiles
             }
 
             return new Point2D(x, y);
-        }
-
-        // used for getting non-mobile spawn positions
-        public Point3D GetSpawnPosition(bool requiresurface)
-        {
-            // no pack spawning
-            return GetSpawnPosition(requiresurface, -1, Point3D.Zero, null, null);
-        }
-
-        // used for getting mobile spawn positions
-        public Point3D GetSpawnPosition(bool requiresurface, Mobile mob)
-        {
-            // no pack spawning
-            return GetSpawnPosition(requiresurface, -1, Point3D.Zero, null, mob);
         }
 
         // used for getting non-mobile spawn positions
@@ -8754,18 +8373,6 @@ namespace Server.Mobiles
             return Location;
         }
 
-        public int GetCreatureMax(int index)
-        {
-            Defrag(false);
-
-            if (m_SpawnObjects == null)
-            {
-                return 0;
-            }
-
-            return m_SpawnObjects[index].MaxCount;
-        }
-
         private void DeleteFromList(List<object> list)
         {
             if (list == null)
@@ -8862,7 +8469,6 @@ namespace Server.Mobiles
 
             Defrag(false); // Defrag again
         }
-
 
         public void RemoveSpawnObjects(SpawnObject so)
         {
