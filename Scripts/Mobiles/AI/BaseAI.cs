@@ -3055,8 +3055,6 @@ namespace Server.Mobiles
                     TimeSpan.FromSeconds(Math.Max(0.0, owner.m_Mobile.CurrentSpeed)))
             {
                 m_Owner = owner;
-
-                Priority = TimerPriority.FiftyMS;
             }
 
             protected override void OnTick()

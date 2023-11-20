@@ -535,8 +535,6 @@ namespace Server.Engines.VendorSearching
                     _GivenTo = null;
                 }
             });
-
-            t.Priority = TimerPriority.OneMinute;
         }
 
         public static Dictionary<Item, List<PlayerMobile>> _GivenTo;

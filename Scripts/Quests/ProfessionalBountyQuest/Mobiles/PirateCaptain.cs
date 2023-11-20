@@ -235,7 +235,7 @@ namespace Server.Mobiles
                 quest.Galleon.CapturedCaptain = this;
             }
 
-            Timer.DelayCall(TimeSpan.FromSeconds(2.5), new TimerStateCallback(MoveCaptainToShip), new object[] { x, y, pole });
+            Timer.DelayCall(TimeSpan.FromSeconds(2.5), MoveCaptainToShip, new object[] { x, y, pole });
         }
 
         private void MoveCaptainToShip(object obj)

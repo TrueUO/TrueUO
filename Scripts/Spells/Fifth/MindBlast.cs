@@ -48,7 +48,7 @@ namespace Server.Spells.Fifth
                         damage = 60;
 
                     Timer.DelayCall(TimeSpan.FromSeconds(1.0),
-                        new TimerStateCallback(AosDelay_Callback),
+                        AosDelay_Callback,
                         new object[] { Caster, target, m, damage });
                 }
             }

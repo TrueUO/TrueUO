@@ -46,7 +46,7 @@ namespace Server.Mobiles
                     false, false, false, false, false, false, 0, 0);
 
                 // display the updated gump synched with the main server thread
-                Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(GumpDisplayCallback), new object[] { m_From, gump, status_str });
+                Timer.DelayCall(TimeSpan.Zero, GumpDisplayCallback, new object[] { m_From, gump, status_str });
 
             }
 

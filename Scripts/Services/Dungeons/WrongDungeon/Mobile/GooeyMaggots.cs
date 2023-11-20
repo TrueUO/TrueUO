@@ -64,7 +64,6 @@ namespace Server.Mobiles
 
             public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(3))
             {
-                Priority = TimerPriority.FiveSeconds;
                 creature = (GooeyMaggots)p;
             }
             protected override void OnTick()
@@ -159,8 +158,6 @@ namespace Server.Mobiles
             public InternalTimer(Item slime)
                 : base(TimeSpan.FromSeconds(10.0))
             {
-                Priority = TimerPriority.OneSecond;
-
                 m_Slime = slime;
             }
 

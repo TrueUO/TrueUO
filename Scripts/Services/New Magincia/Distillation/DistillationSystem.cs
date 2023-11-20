@@ -135,7 +135,7 @@ namespace Server.Engines.Distillation
 
         public static void SendDelayedGump(Mobile from)
         {
-            Timer.DelayCall(TimeSpan.FromSeconds(1.5), new TimerStateCallback(SendGump), from);
+            Timer.DelayCall(TimeSpan.FromSeconds(1.5), SendGump, from);
         }
 
         public static void SendGump(object o)

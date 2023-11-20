@@ -563,7 +563,6 @@ namespace Server.Guilds
         public WarTimer()
             : base(InternalDelay, InternalDelay)
         {
-            Priority = TimerPriority.FiveSeconds;
         }
 
         protected override void OnTick()

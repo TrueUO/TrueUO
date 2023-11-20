@@ -328,7 +328,6 @@ namespace Server.Items
                 : base(delay)
             {
                 m_Light = light;
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

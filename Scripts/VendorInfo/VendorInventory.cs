@@ -114,8 +114,6 @@ namespace Server.Mobiles
                 : base(delay)
             {
                 m_Inventory = inventory;
-
-                Priority = TimerPriority.OneMinute;
             }
 
             protected override void OnTick()

@@ -94,7 +94,7 @@ namespace Server.Items
 
                                 MaginciaPlantSystem.OnPlantPlanted(from, from.Map);
 
-                                Timer.DelayCall(TimeSpan.FromSeconds(.7), new TimerStateCallback(MoveItem_Callback), new object[] { dirt, lt.Location, map });
+                                Timer.DelayCall(TimeSpan.FromSeconds(.7), MoveItem_Callback, new object[] { dirt, lt.Location, map });
                             }
                         }
                     }

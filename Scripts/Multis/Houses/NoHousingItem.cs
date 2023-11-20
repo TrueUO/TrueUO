@@ -106,7 +106,6 @@ namespace Server.Items
                 : base(delay)
             {
                 m_Item = item;
-                Priority = TimerPriority.OneMinute;
             }
 
             public static TimeSpan DefaultDelay => TimeSpan.FromMinutes(Utility.RandomMinMax(60, 120));

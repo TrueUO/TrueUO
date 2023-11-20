@@ -791,9 +791,9 @@ namespace Server.Multis
             Region newReg = Region.Find(Location, Map);
 
             if (oldReg != newReg && oldReg is CorgulRegion)
-                Timer.DelayCall(TimeSpan.FromSeconds(0.5), new TimerStateCallback(CheckExit), oldReg);
+                Timer.DelayCall(TimeSpan.FromSeconds(0.5), CheckExit, oldReg);
             else if (oldReg != newReg && newReg is CorgulWarpRegion)
-                Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(CheckEnter), newReg);
+                Timer.DelayCall(TimeSpan.FromSeconds(1), CheckEnter, newReg);
             #endregion
         }
 
@@ -1611,8 +1611,6 @@ namespace Server.Multis
                 : base(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(5.0))
             {
                 m_Boat = boat;
-
-                Priority = TimerPriority.TwoFiftyMS;
             }
 
             protected override void OnTick()
@@ -2916,7 +2914,6 @@ namespace Server.Multis
             {
                 m_Boat = boat;
                 m_SingleMove = single;
-                Priority = TimerPriority.TwentyFiveMS;
             }
 
             protected override void OnTick()
@@ -2947,8 +2944,6 @@ namespace Server.Multis
                 m_Resume = resume;
                 m_ResumeDirection = resumeDir;
                 m_Fast = fast;
-
-                Priority = TimerPriority.TenMS;
             }
 
             protected override void OnTick()
