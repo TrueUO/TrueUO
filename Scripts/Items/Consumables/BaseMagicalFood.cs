@@ -58,7 +58,7 @@ namespace Server.Items
 
             m_Table[mob] = (int)m_Table[mob] | (int)id;
 
-            Timer.DelayCall(duration, new TimerStateCallback(EndInfluence), new object[] { mob, id, cooldown });
+            Timer.DelayCall(duration, EndInfluence, new object[] { mob, id, cooldown });
         }
 
         public static void EndInfluence(object obj)
@@ -84,7 +84,7 @@ namespace Server.Items
 
                 m_Cooldown[mob] = (int)m_Cooldown[mob] | (int)id;
 
-                Timer.DelayCall(cooldown, new TimerStateCallback(EndCooldown), new object[] { mob, id });
+                Timer.DelayCall(cooldown, EndCooldown, new object[] { mob, id });
             }
         }
 

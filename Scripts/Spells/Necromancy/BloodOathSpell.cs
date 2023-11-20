@@ -132,8 +132,6 @@ namespace Server.Spells.Necromancy
                 m_Caster = caster;
                 m_Target = target;
                 m_End = DateTime.UtcNow + delay;
-
-                Priority = TimerPriority.TwoFiftyMS;
             }
 
             public void DoExpire()

@@ -331,8 +331,6 @@ namespace Server.Items
                 : base(TimeSpan.FromSeconds(30.0))
             {
                 m_Contract = contract;
-
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()

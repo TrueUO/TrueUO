@@ -126,8 +126,6 @@ namespace Server
                 : base(TimeSpan.FromMinutes(Utility.Random(15, 25)))
             {
                 m_Owner = owner;
-
-                Priority = TimerPriority.OneMinute;
             }
 
             protected override void OnTick()
@@ -144,7 +142,6 @@ namespace Server
             public LightCycleTimer(double interval)
                 : base(TimeSpan.Zero, TimeSpan.FromSeconds(interval))
             {
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()

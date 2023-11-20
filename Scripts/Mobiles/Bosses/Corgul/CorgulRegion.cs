@@ -113,7 +113,7 @@ namespace Server.Regions
         public void CheckExit(BaseBoat boat)
         {
             if (boat != null)
-                Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(RemoveBoat_Callback), boat);
+                Timer.DelayCall(TimeSpan.FromSeconds(1), RemoveBoat_Callback, boat);
         }
 
         public void RemovePlayers(bool message)

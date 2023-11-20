@@ -22,7 +22,7 @@ namespace Server.Items
                 _ToothAches[m].Acidity += acidity;
             }
 
-            _ToothAches[m].Running = true;
+            _ToothAches[m].Start();
 
             return _ToothAches[m];
         }
@@ -97,8 +97,6 @@ namespace Server.Items
             {
                 ConsumedBy = consumedBy;
                 Acidity = acidity;
-
-                Priority = TimerPriority.FiveSeconds;
 
                 Start();
             }

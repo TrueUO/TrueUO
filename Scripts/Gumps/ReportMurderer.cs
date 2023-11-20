@@ -138,7 +138,7 @@ namespace Server.Gumps
                             killer.ShortTermMurders++;
 
                             ((PlayerMobile)from).RecentlyReported.Add(killer);
-                            Timer.DelayCall(TimeSpan.FromMinutes(10), new TimerStateCallback(ReportedListExpiry_Callback), new object[] { from, killer });
+                            Timer.DelayCall(TimeSpan.FromMinutes(10), ReportedListExpiry_Callback, new object[] { from, killer });
 
                             if (killer is PlayerMobile pk)
                             {

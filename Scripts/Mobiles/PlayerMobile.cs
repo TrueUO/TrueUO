@@ -1210,7 +1210,7 @@ namespace Server.Mobiles
                 {
                     notice = from.IsPlayer() ? "The server is currently under lockdown. No players are allowed to log in at this time." : "The server is currently under lockdown. You do not have sufficient access level to connect.";
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(Disconnect), from);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), Disconnect, from);
                 }
                 else if (from.AccessLevel >= AccessLevel.Administrator)
                 {
@@ -1520,7 +1520,7 @@ namespace Server.Mobiles
             
             DisguiseTimers.StartTimer(e.Mobile);
 
-            Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(ClearSpecialMovesCallback), e.Mobile);
+            Timer.DelayCall(TimeSpan.Zero, ClearSpecialMovesCallback, e.Mobile);
         }
 
         private static void ClearSpecialMovesCallback(object state)

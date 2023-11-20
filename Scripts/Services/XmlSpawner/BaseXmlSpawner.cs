@@ -346,7 +346,6 @@ namespace Server.Mobiles
                 public KeywordTimer(XmlSpawner spawner, KeywordTag tag, TimeSpan delay, TimeSpan repeatdelay, string condition, int gotogroup)
                     : base(delay)
                 {
-                    Priority = TimerPriority.OneSecond;
                     m_Tag = tag;
                     m_Spawner = spawner;
                     m_Condition = condition;

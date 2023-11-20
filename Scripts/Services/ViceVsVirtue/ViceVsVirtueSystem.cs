@@ -347,7 +347,7 @@ namespace Server.Engines.VvV
                 }
             }
 
-            context.m_Timer = Timer.DelayCall(SkillLossPeriod, new TimerStateCallback(ClearSkillLoss_Callback), mob);
+            context.m_Timer = Timer.DelayCall(SkillLossPeriod, ClearSkillLoss_Callback, mob);
         }
 
         private static void ClearSkillLoss_Callback(object state)

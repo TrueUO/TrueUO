@@ -274,8 +274,6 @@ namespace Server.Menus.Questions
             public TeleportTimer(Mobile mobile, StuckMenuEntry destination, TimeSpan delay)
                 : base(TimeSpan.Zero, TimeSpan.FromSeconds(1.0))
             {
-                Priority = TimerPriority.TwoFiftyMS;
-
                 m_Mobile = mobile;
                 m_Destination = destination;
                 m_End = DateTime.UtcNow + delay;

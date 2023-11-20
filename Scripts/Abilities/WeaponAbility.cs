@@ -457,8 +457,6 @@ namespace Server.Items
                 : base(TimeSpan.FromSeconds(3.0))
             {
                 m_Mobile = from;
-
-                Priority = TimerPriority.TwentyFiveMS;
             }
 
             protected override void OnTick()

@@ -378,7 +378,6 @@ namespace Server.Engines.CannedEvil
             public InternalTimer()
                 : base(TimeSpan.FromMinutes(1.0d))
             {
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

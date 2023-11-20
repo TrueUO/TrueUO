@@ -151,7 +151,6 @@ namespace Server.Mobiles
                 : base(TimeSpan.FromSeconds(5.0), TimeSpan.FromSeconds(5.0))
             {
                 m_Owner = owner;
-                Priority = TimerPriority.TwoFiftyMS;
             }
 
             protected override void OnTick()

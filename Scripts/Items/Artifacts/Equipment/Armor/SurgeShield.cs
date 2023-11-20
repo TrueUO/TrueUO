@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Server.Items
@@ -88,7 +88,7 @@ namespace Server.Items
                 Charges--;
 
                 m_Table[from] = m_Surge;
-                Timer.DelayCall(TimeSpan.FromSeconds(20.0), new TimerStateCallback(RemoveEffects), from);
+                Timer.DelayCall(TimeSpan.FromSeconds(20.0), RemoveEffects, from);
 
                 from.PlaySound(0x0F5);
                 from.PlaySound(0x1ED);

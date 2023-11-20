@@ -585,8 +585,7 @@ namespace Server.Items
                 : base(TimeSpan.FromMilliseconds(250), TimeSpan.FromMilliseconds(250))
             {
                 m_Context = context;
-                Priority = TimerPriority.FiftyMS;
-
+                
                 m_Begin = Core.TickCount;
                 m_Expires = Core.TickCount + (int)delay.TotalMilliseconds;
             }
