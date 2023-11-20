@@ -1173,8 +1173,6 @@ namespace Server.Items
                 m_NextSkillTime = from.NextSkillTime;
                 m_NextActionTime = from.NextActionTime;
                 m_LastMoveTime = from.LastMoveTime;
-
-                Priority = TimerPriority.TenMS;
             }            
 
             protected override void OnTick()
@@ -1359,8 +1357,6 @@ namespace Server.Items
                 {
                     m_From = from;
                     m_SoundID = soundID;
-
-                    Priority = TimerPriority.TenMS;
                 }
 
                 protected override void OnTick()

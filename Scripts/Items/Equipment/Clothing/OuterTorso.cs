@@ -548,7 +548,6 @@ namespace Server.Items
                 : base(delay)
             {
                 m_Robe = c;
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

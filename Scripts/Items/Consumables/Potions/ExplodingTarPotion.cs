@@ -234,7 +234,7 @@ namespace Server.Items
                     to = new Entity(Serial.Zero, new Point3D(p), from.Map);
 
                 Effects.SendMovingEffect(from, to, 0xF0D, 7, 0, false, false, m_Potion.Hue, 0);
-                Timer.DelayCall(TimeSpan.FromSeconds(1.0), new TimerStateCallback(m_Potion.Explode_Callback), new object[] { from, new Point3D(p), from.Map });
+                Timer.DelayCall(TimeSpan.FromSeconds(1.0), m_Potion.Explode_Callback, new object[] { from, new Point3D(p), from.Map });
             }
         }
     }

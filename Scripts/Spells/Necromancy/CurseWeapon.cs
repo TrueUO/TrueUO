@@ -82,7 +82,6 @@ namespace Server.Spells.Necromancy
             {
                 Weapon = weapon;
                 Owner = owner;
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()
@@ -101,7 +100,6 @@ namespace Server.Spells.Necromancy
                 : base(TimeSpan.FromSeconds(0.75))
             {
                 m_Mobile = m;
-                Priority = TimerPriority.FiftyMS;
             }
 
             protected override void OnTick()

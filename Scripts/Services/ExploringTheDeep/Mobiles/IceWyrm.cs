@@ -54,7 +54,6 @@ namespace Server.Mobiles
 
             public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(10))
             {
-                Priority = TimerPriority.FiveSeconds;
                 Mare = (IceWyrm)p;
             }
             protected override void OnTick()

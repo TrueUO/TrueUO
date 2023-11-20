@@ -436,7 +436,7 @@ namespace Server
             if (length < TimeSpan.Zero)
                 length = TimeSpan.Zero;
 
-            m_Stream.Write((short)length.TotalSeconds);	// Buff Duration in seconds
+            m_Stream.Write((short)Math.Round(length.TotalSeconds)); // Need this in TotalSeconds (rounded)
 
             m_Stream.Fill(3); // byte[3] 0x00
 

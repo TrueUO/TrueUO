@@ -136,7 +136,6 @@ namespace Server.Items
                 : base(TimeSpan.FromMinutes(3.0))
             {
                 m_From = from;
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()
@@ -257,8 +256,6 @@ namespace Server.Items
             m_Location = location;
             m_Map = map;
             m_From = from;
-
-            Priority = TimerPriority.TwoFiftyMS;
         }
 
         public Point3D Location => m_Location;
@@ -729,7 +726,6 @@ namespace Server.Items
                 : base(TimeSpan.FromMinutes(1.0))
             {
                 m_Teleporter = teleporter;
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

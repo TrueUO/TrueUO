@@ -1006,8 +1006,6 @@ namespace Server.Items
                 : base(TimeSpan.FromSeconds(5.0), TimeSpan.FromSeconds(5.0))
             {
                 m_Drunk = drunk;
-
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()

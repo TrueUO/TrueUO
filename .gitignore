@@ -51,9 +51,8 @@
 *.csproj.user
 *.DotSettings.user
 *.ini
+*.json
+*.dll
 
 # Include Data Files
 !/Data/*
-
-# Exclude Data Files
-/Data/PVPTournamentSystemData

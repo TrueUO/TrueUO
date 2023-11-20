@@ -114,7 +114,7 @@ namespace Server.Spells.Necromancy
 
             TimeSpan duration = TimeSpan.FromSeconds(((Caster.Skills[SkillName.SpiritSpeak].Value / 12) + 1.0) * strength);
 
-            Timer.DelayCall(duration, new TimerStateCallback(EffectExpire_Callback), m);
+            Timer.DelayCall(duration, EffectExpire_Callback, m);
 
             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.EvilOmen, 1075647, 1075648, duration, m));
         }

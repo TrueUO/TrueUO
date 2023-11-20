@@ -242,8 +242,6 @@ namespace Server.Mobiles
                 : base(TimeSpan.FromMinutes(3.0)) 
             {
                 m_Owner = owner;
-
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()

@@ -144,7 +144,6 @@ namespace Server.Items
             {
                 m_From = from;
                 m_Mobile = m;
-                Priority = TimerPriority.TwoFiftyMS;
                 m_BloodDrinker = blooddrinker;
 
                 m_MaxCount = Spells.SkillMasteries.ResilienceSpell.UnderEffects(m) ? 3 : 5;

@@ -98,8 +98,8 @@ namespace Server.Items
                     Effects.SendLocationParticles(EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0x1FCB, 10, 14, effHue, 0, 0x1FCB, 0);
                     Effects.PlaySound(new Point3D(m.X, m.Y, m.Z), m.Map, 0x20E);
                     m.Frozen = true;
-                    Timer.DelayCall(TimeSpan.FromSeconds(0.65), new TimerStateCallback(InternalShowGate), new object[] { m, effHue });
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.5), new TimerStateCallback(InternalHideGate), new object[] { m, effHue });
+                    Timer.DelayCall(TimeSpan.FromSeconds(0.65), InternalShowGate, new object[] { m, effHue });
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.5), InternalHideGate, new object[] { m, effHue });
                     break;
                 //[/s7]
                 case StoneEffect.FlameStrike1:
@@ -397,7 +397,6 @@ namespace Server.Items
             public FireStormTimer(Mobile from, int hue, int start, int dir)
                 : base(TimeSpan.FromSeconds(0.1), TimeSpan.FromSeconds(0.1))
             {
-                Priority = TimerPriority.FiftyMS;
                 m = from;
                 ehue = hue;
                 fstart = start;

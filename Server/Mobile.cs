@@ -1760,7 +1760,7 @@ namespace Server
             }
             else if (!TimerRegistry.HasTimer(_ExpireAggroTimerID, this))
             {
-                TimerRegistry.Register(_ExpireAggroTimerID, this, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5), false, TimerPriority.OneSecond, m => m.AggroExpireOnTick());
+                TimerRegistry.Register(_ExpireAggroTimerID, this, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5), false, m => m.AggroExpireOnTick());
             }
         }
 
@@ -1840,7 +1840,7 @@ namespace Server
 
         private void StartExpireCombatantTimer()
         {
-            TimerRegistry.Register(_ExpireCombatantTimerID, this, TimeSpan.FromMinutes(1), false, TimerPriority.FiveSeconds, m => m.CheckExpireCombatant());
+            TimerRegistry.Register(_ExpireCombatantTimerID, this, TimeSpan.FromMinutes(1), false, m => m.CheckExpireCombatant());
         }
 
         private void RemoveCombatantTimer()
@@ -1922,7 +1922,6 @@ namespace Server
                 this,
                 TimeSpan.FromSeconds(0.01),
                 false,
-                playerTimer ? TimerPriority.EveryTick : TimerPriority.FiftyMS,
                 m => m.CombatTimerOnTick());
         }
 
@@ -1973,7 +1972,7 @@ namespace Server
         {
             if (!TimerRegistry.UpdateRegistry(_ExpireCrimID, this, _ExpireCriminalDelay))
             {
-                TimerRegistry.Register(_ExpireCrimID, this, _ExpireCriminalDelay, TimerPriority.FiveSeconds, m => m.Criminal = false);
+                TimerRegistry.Register(_ExpireCrimID, this, _ExpireCriminalDelay, m => m.Criminal = false);
             }
         }
 
@@ -7709,7 +7708,7 @@ namespace Server
                                 this,
                                 GetHitsRegenRate(this),
                                 Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                                false, TimerPriority.TenMS,
+                                false,
                                 mobile => mobile.HitsOnTick());
                         }
                         else if (Hits > HitsMax)
@@ -7800,7 +7799,7 @@ namespace Server
                                 this,
                                 GetStamRegenRate(this),
                                 Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                                false, TimerPriority.TenMS,
+                                false, 
                                 mobile => mobile.StamOnTick());
                         }
                         else if (Stam > StamMax)
@@ -7891,7 +7890,7 @@ namespace Server
                                 Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID,
                                 this,
                                 GetManaRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                                false, TimerPriority.TenMS,
+                                false, 
                                 mobile => mobile.ManaOnTick());
                         }
                         else if (Mana > ManaMax)
@@ -8007,7 +8006,6 @@ namespace Server
                             this, GetHitsRegenRate(this),
                             Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
                             false,
-                            TimerPriority.TenMS,
                             mobile => mobile.HitsOnTick());
                     }
 					else
@@ -8072,7 +8070,6 @@ namespace Server
                             GetStamRegenRate(this),
                             Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
                             false,
-                            TimerPriority.TenMS,
                             mobile => mobile.StamOnTick());
                     }
                     else
@@ -8142,7 +8139,6 @@ namespace Server
                             this, GetManaRegenRate(this),
                             Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
                             false,
-                            TimerPriority.TenMS,
                             mobile => mobile.ManaOnTick());
                     }
 					else
@@ -8555,7 +8551,7 @@ namespace Server
                         var logoutDelay = GetLogoutDelay();
                         if (!TimerRegistry.UpdateRegistry(_LogoutTimerID, this, logoutDelay))
                         {
-                            TimerRegistry.Register(_LogoutTimerID, this, logoutDelay, TimerPriority.OneSecond, m => m.DoLogout());
+                            TimerRegistry.Register(_LogoutTimerID, this, logoutDelay, m => m.DoLogout());
                         }
 					}
 					else

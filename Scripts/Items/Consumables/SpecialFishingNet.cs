@@ -168,7 +168,7 @@ namespace Server.Items
                 Effects.SendLocationEffect(p, map, 0x352D, 16, 4);
                 Effects.PlaySound(p, map, 0x364);
 
-                Timer.DelayCall(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.25), 14, new TimerStateCallback(DoEffect), new object[] { p, 0, from });
+                Timer.DelayCall(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.25), 14, DoEffect, new object[] { p, 0, from });
 
                 from.SendLocalizedMessage(RequireDeepWater ? 1010487 : 1074492); // You plunge the net into the sea... / You plunge the net into the water...
             }

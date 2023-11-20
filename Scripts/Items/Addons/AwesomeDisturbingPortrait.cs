@@ -114,8 +114,6 @@ namespace Server.Items
                 : base(delay, TimeSpan.FromMinutes(10))
             {
                 m_Component = c;
-
-                Priority = TimerPriority.OneMinute;
             }
 
             protected override void OnTick()
