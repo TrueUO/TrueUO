@@ -28,7 +28,7 @@ namespace Server.Engines.BulkOrders
         public static readonly int MaxCachedDeeds = 2;
         public static readonly int Delay = 6;
 
-        public static bool NewSystemEnabled = true;
+        public static readonly bool NewSystemEnabled = true;
         public static BulkOrderSystem Instance { get; set; }
 
         public Dictionary<PlayerMobile, BODContext> BODPlayerData { get; set; }
@@ -76,9 +76,9 @@ namespace Server.Engines.BulkOrders
 
             if (m is PlayerMobile pm)
             {
-                if (Instance.BODPlayerData.ContainsKey(pm))
+                if (Instance.BODPlayerData.TryGetValue(pm, out BODContext value))
                 {
-                    context = Instance.BODPlayerData[pm];
+                    context = value;
                 }
                 else if (create)
                 {
@@ -93,12 +93,9 @@ namespace Server.Engines.BulkOrders
         {
             BODContext context = GetContext(m);
 
-            if (context != null)
+            if (context != null && context.Entries.TryGetValue(type, out BODEntry value))
             {
-                if (context.Entries.ContainsKey(type))
-                {
-                    return context.Entries[type].BankedPoints;
-                }
+                return value.BankedPoints;
             }
 
             return 0;
@@ -107,34 +104,34 @@ namespace Server.Engines.BulkOrders
         public static void SetPoints(Mobile m, BODType type, double points)
         {
             if (points < 0)
+            {
                 points = 0.0;
+            }
 
             BODContext context = GetContext(m);
 
-            if (context != null)
+            if (context != null && context.Entries.TryGetValue(type, out BODEntry value))
             {
-                if (context.Entries.ContainsKey(type))
-                {
-                    context.Entries[type].BankedPoints += points;
-                }
+                value.BankedPoints += points;
             }
         }
 
         public static void DeductPoints(Mobile m, BODType type, double points)
         {
             if (points < 0)
+            {
                 points = 0.0;
+            }
 
             BODContext context = GetContext(m);
 
-            if (context != null)
+            if (context != null && context.Entries.TryGetValue(type, out BODEntry value))
             {
-                if (context.Entries.ContainsKey(type))
-                {
-                    context.Entries[type].BankedPoints -= points;
+                value.BankedPoints -= points;
 
-                    if (context.Entries[type].BankedPoints < 0.0)
-                        context.Entries[type].BankedPoints = 0.0;
+                if (value.BankedPoints < 0.0)
+                {
+                    value.BankedPoints = 0.0;
                 }
             }
         }
@@ -164,10 +161,8 @@ namespace Server.Engines.BulkOrders
         {
             BODContext context = GetContext(m);
 
-            if (context != null && context.Entries.ContainsKey(type))
+            if (context != null && context.Entries.TryGetValue(type, out BODEntry entry))
             {
-                BODEntry entry = context.Entries[type];
-
                 if (entry != null)
                 {
                     entry.CheckCache();
@@ -197,22 +192,9 @@ namespace Server.Engines.BulkOrders
 
             if (context != null)
             {
-                if (NewSystemEnabled)
-                {
-                    DateTime last = context.Entries[type].LastBulkOrder;
+                DateTime last = context.Entries[type].LastBulkOrder;
 
-                    return (last + TimeSpan.FromHours(Delay)) - DateTime.UtcNow;
-                }
-
-                if (context.Entries.ContainsKey(type))
-                {
-                    DateTime dt = context.Entries[type].NextBulkOrder;
-
-                    if (dt < DateTime.UtcNow)
-                        return TimeSpan.Zero;
-
-                    return DateTime.UtcNow - dt;
-                }
+                return last + TimeSpan.FromHours(Delay) - DateTime.UtcNow;
             }
 
             return TimeSpan.MaxValue;
@@ -222,64 +204,107 @@ namespace Server.Engines.BulkOrders
         {
             BODContext context = GetContext(pm);
 
-            if (context != null)
+            if (context != null && context.Entries.TryGetValue(type, out BODEntry value))
             {
-                if (NewSystemEnabled)
+                if (value.LastBulkOrder < DateTime.UtcNow - TimeSpan.FromHours(Delay * MaxCachedDeeds))
                 {
-                    if (context.Entries.ContainsKey(type))
-                    {
-                        if (context.Entries[type].LastBulkOrder < DateTime.UtcNow - TimeSpan.FromHours(Delay * MaxCachedDeeds))
-                            context.Entries[type].LastBulkOrder = DateTime.UtcNow - TimeSpan.FromHours(Delay * MaxCachedDeeds);
-                        else
-                            context.Entries[type].LastBulkOrder = (context.Entries[type].LastBulkOrder + ts) - TimeSpan.FromHours(Delay);
-                    }
+                    value.LastBulkOrder = DateTime.UtcNow - TimeSpan.FromHours(Delay * MaxCachedDeeds);
                 }
-                else if (context.Entries.ContainsKey(type))
+                else
                 {
-                    context.Entries[type].NextBulkOrder = DateTime.UtcNow + ts;
+                    value.LastBulkOrder = value.LastBulkOrder + ts - TimeSpan.FromHours(Delay);
                 }
             }
         }
 
         public static Item CreateBulkOrder(Mobile m, BODType type, bool fromContextMenu)
         {
-            PlayerMobile pm = m as PlayerMobile;
-
-            if (pm == null)
+            if (m is not PlayerMobile pm)
+            {
                 return null;
+            }
 
             if (pm.AccessLevel > AccessLevel.Player || fromContextMenu || 0.2 > Utility.RandomDouble())
             {
                 SkillName sk = GetSkillForBOD(type);
+
                 double theirSkill = pm.Skills[sk].Base;
-                bool doLarge = theirSkill >= 70.1 && ((theirSkill - 40.0) / 300.0) > Utility.RandomDouble();
+                bool doLarge = theirSkill >= 70.1 && (theirSkill - 40.0) / 300.0 > Utility.RandomDouble();
 
                 switch (type)
                 {
                     case BODType.Smith:
-                        if (doLarge) return new LargeSmithBOD();
-                        else return SmallSmithBOD.CreateRandomFor(pm);
+                    {
+                        if (doLarge)
+                        {
+                            return new LargeSmithBOD();
+                        }
+
+                        return SmallSmithBOD.CreateRandomFor(pm);
+                    }
                     case BODType.Tailor:
-                        if (doLarge) return new LargeTailorBOD();
-                        else return SmallTailorBOD.CreateRandomFor(pm);
+                    {
+                        if (doLarge)
+                        {
+                            return new LargeTailorBOD();
+                        }
+
+                        return SmallTailorBOD.CreateRandomFor(pm);
+                    }
                     case BODType.Alchemy:
-                        if (doLarge) return new LargeAlchemyBOD();
-                        else return SmallAlchemyBOD.CreateRandomFor(pm);
+                    {
+                        if (doLarge)
+                        {
+                            return new LargeAlchemyBOD();
+                        }
+
+                        return SmallAlchemyBOD.CreateRandomFor(pm);
+                    }
                     case BODType.Inscription:
-                        if (doLarge) return new LargeInscriptionBOD();
-                        else return SmallInscriptionBOD.CreateRandomFor(pm);
+                    {
+                        if (doLarge)
+                        {
+                            return new LargeInscriptionBOD();
+                        }
+
+                        return SmallInscriptionBOD.CreateRandomFor(pm);
+                    }
                     case BODType.Tinkering:
-                        if (doLarge) return new LargeTinkerBOD();
-                        else return SmallTinkerBOD.CreateRandomFor(pm);
+                    {
+                        if (doLarge)
+                        {
+                            return new LargeTinkerBOD();
+                        }
+
+                        return SmallTinkerBOD.CreateRandomFor(pm);
+                    }
                     case BODType.Cooking:
-                        if (doLarge) return new LargeCookingBOD();
-                        else return SmallCookingBOD.CreateRandomFor(pm);
+                    {
+                        if (doLarge)
+                        {
+                            return new LargeCookingBOD();
+                        }
+
+                        return SmallCookingBOD.CreateRandomFor(pm);
+                    }
                     case BODType.Fletching:
-                        if (doLarge) return new LargeFletchingBOD();
-                        else return SmallFletchingBOD.CreateRandomFor(pm);
+                    {
+                        if (doLarge)
+                        {
+                            return new LargeFletchingBOD();
+                        }
+
+                        return SmallFletchingBOD.CreateRandomFor(pm);
+                    }
                     case BODType.Carpentry:
-                        if (doLarge) return new LargeCarpentryBOD();
-                        else return SmallCarpentryBOD.CreateRandomFor(pm);
+                    {
+                        if (doLarge)
+                        {
+                            return new LargeCarpentryBOD();
+                        }
+
+                        return SmallCarpentryBOD.CreateRandomFor(pm);
+                    }
                 }
             }
 
@@ -323,49 +348,11 @@ namespace Server.Engines.BulkOrders
             return GetContext(pm).BOBFilter;
         }
 
-        public static void SetBOBFilter(PlayerMobile pm, BOBFilter filter)
-        {
-            BODContext context = GetContext(pm);
-            context.BOBFilter = filter;
-        }
-
-        public static int ComputePoints(SmallBOD bod)
-        {
-            switch (bod.BODType)
-            {
-                default:
-                case BODType.Smith: return SmithRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Tailor: return TailorRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Alchemy: return AlchemyRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Inscription: return InscriptionRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Tinkering: return TinkeringRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Cooking: return CookingRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Fletching: return FletchingRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Carpentry: return CarpentryRewardCalculator.Instance.ComputePoints(bod);
-            }
-        }
-
-        public static int ComputePoints(LargeBOD bod)
-        {
-            switch (bod.BODType)
-            {
-                default:
-                case BODType.Smith: return SmithRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Tailor: return TailorRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Alchemy: return AlchemyRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Inscription: return InscriptionRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Tinkering: return TinkeringRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Cooking: return CookingRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Fletching: return FletchingRewardCalculator.Instance.ComputePoints(bod);
-                case BODType.Carpentry: return CarpentryRewardCalculator.Instance.ComputePoints(bod);
-            }
-        }
-
         public static bool ComputeGold(Type type, int quantity, out int gold)
         {
-            if (GenericBuyInfo.BuyPrices.ContainsKey(type))
+            if (GenericBuyInfo.BuyPrices.TryGetValue(type, out int value))
             {
-                gold = (quantity * GenericBuyInfo.BuyPrices[type]) / 2;
+                gold = quantity * value / 2;
                 return true;
             }
 
@@ -407,16 +394,6 @@ namespace Server.Engines.BulkOrders
             }
 
             banked = points * .2;
-        }
-
-        public static void AddToPending(Mobile m, BODType type, int points)
-        {
-            BODContext context = GetContext(m);
-
-            if (context != null)
-            {
-                context.AddPending(type, points);
-            }
         }
 
         public static void RemovePending(Mobile m, BODType type)
@@ -533,9 +510,9 @@ namespace Server.Engines.BulkOrders
 
             Type first = null;
 
-            for (var index = 0; index < _ExceptionalExcluded.Length; index++)
+            for (int index = 0; index < _ExceptionalExcluded.Length; index++)
             {
-                var type = _ExceptionalExcluded[index];
+                Type type = _ExceptionalExcluded[index];
 
                 if (type == t)
                 {
@@ -597,26 +574,57 @@ namespace Server.Engines.BulkOrders
 
             switch (picker[Utility.Random(picker.Count)])
             {
-                case 0: bod.RequireExceptional = true; break;
-                case 1: bod.AmountMax += 5; break;
+                case 0:
+                {
+                    bod.RequireExceptional = true;
+
+                    break;
+                }
+                case 1:
+                {
+                    bod.AmountMax += 5;
+
+                    break;
+                }
                 case 2:
+                {
                     if (bod.Material == BulkMaterialType.None)
                     {
                         BulkGenericType type = BGTClassifier.Classify(bod.BODType, null);
 
                         switch (type)
                         {
-                            case BulkGenericType.Iron: bod.Material = BulkMaterialType.DullCopper; break;
-                            case BulkGenericType.Cloth: break;
-                            case BulkGenericType.Leather: bod.Material = BulkMaterialType.Spined; break;
-                            case BulkGenericType.Wood: bod.Material = BulkMaterialType.OakWood; break;
+                            case BulkGenericType.Iron:
+                            {
+                                bod.Material = BulkMaterialType.DullCopper;
+
+                                break;
+                            }
+                            case BulkGenericType.Cloth:
+                            {
+                                break;
+                            }
+                            case BulkGenericType.Leather:
+                            {
+                                bod.Material = BulkMaterialType.Spined;
+
+                                break;
+                            }
+                            case BulkGenericType.Wood:
+                            {
+                                bod.Material = BulkMaterialType.OakWood;
+
+                                break;
+                            }
                         }
                     }
                     else
                     {
                         bod.Material++;
                     }
+
                     break;
+                }
             }
 
             picker.Clear();
@@ -668,7 +676,7 @@ namespace Server.Engines.BulkOrders
             return worth;
         }
 
-        public static void OnTick()
+        private static void OnTick()
         {
             foreach (KeyValuePair<PlayerMobile, BODContext> kvp in Instance.BODPlayerData)
             {
@@ -736,25 +744,25 @@ namespace Server.Engines.BulkOrders
 
         public void AddPending(BODType type, int points)
         {
-            if (Entries.ContainsKey(type))
+            if (Entries.TryGetValue(type, out BODEntry value))
             {
-                Entries[type].PendingRewardPoints = points;
+                value.PendingRewardPoints = points;
             }
         }
 
         public void RemovePending(BODType type)
         {
-            if (Entries.ContainsKey(type))
+            if (Entries.TryGetValue(type, out BODEntry value))
             {
-                Entries[type].PendingRewardPoints = 0;
+                value.PendingRewardPoints = 0;
             }
         }
 
         public int GetPendingRewardFor(BODType type)
         {
-            if (Entries.ContainsKey(type))
+            if (Entries.TryGetValue(type, out BODEntry value))
             {
-                return Entries[type].PendingRewardPoints;
+                return value.PendingRewardPoints;
             }
 
             return 0;
@@ -776,6 +784,7 @@ namespace Server.Engines.BulkOrders
         public BODContext(GenericReader reader)
         {
             int version = reader.ReadInt();
+
             ConfigEntries();
 
             PointsMode = (PointsMode)reader.ReadInt();
@@ -854,13 +863,7 @@ namespace Server.Engines.BulkOrders
         public int PendingRewardPoints { get; set; }
 
         // Legacy System
-        private DateTime _NextBulkOrder;
-
-        public DateTime NextBulkOrder
-        {
-            get => _NextBulkOrder;
-            set => _NextBulkOrder = value;
-        }
+        private readonly DateTime _NextBulkOrder;
 
         public override string ToString()
         {
