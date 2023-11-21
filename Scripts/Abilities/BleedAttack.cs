@@ -27,11 +27,11 @@ namespace Server.Items
         {
             BleedTimer timer = null;
 
-            if (m_BleedTable.ContainsKey(m))
+            if (m_BleedTable.TryGetValue(m, out BleedTimer value))
             {
                 if (splintering)
                 {
-                    timer = m_BleedTable[m];
+                    timer = value;
                     timer.Stop();
                 }
                 else
