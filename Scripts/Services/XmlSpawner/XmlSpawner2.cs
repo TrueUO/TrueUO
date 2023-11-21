@@ -2678,25 +2678,6 @@ namespace Server.Mobiles
             }
         }
 
-        private class TagListTarget : Target
-        {
-            private readonly CommandEventArgs m_e;
-
-            public TagListTarget(CommandEventArgs e)
-                : base(30, false, TargetFlags.None)
-            {
-                m_e = e;
-            }
-
-            protected override void OnTarget(Mobile from, object targeted)
-            {
-                if (targeted is XmlSpawner spawner)
-                {
-                    spawner.ShowTagList(spawner);
-                }
-            }
-        }
-
         public void ShowTagList(XmlSpawner spawner)
         {
             int count = 0;
