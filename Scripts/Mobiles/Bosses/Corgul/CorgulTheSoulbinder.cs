@@ -339,7 +339,7 @@ namespace Server.Mobiles
             {
                 if ((m is PlayerMobile || m is BaseCreature creature && creature.GetMaster() is PlayerMobile) && CanBeHarmful(m))
                 {
-                    Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(DoDamage_Callback), m);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1), DoDamage_Callback, m);
                 }
             }
 
@@ -381,7 +381,7 @@ namespace Server.Mobiles
             {
                 m_Tick = 1;
                 m_Mobile = mob;
-                Priority = TimerPriority.FiftyMS;
+              
                 Start();
             }
 

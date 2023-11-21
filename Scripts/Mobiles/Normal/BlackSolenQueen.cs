@@ -125,7 +125,7 @@ namespace Server.Mobiles
             MovingEffect(m, 0x36D4, 1, 0, false, false, 0x3F, 0);
 
             TimeSpan delay = TimeSpan.FromSeconds(GetDistanceToSqrt(m) / 5.0);
-            Timer.DelayCall(delay, new TimerStateCallback<Mobile>(EndAcidBreath), m);
+            Timer.DelayCall(delay, EndAcidBreath, m);
 
             m_NextAcidBreath = DateTime.Now + TimeSpan.FromSeconds(5);
         }
@@ -147,7 +147,6 @@ namespace Server.Mobiles
             public EggSacTimer()
                 : base(TimeSpan.FromSeconds(10))
             {
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()
@@ -276,8 +275,6 @@ namespace Server.Mobiles
             public SpawnTimer(Item item)
                 : base(TimeSpan.FromSeconds(Utility.RandomMinMax(5, 10)))
             {
-                Priority = TimerPriority.FiftyMS;
-
                 m_Item = item;
             }
 

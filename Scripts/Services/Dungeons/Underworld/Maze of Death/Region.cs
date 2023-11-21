@@ -193,7 +193,7 @@ namespace Server.Regions
             base.OnDeath(m);
 
             if (m.Player && m_TrapCorridor.Contains(m.Location))
-                Timer.DelayCall(TimeSpan.FromSeconds(3), new TimerStateCallback(Kick_Callback), m);
+                Timer.DelayCall(TimeSpan.FromSeconds(3), Kick_Callback, m);
         }
 
         public void SpringTrap(Mobile from)

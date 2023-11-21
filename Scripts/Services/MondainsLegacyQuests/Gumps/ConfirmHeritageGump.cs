@@ -48,7 +48,7 @@ namespace Server.Engines.Quests
                 if (HeritageQuester.Check(m))
                 {
                     HeritageQuester.AddPending(m, m_Quester);
-                    Timer.DelayCall(TimeSpan.FromMinutes(1), new TimerStateCallback(CloseHeritageGump), m);
+                    Timer.DelayCall(TimeSpan.FromMinutes(1), CloseHeritageGump, m);
 
                     state.Mobile.Send(new HeritagePacket(m.Female, (short)(m_Quester.Race.RaceID + 1)));
                 }

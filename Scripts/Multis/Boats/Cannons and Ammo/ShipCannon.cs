@@ -618,17 +618,17 @@ namespace Server.Items
 
                                 if (toHit is Mobile mobileHit)
                                 {
-                                    Timer.DelayCall(delay, new TimerStateCallback(OnMobileHit), new object[] { mobileHit, newPoint, ammo, shooter });
+                                    Timer.DelayCall(delay, OnMobileHit, new object[] { mobileHit, newPoint, ammo, shooter });
                                     hit = true;
                                 }
                                 else if (toHit is BaseBoat boat)
                                 {
-                                    Timer.DelayCall(delay, new TimerStateCallback(OnShipHit), new object[] { boat, newPoint, ammo, shooter });
+                                    Timer.DelayCall(delay, OnShipHit, new object[] { boat, newPoint, ammo, shooter });
                                     hit = true;
                                 }
                                 else if (toHit is DamageableItem item)
                                 {
-                                    Timer.DelayCall(delay, new TimerStateCallback(OnDamageableItemHit), new object[] { item, newPoint, ammo, shooter });
+                                    Timer.DelayCall(delay, OnDamageableItemHit, new object[] { item, newPoint, ammo, shooter });
                                     hit = true;
                                 }
                             }
@@ -668,17 +668,17 @@ namespace Server.Items
 
                                 if (toHit is Mobile hitMobile)
                                 {
-                                    Timer.DelayCall(delay, new TimerStateCallback(OnMobileHit), new object[] { hitMobile, newPoint, ammo, shooter });
+                                    Timer.DelayCall(delay, OnMobileHit, new object[] { hitMobile, newPoint, ammo, shooter });
                                     hit = true;
                                 }
                                 else if (toHit is BaseBoat boat)
                                 {
-                                    Timer.DelayCall(delay, new TimerStateCallback(OnShipHit), new object[] { boat, newPoint, ammo, shooter });
+                                    Timer.DelayCall(delay, OnShipHit, new object[] { boat, newPoint, ammo, shooter });
                                     hit = true;
                                 }
                                 else if (toHit is DamageableItem item)
                                 {
-                                    Timer.DelayCall(delay, new TimerStateCallback(OnDamageableItemHit), new object[] { item, newPoint, ammo, shooter });
+                                    Timer.DelayCall(delay, OnDamageableItemHit, new object[] { item, newPoint, ammo, shooter });
                                     hit = true;
                                 }
                             }

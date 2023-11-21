@@ -40,7 +40,7 @@ namespace Server.Items
                     SendLocalizedMessageTo(from, 500803); // You feel as though you've slept for days!
                 }
 
-                Timer.DelayCall(TimeSpan.FromHours(2.0), new TimerStateCallback(ReleaseUseLock_Callback), new object[] { from, random });
+                Timer.DelayCall(TimeSpan.FromHours(2.0), ReleaseUseLock_Callback, new object[] { from, random });
             }
         }
 

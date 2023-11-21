@@ -768,7 +768,7 @@ namespace Server.Mobiles
                 if (GetVendorItem(item) == null)
                 {
                     // We must wait until the item is added
-                    Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(NonLocalDropCallback), new object[] { from, item });
+                    Timer.DelayCall(TimeSpan.Zero, NonLocalDropCallback, new object[] { from, item });
                 }
 
                 return true;
@@ -1576,8 +1576,6 @@ namespace Server.Mobiles
                 : base(TimeSpan.FromMinutes(2.0))
             {
                 m_Placeholder = placeholder;
-
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

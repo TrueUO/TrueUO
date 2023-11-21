@@ -123,8 +123,6 @@ namespace Server.Items
             : base(TimeSpan.FromMinutes(12), TimeSpan.FromMinutes(12))
         {
             _Mobile = m;
-
-            Priority = TimerPriority.OneMinute;
         }
 
         protected override void OnTick()

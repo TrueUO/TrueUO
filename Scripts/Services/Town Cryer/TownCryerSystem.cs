@@ -274,7 +274,6 @@ namespace Server.Services.TownCryer
                 if (Timer == null || !Timer.Running)
                 {
                     Timer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), CheckExpiredEntries);
-                    Timer.Priority = TimerPriority.OneMinute;
                 }
             }
             else if (Timer != null)

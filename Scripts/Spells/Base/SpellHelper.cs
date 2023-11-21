@@ -1436,8 +1436,6 @@ namespace Server.Spells
 
                 if (m_Spell != null && m_Spell.DelayedDamage && !m_Spell.DelayedDamageStacking)
                     m_Spell.StartDelayedDamageContext(target, this);
-
-                Priority = TimerPriority.TwentyFiveMS;
             }
 
             protected override void OnTick()
@@ -1493,8 +1491,6 @@ namespace Server.Spells
 
                 if (m_Spell != null && m_Spell.DelayedDamage && !m_Spell.DelayedDamageStacking)
                     m_Spell.StartDelayedDamageContext(target, this);
-
-                Priority = TimerPriority.TwentyFiveMS;
             }
 
             protected override void OnTick()

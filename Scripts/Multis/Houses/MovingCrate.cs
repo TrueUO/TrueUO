@@ -269,8 +269,6 @@ namespace Server.Multis
                 : base(TimeSpan.FromMinutes(5.0))
             {
                 m_Crate = crate;
-
-                Priority = TimerPriority.FiveSeconds;
             }
 
             protected override void OnTick()

@@ -98,11 +98,6 @@ namespace Server.Mobiles
             DESPAWN
         }
 
-        private enum typemodKeyword
-        {
-            // Preparing for removal. 
-        }
-
         private enum valueKeyword
         {
             PLAYERSINRANGE,
@@ -123,7 +118,6 @@ namespace Server.Mobiles
         private static readonly string CommandMobileName = null;
 
         private static readonly Dictionary<string, typeKeyword> typeKeywordHash = new Dictionary<string, typeKeyword>();
-        private static readonly Dictionary<string, typemodKeyword> typemodKeywordHash = new Dictionary<string, typemodKeyword>();
         private static readonly Dictionary<string, valueKeyword> valueKeywordHash = new Dictionary<string, valueKeyword>();
         private static readonly Dictionary<string, valuemodKeyword> valuemodKeywordHash = new Dictionary<string, valuemodKeyword>();
 
@@ -157,25 +151,9 @@ namespace Server.Mobiles
             if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0])) return false;
             return (typeKeywordHash.ContainsKey(typeName));
         }
-
-        public static void RemoveKeyword(string name)
-        {
-            if (name == null) return;
-
-            name = name.Trim().ToUpper();
-
-            typeKeywordHash.Remove(name);
-
-            typemodKeywordHash.Remove(name);
-
-            valueKeywordHash.Remove(name);
-
-            valuemodKeywordHash.Remove(name);
-        }
         #endregion
 
         #region KeywordTag
-
         public class KeywordTag
         {
             public KeywordFlags Flags;
@@ -346,7 +324,6 @@ namespace Server.Mobiles
                 public KeywordTimer(XmlSpawner spawner, KeywordTag tag, TimeSpan delay, TimeSpan repeatdelay, string condition, int gotogroup)
                     : base(delay)
                 {
-                    Priority = TimerPriority.OneSecond;
                     m_Tag = tag;
                     m_Spawner = spawner;
                     m_Condition = condition;

@@ -57,8 +57,7 @@ namespace Server.Items
             {
                 m_Defender = defender;
                 m_DamageRemaining = totalDamage;
-                Priority = TimerPriority.TwentyFiveMS;
-
+                
                 DamagePerTick = (double)totalDamage / 12 + .01;
             }
 

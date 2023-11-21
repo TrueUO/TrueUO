@@ -213,9 +213,6 @@ namespace Server.Mobiles
         public override bool IsVirtualItem => true;
 
         #region Properties
-
-        public TimerPriority BasePriority { get; set; } = TimerPriority.OneSecond;
-
         public bool DebugThis { get; set; } = false;
 
         public int MovingPlayerCount { get; set; } = 0;
@@ -1887,15 +1884,6 @@ namespace Server.Mobiles
             }
         }
 
-        public static void SpawnerGumpCallback(Mobile from, object invoker, string response)
-        {
-            // assign the response to the gumpstate
-            if (invoker is XmlSpawner xs)
-            {
-                xs.GumpState = response;
-            }
-        }
-
         public void DeleteTextEntryBook()
         {
             if (m_TextEntryBook != null)
@@ -1913,93 +1901,22 @@ namespace Server.Mobiles
         #endregion
 
         #region Utility Methods
-
         private static bool IsConstructable(ConstructorInfo ctor)
         {
             return ctor.IsDefined(typeof(ConstructableAttribute), false);
         }
 
-        public static int ConvertToInt(string value)
-        {
-            if (value.StartsWith("0x"))
-            {
-                return Convert.ToInt32(value.Substring(2), 16);
-            }
-
-            return Convert.ToInt32(value);
-        }
-
-        public static void ExecuteAction(object attachedto, Mobile trigmob, string action)
-        {
-            Point3D loc = Point3D.Zero;
-            Map map = null;
-
-            if (attachedto is IEntity entity)
-            {
-                loc = entity.Location;
-                map = entity.Map;
-            }
-
-            if (action == null || action.Length <= 0 || attachedto == null || map == null) return;
-            SpawnObject TheSpawn = new SpawnObject(null, 0)
-            {
-                TypeName = action
-            };
-            string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(null, attachedto, action);
-            string typeName = BaseXmlSpawner.ParseObjectType(substitutedtypeName);
-
-
-            string status_str;
-            if (BaseXmlSpawner.IsTypeOrItemKeyword(typeName))
-            {
-                BaseXmlSpawner.SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, trigmob, map, out status_str);
-            }
-            else
-            {
-                // its a regular type descriptor so find out what it is
-                Type type = SpawnerType.GetType(typeName);
-                try
-                {
-                    string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-                    object o = CreateObject(type, arglist[0]);
-
-                    if (o == null)
-                    {
-                        status_str = "invalid type specification: " + arglist[0];
-                    }
-                    else if (o is Mobile m)
-                    {
-                        if (m is BaseCreature bc)
-                        {
-                            bc.Home = loc; // Spawners location is the home point
-                        }
-
-                        m.Location = loc;
-                        m.Map = map;
-
-                        BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
-                    }
-                    else if (o is Item item)
-                    {
-                        BaseXmlSpawner.AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Diagnostics.ExceptionLogging.LogException(e);
-                }
-            }
-        }
-
         private static void RemoveFromSectorTable(Sector s, XmlSpawner spawner)
         {
-            if (s == null || s.Owner == null || s.Owner == Map.Internal || GlobalSectorTable[s.Owner.MapID] == null) return;
+            if (s == null || s.Owner == null || s.Owner == Map.Internal || GlobalSectorTable[s.Owner.MapID] == null)
+            {
+                return;
+            }
 
             // find the sector
             List<XmlSpawner> spawnerlist;
             if (GlobalSectorTable[s.Owner.MapID].TryGetValue(s, out spawnerlist) && spawnerlist != null)
             {
-                //List<XmlSpawner> spawnerlist = GlobalSectorTable[s.Owner.MapID][s];
                 spawnerlist.Remove(spawner);
             }
         }
@@ -2254,7 +2171,6 @@ namespace Server.Mobiles
             public MovementTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
                 m_Spawner = spawner;
             }
 
@@ -2336,298 +2252,10 @@ namespace Server.Mobiles
         #endregion
 
         #region Initialization
-
-        public static bool AssignSettings(string argname, string value)
-        {
-            switch (argname)
-            {
-                case "XmlSpawnDir":
-                    XmlSpawnDir = value;
-                    break;
-                case "DiskAccessLevel":
-                    DiskAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), value, true);
-                    break;
-                case "SmartSpawnAccessLevel":
-                    SmartSpawnAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), value, true);
-                    break;
-                case "defaultTriggerSound":
-                    defaultTriggerSound = ConvertToInt(value);
-                    defProximityTriggerSound = defaultTriggerSound;
-                    break;
-                case "BaseItemId":
-                    BaseItemId = ConvertToInt(value);
-                    break;
-                case "ShowItemId":
-                    ShowItemId = ConvertToInt(value);
-                    break;
-                case "MaxMoveCheck":
-                    MaxMoveCheck = ConvertToInt(value);
-                    break;
-                case "defMinDelay":
-                    defMinDelay = TimeSpan.FromMinutes(ConvertToInt(value));
-                    break;
-                case "defMaxDelay":
-                    defMaxDelay = TimeSpan.FromMinutes(ConvertToInt(value));
-                    break;
-                case "defRelativeHome":
-                    defRelativeHome = bool.Parse(value);
-                    break;
-                case "defSpawnRange":
-                    defSpawnRange = ConvertToInt(value);
-                    break;
-                case "defHomeRange":
-                    defHomeRange = ConvertToInt(value);
-                    break;
-                case "BlockKeyword":
-                    {
-                        // parse the keyword list and remove them from the keyword hashtables
-                        string[] keywordlist = value.Split(',');
-
-                        if (keywordlist.Length > 0)
-                        {
-                            for (int i = 0; i < keywordlist.Length; i++)
-                            {
-                                BaseXmlSpawner.RemoveKeyword(keywordlist[i]);
-                            }
-                        }
-
-                        break;
-                    }
-                case "BlockCommand":
-                case "ChangeCommand":
-                    // delay processing of these settings until after all commands have been registered in their Initialize methods
-                    Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(DelayedAssignSettings), new object[] { argname, value });
-                    break;
-                default:
-                    return false;
-            }
-
-            return true;
-        }
-
-        private static void DelayedAssignSettings(object state)
-        {
-            object[] args = (object[])state;
-            string argname = (string)args[0];
-            string value = (string)args[1];
-            switch (argname)
-            {
-                case "BlockCommand":
-                    {
-                        // delay processing of this until after all commands have been registered in their Initialize methods
-                        // parse the command list and remove them from the command hashtables
-                        // the syntax is "commandname, commandname, etc."
-                        string[] keywordlist = value.Split(',');
-
-                        if (keywordlist.Length > 0)
-                        {
-                            for (int i = 0; i < keywordlist.Length; i++)
-                            {
-                                string commandname = keywordlist[i].Trim().ToLower();
-                                try
-                                {
-                                    CommandSystem.Entries.Remove(commandname);
-                                }
-                                catch
-                                {
-                                    Console.WriteLine("{0}: invalid command {1}", argname, commandname);
-                                }
-                            }
-                        }
-                        break;
-                    }
-                case "ChangeCommand":
-                    {
-                        // delay processing of this until after all commands have been registered in their Initialize methods
-                        // parse the command list and rehash them into the command hashtables
-                        // the syntax is "oldname:newname[:accesslevel], oldname:newname[:accesslevel], etc."
-                        string[] keywordlist = value.Split(',');
-
-                        if (keywordlist.Length > 0)
-                        {
-                            for (int i = 0; i < keywordlist.Length; i++)
-                            {
-                                string[] namelist = keywordlist[i].Split(':');
-                                if (namelist.Length > 1)
-                                {
-                                    string oldname = namelist[0].Trim().ToLower();
-                                    string newname = namelist[1].Trim();
-
-                                    if (newname.Length == 0) newname = oldname;
-
-                                    AccessLevel access = AccessLevel.Player;
-                                    bool validaccess = false;
-                                    if (namelist.Length > 2)
-                                    {
-                                        // get the new accesslevel
-                                        try
-                                        {
-                                            access = (AccessLevel)Enum.Parse(typeof(AccessLevel), namelist[2].Trim(), true);
-                                            validaccess = true;
-                                        }
-                                        catch
-                                        {
-                                            Console.WriteLine("{0}: invalid accesslevel {1} for {2}", argname, namelist[2], newname);
-                                        }
-                                    }
-                                    // find the command entry for the old name
-                                    CommandEntry e = null;
-                                    try
-                                    {
-                                        e = CommandSystem.Entries[oldname];
-                                    }
-                                    catch
-                                    {
-                                        Console.WriteLine("{0}: invalid command {1}", argname, oldname);
-                                    }
-                                    if (e != null)
-                                    {
-                                        if (!validaccess)
-                                        {
-                                            // use the old accesslevel
-                                            access = e.AccessLevel;
-                                        }
-                                        // remove the old command entry
-                                        CommandSystem.Entries.Remove(oldname);
-                                        // register the new command using the old handler
-                                        CommandSystem.Register(newname, access, e.Handler);
-                                    }
-
-                                    // also look in the targetcommands list and adjust name and accesslevel there
-                                    for (var index = 0; index < TargetCommands.AllCommands.Count; index++)
-                                    {
-                                        BaseCommand b = TargetCommands.AllCommands[index];
-
-                                        if (b.Commands != null)
-                                        {
-                                            for (int j = 0; j < b.Commands.Length; j++)
-                                            {
-                                                string commandname = b.Commands[j];
-                                                if (commandname.ToLower() == oldname)
-                                                {
-                                                    // modify the basecommand with the new name and access
-                                                    b.Commands[j] = newname;
-                                                    if (validaccess)
-                                                    {
-                                                        b.AccessLevel = access;
-                                                    }
-
-                                                    // re-register it in the implementors hashtable
-                                                    List<BaseCommandImplementor> impls =
-                                                        BaseCommandImplementor.Implementors;
-
-                                                    for (int k = 0; k < impls.Count; ++k)
-                                                    {
-                                                        BaseCommandImplementor impl = impls[k];
-
-                                                        if ((b.Supports & impl.SupportRequirement) != 0)
-                                                        {
-                                                            try
-                                                            {
-                                                                impl.Commands.Remove(commandname);
-                                                            }
-                                                            catch (Exception ex)
-                                                            {
-                                                                Diagnostics.ExceptionLogging.LogException(ex);
-                                                            }
-
-                                                            impl.Register(b);
-                                                        }
-                                                    }
-
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    }
-            }
-        }
-
         public delegate bool AssignSettingsHandler(string argname, string value);
-
-        // load in settings from the xmlspawner2.cfg file in the Data directory
-        public static void LoadSettings(AssignSettingsHandler settingshandler, string section)
-        {
-            // Check if the file exists
-            string path = Path.Combine(Core.BaseDirectory, "Data/xmlspawner.cfg");
-
-            if (!File.Exists(path))
-            {
-                return;
-            }
-
-            Console.WriteLine("Loading {0} configuration", section);
-            using (StreamReader ip = new StreamReader(path))
-            {
-                string line;
-                string currentsection = null;
-                int nsettings = 0;
-
-                while ((line = ip.ReadLine()) != null)
-                {
-                    line = line.Trim();
-
-                    // skip comments
-                    if (line.Length == 0 || line.StartsWith("#"))
-                        continue;
-
-                    if (line.StartsWith("["))
-                    {
-                        // parse the section name
-                        string[] args = line.Split("[]".ToCharArray(), 3);
-                        if (args.Length > 2)
-                        {
-                            currentsection = args[1].Trim();
-                        }
-                    }
-
-                    // only process the matching classname section
-                    if (currentsection != section)
-                        continue;
-
-                    string[] split = line.Split('=');
-
-                    if (split.Length >= 2)
-                    {
-                        string argname = split[0].Trim();
-                        string value = split[1].Trim();
-
-                        if (argname.Length == 0 || value.Length == 0)
-                            continue;
-
-                        try
-                        {
-                            if (settingshandler(argname, value))
-                                nsettings++;
-                            else
-                                Console.WriteLine("'{0}' setting is invalid in section [{1}]", argname, currentsection);
-
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine("Config error '{0}'='{1}'", argname, value);
-                            Console.WriteLine("Error: {0}", e.Message);
-                            Diagnostics.ExceptionLogging.LogException(e);
-                        }
-                    }
-                }
-
-                if (nsettings > 0)
-                {
-                    Console.WriteLine("{0} settings processed", nsettings);
-                }
-            }
-        }
 
         public static void Initialize()
         {
-            LoadSettings(AssignSettings, "XmlSpawner");
-
             // initialize the default waypoint name
             WayPoint tmpwaypoint = new WayPoint();
             defwaypointname = tmpwaypoint.Name;
@@ -2680,21 +2308,17 @@ namespace Server.Mobiles
             CommandSystem.Register("XmlUnLoad", DiskAccessLevel, UnLoad_OnCommand);
             CommandSystem.Register("XmlSpawnerUnLoad", DiskAccessLevel, UnLoad_OnCommand);
             CommandSystem.Register("XmlLoad", DiskAccessLevel, Load_OnCommand);
-            CommandSystem.Register("XmlLoadHere", DiskAccessLevel, LoadHere_OnCommand);
             CommandSystem.Register("XmlSave", DiskAccessLevel, Save_OnCommand);
             CommandSystem.Register("XmlSaveAll", DiskAccessLevel, SaveAll_OnCommand);
             CommandSystem.Register("XmlDefaults", AccessLevel.Administrator, XmlDefaults_OnCommand);
             CommandSystem.Register("XmlGet", AccessLevel.GameMaster, XmlGetValue_OnCommand);
-            CommandSystem.Register("XmlGo", AccessLevel.GameMaster, SpawnEditorGo_OnCommand);
-
+            
             TargetCommands.Register(new XmlSetCommand());
             TargetCommands.Register(new XmlSaveSingle());
         }
-
         #endregion
 
         #region Commands
-
         [Usage("XmlGet property")]
         [Description("Returns value of the property on the targeted object.")]
         public static void XmlGetValue_OnCommand(CommandEventArgs e)
@@ -2751,32 +2375,6 @@ namespace Server.Mobiles
                 else
                 {
                     LogFailure("Format: XmlSet <propertyName> <value>");
-                }
-            }
-        }
-
-        [Usage("TagList property")]
-        [Description("Lists the keyword taglist for a spawner")]
-        public static void ShowTagList_OnCommand(CommandEventArgs e)
-        {
-            e.Mobile.Target = new TagListTarget(e);
-        }
-
-        private class TagListTarget : Target
-        {
-            private readonly CommandEventArgs m_e;
-
-            public TagListTarget(CommandEventArgs e)
-                : base(30, false, TargetFlags.None)
-            {
-                m_e = e;
-            }
-
-            protected override void OnTarget(Mobile from, object targeted)
-            {
-                if (targeted is XmlSpawner spawner)
-                {
-                    spawner.ShowTagList(spawner);
                 }
             }
         }
@@ -2902,8 +2500,10 @@ namespace Server.Mobiles
 
         private static void XmlSaveDefaults(string filePath, Mobile m)
         {
-
-            if (string.IsNullOrEmpty(filePath)) return;
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
 
             using (StreamWriter op = new StreamWriter(filePath))
             {
@@ -3001,7 +2601,6 @@ namespace Server.Mobiles
 
         private static void LoadDefaults(XmlElement node)
         {
-
             try { defProximityRange = int.Parse(node["defProximityRange"].InnerText); }
             catch (Exception e)
             {
@@ -3393,70 +2992,6 @@ namespace Server.Mobiles
             }
         }
 
-        [Usage("XmlGo <map> | <map> <x> <y> [z]")]
-        [Description("Go command used with spawn editor, takes the name of the map as the first parameter.")]
-        private static void SpawnEditorGo_OnCommand(CommandEventArgs e)
-        {
-            if (e == null) return;
-
-            Mobile from = e.Mobile;
-
-            // Make sure a map name was given at least
-            if (from != null && e.Length >= 1)
-            {
-                string MapName = e.Arguments[0];
-
-                // Get the map
-                Map NewMap;
-                // Convert the xml map value to a real map object
-                if (string.Compare(MapName, Map.Trammel.Name, true) == 0)
-                    NewMap = Map.Trammel;
-                else if (string.Compare(MapName, Map.Felucca.Name, true) == 0)
-                    NewMap = Map.Felucca;
-                else if (string.Compare(MapName, Map.Ilshenar.Name, true) == 0)
-                    NewMap = Map.Ilshenar;
-                else if (string.Compare(MapName, Map.Malas.Name, true) == 0)
-                    NewMap = Map.Malas;
-                else if (string.Compare(MapName, Map.Tokuno.Name, true) == 0)
-                    NewMap = Map.Tokuno;
-                else
-                {
-                    from.SendMessage("Map '{0}' does not exist!", MapName);
-                    return;
-                }
-
-                // Now that the map has been determined, continue
-                // Check if the request is to simply change maps
-                if (e.Length == 1)
-                {
-                    // Map Change ONLY
-                    from.Map = NewMap;
-                }
-                else if (e.Length == 3)
-                {
-                    // Map & X Y ONLY
-                    if (NewMap != null)
-                    {
-                        int x = e.GetInt32(1);
-                        int y = e.GetInt32(2);
-                        int z = NewMap.GetAverageZ(x, y);
-                        from.Map = NewMap;
-                        from.Location = new Point3D(x, y, z);
-                    }
-                }
-                else if (e.Length == 4)
-                {
-                    // Map & X Y Z
-                    from.Map = NewMap;
-                    from.Location = new Point3D(e.GetInt32(1), e.GetInt32(2), e.GetInt32(3));
-                }
-                else
-                {
-                    from.SendMessage("Format: XmlGo <map> | <map> <x> <y> [z]");
-                }
-            }
-        }
-
         [Usage("XmlSpawnerWipe [SpawnerPrefixFilter]")]
         [Description("Removes all XmlSpawner objects from the current map.")]
         public static void Wipe_OnCommand(CommandEventArgs e)
@@ -3561,7 +3096,6 @@ namespace Server.Mobiles
                     from.SendMessage("{0} does not exist", filename);
                 }
             }
-
         }
 
         public static void XmlUnLoadFromStream(Stream fs, string filename, string SpawnerPrefix, Mobile from, out int processedmaps, out int processedspawners)
@@ -3805,7 +3339,6 @@ namespace Server.Mobiles
 
                 // load the file
                 XmlLoadFromStream(fs, filename, SpawnerPrefix, from, fromloc, frommap, loadrelative, maxrange, loadnew, out processedmaps, out processedspawners);
-
             }
             else if (Directory.Exists(filename))
             {
@@ -3865,7 +3398,6 @@ namespace Server.Mobiles
                 if (from != null)
                     from.SendMessage("{0} does not exist", filename);
             }
-
         }
 
         public static void XmlLoadFromFile(string filename, string SpawnerPrefix, Mobile from, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners)
@@ -3892,7 +3424,6 @@ namespace Server.Mobiles
 
             // assign an id that will be used to distinguish the newly loaded spawners by appending it to their name
             Guid newloadid = Guid.NewGuid();
-
 
             int TotalCount = 0;
             int TrammelCount = 0;
@@ -4780,11 +4311,7 @@ namespace Server.Mobiles
                                 // Try to find a valid Z height if required (SpawnCentreZ = short.MinValue)
                                 int NewZ = 0;
 
-                                // Check if relative loading is set.  If so then try loading at the z-offset position first with no surface requirement, then try auto
-                                /*if(loadrelative && SpawnMap.CanFit( SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ, SpawnFitSize,true, false,false )) */
-
-                                if (loadrelative && HasTileSurface(SpawnMap, SpawnCentreX, SpawnCentreY,
-                                    OrigZ - SpawnRelZ))
+                                if (loadrelative && HasTileSurface(SpawnMap, SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ))
                                 {
                                     NewZ = OrigZ - SpawnRelZ;
                                 }
@@ -5138,54 +4665,6 @@ namespace Server.Mobiles
             }
         }
 
-        [Usage("XmlLoadHere <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]")]
-        [Description("Loads XmlSpawner objects to the current map and location of the player. Spawners beyond maxrange (default=48 tiles) are not moved relative to the player")]
-        public static void LoadHere_OnCommand(CommandEventArgs e)
-        {
-            if (e.Mobile.AccessLevel >= DiskAccessLevel)
-            {
-                if (e.Arguments.Length >= 1)
-                {
-                    string filename = LocateFile(e.Arguments[0]);
-
-                    // Spawner load criteria (if any)
-                    string SpawnerPrefix = string.Empty;
-                    bool badargs = false;
-                    int maxrange = 48;
-
-                    try
-                    {
-                        // Check if there is an argument provided (load criteria)
-                        for (int nxtarg = 1; nxtarg < e.Arguments.Length; nxtarg++)
-                        {
-                            // is it a maxrange option?
-                            if (e.Arguments[nxtarg].ToLower() == "-maxrange")
-                            {
-                                maxrange = int.Parse(e.Arguments[++nxtarg]);
-                            }
-                            else
-                            {
-                                SpawnerPrefix = e.Arguments[nxtarg];
-                            }
-                        }
-                    }
-                    catch { e.Mobile.SendMessage("Usage:  {0} <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]", e.Command); badargs = true; }
-
-                    if (!badargs)
-                    {
-                        int processedmaps;
-                        int processedspawners;
-
-                        XmlLoadFromFile(filename, SpawnerPrefix, e.Mobile, true, maxrange, false, out processedmaps, out processedspawners);
-                    }
-                }
-                else
-                    e.Mobile.SendMessage("Usage:  {0} <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]", e.Command);
-            }
-            else
-                e.Mobile.SendMessage("You do not have rights to perform this command.");
-        }
-
         [Usage("XmlSpawnerSave <SpawnFile> [SpawnerPrefixFilter]")]
         [Description("Saves all XmlSpawner objects from the current map into the file supplied.")]
         public static void Save_OnCommand(CommandEventArgs e)
@@ -5361,10 +4840,12 @@ namespace Server.Mobiles
             return save_ok;
         }
 
-
         public static bool SaveSpawnList(Mobile from, List<XmlSpawner> savelist, string dirname, Stream stream, bool oldformat, bool verbose)
         {
-            if (savelist == null || stream == null) return false;
+            if (savelist == null || stream == null)
+            {
+                return false;
+            }
 
             int TotalCount = 0;
             int TrammelCount = 0;
@@ -5373,7 +4854,6 @@ namespace Server.Mobiles
             int MalasCount = 0;
             int TokunoCount = 0;
             int OtherCount = 0;
-
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -5437,7 +4917,6 @@ namespace Server.Mobiles
             ds.Tables[SpawnTablePointName].Columns.Add("ConfigFile");
             ds.Tables[SpawnTablePointName].Columns.Add("SmartSpawning");
             ds.Tables[SpawnTablePointName].Columns.Add("TickReset");
-
             ds.Tables[SpawnTablePointName].Columns.Add("WayPoint");
             ds.Tables[SpawnTablePointName].Columns.Add("Team");
             // amount for stacked item spawns
@@ -7659,8 +7138,6 @@ namespace Server.Mobiles
             return false;
         }
 
-        public Rectangle2D SpawnerBounds => new Rectangle2D(m_X, m_Y, m_Width + 1, m_Height + 1);
-
         private void FindTileLocations(ref List<Point3D> locations, Map map, int startx, int starty, int width, int height, List<int> includetilelist, List<int> excludetilelist, TileFlag tileflag, bool checkitems, int spawnerZ)
         {
             if (width < 0 || height < 0 || map == null) return;
@@ -8794,7 +8271,6 @@ namespace Server.Mobiles
             public GlobalSectorTimer(TimeSpan delay)
                 : base(delay, delay)
             {
-                Priority = TimerPriority.OneSecond;
             }
 
             protected override void OnTick()
@@ -8857,7 +8333,6 @@ namespace Server.Mobiles
             public SectorTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay, delay)
             {
-                Priority = TimerPriority.OneSecond;
                 m_Spawner = spawner;
             }
 
@@ -9005,7 +8480,6 @@ namespace Server.Mobiles
             public InternalTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
                 m_spawner = spawner;
             }
 
@@ -9027,15 +8501,6 @@ namespace Server.Mobiles
             public SpawnerTimer(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                if (spawner.IsInactivated || spawner.CurrentCount == spawner.MaxCount) // reduce timer priority if spawner is inactivated or spawner is maxed
-                {
-                    Priority = TimerPriority.FiveSeconds;
-                }
-                else
-                {
-                    Priority = spawner.BasePriority;
-                }
-
                 m_Spawner = spawner;
             }
 
@@ -9056,7 +8521,6 @@ namespace Server.Mobiles
             public InternalTimer3(XmlSpawner spawner, TimeSpan delay)
                 : base(delay)
             {
-                Priority = TimerPriority.OneSecond;
                 m_spawner = spawner;
             }
 

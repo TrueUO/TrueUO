@@ -116,7 +116,6 @@ namespace Server.Items
 
                 m_Start = Core.TickCount;
 
-                Priority = TimerPriority.TwentyFiveMS;
                 DoHit();
 
                 Start();

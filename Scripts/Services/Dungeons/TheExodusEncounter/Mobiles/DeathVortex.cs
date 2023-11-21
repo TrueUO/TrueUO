@@ -79,8 +79,6 @@ namespace Server.Items
             public InternalTimer(DeathVortexTrap item) : base(TimeSpan.FromSeconds(15.0))
             {
                 m_Item = item;
-
-                Priority = TimerPriority.OneMinute;
             }
 
             protected override void OnTick()

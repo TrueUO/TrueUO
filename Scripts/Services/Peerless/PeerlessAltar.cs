@@ -753,7 +753,6 @@ namespace Server.Items
             }
 
             m_SlayTimer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), DeadlineCheck);
-            m_SlayTimer.Priority = TimerPriority.OneMinute;
         }
 
         public virtual void DeadlineCheck()
