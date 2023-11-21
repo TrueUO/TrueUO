@@ -76,15 +76,13 @@ namespace Server.Items
         protected void AddLoot(Item item)
         {
             if (item == null)
-                return;
-
-            if (RandomItemGenerator.Enabled)
             {
-                int min, max;
-                TreasureMapChest.GetRandomItemStat(out min, out max);
-
-                RunicReforging.GenerateRandomItem(item, 0, min, max);
+                return;
             }
+
+            TreasureMapChest.GetRandomItemStat(out int min, out int max);
+
+            RunicReforging.GenerateRandomItem(item, 0, min, max);
 
             DropItem(item);
         }
