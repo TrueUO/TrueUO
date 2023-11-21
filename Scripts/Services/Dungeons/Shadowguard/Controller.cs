@@ -511,12 +511,11 @@ namespace Server.Engines.Shadowguard
 
                     Timer.DelayCall(TimeSpan.FromMinutes(2), mobile =>
                     {
-                        if (Queue.ContainsKey(m))
+                        if (Queue.TryGetValue(m, out EncounterType value))
                         {
-                            EncounterType type = Queue[m];
-                            ShadowguardInstance instance = GetAvailableInstance(type);
+                            ShadowguardInstance instance = GetAvailableInstance(value);
 
-                            if (instance != null && instance.TryBeginEncounter(m, true, type))
+                            if (instance != null && instance.TryBeginEncounter(m, true, value))
                             {
                                 RemoveFromQueue(m);
                             }

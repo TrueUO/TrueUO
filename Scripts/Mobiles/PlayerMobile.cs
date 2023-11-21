@@ -6002,9 +6002,9 @@ namespace Server.Mobiles
 
         public virtual bool HasRecipe(int recipeID)
         {
-            if (m_AcquiredRecipes != null && m_AcquiredRecipes.ContainsKey(recipeID))
+            if (m_AcquiredRecipes != null && m_AcquiredRecipes.TryGetValue(recipeID, out bool value))
             {
-                return m_AcquiredRecipes[recipeID];
+                return value;
             }
 
             return false;

@@ -85,9 +85,9 @@ namespace Server.Spells.SkillMasteries
 
         public static int GetStagger(Mobile from)
         {
-            if (_Table != null && _Table.ContainsKey(from))
+            if (_Table != null && _Table.TryGetValue(from, out int value))
             {
-                return _Table[from];
+                return value;
             }
 
             return 0;

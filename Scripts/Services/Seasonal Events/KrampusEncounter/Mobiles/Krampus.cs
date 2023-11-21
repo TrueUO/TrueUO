@@ -349,9 +349,9 @@ namespace Server.Mobiles
                     {
                         int ordersComplete = 0;
 
-                        if (KrampusEvent.Instance.CompleteTable.ContainsKey(m))
+                        if (KrampusEvent.Instance.CompleteTable.TryGetValue(m, out int value))
                         {
-                            ordersComplete = KrampusEvent.Instance.CompleteTable[m];
+                            ordersComplete = value;
                         }
 
                         if (ordersComplete >= 3 || Utility.RandomMinMax(0, 8) <= ordersComplete)

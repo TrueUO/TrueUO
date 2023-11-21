@@ -42,9 +42,9 @@ namespace Server.Engines.Points
 
             Type type = item.GetType();
 
-            if (Entries.ContainsKey(type))
+            if (Entries.TryGetValue(type, out double value))
             {
-                points = Entries[type];
+                points = value;
 
                 if (item is SOS sos && sos.IsAncient)
                     points = 2500;

@@ -43,9 +43,9 @@ namespace Server.Items
 
         private bool CheckUse(PlayerMobile pm)
         {
-            if (DaughtUsageList.ContainsKey(pm))
+            if (DaughtUsageList.TryGetValue(pm, out DateTime value))
             {
-                if (DaughtUsageList[pm] + Cooldown >= DateTime.Now)
+                if (value + Cooldown >= DateTime.Now)
                 {
                     return false;
                 }

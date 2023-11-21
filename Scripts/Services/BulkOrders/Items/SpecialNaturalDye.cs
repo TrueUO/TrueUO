@@ -76,9 +76,9 @@ namespace Server.Items
 
         public void ValidateHue()
         {
-            if (HueInfo.ContainsKey(DyeType))
+            if (HueInfo.TryGetValue(DyeType, out Tuple<int, int> value))
             {
-                Hue = HueInfo[DyeType].Item1;
+                Hue = value.Item1;
             }
         }
 

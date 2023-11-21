@@ -435,9 +435,9 @@ namespace Server.Engines.Khaldun
                     return true;
                 }
 
-                if (_MessageTable.ContainsKey(m))
+                if (_MessageTable.TryGetValue(m, out DateTime value))
                 {
-                    return _MessageTable[m] < DateTime.UtcNow;
+                    return value < DateTime.UtcNow;
                 }
 
                 return true;

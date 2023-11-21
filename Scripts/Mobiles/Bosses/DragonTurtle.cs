@@ -244,10 +244,14 @@ namespace Server.Mobiles
             {
                 int hue;
 
-                if (_Affected != null && _Affected.ContainsKey(mob))
-                    hue = _Affected[mob];
+                if (_Affected != null && _Affected.TryGetValue(mob, out int value))
+                {
+                    hue = value;
+                }
                 else
+                {
                     hue = _Hues[Utility.Random(_Hues.Length)];
+                }
 
                 MovingParticles(mob, 13920, 10, 0, false, true, hue == 0 ? 0 : hue - 1, 5, 9502, 14120, 0, 0);
 

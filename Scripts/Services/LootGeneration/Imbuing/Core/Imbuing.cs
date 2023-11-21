@@ -1191,9 +1191,9 @@ namespace Server.SkillHandlers
             {
                 int[] resists = null;
 
-                if (ResistBuffer != null && ResistBuffer.ContainsKey(type))
+                if (ResistBuffer != null && ResistBuffer.TryGetValue(type, out int[] value))
                 {
-                    resists = ResistBuffer[type];
+                    resists = value;
                 }
                 else
                 {
@@ -1353,9 +1353,9 @@ namespace Server.SkillHandlers
             {
                 int[] resists = null;
 
-                if (ResistBuffer != null && ResistBuffer.ContainsKey(type))
+                if (ResistBuffer != null && ResistBuffer.TryGetValue(type, out int[] value))
                 {
-                    resists = ResistBuffer[type];
+                    resists = value;
                 }
                 else
                 {
@@ -1973,9 +1973,9 @@ namespace Server.SkillHandlers
             {
                 int[] resists = null;
 
-                if (ResistBuffer != null && ResistBuffer.ContainsKey(type))
+                if (ResistBuffer != null && ResistBuffer.TryGetValue(type, out int[] value))
                 {
-                    resists = ResistBuffer[type];
+                    resists = value;
                 }
                 else
                 {

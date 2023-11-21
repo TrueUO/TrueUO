@@ -251,8 +251,10 @@ namespace Server.Spells.Mysticism
 
         public static void OnMobileDoDamage(Mobile from)
         {
-            if (from != null && m_CurseTable.ContainsKey(from))
-                RemoveCurse(from, m_CurseTable[from].Caster);
+            if (from != null && m_CurseTable.TryGetValue(from, out CurseTimer value))
+            {
+                RemoveCurse(from, value.Caster);
+            }
         }
 
         public static bool IsUnderCurseEffects(Mobile from)

@@ -392,9 +392,9 @@ namespace Server.Mobiles
                 _Table = new Dictionary<Mobile, ExpireTimer>();
             }
 
-            if (_Table.ContainsKey(defender))
+            if (_Table.TryGetValue(defender, out ExpireTimer value))
             {
-                timer = _Table[defender];
+                timer = value;
             }
 
             if (timer != null)
@@ -469,9 +469,9 @@ namespace Server.Mobiles
                 _Table = new Dictionary<Mobile, ExpireTimer>();
             }
 
-            if (_Table.ContainsKey(defender))
+            if (_Table.TryGetValue(defender, out ExpireTimer value))
             {
-                timer = _Table[defender];
+                timer = value;
             }
 
             if (timer != null)
@@ -1136,8 +1136,10 @@ namespace Server.Mobiles
 
             ExpireTimer timer = null;
 
-            if (_Table.ContainsKey(defender))
-                timer = _Table[defender];
+            if (_Table.TryGetValue(defender, out ExpireTimer value))
+            {
+                timer = value;
+            }
 
             if (timer != null)
             {
@@ -1210,8 +1212,10 @@ namespace Server.Mobiles
 
             ExpireTimer timer = null;
 
-            if (_Table.ContainsKey(defender))
-                timer = _Table[defender];
+            if (_Table.TryGetValue(defender, out ExpireTimer value))
+            {
+                timer = value;
+            }
 
             if (timer != null)
             {
@@ -1336,9 +1340,9 @@ namespace Server.Mobiles
 
             InternalTimer timer = null;
 
-            if (_Table.ContainsKey(defender))
+            if (_Table.TryGetValue(defender, out InternalTimer value))
             {
-                timer = _Table[defender];
+                timer = value;
             }
 
             if (timer != null)
@@ -1664,8 +1668,10 @@ namespace Server.Mobiles
 
             ExpireTimer timer = null;
 
-            if (_Table.ContainsKey(creature))
-                timer = _Table[creature];
+            if (_Table.TryGetValue(creature, out ExpireTimer value))
+            {
+                timer = value;
+            }
 
             if (timer != null)
             {
@@ -2054,8 +2060,10 @@ namespace Server.Mobiles
 
             ExpireTimer timer = null;
 
-            if (_Table.ContainsKey(defender))
-                timer = _Table[defender];
+            if (_Table.TryGetValue(defender, out ExpireTimer value))
+            {
+                timer = value;
+            }
 
             if (timer != null)
             {

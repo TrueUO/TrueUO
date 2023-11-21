@@ -647,9 +647,9 @@ namespace Server.Engines.CityLoyalty
 
         public bool CanAdd(Mobile from)
         {
-            if (CitizenWait.ContainsKey(from))
+            if (CitizenWait.TryGetValue(from, out DateTime value))
             {
-                if (CitizenWait[from] < DateTime.UtcNow)
+                if (value < DateTime.UtcNow)
                 {
                     RemoveWaitTime(from);
                 }
@@ -664,9 +664,9 @@ namespace Server.Engines.CityLoyalty
 
         public int NextJoin(Mobile from)
         {
-            if (CitizenWait.ContainsKey(from))
+            if (CitizenWait.TryGetValue(from, out DateTime value))
             {
-                return (int)(CitizenWait[from] - DateTime.UtcNow).TotalDays;
+                return (int)(value - DateTime.UtcNow).TotalDays;
             }
 
             return 0;
