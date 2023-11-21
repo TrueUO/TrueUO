@@ -80,9 +80,9 @@ namespace Server.Items
 
             ThieveConsumableInfo info = new ThieveConsumableInfo(t, m_EffectType);
 
-            if (EffectTable.ContainsKey(pm))
+            if (EffectTable.TryGetValue(pm, out ThieveConsumableInfo value))
             {
-                RemoveEffect(pm, EffectTable[pm].Effect);
+                RemoveEffect(pm, value.Effect);
             }
 
             EffectTable.Add(pm, info);
@@ -147,14 +147,12 @@ namespace Server.Items
 
         public static ThieveConsumableEffect CheckThieveConsumable(PlayerMobile pm)
         {
-            if (EffectTable.ContainsKey(pm))
+            if (EffectTable.TryGetValue(pm, out ThieveConsumableInfo value))
             {
-                return EffectTable[pm].Effect;
+                return value.Effect;
             }
-            else
-            {
-                return ThieveConsumableEffect.None;
-            }
+
+            return ThieveConsumableEffect.None;
         }
 
         public BaseThieveConsumable(Serial serial)

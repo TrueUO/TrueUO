@@ -147,14 +147,9 @@ namespace Server.Items
                 _Delay = new Dictionary<Mobile, Timer>();
             }
 
-            if (_Delay.ContainsKey(m))
+            if (_Delay.TryGetValue(m, out Timer value) && value != null)
             {
-                Timer timer = _Delay[m];
-
-                if (timer != null)
-                {
-                    timer.Stop();
-                }
+                value.Stop();
             }
 
             _Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(120), EndDelay_Callback, m);
@@ -162,13 +157,11 @@ namespace Server.Items
 
         public static int GetDelay(Mobile m)
         {
-            if (_Delay != null && _Delay.ContainsKey(m))
+            if (_Delay != null && _Delay.TryGetValue(m, out Timer value))
             {
-                Timer timer = _Delay[m];
-
-                if (timer != null && timer.Next > DateTime.UtcNow)
+                if (value != null && value.Next > DateTime.UtcNow)
                 {
-                    return (int)(timer.Next - DateTime.UtcNow).TotalSeconds;
+                    return (int)(value.Next - DateTime.UtcNow).TotalSeconds;
                 }
             }
 

@@ -191,12 +191,16 @@ namespace Server.Engines.Fellowship
             {
                 int cliloc;
 
-                if (FellowshipChainList.ContainsKey(from))
+                if (FellowshipChainList.TryGetValue(from, out FellowshipChain value))
                 {
-                    if (chain > FellowshipChainList[from])
+                    if (chain > value)
+                    {
                         cliloc = clilocs[(int)(chain - 1), 0];
+                    }
                     else
+                    {
                         cliloc = clilocs[(int)(chain - 1), 1];
+                    }
                 }
                 else
                 {

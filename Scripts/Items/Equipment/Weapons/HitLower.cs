@@ -37,14 +37,12 @@ namespace Server.Items
 
         public static bool ApplyDefense(Mobile m)
         {
-            if (m_DefenseTable.ContainsKey(m))
+            if (m_DefenseTable.TryGetValue(m, out DefenseTimer value))
             {
-                DefenseTimer timer = m_DefenseTable[m];
-
-                if (timer != null)
+                if (value != null)
                 {
-                    timer.Stop();
-                    timer.DefenseMalus = 0;
+                    value.Stop();
+                    value.DefenseMalus = 0;
                 }
             }
 
@@ -91,9 +89,9 @@ namespace Server.Items
 
         public static int GetDefenseMalus(Mobile m)
         {
-            if (m_DefenseTable.ContainsKey(m))
+            if (m_DefenseTable.TryGetValue(m, out DefenseTimer value))
             {
-                return m_DefenseTable[m].DefenseMalus;
+                return value.DefenseMalus;
             }
 
             return 0;

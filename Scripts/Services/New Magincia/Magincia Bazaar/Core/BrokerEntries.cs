@@ -165,9 +165,9 @@ namespace Server.Engines.NewMagincia
 
             Type t = bc.GetType();
 
-            if (m_NameBuffer.ContainsKey(t))
+            if (m_NameBuffer.TryGetValue(t, out string value))
             {
-                return m_NameBuffer[t];
+                return value;
             }
 
             if (Activator.CreateInstance(t) is BaseCreature c)

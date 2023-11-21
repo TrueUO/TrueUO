@@ -125,9 +125,9 @@ namespace Server.Spells.Chivalry
 
             Type t = defender.GetType();
 
-            if (NameCache.ContainsKey(t))
+            if (NameCache.TryGetValue(t, out string value))
             {
-                return NameCache[t];
+                return value;
             }
 
             return AddNameToCache(t);

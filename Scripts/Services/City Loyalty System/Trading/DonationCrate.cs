@@ -147,14 +147,14 @@ namespace Server.Engines.CityLoyalty
 
                     if (bc.Controlled && !bc.Summoned && bc.GetMaster() == from)
                     {
-                        if (Item.Table.ContainsKey(t))
+                        if (Item.Table.TryGetValue(t, out int value))
                         {
                             CityLoyaltySystem sys = CityLoyaltySystem.GetCityInstance(Item.City);
 
                             if (sys != null)
                             {
                                 bc.Delete();
-                                sys.AwardLove(from, Item.Table[t]);
+                                sys.AwardLove(from, value);
 
                                 Item.SendMessageTo(from, 1152926); // The City thanks you for your generosity!
                             }

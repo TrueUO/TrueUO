@@ -83,9 +83,9 @@ namespace Server.Items
 
         public static AmmoInfo GetAmmoInfo(Type ammoType)
         {
-            if (ammoType != null && Infos.ContainsKey(ammoType))
+            if (ammoType != null && Infos.TryGetValue(ammoType, out AmmoInfo value))
             {
-                return Infos[ammoType];
+                return value;
             }
 
             return null;

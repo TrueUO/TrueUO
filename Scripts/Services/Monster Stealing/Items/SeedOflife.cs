@@ -55,17 +55,17 @@ namespace Server.Items
 
         private bool CheckUse(PlayerMobile pm)
         {
-            if (SeedUsageList.ContainsKey(pm))
+            if (SeedUsageList.TryGetValue(pm, out DateTime value))
             {
-                if (SeedUsageList[pm] + Cooldown >= DateTime.Now)
+                if (value + Cooldown >= DateTime.Now)
+                {
                     return false;
-                else
-                    return true;
-            }
-            else
-            {
+                }
+
                 return true;
             }
+
+            return true;
         }
 
         private void OnUsed(PlayerMobile by)

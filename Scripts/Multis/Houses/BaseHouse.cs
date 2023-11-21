@@ -3868,9 +3868,9 @@ namespace Server.Multis
 
         public DateTime LastVisit(Mobile m)
         {
-            if (Visits.ContainsKey(m))
+            if (Visits.TryGetValue(m, out DateTime value))
             {
-                return Visits[m];
+                return value;
             }
 
             return DateTime.MinValue;

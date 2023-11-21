@@ -148,14 +148,14 @@ namespace Server.Engines.Craft
 
         public static AnvilOfArtifactsEntry GetAnvilEntry(Mobile m, bool create)
         {
-            if (AnvilEntries.ContainsKey(m))
+            if (AnvilEntries.TryGetValue(m, out AnvilOfArtifactsEntry value))
             {
-                return AnvilEntries[m];
+                return value;
             }
 
             if (create)
             {
-                var entry = new AnvilOfArtifactsEntry();
+                AnvilOfArtifactsEntry entry = new AnvilOfArtifactsEntry();
 
                 AnvilEntries[m] = entry;
 

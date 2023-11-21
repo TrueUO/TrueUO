@@ -50,9 +50,9 @@ namespace Server.Spells.Necromancy
 
                 ExpireTimer t = null;
 
-                if (m_Table.ContainsKey(Caster))
+                if (m_Table.TryGetValue(Caster, out ExpireTimer value))
                 {
-                    t = m_Table[Caster];
+                    t = value;
                 }
 
                 t?.Stop();

@@ -60,8 +60,10 @@ namespace Server.Engines.Points
             if (from == null || type == null)
                 return;
 
-            if (Entries.ContainsKey(type))
-                AwardPoints(from, Entries[type].Item1, true);
+            if (Entries.TryGetValue(type, out Tuple<double, double> value))
+            {
+                AwardPoints(from, value.Item1, true);
+            }
         }
 
         public override void OnPlayerAdded(PlayerMobile pm)

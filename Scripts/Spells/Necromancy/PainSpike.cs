@@ -67,10 +67,10 @@ namespace Server.Spells.Necromancy
 
             InternalTimer t;
 
-            if (m_Table.ContainsKey(m))
+            if (m_Table.TryGetValue(m, out InternalTimer value))
             {
                 damage = Utility.RandomMinMax(3, 7);
-                t = m_Table[m];
+                t = value;
 
                 if (t != null)
                 {

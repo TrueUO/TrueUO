@@ -842,10 +842,9 @@ namespace Server.Mobiles
 
                 Vertex source = GuideHelper.ClosestVetrex(m_Guide.Region.Name, m_Guide.Location);
 
-                if (m_Shops.ContainsKey(shop))
+                if (m_Shops.TryGetValue(shop, out Vertex value))
                 {
-                    Vertex destination = m_Shops[shop];
-                    List<Vertex> path = GuideHelper.Dijkstra(m_Guide.Region.Name, source, destination);
+                    List<Vertex> path = GuideHelper.Dijkstra(m_Guide.Region.Name, source, value);
                     m_Guide.StartGuiding(path);
                 }
             }

@@ -158,9 +158,9 @@ namespace Server
 
                             int stats = 0;
 
-                            if (StatsTable.ContainsKey(kvp.Key))
+                            if (StatsTable.TryGetValue(kvp.Key, out int value))
                             {
-                                stats = StatsTable[kvp.Key];
+                                stats = value;
                             }
 
                             Console.WriteLine("Stats gained today: {0} of {1}", stats, StatsPerDay.ToString());

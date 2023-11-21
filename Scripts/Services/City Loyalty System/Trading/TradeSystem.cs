@@ -289,8 +289,10 @@ namespace Server.Engines.CityLoyalty
 
         public string GetNameFor(Type t, string fallbackname)
         {
-            if (_NameBuffer.ContainsKey(t))
-                return _NameBuffer[t];
+            if (_NameBuffer.TryGetValue(t, out string value))
+            {
+                return value;
+            }
 
             Item item = Loot.Construct(t);
 
@@ -329,9 +331,9 @@ namespace Server.Engines.CityLoyalty
 
         public static void OnQuickTravelUsed(Mobile from)
         {
-            if (ActiveTrades.ContainsKey(from))
+            if (ActiveTrades.TryGetValue(from, out TradeOrderCrate value))
             {
-                ActiveTrades[from].Entry.Distance = 0;
+                value.Entry.Distance = 0;
             }
         }
 
@@ -609,12 +611,12 @@ namespace Server.Engines.CityLoyalty
         {
             if (victim is BaseCreature creature && Ambushers != null && Ambushers.ContainsKey(creature))
             {
-                if (ActiveTrades.ContainsKey(damager))
+                if (ActiveTrades.TryGetValue(damager, out TradeOrderCrate value))
                 {
-                    TradeOrderCrate crate = ActiveTrades[damager];
-
-                    if (crate.Entry != null)
-                        crate.Entry.Kills++;
+                    if (value.Entry != null)
+                    {
+                        value.Entry.Kills++;
+                    }
                 }
 
                 Ambushers.Remove(creature);

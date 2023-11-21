@@ -138,9 +138,9 @@ namespace Server.Spells
 
             Type t = GetType();
 
-            if (m_ContextTable.ContainsKey(t))
+            if (m_ContextTable.TryGetValue(t, out DelayedDamageContextWrapper value))
             {
-                return m_ContextTable[t].Contains(d);
+                return value.Contains(d);
             }
 
             return false;

@@ -170,9 +170,9 @@ namespace Server.Engines.CityLoyalty
 
         public bool IsInBannerCooldown(PlayerMobile m)
         {
-            if (_BannerCooldown != null && m != null && _BannerCooldown.ContainsKey(m))
+            if (_BannerCooldown != null && m != null && _BannerCooldown.TryGetValue(m, out DateTime value))
             {
-                return _BannerCooldown[m] > DateTime.UtcNow;
+                return value > DateTime.UtcNow;
             }
 
             return false;
