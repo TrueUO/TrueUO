@@ -37,8 +37,8 @@ namespace Server.Items
             if (targ == null || _Table == null)
                 return 0;
 
-            if (_Table.ContainsKey(targ))
-                return _Table[targ]._DCIBonus;
+            if (_Table.TryGetValue(targ, out BlockInfo value))
+                return value._DCIBonus;
 
             return 0;
         }
@@ -48,9 +48,9 @@ namespace Server.Items
             if (m == null || _Table == null)
                 return 0;
 
-            if (_Table.ContainsKey(m))
+            if (_Table.TryGetValue(m, out BlockInfo value))
             {
-                return _Table[m]._SpellReduction;
+                return value._SpellReduction;
             }
 
             return 0;
@@ -61,9 +61,9 @@ namespace Server.Items
             if (m == null || _Table == null)
                 return 0;
 
-            if (_Table.ContainsKey(m))
+            if (_Table.TryGetValue(m, out BlockInfo value))
             {
-                return _Table[m]._MeleeReduction;
+                return value._MeleeReduction;
             }
 
             return 0;

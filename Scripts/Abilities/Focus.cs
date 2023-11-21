@@ -52,9 +52,9 @@ namespace Server.Items
             }
             else if (item is BaseWeapon weapon && weapon.ExtendedWeaponAttributes.Focus > 0)
             {
-                if (m_Table.ContainsKey(from))
+                if (m_Table.TryGetValue(from, out FocusInfo value))
                 {
-                    FocusInfo info = m_Table[from];
+                    FocusInfo info = value;
 
                     BuffInfo.AddBuff(from, new BuffInfo(BuffIcon.RageFocusingBuff, 1151393, 1151394,
                         string.Format("{0}\t{1}", info.Target == null ? "NONE" : info.Target.Name, info.DamageBonus)));
@@ -66,13 +66,11 @@ namespace Server.Items
 
         public static int GetBonus(Mobile from, Mobile target)
         {
-            if (m_Table.ContainsKey(from))
+            if (m_Table.TryGetValue(from, out FocusInfo value))
             {
-                FocusInfo info = m_Table[from];
-
-                if (info.Target == target)
+                if (value.Target == target)
                 {
-                    return info.DamageBonus;
+                    return value.DamageBonus;
                 }
             }
 
@@ -81,29 +79,27 @@ namespace Server.Items
 
         public static void OnHit(Mobile attacker, Mobile defender)
         {
-            if (m_Table.ContainsKey(attacker))
+            if (m_Table.TryGetValue(attacker, out FocusInfo value))
             {
-                FocusInfo info = m_Table[attacker];
-
-                if (info.Target == null)
+                if (value.Target == null)
                 {
-                    info.DamageBonus -= 10;
+                    value.DamageBonus -= 10;
                 }
-                else if (info.Target == defender)
+                else if (value.Target == defender)
                 {
-                    if (info.DamageBonus < -40)
-                        info.DamageBonus += 10;
+                    if (value.DamageBonus < -40)
+                        value.DamageBonus += 10;
                     else
-                        info.DamageBonus += 8;
+                        value.DamageBonus += 8;
                 }
                 else
                 {
-                    if (info.DamageBonus >= -50)
-                        info.DamageBonus = DefaultDamageBonus;
+                    if (value.DamageBonus >= -50)
+                        value.DamageBonus = DefaultDamageBonus;
                 }
 
-                if (info.Target != defender)
-                    info.Target = defender;
+                if (value.Target != defender)
+                    value.Target = defender;
 
                 UpdateBuff(attacker, defender);
             }

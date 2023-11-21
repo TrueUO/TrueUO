@@ -339,7 +339,7 @@ namespace Server.Items
 
             if (arty != null)
             {
-                Container pack = new Backpack
+                Backpack pack = new Backpack
                 {
                     Hue = 1278
                 };
@@ -677,42 +677,6 @@ namespace Server.Items
 
             from.SendLocalizedMessage(1048124, "", 0x8A5); // The old, rusted chest crumbles when you hit it.
             Delete();
-        }
-
-        private static void GetRandomAOSStats(out int attributeCount, out int min, out int max)
-        {
-            int rnd = Utility.Random(15);
-
-            if (rnd < 1)
-            {
-                attributeCount = Utility.RandomMinMax(3, 5);
-                min = 50;
-                max = 100;
-            }
-            else if (rnd < 3)
-            {
-                attributeCount = Utility.RandomMinMax(2, 5);
-                min = 40;
-                max = 80;
-            }
-            else if (rnd < 6)
-            {
-                attributeCount = Utility.RandomMinMax(2, 4);
-                min = 30;
-                max = 60;
-            }
-            else if (rnd < 10)
-            {
-                attributeCount = Utility.RandomMinMax(1, 3);
-                min = 20;
-                max = 40;
-            }
-            else
-            {
-                attributeCount = 1;
-                min = 10;
-                max = 20;
-            }
         }
 
         private bool CheckLoot(Mobile m, bool criminalAction)
