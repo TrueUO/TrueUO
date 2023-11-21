@@ -5,31 +5,7 @@ namespace Server.Engines.BulkOrders
 {
     public class BOBFilterGump : Gump
     {
-        private static readonly int[,] m_MaterialFilters =
-        {
-            { 1044067,  1 }, // Blacksmithy
-            { 1062226,  3 }, // Iron
-            { 1018332,  4 }, // Dull Copper
-            { 1018333,  5 }, // Shadow Iron
-            { 1018334,  6 }, // Copper
-            { 1018335,  7 }, // Bronze
-
-            {       0,  0 }, // --Blank--
-            { 1018336,  8 }, // Golden
-            { 1018337,  9 }, // Agapite
-            { 1018338, 10 }, // Verite
-            { 1018339, 11 }, // Valorite
-            {       0,  0 }, // --Blank--
-
-            { 1044094,  2 }, // Tailoring
-            { 1044286, 12 }, // Cloth
-            { 1062235, 13 }, // Leather
-            { 1062236, 14 }, // Spined
-            { 1062237, 15 }, // Horned
-            { 1062238, 16 }  // Barbed
-        };
-
-        private static readonly int[,] m_MaterialFiltersNew =
+        private static readonly int[,] _MaterialFilters =
         {
             { 1044067, 1 }, // Blacksmithy
             { 1062226, 9 }, // Iron
@@ -116,21 +92,21 @@ namespace Server.Engines.BulkOrders
             { 0, 0 } // --Blank--
         };
 
-        private static readonly int[,] m_TypeFilters =
+        private static readonly int[,] _TypeFilters =
         {
             { 1062229, 0 }, // All
             { 1062224, 1 }, // Small
             { 1062225, 2 }// Large
         };
 
-        private static readonly int[,] m_QualityFilters =
+        private static readonly int[,] _QualityFilters =
         {
             { 1062229, 0 }, // All
             { 1011542, 1 }, // Normal
             { 1060636, 2 }// Exceptional
         };
 
-        private static readonly int[,] m_AmountFilters =
+        private static readonly int[,] _AmountFilters =
         {
             { 1062229, 0 }, // All
             { 1049706, 1 }, // 10
@@ -138,32 +114,25 @@ namespace Server.Engines.BulkOrders
             { 1062239, 3 }// 20
         };
 
-        private static readonly int[][,] m_Filters =
+        private static readonly int[][,] _Filters =
         {
-            m_TypeFilters,
-            m_QualityFilters,
-            m_MaterialFilters,
-            m_AmountFilters
+            _TypeFilters,
+            _QualityFilters,
+            _MaterialFilters,
+            _AmountFilters
         };
 
-        private static readonly int[][,] m_FiltersNew =
-        {
-            m_TypeFilters,
-            m_QualityFilters,
-            m_MaterialFiltersNew,
-            m_AmountFilters
-        };
+        private static readonly int[] _XOffsetsType = { 0, 75, 170 };
+        private static readonly int[] _XOffsetsQuality = { 0, 75, 170 };
+        private static readonly int[] _XOffsetsAmount = { 0, 75, 180, 275 };
+        private static readonly int[] _XOffsetsMaterial = { 0, 108, 212, 307, 392, 487 };
+        private static readonly int[] _XWidthsSmall = { 50, 50, 70, 50 };
+        private static readonly int[] _XWidthsLarge = { 80, 60, 60, 60, 60, 60 };
 
-        private static readonly int[] m_XOffsets_Type = { 0, 75, 170 };
-        private static readonly int[] m_XOffsets_Quality = { 0, 75, 170 };
-        private static readonly int[] m_XOffsets_Amount = { 0, 75, 180, 275 };
-        private static readonly int[] m_XOffsets_Material = { 0, 108, 212, 307, 392, 487 };
-        private static readonly int[] m_XWidths_Small = { 50, 50, 70, 50 };
-        private static readonly int[] m_XWidths_Large = { 80, 60, 60, 60, 60, 60 };
+        private const int _LabelColor = 0x7FFF;
 
-        private const int LabelColor = 0x7FFF;
-        private readonly PlayerMobile m_From;
-        private readonly BulkOrderBook m_Book;
+        private readonly PlayerMobile _From;
+        private readonly BulkOrderBook _Book;
 
         public BOBFilterGump(PlayerMobile from, BulkOrderBook book)
             : base(12, 24)
@@ -171,10 +140,10 @@ namespace Server.Engines.BulkOrders
             from.CloseGump(typeof(BOBGump));
             from.CloseGump(typeof(BOBFilterGump));
 
-            m_From = from;
-            m_Book = book;
+            _From = from;
+            _Book = book;
 
-            BOBFilter f = (from.UseOwnFilter ? from.BOBFilter : book.Filter);
+            BOBFilter f = from.UseOwnFilter ? from.BOBFilter : book.Filter;
 
             AddPage(0);
 
@@ -188,36 +157,36 @@ namespace Server.Engines.BulkOrders
             AddImage(5, 690, 10460);
             AddImage(585, 690, 10460);
 
-            AddHtmlLocalized(270, 32, 200, 32, 1062223, LabelColor, false, false); // Filter Preference
+            AddHtmlLocalized(270, 32, 200, 32, 1062223, _LabelColor, false, false); // Filter Preference
 
-            AddHtmlLocalized(26, 64, 120, 32, 1062228, LabelColor, false, false); // Bulk Order Type
-            AddFilterList(25, 96, m_XOffsets_Type, 40, m_TypeFilters, m_XWidths_Small, f.Type, 0);
+            AddHtmlLocalized(26, 64, 120, 32, 1062228, _LabelColor, false, false); // Bulk Order Type
+            AddFilterList(25, 96, _XOffsetsType, 40, _TypeFilters, _XWidthsSmall, f.Type, 0);
 
-            AddHtmlLocalized(320, 64, 50, 32, 1062215, LabelColor, false, false); // Quality
-            AddFilterList(320, 96, m_XOffsets_Quality, 40, m_QualityFilters, m_XWidths_Small, f.Quality, 1);
+            AddHtmlLocalized(320, 64, 50, 32, 1062215, _LabelColor, false, false); // Quality
+            AddFilterList(320, 96, _XOffsetsQuality, 40, _QualityFilters, _XWidthsSmall, f.Quality, 1);
 
-            AddHtmlLocalized(26, 130, 120, 32, 1062232, LabelColor, false, false); // Material Type
-            AddFilterList(25, 162, m_XOffsets_Material, 35, BulkOrderSystem.NewSystemEnabled ? m_MaterialFiltersNew : m_MaterialFilters, m_XWidths_Large, f.Material, 2);
+            AddHtmlLocalized(26, 130, 120, 32, 1062232, _LabelColor, false, false); // Material Type
+            AddFilterList(25, 162, _XOffsetsMaterial, 35, _MaterialFilters, _XWidthsLarge, f.Material, 2);
 
-            AddHtmlLocalized(26, 608, 120, 32, 1062217, LabelColor, false, false); // Amount
-            AddFilterList(25, 640, m_XOffsets_Amount, 40, m_AmountFilters, m_XWidths_Small, f.Quantity, 3);
+            AddHtmlLocalized(26, 608, 120, 32, 1062217, _LabelColor, false, false); // Amount
+            AddFilterList(25, 640, _XOffsetsAmount, 40, _AmountFilters, _XWidthsSmall, f.Quantity, 3);
 
-            AddHtmlLocalized(75, 670, 120, 32, 1062477, (from.UseOwnFilter ? LabelColor : 16927), false, false); // Set Book Filter
+            AddHtmlLocalized(75, 670, 120, 32, 1062477, (from.UseOwnFilter ? _LabelColor : 16927), false, false); // Set Book Filter
             AddButton(40, 670, 4005, 4007, 1, GumpButtonType.Reply, 0);
 
-            AddHtmlLocalized(235, 670, 120, 32, 1062478, (from.UseOwnFilter ? 16927 : LabelColor), false, false); // Set Your Filter
+            AddHtmlLocalized(235, 670, 120, 32, 1062478, (from.UseOwnFilter ? 16927 : _LabelColor), false, false); // Set Your Filter
             AddButton(200, 670, 4005, 4007, 2, GumpButtonType.Reply, 0);
 
-            AddHtmlLocalized(405, 670, 120, 32, 1062231, LabelColor, false, false); // Clear Filter
+            AddHtmlLocalized(405, 670, 120, 32, 1062231, _LabelColor, false, false); // Clear Filter
             AddButton(370, 670, 4005, 4007, 3, GumpButtonType.Reply, 0);
 
-            AddHtmlLocalized(540, 670, 50, 32, 1011046, LabelColor, false, false); // APPLY
+            AddHtmlLocalized(540, 670, 50, 32, 1011046, _LabelColor, false, false); // APPLY
             AddButton(505, 670, 4017, 4018, 0, GumpButtonType.Reply, 0);
         }
 
         public override void OnResponse(Network.NetState sender, RelayInfo info)
         {
-            BOBFilter f = (m_From.UseOwnFilter ? m_From.BOBFilter : m_Book.Filter);
+            BOBFilter f = _From.UseOwnFilter ? _From.BOBFilter : _Book.Filter;
 
             int index = info.ButtonID;
 
@@ -225,28 +194,28 @@ namespace Server.Engines.BulkOrders
             {
                 case 0: // Apply
                     {
-                        m_From.SendGump(new BOBGump(m_From, m_Book));
+                        _From.SendGump(new BOBGump(_From, _Book));
 
                         break;
                     }
                 case 1: // Set Book Filter
                     {
-                        m_From.UseOwnFilter = false;
-                        m_From.SendGump(new BOBFilterGump(m_From, m_Book));
+                        _From.UseOwnFilter = false;
+                        _From.SendGump(new BOBFilterGump(_From, _Book));
 
                         break;
                     }
                 case 2: // Set Your Filter
                     {
-                        m_From.UseOwnFilter = true;
-                        m_From.SendGump(new BOBFilterGump(m_From, m_Book));
+                        _From.UseOwnFilter = true;
+                        _From.SendGump(new BOBFilterGump(_From, _Book));
 
                         break;
                     }
                 case 3: // Clear Filter
                     {
                         f.Clear();
-                        m_From.SendGump(new BOBFilterGump(m_From, m_Book));
+                        _From.SendGump(new BOBFilterGump(_From, _Book));
 
                         break;
                     }
@@ -257,7 +226,7 @@ namespace Server.Engines.BulkOrders
                         int type = index % 4;
                         index /= 4;
 
-                        int[][,] filter = BulkOrderSystem.NewSystemEnabled ? m_FiltersNew : m_Filters;
+                        int[][,] filter = _Filters;
 
                         if (type >= 0 && type < filter.Length)
                         {
@@ -284,7 +253,7 @@ namespace Server.Engines.BulkOrders
                                         break;
                                 }
 
-                                m_From.SendGump(new BOBFilterGump(m_From, m_Book));
+                                _From.SendGump(new BOBFilterGump(_From, _Book));
                             }
                         }
 
@@ -300,14 +269,18 @@ namespace Server.Engines.BulkOrders
                 int number = filters[i, 0];
 
                 if (number == 0)
+                {
                     continue;
+                }
 
                 bool isSelected = (filters[i, 1] == filterValue);
 
                 if (!isSelected && (i % xOffsets.Length) == 0)
+                {
                     isSelected = (filterValue == 0);
+                }
 
-                AddHtmlLocalized(x + 35 + xOffsets[i % xOffsets.Length], y + ((i / xOffsets.Length) * yOffset), xWidths[i % xOffsets.Length], 32, number, isSelected ? 16927 : LabelColor, false, false);
+                AddHtmlLocalized(x + 35 + xOffsets[i % xOffsets.Length], y + ((i / xOffsets.Length) * yOffset), xWidths[i % xOffsets.Length], 32, number, isSelected ? 16927 : _LabelColor, false, false);
                 AddButton(x + xOffsets[i % xOffsets.Length], y + ((i / xOffsets.Length) * yOffset), 4005, 4007, 4 + filterIndex + (i * 4), GumpButtonType.Reply, 0);
             }
         }
