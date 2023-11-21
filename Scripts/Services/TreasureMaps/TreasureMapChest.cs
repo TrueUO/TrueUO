@@ -339,7 +339,7 @@ namespace Server.Items
 
             if (arty != null)
             {
-                Container pack = new Backpack
+                Backpack pack = new Backpack
                 {
                     Hue = 1278
                 };
