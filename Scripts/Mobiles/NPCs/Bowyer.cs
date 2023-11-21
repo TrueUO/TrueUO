@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
-    [TypeAlias("Server.Mobiles.Bower")]
     public class Bowyer : BaseVendor
     {
         private readonly List<SBInfo> m_SBInfos = new List<SBInfo>();
+
         [Constructable]
         public Bowyer()
             : base("the bowyer")
@@ -23,6 +23,7 @@ namespace Server.Mobiles
 
         public override VendorShoeType ShoeType => Female ? VendorShoeType.ThighBoots : VendorShoeType.Boots;
         protected override List<SBInfo> SBInfos => m_SBInfos;
+
         public override int GetShoeHue()
         {
             return 0;
@@ -55,7 +56,7 @@ namespace Server.Mobiles
 
         public override bool SupportsBulkOrders(Mobile from)
         {
-            return BulkOrderSystem.NewSystemEnabled && from is PlayerMobile && from.Skills[SkillName.Fletching].Base > 0;
+            return from is PlayerMobile && from.Skills[SkillName.Fletching].Base > 0;
         }
 
         public override void OnSuccessfulBulkOrderReceive(Mobile from)
