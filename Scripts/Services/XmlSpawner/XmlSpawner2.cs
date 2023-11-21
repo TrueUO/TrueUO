@@ -1884,15 +1884,6 @@ namespace Server.Mobiles
             }
         }
 
-        public static void SpawnerGumpCallback(Mobile from, object invoker, string response)
-        {
-            // assign the response to the gumpstate
-            if (invoker is XmlSpawner xs)
-            {
-                xs.GumpState = response;
-            }
-        }
-
         public void DeleteTextEntryBook()
         {
             if (m_TextEntryBook != null)
@@ -1926,77 +1917,17 @@ namespace Server.Mobiles
             return Convert.ToInt32(value);
         }
 
-        public static void ExecuteAction(object attachedto, Mobile trigmob, string action)
-        {
-            Point3D loc = Point3D.Zero;
-            Map map = null;
-
-            if (attachedto is IEntity entity)
-            {
-                loc = entity.Location;
-                map = entity.Map;
-            }
-
-            if (action == null || action.Length <= 0 || attachedto == null || map == null) return;
-            SpawnObject TheSpawn = new SpawnObject(null, 0)
-            {
-                TypeName = action
-            };
-            string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(null, attachedto, action);
-            string typeName = BaseXmlSpawner.ParseObjectType(substitutedtypeName);
-
-
-            string status_str;
-            if (BaseXmlSpawner.IsTypeOrItemKeyword(typeName))
-            {
-                BaseXmlSpawner.SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, trigmob, map, out status_str);
-            }
-            else
-            {
-                // its a regular type descriptor so find out what it is
-                Type type = SpawnerType.GetType(typeName);
-                try
-                {
-                    string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-                    object o = CreateObject(type, arglist[0]);
-
-                    if (o == null)
-                    {
-                        status_str = "invalid type specification: " + arglist[0];
-                    }
-                    else if (o is Mobile m)
-                    {
-                        if (m is BaseCreature bc)
-                        {
-                            bc.Home = loc; // Spawners location is the home point
-                        }
-
-                        m.Location = loc;
-                        m.Map = map;
-
-                        BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
-                    }
-                    else if (o is Item item)
-                    {
-                        BaseXmlSpawner.AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Diagnostics.ExceptionLogging.LogException(e);
-                }
-            }
-        }
-
         private static void RemoveFromSectorTable(Sector s, XmlSpawner spawner)
         {
-            if (s == null || s.Owner == null || s.Owner == Map.Internal || GlobalSectorTable[s.Owner.MapID] == null) return;
+            if (s == null || s.Owner == null || s.Owner == Map.Internal || GlobalSectorTable[s.Owner.MapID] == null)
+            {
+                return;
+            }
 
             // find the sector
             List<XmlSpawner> spawnerlist;
             if (GlobalSectorTable[s.Owner.MapID].TryGetValue(s, out spawnerlist) && spawnerlist != null)
             {
-                //List<XmlSpawner> spawnerlist = GlobalSectorTable[s.Owner.MapID][s];
                 spawnerlist.Remove(spawner);
             }
         }
@@ -2676,21 +2607,17 @@ namespace Server.Mobiles
             CommandSystem.Register("XmlUnLoad", DiskAccessLevel, UnLoad_OnCommand);
             CommandSystem.Register("XmlSpawnerUnLoad", DiskAccessLevel, UnLoad_OnCommand);
             CommandSystem.Register("XmlLoad", DiskAccessLevel, Load_OnCommand);
-            CommandSystem.Register("XmlLoadHere", DiskAccessLevel, LoadHere_OnCommand);
             CommandSystem.Register("XmlSave", DiskAccessLevel, Save_OnCommand);
             CommandSystem.Register("XmlSaveAll", DiskAccessLevel, SaveAll_OnCommand);
             CommandSystem.Register("XmlDefaults", AccessLevel.Administrator, XmlDefaults_OnCommand);
             CommandSystem.Register("XmlGet", AccessLevel.GameMaster, XmlGetValue_OnCommand);
-            CommandSystem.Register("XmlGo", AccessLevel.GameMaster, SpawnEditorGo_OnCommand);
-
+            
             TargetCommands.Register(new XmlSetCommand());
             TargetCommands.Register(new XmlSaveSingle());
         }
-
         #endregion
 
         #region Commands
-
         [Usage("XmlGet property")]
         [Description("Returns value of the property on the targeted object.")]
         public static void XmlGetValue_OnCommand(CommandEventArgs e)
@@ -2749,13 +2676,6 @@ namespace Server.Mobiles
                     LogFailure("Format: XmlSet <propertyName> <value>");
                 }
             }
-        }
-
-        [Usage("TagList property")]
-        [Description("Lists the keyword taglist for a spawner")]
-        public static void ShowTagList_OnCommand(CommandEventArgs e)
-        {
-            e.Mobile.Target = new TagListTarget(e);
         }
 
         private class TagListTarget : Target
@@ -2898,8 +2818,10 @@ namespace Server.Mobiles
 
         private static void XmlSaveDefaults(string filePath, Mobile m)
         {
-
-            if (string.IsNullOrEmpty(filePath)) return;
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
 
             using (StreamWriter op = new StreamWriter(filePath))
             {
@@ -2997,7 +2919,6 @@ namespace Server.Mobiles
 
         private static void LoadDefaults(XmlElement node)
         {
-
             try { defProximityRange = int.Parse(node["defProximityRange"].InnerText); }
             catch (Exception e)
             {
@@ -3389,70 +3310,6 @@ namespace Server.Mobiles
             }
         }
 
-        [Usage("XmlGo <map> | <map> <x> <y> [z]")]
-        [Description("Go command used with spawn editor, takes the name of the map as the first parameter.")]
-        private static void SpawnEditorGo_OnCommand(CommandEventArgs e)
-        {
-            if (e == null) return;
-
-            Mobile from = e.Mobile;
-
-            // Make sure a map name was given at least
-            if (from != null && e.Length >= 1)
-            {
-                string MapName = e.Arguments[0];
-
-                // Get the map
-                Map NewMap;
-                // Convert the xml map value to a real map object
-                if (string.Compare(MapName, Map.Trammel.Name, true) == 0)
-                    NewMap = Map.Trammel;
-                else if (string.Compare(MapName, Map.Felucca.Name, true) == 0)
-                    NewMap = Map.Felucca;
-                else if (string.Compare(MapName, Map.Ilshenar.Name, true) == 0)
-                    NewMap = Map.Ilshenar;
-                else if (string.Compare(MapName, Map.Malas.Name, true) == 0)
-                    NewMap = Map.Malas;
-                else if (string.Compare(MapName, Map.Tokuno.Name, true) == 0)
-                    NewMap = Map.Tokuno;
-                else
-                {
-                    from.SendMessage("Map '{0}' does not exist!", MapName);
-                    return;
-                }
-
-                // Now that the map has been determined, continue
-                // Check if the request is to simply change maps
-                if (e.Length == 1)
-                {
-                    // Map Change ONLY
-                    from.Map = NewMap;
-                }
-                else if (e.Length == 3)
-                {
-                    // Map & X Y ONLY
-                    if (NewMap != null)
-                    {
-                        int x = e.GetInt32(1);
-                        int y = e.GetInt32(2);
-                        int z = NewMap.GetAverageZ(x, y);
-                        from.Map = NewMap;
-                        from.Location = new Point3D(x, y, z);
-                    }
-                }
-                else if (e.Length == 4)
-                {
-                    // Map & X Y Z
-                    from.Map = NewMap;
-                    from.Location = new Point3D(e.GetInt32(1), e.GetInt32(2), e.GetInt32(3));
-                }
-                else
-                {
-                    from.SendMessage("Format: XmlGo <map> | <map> <x> <y> [z]");
-                }
-            }
-        }
-
         [Usage("XmlSpawnerWipe [SpawnerPrefixFilter]")]
         [Description("Removes all XmlSpawner objects from the current map.")]
         public static void Wipe_OnCommand(CommandEventArgs e)
@@ -3557,7 +3414,6 @@ namespace Server.Mobiles
                     from.SendMessage("{0} does not exist", filename);
                 }
             }
-
         }
 
         public static void XmlUnLoadFromStream(Stream fs, string filename, string SpawnerPrefix, Mobile from, out int processedmaps, out int processedspawners)
@@ -3801,7 +3657,6 @@ namespace Server.Mobiles
 
                 // load the file
                 XmlLoadFromStream(fs, filename, SpawnerPrefix, from, fromloc, frommap, loadrelative, maxrange, loadnew, out processedmaps, out processedspawners);
-
             }
             else if (Directory.Exists(filename))
             {
@@ -3861,7 +3716,6 @@ namespace Server.Mobiles
                 if (from != null)
                     from.SendMessage("{0} does not exist", filename);
             }
-
         }
 
         public static void XmlLoadFromFile(string filename, string SpawnerPrefix, Mobile from, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners)
@@ -3888,7 +3742,6 @@ namespace Server.Mobiles
 
             // assign an id that will be used to distinguish the newly loaded spawners by appending it to their name
             Guid newloadid = Guid.NewGuid();
-
 
             int TotalCount = 0;
             int TrammelCount = 0;
@@ -4776,11 +4629,7 @@ namespace Server.Mobiles
                                 // Try to find a valid Z height if required (SpawnCentreZ = short.MinValue)
                                 int NewZ = 0;
 
-                                // Check if relative loading is set.  If so then try loading at the z-offset position first with no surface requirement, then try auto
-                                /*if(loadrelative && SpawnMap.CanFit( SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ, SpawnFitSize,true, false,false )) */
-
-                                if (loadrelative && HasTileSurface(SpawnMap, SpawnCentreX, SpawnCentreY,
-                                    OrigZ - SpawnRelZ))
+                                if (loadrelative && HasTileSurface(SpawnMap, SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ))
                                 {
                                     NewZ = OrigZ - SpawnRelZ;
                                 }
@@ -5134,54 +4983,6 @@ namespace Server.Mobiles
             }
         }
 
-        [Usage("XmlLoadHere <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]")]
-        [Description("Loads XmlSpawner objects to the current map and location of the player. Spawners beyond maxrange (default=48 tiles) are not moved relative to the player")]
-        public static void LoadHere_OnCommand(CommandEventArgs e)
-        {
-            if (e.Mobile.AccessLevel >= DiskAccessLevel)
-            {
-                if (e.Arguments.Length >= 1)
-                {
-                    string filename = LocateFile(e.Arguments[0]);
-
-                    // Spawner load criteria (if any)
-                    string SpawnerPrefix = string.Empty;
-                    bool badargs = false;
-                    int maxrange = 48;
-
-                    try
-                    {
-                        // Check if there is an argument provided (load criteria)
-                        for (int nxtarg = 1; nxtarg < e.Arguments.Length; nxtarg++)
-                        {
-                            // is it a maxrange option?
-                            if (e.Arguments[nxtarg].ToLower() == "-maxrange")
-                            {
-                                maxrange = int.Parse(e.Arguments[++nxtarg]);
-                            }
-                            else
-                            {
-                                SpawnerPrefix = e.Arguments[nxtarg];
-                            }
-                        }
-                    }
-                    catch { e.Mobile.SendMessage("Usage:  {0} <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]", e.Command); badargs = true; }
-
-                    if (!badargs)
-                    {
-                        int processedmaps;
-                        int processedspawners;
-
-                        XmlLoadFromFile(filename, SpawnerPrefix, e.Mobile, true, maxrange, false, out processedmaps, out processedspawners);
-                    }
-                }
-                else
-                    e.Mobile.SendMessage("Usage:  {0} <SpawnFile or directory> [SpawnerPrefixFilter][-maxrange range]", e.Command);
-            }
-            else
-                e.Mobile.SendMessage("You do not have rights to perform this command.");
-        }
-
         [Usage("XmlSpawnerSave <SpawnFile> [SpawnerPrefixFilter]")]
         [Description("Saves all XmlSpawner objects from the current map into the file supplied.")]
         public static void Save_OnCommand(CommandEventArgs e)
@@ -5357,10 +5158,12 @@ namespace Server.Mobiles
             return save_ok;
         }
 
-
         public static bool SaveSpawnList(Mobile from, List<XmlSpawner> savelist, string dirname, Stream stream, bool oldformat, bool verbose)
         {
-            if (savelist == null || stream == null) return false;
+            if (savelist == null || stream == null)
+            {
+                return false;
+            }
 
             int TotalCount = 0;
             int TrammelCount = 0;
@@ -5369,7 +5172,6 @@ namespace Server.Mobiles
             int MalasCount = 0;
             int TokunoCount = 0;
             int OtherCount = 0;
-
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -5433,7 +5235,6 @@ namespace Server.Mobiles
             ds.Tables[SpawnTablePointName].Columns.Add("ConfigFile");
             ds.Tables[SpawnTablePointName].Columns.Add("SmartSpawning");
             ds.Tables[SpawnTablePointName].Columns.Add("TickReset");
-
             ds.Tables[SpawnTablePointName].Columns.Add("WayPoint");
             ds.Tables[SpawnTablePointName].Columns.Add("Team");
             // amount for stacked item spawns
@@ -7654,8 +7455,6 @@ namespace Server.Mobiles
 
             return false;
         }
-
-        public Rectangle2D SpawnerBounds => new Rectangle2D(m_X, m_Y, m_Width + 1, m_Height + 1);
 
         private void FindTileLocations(ref List<Point3D> locations, Map map, int startx, int starty, int width, int height, List<int> includetilelist, List<int> excludetilelist, TileFlag tileflag, bool checkitems, int spawnerZ)
         {
