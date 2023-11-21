@@ -269,13 +269,13 @@ namespace Server.Items
                 max = delta;
             }
 
-            if (!playerMade && RandomItemGenerator.Enabled)
+            if (!playerMade)
             {
                 RandomItemGenerator.GenerateRandomItem(weapon, luckChance, attributeCount, min, max);
                 return;
             }
 
-            m_PlayerMade = playerMade;
+            m_PlayerMade = true;
             m_LuckChance = luckChance;
 
             AosAttributes primary = weapon.Attributes;
@@ -478,13 +478,13 @@ namespace Server.Items
                 max = delta;
             }
 
-            if (!playerMade && RandomItemGenerator.Enabled)
+            if (!playerMade)
             {
                 RandomItemGenerator.GenerateRandomItem(armor, luckChance, attributeCount, min, max);
                 return;
             }
 
-            m_PlayerMade = playerMade;
+            m_PlayerMade = true;
             m_LuckChance = luckChance;
 
             AosAttributes primary = armor.Attributes;
@@ -613,13 +613,13 @@ namespace Server.Items
                 max = delta;
             }
 
-            if (!playerMade && RandomItemGenerator.Enabled)
+            if (!playerMade)
             {
                 RandomItemGenerator.GenerateRandomItem(hat, luckChance, attributeCount, min, max);
                 return;
             }
 
-            m_PlayerMade = playerMade;
+            m_PlayerMade = true;
             m_LuckChance = luckChance;
 
             AosAttributes primary = hat.Attributes;
@@ -714,13 +714,13 @@ namespace Server.Items
                 max = delta;
             }
 
-            if (!playerMade && RandomItemGenerator.Enabled)
+            if (!playerMade)
             {
                 RandomItemGenerator.GenerateRandomItem(jewelry, luckChance, attributeCount, min, max);
                 return;
             }
 
-            m_PlayerMade = playerMade;
+            m_PlayerMade = true;
             m_LuckChance = luckChance;
 
             AosAttributes primary = jewelry.Attributes;
