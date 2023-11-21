@@ -131,75 +131,37 @@ namespace Server.Mobiles
             public override void OnClick()
             {
                 if (!m_From.InRange(m_Vendor.Location, 20))
+                {
                     return;
+                }
 
                 EventSink.InvokeBODOffered(new BODOfferEventArgs(m_From, m_Vendor));
 
                 if (m_Vendor.SupportsBulkOrders(m_From) && m_From is PlayerMobile pm)
                 {
-                    if (BulkOrderSystem.NewSystemEnabled)
+                    if (BulkOrderSystem.CanGetBulkOrder(pm, m_Vendor.BODType) || pm.AccessLevel > AccessLevel.Player)
                     {
-                        if (BulkOrderSystem.CanGetBulkOrder(pm, m_Vendor.BODType) || pm.AccessLevel > AccessLevel.Player)
-                        {
-                            Item bulkOrder = BulkOrderSystem.CreateBulkOrder(pm, m_Vendor.BODType, true);
+                        Item bulkOrder = BulkOrderSystem.CreateBulkOrder(pm, m_Vendor.BODType, true);
 
-                            if (bulkOrder is LargeBOD lBod)
-                            {
-                                pm.CloseGump(typeof(LargeBODAcceptGump));
-                                pm.SendGump(new LargeBODAcceptGump(pm, lBod));
-                            }
-                            else if (bulkOrder is SmallBOD sBod)
-                            {
-                                pm.CloseGump(typeof(SmallBODAcceptGump));
-                                pm.SendGump(new SmallBODAcceptGump(pm, sBod));
-                            }
+                        if (bulkOrder is LargeBOD lBod)
+                        {
+                            pm.CloseGump(typeof(LargeBODAcceptGump));
+                            pm.SendGump(new LargeBODAcceptGump(pm, lBod));
                         }
-                        else
+                        else if (bulkOrder is SmallBOD sBod)
                         {
-                            TimeSpan ts = BulkOrderSystem.GetNextBulkOrder(m_Vendor.BODType, pm);
-
-                            int totalSeconds = (int)ts.TotalSeconds;
-                            int totalHours = (totalSeconds + 3599) / 3600;
-                            int totalMinutes = (totalSeconds + 59) / 60;
-
-                            m_Vendor.SayTo(pm, 1072058, totalMinutes.ToString(), 0x3B2); // An offer may be available in about ~1_minutes~ minutes.
+                            pm.CloseGump(typeof(SmallBODAcceptGump));
+                            pm.SendGump(new SmallBODAcceptGump(pm, sBod));
                         }
                     }
                     else
                     {
-                        TimeSpan ts = m_Vendor.GetNextBulkOrder(pm);
+                        TimeSpan ts = BulkOrderSystem.GetNextBulkOrder(m_Vendor.BODType, pm);
 
                         int totalSeconds = (int)ts.TotalSeconds;
-                        int totalHours = (totalSeconds + 3599) / 3600;
                         int totalMinutes = (totalSeconds + 59) / 60;
 
-                        if (totalMinutes == 0)
-                        {
-                            pm.SendLocalizedMessage(1049038); // You can get an order now.
-
-                            Item bulkOrder = m_Vendor.CreateBulkOrder(pm, true);
-
-                            if (bulkOrder is LargeBOD lBod)
-                            {
-                                pm.CloseGump(typeof(LargeBODAcceptGump));
-                                pm.SendGump(new LargeBODAcceptGump(pm, lBod));
-                            }
-                            else if (bulkOrder is SmallBOD sBod)
-                            {
-                                pm.CloseGump(typeof(SmallBODAcceptGump));
-                                pm.SendGump(new SmallBODAcceptGump(pm, sBod));
-                            }
-                        }
-                        else
-                        {
-                            int oldSpeechHue = m_Vendor.SpeechHue;
-                            m_Vendor.SpeechHue = 0x3B2;
-
-                            m_Vendor.SayTo(pm, 1072058, totalMinutes.ToString(), 0x3B2);
-                            // An offer may be available in about ~1_minutes~ minutes.
-
-                            m_Vendor.SpeechHue = oldSpeechHue;
-                        }
+                        m_Vendor.SayTo(pm, 1072058, totalMinutes.ToString(), 0x3B2); // An offer may be available in about ~1_minutes~ minutes.
                     }
                 }
             }
@@ -1142,9 +1104,9 @@ namespace Server.Mobiles
                 PlayerMobile pm = from as PlayerMobile;
                 IBOD bod = (IBOD) dropped;
 
-                if (BulkOrderSystem.NewSystemEnabled && Bribes != null && Bribes.ContainsKey(from) && Bribes[from].BOD == bod)
+                if (Bribes != null && Bribes.TryGetValue(from, out PendingBribe value) && value.BOD == bod)
                 {
-                    if (BulkOrderSystem.CanExchangeBOD(from, this, bod, Bribes[from].Amount))
+                    if (BulkOrderSystem.CanExchangeBOD(from, this, bod, value.Amount))
                     {
                         DoBribe(from, bod);
                         return false;
@@ -1189,7 +1151,7 @@ namespace Server.Mobiles
 
                 from.SendSound(0x3D);
 
-                if (BulkOrderSystem.NewSystemEnabled && from is PlayerMobile mobile)
+                if (from is PlayerMobile mobile)
                 {
                     SayTo(mobile, 1157204, mobile.Name, 0x3B2); // Ho! Ho! Thank ye ~1_PLAYER~ for giving me a Bulk Order Deed!
 
@@ -1224,18 +1186,7 @@ namespace Server.Mobiles
 
                     Banker.Deposit(mobile, gold, true);
                 }
-                else
-                {
-                    SayTo(from, 1045132, 0x3B2); // Thank you so much!  Here is a reward for your effort.
-
-                    if (reward != null)
-                    {
-                        from.AddToBackpack(reward);
-                    }
-
-                    Banker.Deposit(from, gold, true);
-                }
-
+                
                 Titles.AwardFame(from, fame, true);
 
                 OnSuccessfulBulkOrderReceive(from);
@@ -2421,12 +2372,8 @@ namespace Server.Mobiles
                 if (SupportsBulkOrders(from))
                 {
                     list.Add(new BulkOrderInfoEntry(from, this));
-
-                    if (BulkOrderSystem.NewSystemEnabled)
-                    {
-                        list.Add(new BribeEntry(from, this));
-                        list.Add(new ClaimRewardsEntry(from, this));
-                    }
+                    list.Add(new BribeEntry(from, this));
+                    list.Add(new ClaimRewardsEntry(from, this));
                 }
 
                 if (IsActiveSeller)
