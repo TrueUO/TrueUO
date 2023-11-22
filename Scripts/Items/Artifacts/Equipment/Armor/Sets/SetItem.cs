@@ -158,7 +158,7 @@ namespace Server
                 list.Add(1060441); // night sight
 
             if (setItem.SetSkillBonuses.Skill_1_Value != 0)
-                list.Add(1072502, "{0}\t{1}", "#" + (1044060 + (int)setItem.SetSkillBonuses.Skill_1_Name), setItem.SetSkillBonuses.Skill_1_Value); // ~1_skill~ ~2_val~ (total)
+                list.Add(1072502, $"{"#" + (1044060 + (int)setItem.SetSkillBonuses.Skill_1_Name)}\t{setItem.SetSkillBonuses.Skill_1_Value}"); // ~1_skill~ ~2_val~ (total)
         }
 
         public static void RemoveSetBonus(Mobile from, SetItem setID, Item item)

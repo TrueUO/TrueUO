@@ -46,7 +46,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1076759, "{0}\t{1:0.0} Skill Points", GetName(), Value);
+            list.Add(1076759, $"{GetName()}\t{Value:0.0} Skill Points");
 
             if (!string.IsNullOrEmpty(Account))
                 list.Add(1155526); // Account Bound
