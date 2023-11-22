@@ -44,12 +44,7 @@ namespace Server.Items
 			{
 				m_Open = true;
 
-				m_Owner.PrivateOverheadMessage(
-					MessageType.Regular,
-					0x3B2,
-					true,
-					string.Format("Bank container has {0} items, {1} stones", TotalItems, TotalWeight),
-					m_Owner.NetState);
+				m_Owner.PrivateOverheadMessage(MessageType.Regular, 0x3B2, true, $"Bank container has {TotalItems} items, {TotalWeight} stones", m_Owner.NetState);
 
 				m_Owner.Send(new EquipUpdate(this));
 

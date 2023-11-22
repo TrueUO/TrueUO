@@ -1780,11 +1780,11 @@ namespace Server.Mobiles
                 {
                     if (target.Title == null)
                     {
-                        SendMessage("{0} the vendor cannot be harmed.", target.Name);
+                        SendMessage($"{target.Name} the vendor cannot be harmed.");
                     }
                     else
                     {
-                        SendMessage("{0} {1} cannot be harmed.", target.Name, target.Title);
+                        SendMessage($"{target.Name} {target.Title} cannot be harmed.");
                     }
                 }
 
@@ -3934,9 +3934,8 @@ namespace Server.Mobiles
                 {
                     if (g.Alliance != null && g.Alliance.IsMember(g))
                     {
-                        //g.Alliance.AllianceTextMessage( hue, "[Alliance][{0}]: {1}", Name, text );
                         g.Alliance.AllianceChat(this, text);
-                        SendToStaffMessage(this, "[Alliance]: {0}", text);
+                        SendToStaffMessage(this, $"[Alliance]: {text}");
 
                         m_AllianceMessageHue = hue;
                     }
@@ -3950,7 +3949,7 @@ namespace Server.Mobiles
                     m_GuildMessageHue = hue;
 
                     g.GuildChat(this, text);
-                    SendToStaffMessage(this, "[Guild]: {0}", text);
+                    SendToStaffMessage(this, $"[Guild]: {text}");
                 }
             }
             else
@@ -5170,7 +5169,7 @@ namespace Server.Mobiles
             suffix = ApplyNameSuffix(suffix);
             string name = Name;
 
-            list.Add(1050045, "{0} \t{1}\t {2}", prefix, name, suffix); // ~1_PREFIX~~2_NAME~~3_SUFFIX~
+            list.Add(1050045, $"{prefix} \t{name}\t {suffix}"); // ~1_PREFIX~~2_NAME~~3_SUFFIX~
 
             if (guild != null && DisplayGuildTitle)
             {
@@ -5180,7 +5179,7 @@ namespace Server.Mobiles
 
                 if (title.Length > 0)
                 {
-                    list.Add(1060776, "{0}\t{1}", Utility.FixHtml(title), Utility.FixHtml(guild.Name)); // ~1_val~, ~2_val~
+                    list.Add(1060776, $"{Utility.FixHtml(title)}\t{Utility.FixHtml(guild.Name)}"); // ~1_val~, ~2_val~
                 }
             }
         }
@@ -5213,8 +5212,6 @@ namespace Server.Mobiles
         {
             if (skill != SkillName.Alchemy && Skills.CurrentMastery == skill && Skills[skill].Value < MasteryInfo.MinSkillRequirement)
             {
-                //SendLocalizedMessage(1156236, String.Format("{0}\t{1}", MasteryInfo.MinSkillRequirement.ToString(), Skills[skill].Info.Name)); // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that mastery.
-
                 SkillName mastery = Skills.CurrentMastery;
                 Skills.CurrentMastery = SkillName.Alchemy;
 

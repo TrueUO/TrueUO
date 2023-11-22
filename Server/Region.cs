@@ -541,12 +541,7 @@ namespace Server
             return list;
         }
 
-		public IEnumerable<Mobile> GetEnumeratedPlayers()
-		{
-			return GetEnumeratedPlayers(null);
-		}
-
-		public IEnumerable<Mobile> GetEnumeratedPlayers(Func<Mobile, bool> predicate)
+        public IEnumerable<Mobile> GetEnumeratedPlayers(Func<Mobile, bool> predicate)
 		{
 			if (Sectors != null)
             {
@@ -617,41 +612,7 @@ namespace Server
             }
 		}
 
-		public int GetMobileCount()
-		{
-			return GetMobileCount(null);
-		}
-
-		public int GetMobileCount(Func<Mobile, bool> predicate)
-        {
-            int count = 0;
-
-            foreach (var mobile in GetEnumeratedMobiles(predicate))
-            {
-                count++;
-            }
-
-            return count;
-        }
-
-		public List<Item> GetItems()
-		{
-			return GetItems(null);
-		}
-
-		public List<Item> GetItems(Func<Item, bool> predicate)
-        {
-            List<Item> list = new List<Item>();
-
-            foreach (var item in GetEnumeratedItems(predicate))
-            {
-                list.Add(item);
-            }
-
-            return list;
-        }
-
-		public IEnumerable<Item> GetEnumeratedItems()
+        public IEnumerable<Item> GetEnumeratedItems()
 		{
 			return GetEnumeratedItems(null);
 		}
@@ -672,12 +633,7 @@ namespace Server
             }
 		}
 
-		public int GetItemCount()
-		{
-			return GetItemCount(null);
-		}
-
-		public int GetItemCount(Func<Item, bool> predicate)
+        public int GetItemCount(Func<Item, bool> predicate)
         {
             int count = 0;
 
@@ -689,24 +645,7 @@ namespace Server
             return count;
         }
 
-		public List<BaseMulti> GetMultis()
-		{
-			return GetMultis(null);
-		}
-
-		public List<BaseMulti> GetMultis(Func<BaseMulti, bool> predicate)
-        {
-            List<BaseMulti> list = new List<BaseMulti>();
-
-            foreach (var multi in GetEnumeratedMultis(predicate))
-            {
-                list.Add(multi);
-            }
-
-            return list;
-        }
-
-		public IEnumerable<BaseMulti> GetEnumeratedMultis()
+        public IEnumerable<BaseMulti> GetEnumeratedMultis()
 		{
 			return GetEnumeratedMultis(null);
 		}
@@ -727,24 +666,7 @@ namespace Server
             }
 		}
 
-		public int GetMultiCount()
-		{
-			return GetMultiCount(null);
-		}
-
-		public int GetMultiCount(Func<BaseMulti, bool> predicate)
-        {
-            int count = 0;
-
-            foreach (var multi in GetEnumeratedMultis(predicate))
-            {
-                count++;
-            }
-
-            return count;
-        }
-
-		private IEnumerable<T> GetDistinctEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
+        private IEnumerable<T> GetDistinctEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity
         {
             HashSet<T> set = new HashSet<T>();
@@ -1482,12 +1404,7 @@ namespace Server
 			return true;
 		}
 
-		public static bool ReadInt32(XmlElement xml, string attribute, ref int value)
-		{
-			return ReadInt32(xml, attribute, ref value, true);
-		}
-
-		public static bool ReadInt32(XmlElement xml, string attribute, ref int value, bool mandatory)
+        public static bool ReadInt32(XmlElement xml, string attribute, ref int value, bool mandatory)
 		{
 			string s = GetAttribute(xml, attribute, mandatory);
 
@@ -1511,12 +1428,7 @@ namespace Server
 			return true;
 		}
 
-		public static bool ReadBoolean(XmlElement xml, string attribute, ref bool value)
-		{
-			return ReadBoolean(xml, attribute, ref value, true);
-		}
-
-		public static bool ReadBoolean(XmlElement xml, string attribute, ref bool value, bool mandatory)
+        public static bool ReadBoolean(XmlElement xml, string attribute, ref bool value, bool mandatory)
 		{
 			string s = GetAttribute(xml, attribute, mandatory);
 
@@ -1540,41 +1452,7 @@ namespace Server
 			return true;
 		}
 
-		public static bool ReadDateTime(XmlElement xml, string attribute, ref DateTime value)
-		{
-			return ReadDateTime(xml, attribute, ref value, true);
-		}
-
-		public static bool ReadDateTime(XmlElement xml, string attribute, ref DateTime value, bool mandatory)
-		{
-			string s = GetAttribute(xml, attribute, mandatory);
-
-			if (s == null)
-			{
-				return false;
-			}
-
-			try
-			{
-				value = XmlConvert.ToDateTime(s, XmlDateTimeSerializationMode.Utc);
-			}
-			catch
-			{
-				Utility.PushColor(ConsoleColor.Red);
-				Console.WriteLine("Could not parse DateTime attribute '{0}' in element '{1}'", attribute, xml.Name);
-				Utility.PopColor();
-				return false;
-			}
-
-			return true;
-		}
-
-		public static bool ReadTimeSpan(XmlElement xml, string attribute, ref TimeSpan value)
-		{
-			return ReadTimeSpan(xml, attribute, ref value, true);
-		}
-
-		public static bool ReadTimeSpan(XmlElement xml, string attribute, ref TimeSpan value, bool mandatory)
+        public static bool ReadTimeSpan(XmlElement xml, string attribute, ref TimeSpan value, bool mandatory)
 		{
 			string s = GetAttribute(xml, attribute, mandatory);
 
@@ -1598,12 +1476,7 @@ namespace Server
 			return true;
 		}
 
-		public static bool ReadEnum<T>(XmlElement xml, string attribute, ref T value) where T : struct
-		{
-			return ReadEnum(xml, attribute, ref value, true);
-		}
-
-		public static bool ReadEnum<T>(XmlElement xml, string attribute, ref T value, bool mandatory) where T : struct
+        public static bool ReadEnum<T>(XmlElement xml, string attribute, ref T value, bool mandatory) where T : struct
 			// We can't limit the where clause to Enums only
 		{
 			string s = GetAttribute(xml, attribute, mandatory);
@@ -1695,12 +1568,7 @@ namespace Server
 			return true;
 		}
 
-		public static bool ReadPoint3D(XmlElement xml, Map map, ref Point3D value)
-		{
-			return ReadPoint3D(xml, map, ref value, true);
-		}
-
-		public static bool ReadPoint3D(XmlElement xml, Map map, ref Point3D value, bool mandatory)
+        public static bool ReadPoint3D(XmlElement xml, Map map, ref Point3D value, bool mandatory)
 		{
 			int x = 0, y = 0, z = 0;
 
