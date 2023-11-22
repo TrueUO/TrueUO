@@ -692,16 +692,16 @@ namespace Server.Items
                 list.Add(1116158); //Mana Phase
 
             if (m_Killer != null && !m_Killer.IsEmpty && m_Killer.Amount > 0)
-                list.Add(1072388, "{0}\t{1}", m_Killer.Name != null ? m_Killer.Name.ToString() : "Unknown", m_Killer.Amount); // ~1_NAME~ Killer: +~2_val~%
+                list.Add(1072388, $"{(m_Killer.Name != null ? m_Killer.Name.ToString() : "Unknown")}\t{m_Killer.Amount}"); // ~1_NAME~ Killer: +~2_val~%
 
             if (m_Protection != null && !m_Protection.IsEmpty && m_Protection.Amount > 0)
-                list.Add(1072387, "{0}\t{1}", m_Protection.Name != null ? m_Protection.Name.ToString() : "Unknown", m_Protection.Amount); // ~1_NAME~ Protection: +~2_val~%
+                list.Add(1072387, $"{(m_Protection.Name != null ? m_Protection.Name.ToString() : "Unknown")}\t{m_Protection.Amount}"); // ~1_NAME~ Protection: +~2_val~%
 
             if (m_ExceptionalBonus != 0)
-                list.Add(1072395, "#{0}\t{1}", GetSkillLabel(), m_ExceptionalBonus); // ~1_NAME~ Exceptional Bonus: ~2_val~%
+                list.Add(1072395, $"#{GetSkillLabel()}\t{m_ExceptionalBonus}"); // ~1_NAME~ Exceptional Bonus: ~2_val~%
 
             if (m_SuccessBonus != 0)
-                list.Add(1072394, "#{0}\t{1}", GetSkillLabel(), m_SuccessBonus); // ~1_NAME~ Bonus: ~2_val~%
+                list.Add(1072394, $"#{GetSkillLabel()}\t{m_SuccessBonus}"); // ~1_NAME~ Bonus: ~2_val~%
 
             if (m_NegativeAttributes != null)
                 m_NegativeAttributes.GetProperties(list, this);
@@ -850,7 +850,7 @@ namespace Server.Items
             }
 
             if (m_MaxHitPoints > 0)
-                list.Add(1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints); // durability ~1_val~ / ~2_val~
+                list.Add(1060639, $"{m_HitPoints}\t{m_MaxHitPoints}"); // durability ~1_val~ / ~2_val~
         }
 
         private static void SetSaveFlag(ref SaveFlag flags, SaveFlag toSet, bool setIf)

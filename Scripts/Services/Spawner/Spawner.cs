@@ -298,11 +298,11 @@ namespace Server.Mobiles
 
                 list.Add(1060656, m_MaxCount.ToString()); // amount to make: ~1_val~
                 list.Add(1061169, m_HomeRange.ToString()); // range ~1_val~
-                list.Add(1060658, "walking range\t{0}", m_WalkingRange); // ~1_val~: ~2_val~
+                list.Add(1060658, $"walking range\t{m_WalkingRange}"); // ~1_val~: ~2_val~
 
-                list.Add(1060659, "group\t{0}", m_Group); // ~1_val~: ~2_val~
-                list.Add(1060660, "team\t{0}", m_Team); // ~1_val~: ~2_val~
-                list.Add(1060661, "speed\t{0} to {1}", m_MinDelay, m_MaxDelay); // ~1_val~: ~2_val~
+                list.Add(1060659, $"group\t{m_Group}"); // ~1_val~: ~2_val~
+                list.Add(1060660, $"team\t{m_Team}"); // ~1_val~: ~2_val~
+                list.Add(1060661, $"speed\t{m_MinDelay} to {m_MaxDelay}"); // ~1_val~: ~2_val~
 
                 if (m_SpawnObjects.Count != 0)
                     list.Add(SpawnedStats());
