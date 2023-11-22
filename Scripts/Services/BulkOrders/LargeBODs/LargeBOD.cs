@@ -145,7 +145,7 @@ namespace Server.Engines.BulkOrders
             list.Add(1060656, m_AmountMax.ToString()); // amount to make: ~1_val~
 
             for (int i = 0; i < m_Entries.Length; ++i)
-                list.Add(1060658 + i, "#{0}\t{1}", m_Entries[i].Details.Number, m_Entries[i].Amount); // ~1_val~: ~2_val~
+                list.Add(1060658 + i, $"#{m_Entries[i].Details.Number}\t{m_Entries[i].Amount}"); // ~1_val~: ~2_val~
         }
 
         public override void OnDoubleClickNotAccessible(Mobile from)

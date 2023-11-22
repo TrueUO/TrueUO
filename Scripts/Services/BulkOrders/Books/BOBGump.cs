@@ -206,7 +206,7 @@ namespace Server.Engines.BulkOrders
                         else if (name is string sName)
                             AddLabel(316, y, 1152, sName);
 
-                        AddLabel(421, y, 1152, string.Format("{0} / {1}", sub.AmountCur, largeEntry.AmountMax));
+                        AddLabel(421, y, 1152, $"{sub.AmountCur} / {largeEntry.AmountMax}");
 
                         ++tableIndex;
                         y += 32;
@@ -241,7 +241,7 @@ namespace Server.Engines.BulkOrders
                     else if (name is string sName)
                         AddLabel(316, y, 1152, sName);
 
-                    AddLabel(421, y, 1152, string.Format("{0} / {1}", smallEntry.AmountCur, smallEntry.AmountMax));
+                    AddLabel(421, y, 1152, $"{smallEntry.AmountCur} / {smallEntry.AmountMax}");
                 }
             }
         }

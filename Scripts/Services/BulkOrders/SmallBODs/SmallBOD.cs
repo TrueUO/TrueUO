@@ -188,7 +188,7 @@ namespace Server.Engines.BulkOrders
                 list.Add(SmallBODGump.GetMaterialNumberFor(m_Material)); // All items must be made with x material.
 
             list.Add(1060656, m_AmountMax.ToString()); // amount to make: ~1_val~
-            list.Add(1060658, "#{0}\t{1}", m_Number, m_AmountCur); // ~1_val~: ~2_val~
+            list.Add(1060658, $"#{m_Number}\t{m_AmountCur}"); // ~1_val~: ~2_val~
         }
 
         public override void OnDoubleClick(Mobile from)
