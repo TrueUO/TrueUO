@@ -1165,7 +1165,7 @@ namespace Server
 				}
 				else
 				{
-					list.Add(1050039, "{0}\t#{1}", m_Amount, LabelNumber); // ~1_NUMBER~ ~2_ITEMNAME~
+					list.Add(1050039, $"{m_Amount}\t#{LabelNumber}"); // ~1_NUMBER~ ~2_ITEMNAME~
 				}
 			}
 			else
@@ -1176,7 +1176,7 @@ namespace Server
 				}
 				else
 				{
-					list.Add(1050039, "{0}\t{1}", m_Amount, Name); // ~1_NUMBER~ ~2_ITEMNAME~
+					list.Add(1050039, $"{m_Amount}\t{Name}"); // ~1_NUMBER~ ~2_ITEMNAME~
 				}
 			}
 		}
@@ -1208,39 +1208,39 @@ namespace Server
 		/// </summary>
 		public virtual void AddResistanceProperties(ObjectPropertyList list)
 		{
-			int v = PhysicalResistance;
+			int value = PhysicalResistance;
 
-			if (v != 0)
+			if (value != 0)
 			{
-				list.Add(1060448, v.ToString()); // physical resist ~1_val~%
+				list.Add(1060448, $"{value}"); // physical resist ~1_val~%
 			}
 
-			v = FireResistance;
+            value = FireResistance;
 
-			if (v != 0)
+			if (value != 0)
 			{
-				list.Add(1060447, v.ToString()); // fire resist ~1_val~%
+				list.Add(1060447, $"{value}"); // fire resist ~1_val~%
 			}
 
-			v = ColdResistance;
+            value = ColdResistance;
 
-			if (v != 0)
+			if (value != 0)
 			{
-				list.Add(1060445, v.ToString()); // cold resist ~1_val~%
+				list.Add(1060445, $"{value}"); // cold resist ~1_val~%
 			}
 
-			v = PoisonResistance;
+            value = PoisonResistance;
 
-			if (v != 0)
+			if (value != 0)
 			{
-				list.Add(1060449, v.ToString()); // poison resist ~1_val~%
+				list.Add(1060449, $"{value}"); // poison resist ~1_val~%
 			}
 
-			v = EnergyResistance;
+            value = EnergyResistance;
 
-			if (v != 0)
+			if (value != 0)
 			{
-				list.Add(1060446, v.ToString()); // energy resist ~1_val~%
+				list.Add(1060446, $"{value}"); // energy resist ~1_val~%
 			}
 		}
 
@@ -1323,11 +1323,11 @@ namespace Server
 
 				if (weight == 1)
 				{
-					list.Add(1072788, weight.ToString()); //Weight: ~1_WEIGHT~ stone
+					list.Add(1072788, $"{weight}"); //Weight: ~1_WEIGHT~ stone
 				}
 				else
 				{
-					list.Add(1072789, weight.ToString()); //Weight: ~1_WEIGHT~ stones
+					list.Add(1072789, $"{weight}"); //Weight: ~1_WEIGHT~ stones
 				}
 			}
 		}
@@ -1361,7 +1361,7 @@ namespace Server
 		/// </summary>
 		public virtual void AddBlessedForProperty(ObjectPropertyList list, Mobile m)
 		{
-			list.Add(1062203, "{0}", m.Name); // Blessed for ~1_NAME~
+			list.Add(1062203, $"{m.Name}"); // Blessed for ~1_NAME~
 		}
 
 		public virtual void AddItemSocketProperties(ObjectPropertyList list)
