@@ -851,7 +851,7 @@ namespace Server
 			}
 
 			SaveStrategy strategy = SaveStrategy.Acquire();
-			Console.WriteLine("Core: Using {0} save strategy", strategy.Name.ToLowerInvariant());
+			Console.WriteLine($"Core: Using {strategy.Name.ToLowerInvariant()} save strategy");
 
 			Console.WriteLine("World: Saving...");
 
@@ -901,11 +901,11 @@ namespace Server
 
 			strategy.ProcessDecay();
 
-			Console.WriteLine("Save finished in {0:F2} seconds.", watch.Elapsed.TotalSeconds);
+			Console.WriteLine($"Save finished in {watch.Elapsed.TotalSeconds:F2} seconds.");
 
 			if (message)
 			{
-				Broadcast(0x35, false, AccessLevel.Player, "World save done in {0:F1} seconds.", watch.Elapsed.TotalSeconds);
+				Broadcast(0x35, false, AccessLevel.Player, $"World save done in {watch.Elapsed.TotalSeconds:F1} seconds.");
 			}
 
 			NetState.Resume();
