@@ -414,9 +414,9 @@ namespace Server
         {
             bool args = titleargs != null || secargs != null || thirdargs != null;
 
-            string title = string.Format("{0}{1}", titleargs ?? "", args ? "\0" : "");
-            string secondary = string.Format("{0}{1}", secargs ?? "", args ? "\0" : "");
-            string third = string.Format("{0}{1}", thirdargs ?? "", args ? "\0" : "");
+            string title = $"{titleargs ?? ""}{(args ? "\0" : "")}";
+            string secondary = $"{secargs ?? ""}{(args ? "\0" : "")}";
+            string third = $"{thirdargs ?? ""}{(args ? "\0" : "")}";
 
             EnsureCapacity(46 + (title.Length * 2) + (secondary.Length * 2) + (third.Length * 2));
 
