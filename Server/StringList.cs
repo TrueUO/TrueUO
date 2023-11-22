@@ -18,7 +18,7 @@ namespace Server
         public List<StringEntry> Entries { get; set; }
 
         public Dictionary<int, string> StringTable;
-        private readonly Dictionary<int, StringEntry> EntryTable;
+        private readonly Dictionary<int, StringEntry> _EntryTable;
 
         public string Language { get; private set; }
 
@@ -59,7 +59,7 @@ namespace Server
             }
 
             StringTable = new Dictionary<int, string>();
-            EntryTable = new Dictionary<int, StringEntry>();
+            _EntryTable = new Dictionary<int, StringEntry>();
             Entries = new List<StringEntry>();
 
             using (BinaryReader bin = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)))
@@ -85,68 +85,29 @@ namespace Server
                     Entries.Add(se);
 
                     StringTable[number] = text;
-                    EntryTable[number] = se;
+                    _EntryTable[number] = se;
                 }
             }
         }
 
-        //C# argument support
-        public static Regex FormatExpression = new Regex(@"~(\d)+_.*?~", RegexOptions.IgnoreCase);
-
-        public static string MatchComparison(Match m)
-        {
-            return "{" + (Utility.ToInt32(m.Groups[1].Value) - 1) + "}";
-        }
-
-        public static string FormatArguments(string entry)
-        {
-            return FormatExpression.Replace(entry, MatchComparison);
-        }
-
-        //UO tabbed argument conversion
-        public static string CombineArguments(string str, string args)
-        {
-            if (string.IsNullOrEmpty(args))
-            {
-                return str;
-            }
-
-            return CombineArguments(str, args.Split('\t'));
-        }
-
-        public static string CombineArguments(string str, params object[] args)
-        {
-            return string.Format(str, args);
-        }
-
-        public static string CombineArguments(int number, string args)
-        {
-            return CombineArguments(number, args.Split('\t'));
-        }
-
-        public static string CombineArguments(int number, params object[] args)
-        {
-            return string.Format(Localization[number], args);
-        }
-
         public StringEntry GetEntry(int number)
         {
-            if (EntryTable == null || !EntryTable.ContainsKey(number))
+            if (_EntryTable == null || !_EntryTable.TryGetValue(number, out StringEntry value))
             {
                 return null;
             }
 
-            return EntryTable[number];
+            return value;
         }
 
         public string GetString(int number)
         {
-            if (StringTable == null || !StringTable.ContainsKey(number))
+            if (StringTable == null || !StringTable.TryGetValue(number, out string value))
             {
                 return null;
             }
 
-            return StringTable[number];
+            return value;
         }
     }
 
@@ -161,25 +122,23 @@ namespace Server
             Text = text;
         }
 
-        private string m_FmtTxt;
-
-        private static readonly Regex m_RegEx = new Regex(@"~(\d+)[_\w]+~", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
-
-        private static readonly object[] m_Args = { "", "", "", "", "", "", "", "", "", "", "" };
+        private string _FmtTxt;
+        private static readonly Regex _RegEx = new Regex(@"~(\d+)[_\w]+~", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        private static readonly object[] _Args = { "", "", "", "", "", "", "", "", "", "", "" };
 
         public string Format(params object[] args)
         {
-            if (m_FmtTxt == null)
+            if (_FmtTxt == null)
             {
-                m_FmtTxt = m_RegEx.Replace(Text, "{$1}");
+                _FmtTxt = _RegEx.Replace(Text, "{$1}");
             }
 
             for (int i = 0; i < args.Length && i < 10; i++)
             {
-                m_Args[i + 1] = args[i];
+                _Args[i + 1] = args[i];
             }
 
-            return string.Format(m_FmtTxt, m_Args);
+            return string.Format(_FmtTxt, _Args);
         }
     }
 }
