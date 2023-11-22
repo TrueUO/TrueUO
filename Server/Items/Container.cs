@@ -2029,17 +2029,15 @@ namespace Server.Items
 		{
 			base.GetProperties(list);
 
-			if (DisplaysContent) //CheckContentDisplay( from ) )
+			if (DisplaysContent)
 			{
-				if (ParentsContain<Item>() || IsLockedDown || IsSecure) //Root Parent is the Mobile.  Parent could be another containter.
+				if (ParentsContain<Item>() || IsLockedDown || IsSecure) //Root Parent is the Mobile.  Parent could be another container.
 				{
-					list.Add(1073841, "{0}\t{1}\t{2}", TotalItems, MaxItems, TotalWeight);
-					// Contents: ~1_COUNT~/~2_MAXCOUNT~ items, ~3_WEIGHT~ stones
+					list.Add(1073841, $"{TotalItems}\t{MaxItems}\t{TotalWeight}"); // Contents: ~1_COUNT~/~2_MAXCOUNT~ items, ~3_WEIGHT~ stones
 				}
 				else
 				{
-					list.Add(1072241, "{0}\t{1}\t{2}\t{3}", TotalItems, MaxItems, TotalWeight, MaxWeight);
-					// Contents: ~1_COUNT~/~2_MAXCOUNT~ items, ~3_WEIGHT~/~4_MAXWEIGHT~ stones
+					list.Add(1072241, $"{TotalItems}\t{MaxItems}\t{TotalWeight}\t{MaxWeight}"); // Contents: ~1_COUNT~/~2_MAXCOUNT~ items, ~3_WEIGHT~/~4_MAXWEIGHT~ stones
 				}
 			}
 		}
