@@ -10,19 +10,19 @@ namespace Server.Items
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public CraftResource Resource { get { return _Resource; } set { _Resource = value; _Resource = value; Hue = CraftResources.GetHue(_Resource); InvalidateProperties(); } }
+        public CraftResource Resource { get => _Resource; set { _Resource = value; _Resource = value; Hue = CraftResources.GetHue(_Resource); InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Crafter { get { return _Crafter; } set { _Crafter = value; InvalidateProperties(); } }
+        public Mobile Crafter { get => _Crafter; set { _Crafter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public bool PlayerConstructed => true;
 
         [Constructable]
         public Globe()
-            : base(0x1047)// It isn't flipable
+            : base(0x1047)
         {
             Weight = 3.0;
         }
@@ -44,7 +44,7 @@ namespace Server.Items
         {
             if (_Resource != CraftResource.None)
             {
-                list.Add(1053099, "#{0}\t{1}", CraftResources.GetLocalizationNumber(_Resource), string.Format("#{0}", LabelNumber.ToString())); // ~1_oretype~ ~2_armortype~
+                list.Add(1053099, $"#{CraftResources.GetLocalizationNumber(_Resource)}\t#{LabelNumber}"); // ~1_oretype~ ~2_armortype~
             }
             else
             {
@@ -78,7 +78,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(1); // version
 
             writer.Write((int)_Resource);
@@ -89,19 +88,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadEncodedInt();
 
-            int version = reader.ReadEncodedInt();
-
-            switch (version)
-            {
-                case 1:
-                    _Resource = (CraftResource)reader.ReadInt();
-                    _Crafter = reader.ReadMobile();
-                    _Quality = (ItemQuality)reader.ReadInt();
-                    break;
-                case 0:
-                    break;
-            }
+            _Resource = (CraftResource)reader.ReadInt();
+            _Crafter = reader.ReadMobile();
+            _Quality = (ItemQuality)reader.ReadInt();
         }
     }
 }

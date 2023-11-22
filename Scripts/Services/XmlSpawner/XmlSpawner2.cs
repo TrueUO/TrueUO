@@ -1759,30 +1759,30 @@ namespace Server.Mobiles
 
             if (m_Group)
             {
-                list.Add(1060658 + 6 - nlist_items, "group\t{0}", m_Group); // ~1_val~: ~2_val~
+                list.Add(1060658 + 6 - nlist_items, $"group\t{m_Group}"); // ~1_val~: ~2_val~
                 nlist_items--;
             }
 
             if (m_Team != 0)
             {
-                list.Add(1060658 + 6 - nlist_items, "team\t{0}", m_Team); // ~1_val~: ~2_val~
+                list.Add(1060658 + 6 - nlist_items, $"team\t{m_Team}"); // ~1_val~: ~2_val~
                 nlist_items--;
             }
 
-            list.Add(1060658 + 6 - nlist_items, "speed\t{0} to {1}", m_MinDelay, m_MaxDelay); // ~1_val~: ~2_val~
+            list.Add(1060658 + 6 - nlist_items, $"speed\t{m_MinDelay} to {m_MaxDelay}"); // ~1_val~: ~2_val~
             nlist_items--;
 
             // display the duration parameter in the prop gump if it is non-zero
             if (m_Duration > TimeSpan.FromMinutes(0))
             {
-                list.Add(1060658 + 6 - nlist_items, "Duration\t{0}", m_Duration);
+                list.Add(1060658 + 6 - nlist_items, $"Duration\t{m_Duration}");
                 nlist_items--;
             }
 
             // display the proximity range parameter in the prop gump if it is active
             if (m_ProximityRange != -1)
             {
-                list.Add(1060658 + 6 - nlist_items, "ProximityRange\t{0}", m_ProximityRange);
+                list.Add(1060658 + 6 - nlist_items, $"ProximityRange\t{m_ProximityRange}");
                 nlist_items--;
             }
 
