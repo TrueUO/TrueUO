@@ -105,7 +105,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1152599, string.Format("#{0}\t#1152606", CraftResources.GetLocalizationNumber(_Resource))); // ~1_RES~ ~2_TYPE~ Talisman
+            list.Add(1152599, $"#{CraftResources.GetLocalizationNumber(_Resource)}\t#1152606"); // ~1_RES~ ~2_TYPE~ Talisman
         }
 
         public override void AddUsesRemainingProperties(ObjectPropertyList list)

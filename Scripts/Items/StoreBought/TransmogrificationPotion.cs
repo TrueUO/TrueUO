@@ -233,7 +233,7 @@ namespace Server.Items
                 AddHtmlLocalized(85, 10, 200, 20, 1114513, "#1159501", 0x67D5, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
                 AddItem(160, 50, 0x9D83);
                 AddItem(145, 20, 0x376F);
-                AddHtmlLocalized(10, 150, 350, isrobe ? 180 : 252, 1114513, string.Format("#{0}", Potion.GumpDesciption), 0x43FF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+                AddHtmlLocalized(10, 150, 350, isrobe ? 180 : 252, 1114513, $"#{Potion.GumpDesciption}", 0x43FF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
                 AddButton(10, isrobe ? 339 : 411, 0x15E1, 0x15E5, 1, GumpButtonType.Reply, 0);
                 AddHtmlLocalized(35, isrobe ? 339 : 411, 150, 20, 1159494, 0x7FFF, false, false); // Set Source Object
                 AddButton(185, isrobe ? 339 : 411, 0x15E1, 0x15E5, 2, GumpButtonType.Reply, 0);

@@ -2691,15 +2691,12 @@ namespace Server.Items
             defender.PlaySound(0x1EA);
             TimeSpan duration = TimeSpan.FromSeconds(30);
 
-            defender.AddStatMod(
-                new StatMod(StatType.Str, string.Format("[Magic] {0} Curse", StatType.Str), -10, duration));
-            defender.AddStatMod(
-                new StatMod(StatType.Dex, string.Format("[Magic] {0} Curse", StatType.Dex), -10, duration));
-            defender.AddStatMod(
-                new StatMod(StatType.Int, string.Format("[Magic] {0} Curse", StatType.Int), -10, duration));
+            defender.AddStatMod(new StatMod(StatType.Str, $"[Magic] {StatType.Str} Curse", -10, duration));
+            defender.AddStatMod(new StatMod(StatType.Dex, $"[Magic] {StatType.Dex} Curse", -10, duration));
+            defender.AddStatMod(new StatMod(StatType.Int, $"[Magic] {StatType.Int} Curse", -10, duration));
 
-            int percentage = -10; //(int)(SpellHelper.GetOffsetScalar(Caster, m, true) * 100);
-            string args = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}", percentage, percentage, percentage, 10, 10, 10, 10);
+            int percentage = -10;
+            string args = $"{percentage}\t{percentage}\t{percentage}\t{10}\t{10}\t{10}\t{10}";
 
             Spells.Fourth.CurseSpell.AddEffect(defender, duration, 10, 10, 10);
             BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.Curse, 1075835, 1075836, duration, defender, args));
@@ -4143,7 +4140,7 @@ namespace Server.Items
 
             if (name == null)
             {
-                name = string.Format("#{0}", LabelNumber);
+                name = $"#{LabelNumber}";
             }
 
             return name;
@@ -4290,9 +4287,9 @@ namespace Server.Items
                     int prefix = RunicReforging.GetPrefixName(m_ReforgedPrefix);
 
                     if (m_ReforgedSuffix == ReforgedSuffix.None)
-                        list.Add(1151757, string.Format("#{0}\t{1}", prefix, GetNameString())); // ~1_PREFIX~ ~2_ITEM~
+                        list.Add(1151757, $"#{prefix}\t{GetNameString()}"); // ~1_PREFIX~ ~2_ITEM~
                     else
-                        list.Add(1151756, string.Format("#{0}\t{1}\t#{2}", prefix, GetNameString(), RunicReforging.GetSuffixName(m_ReforgedSuffix))); // ~1_PREFIX~ ~2_ITEM~ of ~3_SUFFIX~
+                        list.Add(1151756, $"#{prefix}\t{GetNameString()}\t#{RunicReforging.GetSuffixName(m_ReforgedSuffix)}"); // ~1_PREFIX~ ~2_ITEM~ of ~3_SUFFIX~
                 }
                 else if (m_ReforgedSuffix != ReforgedSuffix.None)
                 {
@@ -4305,7 +4302,7 @@ namespace Server.Items
             }
             else if (SearingWeapon)
             {
-                list.Add(1151318, string.Format("#{0}", LabelNumber));
+                list.Add(1151318, $"#{LabelNumber}");
             }
             else if (Name == null)
             {
@@ -5024,7 +5021,7 @@ namespace Server.Items
 
             list.Add(1061168, "{0}\t{1}", MinDamage.ToString(), MaxDamage.ToString()); // weapon damage ~1_val~ - ~2_val~
 
-            list.Add(1061167, string.Format("{0}s", Speed)); // weapon speed ~1_val~
+            list.Add(1061167, $"{Speed}s"); // weapon speed ~1_val~
 
             if (MaxRange > 1)
             {

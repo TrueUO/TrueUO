@@ -386,7 +386,7 @@ namespace Server.Mobiles
 
             if (sys != null)
             {
-                return string.Format("Citizenship: {0}", sys.City.ToString());
+                return $"Citizenship: {sys.City}";
             }
 
             return base.ToString();

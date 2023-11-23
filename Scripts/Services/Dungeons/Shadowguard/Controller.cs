@@ -936,7 +936,7 @@ namespace Server.Engines.Shadowguard
         public ShadowguardInstance Instance { get; }
 
         public ShadowguardRegion(Rectangle2D bounds, string regionName, ShadowguardInstance instance)
-            : base(string.Format("Shadowguard_{0}", regionName), Map.TerMur, DefaultPriority, bounds)
+            : base($"Shadowguard_{regionName}", Map.TerMur, DefaultPriority, bounds)
         {
             Instance = instance;
         }

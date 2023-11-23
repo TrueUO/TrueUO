@@ -19,7 +19,7 @@ namespace Server.Items
         {
             Hue = 85;
 
-            Args = string.Format("{0}\t{1}", _Staff[Utility.Random(_Staff.Length)], m != null ? m.Name : "you");
+            Args = $"{_Staff[Utility.Random(_Staff.Length)]}\t{(m != null ? m.Name : "you")}";
         }
 
         public override void AddNameProperty(ObjectPropertyList list)

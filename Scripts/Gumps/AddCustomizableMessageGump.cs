@@ -45,7 +45,7 @@ namespace Server.Items
             AddPage(0);
 
             AddBackground(0, 0, 420, 320, 0x2454);
-            AddHtmlLocalized(10, 10, 400, 18, 1114513, string.Format("#{0}", TitleCliloc == 0 ? 1151680 : TitleCliloc), 0x4000, false, false); // Add Message
+            AddHtmlLocalized(10, 10, 400, 18, 1114513, $"#{(TitleCliloc == 0 ? 1151680 : TitleCliloc)}", 0x4000, false, false); // Add Message
             AddHtmlLocalized(10, 37, 400, 90, SubjectCliloc == 0 ? 1151681 : SubjectCliloc, 0x14AA, false, false); // Enter up to three lines of personallized text.  you may enter up to 25 characters per line.
 
             AddHtmlLocalized(10, 136, 400, 16, 1150296, 0x14AA, false, false); // Line 1:

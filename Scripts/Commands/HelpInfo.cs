@@ -215,7 +215,7 @@ namespace Server.Commands
                     return;
                 }
 
-                e.Mobile.SendMessage(string.Format("Command '{0}' not found!", arg));
+                e.Mobile.SendMessage($"Command '{arg}' not found!");
             }
 
             e.Mobile.SendGump(new CommandListGump(0, e.Mobile, null));
@@ -251,7 +251,7 @@ namespace Server.Commands
                 else
                     AddEntryHeader(20);
 
-                AddEntryHtml(160, Center(string.Format("Page {0} of {1}", m_Page + 1, (m_List.Count + EntriesPerPage - 1) / EntriesPerPage)));
+                AddEntryHtml(160, Center($"Page {m_Page + 1} of {(m_List.Count + EntriesPerPage - 1) / EntriesPerPage}"));
 
                 if ((m_Page + 1) * EntriesPerPage < m_List.Count)
                     AddEntryButton(20, ArrowRightID1, ArrowRightID2, 2, ArrowRightWidth, ArrowRightHeight);
@@ -371,7 +371,7 @@ namespace Server.Commands
 
                 if (aliases != null && aliases.Length != 0)
                 {
-                    sb.Append(string.Format("Alias{0}: ", aliases.Length == 1 ? "" : "es"));
+                    sb.Append($"Alias{(aliases.Length == 1 ? "" : "es")}: ");
 
                     for (int i = 0; i < aliases.Length; ++i)
                     {
@@ -414,12 +414,12 @@ namespace Server.Commands
 
             public string Color(string text, int color)
             {
-                return string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, text);
+                return $"<BASEFONT COLOR=#{color:X6}>{text}</BASEFONT>";
             }
 
             public string Center(string text)
             {
-                return string.Format("<CENTER>{0}</CENTER>", text);
+                return $"<CENTER>{text}</CENTER>";
             }
         }
     }

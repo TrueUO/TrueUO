@@ -156,7 +156,7 @@ namespace Server.Items
                     }
 
                     AddButton(15, 39 + (i * 20), 10006, 10006, i + 1, GumpButtonType.Reply, 0);
-                    AddHtml(32, 35 + (i * 20), 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet == null || pet.Deleted ? "empty" : pet.Name), false, false);
+                    AddHtml(32, 35 + (i * 20), 275, 18, $"<BASEFONT COLOR=#C0C0EE>{(pet == null || pet.Deleted ? "empty" : pet.Name)}</BASEFONT>", false, false);
                 }
             }
 

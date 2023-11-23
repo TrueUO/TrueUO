@@ -60,7 +60,7 @@ namespace Server.Gumps
                 if (selection is int iSelection)
                     AddHtmlLocalized(80, 109 + (i * 32), 275, 36, iSelection, 0x0, false, false);
                 else
-                    AddHtml(80, 109 + (i * 32), 275, 36, string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", 0x0, selection), false, false);
+                    AddHtml(80, 109 + (i * 32), 275, 36, $"<BASEFONT COLOR=#{0x0:X6}>{selection}</BASEFONT>", false, false);
             }
         }
 

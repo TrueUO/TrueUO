@@ -26,7 +26,7 @@ namespace Server.Commands
             rune.Name = rune.Description = runeName;
 
             e.Mobile.AddToBackpack(rune);
-            e.Mobile.SendMessage(string.Format("Rune {0} added to your backpack.", runeName));
+            e.Mobile.SendMessage($"Rune {runeName} added to your backpack.");
         }
     }
 }

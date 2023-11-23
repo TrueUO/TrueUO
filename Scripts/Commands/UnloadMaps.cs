@@ -335,111 +335,111 @@ namespace Server.Gumps
 
                             if (Selections.Contains(101))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 101", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 101");
                             }
                             if (Selections.Contains(102))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 102", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 102");
                             }
                             if (Selections.Contains(103))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 103", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 103");
                             }
                             if (Selections.Contains(104))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 104", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 104");
                             }
                             if (Selections.Contains(105))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 105", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 105");
                             }
                             if (Selections.Contains(106))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 106", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 106");
                             }
                             if (Selections.Contains(107))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 107", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 107");
                             }
                             if (Selections.Contains(108))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 108", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 108");
                             }
                             if (Selections.Contains(109))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 109", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 109");
                             }
                             if (Selections.Contains(110))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 110", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 110");
                             }
                             if (Selections.Contains(111))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 111", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 111");
                             }
                             if (Selections.Contains(112))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 112", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 112");
                             }
                             if (Selections.Contains(113))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 113", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 113");
                             }
                             if (Selections.Contains(114))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 114", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 114");
                             }
                             if (Selections.Contains(115))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 115", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 115");
                             }
                             if (Selections.Contains(116))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 116", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 116");
                             }
                             if (Selections.Contains(117))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 117", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 117");
                             }
                             if (Selections.Contains(118))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 118", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 118");
                             }
                             if (Selections.Contains(119))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 119", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 119");
                             }
                             if (Selections.Contains(120))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 120", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 120");
                             }
                             if (Selections.Contains(121))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 121", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 121");
                             }
                             if (Selections.Contains(122))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 122", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 122");
                             }
                             if (Selections.Contains(123))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 123", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 123");
                             }
                             if (Selections.Contains(124))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 124", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 124");
                             }
                             if (Selections.Contains(125))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 125", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 125");
                             }
                             if (Selections.Contains(126))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 126", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 126");
                             }
                             if (Selections.Contains(127))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 127", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 127");
                             }
                         }
 
@@ -721,115 +721,115 @@ namespace Server.Gumps
 
                             if (Selections.Contains(101))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 201", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 201");
                             }
                             if (Selections.Contains(102))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 202", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 202");
                             }
                             if (Selections.Contains(103))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 203", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 203");
                             }
                             if (Selections.Contains(104))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 204", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 204");
                             }
                             if (Selections.Contains(105))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 205", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 205");
                             }
                             if (Selections.Contains(106))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 206", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 206");
                             }
                             if (Selections.Contains(107))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 207", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 207");
                             }
                             if (Selections.Contains(108))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 208", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 208");
                             }
                             if (Selections.Contains(109))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 209", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 209");
                             }
                             if (Selections.Contains(110))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 210", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 210");
                             }
                             if (Selections.Contains(111))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 228", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 228");
                             }
                             if (Selections.Contains(112))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 211", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 211");
                             }
                             if (Selections.Contains(113))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 212", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 212");
                             }
                             if (Selections.Contains(114))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 213", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 213");
                             }
                             if (Selections.Contains(115))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 214", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 214");
                             }
                             if (Selections.Contains(116))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 215", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 215");
                             }
                             if (Selections.Contains(117))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 216", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 216");
                             }
                             if (Selections.Contains(118))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 217", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 217");
                             }
                             if (Selections.Contains(119))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 218", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 218");
                             }
                             if (Selections.Contains(120))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 219", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 219");
                             }
                             if (Selections.Contains(121))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 220", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 220");
                             }
                             if (Selections.Contains(122))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 221", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 221");
                             }
                             if (Selections.Contains(123))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 222", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 222");
                             }
                             if (Selections.Contains(124))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 223", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 223");
                             }
                             if (Selections.Contains(125))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 224", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 224");
                             }
                             if (Selections.Contains(126))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 225", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 225");
                             }
                             if (Selections.Contains(127))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 226", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 226");
                             }
                             if (Selections.Contains(128))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 227", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 227");
                             }
                         }
 
@@ -986,59 +986,59 @@ namespace Server.Gumps
 
                             if (Selections.Contains(101))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 301", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 301");
                             }
                             if (Selections.Contains(102))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 302", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 302");
                             }
                             if (Selections.Contains(103))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 303", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 303");
                             }
                             if (Selections.Contains(104))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 304", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 304");
                             }
                             if (Selections.Contains(105))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 305", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 305");
                             }
                             if (Selections.Contains(106))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 306", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 306");
                             }
                             if (Selections.Contains(107))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 307", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 307");
                             }
                             if (Selections.Contains(108))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 308", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 308");
                             }
                             if (Selections.Contains(109))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 309", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 309");
                             }
                             if (Selections.Contains(110))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 310", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 310");
                             }
                             if (Selections.Contains(111))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 311", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 311");
                             }
                             if (Selections.Contains(112))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 312", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 312");
                             }
                             if (Selections.Contains(113))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 313", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 313");
                             }
                             if (Selections.Contains(114))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 314", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 314");
                             }
                         }
 
@@ -1140,35 +1140,35 @@ namespace Server.Gumps
 
                             if (Selections.Contains(101))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 401", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 401");
                             }
                             if (Selections.Contains(102))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 402", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 402");
                             }
                             if (Selections.Contains(103))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 403", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 403");
                             }
                             if (Selections.Contains(104))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 404", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 404");
                             }
                             if (Selections.Contains(105))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 405", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 405");
                             }
                             if (Selections.Contains(106))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 406", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 406");
                             }
                             if (Selections.Contains(107))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 407", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 407");
                             }
                             if (Selections.Contains(108))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 408", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 408");
                             }
                         }
 
@@ -1262,27 +1262,27 @@ namespace Server.Gumps
 
                             if (Selections.Contains(101))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 501", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 501");
                             }
                             if (Selections.Contains(102))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 502", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 502");
                             }
                             if (Selections.Contains(103))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 503", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 503");
                             }
                             if (Selections.Contains(104))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 504", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 504");
                             }
                             if (Selections.Contains(105))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 505", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 505");
                             }
                             if (Selections.Contains(106))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 506", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 506");
                             }
                         }
 
@@ -1620,155 +1620,155 @@ namespace Server.Gumps
 
                             if (Selections.Contains(101))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 601", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 601");
                             }
                             if (Selections.Contains(102))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 602", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 602");
                             }
                             if (Selections.Contains(103))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 603", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 603");
                             }
                             if (Selections.Contains(104))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 604", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 604");
                             }
                             if (Selections.Contains(105))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 605", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 605");
                             }
                             if (Selections.Contains(106))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 606", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 606");
                             }
                             if (Selections.Contains(107))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 607", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 607");
                             }
                             if (Selections.Contains(108))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 608", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 608");
                             }
                             if (Selections.Contains(109))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 609", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 609");
                             }
                             if (Selections.Contains(110))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 610", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 610");
                             }
                             if (Selections.Contains(111))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 611", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 611");
                             }
                             if (Selections.Contains(112))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 612", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 612");
                             }
                             if (Selections.Contains(113))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 613", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 613");
                             }
                             if (Selections.Contains(114))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 614", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 614");
                             }
                             if (Selections.Contains(115))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 615", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 615");
                             }
                             if (Selections.Contains(116))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 616", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 616");
                             }
                             if (Selections.Contains(117))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 617", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 617");
                             }
                             if (Selections.Contains(118))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 618", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 618");
                             }
                             if (Selections.Contains(119))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 619", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 619");
                             }
                             if (Selections.Contains(120))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 620", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 620");
                             }
                             if (Selections.Contains(121))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 621", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 621");
                             }
                             if (Selections.Contains(122))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 622", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 622");
                             }
                             if (Selections.Contains(123))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 623", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 623");
                             }
                             if (Selections.Contains(124))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 624", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 624");
                             }
                             if (Selections.Contains(125))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 625", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 625");
                             }
                             if (Selections.Contains(126))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 626", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 626");
                             }
                             if (Selections.Contains(127))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 627", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 627");
                             }
                             if (Selections.Contains(128))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 628", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 628");
                             }
                             if (Selections.Contains(129))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 629", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 629");
                             }
                             if (Selections.Contains(130))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 630", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 630");
                             }
                             if (Selections.Contains(131))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 631", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 631");
                             }
                             if (Selections.Contains(132))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 632", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 632");
                             }
                             if (Selections.Contains(133))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 633", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 633");
                             }
                             if (Selections.Contains(134))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 634", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 634");
                             }
                             if (Selections.Contains(135))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 635", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 635");
                             }
                             if (Selections.Contains(136))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 636", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 636");
                             }
                             if (Selections.Contains(137))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 637", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 637");
                             }
                             if (Selections.Contains(138))
                             {
-                                CommandSystem.Handle(from, string.Format("{0}Spawngen unload 638", prefix));
+                                CommandSystem.Handle(from, $"{prefix}Spawngen unload 638");
                             }
                         }
 

@@ -42,7 +42,9 @@ namespace Server.Items
                 return 0;
             }
         }
-        public override string DefaultTitle => string.Format("<basefont color=#FFFFFF>Power Scroll ({0}{1} Maximum Stats):</basefont>", (int)Value - m_StatCap >= 0 ? "+" : "", (int)Value - m_StatCap);
+
+        public override string DefaultTitle => $"<basefont color=#FFFFFF>Power Scroll ({((int)Value - m_StatCap >= 0 ? "+" : "")}{(int)Value - m_StatCap} Maximum Stats):</basefont>";
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             int level = ((int)Value - (m_StatCap + 5)) / 5;

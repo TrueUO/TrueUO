@@ -58,17 +58,17 @@ namespace Server.Items
                     {
                         string skillName = SkillInfo.Table[(int)Skill].Name;
 
-                        list.Add(1113149, string.Format("{0}\t{1}\t{2}\t{3}", v.ToString(), skillName, ((int)Has).ToString(), Needed.ToString())); // ~1_bonus~ ~2_type~: ~3_given~/~4_needed~
+                        list.Add(1113149, $"{v}\t{skillName}\t{(int)Has}\t{Needed}"); // ~1_bonus~ ~2_type~: ~3_given~/~4_needed~
                         break;
                     }
                 case BinderType.StatScroll:
                     {
-                        list.Add(1113149, string.Format("+{0}\t#{1}\t{2}\t{3}", v - 225, 1049477, ((int)Has).ToString(), Needed.ToString())); // ~1_bonus~ ~2_type~: ~3_given~/~4_needed~
+                        list.Add(1113149, $"+{v - 225}\t#{1049477}\t{(int)Has}\t{Needed}"); // ~1_bonus~ ~2_type~: ~3_given~/~4_needed~
                         break;
                     }
                 case BinderType.SOT:
                     {
-                        string value = string.Format("{0:0.##}", Has);
+                        string value = $"{Has:0.##}";
                         string skillName = SkillInfo.Table[(int)Skill].Name;
                         int number;
 
@@ -77,7 +77,7 @@ namespace Server.Items
                         else
                             number = 1113620; // ~1_type~ transcendence: ~2_given~/5.0
 
-                        list.Add(number, string.Format("{0}\t{1}", skillName, value));
+                        list.Add(number, $"{skillName}\t{value}");
                         break;
                     }
             }

@@ -742,7 +742,7 @@ namespace Server.Items
                 return;
             }
 
-            to.SendLocalizedMessage(1074360, string.Format("#{0}", item.LabelNumber)); // You receive a reward: ~1_REWARD~
+            to.SendLocalizedMessage(1074360, $"#{item.LabelNumber}"); // You receive a reward: ~1_REWARD~
             to.PlaySound(0x5A3);
 
             m_RewardAvailable = false;
@@ -874,7 +874,7 @@ namespace Server.Items
             LiveCreatures += 1;
 
             if (from != null)
-                from.SendLocalizedMessage(1073632, string.Format("#{0}", fish.LabelNumber)); // You add the following creature to your aquarium: ~1_FISH~
+                from.SendLocalizedMessage(1073632, $"#{fish.LabelNumber}"); // You add the following creature to your aquarium: ~1_FISH~
 
             InvalidateProperties();
             return true;
@@ -909,7 +909,7 @@ namespace Server.Items
             AddItem(item);
 
             if (from != null)
-                from.SendLocalizedMessage(1073635, (item.LabelNumber != 0) ? string.Format("#{0}", item.LabelNumber) : item.Name); // You add the following decoration to your aquarium: ~1_NAME~
+                from.SendLocalizedMessage(1073635, item.LabelNumber != 0 ? $"#{item.LabelNumber}" : item.Name); // You add the following decoration to your aquarium: ~1_NAME~
 
             InvalidateProperties();
             return true;

@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class HolidayBell : Item
     {
@@ -80,7 +80,7 @@
                 m_Maker = value;
             }
         }
-        public override string DefaultName => string.Format("A Holiday Bell From {0}", Giver);
+        public override string DefaultName => $"A Holiday Bell From {Giver}";
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.InRange(GetWorldLocation(), 2))

@@ -97,7 +97,7 @@ namespace Server.Items
                 object label = FishInfo.GetFishLabel(m_BaitType);
 
                 if (label is int i)
-                    list.Add(1116468, string.Format("#{0}", i)); // baited to attract: ~1_val~
+                    list.Add(1116468, $"#{i}"); // baited to attract: ~1_val~
                 else if (label is string s)
                     list.Add(1116468, s);
             }
@@ -155,7 +155,7 @@ namespace Server.Items
                         item.MoveToWorld(from.Location, from.Map);
                     }
 
-                    from.SendLocalizedMessage(1116386, string.Format("#{0}", item.LabelNumber)); // You remove ~1_ITEM~from the trap and put it in your pack.
+                    from.SendLocalizedMessage(1116386, $"#{item.LabelNumber}"); // You remove ~1_ITEM~from the trap and put it in your pack.
                 }
             }
 
@@ -461,7 +461,7 @@ namespace Server.Items
                 object label = FishInfo.GetFishLabel(BaitType);
 
                 if (label is int i)
-                    list.Add(1116468, string.Format("#{0}", i)); // baited to attract: ~1_val~
+                    list.Add(1116468, $"#{i}"); // baited to attract: ~1_val~
                 else if (label is string s)
                     list.Add(1116468, s);
             }

@@ -66,7 +66,7 @@ namespace Server.Items
                     break;
             }
 
-            list.Add(1070998, string.Format("#{0}", cliloc)); // Use this to redeem<br>your ~1_PROMO~
+            list.Add(1070998, $"#{cliloc}"); // Use this to redeem<br>your ~1_PROMO~
         }
 
         public override void OnDoubleClick(Mobile from)

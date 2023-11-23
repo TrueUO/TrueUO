@@ -61,12 +61,12 @@ namespace Server.Items
 
         public string Center(string text)
         {
-            return string.Format("<CENTER>{0}</CENTER>", text);
+            return $"<CENTER>{text}</CENTER>";
         }
 
         public string Color(string text, int color)
         {
-            return string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, text);
+            return $"<BASEFONT COLOR=#{color:X6}>{text}</BASEFONT>";
         }
 
         public void AddButtonLabeled(int x, int y, int buttonID, string text)
@@ -114,7 +114,7 @@ namespace Server.Items
             {
                 m.RawName = newName;
                 m.SendMessage("Your name has been changed!");
-                m.SendMessage(string.Format("You are now known as {0}", newName));
+                m.SendMessage($"You are now known as {newName}");
                 m_Sender.Delete();
             }
         }

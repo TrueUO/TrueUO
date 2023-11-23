@@ -210,7 +210,7 @@ namespace Server.Mobiles
                             // Try to add the hireling as a follower
                             if (AddHire(from))
                             {
-                                SayTo(from, 1043258, string.Format("{0}", item.Amount / Pay), 0x3B2);//"I thank thee for paying me. I will work for thee for ~1_NUMBER~ days.", (int)item.Amount / Pay );
+                                SayTo(from, 1043258, $"{item.Amount / Pay}", 0x3B2);//"I thank thee for paying me. I will work for thee for ~1_NUMBER~ days.", (int)item.Amount / Pay );
                                 HoldGold += item.Amount;
 
                                 NextPay = DateTime.UtcNow + PayTimer.GetInterval();
@@ -247,7 +247,7 @@ namespace Server.Mobiles
         #region [ OnSpeech ] 
         internal void SayHireCost()
         {
-            Say(1043256, string.Format("{0}", Pay), 0x3B2);// "I am available for hire for ~1_AMOUNT~ gold coins a day. If thou dost give me gold, I will work for thee."
+            Say(1043256, $"{Pay}", 0x3B2);// "I am available for hire for ~1_AMOUNT~ gold coins a day. If thou dost give me gold, I will work for thee."
         }
 
         public override void OnSpeech(SpeechEventArgs e)

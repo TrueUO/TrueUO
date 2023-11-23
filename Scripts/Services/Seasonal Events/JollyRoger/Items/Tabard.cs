@@ -47,7 +47,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1159369, string.Format("{0}", _Shrine.ToString())); // Tabard of ~1_VIRTUE~
+            list.Add(1159369, $"{_Shrine}"); // Tabard of ~1_VIRTUE~
         }
 
         public override void Serialize(GenericWriter writer)

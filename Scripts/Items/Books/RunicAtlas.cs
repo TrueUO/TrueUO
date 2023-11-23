@@ -141,7 +141,7 @@ namespace Server.Items
 
             bool valid = Sextant.Format(location, map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth);
 
-            return valid ? string.Format("{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W") : "Nowhere";
+            return valid ? $"{yLat}° {yMins}'{(ySouth ? "S" : "N")}, {xLong}° {xMins}'{(xEast ? "E" : "W")}" : "Nowhere";
         }
 
         public RunicAtlas Atlas { get; }
@@ -177,7 +177,7 @@ namespace Server.Items
             AddImage(0, 0, 39923);
 
             AddHtmlLocalized(60, 9, 147, 22, 1011296, false, false); //Charges:
-            AddHtml(110, 9, 97, 22, string.Format("{0} / {1}", Atlas.CurCharges, Atlas.MaxCharges), false, false);
+            AddHtml(110, 9, 97, 22, $"{Atlas.CurCharges} / {Atlas.MaxCharges}", false, false);
 
             AddHtmlLocalized(264, 9, 144, 18, 1011299, false, false); // rename book 
             AddButton(248, 14, 2103, 2103, 1, GumpButtonType.Reply, 0);
@@ -219,7 +219,7 @@ namespace Server.Items
 
             string coords = entry != null ? RunebookGump.GetLocation(entry) : "Nowhere";
 
-            AddHtml(25, 254, 182, 18, string.Format("<center>{0}</center>", coords), false, false);
+            AddHtml(25, 254, 182, 18, $"<center>{coords}</center>", false, false);
 
             AddHtmlLocalized(62, 290, 144, 18, 1011300, false, false); // Set default                        
             AddButton(46, 295, 2103, 2103, 2, GumpButtonType.Reply, 0);
@@ -227,7 +227,7 @@ namespace Server.Items
             AddHtmlLocalized(62, 310, 144, 18, 1011298, false, false); // Drop rune
             AddButton(46, 315, 2103, 2103, 3, GumpButtonType.Reply, 0);
 
-            AddHtml(25, 348, 182, 18, string.Format("<center>{0}</center>", entry != null ? entry.Description : "Empty"), false, false);
+            AddHtml(25, 348, 182, 18, $"<center>{(entry != null ? entry.Description : "Empty")}</center>", false, false);
 
             int hy = 284;
             int by = 289;

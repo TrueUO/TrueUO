@@ -79,15 +79,15 @@ namespace Server.Items
         {
             if (AuctionItem == null)
             {
-                list.Add(1156474, string.Format("{0}\t{1}", HouseName, "Unknown")); // Map to Auction ~1_ITEMNAME~: ~2_HOUSE~
+                list.Add(1156474, $"{HouseName}\tUnknown"); // Map to Auction ~1_ITEMNAME~: ~2_HOUSE~
             }
             else if (AuctionItem.LabelNumber != 0)
             {
-                list.Add(1156474, string.Format("{0}\t#{1}", HouseName, AuctionItem.LabelNumber)); // Map to Auction ~1_ITEMNAME~: ~2_HOUSE~
+                list.Add(1156474, $"{HouseName}\t#{AuctionItem.LabelNumber}"); // Map to Auction ~1_ITEMNAME~: ~2_HOUSE~
             }
             else
             {
-                list.Add(1156474, string.Format("{0}\t{1}", HouseName, AuctionItem.Name)); // Map to Auction ~1_ITEMNAME~: ~2_HOUSE~
+                list.Add(1156474, $"{HouseName}\t{AuctionItem.Name}"); // Map to Auction ~1_ITEMNAME~: ~2_HOUSE~
             }
         }
 

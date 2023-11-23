@@ -145,7 +145,7 @@ namespace Server.AccountVault
 
                     if (manager != null)
                     {
-                        manager.SayTo(pm, 1158644, string.Format("{0}\t{1}", TotalItems, TotalWeight), 0x3B2); // Vault container has ~1_VAL~ items, ~2_VAL~ stones
+                        manager.SayTo(pm, 1158644, $"{TotalItems}\t{TotalWeight}", 0x3B2); // Vault container has ~1_VAL~ items, ~2_VAL~ stones
                     }
                 });
             }
@@ -321,7 +321,7 @@ namespace Server.AccountVault
                                 m,
                                 new NewMaginciaMessage(
                                     1158081, // Rent Past Due
-                                    string.Format("Your vault contents have been put up for auction and no longer can be claimed. This vault is located at {0} [{1}].", GetWorldLocation().ToString(), Map.ToString()),
+                                    $"Your vault contents have been put up for auction and no longer can be claimed. This vault is located at {GetWorldLocation()} [{Map}].",
                                     SystemSettings.PastDuePeriod,
                                     true));
                         }
@@ -435,7 +435,7 @@ namespace Server.AccountVault
                         m,
                         new NewMaginciaMessage(
                             1158081, // Rent Past Due
-                            string.Format("Rent is past due for your Vault and your items will be lost after 168 hours unless you claim your Vault from the Vault Manager. This vault is located at {0} [{1}].", GetWorldLocation().ToString(), Map.ToString()),
+                            $"Rent is past due for your Vault and your items will be lost after 168 hours unless you claim your Vault from the Vault Manager. This vault is located at {GetWorldLocation()} [{Map}].",
                             SystemSettings.PastDuePeriod,
                             true));
                 }

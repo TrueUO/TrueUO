@@ -1155,16 +1155,15 @@ namespace Server.Mobiles
                 // display the item list
                 if (m_SearchList != null)
                 {
-                    AddLabel(180, y - 50, 68, string.Format("Found {0} items/mobiles", m_SearchList.Count));
-                    AddLabel(400, y - 50, 68, string.Format("Displaying {0}-{1}", DisplayFrom,
-                        DisplayFrom + MaxEntries < m_SearchList.Count ? DisplayFrom + MaxEntries : m_SearchList.Count));
+                    AddLabel(180, y - 50, 68, $"Found {m_SearchList.Count} items/mobiles");
+                    AddLabel(400, y - 50, 68, $"Displaying {DisplayFrom}-{(DisplayFrom + MaxEntries < m_SearchList.Count ? DisplayFrom + MaxEntries : m_SearchList.Count)}");
                     // count the number of selected objects
                     int count = 0;
                     foreach (SearchEntry e in m_SearchList)
                     {
                         if (e.Selected) count++;
                     }
-                    AddLabel(600, y - 50, 33, string.Format("Selected {0}", count));
+                    AddLabel(600, y - 50, 33, $"Selected {count}");
                 }
 
                 // display the select-all-displayed toggle
@@ -1621,7 +1620,7 @@ namespace Server.Mobiles
             if (System.IO.Directory.Exists(XmlSpawner.XmlSpawnDir) && filename != null && !filename.StartsWith("/") && !filename.StartsWith("\\"))
             {
                 // put it in the defaults directory if it exists
-                dirname = string.Format("{0}/{1}", XmlSpawner.XmlSpawnDir, filename);
+                dirname = $"{XmlSpawner.XmlSpawnDir}/{filename}";
             }
             else
             {
@@ -2059,7 +2058,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                AddLabel(20, 225, 33, string.Format("Bring {0} objects to you?", count));
+                AddLabel(20, 225, 33, $"Bring {count} objects to you?");
                 AddRadio(35, 255, 9721, 9724, false, 1); // accept/yes radio
                 AddRadio(135, 255, 9721, 9724, true, 2); // decline/no radio
                 AddHtmlLocalized(72, 255, 200, 30, 1049016, 0x7fff, false, false); // Yes
@@ -2138,7 +2137,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                AddLabel(20, 225, 33, string.Format("Delete {0} objects?", count));
+                AddLabel(20, 225, 33, $"Delete {count} objects?");
                 AddRadio(35, 255, 9721, 9724, false, 1); // accept/yes radio
                 AddRadio(135, 255, 9721, 9724, true, 2); // decline/no radio
                 AddHtmlLocalized(72, 255, 200, 30, 1049016, 0x7fff, false, false); // Yes

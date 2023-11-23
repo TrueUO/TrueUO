@@ -1093,7 +1093,7 @@ namespace Server.Items
                 percRepaired = 100;
             }
 
-            from.SendLocalizedMessage(1116605, string.Format("{0}\t{1}", ((int)temp).ToString(), ((int)percRepaired).ToString())); //You make repairs to the cannon using ~1_METAL~ ingots. The cannon is now ~2_DMGPCT~% repaired.
+            from.SendLocalizedMessage(1116605, $"{(int)temp}\t{(int)percRepaired}"); //You make repairs to the cannon using ~1_METAL~ ingots. The cannon is now ~2_DMGPCT~% repaired.
         }
 
         public void ResendGump(Mobile from)
@@ -1179,7 +1179,7 @@ namespace Server.Items
             base.GetProperties(list);
 
             list.Add(1116026, Charged == CannonAction.Finish ? "#1116031" : "#1116032"); // Charged: ~1_VALUE~
-            list.Add(1116027, string.Format("{0}", AmmoInfo.GetAmmoName(this))); // Ammo: ~1_VALUE~
+            list.Add(1116027, $"{AmmoInfo.GetAmmoName(this)}"); // Ammo: ~1_VALUE~
             list.Add(1116028, Primed == CannonAction.Finish ? "#1116031" : "#1116032"); //Primed: ~1_VALUE~
             list.Add(1116580 + (int)DamageState);
             list.Add(1072241, "{0}\t{1}\t{2}\t{3}", TotalItems, MaxItems, TotalWeight, MaxWeight);

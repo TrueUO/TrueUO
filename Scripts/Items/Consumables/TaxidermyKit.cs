@@ -345,7 +345,7 @@ namespace Server.Items
 
             if (DateCaught != DateTime.MinValue)
             {
-                list.Add(string.Format("[{0}]", DateCaught.ToShortDateString()));
+                list.Add($"[{DateCaught.ToShortDateString()}]");
             }
         }
 

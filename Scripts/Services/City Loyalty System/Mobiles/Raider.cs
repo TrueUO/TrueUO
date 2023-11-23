@@ -105,7 +105,7 @@ namespace Server.Mobiles
                 ControlOrder = LastOrderType.Follow;
 
                 m.SendLocalizedMessage(1152236, Name); // You arrest the ~1_name~. Take the criminal to the guard captain.
-                m.NonlocalOverheadMessage(MessageType.Regular, 0x3B2, 1152238, string.Format("{0}\t{1}", m.Name, Name));
+                m.NonlocalOverheadMessage(MessageType.Regular, 0x3B2, 1152238, $"{m.Name}\t{Name}");
 
                 return true;
             }

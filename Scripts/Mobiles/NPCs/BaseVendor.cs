@@ -1217,7 +1217,7 @@ namespace Server.Mobiles
             {
                 if (dropped.Amount > 0)
                 {
-                    name = string.Format("{0} {1}", dropped.Amount, dropped.Name);
+                    name = $"{dropped.Amount} {dropped.Name}";
                 }
                 else
                 {
@@ -1231,11 +1231,11 @@ namespace Server.Mobiles
 
             if (!string.IsNullOrEmpty(name))
             {
-                PrivateOverheadMessage(MessageType.Regular, 0x3B2, true, string.Format("Thou art giving me {0}.", name), from.NetState);
+                PrivateOverheadMessage(MessageType.Regular, 0x3B2, true, $"Thou art giving me {name}.", from.NetState);
             }
             else
             {
-                SayTo(from, 1071971, string.Format("#{0}", dropped.LabelNumber.ToString()), 0x3B2); // Thou art giving me ~1_VAL~?
+                SayTo(from, 1071971, $"#{dropped.LabelNumber}", 0x3B2); // Thou art giving me ~1_VAL~?
             }
 
             if (dropped is Gold)
@@ -1842,7 +1842,7 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    SayTo(buyer, string.Format("The total of thy purchase is {0} gold.  My thanks for the patronage.", totalCost), 0x3B2, true);
+                    SayTo(buyer, $"The total of thy purchase is {totalCost} gold.  My thanks for the patronage.", 0x3B2, true);
                 }
             }
             else

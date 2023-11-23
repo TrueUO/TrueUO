@@ -221,7 +221,7 @@ namespace Server.Misc
             {
                 if (value < 0 || value > skill.Cap)
                 {
-                    from.SendMessage(string.Format("Your skill in {0} is capped at {1:F1}.", skill.Info.Name, skill.Cap));
+                    from.SendMessage($"Your skill in {skill.Info.Name} is capped at {skill.Cap:F1}.");
                 }
                 else
                 {
@@ -724,7 +724,7 @@ namespace Server.Misc
 
                 bag = new Bag
                 {
-                    Name = string.Format("{0} Mastery", SkillInfo.Table[(int)skill].Name)
+                    Name = $"{SkillInfo.Table[(int)skill].Name} Mastery"
                 };
 
                 for (int j = 1; j <= 3; j++)

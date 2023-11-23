@@ -35,7 +35,7 @@ namespace Server.Items
                 int num = CraftResources.GetLocalizationNumber(Resource);
 
                 if (num > 0)
-                    v = string.Format("#{0}", num);
+                    v = $"#{num}";
                 else
                     v = CraftResources.GetName(Resource);
             }

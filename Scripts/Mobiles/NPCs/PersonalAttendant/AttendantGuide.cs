@@ -131,7 +131,7 @@ namespace Server.Mobiles
                                             if (num >= 0 && num < m_ShopDefinitions.Count)
                                                 current.Shops.Add(num);
                                             else
-                                                throw new Exception(string.Format("Invalid shop ID: {0}", num));
+                                                throw new Exception($"Invalid shop ID: {num}");
                                         }
                                     }
                                 }
@@ -379,7 +379,7 @@ namespace Server.Mobiles
                     return;
 
                 List<Vertex> list = m_GraphDefinitions[town];
-                string path = Core.BaseDirectory + string.Format("\\Data\\Guide\\{0}.graph", town);
+                string path = Core.BaseDirectory + $@"\Data\Guide\{town}.graph";
 
                 using (FileStream stream = new FileStream(path, FileMode.Create))
                 using (StreamWriter writer = new StreamWriter(stream))

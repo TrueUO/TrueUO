@@ -37,7 +37,7 @@ namespace Server.Items
 
             if (delay > 0)
             {
-                from.SendLocalizedMessage(1072529, string.Format("{0}\t{1}", delay, delay > 1 ? "seconds." : "second.")); // You cannot use that for another ~1_NUM~ ~2_TIMEUNITS~
+                from.SendLocalizedMessage(1072529, $"{delay}\t{(delay > 1 ? "seconds." : "second.")}"); // You cannot use that for another ~1_NUM~ ~2_TIMEUNITS~
                 return;
             }
 
@@ -117,7 +117,7 @@ namespace Server.Items
 
                 if (p > 1)
                 {
-                    from.SendLocalizedMessage(1115762, string.Format("{0}\t{1}", from.Name, p)); // ~1_NAME~'s shatter potion destroys ~2_NUM~ potions in your inventory.                    
+                    from.SendLocalizedMessage(1115762, $"{from.Name}\t{p}"); // ~1_NAME~'s shatter potion destroys ~2_NUM~ potions in your inventory.                    
                 }
                 else
                 {

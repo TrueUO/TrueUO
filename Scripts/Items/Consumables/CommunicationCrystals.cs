@@ -331,7 +331,7 @@ namespace Server.Items
             if (!Active)
                 return;
 
-            string text = string.Format("{0} says {1}", from.Name, message);
+            string text = $"{from.Name} says {message}";
 
             if (RootParent is Mobile mobile)
             {

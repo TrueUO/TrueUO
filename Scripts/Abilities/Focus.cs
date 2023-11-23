@@ -57,7 +57,7 @@ namespace Server.Items
                     FocusInfo info = value;
 
                     BuffInfo.AddBuff(from, new BuffInfo(BuffIcon.RageFocusingBuff, 1151393, 1151394,
-                        string.Format("{0}\t{1}", info.Target == null ? "NONE" : info.Target.Name, info.DamageBonus)));
+                        $"{(info.Target == null ? "NONE" : info.Target.Name)}\t{info.DamageBonus}"));
                 }
 
                 m_Table[from] = new FocusInfo(target, DefaultDamageBonus);

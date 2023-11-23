@@ -246,7 +246,7 @@ namespace Server.Engines.Quests
                         }
                     }
 
-                    mob.SendLocalizedMessage(1149825, string.Format("{0}\t{1}", totalAward, eachAward)); //Here's your share of the ~1_val~ reward money, you get ~2_val~ gold.  You've earned it!
+                    mob.SendLocalizedMessage(1149825, $"{totalAward}\t{eachAward}"); //Here's your share of the ~1_val~ reward money, you get ~2_val~ gold.  You've earned it!
                 }
                 else
                 {
@@ -256,7 +256,7 @@ namespace Server.Engines.Quests
 
                         if (mobile != mob && mobile.NetState != null)
                         {
-                            mobile.SendLocalizedMessage(1149837, string.Format("{0}\t{1}\t{2}", eachAward, mob.Name, Owner.Name)); //~1_val~ gold is for ~2_val~, I can't find them so I'm giving this to Captain ~3_val~.
+                            mobile.SendLocalizedMessage(1149837, $"{eachAward}\t{mob.Name}\t{Owner.Name}"); //~1_val~ gold is for ~2_val~, I can't find them so I'm giving this to Captain ~3_val~.
                         }
                     }
 

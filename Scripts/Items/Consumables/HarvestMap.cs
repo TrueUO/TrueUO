@@ -118,7 +118,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1152598, string.Format("#{0}\t#{1}", CraftResources.GetLocalizationNumber(Resource), IsMinerMap ? "1152604" : "1152605")); // ~1_RES~ ~2_TYPE~ Map
+            list.Add(1152598, $"#{CraftResources.GetLocalizationNumber(Resource)}\t#{(IsMinerMap ? "1152604" : "1152605")}"); // ~1_RES~ ~2_TYPE~ Map
         }
 
         public override void AddUsesRemainingProperties(ObjectPropertyList list)
@@ -157,7 +157,7 @@ namespace Server.Items
 
             if (Sextant.Format(new Point3D(x, y, TargetMap.GetAverageZ(x, y)), TargetMap, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
             {
-                return string.Format("{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
+                return $"{yLat}° {yMins}'{(ySouth ? "S" : "N")}, {xLong}° {xMins}'{(xEast ? "E" : "W")}";
             }
 
             return "Unknown";
@@ -227,7 +227,7 @@ namespace Server.Items
 
         public static List<Point2D> LoadLocsFor(Map map, HarvestMap hMap)
         {
-            string path = string.Format("Data/HarvestLocs/{0}_{1}.cfg", hMap.IsMinerMap ? "MinerLocs" : "LumberLocs", map);
+            string path = $"Data/HarvestLocs/{(hMap.IsMinerMap ? "MinerLocs" : "LumberLocs")}_{map}.cfg";
 
             if (!File.Exists(path))
             {

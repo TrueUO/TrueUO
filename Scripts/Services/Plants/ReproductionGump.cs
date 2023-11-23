@@ -265,8 +265,7 @@ namespace Server.Engines.Plants
             }
             else
             {
-                AddLabel(x, y, PlantHueInfo.GetInfo(m_Plant.PlantHue).GumpHue,
-                    string.Format("{0}/{1}", system.AvailableResources, totalResources));
+                AddLabel(x, y, PlantHueInfo.GetInfo(m_Plant.PlantHue).GumpHue, $"{system.AvailableResources}/{totalResources}");
             }
         }
 
@@ -281,8 +280,7 @@ namespace Server.Engines.Plants
             }
             else
             {
-                AddLabel(x, y, PlantHueInfo.GetInfo(system.SeedHue).GumpHue,
-                    string.Format("{0}/{1}", system.AvailableSeeds, totalSeeds));
+                AddLabel(x, y, PlantHueInfo.GetInfo(system.SeedHue).GumpHue, $"{system.AvailableSeeds}/{totalSeeds}");
             }
         }
     }
