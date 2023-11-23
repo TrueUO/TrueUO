@@ -1,3 +1,4 @@
+using Server.Items;
 using System;
 
 namespace Server.Spells.Mysticism
@@ -18,6 +19,17 @@ namespace Server.Spells.Mysticism
 
         public double ChanceOffset => Caster is Mobiles.PlayerMobile ? 20.0 : 30.0;
         private const double ChanceLength = 100.0 / 7.0;
+
+        public override bool ConsumeReagents()
+        {
+            if (base.ConsumeReagents())
+                return true;
+
+            if (ArcaneGem.ConsumeCharges(Caster, 1))
+                return true;
+
+            return false;
+        }
 
         public override void GetCastSkills(out double min, out double max)
         {
