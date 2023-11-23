@@ -15,7 +15,7 @@ namespace Server.Diagnostics
             {
                 if (_Output == null)
                 {
-					_Output = new StreamWriter(Path.Combine(LogDirectory, string.Format("{0}.log", DateTime.UtcNow.ToLongDateString())), true)
+					_Output = new StreamWriter(Path.Combine(LogDirectory, $"{DateTime.UtcNow.ToLongDateString()}.log"), true)
 					{
 						AutoFlush = true
 					};
