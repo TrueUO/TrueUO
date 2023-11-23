@@ -97,7 +97,7 @@ namespace Server.Misc
             {
                 string sub = input.Substring(2).Trim();
 
-                BroadcastMessage(AccessLevel.Player, 0x35, string.Format("[Admin] {0}", sub));
+                BroadcastMessage(AccessLevel.Player, 0x35, $"[Admin] {sub}");
 
                 Console.WriteLine("[World]: {0}", sub);
                 return;
@@ -107,7 +107,7 @@ namespace Server.Misc
             {
                 string sub = input.Substring(2).Trim();
 
-                BroadcastMessage(AccessLevel.Counselor, 0x32, string.Format("[Admin] {0}", sub));
+                BroadcastMessage(AccessLevel.Counselor, 0x32, $"[Admin] {sub}");
 
                 Console.WriteLine("[Staff]: {0}", sub);
                 return;

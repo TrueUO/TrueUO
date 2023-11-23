@@ -158,7 +158,7 @@ namespace Server.Engines.Quests
 
             QuestContext context = m_Table[from];
 
-            from.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1112821, string.Format("#{0}", (int)context.CurrentIngredient)); // I need to add some ~1_INGREDIENT~.
+            from.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1112821, $"#{(int)context.CurrentIngredient}"); // I need to add some ~1_INGREDIENT~.
         }
 
         public class QuestContext
@@ -191,7 +191,7 @@ namespace Server.Engines.Quests
                 SutekIngredient[] ingredients = (SutekIngredient[])Enum.GetValues(typeof(SutekIngredient));
                 m_CurrentIngredient = ingredients[Utility.Random(ingredients.Length)];
 
-                m_Owner.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1112821, string.Format("#{0}", (int)m_CurrentIngredient)); // I need to add some ~1_INGREDIENT~.
+                m_Owner.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1112821, $"#{(int)m_CurrentIngredient}"); // I need to add some ~1_INGREDIENT~.
 
                 m_IngredientsLeft--;
             }

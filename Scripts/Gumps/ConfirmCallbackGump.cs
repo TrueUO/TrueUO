@@ -74,7 +74,7 @@ namespace Server.Gumps
                 }
                 else if (!string.IsNullOrEmpty(Title.String))
                 {
-                    AddHtml(25, 25, 200, 20, string.Format("<basefont color=#FF0000>{0}", Title.String), false, false);
+                    AddHtml(25, 25, 200, 20, $"<basefont color=#FF0000>{Title.String}", false, false);
                 }
             }
 
@@ -93,7 +93,7 @@ namespace Server.Gumps
             }
             else if (!string.IsNullOrEmpty(Body.String))
             {
-                AddHtml(25, 55, 300, 120, string.Format("<BASEFONT COLOR=#FFFFFF>{0}</BASEFONT>", Body.String), false, false);
+                AddHtml(25, 55, 300, 120, $"<BASEFONT COLOR=#FFFFFF>{Body.String}</BASEFONT>", false, false);
             }
 
             AddRadio(25, 175, 0x25F8, 0x25FB, true, 1);
@@ -195,7 +195,7 @@ namespace Server.Gumps
             }
             else if (!string.IsNullOrEmpty(Title.String))
             {
-                AddHtml(25, 25, 200, 20, string.Format("<basefont color=#FF0000>{0}", Title.String), false, false);
+                AddHtml(25, 25, 200, 20, $"<basefont color=#FF0000>{Title.String}", false, false);
             }
 
             AddImage(25, 45, 0xBBF);
@@ -213,7 +213,7 @@ namespace Server.Gumps
             }
             else if (!string.IsNullOrEmpty(Body.String))
             {
-                AddHtml(25, 55, 300, 120, string.Format("<BASEFONT COLOR=#FFFFFF>{0}</BASEFONT>", Body.String), false, false);
+                AddHtml(25, 55, 300, 120, $"<BASEFONT COLOR=#FFFFFF>{Body.String}</BASEFONT>", false, false);
             }
 
             AddRadio(25, 175, 0x25F8, 0x25FB, true, 1);

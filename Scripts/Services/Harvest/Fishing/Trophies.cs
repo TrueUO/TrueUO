@@ -414,7 +414,7 @@ namespace Server.Items
             {
                 list.Add(1070858, trophy.FishWeight.ToString());
                 list.Add(1070857, trophy.Fisher != null ? trophy.Fisher.Name : "Unknown");
-                list.Add(string.Format("[{0}]", trophy.DateCaught.ToShortDateString()));
+                list.Add($"[{trophy.DateCaught.ToShortDateString()}]");
             }
         }
 

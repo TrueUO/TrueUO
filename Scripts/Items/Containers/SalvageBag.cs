@@ -264,7 +264,7 @@ namespace Server.Items
             }
             else
             {
-                from.SendLocalizedMessage(1079973, string.Format("{0}\t{1}", salvaged, salvaged + notSalvaged)); // Salvaged: ~1_COUNT~/~2_NUM~ blacksmithed items
+                from.SendLocalizedMessage(1079973, $"{salvaged}\t{salvaged + notSalvaged}"); // Salvaged: ~1_COUNT~/~2_NUM~ blacksmithed items
             }
         }
 

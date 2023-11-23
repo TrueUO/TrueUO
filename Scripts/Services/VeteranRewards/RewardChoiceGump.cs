@@ -89,7 +89,7 @@ namespace Server.Engines.VeteranRewards
 
             RewardSystem.ComputeRewardInfo(m_From, out int cur, out int max);
 
-            AddHtmlLocalized(160, 118, 650, 18, 1159426, string.Format("{0}@{1}", cur.ToString(), (max - cur).ToString()), 0x7FF0, false, false); // You have already chosen ~1_COUNT~ rewards.  You have ~2_COUNT~ remaining rewards to choose.
+            AddHtmlLocalized(160, 118, 650, 18, 1159426, $"{cur}@{max - cur}", 0x7FF0, false, false); // You have already chosen ~1_COUNT~ rewards.  You have ~2_COUNT~ remaining rewards to choose.
             AddECHandleInput();
         }
 
@@ -107,9 +107,9 @@ namespace Server.Engines.VeteranRewards
                 AddButton(18 + (i * 130), 160, m_CategoryIndex == i ? 0x635 : 0x634, 0x637, 20000 + i, GumpButtonType.Reply, 0);
 
                 if (categories[i].NameString != null)
-                    AddHtml(18 + (i * 130), 162, 125, 18, string.Format("<div align=CENTER>{0}</div>", categories[i].NameString), false, false);
+                    AddHtml(18 + (i * 130), 162, 125, 18, $"<div align=CENTER>{categories[i].NameString}</div>", false, false);
                 else
-                    AddHtmlLocalized(18 + (i * 130), 162, 125, 18, 1114513, string.Format("#{0}", categories[i].Name), 0xC63, false, false);
+                    AddHtmlLocalized(18 + (i * 130), 162, 125, 18, 1114513, $"#{categories[i].Name}", 0xC63, false, false);
             }
 
             RenderCategory(categories[m_CategoryIndex]);

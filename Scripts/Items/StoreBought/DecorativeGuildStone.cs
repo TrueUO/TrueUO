@@ -121,8 +121,8 @@ namespace Server.Items
 
             if (Guild != null)
             {
-                list.Add(string.Format("{0}", Guild.Name));
-                list.Add(string.Format("{0}", Guild.Abbreviation));
+                list.Add($"{Guild.Name}");
+                list.Add($"{Guild.Abbreviation}");
             }
 
             list.Add(1155536); // Shard Bound
@@ -156,7 +156,7 @@ namespace Server.Items
                 AddBackground(0, 0, 520, 245, 0x6DB);
                 AddHtmlLocalized(10, 10, 500, 18, 1114513, g.Name, 0x7FFF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
                 AddHtmlLocalized(10, 30, 500, 18, 1114513, g.Abbreviation, 0x7FFF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
-                AddHtmlLocalized(10, 50, 500, 18, 1114513, string.Format("A Guild Created On {0}", ServerList.ServerName), 0x7FFF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+                AddHtmlLocalized(10, 50, 500, 18, 1114513, $"A Guild Created On {ServerList.ServerName}", 0x7FFF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
                 AddHtmlLocalized(10, 150, 500, 18, 1114513, g.Leader != null ? g.Leader.Name : "Unknown", 0x1745, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
 
                 int[] itemIDs = null;

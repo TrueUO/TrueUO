@@ -171,7 +171,7 @@ namespace Server.Items
                 hours = 12;
             }
 
-            exactTime = string.Format("{0}:{1:D2}", hours, minutes);
+            exactTime = $"{hours}:{minutes:D2}";
         }
 
         public override void OnDoubleClick(Mobile from)

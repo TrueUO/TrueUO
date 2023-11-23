@@ -202,7 +202,7 @@ namespace Server.Items
 
                 "This creature be said",
                 "to live in the",
-                string.Format("{0} beneath Fire", FishInfo.GetFishLocation(typeof(TunnelCrab))),
+                $"{FishInfo.GetFishLocation(typeof(TunnelCrab))} beneath Fire",
                 "Island. 'Tis a goblin",
                 "legend so 'tis a bit",
                 "suspect."
@@ -213,7 +213,7 @@ namespace Server.Items
                 "Void Crab:",
 
                 "Some old fisherman in",
-                string.Format("{0} say they have", FishInfo.GetFishLocation(typeof(VoidCrab))),
+                $"{FishInfo.GetFishLocation(typeof(VoidCrab))} say they have",
                 "seen a crab that ",
                 "resembles a void demon",
                 "in the rivers. This has",
@@ -225,7 +225,7 @@ namespace Server.Items
                 "Void Lobster:",
 
                 "The goblins o' the",
-                string.Format("{0} tell o' a", FishInfo.GetFishLocation(typeof(VoidLobster))),
+                $"{FishInfo.GetFishLocation(typeof(VoidLobster))} tell o' a",
                 "creature that looks like",
                 "a cross between a void",
                 "demon and a lobster. They",

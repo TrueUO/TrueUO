@@ -2220,7 +2220,7 @@ namespace Server.Multis
                 bool valid = m_House != null && Sextant.Format(m_House.Location, m_House.Map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth);
 
                 if (valid)
-                    location = string.Format("{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
+                    location = $"{yLat}° {yMins}'{(ySouth ? "S" : "N")}, {xLong}° {xMins}'{(xEast ? "E" : "W")}";
                 else
                     location = "unknown";
 
@@ -2486,8 +2486,7 @@ namespace Server.Multis
                 {
                     string name = Sign == null || Sign.Name == null ? "An Unnamed House" : Sign.Name;
 
-                    NewMaginciaMessage message = new NewMaginciaMessage(null, new TextDefinition(1154338),
-                        string.Format("{0}\t{1}", vendor.ShopName, name));
+                    NewMaginciaMessage message = new NewMaginciaMessage(null, new TextDefinition(1154338), $"{vendor.ShopName}\t{name}");
                     /* Your rental vendor named ~1_VENDOR~ located in house: ~2_HOUSE~ is in danger of deletion. 
                     * This house has been condemned and you should remove everything on your vendor AS SOON AS 
                     * POSSIBLE or risk possible deletion.*/

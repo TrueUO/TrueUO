@@ -173,13 +173,13 @@ namespace Server.Misc
 
                 switch (Merge)
                 {
-                    case MergeType.Months: date = string.Format("{0}-{1}", now.Month, now.Year); break;
-                    case MergeType.Days: date = string.Format("{0}-{1}-{2}", now.Day, now.Month, now.Year); break;
-                    case MergeType.Hours: date = string.Format("{0}-{1}-{2} {3:D2} {4}", now.Day, now.Month, now.Year, hour12, ampm); break;
-                    case MergeType.Minutes: default: date = string.Format("{0}-{1}-{2} {3:D2}-{4:D2} {5}", now.Day, now.Month, now.Year, hour12, now.Minute, ampm); break;
+                    case MergeType.Months: date = $"{now.Month}-{now.Year}"; break;
+                    case MergeType.Days: date = $"{now.Day}-{now.Month}-{now.Year}"; break;
+                    case MergeType.Hours: date = $"{now.Day}-{now.Month}-{now.Year} {hour12:D2} {ampm}"; break;
+                    case MergeType.Minutes: default: date = $"{now.Day}-{now.Month}-{now.Year} {hour12:D2}-{now.Minute:D2} {ampm}"; break;
                 }
 
-                string file = string.Format("{0} Saves ({1}).zip", ServerList.ServerName, date);
+                string file = $"{ServerList.ServerName} Saves ({date}).zip";
                 string dest = Path.Combine(Destination, file);
 
                 try { File.Delete(dest); }

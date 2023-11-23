@@ -183,7 +183,7 @@ namespace Server.Services.Virtues
                 source.Animate(32, 5, 1, true, true, 0);
 
             BuffInfo.AddBuff(source, new BuffInfo(BuffIcon.Honored, 1075649, 1153815, string.Format("{0}", target.Name, true)));
-            BuffInfo.AddBuff(source, new BuffInfo(BuffIcon.Perfection, 1153786, 1151394, string.Format("0\t{0}", target.Name)));
+            BuffInfo.AddBuff(source, new BuffInfo(BuffIcon.Perfection, 1153786, 1151394, $"0\t{target.Name}"));
         }
 
         private class InternalTarget : Target
@@ -349,11 +349,11 @@ namespace Server.Services.Virtues
                         1075652,
                         TimeSpan.FromSeconds(5),
                         from,
-                        string.Format("{0}\t{1}", m_Perfection, from.Name)));
+                        $"{m_Perfection}\t{from.Name}"));
 
                 BuffInfo.AddBuff(
                     from,
-                    new BuffInfo(BuffIcon.Perfection, 1153786, 1151394, string.Format("{0}\t{1}", m_Target.Name, m_Perfection)));
+                    new BuffInfo(BuffIcon.Perfection, 1153786, 1151394, $"{m_Target.Name}\t{m_Perfection}"));
             }
             else
             {
@@ -361,7 +361,7 @@ namespace Server.Services.Virtues
 
                 BuffInfo.AddBuff(
                     from,
-                    new BuffInfo(BuffIcon.Perfection, 1153786, 1151394, string.Format("{0}\t{1}", m_Target.Name, m_Perfection)));
+                    new BuffInfo(BuffIcon.Perfection, 1153786, 1151394, $"{m_Target.Name}\t{m_Perfection}"));
             }
         }
 

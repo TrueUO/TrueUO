@@ -159,7 +159,7 @@ namespace Server.Items
                 Timer t = new InternalTimer(Duration, from);
                 t.Start();
 
-                BuffInfo.AddBuff(from, new BuffInfo(BuffIcon.FishPie, 1116559, string.Format("#{0}", Buff), 1116560, string.Format("+{0}\t#{1}", BuffAmount, BuffDescription), Duration, from)); // Magic Fish Buff<br>~1_val~
+                BuffInfo.AddBuff(from, new BuffInfo(BuffIcon.FishPie, 1116559, $"#{Buff}", 1116560, $"+{BuffAmount}\t#{BuffDescription}", Duration, from)); // Magic Fish Buff<br>~1_val~
             }
         }
 

@@ -800,7 +800,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = string.Format("Pirate - Jhelom {0}", i + 1);
+                mapitem.Name = $"Pirate - Jhelom {i + 1}";
                 e.Mobile.AddToBackpack(mapitem);
             }
 
@@ -815,7 +815,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = string.Format("Pirate - Moonglow {0}", i + 1);
+                mapitem.Name = $"Pirate - Moonglow {i + 1}";
                 e.Mobile.AddToBackpack(mapitem);
             }
 
@@ -830,7 +830,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = string.Format("Pirate - tokuno {0}", i + 1);
+                mapitem.Name = $"Pirate - tokuno {i + 1}";
                 e.Mobile.AddToBackpack(mapitem);
             }
 
@@ -845,7 +845,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = string.Format("Merchant - tokuno {0}", i + 1);
+                mapitem.Name = $"Merchant - tokuno {i + 1}";
                 e.Mobile.AddToBackpack(mapitem);
             }
             for (int i = 0; i < SpawnDefinition.MerchantTramFelCourses1.Length; i++)
@@ -859,7 +859,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = string.Format("Merchant - tram/fel(a) {0}", i + 1);
+                mapitem.Name = $"Merchant - tram/fel(a) {i + 1}";
                 e.Mobile.AddToBackpack(mapitem);
             }
             for (int i = 0; i < SpawnDefinition.MerchantTramFelCourses2.Length; i++)
@@ -873,7 +873,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = string.Format("Merchant - tram/fel(b) {0}", i + 1);
+                mapitem.Name = $"Merchant - tram/fel(b) {i + 1}";
                 e.Mobile.AddToBackpack(mapitem);
             }
 

@@ -241,7 +241,7 @@ namespace Server.Commands
         {
             if (CreateWorldData.CreateTable.ContainsKey(entry.CheckID) && CreateWorldData.CreateTable[entry.CheckID])
             {
-                string er = string.Format("<br>- {0} have been generated already.", entry.Name);
+                string er = $"<br>- {entry.Name} have been generated already.";
                 Console.WriteLine(er);
 
                 error += er;
@@ -256,7 +256,7 @@ namespace Server.Commands
                     return true;
                 }
 
-                string er = string.Format("<br>- Cannot generate {0}. You need to generate Decorations and Spawners first.", entry.Name);
+                string er = $"<br>- Cannot generate {entry.Name}. You need to generate Decorations and Spawners first.";
                 Console.WriteLine(er);
 
                 error += er;
@@ -271,7 +271,7 @@ namespace Server.Commands
                     return true;
                 }
 
-                string er = string.Format("<br>- Cannot generate {0}. You need to generate Spawners first.", entry.Name);
+                string er = $"<br>- Cannot generate {entry.Name}. You need to generate Spawners first.";
                 Console.WriteLine(er);
 
                 error += er;
@@ -401,7 +401,7 @@ namespace Server.Gumps
             }
 
             AddHtml(152, 15, 450, 20, ColorAndCenter("#00FFFF", label), false, false);
-            AddHtml(12, 15, 140, 20, ColorAndCenter("#696969", string.Format("Shard Expansion: {0}", Core.Expansion.ToString())), false, false);
+            AddHtml(12, 15, 140, 20, ColorAndCenter("#696969", $"Shard Expansion: {Core.Expansion}"), false, false);
 
             for (int i = 0; i < 6; i++)
             {
@@ -433,7 +433,7 @@ namespace Server.Gumps
                 else
                     check = GumpType == CreateWorld.GumpType.Create ? !created : created;
 
-                AddLabel(x + 21, y, created ? 200 : 338, string.Format("{0} {1}", entry.Name, created ? "[created]" : "[not created]"));
+                AddLabel(x + 21, y, created ? 200 : 338, $"{entry.Name} {(created ? "[created]" : "[not created]")}");
                 AddCheck(x, y - 2, 210, 211, check, entry.CheckID);
 
                 y += 20;

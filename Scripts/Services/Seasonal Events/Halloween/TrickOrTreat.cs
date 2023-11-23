@@ -288,7 +288,7 @@ namespace Server.Engines.Events
                 Body = from.Body;
 
                 m_From = from;
-                Name = string.Format("{0}\'s Naughty Twin", from.Name);
+                Name = $"{from.Name}\'s Naughty Twin";
 
                 Timer.DelayCall(TrickOrTreat.OneSecond, Utility.RandomBool() ? StealCandy : ToGate, m_From);
             }

@@ -34,7 +34,7 @@ namespace Server.AccountVault
 
             if (timeSpan.Days > 0)
             {
-                builder.AppendFormat("{0:%d} day(s)", timeSpan);
+                builder.Append($"{timeSpan:%d} day(s)");
             }
 
             if (timeSpan.Days > 0 && (timeSpan.Hours > 0 || timeSpan.Minutes > 0 || timeSpan.Seconds > 0))
@@ -44,7 +44,7 @@ namespace Server.AccountVault
 
             if (timeSpan.Hours > 0)
             {
-                builder.AppendFormat("{0:%h} hour(s)", timeSpan);
+                builder.Append($"{timeSpan:%h} hour(s)");
             }
 
             if (timeSpan.Hours > 0 && (timeSpan.Minutes > 0 || timeSpan.Seconds > 0))
@@ -54,7 +54,7 @@ namespace Server.AccountVault
 
             if (timeSpan.Minutes > 0)
             {
-                builder.AppendFormat("{0:%m} minute(s)", timeSpan);
+                builder.Append($"{timeSpan:%m} minute(s)");
             }
 
             if (timeSpan.Minutes > 0 && timeSpan.Seconds > 0)
@@ -64,7 +64,7 @@ namespace Server.AccountVault
 
             if (timeSpan.Seconds > 0)
             {
-                builder.AppendFormat("{0:%s} second(s)", timeSpan);
+                builder.Append($"{timeSpan:%s} second(s)");
             }
 
             return builder.ToString();
@@ -78,10 +78,10 @@ namespace Server.AccountVault
         {
             if (UseTokens)
             {
-                return string.Format("Do you wish to rent a storage vault for {0} vault token[s] a month? You will need to keep your vault token balance up to date or risk losing your vault contents.", RentTokenValue);
+                return $"Do you wish to rent a storage vault for {RentTokenValue} vault token[s] a month? You will need to keep your vault token balance up to date or risk losing your vault contents.";
             }
 
-            return string.Format("Do you wish to rent a storage vault for {0} gold a month? You will need to keep your vault token balance up to date or risk losing your vault contents.", RentGoldValue.ToString("N0", CultureInfo.GetCultureInfo("en-US")));
+            return $"Do you wish to rent a storage vault for {RentGoldValue.ToString("N0", CultureInfo.GetCultureInfo("en-US"))} gold a month? You will need to keep your vault token balance up to date or risk losing your vault contents.";
         }
 
         public static bool HasBalance(PlayerMobile pm, int amount = -1)

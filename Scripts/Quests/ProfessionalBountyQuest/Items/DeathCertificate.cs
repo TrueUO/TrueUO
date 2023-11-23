@@ -17,9 +17,9 @@ namespace Server.Items
             if (owner is PirateCaptain capt)
             {
                 if (capt.PirateName > 0)
-                    m_Owner = string.Format("#{0}\t#{1}\t#{2}", capt.Adjective, capt.Noun, capt.PirateName);
+                    m_Owner = $"#{capt.Adjective}\t#{capt.Noun}\t#{capt.PirateName}";
                 else
-                    m_Owner = string.Format("#{0}\t#{1}\t{2}", capt.Adjective, capt.Noun, Name);
+                    m_Owner = $"#{capt.Adjective}\t#{capt.Noun}\t{Name}";
             }
         }
 

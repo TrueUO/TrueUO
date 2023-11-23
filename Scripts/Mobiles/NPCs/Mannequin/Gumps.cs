@@ -40,7 +40,7 @@ namespace Server.Gumps
             AddHtmlLocalized(5, 5, 270, 18, 1114513, "#1159291", 0x42FF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>            
             AddAlphaRegion(5, 5, 550, 710);
 
-            AddHtmlLocalized(0, 23, 270, 18, 1114513, string.Format("#{0}", _SameItem.LabelNumber), 0x7FFF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+            AddHtmlLocalized(0, 23, 270, 18, 1114513, $"#{_SameItem.LabelNumber}", 0x7FFF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
             AddImageTiled(4, 80, 550, 5, 0x6DC);
 
             List<ValuedProperty> EquipmentItem = Mannequin.FindItemProperty(_SameItem);
@@ -69,7 +69,7 @@ namespace Server.Gumps
                 }
             }
 
-            AddHtmlLocalized(270, 23, 270, 18, 1114513, string.Format("#{0}", item.LabelNumber), 0x7FFF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+            AddHtmlLocalized(270, 23, 270, 18, 1114513, $"#{item.LabelNumber}", 0x7FFF, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
 
             List<ValuedProperty> SelectItem = Mannequin.FindItemProperty(item);
 

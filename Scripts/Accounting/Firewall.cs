@@ -76,7 +76,7 @@ namespace Server
 
             public override string ToString()
             {
-                return string.Format("{0}/{1}", m_CIDRPrefix, m_CIDRLength);
+                return $"{m_CIDRPrefix}/{m_CIDRLength}";
             }
 
             public override bool Equals(object obj)

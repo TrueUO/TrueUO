@@ -172,10 +172,10 @@ namespace Server.Mobiles
             if (defs.NameList == null || defs.NameList.Length == 0)
                 return "0";
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendFormat("{0}", defs.NameList.Length);
+            sb.Append($"{defs.NameList.Length}");
             for (int i = 0; i < defs.NameList.Length; i++)
             {
-                sb.AppendFormat(":{0}", defs.NameList[i]);
+                sb.Append($":{defs.NameList[i]}");
             }
             return sb.ToString();
         }
@@ -185,10 +185,10 @@ namespace Server.Mobiles
             if (defs.SelectionList == null || defs.SelectionList.Length == 0)
                 return "0";
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.AppendFormat("{0}", defs.SelectionList.Length);
+            sb.Append($"{defs.SelectionList.Length}");
             for (int i = 0; i < defs.SelectionList.Length; i++)
             {
-                sb.AppendFormat(":{0}", defs.SelectionList[i] ? 1 : 0);
+                sb.Append($":{(defs.SelectionList[i] ? 1 : 0)}");
             }
             return sb.ToString();
         }
@@ -332,7 +332,7 @@ namespace Server.Mobiles
             // Write out the file
             bool file_error = false;
 
-            var dirname = Directory.Exists(DefsDir) ? string.Format("{0}/{1}.defs", DefsDir, filename) : string.Format("{0}.defs", filename);
+            var dirname = Directory.Exists(DefsDir) ? $"{DefsDir}/{filename}.defs" : $"{filename}.defs";
 
             try
             {
@@ -359,18 +359,18 @@ namespace Server.Mobiles
             if (Directory.Exists(DefsDir))
             {
                 // look for it in the defaults directory
-                dirname = string.Format("{0}/{1}.defs", DefsDir, filename);
+                dirname = $"{DefsDir}/{filename}.defs";
                 // Check if the file exists
                 if (File.Exists(dirname) == false)
                 {
                     // didnt find it so just look in the main install dir
-                    dirname = string.Format("{0}.defs", filename);
+                    dirname = $"{filename}.defs";
                 }
             }
             else
             {
                 // look in the main installation dir
-                dirname = string.Format("{0}.defs", filename);
+                dirname = $"{filename}.defs";
             }
             // Check if the file exists
             if (File.Exists(dirname))
@@ -1021,7 +1021,7 @@ namespace Server.Mobiles
                 string sname = defs.SpawnerName;
                 if (defs.AutoNumber)
                 {
-                    sname = string.Format("{0}#{1}", defs.SpawnerName, defs.AutoNumberValue);
+                    sname = $"{defs.SpawnerName}#{defs.AutoNumberValue}";
                 }
 
                 XmlSpawner spawner = new XmlSpawner(SpawnId, from.Location.X, from.Location.Y, 0, 0, sname, maxcount,
@@ -1305,11 +1305,11 @@ namespace Server.Mobiles
                         string filename;
                         if (!string.IsNullOrEmpty(defaults.DefsExt))
                         {
-                            filename = string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt);
+                            filename = $"{defaults.AccountName}-{defaults.PlayerName}-{defaults.DefsExt}";
                         }
                         else
                         {
-                            filename = string.Format("{0}-{1}", defaults.AccountName, defaults.PlayerName);
+                            filename = $"{defaults.AccountName}-{defaults.PlayerName}";
                         }
                         DoSaveDefs(state.Mobile, filename);
                         break;
@@ -1319,11 +1319,11 @@ namespace Server.Mobiles
                         string filename;
                         if (!string.IsNullOrEmpty(defaults.DefsExt))
                         {
-                            filename = string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt);
+                            filename = $"{defaults.AccountName}-{defaults.PlayerName}-{defaults.DefsExt}";
                         }
                         else
                         {
-                            filename = string.Format("{0}-{1}", defaults.AccountName, defaults.PlayerName);
+                            filename = $"{defaults.AccountName}-{defaults.PlayerName}";
                         }
                         DoLoadDefs(state.Mobile, filename);
                         break;

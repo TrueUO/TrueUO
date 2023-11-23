@@ -27,7 +27,7 @@ namespace Server.Gumps
 
             AddHtmlLocalized(43, 275, 200, 18, 1159137, 0x7FFF, false, false); // How much whilst thou tithe?
             AddBackground(85, 295, 80, 22, 0x2486);
-            AddTextEntry(87, 297, 76, 18, 0x0, 1, offer > 0 ? string.Format("{0}", offer) : "", 6);
+            AddTextEntry(87, 297, 76, 18, 0x0, 1, offer > 0 ? $"{offer}" : "", 6);
 
             AddButton(205, 321, 0xFB7, 0xFB8, 2, GumpButtonType.Reply, 0); // OK
 

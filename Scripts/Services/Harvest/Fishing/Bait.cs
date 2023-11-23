@@ -75,7 +75,7 @@ namespace Server.Items
                     list.Add(1116464, "#{0}\t{1}", 1116470, s);
             }
             else if (label is int i)
-                list.Add(1116465, string.Format("#{0}", i)); // ~1_token~ bait
+                list.Add(1116465, $"#{i}"); // ~1_token~ bait
             else if (label is string s)
                 list.Add(1116465, s);
         }

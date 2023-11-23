@@ -681,7 +681,7 @@ namespace Server.Mobiles
             StringBuilder result = new StringBuilder();
 
             for (int i = 0; i < names.Count; ++i)
-                result.AppendFormat("{0}{1}: {2}", (i == 0) ? "" : "<BR>", names[i], counts[names[i]]);
+                result.Append($"{(i == 0 ? "" : "<BR>")}{names[i]}: {counts[names[i]]}");
 
             return result.ToString();
         }

@@ -31,7 +31,7 @@ namespace Server.Commands
 
             try
             {
-                m_Output = new StreamWriter(Path.Combine(directory, string.Format("{0}.log", DateTime.UtcNow.ToLongDateString())), true)
+                m_Output = new StreamWriter(Path.Combine(directory, $"{DateTime.UtcNow.ToLongDateString()}.log"), true)
                 {
                     AutoFlush = true
                 };
@@ -52,15 +52,15 @@ namespace Server.Commands
             {
                 if (m.Account == null)
                 {
-                    return string.Format("{0} (no account)", m);
+                    return $"{m} (no account)";
                 }
 
-                return string.Format("{0} ('{1}')", m, m.Account.Username);
+                return $"{m} ('{m.Account.Username}')";
             }
 
             if (o is Item item)
             {
-                return string.Format("0x{0:X} ({1})", item.Serial.Value, item.GetType().Name);
+                return $"0x{item.Serial.Value:X} ({item.GetType().Name})";
             }
 
             return o;
@@ -95,7 +95,7 @@ namespace Server.Commands
                 AppendPath(ref path, "Logs");
                 AppendPath(ref path, "Commands");
                 AppendPath(ref path, from == null ? AccessLevel.Owner.ToString() : from.AccessLevel.ToString());
-                path = Path.Combine(path, string.Format("{0}.log", name));
+                path = Path.Combine(path, $"{name}.log");
 
                 using (StreamWriter sw = new StreamWriter(path, true))
                     sw.WriteLine("{0}: {1}: {2}", DateTime.UtcNow, from == null ? "System" : from.NetState.ToString(), text);

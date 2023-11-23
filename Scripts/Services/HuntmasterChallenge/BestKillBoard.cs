@@ -94,7 +94,7 @@ namespace Server.Items
                     y += 20;
                 }
 
-                AddHtml(0, 365, 500, 16, string.Format("<Center>{0}</Center>", GetHuntTypeString()), false, false);
+                AddHtml(0, 365, 500, 16, $"<Center>{GetHuntTypeString()}</Center>", false, false);
 
                 AddButton(150, 365, 4014, 4016, 1, GumpButtonType.Reply, 0);
                 AddButton(328, 365, 4005, 4007, 2, GumpButtonType.Reply, 0);
@@ -104,7 +104,7 @@ namespace Server.Items
             {
                 int hue = 080000 + 100000 * index;
 
-                return string.Format("<BaseFont Color=#{0}>{1}</basefont>", hue.ToString(), str);
+                return $"<BaseFont Color=#{hue}>{str}</basefont>";
             }
 
             public override void OnResponse(Network.NetState state, RelayInfo info)

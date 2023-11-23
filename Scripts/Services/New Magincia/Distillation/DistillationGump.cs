@@ -77,7 +77,7 @@ namespace Server.Engines.Distillation
                 }
             }
 
-            AddHtmlLocalized(250, 54, 240, 20, 1150735, string.Format("#{0}", DistillationSystem.GetLabel(liquor, false)), LabelColor, false, false); // <center>Ingredients of ~1_NAME~</center>
+            AddHtmlLocalized(250, 54, 240, 20, 1150735, $"#{DistillationSystem.GetLabel(liquor, false)}", LabelColor, false, false); // <center>Ingredients of ~1_NAME~</center>
 
             y = 80;
             for (int i = 0; i < m_Def.Ingredients.Length; i++)
@@ -108,7 +108,7 @@ namespace Server.Engines.Distillation
                     amount = total;
                 }
 
-                AddHtmlLocalized(295, y, 200, 20, 1150733, string.Format("#{0}\t{1}", m_Def.Labels[i], string.Format("{0}/{1}", amount.ToString(), total.ToString())), LabelColor, false, false); // ~1_NAME~ : ~2_NUMBER~
+                AddHtmlLocalized(295, y, 200, 20, 1150733, $"#{m_Def.Labels[i]}\t{amount}/{total}", LabelColor, false, false); // ~1_NAME~ : ~2_NUMBER~
 
                 y += 26;
             }
