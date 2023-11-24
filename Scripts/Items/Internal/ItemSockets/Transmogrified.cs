@@ -10,7 +10,7 @@ namespace Server.Items
             {
                 if (string.IsNullOrWhiteSpace(SourceName))
                 {
-                    list.Add(1159679, "#{0}", Owner.LabelNumber); // <BASEFONT COLOR=#b66dff>Transmogrified ~1_ITEM~<BASEFONT COLOR=#FFFFFF>
+                    list.Add(1159679, $"#{Owner.LabelNumber}"); // <BASEFONT COLOR=#b66dff>Transmogrified ~1_ITEM~<BASEFONT COLOR=#FFFFFF>
                 }
                 else
                 {

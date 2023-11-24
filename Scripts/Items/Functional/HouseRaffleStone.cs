@@ -330,8 +330,8 @@ namespace Server.Items
             {
                 case HouseRaffleState.Active:
                     {
-                        list.Add(1060658, "ticket price\t{0}", FormatPrice()); // ~1_val~: ~2_val~
-                        list.Add(1060659, "ends\t{0}", m_Started + m_Duration); // ~1_val~: ~2_val~
+                        list.Add(1060658, $"ticket price\t{FormatPrice()}"); // ~1_val~: ~2_val~
+                        list.Add(1060659, $"ends\t{m_Started + m_Duration}"); // ~1_val~: ~2_val~
                         break;
                     }
                 case HouseRaffleState.Completed:

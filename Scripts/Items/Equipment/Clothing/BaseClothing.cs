@@ -855,7 +855,7 @@ namespace Server.Items
                 }
             }
             else if (oreType != 0)
-                list.Add(1053099, "#{0}\t{1}", oreType, GetNameString()); // ~1_oretype~ ~2_armortype~
+                list.Add(1053099, $"#{oreType}\t{GetNameString()}"); // ~1_oretype~ ~2_armortype~
             else if (Name == null)
                 list.Add(LabelNumber);
             else

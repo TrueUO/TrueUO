@@ -48,7 +48,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1073841, "{0}\t{1}\t{2}", TotalItems, MaxItems, TotalWeight);
+            list.Add(1073841, $"{TotalItems}\t{MaxItems}\t{TotalWeight}");
         }
 
         public bool IsAccept(Item item)

@@ -22,7 +22,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1072395, "#{0}\t{1}", AosSkillBonuses.GetLabel(SkillName.Cooking), _Bonus); // ~1_NAME~ Exceptional Bonus: ~2_val~%
+            list.Add(1072395, $"#{AosSkillBonuses.GetLabel(SkillName.Cooking)}\t{_Bonus}"); // ~1_NAME~ Exceptional Bonus: ~2_val~%
         }
 
         public MasterChefsApron(Serial serial)

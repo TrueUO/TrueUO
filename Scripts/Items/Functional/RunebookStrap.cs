@@ -49,7 +49,7 @@ namespace Server.Items
         {
             base.GetProperties(list);            
 
-            list.Add(1072241, "{0}\t{1}\t{2}\t{3}", TotalItems, MaxItems, TotalWeight, MaxWeight);
+            list.Add(1072241, $"{TotalItems}\t{MaxItems}\t{TotalWeight}\t{MaxWeight}");
 
             list.Add(1072210, "30"); // Weight reduction: ~1_PERCENTAGE~%            
         }
