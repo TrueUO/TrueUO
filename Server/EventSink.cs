@@ -1053,14 +1053,9 @@ namespace Server
 
 	public class WorldSaveEventArgs : EventArgs
 	{
-		private readonly bool m_Msg;
-
-		public bool Message => m_Msg;
-
-		public WorldSaveEventArgs(bool msg)
+        public WorldSaveEventArgs()
 		{
-			m_Msg = msg;
-		}
+        }
 	}
 
 	public class BeforeWorldSaveEventArgs : EventArgs

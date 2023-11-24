@@ -870,7 +870,6 @@ namespace Server
 				Directory.CreateDirectory("Saves/Guilds/");
 			}
 
-
 			try
 			{
 				EventSink.InvokeBeforeWorldSave(new BeforeWorldSaveEventArgs());
@@ -884,7 +883,7 @@ namespace Server
 
             try
 			{
-				EventSink.InvokeWorldSave(new WorldSaveEventArgs(message));
+				EventSink.InvokeWorldSave(new WorldSaveEventArgs());
 			}
 			catch (Exception e)
 			{
