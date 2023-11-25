@@ -315,33 +315,10 @@ namespace Server
 			Write(value.Ticks);
 		}
 
-		public override void WriteDeltaTime(DateTime value)
-		{
-			long ticks = value.Ticks;
-			long now = DateTime.UtcNow.Ticks;
-
-			TimeSpan d;
-
-			try
-			{
-				d = new TimeSpan(ticks - now);
-			}
-			catch (Exception ex)
-			{
-				if (ticks < now)
-				{
-					d = TimeSpan.MaxValue;
-				}
-				else
-				{
-					d = TimeSpan.MaxValue;
-				}
-
-                Diagnostics.ExceptionLogging.LogException(ex);
-			}
-
-			Write(d);
-		}
+        public override void WriteDeltaTime(DateTime value)
+        {
+            Write(value.Ticks - DateTime.UtcNow.Ticks);
+        }
 
 		public override void Write(IPAddress value)
 		{
