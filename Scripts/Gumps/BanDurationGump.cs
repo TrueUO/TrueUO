@@ -241,7 +241,7 @@ namespace Server.Gumps
                     a.SetBanTags(from, DateTime.UtcNow, duration);
 
                     if (comment != null)
-                        a.Comments.Add(new AccountComment(from.RawName, string.Format("Duration: {0}, Comment: {1}", ((duration == TimeSpan.MaxValue) ? "Infinite" : duration.ToString()), comment)));
+                        a.Comments.Add(new AccountComment(from.RawName, $"Duration: {(duration == TimeSpan.MaxValue ? "Infinite" : duration.ToString())}, Comment: {comment}"));
                 }
 
                 if (duration == TimeSpan.MaxValue)

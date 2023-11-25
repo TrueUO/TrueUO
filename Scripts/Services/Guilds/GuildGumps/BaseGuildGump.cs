@@ -81,7 +81,7 @@ namespace Server.Guilds
 
         public static string Color(string text, int color)
         {
-            return string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, text);
+            return $"<BASEFONT COLOR=#{color:X6}>{text}</BASEFONT>";
         }
 
         //There's prolly a way to have all the vars set of inherited classes before something is called in the Ctor... but... I can't think of it right now, and I can't use Timer.DelayCall here :<

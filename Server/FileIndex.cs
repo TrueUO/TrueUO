@@ -153,7 +153,7 @@ namespace Server
 
 						for (var i = 0; i < length; i++)
 						{
-							var entryName = System.String.Format("build/{0}/{1:D8}{2}", uopPattern, i, uopEntryExtension);
+							var entryName = $"build/{uopPattern}/{i:D8}{uopEntryExtension}";
 
 							var hash = UOPHash.HashLittle2(entryName);
 

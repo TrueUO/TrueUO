@@ -315,8 +315,11 @@ namespace Server.Engines.NewMagincia
 
         public int GetBid(Mobile from)
         {
-            if (m_Auction != null && m_Auction.Auctioners.ContainsKey(from))
-                return m_Auction.Auctioners[from].Amount;
+            if (m_Auction != null && m_Auction.Auctioners.TryGetValue(from, out BidEntry value))
+            {
+                return value.Amount;
+            }
+
             return 0;
         }
 

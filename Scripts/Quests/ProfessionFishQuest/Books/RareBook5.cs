@@ -56,7 +56,7 @@ namespace Server.Items
 
                 "This daring fish",
                 "swims the rivers o'",
-                string.Format("{0}. If prepared", FishInfo.GetFishLocation(typeof(FairySalmon))),
+                $"{FishInfo.GetFishLocation(typeof(FairySalmon))}. If prepared",
                 "correctly, and eaten,",
                 "it be helpin' improve",
                 "a sailor's concentration",
@@ -118,7 +118,7 @@ namespace Server.Items
 
                 "This fish be found in",
                 "the lava rivers o' the",
-                string.Format("{0}. When ", FishInfo.GetFishLocation(typeof(LavaFish))),
+                $"{FishInfo.GetFishLocation(typeof(LavaFish))}. When ",
                 "prepared correctly and",
                 "eaten, it be increasin'",
                 "yer mana when ye be ",

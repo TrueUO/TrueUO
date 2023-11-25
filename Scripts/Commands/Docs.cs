@@ -1345,7 +1345,7 @@ namespace Server.Commands
 
                 foreach (string n in names)
                 {
-                    sb.AppendFormat("{0}- {1}", HtmlNewLine, n);
+                    sb.Append($"{HtmlNewLine}- {n}");
                 }
 
                 return sb.ToString();
@@ -1367,7 +1367,7 @@ namespace Server.Commands
                     {
                         string n = names[index];
 
-                        sb.AppendFormat("{0}- {1}", HtmlNewLine, n);
+                        sb.Append($"{HtmlNewLine}- {n}");
                     }
 
                     return sb.ToString();
@@ -1385,7 +1385,7 @@ namespace Server.Commands
                 {
                     string n = names[index];
 
-                    sb.AppendFormat("{0}- {1}", HtmlNewLine, n);
+                    sb.Append($"{HtmlNewLine}- {n}");
                 }
 
                 return sb.ToString();

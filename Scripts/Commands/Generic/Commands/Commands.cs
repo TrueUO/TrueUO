@@ -191,7 +191,7 @@ namespace Server.Commands.Generic
             if (list.Count == 1)
                 AddResponse("There is one matching object.");
             else
-                AddResponse(string.Format("There are {0} matching objects.", list.Count));
+                AddResponse($"There are {list.Count} matching objects.");
         }
     }
 
@@ -266,7 +266,7 @@ namespace Server.Commands.Generic
                             new WarningGump(
                                 1060637,
                                 30720,
-                                string.Format("A game master is requesting to open your web browser to the following URL:<br>{0}", url),
+                                $"A game master is requesting to open your web browser to the following URL:<br>{url}",
                                 0xFFC000,
                                 320,
                                 240,
@@ -689,9 +689,9 @@ namespace Server.Commands.Generic
                 Type type = obj.GetType();
 
                 if (type.DeclaringType == null)
-                    AddResponse(string.Format("The type of that object is {0}.", type.Name));
+                    AddResponse($"The type of that object is {type.Name}.");
                 else
-                    AddResponse(string.Format("The type of that object is {0}.", type.FullName));
+                    AddResponse($"The type of that object is {type.FullName}.");
             }
         }
     }
@@ -752,7 +752,7 @@ namespace Server.Commands.Generic
             Commands = new[] { command };
             ObjectTypes = objects;
             Usage = command;
-            Description = string.Format("Sets the {0} property to {1}.", name, value);
+            Description = $"Sets the {name} property to {value}.";
         }
 
         public override void Execute(CommandEventArgs e, object obj)
@@ -862,12 +862,9 @@ namespace Server.Commands.Generic
         {
             if (list.Count > 1)
             {
-                string message = string.Format(
-                    "You are about to delete {0} objects. " + "This cannot be undone without a full server revert.<br><br>Continue?",
-                    list.Count);
+                string message = $"You are about to delete {list.Count} objects. This cannot be undone without a full server revert.<br><br>Continue?";
 
-                e.Mobile.SendGump(
-                    new WarningGump(1060637, 30720, message, 0xFFC000, 420, 280, OnConfirmCallback, new object[] { e, list }));
+                e.Mobile.SendGump(new WarningGump(1060637, 30720, message, 0xFFC000, 420, 280, OnConfirmCallback, new object[] { e, list }));
 
                 AddResponse("Awaiting confirmation...");
                 return;
@@ -885,7 +882,7 @@ namespace Server.Commands.Generic
                     {
                         if (string.IsNullOrWhiteSpace(message))
                         {
-                            message = string.Format("Confirm deletion of {0}", obj);
+                            message = $"Confirm deletion of {obj}";
                         }
 
                         e.Mobile.SendGump(
@@ -910,7 +907,7 @@ namespace Server.Commands.Generic
                 {
                     if (string.IsNullOrWhiteSpace(message))
                     {
-                        message = string.Format("Confirm deletion of {0}", obj);
+                        message = $"Confirm deletion of {obj}";
                     }
 
                     ArrayList list = new ArrayList
@@ -1210,7 +1207,7 @@ namespace Server.Commands.Generic
 
                         targ.Say("I've been {0}!", m_Ban ? "banned" : "kicked");
 
-                        AddResponse(string.Format("They have been {0}.", m_Ban ? "banned" : "kicked"));
+                        AddResponse($"They have been {(m_Ban ? "banned" : "kicked")}.");
 
                         targState.Dispose();
 

@@ -402,7 +402,7 @@ namespace Server.Gumps
             }
             catch (Exception e)
             {
-                return string.Format("!{0}!", e.GetType());
+                return $"!{e.GetType()}!";
             }
         }
 
@@ -415,7 +415,7 @@ namespace Server.Gumps
 
             if (o is string s1)
             {
-                return string.Format("\"{0}\"", s1);
+                return $"\"{s1}\"";
             }
 
             if (o is bool)
@@ -425,7 +425,7 @@ namespace Server.Gumps
 
             if (o is char c)
             {
-                return string.Format("0x{0:X} '{1}'", (int)c, c);
+                return $"0x{(int)c:X} '{c}'";
             }
 
             if (o is Serial s)
@@ -434,15 +434,15 @@ namespace Server.Gumps
                 {
                     if (s.IsItem)
                     {
-                        return string.Format("(I) 0x{0:X}", s.Value);
+                        return $"(I) 0x{s.Value:X}";
                     }
                     if (s.IsMobile)
                     {
-                        return string.Format("(M) 0x{0:X}", s.Value);
+                        return $"(M) 0x{s.Value:X}";
                     }
                 }
 
-                return string.Format("(?) 0x{0:X}", s.Value);
+                return $"(?) 0x{s.Value:X}";
             }
 
             if (o is byte || o is sbyte || o is short || o is ushort || o is int || o is uint || o is long || o is ulong)
@@ -457,7 +457,7 @@ namespace Server.Gumps
 
             if (o is Mobile mobile)
             {
-                return string.Format("(M) 0x{0:X} \"{1}\"", mobile.Serial.Value, mobile.Name);
+                return $"(M) 0x{mobile.Serial.Value:X} \"{mobile.Name}\"";
             }
 
             if (o is Item item)

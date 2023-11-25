@@ -1410,7 +1410,7 @@ namespace Server
 				return callback.Method.Name;
 			}
 
-			return string.Format("{0}.{1}", callback.Method.DeclaringType.FullName, callback.Method.Name);
+			return $"{callback.Method.DeclaringType.FullName}.{callback.Method.Name}";
 		}
 
 		private static readonly Stack<ConsoleColor> m_ConsoleColors = new Stack<ConsoleColor>();

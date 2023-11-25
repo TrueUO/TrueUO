@@ -652,7 +652,7 @@ namespace Server.Engines.Quests
 
         public static string Color(string text, int color)
         {
-            return string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, text);
+            return $"<BASEFONT COLOR=#{color:X6}>{text}</BASEFONT>";
         }
 
         public static ArrayList BuildList(object obj)

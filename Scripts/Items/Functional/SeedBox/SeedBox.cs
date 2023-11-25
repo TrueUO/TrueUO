@@ -343,8 +343,8 @@ namespace Server.Engines.Plants
                 list.Add(1076220); // 4th Year Veteran Reward
             }
 
-            list.Add(1151847, string.Format("{0}\t{1}", TotalCount.ToString(), MaxSeeds.ToString())); // Seeds in Box: ~1_val~ / ~2_val~
-            list.Add(1151848, string.Format("{0}\t{1}", UniqueCount.ToString(), MaxUnique.ToString())); // Unique Seeds In Box: ~1_val~ / ~2_val~
+            list.Add(1151847, $"{TotalCount}\t{MaxSeeds}"); // Seeds in Box: ~1_val~ / ~2_val~
+            list.Add(1151848, $"{UniqueCount}\t{MaxUnique}"); // Unique Seeds In Box: ~1_val~ / ~2_val~
         }
 
         private void CheckEntries()

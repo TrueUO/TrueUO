@@ -131,14 +131,18 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (!IsEmpty)
-                list.Add(1070721, "#{0}\t{1:0.0}", AosSkillBonuses.GetLabel(Skill), SkillValue); // Skill stored: ~1_skillname~ ~2_skillamount~
+            {
+                list.Add(1070721, $"#{AosSkillBonuses.GetLabel(Skill)}\t{SkillValue:0.0}"); // Skill stored: ~1_skillname~ ~2_skillamount~
+            }
 
             string name = LastUserName;
 
             if (name == null)
-                name = string.Format("#{0}", 1074235); // Unknown
+            {
+                name = $"#{1074235}"; // Unknown
+            }
 
-            list.Add(1041602, "{0}", name); // Owner: ~1_val~
+            list.Add(1041602, $"{name}"); // Owner: ~1_val~
         }
 
         private static bool CheckCombat(Mobile m, TimeSpan time)

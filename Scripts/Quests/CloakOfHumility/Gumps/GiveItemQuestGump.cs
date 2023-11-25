@@ -56,12 +56,12 @@ namespace Server.Engines.Quests
             if (0.5 > Utility.RandomDouble() || m_NPCIndex == 6)
             {
                 cliloc = m_Mobile.Greeting + 2;
-                args = string.Format("#{0}", m_Quest.Infos[m_NPCIndex].NeedsLoc);
+                args = $"#{m_Quest.Infos[m_NPCIndex].NeedsLoc}";
             }
             else
             {
                 cliloc = m_Mobile.Greeting + 3;
-                args = string.Format("#{0}", m_Quest.Infos[m_NPCIndex].GivesLoc);
+                args = $"#{m_Quest.Infos[m_NPCIndex].GivesLoc}";
             }
 
             m_Mobile.SayTo(from, cliloc, args);

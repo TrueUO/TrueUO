@@ -179,19 +179,14 @@ namespace Server.Items
                 {
                     int id = info.ButtonID;
 
-                    if (Locations.ContainsKey(id))
+                    if (Locations.TryGetValue(id, out Point3D value) && CheckTravel(value))
                     {
-                        Point3D p = Locations[id];
+                        Effects.SendPacket(User.Location, User.Map, new ParticleEffect(EffectType.FixedFrom, User.Serial, Server.Serial.Zero, 0x3728, User.Location, User.Location, 10, 10, false, false, 0, 0, 0, 2023, 1, User.Serial, 80, 0));
+                        Effects.PlaySound(User.Location, User.Map, 496);
 
-                        if (CheckTravel(p))
-                        {
-                            Effects.SendPacket(User.Location, User.Map, new ParticleEffect(EffectType.FixedFrom, User.Serial, Server.Serial.Zero, 0x3728, User.Location, User.Location, 10, 10, false, false, 0, 0, 0, 2023, 1, User.Serial, 80, 0));
-                            Effects.PlaySound(User.Location, User.Map, 496);
-
-                            BaseCreature.TeleportPets(User, p, Map.TerMur);
-                            User.MoveToWorld(p, Map.TerMur);
-                            Effects.PlaySound(p, Map.TerMur, 0x1FE);
-                        }
+                        BaseCreature.TeleportPets(User, value, Map.TerMur);
+                        User.MoveToWorld(value, Map.TerMur);
+                        Effects.PlaySound(value, Map.TerMur, 0x1FE);
                     }
                 }
             }

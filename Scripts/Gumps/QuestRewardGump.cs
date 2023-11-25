@@ -23,10 +23,10 @@ namespace Server.Gumps
 
         public void RenderString(Mobile from)
         {
-            AddHtml(150, 15, 320, 22, string.Format("<BASEFONT COLOR=#D5D52A><DIV ALIGN=CENTER>{0}</DIV>", Title), false, false);
-            AddHtml(150, 46, 320, 44, string.Format("<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>{0}</DIV>", Description), false, false);
-            AddHtml(150, 99, 320, 98, string.Format("<BASEFONT COLOR=#DFDFDF>{0}", Line1), false, false);
-            AddHtml(150, 197, 320, 98, string.Format("<BASEFONT COLOR=#DFDFDF>{0}", Line2), false, false);
+            AddHtml(150, 15, 320, 22, $"<BASEFONT COLOR=#D5D52A><DIV ALIGN=CENTER>{Title}</DIV>", false, false);
+            AddHtml(150, 46, 320, 44, $"<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>{Description}</DIV>", false, false);
+            AddHtml(150, 99, 320, 98, $"<BASEFONT COLOR=#DFDFDF>{Line1}", false, false);
+            AddHtml(150, 197, 320, 98, $"<BASEFONT COLOR=#DFDFDF>{Line2}", false, false);
 
             from.CloseGump(typeof(QuestRewardGump));
             from.SendGump(this);

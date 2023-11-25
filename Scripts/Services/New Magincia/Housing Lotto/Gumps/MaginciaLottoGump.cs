@@ -22,12 +22,16 @@ namespace Server.Engines.NewMagincia
             bool prime = plot.IsPrimeSpot;
 
             int ticketsBought = 0;
-            if (plot.Participants.ContainsKey(from))
-                ticketsBought = plot.Participants[from];
+            if (plot.Participants.TryGetValue(from, out int value))
+            {
+                ticketsBought = value;
+            }
 
             int totalTicketsSold = 0;
             foreach (int i in plot.Participants.Values)
+            {
                 totalTicketsSold += i;
+            }
 
             AddBackground(0, 0, 350, 380, 9500);
 

@@ -33,7 +33,7 @@ namespace Server.Gumps
             {
                 if (Title.Number > 0)
                 {
-                    AddHtmlLocalized(0, 10, 600, 18, CenterLoc, string.Format("#{0}", Title.Number), 0x6B45, false, false);
+                    AddHtmlLocalized(0, 10, 600, 18, CenterLoc, $"#{Title.Number}", 0x6B45, false, false);
                 }
                 else if (!string.IsNullOrEmpty(Title.String))
                 {
@@ -79,7 +79,7 @@ namespace Server.Gumps
 
             if (Pages > 1)
             {
-                AddHtmlLocalized(263, 346, 100, 18, 1153561, string.Format("{0}\t{1}", Page + 1, Pages), 0x6B45, false, false); // Page ~1_CUR~ of ~2_MAX~
+                AddHtmlLocalized(263, 346, 100, 18, 1153561, $"{Page + 1}\t{Pages}", 0x6B45, false, false); // Page ~1_CUR~ of ~2_MAX~
             }
             else
             {

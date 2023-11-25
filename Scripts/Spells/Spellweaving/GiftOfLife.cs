@@ -44,14 +44,9 @@ namespace Server.Spells.Spellweaving
         {
             Mobile m = e.Mobile;
 
-            if (m_Table.ContainsKey(m))
+            if (m_Table.TryGetValue(m, out ExpireTimer value) && value.EndTime > DateTime.UtcNow)
             {
-                ExpireTimer timer = m_Table[m];
-
-                if (timer.EndTime > DateTime.UtcNow)
-                {
-                    BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.GiftOfLife, 1031615, 1075807, timer.EndTime - DateTime.UtcNow, m, null, true));
-                }
+                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.GiftOfLife, 1031615, 1075807, value.EndTime - DateTime.UtcNow, m, null, true));
             }
         }
 

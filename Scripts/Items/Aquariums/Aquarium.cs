@@ -390,7 +390,7 @@ namespace Server.Items
             if (m_RewardAvailable)
                 list.Add(1074362); // A reward is available!
 
-            list.Add(1074247, "{0}\t{1}", LiveCreatures, MaxLiveCreatures); // Live Creatures: ~1_NUM~ / ~2_MAX~
+            list.Add(1074247, $"{LiveCreatures}\t{MaxLiveCreatures}"); // Live Creatures: ~1_NUM~ / ~2_MAX~
 
             int dead = DeadCreatures;
 
@@ -402,22 +402,22 @@ namespace Server.Items
             if (decorations > 0)
                 list.Add(1074249, decorations.ToString()); // Decorations: ~1_NUM~
 
-            list.Add(1074250, "#{0}", FoodNumber()); // Food state: ~1_STATE~
-            list.Add(1074251, "#{0}", WaterNumber()); // Water state: ~1_STATE~
+            list.Add(1074250, $"#{FoodNumber()}"); // Food state: ~1_STATE~
+            list.Add(1074251, $"#{WaterNumber()}"); // Water state: ~1_STATE~
 
             if (m_Food.State == (int)FoodState.Dead)
-                list.Add(1074577, "{0}\t{1}", m_Food.Added, m_Food.Improve); // Food Added: ~1_CUR~ Needed: ~2_NEED~
+                list.Add(1074577, $"{m_Food.Added}\t{m_Food.Improve}"); // Food Added: ~1_CUR~ Needed: ~2_NEED~
             else if (m_Food.State == (int)FoodState.Overfed)
-                list.Add(1074577, "{0}\t{1}", m_Food.Added, m_Food.Maintain); // Food Added: ~1_CUR~ Needed: ~2_NEED~
+                list.Add(1074577, $"{m_Food.Added}\t{m_Food.Maintain}"); // Food Added: ~1_CUR~ Needed: ~2_NEED~
             else
-                list.Add(1074253, "{0}\t{1}\t{2}", m_Food.Added, m_Food.Maintain, m_Food.Improve); // Food Added: ~1_CUR~ Feed: ~2_NEED~ Improve: ~3_GROW~
+                list.Add(1074253, $"{m_Food.Added}\t{m_Food.Maintain}\t{m_Food.Improve}"); // Food Added: ~1_CUR~ Feed: ~2_NEED~ Improve: ~3_GROW~
 
             if (m_Water.State == (int)WaterState.Dead)
-                list.Add(1074578, "{0}\t{1}", m_Water.Added, m_Water.Improve); // Water Added: ~1_CUR~ Needed: ~2_NEED~
+                list.Add(1074578, $"{m_Water.Added}\t{m_Water.Improve}"); // Water Added: ~1_CUR~ Needed: ~2_NEED~
             else if (m_Water.State == (int)WaterState.Strong)
-                list.Add(1074578, "{0}\t{1}", m_Water.Added, m_Water.Maintain); // Water Added: ~1_CUR~ Needed: ~2_NEED~
+                list.Add(1074578, $"{m_Water.Added}\t{m_Water.Maintain}"); // Water Added: ~1_CUR~ Needed: ~2_NEED~
             else
-                list.Add(1074254, "{0}\t{1}\t{2}", m_Water.Added, m_Water.Maintain, m_Water.Improve); // Water Added: ~1_CUR~ Maintain: ~2_NEED~ Improve: ~3_GROW~
+                list.Add(1074254, $"{m_Water.Added}\t{m_Water.Maintain}\t{m_Water.Improve}"); // Water Added: ~1_CUR~ Maintain: ~2_NEED~ Improve: ~3_GROW~
         }
 
         public override bool DisplayWeight => false;
@@ -456,7 +456,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(4); // Version
 
             // version 4
@@ -481,60 +480,28 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            m_EvaluateDay = reader.ReadBool();
+            NextEvaluate = reader.ReadDateTime();
 
-            switch (version)
-            {
-                case 4:
-                    m_EvaluateDay = reader.ReadBool();
-                    NextEvaluate = reader.ReadDateTime();
-                    goto case 0;
-                case 3:
-                case 2:
-                case 1:
-                    {
-                        if (version < 4)
-                        {
-                            reader.ReadDateTime();
+            LiveCreatures = reader.ReadInt();
+            m_VacationLeft = reader.ReadInt();
 
-                            NextEvaluate = DateTime.UtcNow + TimeSpan.FromMinutes(5);
-                        }
+            m_Food = new AquariumState();
+            m_Water = new AquariumState();
 
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        LiveCreatures = reader.ReadInt();
-                        m_VacationLeft = reader.ReadInt();
+            m_Food.Deserialize(reader);
+            m_Water.Deserialize(reader);
 
-                        m_Food = new AquariumState();
-                        m_Water = new AquariumState();
+            Events = new List<int>();
 
-                        m_Food.Deserialize(reader);
-                        m_Water.Deserialize(reader);
+            int count = reader.ReadInt();
 
-                        Events = new List<int>();
+            for (int i = 0; i < count; i++)
+                Events.Add(reader.ReadInt());
 
-                        int count = reader.ReadInt();
-
-                        for (int i = 0; i < count; i++)
-                            Events.Add(reader.ReadInt());
-
-                        m_RewardAvailable = reader.ReadBool();
-
-                        break;
-                    }
-            }
-
-            if (version < 2)
-            {
-                Weight = DefaultWeight;
-                Movable = false;
-            }
-
-            if (version < 3)
-                ValidationQueue<Aquarium>.Add(this);
+            m_RewardAvailable = reader.ReadBool();
 
             EventTimer.AddTimer(this);
         }
@@ -775,7 +742,7 @@ namespace Server.Items
                 return;
             }
 
-            to.SendLocalizedMessage(1074360, string.Format("#{0}", item.LabelNumber)); // You receive a reward: ~1_REWARD~
+            to.SendLocalizedMessage(1074360, $"#{item.LabelNumber}"); // You receive a reward: ~1_REWARD~
             to.PlaySound(0x5A3);
 
             m_RewardAvailable = false;
@@ -907,7 +874,7 @@ namespace Server.Items
             LiveCreatures += 1;
 
             if (from != null)
-                from.SendLocalizedMessage(1073632, string.Format("#{0}", fish.LabelNumber)); // You add the following creature to your aquarium: ~1_FISH~
+                from.SendLocalizedMessage(1073632, $"#{fish.LabelNumber}"); // You add the following creature to your aquarium: ~1_FISH~
 
             InvalidateProperties();
             return true;
@@ -942,7 +909,7 @@ namespace Server.Items
             AddItem(item);
 
             if (from != null)
-                from.SendLocalizedMessage(1073635, (item.LabelNumber != 0) ? string.Format("#{0}", item.LabelNumber) : item.Name); // You add the following decoration to your aquarium: ~1_NAME~
+                from.SendLocalizedMessage(1073635, item.LabelNumber != 0 ? $"#{item.LabelNumber}" : item.Name); // You add the following decoration to your aquarium: ~1_NAME~
 
             InvalidateProperties();
             return true;

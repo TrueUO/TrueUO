@@ -277,12 +277,12 @@ namespace Server.Items
             bool xEast = false, ySouth = false;
 
             if (Sextant.Format(loc, map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
-                result.AppendFormat("{0}°{1}'{2},{3}°{4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
+                result.Append($"{yLat}°{yMins}'{(ySouth ? "S" : "N")},{xLong}°{xMins}'{(xEast ? "E" : "W")}");
             else
-                result.AppendFormat("{0},{1}", loc.X, loc.Y);
+                result.Append($"{loc.X},{loc.Y}");
 
             if (displayMap)
-                result.AppendFormat(" ({0})", map);
+                result.Append($" ({map})");
 
             return result.ToString();
         }
@@ -316,7 +316,7 @@ namespace Server.Items
                 return "FREE";
             }
 
-            return string.Format("{0} gold", m_TicketPrice);
+            return $"{m_TicketPrice} gold";
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -330,8 +330,8 @@ namespace Server.Items
             {
                 case HouseRaffleState.Active:
                     {
-                        list.Add(1060658, "ticket price\t{0}", FormatPrice()); // ~1_val~: ~2_val~
-                        list.Add(1060659, "ends\t{0}", m_Started + m_Duration); // ~1_val~: ~2_val~
+                        list.Add(1060658, $"ticket price\t{FormatPrice()}"); // ~1_val~: ~2_val~
+                        list.Add(1060659, $"ends\t{m_Started + m_Duration}"); // ~1_val~: ~2_val~
                         break;
                     }
                 case HouseRaffleState.Completed:
@@ -378,7 +378,7 @@ namespace Server.Items
             }
             else
             {
-                from.SendGump(new WarningGump(1150470, 0x7F00, string.Format("You are about to purchase a raffle ticket for the house plot located at {0}.  The ticket price is {1}.  Tickets are non-refundable and you can only purchase one ticket per account.  Do you wish to continue?", FormatLocation(), FormatPrice()), 0xFFFFFF, 420, 280, Purchase_Callback, null)); // CONFIRM TICKET PURCHASE
+                from.SendGump(new WarningGump(1150470, 0x7F00, $"You are about to purchase a raffle ticket for the house plot located at {FormatLocation()}.  The ticket price is {FormatPrice()}.  Tickets are non-refundable and you can only purchase one ticket per account.  Do you wish to continue?", 0xFFFFFF, 420, 280, Purchase_Callback, null)); // CONFIRM TICKET PURCHASE
             }
         }
 

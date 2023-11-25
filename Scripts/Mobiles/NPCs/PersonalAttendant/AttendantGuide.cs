@@ -131,7 +131,7 @@ namespace Server.Mobiles
                                             if (num >= 0 && num < m_ShopDefinitions.Count)
                                                 current.Shops.Add(num);
                                             else
-                                                throw new Exception(string.Format("Invalid shop ID: {0}", num));
+                                                throw new Exception($"Invalid shop ID: {num}");
                                         }
                                     }
                                 }
@@ -379,7 +379,7 @@ namespace Server.Mobiles
                     return;
 
                 List<Vertex> list = m_GraphDefinitions[town];
-                string path = Core.BaseDirectory + string.Format("\\Data\\Guide\\{0}.graph", town);
+                string path = Core.BaseDirectory + $@"\Data\Guide\{town}.graph";
 
                 using (FileStream stream = new FileStream(path, FileMode.Create))
                 using (StreamWriter writer = new StreamWriter(stream))
@@ -842,10 +842,9 @@ namespace Server.Mobiles
 
                 Vertex source = GuideHelper.ClosestVetrex(m_Guide.Region.Name, m_Guide.Location);
 
-                if (m_Shops.ContainsKey(shop))
+                if (m_Shops.TryGetValue(shop, out Vertex value))
                 {
-                    Vertex destination = m_Shops[shop];
-                    List<Vertex> path = GuideHelper.Dijkstra(m_Guide.Region.Name, source, destination);
+                    List<Vertex> path = GuideHelper.Dijkstra(m_Guide.Region.Name, source, value);
                     m_Guide.StartGuiding(path);
                 }
             }

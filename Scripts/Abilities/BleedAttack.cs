@@ -27,11 +27,11 @@ namespace Server.Items
         {
             BleedTimer timer = null;
 
-            if (m_BleedTable.ContainsKey(m))
+            if (m_BleedTable.TryGetValue(m, out BleedTimer value))
             {
                 if (splintering)
                 {
-                    timer = m_BleedTable[m];
+                    timer = value;
                     timer.Stop();
                 }
                 else
@@ -40,7 +40,7 @@ namespace Server.Items
                 }
             }
 
-            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bleed, 1075829, 1075830, TimeSpan.FromSeconds(10), m, string.Format("{0}\t{1}\t{2}", "1", "10", "2")));
+            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bleed, 1075829, 1075830, TimeSpan.FromSeconds(10), m, "1\t10\t2"));
 
             timer = new BleedTimer(from, m, CheckBloodDrink(from));
             m_BleedTable[m] = timer;

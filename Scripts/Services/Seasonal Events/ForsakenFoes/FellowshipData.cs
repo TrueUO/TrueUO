@@ -14,7 +14,7 @@ namespace Server.Engines.Fellowship
 
         public override void SendMessage(PlayerMobile from, double old, double points, bool quest)
         {
-            from.SendLocalizedMessage(1159189, string.Format("{0}", ((int)points).ToString())); // The soul has been cleansed and you have been awarded ~1_SILVER~ Fellowship Silver for your efforts!
+            from.SendLocalizedMessage(1159189, $"{(int)points}"); // The soul has been cleansed and you have been awarded ~1_SILVER~ Fellowship Silver for your efforts!
         }
 
         public override void Serialize(GenericWriter writer)

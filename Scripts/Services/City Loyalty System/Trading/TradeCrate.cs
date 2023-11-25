@@ -120,9 +120,9 @@ namespace Server.Engines.CityLoyalty
                 for (int i = 0; i < Entry.Details.Count; i++)
                 {
                     if (Utility.ToInt32(Entry.Details[i].Name) > 0)
-                        list.Add(1116453 + i, string.Format("#{0}\t{1}\t{2}", Entry.Details[i].Name, Entry.Details[i].Count(this), Entry.Details[i].Amount)); // ~1_val~: ~2_val~/~3_val~
+                        list.Add(1116453 + i, $"#{Entry.Details[i].Name}\t{Entry.Details[i].Count(this)}\t{Entry.Details[i].Amount}"); // ~1_val~: ~2_val~/~3_val~
                     else
-                        list.Add(1116453 + i, string.Format("{0}\t{1}\t{2}", Entry.Details[i].Name, Entry.Details[i].Count(this), Entry.Details[i].Amount)); // ~1_val~: ~2_val~/~3_val~
+                        list.Add(1116453 + i, $"{Entry.Details[i].Name}\t{Entry.Details[i].Count(this)}\t{Entry.Details[i].Amount}"); // ~1_val~: ~2_val~/~3_val~
                 }
             }
 

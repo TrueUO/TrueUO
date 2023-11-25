@@ -82,7 +82,7 @@ namespace Server.Engines.Plants
 
             if (Pages > 1)
             {
-                AddHtmlLocalized(136, 373, 100, 25, 1151850, string.Format("@{0}@{1}", Page.ToString(), Pages.ToString()), 0x6F7B, false, false);
+                AddHtmlLocalized(136, 373, 100, 25, 1151850, $"@{Page}@{Pages}", 0x6F7B, false, false);
 
                 if (Page > 1)
                 {

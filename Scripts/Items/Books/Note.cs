@@ -62,7 +62,7 @@ namespace Server.Items
 
                     AddHtmlLocalized(45, 30, 165, 200, cliloc, 0x0, false, false);
 
-                    AddLabel(90, 245, 0x0, string.Format("    {0}", i + 1));
+                    AddLabel(90, 245, 0x0, $"    {i + 1}");
 
                     if (page < pages)
                     {

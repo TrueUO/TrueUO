@@ -348,7 +348,7 @@ namespace Server
                     }
                 }
 
-                ToConsole(string.Format("{0} additional Teleporters deleted.", delCount));
+                ToConsole($"{delCount} additional Teleporters deleted.");
             });
         }
         #endregion
@@ -796,7 +796,7 @@ namespace Server
                 spawner.Delete();
             }
 
-            ToConsole(string.Format("Spawner Deletion: deleted {0} spawners containing -{1}-.", toDelete.Count.ToString(), current));
+            ToConsole($"Spawner Deletion: deleted {toDelete.Count} spawners containing -{current}-.");
 
             ColUtility.Free(toDelete);
         }
@@ -1468,7 +1468,7 @@ namespace Server
                     }
                 }
 
-                ToConsole(string.Format("Found {0} Xmlspawner files for removal.", files == null ? 0 : files.Count), files != null && files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
+                ToConsole($"Found {(files == null ? 0 : files.Count)} Xmlspawner files for removal.", files != null && files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
                 ToConsole("Deleting spawners...", ConsoleColor.Cyan);
                 long start = Core.TickCount;
 
@@ -1594,7 +1594,7 @@ namespace Server
 
                         if (fs == null)
                         {
-                            ToConsole(string.Format("Unable to open {0} for loading", filename), ConsoleColor.Red);
+                            ToConsole($"Unable to open {filename} for loading", ConsoleColor.Red);
                             continue;
                         }
 
@@ -1607,7 +1607,7 @@ namespace Server
                         catch
                         {
                             fs.Close();
-                            ToConsole(string.Format("Error reading xml file {0}", filename), ConsoleColor.Red);
+                            ToConsole($"Error reading xml file {filename}", ConsoleColor.Red);
                             continue;
                         }
 
@@ -1639,11 +1639,11 @@ namespace Server
                         fs.Close();
                     }
 
-                    ToConsole(string.Format("Deleted {0} XmlSpawners from {1}/{2}.xml.", deletedxml, directory, filename), ConsoleColor.Cyan);
+                    ToConsole($"Deleted {deletedxml} XmlSpawners from {directory}/{filename}.xml.", ConsoleColor.Cyan);
                 }
                 else
                 {
-                    ToConsole(string.Format("File Not Found: {0}", filename), ConsoleColor.Red);
+                    ToConsole($"File Not Found: {filename}", ConsoleColor.Red);
                 }
             }
         }
@@ -1797,7 +1797,7 @@ namespace Server
                                             {
                                                 nodelelete++;
 
-                                                ToConsole(string.Format("Failed to Delete: {0} in {1}", (string) dr["Name"], file));
+                                                ToConsole($"Failed to Delete: {(string)dr["Name"]} in {file}");
                                             }
                                         }
                                     }

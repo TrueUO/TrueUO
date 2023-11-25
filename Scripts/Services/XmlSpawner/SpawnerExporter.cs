@@ -56,7 +56,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                AddResponse(string.Format("{0} spawners exported to Saves/Spawners/{1}.", spawners.Count.ToString(), filename));
+                AddResponse($"{spawners.Count} spawners exported to Saves/Spawners/{filename}.");
 
                 ExportSpawners(spawners, filename);
             }

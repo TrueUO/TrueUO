@@ -97,7 +97,7 @@ namespace Server
 
 		public override string ToString()
 		{
-			return string.Format("[{0}: {1}]", Name, Base);
+			return $"[{Name}: {Base}]";
 		}
 
 		public Skill(Skills owner, SkillInfo info, GenericReader reader)

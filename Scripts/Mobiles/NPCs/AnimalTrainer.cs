@@ -486,7 +486,7 @@ namespace Server.Mobiles
                 {
                     if (m is AnimalTrainer)
                     {
-                        e.Mobile.SendLocalizedMessage(1071250, string.Format("{0}\t{1}", e.Mobile.Stabled.Count.ToString(), GetMaxStabled(e.Mobile).ToString())); // ~1_USED~/~2_MAX~ stable stalls used.
+                        e.Mobile.SendLocalizedMessage(1071250, $"{e.Mobile.Stabled.Count}\t{GetMaxStabled(e.Mobile)}"); // ~1_USED~/~2_MAX~ stable stalls used.
                         break;
                     }
                 }
@@ -575,7 +575,7 @@ namespace Server.Mobiles
                         35 + i * 20,
                         275,
                         18,
-                        string.Format("<BASEFONT COLOR=#C6C6EF>{0}</BASEFONT>", pet.Name),
+                        $"<BASEFONT COLOR=#C6C6EF>{pet.Name}</BASEFONT>",
                         false,
                         false);
                 }

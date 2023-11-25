@@ -116,7 +116,7 @@ namespace Server.Gumps
                 if (entry.From != null)
                 {
                     if (entry.From.Account is Account acc)
-                        name = string.Format("{0} ({1})", entry.From.Name, acc);
+                        name = $"{entry.From.Name} ({acc})";
                     else
                         name = entry.From.Name;
                 }
@@ -146,19 +146,15 @@ namespace Server.Gumps
             Account,
             Address
         }
-        public string Right(string text)
-        {
-            return string.Format("<DIV ALIGN=RIGHT>{0}</DIV>", text);
-        }
-
+        
         public string Center(string text)
         {
-            return string.Format("<CENTER>{0}</CENTER>", text);
+            return $"<CENTER>{text}</CENTER>";
         }
 
         public string Color(string text, int color)
         {
-            return string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, text);
+            return $"<BASEFONT COLOR=#{color:X6}>{text}</BASEFONT>";
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)

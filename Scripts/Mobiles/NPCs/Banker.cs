@@ -429,12 +429,9 @@ namespace Server.Mobiles
 
                             if (AccountGold.Enabled && e.Mobile.Account is Account account)
                             {
-                                vendor.Say(1155855, string.Format("{0:#,0}\t{1:#,0}",
-                                    account.TotalPlat,
-                                    account.TotalGold), 0x3BC);
+                                vendor.Say(1155855, $"{account.TotalPlat:#,0}\t{account.TotalGold:#,0}", 0x3BC);
 
-                                vendor.Say(1155848, string.Format("{0:#,0}", account.GetSecureAccountAmount(e.Mobile)),
-                                    0x3BC);
+                                vendor.Say(1155848, $"{account.GetSecureAccountAmount(e.Mobile):#,0}", 0x3BC);
                             }
                             else
                             {

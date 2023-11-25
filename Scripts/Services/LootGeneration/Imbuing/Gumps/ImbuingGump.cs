@@ -368,7 +368,7 @@ namespace Server.Gumps
                         User.SendLocalizedMessage(1072223); // An item has been placed in your backpack.
                     }
 
-                    User.SendLocalizedMessage(1111814, string.Format("{0}\t{1}", count, m_List.Count));
+                    User.SendLocalizedMessage(1111814, $"{count}\t{m_List.Count}");
 
                     ColUtility.Free(m_List);
                 }

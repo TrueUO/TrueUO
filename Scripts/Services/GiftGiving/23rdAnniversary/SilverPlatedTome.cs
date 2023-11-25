@@ -15,7 +15,7 @@ namespace Server.Items
             : base(0xA5CE)
         {
             Hue = Utility.RandomMinMax(8, 254);
-            _DisplayName = string.Format("{0} of {1}", _Titles[Utility.Random(_Titles.Length)], _Names[Utility.Random(_Names.Length)]);
+            _DisplayName = $"{_Titles[Utility.Random(_Titles.Length)]} of {_Names[Utility.Random(_Names.Length)]}";
         }
 
         public SilverPlatedTome(Serial serial)

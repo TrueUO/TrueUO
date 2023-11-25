@@ -1,7 +1,3 @@
-#region References
-using System;
-#endregion
-
 namespace Server.Items
 {
 	public class BaseMulti : Item
@@ -42,22 +38,7 @@ namespace Server.Items
 			}
 		}
 
-		[Obsolete("Replace with calls to OnLeave and OnEnter surrounding component invalidation.", true)]
-		public virtual void RefreshComponents()
-		{
-			if (Parent == null)
-			{
-				Map facet = Map;
-
-				if (facet != null)
-				{
-					facet.OnLeave(this);
-					facet.OnEnter(this);
-				}
-			}
-		}
-
-		public override int LabelNumber
+        public override int LabelNumber
 		{
 			get
 			{

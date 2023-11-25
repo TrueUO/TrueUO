@@ -62,11 +62,11 @@ namespace Server.Items
             {
                 TenthAnniversarySculpture sculpture = m_sculptures[index];
 
-                if (sculpture.RewardCooldown != null && sculpture.RewardCooldown.ContainsKey(from))
+                if (sculpture.RewardCooldown != null && sculpture.RewardCooldown.TryGetValue(from, out DateTime value))
                 {
                     if (!donemessage)
                     {
-                        TimeSpan left = sculpture.RewardCooldown[from] - DateTime.UtcNow;
+                        TimeSpan left = value - DateTime.UtcNow;
 
                         if (left.TotalHours > 1)
                         {

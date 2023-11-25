@@ -57,9 +57,9 @@ namespace Server
                 return 0;
             }
 
-            if (item.RootParent is Mobile m && _Table != null && _Table.ContainsKey(m))
+            if (item.RootParent is Mobile m && _Table != null && _Table.TryGetValue(m, out BerserkTimer value))
             {
-                return _Table[m].Level;
+                return value.Level;
             }
 
             return 1;

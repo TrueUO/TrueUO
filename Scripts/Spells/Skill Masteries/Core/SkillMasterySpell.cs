@@ -880,9 +880,9 @@ namespace Server.Spells.SkillMasteries
 
         public static List<SkillMasterySpell> GetSpells(Mobile m)
         {
-            if (m_Table != null && m_Table.ContainsKey(m))
+            if (m_Table != null && m_Table.TryGetValue(m, out List<SkillMasterySpell> value))
             {
-                return new List<SkillMasterySpell>(m_Table[m]);
+                return new List<SkillMasterySpell>(value);
             }
 
             return null;

@@ -41,16 +41,18 @@ namespace Server.Spells.Spellweaving
         {
             Timer.DelayCall(TimeSpan.FromSeconds(.25), () =>
                 {
-                    if (m_WeaponDamageTable.ContainsKey(attacker))
-                        AOS.Damage(target, attacker, m_WeaponDamageTable[attacker].m_Damage, 0, 100, 0, 0, 0);
+                    if (m_WeaponDamageTable.TryGetValue(attacker, out ImmolatingWeaponEntry value))
+                    {
+                        AOS.Damage(target, attacker, value.m_Damage, 0, 100, 0, 0, 0);
+                    }
                 });
         }
 
         public static void StopImmolating(Mobile mob)
         {
-            if (m_WeaponDamageTable.ContainsKey(mob))
+            if (m_WeaponDamageTable.TryGetValue(mob, out ImmolatingWeaponEntry value))
             {
-                StopImmolating(m_WeaponDamageTable[mob].m_Weapon, mob);
+                StopImmolating(value.m_Weapon, mob);
             }
         }
 

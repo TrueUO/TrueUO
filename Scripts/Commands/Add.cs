@@ -69,17 +69,17 @@ namespace Server.Commands
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.AppendFormat("{0} {1} building ", from.AccessLevel, CommandLogging.Format(from));
+            sb.Append($"{from.AccessLevel} {CommandLogging.Format(from)} building ");
 
             if (start == end)
-                sb.AppendFormat("at {0} in {1}", start, from.Map);
+                sb.Append($"at {start} in {from.Map}");
             else
-                sb.AppendFormat("from {0} to {1} in {2}", start, end, from.Map);
+                sb.Append($"from {start} to {end} in {from.Map}");
 
-            sb.Append(":");
+            sb.Append(':');
 
             for (int i = 0; i < args.Length; ++i)
-                sb.AppendFormat(" \"{0}\"", args[i]);
+                sb.Append($" \"{args[i]}\"");
 
             CommandLogging.WriteLine(from, sb.ToString());
 
@@ -357,7 +357,7 @@ namespace Server.Commands
                     {
                         IEntity built = Build(from, ctor, values, props, realProps, ref sendError);
 
-                        sb.AppendFormat("0x{0:X}; ", built.Serial.Value);
+                        sb.Append($"0x{built.Serial.Value:X}; ");
 
                         if (built is Item item)
                         {
@@ -386,7 +386,7 @@ namespace Server.Commands
 
                             IEntity built = Build(from, ctor, values, props, realProps, ref sendError);
 
-                            sb.AppendFormat("0x{0:X}; ", built.Serial.Value);
+                            sb.Append($"0x{built.Serial.Value:X}; ");
 
                             if (built is Item item)
                             {

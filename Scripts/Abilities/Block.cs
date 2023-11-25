@@ -37,8 +37,8 @@ namespace Server.Items
             if (targ == null || _Table == null)
                 return 0;
 
-            if (_Table.ContainsKey(targ))
-                return _Table[targ]._DCIBonus;
+            if (_Table.TryGetValue(targ, out BlockInfo value))
+                return value._DCIBonus;
 
             return 0;
         }
@@ -48,9 +48,9 @@ namespace Server.Items
             if (m == null || _Table == null)
                 return 0;
 
-            if (_Table.ContainsKey(m))
+            if (_Table.TryGetValue(m, out BlockInfo value))
             {
-                return _Table[m]._SpellReduction;
+                return value._SpellReduction;
             }
 
             return 0;
@@ -61,9 +61,9 @@ namespace Server.Items
             if (m == null || _Table == null)
                 return 0;
 
-            if (_Table.ContainsKey(m))
+            if (_Table.TryGetValue(m, out BlockInfo value))
             {
-                return _Table[m]._MeleeReduction;
+                return value._MeleeReduction;
             }
 
             return 0;
@@ -79,7 +79,7 @@ namespace Server.Items
             BlockInfo info = new BlockInfo(dciBonus, spellblock, meleeblock);
             _Table[m] = info;
 
-            string args = string.Format("{0}\t{1}\t{2}\t{3}\t{4}", dciBonus, spellblock, meleeblock, "15", "30");
+            string args = $"{dciBonus}\t{spellblock}\t{meleeblock}\t15\t30";
 
             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Block, 1151291, 1151292, TimeSpan.FromSeconds(6), m, args));
             // Next incoming damage reduced.<br>Defense Chance Increase: +~1_val~%<br>Incoming Spell Damage: -~2_val~%<br>Incoming Attack Damage: -~3_val~%<br>Hit Chance Penalty: ~4_val~%<br>Damage Penalty: ~5_val~%

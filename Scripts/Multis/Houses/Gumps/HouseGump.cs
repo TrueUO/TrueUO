@@ -341,7 +341,7 @@ namespace Server.Gumps
                         if (bonusStorage > 0)
                         {
                             AddHtmlLocalized(10, 150, 300, 20, 1072519, LabelColor, false, false); // Increased Storage
-                            AddLabel(310, 150, LabelHue, string.Format("{0}%", bonusStorage));
+                            AddLabel(310, 150, LabelHue, $"{bonusStorage}%");
                         }
 
                         AddHtmlLocalized(10, 170, 300, 20, 1060683, LabelColor, false, false); // Maximum Secure Storage

@@ -73,7 +73,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1151797, string.Format("{0}\t{1}", Items.Count, Capacity)); // Scrolls in book: ~1_val~/~2_val~
+            list.Add(1151797, $"{Items.Count}\t{Capacity}"); // Scrolls in book: ~1_val~/~2_val~
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)

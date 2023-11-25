@@ -86,12 +86,12 @@ namespace Server.Gumps
 
         public string Center(string text)
         {
-            return string.Format("<CENTER>{0}</CENTER>", text);
+            return $"<CENTER>{text}</CENTER>";
         }
 
         public string Color(string text, int color)
         {
-            return string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, text);
+            return $"<BASEFONT COLOR=#{color:X6}>{text}</BASEFONT>";
         }
 
         public void AddBlackAlpha(int x, int y, int width, int height)
@@ -107,21 +107,21 @@ namespace Server.Gumps
 
         public static string FormatTimeSpan(TimeSpan ts)
         {
-            return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D2}", ts.Days, ts.Hours % 24, ts.Minutes % 60, ts.Seconds % 60);
+            return $"{ts.Days:D2}:{ts.Hours % 24:D2}:{ts.Minutes % 60:D2}:{ts.Seconds % 60:D2}";
         }
 
         public static string FormatByteAmount(long totalBytes)
         {
             if (totalBytes > 1000000000)
-                return string.Format("{0:F1} GB", (double)totalBytes / 1073741824);
+                return $"{(double)totalBytes / 1073741824:F1} GB";
 
             if (totalBytes > 1000000)
-                return string.Format("{0:F1} MB", (double)totalBytes / 1048576);
+                return $"{(double)totalBytes / 1048576:F1} MB";
 
             if (totalBytes > 1000)
-                return string.Format("{0:F1} KB", (double)totalBytes / 1024);
+                return $"{(double)totalBytes / 1024:F1} KB";
 
-            return string.Format("{0} Bytes", totalBytes);
+            return $"{totalBytes} Bytes";
         }
 
         public static void Initialize()
@@ -628,7 +628,7 @@ namespace Server.Gumps
                             y += 20;
 
                             AddLabel(20, y, LabelHue, "Location:");
-                            AddLabel(200, y, LabelHue, string.Format("{0} [{1}]", m.Location, m.Map));
+                            AddLabel(200, y, LabelHue, $"{m.Location} [{m.Map}]");
                             y += 24;
                         }
 
@@ -920,7 +920,7 @@ namespace Server.Gumps
 
                                 double perc = remMinutes / totMinutes;
 
-                                AddLabel(250, 190, LabelHue, string.Format("{0} [{1:F0}%]", FormatTimeSpan(banDuration), perc * 100));
+                                AddLabel(250, 190, LabelHue, $"{FormatTimeSpan(banDuration)} [{perc * 100:F0}%]");
                             }
                         }
                         else if (a.Banned)
@@ -1125,7 +1125,7 @@ namespace Server.Gumps
 
                             AccountComment c = a.Comments[i];
 
-                            sb.AppendFormat("[{0} on {1}]<BR>{2}", c.AddedBy, c.LastModified, c.Content);
+                            sb.Append($"[{c.AddedBy} on {c.LastModified}]<BR>{c.Content}");
                         }
 
                         AddHtml(20, 180, 380, 190, sb.ToString(), true, true);
@@ -1155,7 +1155,7 @@ namespace Server.Gumps
 
                             AccountTag tag = a.Tags[i];
 
-                            sb.AppendFormat("{0} = {1}", tag.Name, tag.Value);
+                            sb.Append($"{tag.Name} = {tag.Value}");
                         }
 
                         AddHtml(20, 180, 380, 190, sb.ToString(), true, true);

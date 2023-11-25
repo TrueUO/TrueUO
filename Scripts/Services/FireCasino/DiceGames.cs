@@ -154,7 +154,7 @@ namespace Server.Engines.ResortAndCasino
         {
             base.BeginRollDice();
 
-            Player.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153375, string.Format("{0}\t{1}", CurrentBet.ToString(), BettingOn.ToString()), Player.NetState); // *bets ~1_AMT~ chips on ~2_PROP~*
+            Player.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153375, $"{CurrentBet}\t{BettingOn}", Player.NetState); // *bets ~1_AMT~ chips on ~2_PROP~*
         }
 
         public override void OnDiceRolled()
@@ -165,11 +165,11 @@ namespace Server.Engines.ResortAndCasino
 
             int matches = GetMatches();
 
-            Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153391, string.Format("{0}\t{1}\t{2}", Roll[0], Roll[1], Roll[2]), Player.NetState); // *rolls the dice; they land on ~1_FIRST~ ~2_SECOND~ ~3_THIRD~*
+            Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153391, $"{Roll[0]}\t{Roll[1]}\t{Roll[2]}", Player.NetState); // *rolls the dice; they land on ~1_FIRST~ ~2_SECOND~ ~3_THIRD~*
 
             if (matches == 0)
             {
-                Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153376, string.Format("{0}\t{1}", Player.Name, CurrentBet.ToString(CultureInfo.GetCultureInfo("en-US"))), Player.NetState); // *rakes in ~1_NAME~'s ~2_VAL~-chip bet*
+                Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153376, $"{Player.Name}\t{CurrentBet.ToString(CultureInfo.GetCultureInfo("en-US"))}", Player.NetState); // *rakes in ~1_NAME~'s ~2_VAL~-chip bet*
             }
             else
             {
@@ -178,7 +178,7 @@ namespace Server.Engines.ResortAndCasino
 
                 Winner = true;
                 OnWin();
-                Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153377, string.Format("{0}\t{1}", Player.Name, winnings.ToString(CultureInfo.GetCultureInfo("en-US"))), Player.NetState); // *pays out ~2_VAL~ chips to ~1_NAME~*
+                Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153377, $"{Player.Name}\t{winnings.ToString(CultureInfo.GetCultureInfo("en-US"))}", Player.NetState); // *pays out ~2_VAL~ chips to ~1_NAME~*
             }
         }
 
@@ -218,7 +218,7 @@ namespace Server.Engines.ResortAndCasino
         {
             base.BeginRollDice();
 
-            Player.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153375, string.Format("{0}\t{1}", CurrentBet.ToString(), ((HighMiddleLowType)BettingOn).ToString()), Player.NetState); // *bets ~1_AMT~ chips on ~2_PROP~*
+            Player.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153375, $"{CurrentBet}\t{(HighMiddleLowType)BettingOn}", Player.NetState); // *bets ~1_AMT~ chips on ~2_PROP~*
         }
 
         public override void OnDiceRolled()
@@ -236,7 +236,7 @@ namespace Server.Engines.ResortAndCasino
                 int total = Roll[0] + Roll[1] + Roll[2];
                 int winnings = 0;
 
-                Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153391, string.Format("{0}\t{1}\t{2}", Roll[0], Roll[1], Roll[2]), Player.NetState); // *rolls the dice; they land on ~1_FIRST~ ~2_SECOND~ ~3_THIRD~*
+                Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153391, $"{Roll[0]}\t{Roll[1]}\t{Roll[2]}", Player.NetState); // *rolls the dice; they land on ~1_FIRST~ ~2_SECOND~ ~3_THIRD~*
 
                 switch (BetType)
                 {
@@ -257,11 +257,11 @@ namespace Server.Engines.ResortAndCasino
                     Winner = true;
                     OnWin();
 
-                    Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153377, string.Format("{0}\t{1}", Player.Name, winnings.ToString(CultureInfo.GetCultureInfo("en-US"))), Player.NetState); // *pays out ~2_VAL~ chips to ~1_NAME~*
+                    Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153377, $"{Player.Name}\t{winnings.ToString(CultureInfo.GetCultureInfo("en-US"))}", Player.NetState); // *pays out ~2_VAL~ chips to ~1_NAME~*
                 }
                 else
                 {
-                    Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153376, string.Format("{0}\t{1}", Player.Name, CurrentBet.ToString(CultureInfo.GetCultureInfo("en-US"))), Player.NetState); // *rakes in ~1_NAME~'s ~2_VAL~-chip bet*
+                    Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153376, $"{Player.Name}\t{CurrentBet.ToString(CultureInfo.GetCultureInfo("en-US"))}", Player.NetState); // *rakes in ~1_NAME~'s ~2_VAL~-chip bet*
                 }
             }
         }
@@ -344,7 +344,7 @@ namespace Server.Engines.ResortAndCasino
             if (RollNumber == 1)
             {
                 RollDice(3);
-                Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153391, string.Format("{0}\t{1}\t{2}", GetRoll(0), GetRoll(1), GetRoll(2)), Player.NetState); // *rolls the dice; they land on ~1_FIRST~ ~2_SECOND~ ~3_THIRD~*
+                Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153391, $"{GetRoll(0)}\t{GetRoll(1)}\t{GetRoll(2)}", Player.NetState); // *rolls the dice; they land on ~1_FIRST~ ~2_SECOND~ ~3_THIRD~*
             }
             else
             {
@@ -376,11 +376,11 @@ namespace Server.Engines.ResortAndCasino
                     WinningTotal = winnings;
                     PointsSystem.CasinoData.AwardPoints(Player, winnings);
 
-                    Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153377, string.Format("{0}\t{1}", Player.Name, winnings.ToString(CultureInfo.GetCultureInfo("en-US"))), Player.NetState); // *pays out ~2_VAL~ chips to ~1_NAME~*
+                    Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153377, $"{Player.Name}\t{winnings.ToString(CultureInfo.GetCultureInfo("en-US"))}", Player.NetState); // *pays out ~2_VAL~ chips to ~1_NAME~*
                 }
                 else
                 {
-                    Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153376, string.Format("{0}\t{1}", Player.Name, TotalBet.ToString(CultureInfo.GetCultureInfo("en-US"))), Player.NetState); // *rakes in ~1_NAME~'s ~2_VAL~-chip bet*
+                    Dealer.PrivateOverheadMessage(MessageType.Regular, 0x35, 1153376, $"{Player.Name}\t{TotalBet.ToString(CultureInfo.GetCultureInfo("en-US"))}", Player.NetState); // *rakes in ~1_NAME~'s ~2_VAL~-chip bet*
                 }
             }
             else

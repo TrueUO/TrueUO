@@ -40,9 +40,9 @@ namespace Server.Spells.Chivalry
                 Caster.Stam = Caster.StamMax;
                 Timer t;
 
-                if (m_Table.ContainsKey(Caster))
+                if (m_Table.TryGetValue(Caster, out Timer value))
                 {
-                    t = m_Table[Caster];
+                    t = value;
 
                     t?.Stop();
                 }

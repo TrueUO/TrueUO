@@ -66,7 +66,7 @@ namespace Server.SkillHandlers
 
                     if (map != null)
                     {
-                        string message = string.Format("You notice {0} peeking into your belongings!", from.Name);
+                        string message = $"You notice {from.Name} peeking into your belongings!";
 
                         root.Send(new AsciiMessage(-1, -1, MessageType.Label, 946, 3, "", message));
                     }

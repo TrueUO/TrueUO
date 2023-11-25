@@ -218,7 +218,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1154248, "#{0}", 1154249 + (int)m_Type); // The Plate is Inscribed: ~1_CLUE~
+            list.Add(1154248, $"#{1154249 + (int)m_Type}"); // The Plate is Inscribed: ~1_CLUE~
         }
 
         public override void OnDoubleClick(Mobile from)

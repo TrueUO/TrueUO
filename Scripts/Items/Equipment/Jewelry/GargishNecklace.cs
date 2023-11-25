@@ -192,7 +192,7 @@ namespace Server.Items
         {
             if (GemType != GemType.None)
             {
-                list.Add(1159019, string.Format("#{0}", GemLocalization())); // ~1_type~ gargish octopus necklace
+                list.Add(1159019, $"#{GemLocalization()}"); // ~1_type~ gargish octopus necklace
             }
             else
             {

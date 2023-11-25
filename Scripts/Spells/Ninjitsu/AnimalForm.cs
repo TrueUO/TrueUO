@@ -179,9 +179,9 @@ namespace Server.Spells.Ninjitsu
 
         public int GetLastAnimalForm(Mobile m)
         {
-            if (m_LastAnimalForms.ContainsKey(m))
+            if (m_LastAnimalForms.TryGetValue(m, out int value))
             {
-                return m_LastAnimalForms[m];
+                return value;
             }
 
             return -1;
@@ -350,8 +350,10 @@ namespace Server.Spells.Ninjitsu
 
         public static AnimalFormContext GetContext(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
-                return m_Table[m];
+            if (m_Table.TryGetValue(m, out AnimalFormContext value))
+            {
+                return value;
+            }
 
             return null;
         }

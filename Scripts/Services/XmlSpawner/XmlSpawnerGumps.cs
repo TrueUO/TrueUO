@@ -137,7 +137,7 @@ namespace Server.Mobiles
             // Add sequential spawn state
             if (m_Spawner.SequentialSpawn >= 0)
             {
-                AddLabel(15, 365, 33, string.Format("{0}", m_Spawner.SequentialSpawn));
+                AddLabel(15, 365, 33, $"{m_Spawner.SequentialSpawn}");
             }
 
             // Add Current / Max count labels
@@ -447,7 +447,7 @@ namespace Server.Mobiles
                                 SpawnObjects.Add(new XmlSpawner.SpawnObject(from, m_Spawner, str, 0));
                             }
                             else
-                                m_Spawner.status_str = string.Format("{0} is not a valid type name.", str);
+                                m_Spawner.status_str = $"{str} is not a valid type name.";
                             //from.SendMessage( "{0} is not a valid type name.", str );
                         }
 
@@ -918,7 +918,7 @@ namespace Server.Mobiles
 
                             m_Spawner.m_TextEntryBook.Add(book);
 
-                            book.Title = string.Format("Entry {0}", index);
+                            book.Title = $"Entry {index}";
                             book.Author = m_Spawner.Name;
 
                             // fill the contents of the book with the current text entry data

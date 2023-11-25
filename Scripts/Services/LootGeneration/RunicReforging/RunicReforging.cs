@@ -1712,7 +1712,7 @@ namespace Server.Items
             }
             else
             {
-                list.Add(1151758, string.Format("{0}\t#{1}", name, GetSuffixName(suffix)));// ~1_ITEM~ of ~2_SUFFIX~
+                list.Add(1151758, $"{name}\t#{GetSuffixName(suffix)}");// ~1_ITEM~ of ~2_SUFFIX~
             }
         }
 
@@ -3307,7 +3307,7 @@ namespace Server.Items
                 }
             }
 
-            SpawnerPersistence.ToConsole(string.Format("Cleauned up {0} items: {1} fc2, {2} non-Armor eater, {3} non armor casting focus, {4} brittle jewels converted to Antique.", fc2 + eater + focus + brittle, fc2, eater, focus, brittle));
+            SpawnerPersistence.ToConsole($"Cleauned up {fc2 + eater + focus + brittle} items: {fc2} fc2, {eater} non-Armor eater, {focus} non armor casting focus, {brittle} brittle jewels converted to Antique.");
         }
         #endregion
     }

@@ -23,7 +23,7 @@ namespace Server.Engines.VeteranRewards
             AddHtmlLocalized(30, 55, 300, 35, 1006000, 0x43FF, false, false); // You have selected:
 
             if (entry.NameString != null)
-                AddHtml(335, 55, 150, 35, string.Format("<BASEFONT COLOR=#ffff84>{0}</BASEFONT>", entry.NameString), false, false);
+                AddHtml(335, 55, 150, 35, $"<BASEFONT COLOR=#ffff84>{entry.NameString}</BASEFONT>", false, false);
             else
                 AddHtmlLocalized(335, 55, 150, 35, entry.Name, 0x7FF0, false, false);
 

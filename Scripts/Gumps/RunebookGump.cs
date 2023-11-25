@@ -88,11 +88,11 @@ namespace Server.Gumps
 
             if (e.Type == RecallRuneType.Ship)
             {
-                loc = string.Format("Aboard {0}", e.Description.Substring(e.Description.IndexOf(",") + 2));
+                loc = $"Aboard {e.Description.Substring(e.Description.IndexOf(",") + 2)}";
             }
             else if (Sextant.Format(e.Location, e.Map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
             {
-                loc = string.Format("{0}o {1}'{2}, {3}o {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
+                loc = $"{yLat}o {yMins}'{(ySouth ? "S" : "N")}, {xLong}o {xMins}'{(xEast ? "E" : "W")}";
             }
             else
             {
@@ -316,7 +316,7 @@ namespace Server.Gumps
 
             if (Sextant.Format(e.Location, e.Map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
             {
-                from.SendAsciiMessage(string.Format("{0}o {1}'{2}, {3}o {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W"));
+                from.SendAsciiMessage($"{yLat}o {yMins}'{(ySouth ? "S" : "N")}, {xLong}o {xMins}'{(xEast ? "E" : "W")}");
             }
         }
 

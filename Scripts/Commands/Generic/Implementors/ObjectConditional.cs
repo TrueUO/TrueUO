@@ -93,7 +93,7 @@ namespace Server.Commands.Generic
             Type objectType = ScriptCompiler.FindTypeByName(args[offset + index], true);
 
             if (objectType == null)
-                throw new Exception(string.Format("No type with that name ({0}) was found.", args[offset + index]));
+                throw new Exception($"No type with that name ({args[offset + index]}) was found.");
 
             ++index;
 
@@ -219,7 +219,7 @@ namespace Server.Commands.Generic
                 }
 
                 if (condition == null)
-                    throw new InvalidOperationException(string.Format("Unrecognized operator (\"{0}\").", oper));
+                    throw new InvalidOperationException($"Unrecognized operator (\"{oper}\").");
 
                 current.Add(condition);
             }
