@@ -2476,9 +2476,8 @@ namespace Server
 
 		public virtual void Serialize(GenericWriter writer)
 		{
-			writer.Write(14); // version
+			writer.Write(15); // version
 
-			// 14
 			writer.Write(Sockets != null ? Sockets.Count : 0);
 
 			if (Sockets != null)
@@ -2490,15 +2489,8 @@ namespace Server
                 }
             }
 
-			// 13: Merge sync
-			// 12: Light no longer backed by Direction
-
-			// 11
 			writer.Write(m_GridLocation);
 
-			// 10: Honesty moved to ItemSockets
-
-			// 9
 			SaveFlag flags = SaveFlag.None;
 
 			int x = m_Location.m_X, y = m_Location.m_Y, z = m_Location.m_Z;
@@ -2763,11 +2755,6 @@ namespace Server
 				writer.WriteEncodedInt((int)implFlags);
 			}
 
-			if (GetSaveFlag(flags, SaveFlag.InsuredFor))
-			{
-				writer.Write((Mobile)null);
-			}
-
 			if (GetSaveFlag(flags, SaveFlag.BlessedFor))
 			{
 				writer.Write(info.m_BlessedFor);
@@ -2961,35 +2948,26 @@ namespace Server
 
 			switch (version)
 			{
+                case 15:
 				case 14:
-				int socketCount = reader.ReadInt();
+                {
+                    int socketCount = reader.ReadInt();
 
-				for (int i = 0; i < socketCount; i++)
-				{
-					ItemSocket.Load(this, reader);
-				}
+                    for (int i = 0; i < socketCount; i++)
+                    {
+                        ItemSocket.Load(this, reader);
+                    }
 
-				goto case 13;
-				case 13:
+                    goto case 13;
+                }
+                case 13:
 				case 12:
 				case 11:
-				m_GridLocation = reader.ReadByte();
-				goto case 10;
-				case 10:
-				{
-					// Honesty removed to ItemSockets
-					if (version < 14)
-					{
-						reader.ReadDateTime();
-						reader.ReadBool();
-						reader.ReadMobile();
-						reader.ReadString();
-
-						HonestyItem = reader.ReadBool();
-					}
-
-					goto case 9;
-				}
+                {
+                    m_GridLocation = reader.ReadByte();
+                    goto case 10;
+                }
+                case 10:
 				case 9:
 				case 8:
 				case 7:
@@ -2997,25 +2975,18 @@ namespace Server
 				{
 					SaveFlag flags = (SaveFlag)reader.ReadInt();
 
-					if (version < 7)
-					{
-						LastMoved = reader.ReadDeltaTime();
-					}
-					else
-					{
-						int minutes = reader.ReadEncodedInt();
+                    int minutes = reader.ReadEncodedInt();
 
-						try
-						{
-							LastMoved = DateTime.UtcNow - TimeSpan.FromMinutes(minutes);
-						}
-						catch
-						{
-							LastMoved = DateTime.UtcNow;
-						}
-					}
+                    try
+                    {
+                        LastMoved = DateTime.UtcNow - TimeSpan.FromMinutes(minutes);
+                    }
+                    catch
+                    {
+                        LastMoved = DateTime.UtcNow;
+                    }
 
-					if (GetSaveFlag(flags, SaveFlag.Direction))
+                    if (GetSaveFlag(flags, SaveFlag.Direction))
 					{
 						m_Direction = (Direction)reader.ReadByte();
 					}
@@ -3023,10 +2994,6 @@ namespace Server
 					if (GetSaveFlag(flags, SaveFlag.Light))
 					{
 						m_Light = (LightType)reader.ReadByte();
-					}
-					else if (version < 12)
-					{
-						m_Light = (LightType)m_Direction;
 					}
 
 					if (GetSaveFlag(flags, SaveFlag.Bounce))
@@ -3139,7 +3106,7 @@ namespace Server
 						}
 					}
 
-					if (version < 8 || !GetSaveFlag(flags, SaveFlag.NullWeight))
+					if (!GetSaveFlag(flags, SaveFlag.NullWeight))
 					{
 						double weight;
 
@@ -3203,11 +3170,11 @@ namespace Server
 						m_Flags = (ImplFlag)reader.ReadEncodedInt();
 					}
 
-					if (GetSaveFlag(flags, SaveFlag.InsuredFor))
-					{
-						/*m_InsuredFor = */
-						reader.ReadMobile();
-					}
+                    if (version < 15 && GetSaveFlag(flags, SaveFlag.InsuredFor))
+                    {
+                        /*m_InsuredFor = */
+                        reader.ReadMobile();
+                    }
 
 					if (GetSaveFlag(flags, SaveFlag.BlessedFor))
 					{
@@ -3391,7 +3358,7 @@ namespace Server
 
 					break;
 				}
-				case 4: // Just removed variables
+				case 4: 
 				case 3:
 				{
 					m_Direction = (Direction)reader.ReadInt();
@@ -3407,7 +3374,7 @@ namespace Server
 				}
 				case 1:
 				{
-					m_LootType = (LootType)reader.ReadByte(); //m_Newbied = reader.ReadBool();
+					m_LootType = (LootType)reader.ReadByte(); 
 
 					goto case 0;
 				}
@@ -3479,22 +3446,9 @@ namespace Server
 						AcquireCompactInfo().m_Weight = weight;
 					}
 
-					if (version <= 3)
-					{
-						reader.ReadInt();
-						reader.ReadInt();
-						reader.ReadInt();
-					}
-
 					m_Map = reader.ReadMap();
 					SetFlag(ImplFlag.Visible, reader.ReadBool());
 					SetFlag(ImplFlag.Movable, reader.ReadBool());
-
-					if (version <= 3)
-					{
-						/*m_Deleted =*/
-						reader.ReadBool();
-					}
 
 					Stackable = reader.ReadBool();
 
