@@ -63,8 +63,6 @@ namespace Server
 
 	public abstract class GenericWriter : IDisposable
 	{
-		public abstract void Close();
-
 		public abstract long Position { get; }
 
         public abstract void WriteObjectType(object value);
@@ -120,10 +118,14 @@ namespace Server
 
         public void Dispose()
         {
-            Close();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
-	}
+
+        protected virtual void Dispose(bool disposing)
+        {
+        }
+    }
     
 	public class BinaryFileWriter : GenericWriter
 	{
@@ -182,15 +184,17 @@ namespace Server
 			}
 		}
 
-		public override void Close()
-		{
-			if (m_Index > 0)
-			{
-				Flush();
-			}
+        protected override void Dispose(bool disposing)
+        {
+            if (m_Index > 0)
+            {
+                Flush();
+            }
+           
+            m_File.Close();
 
-			m_File.Close();
-		}
+            base.Dispose(disposing);
+        }
 
 		public override void WriteEncodedInt(int value)
 		{
