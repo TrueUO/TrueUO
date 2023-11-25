@@ -136,6 +136,7 @@ namespace Server.SkillHandlers
         private static readonly bool RegionTracking = Config.Get("Tracking.RegionTracking", false);
         private static readonly bool CustomTargetNumbers = Config.Get("Tracking.CustomTargetNumbers", false);
         private static readonly bool NotifyPlayer = Config.Get("Tracking.NotifyPlayer", false);
+        private static readonly int UpdateArrowRange = Config.Get("Tracking.ArrowShowRange", 200);
 
         private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>
         {
@@ -259,6 +260,22 @@ namespace Server.SkillHandlers
                 AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, name, false, false);
             }
         }
+        private static bool PlayerRegionDetector(TrackTypeDelegate check, Mobile from, Mobile m, int range)
+        {
+            return (m != null &&
+            m != from &&
+            m.Map == from.Map &&
+            m.Alive &&
+            m.AccessLevel == AccessLevel.Player &&
+            from.InOverworld == m.InOverworld &&
+            from.InLostLands == m.InLostLands &&
+            check(m) &&
+            (CheckDifficulty(from, m) || m.InLOS(from)) &&
+            ReachableTarget(from, m, range) &&
+            !(m.Region is Engines.CannedEvil.ChampionSpawnRegion csr
+                && csr.Map == Map.Felucca
+                && csr.ChampionSpawn.GetMobileCurrentDamage(m) > 1000));
+        }
 
         public static void DisplayTo(bool success, Mobile from, int type)
         {
@@ -291,16 +308,15 @@ namespace Server.SkillHandlers
 
                 if (type == 3)
                 {
-                    list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != null
-                            && m != from
-                            && m.Map == from.Map
-                            && m.Alive
-                            && m.AccessLevel == AccessLevel.Player
-                            && check(m)
-                            && CheckDifficulty(from, m)
-                            && ReachableTarget(from, m, range)
-                            && !(m.Region is Engines.CannedEvil.ChampionSpawnRegion csr && csr.Map == Map.Felucca && csr.ChampionSpawn.GetMobileCurrentDamage(m) > 1000))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
+
+                    list = NetState.Instances.AsParallel().Select(m => m.Mobile)
+                        .Where(m =>
+                            PlayerRegionDetector(check, from, m, range)
+                        )
+                        .OrderBy(x => x.GetDistanceToSqrt(from))
+                        .Select(x => x)
+                        .Take(TotalTargetsBySkill(from))
+                        .ToList();
                 }
                 else
                 {
@@ -311,7 +327,7 @@ namespace Server.SkillHandlers
                             && m.Alive
                             && m.AccessLevel == AccessLevel.Player
                             && check(m)
-                            && CheckDifficulty(from, m)
+                            && (CheckDifficulty(from, m) || m.InLOS(from))
                             && ReachableTarget(from, m, range))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
@@ -327,7 +343,7 @@ namespace Server.SkillHandlers
                         && m.Alive
                         && m.AccessLevel == AccessLevel.Player
                         && check(m)
-                        && CheckDifficulty(from, m)
+                        && (CheckDifficulty(from, m) || m.InLOS(from))
                         && (m.IsPlayer() && NonPlayerRangeMultiplier == 1 ? m.InRange(from, range / NonPlayerRangeMultiplier) : m.InRange(from, range)))
                     {
                         list.Add(m);
@@ -376,14 +392,15 @@ namespace Server.SkillHandlers
 
                 if (RegionTracking)
                 {
-                    m_From.QuestArrow = new TrackArrow(m_From, m, m_Range);
+                    m_From.QuestArrow = new TrackArrow(m_From, m, m_Range, UpdateArrowRange);
                 }
                 else
                 {
-                    m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier));
+                    int range = m_Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier);
+                    m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier), range);
                 }
 
-                if (NotifyPlayer && m.Player)
+                if (NotifyPlayer && m.Player && !m_From.InLOS(m.Player))
                 {
                     m.SendLocalizedMessage(1042971, "Your presence has been detected in this area."); // ~1_NOTHING~
                 }
@@ -421,9 +438,9 @@ namespace Server.SkillHandlers
                 return 20;
             }
 
-            if (totalTargets < 1)
+            if (totalTargets < 3)
             {
-                return 1;
+                return 3;
             }
 
             return totalTargets;
@@ -589,13 +606,17 @@ namespace Server.SkillHandlers
 
         private static bool IsAnimal(Mobile m)
         {
-            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
+            return ((m.Body.IsAnimal && !m.Player) ||
+                    (m.Body.IsAnimal && m.Player && TrackNecroAsMonster))
+                    && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsMonster(Mobile m)
         {
-            return (!m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m)) &&
-                   !(m.Region.IsPartOf<Regions.HouseRegion>() && m is PlayerVendor);
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster
+                || (m.Body.IsMonster && !m.Player
+                || TrackedNecro(m))
+                && !(m.Region.IsPartOf<Regions.HouseRegion>() && m is PlayerVendor);
         }
 
         private static bool IsHumanNPC(Mobile m)
@@ -605,12 +626,12 @@ namespace Server.SkillHandlers
 
         private static bool IsPlayer(Mobile m)
         {
-            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal && !TrackedNecro(m) && !TrackedThief(m);
+            return m.Player && !TrackedNecro(m) && !TrackedThief(m) && !m.Region.IsPartOf<Regions.HouseRegion>();
         }
 
         private static bool TrackedNecro(Mobile m)
         {
-            return TrackNecroAsMonster && TransformationSpellHelper.UnderTransformation(m);
+            return TrackNecroAsMonster && (TransformationSpellHelper.UnderTransformation(m) || (m.Body.IsMonster && m.Player));
         }
 
         private static bool TrackedThief(Mobile m)
@@ -653,10 +674,12 @@ namespace Server.SkillHandlers
     {
         private readonly Timer m_Timer;
         private Mobile m_From;
+        private readonly int arrowShowRange;
 
-        public TrackArrow(Mobile from, IEntity target, int range)
+        public TrackArrow(Mobile from, IEntity target, int range, int arrowRange)
             : base(from, target)
         {
+            arrowShowRange = arrowRange;
             m_From = from;
             m_Timer = new TrackTimer(from, target, range, this);
             m_Timer.Start();
@@ -683,6 +706,12 @@ namespace Server.SkillHandlers
                 Tracking.ClearTrackingInfo(m_From);
             }
         }
+
+        public void TrackUpdate(int distance)
+        {
+            if (arrowShowRange > distance)
+                this.Update();
+        }
     }
 
     public class TrackTimer : Timer
@@ -691,30 +720,50 @@ namespace Server.SkillHandlers
         private static readonly bool KeepMarkerOnRangeLost = Config.Get("Tracking.KeepMarkerOnRangeLost", true);
 
         private readonly Mobile m_From;
-        private readonly IEntity m_Target;
+        private readonly Mobile m_Target;
         private readonly int m_Range;
 
-        private readonly QuestArrow m_Arrow;
-        private int p_LastX, p_LastY, m_LastX, m_LastY, m_LastDistance, m_newDistance;
+        private readonly TrackArrow m_Arrow;
+        private Point3D tracker_Last, trackee_Last;
+        private int m_newDistance;
 
-        public TrackTimer(Mobile from, IEntity target, int range, QuestArrow arrow)
-            : base(TimeSpan.FromSeconds(0.25), TimeSpan.FromSeconds(2.5))
+        public TrackTimer(Mobile from, IEntity target, int range, TrackArrow arrow)
+            : base(TimeSpan.FromSeconds(0.25), TimeSpan.FromSeconds(1))
         {
             m_From = from;
-            m_Target = target;
+            m_Target = target as Mobile;
             m_Range = range;
             m_Arrow = arrow;
-            p_LastX = m_From.Location.X;
-            p_LastY = m_From.Location.Y;
+            tracker_Last = m_From.Location;
+            trackee_Last = m_Target.Location;
 
-            if (RegionTracking)
-            {
-                m_LastDistance = Math.Max(Math.Abs(m_Target.Location.Y - m_From.Location.Y), Math.Abs(m_Target.Location.X - m_From.Location.X));
-            }
+        }
+
+        private bool CanTrackTarget()
+        {
+            if (m_Target == null)
+                return false;
+
+            return IsInRegion() ||
+                    m_Target.GetDistanceToSqrt(trackee_Last) > 10 ||
+                    m_Target.AccessLevel > AccessLevel.Player;
+        }
+
+        private bool IsInRegion()
+        {
+            return RegionTracking && (!(m_Target.InOverworld && m_From.InOverworld) ||
+                        (m_Target.InOverworld != m_From.InOverworld) ||
+                        (m_Target.InLostLands != m_From.InLostLands));
         }
 
         protected override void OnTick()
         {
+            if (m_Target == null)
+            {
+                Stop();
+                return;
+            }
+
             if (RegionTracking)
             {
                 m_newDistance = Math.Max(Math.Abs(m_Target.Location.Y - m_From.Location.Y), Math.Abs(m_Target.Location.X - m_From.Location.X));
@@ -729,9 +778,9 @@ namespace Server.SkillHandlers
             if (m_From.Deleted
                 || m_Target.Deleted
                 || m_From.Map != m_Target.Map
-                || RegionTracking && m_Target is Mobile mt && m_From.TopRegion != mt.TopRegion && Math.Abs(m_LastDistance - m_newDistance) > 20
-                || !RegionTracking && !m_From.InRange(m_Target, m_Range)
-                || m_Target is Mobile m && m.Hidden && m.AccessLevel > AccessLevel.Player)
+                || (!RegionTracking && !m_From.InRange(m_Target, m_Range))
+                || CanTrackTarget()
+                )
             {
                 if (!KeepMarkerOnRangeLost)
                 {
@@ -744,19 +793,15 @@ namespace Server.SkillHandlers
                 return;
             }
 
-            if (p_LastX != m_From.Location.X || p_LastY != m_From.Location.Y || m_LastX != m_Target.Location.X || m_LastY != m_Target.Location.Y)
+            if (tracker_Last.X != m_From.Location.X ||
+                tracker_Last.Y != m_From.Location.Y ||
+                trackee_Last.X != m_Target.Location.X ||
+                trackee_Last.Y != m_Target.Location.Y)
             {
-                m_LastX = m_Target.Location.X;
-                m_LastY = m_Target.Location.Y;
-                p_LastX = m_From.Location.X;
-                p_LastY = m_From.Location.Y;
+                trackee_Last = m_Target.Location;
+                tracker_Last = m_From.Location;
 
-                if (RegionTracking)
-                {
-                    m_LastDistance = m_newDistance;
-                }
-
-                m_Arrow.Update();
+                m_Arrow.TrackUpdate(m_newDistance);
             }
         }
     }
