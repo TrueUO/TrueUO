@@ -75,9 +75,9 @@ namespace Server.Items
 
         public static ReforgingContext GetContext(Mobile m)
         {
-            if (ReforgingContexts.ContainsKey(m))
+            if (ReforgingContexts.TryGetValue(m, out ReforgingContext value))
             {
-                return ReforgingContexts[m];
+                return value;
             }
 
             return new ReforgingContext(m);

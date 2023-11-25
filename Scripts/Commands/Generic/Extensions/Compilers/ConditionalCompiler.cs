@@ -172,11 +172,7 @@ namespace Server.Commands.Generic
                     }
                     else
                     {
-                        throw new InvalidOperationException(
-                            string.Format(
-                                "Unable to convert string \"{0}\" into type '{1}'.",
-                                m_Value,
-                                m_Type));
+                        throw new InvalidOperationException($"Unable to convert string \"{m_Value}\" into type '{m_Type}'.");
                     }
                 }
             }

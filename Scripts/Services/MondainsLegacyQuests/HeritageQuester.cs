@@ -248,7 +248,7 @@ namespace Server.Engines.Quests
 
         public static HeritageQuester Pending(Mobile m)
         {
-            return m_Pending.ContainsKey(m) ? m_Pending[m] : null;
+            return m_Pending.TryGetValue(m, out HeritageQuester value) ? value : null;
         }
 
         public static void Say(Mobile m, object message)

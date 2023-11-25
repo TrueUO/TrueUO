@@ -34,23 +34,22 @@ namespace Server.Items
 
         public static void Remove(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
+            if (m_Table.TryGetValue(m, out ForceOfNatureTimer value))
             {
-                m_Table[m].Stop();
+                value.Stop();
+
                 m_Table.Remove(m);
             }
         }
 
         public static void OnHit(Mobile from, Mobile target)
         {
-            if (m_Table.ContainsKey(from))
+            if (m_Table.TryGetValue(from, out ForceOfNatureTimer value))
             {
-                ForceOfNatureTimer t = m_Table[from];
+                value.Hits++;
+                value.LastHit = DateTime.UtcNow;
 
-                t.Hits++;
-                t.LastHit = DateTime.UtcNow;
-
-                if (t.Hits % 12 == 0)
+                if (value.Hits % 12 == 0)
                 {
                     int duration = target.Skills[SkillName.MagicResist].Value >= 90.0 ? 1 : 2;
                     target.Paralyze(TimeSpan.FromSeconds(duration));
@@ -58,7 +57,7 @@ namespace Server.Items
                     target.FixedEffect(0x376A, 9, 32);
                     target.PlaySound(0x204);
 
-                    t.Hits = 0;
+                    value.Hits = 0;
 
                     from.SendLocalizedMessage(1004013); // You successfully stun your opponent!
                     target.SendLocalizedMessage(1004014); // You have been stunned!
@@ -68,16 +67,11 @@ namespace Server.Items
 
         public static double GetDamageScalar(Mobile from, Mobile target)
         {
-            if (m_Table.ContainsKey(from))
+            if (m_Table.TryGetValue(from, out ForceOfNatureTimer value) && value.Target == target)
             {
-                ForceOfNatureTimer t = m_Table[from];
+                double bonus = Math.Min(100, Math.Max(50, from.Str - 50));
 
-                if (t.Target == target)
-                {
-                    double bonus = Math.Min(100, Math.Max(50, from.Str - 50));
-
-                    return (100 + bonus) / 100;
-                }
+                return (100 + bonus) / 100;
             }
 
             return 1.0;

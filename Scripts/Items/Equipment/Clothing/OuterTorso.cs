@@ -1071,7 +1071,7 @@ namespace Server.Items
             base.AddCraftedProperties(list);
 
             if (IsArcane)
-                list.Add(1061837, "{0}\t{1}", m_CurArcaneCharges, m_MaxArcaneCharges); // arcane charges: ~1_val~ / ~2_val~
+                list.Add(1061837, $"{m_CurArcaneCharges}\t{m_MaxArcaneCharges}"); // arcane charges: ~1_val~ / ~2_val~
         }
 
         public void Flip()

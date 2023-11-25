@@ -285,12 +285,12 @@ namespace Server.Items
 
                 AddImage(0, 0, 0xA9C);
                 AddImage(85, 18, 0xA9D);
-                AddHtml(163, 45, 150, 70, string.Format("<BASEFONT COLOR=#000080><DIV ALIGN=CENTER>The Tale of {0}</DIV></BASEFONT>", Misc.ServerList.ServerName), false, false);
-                AddHtml(100, 120, 270, 20, string.Format("<BASEFONT COLOR=#15156A><DIV ALIGN=CENTER>{0}</DIV></BASEFONT>", PageOfLore.GetStoryName(book.Story)), false, false);
-                AddHtml(115, 145, 250, 126, string.Format("<BASEFONT COLOR=#1F1F1F>{0}</BASEFONT>", content.ArticlePart1), false, false);
-                AddHtml(115, 275, 250, 126, string.Format("<BASEFONT COLOR=#1F1F1F>{0}</BASEFONT>", content.ArticlePart2), false, false);
+                AddHtml(163, 45, 150, 70, $"<BASEFONT COLOR=#000080><DIV ALIGN=CENTER>The Tale of {Misc.ServerList.ServerName}</DIV></BASEFONT>", false, false);
+                AddHtml(100, 120, 270, 20, $"<BASEFONT COLOR=#15156A><DIV ALIGN=CENTER>{PageOfLore.GetStoryName(book.Story)}</DIV></BASEFONT>", false, false);
+                AddHtml(115, 145, 250, 126, $"<BASEFONT COLOR=#1F1F1F>{content.ArticlePart1}</BASEFONT>", false, false);
+                AddHtml(115, 275, 250, 126, $"<BASEFONT COLOR=#1F1F1F>{content.ArticlePart2}</BASEFONT>", false, false);
                 AddButton(200, 420, 0x15E3, 0x15E7, 11001, GumpButtonType.Reply, 0);
-                AddHtml(110, 419, 250, 18, string.Format("<BASEFONT COLOR=#1F1F1F><DIV ALIGN=CENTER>{0}</DIV></BASEFONT>", Page.ToString()), false, false);
+                AddHtml(110, 419, 250, 18, $"<BASEFONT COLOR=#1F1F1F><DIV ALIGN=CENTER>{Page}</DIV></BASEFONT>", false, false);
                 AddButton(250, 420, 0x15E1, 0x15E5, 11000, GumpButtonType.Reply, 0);
 
                 AddImage(435, 52, content.BGumpID);

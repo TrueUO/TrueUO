@@ -530,7 +530,7 @@ namespace Server.Items
                         }
                     }
 
-                    return string.Format("{0}'s ship, the {1}", ownername, shipname);
+                    return $"{ownername}'s ship, the {shipname}";
                 }
 
                 return m_Description;

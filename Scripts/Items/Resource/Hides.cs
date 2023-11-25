@@ -71,7 +71,7 @@ namespace Server.Items
         public override void AddNameProperty(ObjectPropertyList list)
         {
             if (Amount > 1)
-                list.Add(1050039, "{0}\t#{1}", Amount, 1024216); // ~1_NUMBER~ ~2_ITEMNAME~
+                list.Add(1050039, $"{Amount}\t#{1024216}"); // ~1_NUMBER~ ~2_ITEMNAME~
             else
                 list.Add(1024216); // pile of hides
         }

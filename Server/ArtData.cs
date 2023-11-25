@@ -1,20 +1,14 @@
-#region References
 using System;
 using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-#endregion
 
 namespace Server
 {
 	public static class ArtData
 	{
-#if MONO
-		public const PixelFormat PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
-#else
 		public const PixelFormat PixelFormat = System.Drawing.Imaging.PixelFormat.Format16bppArgb1555;
-#endif
 
 		private static readonly FileIndex m_FileIndex;
 
@@ -81,65 +75,12 @@ namespace Server
 			return (int)(m_FileIndex.IdxLength / 12);
 		}
 
-		public static Bitmap GetStatic(int index, int hue, bool onlyHueGrayPixels)
-		{
-			return GetStatic(index, hue, onlyHueGrayPixels, out _, true);
-		}
-
-		public static Bitmap GetStatic(int index, int hue, bool onlyHueGrayPixels, out bool patched)
-		{
-			return GetStatic(index, hue, onlyHueGrayPixels, out patched, true);
-		}
-
-		public static Bitmap GetStatic(int index, int hue, bool onlyHueGrayPixels, bool checkmaxid)
-		{
-			return GetStatic(index, hue, onlyHueGrayPixels, out _, checkmaxid);
-		}
-
-		public static Bitmap GetStatic(int index, int hue, bool onlyHueGrayPixels, out bool patched, bool checkmaxid)
-		{
-			try
-			{
-				var orig = GetStatic(index, out patched);
-
-				if (orig == null)
-					return null;
-
-				var image = new Bitmap(orig);
-
-				HueData.ApplyTo(image, hue, onlyHueGrayPixels);
-
-				return image;
-			}
-			catch (Exception e)
-			{
-				patched = false;
-
-				if (Core.Debug)
-				{
-					Console.WriteLine($"[Ultima]: ArtData.GetStatic({nameof(index)}:{index}, {nameof(hue)}:{hue}, {nameof(onlyHueGrayPixels)}:{onlyHueGrayPixels}, ...)\n{e}");
-				}
-
-				return null;
-			}
-		}
-
-		public static Bitmap GetStatic(int index)
+        public static Bitmap GetStatic(int index)
 		{
 			return GetStatic(index, out _, true);
 		}
 
-		public static Bitmap GetStatic(int index, out bool patched)
-		{
-			return GetStatic(index, out patched, true);
-		}
-
-		public static Bitmap GetStatic(int index, bool checkmaxid)
-		{
-			return GetStatic(index, out _, checkmaxid);
-		}
-
-		public static Bitmap GetStatic(int index, out bool patched, bool checkmaxid)
+        public static Bitmap GetStatic(int index, out bool patched, bool checkmaxid)
 		{
 			try
 			{

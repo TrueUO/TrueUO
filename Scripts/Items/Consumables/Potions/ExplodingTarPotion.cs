@@ -38,7 +38,7 @@ namespace Server.Items
 
             if (delay > 0)
             {
-                from.SendLocalizedMessage(1072529, string.Format("{0}\t{1}", delay, delay > 1 ? "seconds." : "second.")); // You cannot use that for another ~1_NUM~ ~2_TIMEUNITS~
+                from.SendLocalizedMessage(1072529, $"{delay}\t{(delay > 1 ? "seconds." : "second.")}"); // You cannot use that for another ~1_NUM~ ~2_TIMEUNITS~
                 return;
             }
 
@@ -147,14 +147,9 @@ namespace Server.Items
                 _Delay = new Dictionary<Mobile, Timer>();
             }
 
-            if (_Delay.ContainsKey(m))
+            if (_Delay.TryGetValue(m, out Timer value) && value != null)
             {
-                Timer timer = _Delay[m];
-
-                if (timer != null)
-                {
-                    timer.Stop();
-                }
+                value.Stop();
             }
 
             _Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(120), EndDelay_Callback, m);
@@ -162,13 +157,11 @@ namespace Server.Items
 
         public static int GetDelay(Mobile m)
         {
-            if (_Delay != null && _Delay.ContainsKey(m))
+            if (_Delay != null && _Delay.TryGetValue(m, out Timer value))
             {
-                Timer timer = _Delay[m];
-
-                if (timer != null && timer.Next > DateTime.UtcNow)
+                if (value != null && value.Next > DateTime.UtcNow)
                 {
-                    return (int)(timer.Next - DateTime.UtcNow).TotalSeconds;
+                    return (int)(value.Next - DateTime.UtcNow).TotalSeconds;
                 }
             }
 

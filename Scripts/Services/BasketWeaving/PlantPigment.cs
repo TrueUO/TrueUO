@@ -57,12 +57,12 @@ namespace Server.Items
             if (Amount > 1)
             {
                 cliloc = info.IsBright() ? 1113271 : 1113270;
-                list.Add(cliloc, string.Format("{0}\t#{1}", Amount.ToString(), info.Name));
+                list.Add(cliloc, $"{Amount}\t#{info.Name}");
             }
             else
             {
                 cliloc = info.IsBright() ? 1112134 : 1112133;
-                list.Add(cliloc, string.Format("#{0}", info.Name));
+                list.Add(cliloc, $"#{info.Name}");
             }
         }
 

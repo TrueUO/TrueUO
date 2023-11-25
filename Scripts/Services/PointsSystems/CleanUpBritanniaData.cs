@@ -42,9 +42,9 @@ namespace Server.Engines.Points
 
             Type type = item.GetType();
 
-            if (Entries.ContainsKey(type))
+            if (Entries.TryGetValue(type, out double value))
             {
-                points = Entries[type];
+                points = value;
 
                 if (item is SOS sos && sos.IsAncient)
                     points = 2500;
@@ -892,7 +892,7 @@ namespace Server.Engines.Points
                 PointsExchange[a.Username] = 0;
                 AwardPoints(m, points, false, false);
 
-                m.SendLocalizedMessage(1158453, string.Format("{0}\t{1}", points.ToString("N0"), ((int)GetPoints(m)).ToString("N0"))); // You have withdrawn ~1_VALUE~ Cleanup Britannia Points.  You now have ~2_VALUE~ points.
+                m.SendLocalizedMessage(1158453, $"{points:N0}\t{(int)GetPoints(m):N0}"); // You have withdrawn ~1_VALUE~ Cleanup Britannia Points.  You now have ~2_VALUE~ points.
                 return true;
             }
 

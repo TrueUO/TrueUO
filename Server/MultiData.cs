@@ -24,9 +24,9 @@ namespace Server
 
 			multiID &= 0x3FFF; // The value of the actual multi is shifted by 0x4000, so this is left alone.
 
-			if (m_Components.ContainsKey(multiID))
+			if (m_Components.TryGetValue(multiID, out MultiComponentList value))
 			{
-				mcl = m_Components[multiID];
+				mcl = value;
 			}
 			else if (!UsingUOPFormat)
 			{

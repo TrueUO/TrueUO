@@ -266,7 +266,7 @@ namespace Server.Mobiles
 
         public override void BuildBody()
         {
-            Name = string.Format("{0} the {1} warrior", GetRandomName(), TribeType.ToString());
+            Name = $"{GetRandomName()} the {TribeType} warrior";
 
             SetStr(150);
             SetDex(150);
@@ -466,7 +466,7 @@ namespace Server.Mobiles
 
         public override void BuildBody()
         {
-            Name = string.Format("{0} the {1} shaman", GetRandomName(), TribeType.ToString());
+            Name = $"{GetRandomName()} the {TribeType} shaman";
 
             SetStr(125);
             SetDex(75, 100);
@@ -622,7 +622,7 @@ namespace Server.Mobiles
 
         public override void BuildBody()
         {
-            Name = string.Format("{0} the {1} {2}", GetRandomName(), TribeType.ToString(), Female ? "chieftess" : "chieftan");
+            Name = $"{GetRandomName()} the {TribeType} {(Female ? "chieftess" : "chieftan")}";
 
             SetStr(200);
             SetDex(2000);

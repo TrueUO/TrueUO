@@ -95,35 +95,33 @@ namespace Server.Commands
 
                     if (attr == null)
                     {
-                        failReason = string.Format("Property '{0}' not found.", propertyName);
+                        failReason = $"Property '{propertyName}' not found.";
                         return null;
                     }
 
                     if ((access & PropertyAccess.Read) != 0 && m.AccessLevel < attr.ReadLevel)
                     {
-                        failReason = string.Format(
-                            "You must be at least {0} to get the property '{1}'.", Mobile.GetAccessLevelName(attr.ReadLevel), propertyName);
+                        failReason = $"You must be at least {Mobile.GetAccessLevelName(attr.ReadLevel)} to get the property '{propertyName}'.";
 
                         return null;
                     }
 
                     if ((access & PropertyAccess.Write) != 0 && m.AccessLevel < attr.WriteLevel)
                     {
-                        failReason = string.Format(
-                            "You must be at least {0} to set the property '{1}'.", Mobile.GetAccessLevelName(attr.WriteLevel), propertyName);
+                        failReason = $"You must be at least {Mobile.GetAccessLevelName(attr.WriteLevel)} to set the property '{propertyName}'.";
 
                         return null;
                     }
 
                     if ((access & PropertyAccess.Read) != 0 && !p.CanRead)
                     {
-                        failReason = string.Format("Property '{0}' is write only.", propertyName);
+                        failReason = $"Property '{propertyName}' is write only.";
                         return null;
                     }
 
                     if ((access & PropertyAccess.Write) != 0 && (!p.CanWrite || attr.ReadOnly) && isFinal)
                     {
-                        failReason = string.Format("Property '{0}' is read only.", propertyName);
+                        failReason = $"Property '{propertyName}' is read only.";
                         return null;
                     }
 
@@ -137,7 +135,7 @@ namespace Server.Commands
                     continue;
                 }
 
-                failReason = string.Format("Property '{0}' not found.", propertyName);
+                failReason = $"Property '{propertyName}' not found.";
                 return null;
             }
 
@@ -174,7 +172,7 @@ namespace Server.Commands
                     continue;
                 }
 
-                failReason = string.Format("Property '{0}' is null.", chain[i]);
+                failReason = $"Property '{chain[i]}' is null.";
                 return null;
             }
 
@@ -284,7 +282,7 @@ namespace Server.Commands
 
             if (realProps.Length == 1)
             {
-                return string.Format("The property has been {0}.", positive ? "increased." : "decreased");
+                return $"The property has been {(positive ? "increased." : "decreased")}.";
             }
 
             if (positive || negative)
@@ -292,7 +290,7 @@ namespace Server.Commands
                 return "The properties have been changed.";
             }
 
-            return string.Format("The properties have been {0}.", "decreased");
+            return "The properties have been decreased.";
         }
 
         public static string SetValue(Mobile m, object o, string name, string value)
@@ -586,13 +584,11 @@ namespace Server.Commands
             }
             else if (IsString(type))
             {
-                toString = (string)value == "null" ? @"@""null""" : string.Format("\"{0}\"", value);
+                toString = (string)value == "null" ? @"@""null""" : $"\"{value}\"";
             }
             else if (IsIDynamicEnum(type))
             {
-                toString = ((IDynamicEnum)value).Value == "null"
-                               ? @"@""null"""
-                               : string.Format("\"{0}\"", ((IDynamicEnum)value).Value);
+                toString = ((IDynamicEnum)value).Value == "null" ? @"@""null""" : $"\"{((IDynamicEnum)value).Value}\"";
             }
             else if (IsText(type))
             {
@@ -605,7 +601,7 @@ namespace Server.Commands
 
             if (chain == null)
             {
-                return string.Format("{0} = {1}", p.Name, toString);
+                return $"{p.Name} = {toString}";
             }
 
             string[] concat = new string[chain.Length * 2 + 1];
@@ -735,7 +731,7 @@ namespace Server
     public sealed class UnknownPropertyException : BindingException
     {
         public UnknownPropertyException(Property property, string current)
-            : base(property, string.Format("Property '{0}' not found.", current))
+            : base(property, $"Property '{current}' not found.")
         { }
     }
 
@@ -773,13 +769,7 @@ namespace Server
         public AccessLevel NeededAccess { get; protected set; }
 
         public ClearanceException(Property property, AccessLevel playerAccess, AccessLevel neededAccess, string accessType)
-            : base(
-                property,
-                string.Format(
-                    "You must be at least {0} to {1} this property, you are currently {2}.",
-                    Mobile.GetAccessLevelName(neededAccess),
-                    accessType,
-                    Mobile.GetAccessLevelName(playerAccess)))
+            : base(property, $"You must be at least {Mobile.GetAccessLevelName(neededAccess)} to {accessType} this property, you are currently {Mobile.GetAccessLevelName(playerAccess)}.")
         { }
     }
 

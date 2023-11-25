@@ -104,7 +104,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
+            list.Add(1115189, $"#{LabelNumber}"); // moonstone ~1_NAME~
         }
 
         public override void OnMapChange()
@@ -152,7 +152,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
+            list.Add(1115189, $"#{LabelNumber}"); // moonstone ~1_NAME~
         }
 
         public override void OnMapChange()
@@ -200,7 +200,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
+            list.Add(1115189, $"#{LabelNumber}"); // moonstone ~1_NAME~
         }
 
         public override void OnMapChange()
@@ -248,7 +248,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
+            list.Add(1115189, $"#{LabelNumber}"); // moonstone ~1_NAME~
         }
 
         public override void OnMapChange()

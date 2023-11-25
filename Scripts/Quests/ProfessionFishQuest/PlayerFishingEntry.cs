@@ -45,8 +45,10 @@ namespace Server.Engines.Quests
 
         public static PlayerFishingEntry GetEntry(Mobile from, bool create)
         {
-            if (m_FishingEntries.ContainsKey(from))
-                return m_FishingEntries[from];
+            if (m_FishingEntries.TryGetValue(from, out PlayerFishingEntry value))
+            {
+                return value;
+            }
 
             if (create)
             {
@@ -144,10 +146,14 @@ namespace Server.Engines.Quests
                     break;
             }
 
-            if (m_HaveFished.ContainsKey(index))
-                amount = m_HaveFished[index];
+            if (m_HaveFished.TryGetValue(index, out int value))
+            {
+                amount = value;
+            }
             else
+            {
                 amount = 10;
+            }
         }
 
         public void OnQuestResign(Type type)

@@ -133,10 +133,7 @@ namespace Server.Guilds
         {
             TextDefinition[] defs = new TextDefinition[aryLength];
 
-            string name = string.Format("{0} {1}{2}",
-                pm.Name,
-                Engines.VvV.ViceVsVirtueSystem.IsVvV(pm) ? "VvV" : "",
-                (player.GuildFealty == pm && player.GuildFealty != guild.Leader) ? " *" : "");
+            string name = $"{pm.Name} {(Engines.VvV.ViceVsVirtueSystem.IsVvV(pm) ? "VvV" : "")}{(player.GuildFealty == pm && player.GuildFealty != guild.Leader ? " *" : "")}";
 
             if (pm == player)
                 name = Color(name, 0x006600);

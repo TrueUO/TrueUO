@@ -36,9 +36,9 @@ namespace Server.Spells.Spellweaving
             {
                 StopAbsorbing(defender, true);
             }
-            else if (m_Table.ContainsKey(defender))
+            else if (m_Table.TryGetValue(defender, out ExpireTimer value))
             {
-                BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.AttuneWeapon, 1075798, m_Table[defender].Expires - DateTime.UtcNow, defender, defender.MeleeDamageAbsorb.ToString()));
+                BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.AttuneWeapon, 1075798, value.Expires - DateTime.UtcNow, defender, defender.MeleeDamageAbsorb.ToString()));
             }
         }
 

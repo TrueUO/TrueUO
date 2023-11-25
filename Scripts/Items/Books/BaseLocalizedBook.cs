@@ -94,11 +94,11 @@ namespace Server.Items
 
                     if ((i + 1) % 2 == 0)
                     {
-                        AddLabel(90, 200, 0x0, string.Format(" {0}", i + 1));
+                        AddLabel(90, 200, 0x0, $" {i + 1}");
                     }
                     else
                     {
-                        AddLabel(250, 200, 0x0, string.Format("      {0}", i + 1));
+                        AddLabel(250, 200, 0x0, $"      {i + 1}");
                     }
 
                     if (page < pages)

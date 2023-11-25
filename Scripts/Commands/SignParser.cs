@@ -150,7 +150,7 @@ namespace Server.Commands
                 if (map == Map.Malas) return 4;
                 if (map == Map.Tokuno) return 5;
                 if (map == Map.TerMur) return 6;
-                throw new ArgumentException(string.Format("Unhandled map {0}", map.Name));
+                throw new ArgumentException($"Unhandled map {map.Name}");
             }
 
             public static List<SignEntry> LoadConfig(string path)
@@ -188,9 +188,7 @@ namespace Server.Commands
                 {
                     foreach (SignEntry sign in signs)
                     {
-                        string line = string.Format("{0} {1} {2} {3} {4} {5}", sign.m_Map,
-                            sign.m_ItemID, sign.m_Location.X, sign.m_Location.Y,
-                            sign.m_Location.Z, sign.m_Text);
+                        string line = $"{sign.m_Map} {sign.m_ItemID} {sign.m_Location.X} {sign.m_Location.Y} {sign.m_Location.Z} {sign.m_Text}";
                         op.WriteLine(line);
                     }
                 }

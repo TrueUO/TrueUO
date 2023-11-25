@@ -771,7 +771,7 @@ namespace Server.Items
             string name = Name;
 
             if (name == null)
-                name = string.Format("#{0}", LabelNumber);
+                name = $"#{LabelNumber}";
 
             return name;
         }
@@ -845,9 +845,9 @@ namespace Server.Items
                     int prefix = RunicReforging.GetPrefixName(m_ReforgedPrefix);
 
                     if (m_ReforgedSuffix == ReforgedSuffix.None)
-                        list.Add(1151757, string.Format("#{0}\t{1}", prefix, GetNameString())); // ~1_PREFIX~ ~2_ITEM~
+                        list.Add(1151757, $"#{prefix}\t{GetNameString()}"); // ~1_PREFIX~ ~2_ITEM~
                     else
-                        list.Add(1151756, string.Format("#{0}\t{1}\t#{2}", prefix, GetNameString(), RunicReforging.GetSuffixName(m_ReforgedSuffix))); // ~1_PREFIX~ ~2_ITEM~ of ~3_SUFFIX~
+                        list.Add(1151756, $"#{prefix}\t{GetNameString()}\t#{RunicReforging.GetSuffixName(m_ReforgedSuffix)}"); // ~1_PREFIX~ ~2_ITEM~ of ~3_SUFFIX~
                 }
                 else if (m_ReforgedSuffix != ReforgedSuffix.None)
                 {
@@ -855,7 +855,7 @@ namespace Server.Items
                 }
             }
             else if (oreType != 0)
-                list.Add(1053099, "#{0}\t{1}", oreType, GetNameString()); // ~1_oretype~ ~2_armortype~
+                list.Add(1053099, $"#{oreType}\t{GetNameString()}"); // ~1_oretype~ ~2_armortype~
             else if (Name == null)
                 list.Add(LabelNumber);
             else

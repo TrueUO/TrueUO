@@ -161,7 +161,7 @@ namespace Server.Items
                     list.Add(1150829 + (int)item.Alignment); // Set Ability: good healing burst
                     break;
                 case SurgeType.Stam: // NOTE: This doesn't exist on EA, but put it in here anyways!
-                    list.Add(1149953, string.Format("{0}\t{1}", "Set Ability", item.Alignment == Alignment.Evil ? "evil stamina burst" : "good stamina burst"));
+                    list.Add(1149953, $"Set Ability\t{(item.Alignment == Alignment.Evil ? "evil stamina burst" : "good stamina burst")}");
                     break;
                 default:
                 case SurgeType.Mana:

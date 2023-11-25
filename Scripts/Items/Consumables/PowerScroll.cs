@@ -94,7 +94,9 @@ namespace Server.Items
                 return 0;
             }
         }
-        public override string DefaultTitle => string.Format("<basefont color=#FFFFFF>Power Scroll ({0} Skill):</basefont>", Value);
+
+        public override string DefaultTitle => $"<basefont color=#FFFFFF>Power Scroll ({Value} Skill):</basefont>";
+
         public static PowerScroll CreateRandom(int min, int max)
         {
             min /= 5;

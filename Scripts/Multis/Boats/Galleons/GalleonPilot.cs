@@ -297,7 +297,7 @@ namespace Server.Mobiles
                         m_From.SendLocalizedMessage(1116592, left != TimeSpan.Zero ? left.TotalMinutes.ToString() : "0"); // Your ship is underway with emergency repairs holding for an estimated ~1_TIME~ more minutes.
                     }
                     else if (!g.TryEmergencyRepair(m_From))
-                        m_From.SendLocalizedMessage(1116591, string.Format("{0}\t{1}", BaseBoat.EmergencyRepairClothCost.ToString(), BaseBoat.EmergencyRepairWoodCost)); //You need a minimum of ~1_CLOTH~ yards of cloth and ~2_WOOD~ pieces of lumber to effect emergency repairs.
+                        m_From.SendLocalizedMessage(1116591, $"{BaseBoat.EmergencyRepairClothCost}\t{BaseBoat.EmergencyRepairWoodCost}"); //You need a minimum of ~1_CLOTH~ yards of cloth and ~2_WOOD~ pieces of lumber to effect emergency repairs.
                 }
             }
         }
@@ -480,9 +480,9 @@ namespace Server.Mobiles
                 if (string.IsNullOrEmpty(Galleon.ShipName))
                     nameStr = "an unnamed ship";
                 else
-                    nameStr = string.Format("the {0}", Galleon.ShipName);
+                    nameStr = $"the {Galleon.ShipName}";
 
-                list.Add(string.Format("{0} the Pilot of {1}", Name, nameStr));
+                list.Add($"{Name} the Pilot of {nameStr}");
             }
             else
                 base.AddNameProperties(list);

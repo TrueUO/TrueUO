@@ -254,7 +254,7 @@ namespace Server.Mobiles
 
                 if (m_Message.String != null)
                 {
-                    string message = string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, ConstructString(herald, null));
+                    string message = $"<BASEFONT COLOR=#{color:X6}>{ConstructString(herald, null)}</BASEFONT>";
 
                     return new GumpHtml(x, y, width, height, message, false, false);
                 }
@@ -271,7 +271,7 @@ namespace Server.Mobiles
                     args = Construct(herald, visitor, m_Arguments[0]);
 
                     for (int i = 1; i < m_Arguments.Length; i++)
-                        args = string.Format("{0}\t{1}", args, Construct(herald, visitor, m_Arguments[i]));
+                        args = $"{args}\t{Construct(herald, visitor, m_Arguments[i])}";
                 }
 
                 return args;

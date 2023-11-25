@@ -134,11 +134,11 @@ namespace Server.Mobiles
                             for (int i = 0; i < dice; i++)
                             {
                                 int roll = Utility.Random(faces) + 1;
-                                text = string.Format("{0}{1}{2}", text, i > 0 ? " " : "", roll);
+                                text = $"{text}{(i > 0 ? " " : "")}{roll}";
                                 sum += roll;
                             }
 
-                            m_Dealer.Say(1076071, string.Format("{0}\t{1}\t{2}\t{3}\t{4}", sender.Mobile.Name, dice, faces, text, sum)); // ~1_NAME~ rolls ~2_DICE~d~3_FACES~: ~4_ROLLS~ (Total: ~5_TOTAL~)
+                            m_Dealer.Say(1076071, $"{sender.Mobile.Name}\t{dice}\t{faces}\t{text}\t{sum}"); // ~1_NAME~ rolls ~2_DICE~d~3_FACES~: ~4_ROLLS~ (Total: ~5_TOTAL~)
                         }
 
                         if (m_Dealer.m_Count > 0 && DateTime.UtcNow - m_Dealer.m_NextUse < TimeSpan.FromSeconds(m_Dealer.m_Count))

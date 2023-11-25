@@ -138,7 +138,7 @@ namespace Server.Items
 
         public string GetDirectionString(Direction d)
         {
-            return string.Format("#{0}", 1152639 + (int)d);
+            return $"#{1152639 + (int)d}";
         }
 
         public static bool HasSchool(Mobile m)

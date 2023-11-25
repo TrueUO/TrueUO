@@ -64,7 +64,7 @@ namespace Server.Engines.CityLoyalty
             }
 
             list.Add(1154023, City.Treasury > 0 ? City.Treasury.ToString("N0", CultureInfo.GetCultureInfo("en-US")) : City.Treasury.ToString()); // City Treasury Balance: ~1_AMT~
-            list.Add(1154059, string.Format("#{0}", City.ActiveTradeDeal == TradeDeal.None ? 1011051 : (int)City.ActiveTradeDeal - 12)); // Current Trade Deal: ~1_GUILD~
+            list.Add(1154059, $"#{(City.ActiveTradeDeal == TradeDeal.None ? 1011051 : (int)City.ActiveTradeDeal - 12)}"); // Current Trade Deal: ~1_GUILD~
             list.Add(1154907, City.CompletedTrades.ToString(CultureInfo.GetCultureInfo("en-US"))); // Trade Orders Delivered: ~1_val~
         }
 

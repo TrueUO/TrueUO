@@ -1857,7 +1857,7 @@ namespace Server.Multis
 
             if (wood < minWood || cloth < minCloth)
             {
-                from.SendLocalizedMessage(1116593, string.Format("{0}\t{1}", ((int)minCloth).ToString(), ((int)minWood).ToString())); //You need a minimum of ~1_CLOTH~ yards of cloth and ~2_WOOD~ pieces of lumber to effect repairs to this ship.
+                from.SendLocalizedMessage(1116593, $"{(int)minCloth}\t{(int)minWood}"); //You need a minimum of ~1_CLOTH~ yards of cloth and ~2_WOOD~ pieces of lumber to effect repairs to this ship.
                 return;
             }
 
@@ -1974,7 +1974,7 @@ namespace Server.Multis
                 m_EmergencyRepairTimer = null;
             }
 
-            string args = string.Format("{0}\t{1}\t{2}", ((int)clothTemp).ToString(), ((int)woodTemp).ToString(), ((int)Durability).ToString());
+            string args = $"{(int)clothTemp}\t{(int)woodTemp}\t{(int)Durability}";
             from.SendLocalizedMessage(1116598, args); //You effect permanent repairs using ~1_CLOTH~ yards of cloth and ~2_WOOD~ pieces of lumber. The ship is now ~3_DMGPCT~% repaired.
         }
 

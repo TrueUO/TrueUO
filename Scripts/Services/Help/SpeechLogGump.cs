@@ -36,7 +36,7 @@ namespace Server.Engines.Help
             string playerName = player.Name;
             string playerAccount = player.Account is Account ? player.Account.Username : "???";
 
-            AddHtml(10, 10, 280, 20, string.Format("<basefont color=#A0A0FF><center>SPEECH LOG - {0} (<i>{1}</i>)</center></basefont>", playerName, Utility.FixHtml(playerAccount)), false, false);
+            AddHtml(10, 10, 280, 20, $"<basefont color=#A0A0FF><center>SPEECH LOG - {playerName} (<i>{Utility.FixHtml(playerAccount)}</i>)</center></basefont>", false, false);
 
             int lastPage = (log.Count - 1) / MaxEntriesPerPage;
 
@@ -66,7 +66,7 @@ namespace Server.Engines.Help
                     if (i != min)
                         builder.Append("<br>");
 
-                    builder.AppendFormat("<u>{0}</u> (<i>{1}</i>): {2}", name, Utility.FixHtml(account), Utility.FixHtml(speech));
+                    builder.Append($"<u>{name}</u> (<i>{Utility.FixHtml(account)}</i>): {Utility.FixHtml(speech)}");
                 }
 
                 sLog = builder.ToString();
@@ -77,7 +77,7 @@ namespace Server.Engines.Help
             if (page > 0)
                 AddButton(10, 395, 0xFAE, 0xFB0, 1, GumpButtonType.Reply, 0); // Previous page
 
-            AddLabel(45, 395, 0x481, string.Format("Current page: {0}/{1}", page + 1, lastPage + 1));
+            AddLabel(45, 395, 0x481, $"Current page: {page + 1}/{lastPage + 1}");
 
             if (page < lastPage)
                 AddButton(261, 395, 0xFA5, 0xFA7, 2, GumpButtonType.Reply, 0); // Next page

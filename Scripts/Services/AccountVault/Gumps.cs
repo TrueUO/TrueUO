@@ -83,11 +83,11 @@ namespace Server.AccountVault
             AddHtmlLocalized(55, 141, 360, 22, tokens ? 1157983 : 1157979, 0x90D, false, false); // Deposit Vault Token into Vault Rent Account : Deposit Gold into Vault Rent Account
             if (tokens)
             {
-                AddTooltip(string.Format("Transfers purchased vault tokens from the player to the vault rent account; capped at {0} tokens. Tokens added to the vault rent account will be used for auto payments of the vault rent.", SystemSettings.MaxBalance.ToString("N0", CultureInfo.GetCultureInfo("en-US"))));
+                AddTooltip($"Transfers purchased vault tokens from the player to the vault rent account; capped at {SystemSettings.MaxBalance.ToString("N0", CultureInfo.GetCultureInfo("en-US"))} tokens. Tokens added to the vault rent account will be used for auto payments of the vault rent.");
             }
             else
             {
-                AddTooltip(string.Format("Transfers gold from the player's bank to the vault rent account; capped at {0} gold. Funds added to the vault rent account will be used for auto payments of the vault rent.", SystemSettings.MaxBalance.ToString("N0", CultureInfo.GetCultureInfo("en-US"))));
+                AddTooltip($"Transfers gold from the player's bank to the vault rent account; capped at {SystemSettings.MaxBalance.ToString("N0", CultureInfo.GetCultureInfo("en-US"))} gold. Funds added to the vault rent account will be used for auto payments of the vault rent.");
             }
             AddButton(15, 141, 0xFA5, 0xFA6, 102, GumpButtonType.Reply, 0);
 

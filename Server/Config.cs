@@ -242,7 +242,7 @@ namespace Server
 
 				if (io < 0)
 				{
-					throw new FormatException(string.Format("Bad format at line {0}", i + 1));
+					throw new FormatException($"Bad format at line {i + 1}");
 				}
 
 				string key = line.Substring(0, io);
@@ -250,7 +250,7 @@ namespace Server
 
 				if (string.IsNullOrWhiteSpace(key))
 				{
-					throw new NullReferenceException(string.Format("Key can not be null at line {0}", i + 1));
+					throw new NullReferenceException($"Key can not be null at line {i + 1}");
 				}
 
 				key = key.Trim();
@@ -262,7 +262,7 @@ namespace Server
 
 				Entry e = new Entry(info.FullName, idx++, scope, string.Join(string.Empty, desc), key, val, useDef);
 
-				_Entries[string.Format("{0}.{1}", e.Scope, e.Key)] = e;
+				_Entries[$"{e.Scope}.{e.Key}"] = e;
 
 				desc.Clear();
 			}
@@ -320,7 +320,7 @@ namespace Server
                             line.Clear();
                         }
 
-                        line.AppendFormat("{0} ", word);
+                        line.Append($"{word} ");
                     }
 
                     if (line.Length > 0)

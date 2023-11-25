@@ -182,24 +182,30 @@ namespace Server.Spells.Mysticism
 
         public static AosWeaponAttribute BonusAttribute(Mobile from)
         {
-            if (Table.ContainsKey(from))
-                return Table[from].WeaponAttribute;
+            if (Table.TryGetValue(from, out EnchantmentTimer value))
+            {
+                return value.WeaponAttribute;
+            }
 
             return AosWeaponAttribute.HitColdArea;
         }
 
         public static int BonusValue(Mobile from)
         {
-            if (Table.ContainsKey(from))
-                return Table[from].AttributeValue;
+            if (Table.TryGetValue(from, out EnchantmentTimer value))
+            {
+                return value.AttributeValue;
+            }
 
             return 0;
         }
 
         public static bool CastingMalus(Mobile from, BaseWeapon weapon)
         {
-            if (Table.ContainsKey(from))
-                return Table[from].CastingMalus > 0;
+            if (Table.TryGetValue(from, out EnchantmentTimer value))
+            {
+                return value.CastingMalus > 0;
+            }
 
             return false;
         }

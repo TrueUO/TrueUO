@@ -620,7 +620,7 @@ namespace Server.Mobiles
                             m_SpawnObjects.Add(new SpawnObject(str, 1));
                         }
                         else
-                            status_str = string.Format("{0} is not a valid type name.", str);
+                            status_str = $"{str} is not a valid type name.";
                     }
 
                     InvalidateProperties();
@@ -1759,30 +1759,30 @@ namespace Server.Mobiles
 
             if (m_Group)
             {
-                list.Add(1060658 + 6 - nlist_items, "group\t{0}", m_Group); // ~1_val~: ~2_val~
+                list.Add(1060658 + 6 - nlist_items, $"group\t{m_Group}"); // ~1_val~: ~2_val~
                 nlist_items--;
             }
 
             if (m_Team != 0)
             {
-                list.Add(1060658 + 6 - nlist_items, "team\t{0}", m_Team); // ~1_val~: ~2_val~
+                list.Add(1060658 + 6 - nlist_items, $"team\t{m_Team}"); // ~1_val~: ~2_val~
                 nlist_items--;
             }
 
-            list.Add(1060658 + 6 - nlist_items, "speed\t{0} to {1}", m_MinDelay, m_MaxDelay); // ~1_val~: ~2_val~
+            list.Add(1060658 + 6 - nlist_items, $"speed\t{m_MinDelay} to {m_MaxDelay}"); // ~1_val~: ~2_val~
             nlist_items--;
 
             // display the duration parameter in the prop gump if it is non-zero
             if (m_Duration > TimeSpan.FromMinutes(0))
             {
-                list.Add(1060658 + 6 - nlist_items, "Duration\t{0}", m_Duration);
+                list.Add(1060658 + 6 - nlist_items, $"Duration\t{m_Duration}");
                 nlist_items--;
             }
 
             // display the proximity range parameter in the prop gump if it is active
             if (m_ProximityRange != -1)
             {
-                list.Add(1060658 + 6 - nlist_items, "ProximityRange\t{0}", m_ProximityRange);
+                list.Add(1060658 + 6 - nlist_items, $"ProximityRange\t{m_ProximityRange}");
                 nlist_items--;
             }
 
@@ -3117,8 +3117,7 @@ namespace Server.Mobiles
             int spawners_deleted = 0;
 
             if (from != null)
-                from.SendMessage(string.Format("UnLoading {0} objects{1} from file {2}.",
-                    "XmlSpawner", !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, filename));
+                from.SendMessage($"UnLoading {"XmlSpawner"} objects{(!string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty)} from file {filename}.");
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -3445,8 +3444,7 @@ namespace Server.Mobiles
             Map relativemap = null;
 
             if (from != null)
-                from.SendMessage(string.Format("Loading {0} objects{1} from file {2}.", "XmlSpawner",
-                    !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, filename));
+                from.SendMessage($"Loading {"XmlSpawner"} objects{(!string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty)} from file {filename}.");
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -3493,7 +3491,7 @@ namespace Server.Mobiles
                         if (loadnew)
                         {
                             // append the new id to the name
-                            SpawnName = string.Format("{0}-{1}", SpawnName, newloadid);
+                            SpawnName = $"{SpawnName}-{newloadid}";
                         }
 
                         // Check if there is any spawner name criteria specified on the load
@@ -4465,7 +4463,7 @@ namespace Server.Mobiles
                                 // if this is a new load then assume that it will be referring to another newly loaded object so append the newloadid
                                 if (loadnew)
                                 {
-                                    string tmpsetObjectName = string.Format("{0}-{1}", namestr, newloadid);
+                                    string tmpsetObjectName = $"{namestr}-{newloadid}";
                                     OldSpawner.m_SetPropertyItem =
                                         BaseXmlSpawner.FindItemByName(null, tmpsetObjectName, typestr);
                                 }
@@ -4530,7 +4528,7 @@ namespace Server.Mobiles
                                 // if this is a new load then assume that it will be referring to another newly loaded object so append the newloadid
                                 if (loadnew)
                                 {
-                                    string tmptriggerObjectName = string.Format("{0}-{1}", namestr, newloadid);
+                                    string tmptriggerObjectName = $"{namestr}-{newloadid}";
                                     OldSpawner.m_ObjectPropertyItem =
                                         BaseXmlSpawner.FindItemByName(null, tmptriggerObjectName, typestr);
                                 }
@@ -4618,7 +4616,7 @@ namespace Server.Mobiles
             if (Directory.Exists(XmlSpawnDir))
             {
                 // get it from the defaults directory if it exists
-                dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
+                dirname = $"{XmlSpawnDir}/{filename}";
                 found = File.Exists(dirname) || Directory.Exists(dirname);
             }
 
@@ -4731,7 +4729,7 @@ namespace Server.Mobiles
             if (Directory.Exists(XmlSpawnDir) && filename != null && !filename.StartsWith("/") && !filename.StartsWith("\\"))
             {
                 // put it in the defaults directory if it exists
-                dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
+                dirname = $"{XmlSpawnDir}/{filename}";
             }
             else
             {
@@ -4775,7 +4773,7 @@ namespace Server.Mobiles
             if (Directory.Exists(XmlSpawnDir) && filename != null && !filename.StartsWith("/") && !filename.StartsWith("\\"))
             {
                 // put it in the defaults directory if it exists
-                dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
+                dirname = $"{XmlSpawnDir}/{filename}";
             }
             else
             {
@@ -4784,11 +4782,9 @@ namespace Server.Mobiles
             }
 
             if (SaveAllMaps)
-                e.Mobile.SendMessage(string.Format("Saving {0} objects{1} to file {2} from {3}.", "XmlSpawner",
-                    !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, dirname, e.Mobile.Map));
+                e.Mobile.SendMessage($"Saving {"XmlSpawner"} objects{(!string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty)} to file {dirname} from {e.Mobile.Map}.");
             else
-                e.Mobile.SendMessage(string.Format("Saving {0} obejcts{1} to file {2} from the entire world.", "XmlSpawner",
-                    !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, dirname));
+                e.Mobile.SendMessage($"Saving {"XmlSpawner"} obejcts{(!string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty)} to file {dirname} from the entire world.");
 
 
             List<XmlSpawner> saveslist = new List<XmlSpawner>();
@@ -5030,14 +5026,12 @@ namespace Server.Mobiles
                 dr["ProximityTriggerSound"] = sp.m_ProximityTriggerSound;
                 dr["ProximityTriggerMessage"] = sp.m_ProximityTriggerMessage;
                 if (sp.m_ObjectPropertyItem != null && !sp.m_ObjectPropertyItem.Deleted)
-                    dr["ObjectPropertyItemName"] = string.Format("{0},{1}", sp.m_ObjectPropertyItem.Name,
-                        sp.m_ObjectPropertyItem.GetType().Name);
+                    dr["ObjectPropertyItemName"] = $"{sp.m_ObjectPropertyItem.Name},{sp.m_ObjectPropertyItem.GetType().Name}";
                 else
                     dr["ObjectPropertyItemName"] = null;
                 dr["ObjectPropertyName"] = sp.m_ObjectPropertyName;
                 if (sp.m_SetPropertyItem != null && !sp.m_SetPropertyItem.Deleted)
-                    dr["SetPropertyItemName"] = string.Format("{0},{1}", sp.m_SetPropertyItem.Name,
-                        sp.m_SetPropertyItem.GetType().Name);
+                    dr["SetPropertyItemName"] = $"{sp.m_SetPropertyItem.Name},{sp.m_SetPropertyItem.GetType().Name}";
                 else
                     dr["SetPropertyItemName"] = null;
                 dr["ItemTriggerName"] = sp.m_ItemTriggerName;
@@ -5070,7 +5064,7 @@ namespace Server.Mobiles
                     }
                     else
                     {
-                        waystr = string.Format("SERIAL,{0}", sp.m_WayPoint.Serial);
+                        waystr = $"SERIAL,{sp.m_WayPoint.Serial}";
                     }
                 }
 
@@ -9273,7 +9267,7 @@ namespace Server.Mobiles
                     sb.Append(':'); // ':' Separates multiple object types
                 }
 
-                sb.AppendFormat("{0}={1}", so.TypeName, so.ActualMaxCount); // '=' separates object name from maximum amount
+                sb.Append($"{so.TypeName}={so.ActualMaxCount}"); // '=' separates object name from maximum amount
             }
 
             return sb.ToString();
@@ -9292,11 +9286,7 @@ namespace Server.Mobiles
                     sb.Append(":OBJ="); // Separates multiple object types
                 }
 
-                sb.AppendFormat("{0}:MX={1}:SB={2}:RT={3}:TO={4}:KL={5}:RK={6}:CA={7}:DN={8}:DX={9}:SP={10}:PR={11}",
-                    so.TypeName, so.ActualMaxCount, so.SubGroup, so.SequentialResetTime, so.SequentialResetTo,
-                    so.KillsNeeded,
-                    so.RestrictKillsToSubgroup ? 1 : 0, so.ClearOnAdvance ? 1 : 0, so.MinDelay, so.MaxDelay,
-                    so.SpawnsPerTick, so.PackRange);
+                sb.Append($"{so.TypeName}:MX={so.ActualMaxCount}:SB={so.SubGroup}:RT={so.SequentialResetTime}:TO={so.SequentialResetTo}:KL={so.KillsNeeded}:RK={(so.RestrictKillsToSubgroup ? 1 : 0)}:CA={(so.ClearOnAdvance ? 1 : 0)}:DN={so.MinDelay}:DX={so.MaxDelay}:SP={so.SpawnsPerTick}:PR={so.PackRange}");
             }
 
             return sb.ToString();

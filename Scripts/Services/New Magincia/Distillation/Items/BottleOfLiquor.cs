@@ -43,7 +43,7 @@ namespace Server.Engines.Distillation
             if (!string.IsNullOrEmpty(m_Label))
                 list.Add(1049519, m_Label); // a bottle of ~1_DRINK_NAME~
             else
-                list.Add(1049519, string.Format("#{0}", DistillationSystem.GetLabel(m_Liquor, m_IsStrong))); // a bottle of ~1_DRINK_NAME~
+                list.Add(1049519, $"#{DistillationSystem.GetLabel(m_Liquor, m_IsStrong)}"); // a bottle of ~1_DRINK_NAME~
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -51,7 +51,7 @@ namespace Server.Engines.Distillation
             base.GetProperties(list);
 
             if (m_Liquor != Liquor.None)
-                list.Add(1150454, string.Format("#{0}", DistillationSystem.GetLabel(m_Liquor, m_IsStrong))); // Liquor Type: ~1_TYPE~
+                list.Add(1150454, $"#{DistillationSystem.GetLabel(m_Liquor, m_IsStrong)}"); // Liquor Type: ~1_TYPE~
 
             if (m_Distiller != null)
                 list.Add(1150679, m_Distiller.Name); // Distiller: ~1_NAME~

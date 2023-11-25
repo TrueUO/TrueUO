@@ -579,8 +579,10 @@ namespace Server.Engines.VendorSearching
 
         public static SearchCriteria GetContext(PlayerMobile pm)
         {
-            if (Contexts.ContainsKey(pm))
-                return Contexts[pm];
+            if (Contexts.TryGetValue(pm, out SearchCriteria value))
+            {
+                return value;
+            }
 
             return null;
         }

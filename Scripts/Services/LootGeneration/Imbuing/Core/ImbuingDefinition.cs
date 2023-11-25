@@ -95,8 +95,10 @@ namespace Server.SkillHandlers
             if (LocBuffer == null)
                 LocBuffer = new Dictionary<Type, int>();
 
-            if (LocBuffer.ContainsKey(type))
-                return LocBuffer[type];
+            if (LocBuffer.TryGetValue(type, out int value))
+            {
+                return value;
+            }
 
             Item item = Loot.Construct(type);
 

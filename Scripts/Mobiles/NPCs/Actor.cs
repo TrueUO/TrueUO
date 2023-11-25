@@ -34,7 +34,7 @@ namespace Server.Mobiles
 
             Utility.AssignRandomHair(this);
 
-            Container pack = new Backpack();
+            Backpack pack = new Backpack();
 
             pack.DropItem(new Gold(250, 300));
 

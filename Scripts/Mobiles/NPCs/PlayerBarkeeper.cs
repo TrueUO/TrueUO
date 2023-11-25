@@ -755,7 +755,7 @@ namespace Server.Mobiles
         {
             AddPage(1 + page);
 
-            AddHtml(430, 70, 180, 25, string.Format("Page {0} of {1}", page + 1, (entries.Length + 19) / 20), false, false);
+            AddHtml(430, 70, 180, 25, $"Page {page + 1} of {(entries.Length + 19) / 20}", false, false);
 
             for (int count = 0, i = page * 20; count < 20 && i < entries.Length; ++count, ++i)
             {
@@ -792,11 +792,11 @@ namespace Server.Mobiles
             public readonly bool m_Vendor;
 
             public Entry(string desc)
-                : this(desc, string.Format("the {0}", desc.ToLower()), false)
+                : this(desc, $"the {desc.ToLower()}", false)
             { }
 
             public Entry(string desc, bool vendor)
-                : this(desc, string.Format("the {0}", desc.ToLower()), vendor)
+                : this(desc, $"the {desc.ToLower()}", vendor)
             { }
 
             public Entry(string desc, string title, bool vendor)

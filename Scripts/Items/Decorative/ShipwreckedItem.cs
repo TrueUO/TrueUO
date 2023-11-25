@@ -31,7 +31,7 @@ namespace Server.Items
             {
                 if (LabelNumber > 0)
                 {
-                    list.Add(1151075, string.Format("#{0}", LabelNumber)); //barnacle covered ~1_token~
+                    list.Add(1151075, $"#{LabelNumber}"); //barnacle covered ~1_token~
                 }
                 else
                 {

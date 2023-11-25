@@ -2054,9 +2054,9 @@ namespace Server.Items
                     int prefix = RunicReforging.GetPrefixName(m_ReforgedPrefix);
 
                     if (m_ReforgedSuffix == ReforgedSuffix.None)
-                        list.Add(1151757, string.Format("#{0}\t{1}", prefix, GetNameString())); // ~1_PREFIX~ ~2_ITEM~
+                        list.Add(1151757, $"#{prefix}\t{GetNameString()}"); // ~1_PREFIX~ ~2_ITEM~
                     else
-                        list.Add(1151756, string.Format("#{0}\t{1}\t#{2}", prefix, GetNameString(), RunicReforging.GetSuffixName(m_ReforgedSuffix))); // ~1_PREFIX~ ~2_ITEM~ of ~3_SUFFIX~
+                        list.Add(1151756, $"#{prefix}\t{GetNameString()}\t#{RunicReforging.GetSuffixName(m_ReforgedSuffix)}"); // ~1_PREFIX~ ~2_ITEM~ of ~3_SUFFIX~
                 }
                 else if (m_ReforgedSuffix != ReforgedSuffix.None)
                 {
@@ -2066,7 +2066,7 @@ namespace Server.Items
             else
             {
                 if (oreType != 0)
-                    list.Add(1053099, "#{0}\t{1}", oreType, GetNameString()); // ~1_oretype~ ~2_armortype~
+                    list.Add(1053099, $"#{oreType}\t{GetNameString()}"); // ~1_oretype~ ~2_armortype~
                 else if (Name == null)
                     list.Add(LabelNumber);
                 else
@@ -2231,7 +2231,7 @@ namespace Server.Items
                 list.Add(1151780, prop.ToString()); // durability +~1_VAL~%
 
             if (m_TalismanProtection != null && !m_TalismanProtection.IsEmpty && m_TalismanProtection.Amount > 0)
-                list.Add(1072387, "{0}\t{1}", m_TalismanProtection.Name != null ? m_TalismanProtection.Name.ToString() : "Unknown", m_TalismanProtection.Amount); // ~1_NAME~ Protection: +~2_val~%
+                list.Add(1072387, $"{(m_TalismanProtection.Name != null ? m_TalismanProtection.Name.ToString() : "Unknown")}\t{m_TalismanProtection.Amount}"); // ~1_NAME~ Protection: +~2_val~%
 
             if ((prop = m_AosArmorAttributes.SoulCharge) != 0)
                 list.Add(1113630, prop.ToString()); // Soul Charge ~1_val~%
@@ -2365,7 +2365,7 @@ namespace Server.Items
                 list.Add(1061170, prop.ToString()); // strength requirement ~1_val~
 
             if (m_HitPoints >= 0 && m_MaxHitPoints > 0)
-                list.Add(1060639, "{0}\t{1}", m_HitPoints, m_MaxHitPoints); // durability ~1_val~ / ~2_val~
+                list.Add(1060639, $"{m_HitPoints}\t{m_MaxHitPoints}"); // durability ~1_val~ / ~2_val~
 
             if (IsSetItem && !m_SetEquipped)
             {

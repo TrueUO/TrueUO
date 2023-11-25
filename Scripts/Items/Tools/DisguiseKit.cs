@@ -300,13 +300,11 @@ namespace Server.Items
 
         public static void StartTimer(Mobile m)
         {
-            if (m_Timers.ContainsKey(m))
+            if (m_Timers.TryGetValue(m, out InternalTimer value))
             {
-                InternalTimer t = m_Timers[m];
-
-                if (t != null)
+                if (value != null)
                 {
-                    t.Start();
+                    value.Start();
                 }
             }
         }
@@ -318,13 +316,11 @@ namespace Server.Items
 
         public static bool StopTimer(Mobile m)
         {
-            if (m_Timers.ContainsKey(m))
+            if (m_Timers.TryGetValue(m, out InternalTimer value))
             {
-                InternalTimer t = m_Timers[m];
-
-                if (t != null)
+                if (value != null)
                 {
-                    t.Stop();
+                    value.Stop();
                 }
 
                 return true;
@@ -353,13 +349,11 @@ namespace Server.Items
 
         public static TimeSpan TimeRemaining(Mobile m)
         {
-            if (m_Timers.ContainsKey(m))
+            if (m_Timers.TryGetValue(m, out InternalTimer value))
             {
-                InternalTimer t = m_Timers[m];
-
-                if (t != null && t.Expires > DateTime.UtcNow)
+                if (value != null && value.Expires > DateTime.UtcNow)
                 {
-                    return t.Expires - DateTime.UtcNow;
+                    return value.Expires - DateTime.UtcNow;
                 }
             }
 

@@ -129,7 +129,7 @@ namespace Server.Misc
                 string timeStamp = GetTimeStamp();
 
                 string root = GetRoot();
-                string rootBackup = Combine(root, string.Format("Backups/Crashed/{0}/", timeStamp));
+                string rootBackup = Combine(root, $"Backups/Crashed/{timeStamp}/");
                 string rootOrigin = Combine(root, "Saves/");
 
                 // Create new directories
@@ -172,7 +172,7 @@ namespace Server.Misc
             try
             {
                 string timeStamp = GetTimeStamp();
-                string fileName = string.Format("Crash {0}.log", timeStamp);
+                string fileName = $"Crash {timeStamp}.log";
 
                 string root = GetRoot();
                 string filePath = Combine(root, fileName);

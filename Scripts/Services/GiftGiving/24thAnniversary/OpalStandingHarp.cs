@@ -38,7 +38,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1159743, string.Format("#{0}", _DisplayCliloc)); // Hand set by Jewelers at ~1_JEWELER~
+            list.Add(1159743, $"#{_DisplayCliloc}"); // Hand set by Jewelers at ~1_JEWELER~
         }
 
         public override void Serialize(GenericWriter writer)

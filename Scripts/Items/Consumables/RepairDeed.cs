@@ -111,7 +111,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1061133, string.Format("{0}\t{1}", GetSkillTitle(m_SkillLevel), RepairSkillInfo.GetInfo(m_Skill).Name)); // A repair service contract from ~1_SKILL_TITLE~ ~2_SKILL_NAME~.
+            list.Add(1061133, $"{GetSkillTitle(m_SkillLevel)}\t{RepairSkillInfo.GetInfo(m_Skill).Name}"); // A repair service contract from ~1_SKILL_TITLE~ ~2_SKILL_NAME~.
         }
 
         public override void AddWeightProperty(ObjectPropertyList list)
@@ -128,7 +128,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1071345, string.Format("{0:F1}", m_SkillLevel)); // Skill: ~1_val~
+            list.Add(1071345, $"{m_SkillLevel:F1}"); // Skill: ~1_val~
 
             TextDefinition desc = RepairSkillInfo.GetInfo(m_Skill).Description;
 

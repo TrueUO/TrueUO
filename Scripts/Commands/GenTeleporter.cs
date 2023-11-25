@@ -37,8 +37,7 @@ namespace Server.Commands
 
         public override int GetHashCode()
         {
-            string hashString = string.Format("{0}-{1}-{2}-{3}",
-                X, Y, Z, Map.MapID);
+            string hashString = $"{X}-{Y}-{Z}-{Map.MapID}";
             return hashString.GetHashCode();
         }
 
@@ -96,7 +95,7 @@ namespace Server.Commands
                 string[] parts = line.Split(m_Sep);
                 if (parts.Length != 9)
                 {
-                    e.Mobile.SendMessage(33, string.Format("Bad teleporter definition on line {0}", lineNum));
+                    e.Mobile.SendMessage(33, $"Bad teleporter definition on line {lineNum}");
                     continue;
                 }
                 try
@@ -115,11 +114,11 @@ namespace Server.Commands
                 }
                 catch (FormatException)
                 {
-                    e.Mobile.SendMessage(33, string.Format("Bad number format on line {0}", lineNum));
+                    e.Mobile.SendMessage(33, $"Bad number format on line {lineNum}");
                 }
                 catch (ArgumentException ex)
                 {
-                    e.Mobile.SendMessage(33, string.Format("Argument Execption {0} on line {1}", ex.Message, lineNum));
+                    e.Mobile.SendMessage(33, $"Argument Execption {ex.Message} on line {lineNum}");
                 }
             }
             reader.Close();

@@ -440,7 +440,7 @@ namespace Server.Engines.Auction
 
             if (AuctionItem.LabelNumber != 0)
             {
-                return string.Format("#{0}", AuctionItem.LabelNumber.ToString());
+                return $"#{AuctionItem.LabelNumber}";
             }
 
             return AuctionItem.Name;

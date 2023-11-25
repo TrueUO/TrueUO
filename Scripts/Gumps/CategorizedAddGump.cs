@@ -46,7 +46,7 @@ namespace Server.Gumps
             }
             else
             {
-                CommandSystem.Handle(from, string.Format("{0}Add {1}", CommandSystem.Prefix, m_Type.Name));
+                CommandSystem.Handle(from, $"{CommandSystem.Prefix}Add {m_Type.Name}");
 
                 from.SendGump(new CategorizedAddGump(from, m_Parent, page));
             }
@@ -248,7 +248,7 @@ namespace Server.Gumps
             if (!OldStyle)
                 AddImageTiled(x - (OldStyle ? OffsetSize : 0), y, emptyWidth + (OldStyle ? OffsetSize * 2 : 0), EntryHeight, EntryGumpID);
 
-            AddHtml(x + TextOffsetX, y + ((EntryHeight - 20) / 2), emptyWidth - TextOffsetX, EntryHeight, string.Format("<center>{0}</center>", m_Category.Caption), false, false);
+            AddHtml(x + TextOffsetX, y + ((EntryHeight - 20) / 2), emptyWidth - TextOffsetX, EntryHeight, $"<center>{m_Category.Caption}</center>", false, false);
 
             x += emptyWidth + OffsetSize;
 

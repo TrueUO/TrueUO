@@ -26,9 +26,9 @@ namespace Server.Spells.Necromancy
         public override int RequiredMana => 11;
         public static bool RemoveCurse(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
+            if (m_Table.TryGetValue(m, out ExpireTimer value))
             {
-                m_Table[m].DoExpire();
+                value.DoExpire();
                 return true;
             }
 
@@ -42,9 +42,9 @@ namespace Server.Spells.Necromancy
 
         public static int GetResistMalus(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
+            if (m_Table.TryGetValue(m, out ExpireTimer value))
             {
-                return 70 - m_Table[m].Malus;
+                return 70 - value.Malus;
             }
 
             return 70;
@@ -84,9 +84,9 @@ namespace Server.Spells.Necromancy
                 * NOTE: Resistance is not checked if targeting yourself
                 */
 
-            if (m_Table.ContainsKey(m))
+            if (m_Table.TryGetValue(m, out ExpireTimer value))
             {
-                m_Table[m].DoExpire(false);
+                value.DoExpire(false);
             }
 
             m.SendLocalizedMessage(1061689); // Your skin turns dry and corpselike.

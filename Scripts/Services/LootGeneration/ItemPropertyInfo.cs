@@ -39,28 +39,13 @@ namespace Server.Items
         {
         }
 
-        public PropInfo(int itemRef, int scale, int sMax, int lMax, bool useStarndardMax)
-            : this((ItemType)itemRef, scale, sMax, lMax, null, useStarndardMax)
-        {
-        }
-
         public PropInfo(int itemRef, int sMax, int lMax, int[] powerfulRange)
             : this((ItemType)itemRef, -1, sMax, lMax, powerfulRange, false)
         {
         }
 
-        public PropInfo(int itemRef, int sMax, int lMax, int[] powerfulRange, bool useStandardMax)
-            : this((ItemType)itemRef, -1, sMax, lMax, powerfulRange, useStandardMax)
-        {
-        }
-
         public PropInfo(int itemRef, int scale, int sMax, int lMax, int[] powerfulRange)
             : this((ItemType)itemRef, scale, sMax, lMax, powerfulRange, false)
-        {
-        }
-
-        public PropInfo(int itemRef, int scale, int sMax, int lMax, int[] powerfulRange, bool useStandardMax)
-            : this((ItemType)itemRef, scale, sMax, lMax, powerfulRange, useStandardMax)
         {
         }
 
@@ -77,8 +62,6 @@ namespace Server.Items
 
     public class ItemPropertyInfo
     {
-        public static readonly bool NewLootSystem = RandomItemGenerator.Enabled;
-
         public int ID { get; set; }
 
         public bool Imbuable { get; }
@@ -161,7 +144,7 @@ namespace Server.Items
                     }
                     else
                     {
-                        throw new ArgumentException($"Property Category {cat.ItemType.ToString()} already exists for {attribute}!");
+                        throw new ArgumentException($"Property Category {cat.ItemType} already exists for {attribute}!");
                     }
                 }
             }
@@ -232,8 +215,10 @@ namespace Server.Items
             if (type == typeof(CrystallineBlackrock)) return 1077568;
             if (type == typeof(BouraPelt)) return 1113355;
 
-            if (LocBuffer.ContainsKey(type))
-                return LocBuffer[type];
+            if (LocBuffer.TryGetValue(type, out TextDefinition value))
+            {
+                return value;
+            }
 
             Item item = Loot.Construct(type);
 
@@ -257,7 +242,7 @@ namespace Server.Items
                 return localization;
             }
 
-            Console.WriteLine("Warning, missing text defintion for type {0}.", type.Name);
+            Console.WriteLine("Warning, missing text definition for type {0}.", type.Name);
             return -1;
         }
 
@@ -621,9 +606,9 @@ namespace Server.Items
 
         public PropInfo GetItemTypeInfo(ItemType type)
         {
-            for (var index = 0; index < PropCategories.Length; index++)
+            for (int index = 0; index < PropCategories.Length; index++)
             {
-                var prop = PropCategories[index];
+                PropInfo prop = PropCategories[index];
 
                 if (prop != null && prop.ItemType == type)
                 {
@@ -650,9 +635,9 @@ namespace Server.Items
         {
             int id = GetID(attribute);
 
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
-                return Table[id];
+                return value;
             }
 
             return null;
@@ -660,24 +645,19 @@ namespace Server.Items
 
         public static ItemPropertyInfo GetInfo(int id)
         {
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
-                return Table[id];
+                return value;
             }
 
             return null;
         }
 
-        public static TextDefinition GetAttributeName(object o)
-        {
-            return GetAttributeName(GetID(o));
-        }
-
         public static TextDefinition GetAttributeName(int id)
         {
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
-                return Table[id].AttributeName;
+                return value.AttributeName;
             }
 
             return null;
@@ -685,9 +665,9 @@ namespace Server.Items
 
         public static int GetWeight(int id)
         {
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
-                return Table[id].Weight;
+                return value.Weight;
             }
 
             return 0;
@@ -748,19 +728,19 @@ namespace Server.Items
         /// <returns></returns>
         public static int GetMaxIntensity(Item item, int id, bool imbuing, bool applyingProperty = false)
         {
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
-                PropInfo info = Table[id].GetItemTypeInfo(GetItemType(item));
+                PropInfo info = value.GetItemTypeInfo(GetItemType(item));
 
                 // First, we try to get the max intensity from the PropInfo. If null or we're getting an intensity for special imbuing purpopses, we go to the default MaxIntenity
-                if (info == null || !applyingProperty && info.UseStandardMax || imbuing && !ForcesNewLootMax(item, id))
+                if (info == null || !applyingProperty && info.UseStandardMax || imbuing && !ForcesNewLootMax(id))
                 {
                     if (item is BaseWeapon weapon && (id == 25 || id == 27))
                     {
                         return GetSpecialMaxIntensity(weapon);
                     }
 
-                    return Table[id].MaxIntensity;
+                    return value.MaxIntensity;
                 }
 
                 if (item is BaseWeapon baseWeapon && (id == 25 || id == 27))
@@ -768,7 +748,7 @@ namespace Server.Items
                     return GetSpecialMaxIntensity(baseWeapon);
                 }
 
-                return NewLootSystem ? info.LootMax : info.StandardMax;
+                return info.LootMax;
             }
 
             return 0;
@@ -779,14 +759,13 @@ namespace Server.Items
         /// <summary>
         /// We may want to force the new loot tables for items such as ranged weapons that have a different max than melee, think hci/dci (15/25).
         /// </summary>
-        /// <param name="item"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static bool ForcesNewLootMax(Item item, int id)
+        public static bool ForcesNewLootMax(int id)
         {
-            for (var index = 0; index < _ForceUseNewTable.Length; index++)
+            for (int index = 0; index < _ForceUseNewTable.Length; index++)
             {
-                var i = _ForceUseNewTable[index];
+                int i = _ForceUseNewTable[index];
 
                 if (i == id)
                 {
@@ -799,9 +778,9 @@ namespace Server.Items
 
         public static int[] GetMaxOvercappedRange(Item item, int id)
         {
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
-                PropInfo info = Table[id].GetItemTypeInfo(GetItemType(item));
+                PropInfo info = value.GetItemTypeInfo(GetItemType(item));
 
                 if (info != null && info.PowerfulLootRange != null && info.PowerfulLootRange.Length > 0)
                 {
@@ -824,21 +803,15 @@ namespace Server.Items
             return max;
         }
 
-        public static int GetMinIntensity(Item item, object attribute, bool loot = false)
-        {
-            return GetMinIntensity(item, GetID(attribute), loot);
-        }
-
         /// <summary>
         /// Minimum intensity. An item property will never start lower than this value.
         /// </summary>
         /// <param name="item"></param>
-        /// <param name="attribute"></param>
         /// <param name="loot">this will determine if default min intensity is used, or if it uses its min scaled value</param>
         /// <returns></returns>
         public static int GetMinIntensity(Item item, int id, bool loot = false)
         {
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
                 if (loot)
                 {
@@ -847,7 +820,7 @@ namespace Server.Items
                 }
 
                 // Not so with imbuing, for most properties.
-                return Table[id].Start;
+                return value.Start;
             }
 
             return 0;
@@ -866,7 +839,7 @@ namespace Server.Items
 
         public static int GetScale(Item item, int id, bool loot)
         {
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
                 if (loot)
                 {
@@ -886,14 +859,14 @@ namespace Server.Items
                     }
                 }
 
-                PropInfo info = Table[id].GetItemTypeInfo(GetItemType(item));
+                PropInfo info = value.GetItemTypeInfo(GetItemType(item));
 
                 if (info != null && info.Scale >= 0)
                 {
                     return info.Scale;
                 }
 
-                return Table[id].Scale;
+                return value.Scale;
             }
 
             return 1;
@@ -906,9 +879,9 @@ namespace Server.Items
         /// <returns></returns>
         public static object GetAttribute(int id)
         {
-            if (Table.ContainsKey(id))
+            if (Table.TryGetValue(id, out ItemPropertyInfo value))
             {
-                return Table[id].Attribute;
+                return value.Attribute;
             }
 
             return null;
@@ -1168,16 +1141,9 @@ namespace Server.Items
 
                     PropInfo info = prop.GetItemTypeInfo(type);
 
-                    if (info != null)
+                    if (info != null && info.LootMax > 0)
                     {
-                        if (NewLootSystem && info.LootMax > 0)
-                        {
-                            list.Add(prop.ID);
-                        }
-                        else if (!NewLootSystem && info.StandardMax > 0)
-                        {
-                            list.Add(prop.ID);
-                        }
+                        list.Add(prop.ID);
                     }
                 }
 
@@ -1239,17 +1205,9 @@ namespace Server.Items
                 if (typeInfo != null)
                 {
                     // reforged follows its own set of guidelines
-                    if (!reforged)
+                    if (!reforged && typeInfo.LootMax <= 0)
                     {
-                        if (NewLootSystem && typeInfo.LootMax <= 0)
-                        {
-                            return false;
-                        }
-
-                        if (!NewLootSystem && typeInfo.StandardMax <= 0)
-                        {
-                            return false;
-                        }
+                        return false;
                     }
 
                     switch (id)

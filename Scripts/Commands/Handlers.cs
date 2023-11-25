@@ -213,8 +213,7 @@ namespace Server.Commands
 
                 e.Mobile.SendGump(
                     new WarningGump(1060635, 30720,
-                        string.Format("You are about to delete {0} object{1} from this facet.  Do you really wish to continue?",
-                            list.Count, list.Count == 1 ? "" : "s"),
+                        $"You are about to delete {list.Count} object{(list.Count == 1 ? "" : "s")} from this facet.  Do you really wish to continue?",
                         0xFFC000, 360, 260, DeleteList_Callback, list));
             }
             else
@@ -419,7 +418,7 @@ namespace Server.Commands
         [Description("Broadcasts a message to all online staff.")]
         public static void StaffMessage_OnCommand(CommandEventArgs e)
         {
-            BroadcastMessage(AccessLevel.Counselor, e.Mobile.SpeechHue, string.Format("[{0}] {1}", e.Mobile.Name, e.ArgString));
+            BroadcastMessage(AccessLevel.Counselor, e.Mobile.SpeechHue, $"[{e.Mobile.Name}] {e.ArgString}");
         }
 
         [Usage("BCast <text>")]
@@ -427,7 +426,7 @@ namespace Server.Commands
         [Description("Broadcasts a message to everyone online.")]
         public static void BroadcastMessage_OnCommand(CommandEventArgs e)
         {
-            BroadcastMessage(AccessLevel.Player, 0x482, string.Format("Staff message from {0}:", e.Mobile.Name));
+            BroadcastMessage(AccessLevel.Player, 0x482, $"Staff message from {e.Mobile.Name}:");
             BroadcastMessage(AccessLevel.Player, 0x482, e.ArgString);
         }
 
@@ -818,7 +817,7 @@ namespace Server.Commands
                 {
                     Item item = m.Items[i];
 
-                    entries[i] = new ItemListEntry(string.Format("{0}: {1}", item.Layer, item.GetType().Name), item.ItemID, item.Hue);
+                    entries[i] = new ItemListEntry($"{item.Layer}: {item.GetType().Name}", item.ItemID, item.Hue);
                 }
 
                 return entries;
@@ -850,7 +849,7 @@ namespace Server.Commands
                     private readonly Mobile m_Mobile;
                     private readonly Item m_Item;
                     public EquipDetailsMenu(Mobile m, Item item)
-                        : base(string.Format("{0}: {1}", item.Layer, item.GetType().Name), new[] { "Move", "Delete", "Props" })
+                        : base($"{item.Layer}: {item.GetType().Name}", new[] { "Move", "Delete", "Props" })
                     {
                         m_Mobile = m;
                         m_Item = item;

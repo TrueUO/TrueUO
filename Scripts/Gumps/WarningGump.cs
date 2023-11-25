@@ -35,7 +35,7 @@ namespace Server.Gumps
             }
             else if (header.String != null)
             {
-                AddHtml(10, 10, width - 20, height - 80, string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", headerColor, header.String), false, true);
+                AddHtml(10, 10, width - 20, height - 80, $"<BASEFONT COLOR=#{headerColor:X6}>{header.String}</BASEFONT>", false, true);
             }
 
             AddImageTiled(10, 40, width - 20, height - 80, 2624);
@@ -47,7 +47,7 @@ namespace Server.Gumps
             }
             else if (content.String != null)
             {
-                AddHtml(10, 40, width - 20, height - 80, string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", contentColor, content.String), false, true);
+                AddHtml(10, 40, width - 20, height - 80, $"<BASEFONT COLOR=#{contentColor:X6}>{content.String}</BASEFONT>", false, true);
             }
 
             AddImageTiled(10, height - 30, width - 20, 20, 2624);

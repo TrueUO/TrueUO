@@ -221,8 +221,10 @@ namespace Server.Mobiles
             DateTime expiration = DateTime.UtcNow + duration;
             BlockEntry entry = null;
 
-            if (m_Table.ContainsKey(mob))
-                entry = m_Table[mob];
+            if (m_Table.TryGetValue(mob, out BlockEntry value))
+            {
+                entry = value;
+            }
 
             if (entry != null)
             {
@@ -255,8 +257,10 @@ namespace Server.Mobiles
 
             BlockEntry entry = null;
 
-            if (m_Table.ContainsKey(mob))
-                entry = m_Table[mob];
+            if (m_Table.TryGetValue(mob, out BlockEntry value))
+            {
+                entry = value;
+            }
 
             if (entry == null)
                 return BlockMountType.None;
@@ -381,11 +385,9 @@ namespace Server.Mobiles
 
             Mobile owner = GetMaster();
 
-            if (owner != null && m_Table.ContainsKey(owner))
+            if (owner != null && m_Table.TryGetValue(owner, out BlockEntry value))
             {
-                BlockEntry entry = m_Table[owner];
-
-                if (entry.m_Type >= BlockMountType.RidingSwipe && entry.m_Mount == this)
+                if (value.m_Type >= BlockMountType.RidingSwipe && value.m_Mount == this)
                 {
                     ExpireMountPrevention(owner);
                 }

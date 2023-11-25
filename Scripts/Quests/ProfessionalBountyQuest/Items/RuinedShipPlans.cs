@@ -45,9 +45,9 @@ namespace Server.Items
             list.Add(1116747); //Orc Ship
 
             if (m_Joined.Count == 1)
-                list.Add(1116776, string.Format("{0}\t{1}", ((int)m_PlanType).ToString(), "8")); //Part ~1_val~ of ~2_val~
+                list.Add(1116776, $"{(int)m_PlanType}\t8"); //Part ~1_val~ of ~2_val~
             else
-                list.Add(1116777, string.Format("{0}\t{1}", m_Joined.Count.ToString(), "8")); //Parts ~1_val~ of ~2_val~
+                list.Add(1116777, $"{m_Joined.Count}\t8"); //Parts ~1_val~ of ~2_val~
 
             if (m_Joined.Count > 1)
             {

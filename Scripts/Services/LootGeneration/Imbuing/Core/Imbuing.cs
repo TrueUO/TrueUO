@@ -943,7 +943,7 @@ namespace Server.SkillHandlers
             {
                 int ids = GetTotalMods(item);
 
-                item.LabelTo(from, string.Format("Total Mods: {0}", ids.ToString()));
+                item.LabelTo(from, $"Total Mods: {ids}");
             }
             else
             {
@@ -1191,9 +1191,9 @@ namespace Server.SkillHandlers
             {
                 int[] resists = null;
 
-                if (ResistBuffer != null && ResistBuffer.ContainsKey(type))
+                if (ResistBuffer != null && ResistBuffer.TryGetValue(type, out int[] value))
                 {
-                    resists = ResistBuffer[type];
+                    resists = value;
                 }
                 else
                 {
@@ -1281,11 +1281,11 @@ namespace Server.SkillHandlers
             if (targeted is Item item)
             {
                 int w = GetTotalWeight(item, -1, false, true);
-                item.LabelTo(from, string.Format("Imbuing Weight: {0}", w.ToString()));
+                item.LabelTo(from, $"Imbuing Weight: {w}");
                 w = GetTotalWeight(item, -1, false, false);
-                item.LabelTo(from, string.Format("Loot Weight: {0}", w.ToString()));
+                item.LabelTo(from, $"Loot Weight: {w}");
                 w = GetTotalWeight(item, -1, true, true);
-                item.LabelTo(from, string.Format("True Weight: {0}", w.ToString()));
+                item.LabelTo(from, $"True Weight: {w}");
             }
             else
                 from.SendMessage("That is not an item!");
@@ -1353,9 +1353,9 @@ namespace Server.SkillHandlers
             {
                 int[] resists = null;
 
-                if (ResistBuffer != null && ResistBuffer.ContainsKey(type))
+                if (ResistBuffer != null && ResistBuffer.TryGetValue(type, out int[] value))
                 {
-                    resists = ResistBuffer[type];
+                    resists = value;
                 }
                 else
                 {
@@ -1973,9 +1973,9 @@ namespace Server.SkillHandlers
             {
                 int[] resists = null;
 
-                if (ResistBuffer != null && ResistBuffer.ContainsKey(type))
+                if (ResistBuffer != null && ResistBuffer.TryGetValue(type, out int[] value))
                 {
-                    resists = ResistBuffer[type];
+                    resists = value;
                 }
                 else
                 {

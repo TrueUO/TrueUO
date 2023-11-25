@@ -92,9 +92,7 @@ namespace Server.Engines.CityLoyalty
                 minister.SayTo(
                     from,
                     1158790,
-                    string.Format("{0}\t{1}",
-                    WorldLocationInfo.GetLocationString(p, map),
-                    Sextant.GetCoords(p, map)), 1150);
+                    $"{WorldLocationInfo.GetLocationString(p, map)}\t{Sextant.GetCoords(p, map)}", 1150);
                 // Take notice! The vile Krampus has been spotted near ~2_where~ at ~1_coords~!  New Trade Orders are suspended until Krampus has been defeated!
             }
             else
@@ -177,7 +175,7 @@ namespace Server.Engines.CityLoyalty
 
             if (from.AccessLevel == AccessLevel.Player && turninMobile is TradeMinister minister && minister.City != entry.Destination)
             {
-                turninMobile.SayTo(from, 1151738, string.Format("#{0}", CityLoyaltySystem.GetCityLocalization(entry.Destination))); // Begging thy pardon, but those goods are destined for the City of ~1_city~
+                turninMobile.SayTo(from, 1151738, $"#{CityLoyaltySystem.GetCityLocalization(entry.Destination)}"); // Begging thy pardon, but those goods are destined for the City of ~1_city~
             }
             else if (!order.Fulfilled)
             {
@@ -289,8 +287,10 @@ namespace Server.Engines.CityLoyalty
 
         public string GetNameFor(Type t, string fallbackname)
         {
-            if (_NameBuffer.ContainsKey(t))
-                return _NameBuffer[t];
+            if (_NameBuffer.TryGetValue(t, out string value))
+            {
+                return value;
+            }
 
             Item item = Loot.Construct(t);
 
@@ -329,9 +329,9 @@ namespace Server.Engines.CityLoyalty
 
         public static void OnQuickTravelUsed(Mobile from)
         {
-            if (ActiveTrades.ContainsKey(from))
+            if (ActiveTrades.TryGetValue(from, out TradeOrderCrate value))
             {
-                ActiveTrades[from].Entry.Distance = 0;
+                value.Entry.Distance = 0;
             }
         }
 
@@ -609,12 +609,12 @@ namespace Server.Engines.CityLoyalty
         {
             if (victim is BaseCreature creature && Ambushers != null && Ambushers.ContainsKey(creature))
             {
-                if (ActiveTrades.ContainsKey(damager))
+                if (ActiveTrades.TryGetValue(damager, out TradeOrderCrate value))
                 {
-                    TradeOrderCrate crate = ActiveTrades[damager];
-
-                    if (crate.Entry != null)
-                        crate.Entry.Kills++;
+                    if (value.Entry != null)
+                    {
+                        value.Entry.Kills++;
+                    }
                 }
 
                 Ambushers.Remove(creature);

@@ -114,13 +114,11 @@ namespace Server.Items
 
         public static void OnRaceChange(Mobile m)
         {
-            if (Pending != null && Pending.ContainsKey(m))
+            if (Pending != null && Pending.TryGetValue(m, out Tuple<RaceChangeToken, Race> value))
             {
-                Tuple<RaceChangeToken, Race> tuple = Pending[m];
-
-                if (tuple.Item1 != null && !tuple.Item1.Deleted)
+                if (value.Item1 != null && !value.Item1.Deleted)
                 {
-                    tuple.Item1.Delete();
+                    value.Item1.Delete();
                 }
             }
         }

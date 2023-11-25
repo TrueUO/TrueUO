@@ -146,7 +146,8 @@ namespace Server.Items
         {
             if (_MasterName != null)
             {
-                list.Add(1158958, string.Format("{0}{1}", _MasterName, _MasterName.ToLower().EndsWith("s") || _MasterName.ToLower().EndsWith("z") ? "'" : "'s"));
+                list.Add(1158958,
+                    $"{_MasterName}{(_MasterName.ToLower().EndsWith("s") || _MasterName.ToLower().EndsWith("z") ? "'" : "'s")}");
             }
             else
             {

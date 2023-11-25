@@ -225,7 +225,7 @@ namespace Server.Engines.Quests
                 if (!Completed)
                 {
                     Owner.PlaySound(UpdateSound);
-                    Owner.SendLocalizedMessage(1156535, string.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have rescued ~1_count~ of ~2_max~ Dragon Turtle Hatchlings.
+                    Owner.SendLocalizedMessage(1156535, $"{obj.CurProgress}\t{obj.MaxProgress}"); // You have rescued ~1_count~ of ~2_max~ Dragon Turtle Hatchlings.
                 }
                 else
                 {
@@ -413,7 +413,7 @@ namespace Server.Engines.Quests
                 if (!Completed)
                 {
                     Owner.PlaySound(UpdateSound);
-                    Owner.SendLocalizedMessage(1156539, string.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have recovered ~1_count~ of ~2_max~ Lava Rocks.
+                    Owner.SendLocalizedMessage(1156539, $"{obj.CurProgress}\t{obj.MaxProgress}"); // You have recovered ~1_count~ of ~2_max~ Lava Rocks.
                 }
                 else
                 {
@@ -508,7 +508,7 @@ namespace Server.Engines.Quests
                 if (!Completed)
                 {
                     Owner.PlaySound(UpdateSound);
-                    Owner.SendLocalizedMessage(1156543, string.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have rescued ~1_count~ of ~2_max~ tiger cubs.
+                    Owner.SendLocalizedMessage(1156543, $"{obj.CurProgress}\t{obj.MaxProgress}"); // You have rescued ~1_count~ of ~2_max~ tiger cubs.
                 }
                 else
                 {

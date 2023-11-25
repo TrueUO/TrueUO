@@ -410,8 +410,11 @@ namespace Server.Engines.NewMagincia
 
         public static int GetNextAvailableBid(Mobile from)
         {
-            if (m_NextAvailable.ContainsKey(from))
-                return m_NextAvailable[from].Amount;
+            if (m_NextAvailable.TryGetValue(from, out BidEntry value))
+            {
+                return value.Amount;
+            }
+
             return 0;
         }
 
@@ -546,8 +549,11 @@ namespace Server.Engines.NewMagincia
 
         public static StorageEntry GetStorageEntry(Mobile from)
         {
-            if (m_WarehouseStorage.ContainsKey(from))
-                return m_WarehouseStorage[from];
+            if (m_WarehouseStorage.TryGetValue(from, out StorageEntry value))
+            {
+                return value;
+            }
+
             return null;
         }
 

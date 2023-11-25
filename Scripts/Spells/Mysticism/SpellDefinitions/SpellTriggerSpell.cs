@@ -221,10 +221,9 @@ namespace Server.Spells.Mysticism
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_CooldownTable.ContainsKey(from))
+            if (m_CooldownTable.TryGetValue(from, out DateTime value))
             {
-                DateTime next = m_CooldownTable[from];
-                int seconds = (int)(next - DateTime.UtcNow).TotalSeconds + 1;
+                int seconds = (int)(value - DateTime.UtcNow).TotalSeconds + 1;
 
                 // You must wait ~1_seconds~ seconds before you can use this item.
                 from.SendLocalizedMessage(1079263, seconds.ToString());

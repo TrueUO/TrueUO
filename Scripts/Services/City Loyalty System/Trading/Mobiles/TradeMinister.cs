@@ -151,9 +151,9 @@ namespace Server.Engines.CityLoyalty
                     {
                         if (CityLoyaltySystem.CityTrading.TryTurnIn(from, order, Minister))
                         {
-                            if (List.ContainsKey(from))
+                            if (List.TryGetValue(from, out ExpireTimer value))
                             {
-                                List[from].StopTimer();
+                                value.StopTimer();
                             }
 
                             if (order.Entry != null && order.Entry.Distance > 0)

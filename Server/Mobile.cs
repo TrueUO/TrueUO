@@ -1099,7 +1099,7 @@ namespace Server
 
             suffix = ApplyNameSuffix(suffix);
 
-            list.Add(1050045, "{0} \t{1}\t {2}", prefix, name, suffix); // ~1_PREFIX~~2_NAME~~3_SUFFIX~           
+            list.Add(1050045, $"{prefix} \t{name}\t {suffix}"); // ~1_PREFIX~~2_NAME~~3_SUFFIX~           
         }
 
         public virtual void GetProperties(ObjectPropertyList list)

@@ -230,7 +230,7 @@ namespace Server.Misc
             }
             else if (beheld is BaseVendor)
             {
-                title.AppendFormat(" {0}", customTitle);
+                title.Append($" {customTitle}");
             }
 
             return title.ToString();

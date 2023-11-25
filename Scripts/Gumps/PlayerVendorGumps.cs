@@ -26,7 +26,7 @@ namespace Server.Gumps
             var desc = vi.Description;
 
             if (!string.IsNullOrEmpty(desc))
-                AddLabel(125, 45, 0, desc.Length > 27 ? string.Format("{0}...", desc.Substring(0, 24)) : desc);
+                AddLabel(125, 45, 0, desc.Length > 27 ? $"{desc.Substring(0, 24)}..." : desc);
             else
                 AddHtmlLocalized(125, 45, 250, 24, 1019072, false, false); // an item without a description
 
@@ -217,7 +217,7 @@ namespace Server.Gumps
             else
             {
                 AddHtmlLocalized(40, 78, 260, 20, 1159157, 0x7FFF, false, false); // My commission per sale:
-                AddLabel(300, 78, 0x480, string.Format("{0}%", vendor.CommissionPerc));
+                AddLabel(300, 78, 0x480, $"{vendor.CommissionPerc}%");
             }
 
             AddHtmlLocalized(40, 181, 260, 20, vendor.VendorSearch ? 1154633 : 1154634, 0x7FFF, false, false); // Vendor Search Enabled / Disable            
@@ -233,7 +233,7 @@ namespace Server.Gumps
                 int days, hours;
                 rentedVendor.ComputeRentalExpireDelay(out days, out hours);
 
-                AddLabel(40, 154, 0x480, string.Format("Location rental will expire in {0} day{1} and {2} hour{3}.", days, days != 1 ? "s" : "", hours, hours != 1 ? "s" : ""));
+                AddLabel(40, 154, 0x480, $"Location rental will expire in {days} day{(days != 1 ? "s" : "")} and {hours} hour{(hours != 1 ? "s" : "")}.");
             }
 
             AddButton(390, 24, 0x15E1, 0x15E5, 1, GumpButtonType.Reply, 0);
