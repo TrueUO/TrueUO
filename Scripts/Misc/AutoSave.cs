@@ -55,11 +55,6 @@ namespace Server.Misc
 
         public static void Save()
         {
-            Save(false);
-        }
-
-        public static void Save(bool permitBackgroundWrite)
-        {
             if (AutoRestart.Restarting || CreateWorld.WorldCreating)
                 return;
 
@@ -127,7 +122,9 @@ namespace Server.Misc
                 DirectoryInfo dir = Match(existing, m_Backups[i]);
 
                 if (dir == null)
+                {
                     continue;
+                }
 
                 if (i > 0)
                 {
@@ -153,7 +150,10 @@ namespace Server.Misc
 
                     if (delete)
                     {
-                        try { dir.Delete(true); }
+                        try
+                        {
+                            dir.Delete(true);
+                        }
                         catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                     }
                 }

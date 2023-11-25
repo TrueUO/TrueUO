@@ -43,20 +43,13 @@ namespace Server.Commands
             Register("Help", AccessLevel.Player, Help_OnCommand);
 
             Register("Save", AccessLevel.Administrator, Save_OnCommand);
-            Register("BackgroundSave", AccessLevel.Administrator, BackgroundSave_OnCommand);
-            Register("BGSave", AccessLevel.Administrator, BackgroundSave_OnCommand);
-            Register("SaveBG", AccessLevel.Administrator, BackgroundSave_OnCommand);
 
             Register("Move", AccessLevel.GameMaster, Move_OnCommand);
             Register("Client", AccessLevel.Counselor, Client_OnCommand);
 
-            Register("SMsg", AccessLevel.Counselor, StaffMessage_OnCommand);
             Register("SM", AccessLevel.Counselor, StaffMessage_OnCommand);
-            Register("S", AccessLevel.Counselor, StaffMessage_OnCommand);
 
-            Register("BCast", AccessLevel.GameMaster, BroadcastMessage_OnCommand);
             Register("BC", AccessLevel.GameMaster, BroadcastMessage_OnCommand);
-            Register("B", AccessLevel.GameMaster, BroadcastMessage_OnCommand);
 
             Register("Bank", AccessLevel.GameMaster, Bank_OnCommand);
 
@@ -413,16 +406,14 @@ namespace Server.Commands
                 m.SendAsciiMessage(0x482, sb.ToString());
         }
 
-        [Usage("SMsg <text>")]
-        [Aliases("S", "SM")]
+        [Usage("SM <text>")]
         [Description("Broadcasts a message to all online staff.")]
         public static void StaffMessage_OnCommand(CommandEventArgs e)
         {
             BroadcastMessage(AccessLevel.Counselor, e.Mobile.SpeechHue, $"[{e.Mobile.Name}] {e.ArgString}");
         }
 
-        [Usage("BCast <text>")]
-        [Aliases("B", "BC")]
+        [Usage("BC <text>")]
         [Description("Broadcasts a message to everyone online.")]
         public static void BroadcastMessage_OnCommand(CommandEventArgs e)
         {
@@ -572,14 +563,6 @@ namespace Server.Commands
         private static void Save_OnCommand(CommandEventArgs e)
         {
             Misc.AutoSave.Save();
-        }
-
-        [Usage("BackgroundSave")]
-        [Aliases("BGSave", "SaveBG")]
-        [Description("Saves the world, writing to the disk in the background")]
-        private static void BackgroundSave_OnCommand(CommandEventArgs e)
-        {
-            Misc.AutoSave.Save(true);
         }
 
         private static bool FixMap(ref Map map, ref Point3D loc, Item item)
