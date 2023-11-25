@@ -129,110 +129,106 @@ namespace Server
     
 	public class BinaryFileWriter : GenericWriter
 	{
-		private readonly bool PrefixStrings;
-		private readonly Stream m_File;
+		private readonly bool _PrefixStrings;
+		private Stream _File;
 
 		protected virtual int BufferSize => 81920;
 
-		private readonly byte[] m_Buffer;
+		private readonly byte[] _Buffer;
 
-		private int m_Index;
+		private int _Index;
 
-		private readonly Encoding m_Encoding;
+		private readonly Encoding _Encoding;
 
 		public BinaryFileWriter(Stream strm, bool prefixStr)
 		{
-			PrefixStrings = prefixStr;
-			m_Encoding = Utility.UTF8;
-			m_Buffer = new byte[BufferSize];
-			m_File = strm;
+			_PrefixStrings = prefixStr;
+			_Encoding = Utility.UTF8;
+			_Buffer = new byte[BufferSize];
+			_File = strm;
 		}
 
 		public BinaryFileWriter(string filename, bool prefixStr)
 		{
-			PrefixStrings = prefixStr;
-			m_Buffer = new byte[BufferSize];
-			m_File = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
-			m_Encoding = Utility.UTF8WithEncoding;
+			_PrefixStrings = prefixStr;
+			_Buffer = new byte[BufferSize];
+			_File = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+			_Encoding = Utility.UTF8WithEncoding;
 		}
 
-		public void Flush()
-		{
-			if (m_Index > 0)
-			{
-				m_Position += m_Index;
+		private long _Position;
+		public override long Position => _Position + _Index;
 
-				m_File.Write(m_Buffer, 0, m_Index);
-				m_Index = 0;
-			}
-		}
+        public void Flush()
+        {
+            if (_Index > 0)
+            {
+                _Position += _Index;
 
-		private long m_Position;
+                _File.Write(_Buffer, 0, _Index);
 
-		public override long Position => m_Position + m_Index;
-
-		public Stream UnderlyingStream
-		{
-			get
-			{
-				if (m_Index > 0)
-				{
-					Flush();
-				}
-
-				return m_File;
-			}
-		}
+                _Index = 0;
+            }
+        }
 
         protected override void Dispose(bool disposing)
         {
-            if (m_Index > 0)
+            if (disposing)
             {
-                Flush();
+                if (_Index > 0)
+                {
+                    Flush();
+                }
+
+                _File.Close();
+                _File = null;
             }
-           
-            m_File.Close();
 
             base.Dispose(disposing);
         }
 
-		public override void WriteEncodedInt(int value)
+        ~BinaryFileWriter()
+        {
+            Dispose(false);
+        }
+
+        public override void WriteEncodedInt(int value)
 		{
 			uint v = (uint)value;
 
 			while (v >= 0x80)
 			{
-				if (m_Index + 1 > m_Buffer.Length)
+				if (_Index + 1 > _Buffer.Length)
 				{
 					Flush();
 				}
 
-				m_Buffer[m_Index++] = (byte)(v | 0x80);
+				_Buffer[_Index++] = (byte)(v | 0x80);
 				v >>= 7;
 			}
 
-			if (m_Index + 1 > m_Buffer.Length)
+			if (_Index + 1 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index++] = (byte)v;
+			_Buffer[_Index++] = (byte)v;
 		}
 
 		private byte[] _CharacterBuffer;
 		private int _MaxBufferChars;
 		private const int _LargeByteBufferSize = 256;
 
-		internal void InternalWriteString(string value)
+        private void InternalWriteString(string value)
 		{
-			int length = m_Encoding.GetByteCount(value);
+			int length = _Encoding.GetByteCount(value);
 
 			WriteEncodedInt(length);
 
 			if (_CharacterBuffer == null)
 			{
 				_CharacterBuffer = new byte[_LargeByteBufferSize];
-				_MaxBufferChars = _LargeByteBufferSize / m_Encoding.GetMaxByteCount(1);
+				_MaxBufferChars = _LargeByteBufferSize / _Encoding.GetMaxByteCount(1);
 			}
 
 			if (length > _LargeByteBufferSize)
@@ -243,15 +239,15 @@ namespace Server
 				while (charsLeft > 0)
 				{
 					int charCount = charsLeft > _MaxBufferChars ? _MaxBufferChars : charsLeft;
-					int byteLength = m_Encoding.GetBytes(value, current, charCount, _CharacterBuffer, 0);
+					int byteLength = _Encoding.GetBytes(value, current, charCount, _CharacterBuffer, 0);
 
-					if (m_Index + byteLength > m_Buffer.Length)
+					if (_Index + byteLength > _Buffer.Length)
 					{
 						Flush();
 					}
 
-					Buffer.BlockCopy(_CharacterBuffer, 0, m_Buffer, m_Index, byteLength);
-					m_Index += byteLength;
+					Buffer.BlockCopy(_CharacterBuffer, 0, _Buffer, _Index, byteLength);
+					_Index += byteLength;
 
 					current += charCount;
 					charsLeft -= charCount;
@@ -259,39 +255,39 @@ namespace Server
 			}
 			else
 			{
-				int byteLength = m_Encoding.GetBytes(value, 0, value.Length, _CharacterBuffer, 0);
+				int byteLength = _Encoding.GetBytes(value, 0, value.Length, _CharacterBuffer, 0);
 
-				if (m_Index + byteLength > m_Buffer.Length)
+				if (_Index + byteLength > _Buffer.Length)
 				{
 					Flush();
 				}
 
-				Buffer.BlockCopy(_CharacterBuffer, 0, m_Buffer, m_Index, byteLength);
-				m_Index += byteLength;
+				Buffer.BlockCopy(_CharacterBuffer, 0, _Buffer, _Index, byteLength);
+				_Index += byteLength;
 			}
 		}
 
 		public override void Write(string value)
 		{
-			if (PrefixStrings)
+			if (_PrefixStrings)
 			{
 				if (value == null)
 				{
-					if (m_Index + 1 > m_Buffer.Length)
+					if (_Index + 1 > _Buffer.Length)
 					{
 						Flush();
 					}
 
-					m_Buffer[m_Index++] = 0;
+					_Buffer[_Index++] = 0;
 				}
 				else
 				{
-					if (m_Index + 1 > m_Buffer.Length)
+					if (_Index + 1 > _Buffer.Length)
 					{
 						Flush();
 					}
 
-					m_Buffer[m_Index++] = 1;
+					_Buffer[_Index++] = 1;
 
 					InternalWriteString(value);
 				}
@@ -336,150 +332,156 @@ namespace Server
 
 		public override void Write(long value)
 		{
-			if (m_Index + 8 > m_Buffer.Length)
+			if (_Index + 8 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index] = (byte)value;
-			m_Buffer[m_Index + 1] = (byte)(value >> 8);
-			m_Buffer[m_Index + 2] = (byte)(value >> 16);
-			m_Buffer[m_Index + 3] = (byte)(value >> 24);
-			m_Buffer[m_Index + 4] = (byte)(value >> 32);
-			m_Buffer[m_Index + 5] = (byte)(value >> 40);
-			m_Buffer[m_Index + 6] = (byte)(value >> 48);
-			m_Buffer[m_Index + 7] = (byte)(value >> 56);
-			m_Index += 8;
+			_Buffer[_Index] = (byte)value;
+            _Buffer[_Index + 1] = (byte)(value >> 8);
+			_Buffer[_Index + 2] = (byte)(value >> 16);
+			_Buffer[_Index + 3] = (byte)(value >> 24);
+			_Buffer[_Index + 4] = (byte)(value >> 32);
+			_Buffer[_Index + 5] = (byte)(value >> 40);
+			_Buffer[_Index + 6] = (byte)(value >> 48);
+			_Buffer[_Index + 7] = (byte)(value >> 56);
+
+			_Index += 8;
 		}
 
 		public override void Write(ulong value)
 		{
-			if (m_Index + 8 > m_Buffer.Length)
+			if (_Index + 8 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index] = (byte)value;
-			m_Buffer[m_Index + 1] = (byte)(value >> 8);
-			m_Buffer[m_Index + 2] = (byte)(value >> 16);
-			m_Buffer[m_Index + 3] = (byte)(value >> 24);
-			m_Buffer[m_Index + 4] = (byte)(value >> 32);
-			m_Buffer[m_Index + 5] = (byte)(value >> 40);
-			m_Buffer[m_Index + 6] = (byte)(value >> 48);
-			m_Buffer[m_Index + 7] = (byte)(value >> 56);
-			m_Index += 8;
+			_Buffer[_Index] = (byte)value;
+			_Buffer[_Index + 1] = (byte)(value >> 8);
+			_Buffer[_Index + 2] = (byte)(value >> 16);
+			_Buffer[_Index + 3] = (byte)(value >> 24);
+			_Buffer[_Index + 4] = (byte)(value >> 32);
+			_Buffer[_Index + 5] = (byte)(value >> 40);
+			_Buffer[_Index + 6] = (byte)(value >> 48);
+			_Buffer[_Index + 7] = (byte)(value >> 56);
+
+			_Index += 8;
 		}
 
 		public override void Write(int value)
 		{
-			if (m_Index + 4 > m_Buffer.Length)
+			if (_Index + 4 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index] = (byte)value;
-			m_Buffer[m_Index + 1] = (byte)(value >> 8);
-			m_Buffer[m_Index + 2] = (byte)(value >> 16);
-			m_Buffer[m_Index + 3] = (byte)(value >> 24);
-			m_Index += 4;
+			_Buffer[_Index] = (byte)value;
+			_Buffer[_Index + 1] = (byte)(value >> 8);
+			_Buffer[_Index + 2] = (byte)(value >> 16);
+			_Buffer[_Index + 3] = (byte)(value >> 24);
+
+			_Index += 4;
 		}
 
 		public override void Write(uint value)
 		{
-			if (m_Index + 4 > m_Buffer.Length)
+			if (_Index + 4 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index] = (byte)value;
-			m_Buffer[m_Index + 1] = (byte)(value >> 8);
-			m_Buffer[m_Index + 2] = (byte)(value >> 16);
-			m_Buffer[m_Index + 3] = (byte)(value >> 24);
-			m_Index += 4;
+			_Buffer[_Index] = (byte)value;
+			_Buffer[_Index + 1] = (byte)(value >> 8);
+			_Buffer[_Index + 2] = (byte)(value >> 16);
+			_Buffer[_Index + 3] = (byte)(value >> 24);
+
+			_Index += 4;
 		}
 
 		public override void Write(short value)
 		{
-			if (m_Index + 2 > m_Buffer.Length)
+			if (_Index + 2 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index] = (byte)value;
-			m_Buffer[m_Index + 1] = (byte)(value >> 8);
-			m_Index += 2;
+			_Buffer[_Index] = (byte)value;
+			_Buffer[_Index + 1] = (byte)(value >> 8);
+
+			_Index += 2;
 		}
 
 		public override void Write(ushort value)
 		{
-			if (m_Index + 2 > m_Buffer.Length)
+			if (_Index + 2 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index] = (byte)value;
-			m_Buffer[m_Index + 1] = (byte)(value >> 8);
-			m_Index += 2;
+			_Buffer[_Index] = (byte)value;
+			_Buffer[_Index + 1] = (byte)(value >> 8);
+
+			_Index += 2;
 		}
 
 		public override unsafe void Write(double value)
 		{
-			if (m_Index + 8 > m_Buffer.Length)
+			if (_Index + 8 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			fixed (byte* pBuffer = m_Buffer)
+			fixed (byte* pBuffer = _Buffer)
 			{
-				*(double*)(pBuffer + m_Index) = value;
+				*(double*)(pBuffer + _Index) = value;
 			}
 
-			m_Index += 8;
+			_Index += 8;
 		}
 
 		public override unsafe void Write(float value)
 		{
-			if (m_Index + 4 > m_Buffer.Length)
+			if (_Index + 4 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			fixed (byte* pBuffer = m_Buffer)
+			fixed (byte* pBuffer = _Buffer)
 			{
-				*(float*)(pBuffer + m_Index) = value;
+				*(float*)(pBuffer + _Index) = value;
 			}
 
-			m_Index += 4;
+			_Index += 4;
 		}
 
 		public override void Write(byte value)
 		{
-			if (m_Index + 1 > m_Buffer.Length)
+			if (_Index + 1 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index++] = value;
+			_Buffer[_Index++] = value;
 		}
 
 		public override void Write(sbyte value)
 		{
-			if (m_Index + 1 > m_Buffer.Length)
+			if (_Index + 1 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index++] = (byte)value;
+			_Buffer[_Index++] = (byte)value;
 		}
 
 		public override void Write(bool value)
 		{
-			if (m_Index + 1 > m_Buffer.Length)
+			if (_Index + 1 > _Buffer.Length)
 			{
 				Flush();
 			}
 
-			m_Buffer[m_Index++] = (byte)(value ? 1 : 0);
+			_Buffer[_Index++] = (byte)(value ? 1 : 0);
 		}
 
 		public override void Write(Point3D value)
