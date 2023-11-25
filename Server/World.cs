@@ -849,10 +849,7 @@ namespace Server
 			{
 				Broadcast(0x35, false, AccessLevel.Player, "The world is saving, please wait.");
 			}
-
-			SaveStrategy strategy = SaveStrategy.Acquire();
-			Console.WriteLine($"Core: Using {strategy.Name.ToLowerInvariant()} save strategy");
-
+            
 			Console.WriteLine("World: Saving...");
 
 			Stopwatch watch = Stopwatch.StartNew();
@@ -878,6 +875,8 @@ namespace Server
 			{
 				throw new Exception("FATAL: Exception in EventSink.BeforeWorldSave", e);
 			}
+
+            SaveStrategy strategy = new SaveStrategy();
 
             strategy.Save();
 
