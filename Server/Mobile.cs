@@ -55,24 +55,6 @@ namespace Server
 		}
 	}
 
-	public class EquipedSkillMod : SkillMod
-	{
-		private readonly Item m_Item;
-		private readonly Mobile m_Mobile;
-
-		public EquipedSkillMod(SkillName skill, bool relative, double value, Item item, Mobile mobile)
-			: base(skill, relative, value)
-		{
-			m_Item = item;
-			m_Mobile = mobile;
-		}
-
-		public override bool CheckCondition()
-		{
-			return !m_Item.Deleted && !m_Mobile.Deleted && m_Item.Parent == m_Mobile;
-		}
-	}
-
 	public class DefaultSkillMod : SkillMod
 	{
 		public DefaultSkillMod(SkillName skill, bool relative, double value)
@@ -313,11 +295,6 @@ namespace Server
 			}
 
 			return DateTime.UtcNow - m_Added >= m_Duration;
-		}
-
-		public TimeSpan TimeLeft()
-		{
-			return m_Duration - (DateTime.UtcNow - m_Added);
 		}
 
 		public StatMod(StatType type, string name, int offset, TimeSpan duration)
@@ -1219,24 +1196,24 @@ namespace Server
 
         private class WarmodeTimer : Timer
         {
-            private readonly Mobile m_Mobile;
-            private bool m_Value;
+            private readonly Mobile _Mobile;
+            private bool _Value;
 
-            public bool Value { get => m_Value; set => m_Value = value; }
+            public bool Value { set => _Value = value; }
 
             public WarmodeTimer(Mobile m, bool value)
                 : base(WarmodeSpamDelay)
             {
-                m_Mobile = m;
-                m_Value = value;
+                _Mobile = m;
+                _Value = value;
             }
 
             protected override void OnTick()
             {
-                m_Mobile.Warmode = m_Value;
-                m_Mobile.m_WarmodeChanges = 0;
+                _Mobile.Warmode = _Value;
+                _Mobile.m_WarmodeChanges = 0;
 
-                m_Mobile.m_WarmodeTimer = null;
+                _Mobile.m_WarmodeTimer = null;
             }
         }
 
@@ -4620,36 +4597,34 @@ namespace Server
 
 		private class LocationComparer : IComparer<IEntity>
 		{
-			private static LocationComparer m_Instance;
+			private static LocationComparer _Instance;
 
-			public static LocationComparer GetInstance(IEntity relativeTo)
+            private IEntity _RelativeTo;
+
+            public static LocationComparer GetInstance(IEntity relativeTo)
 			{
-				if (m_Instance == null)
+				if (_Instance == null)
 				{
-					m_Instance = new LocationComparer(relativeTo);
+					_Instance = new LocationComparer(relativeTo);
 				}
 				else
 				{
-					m_Instance.m_RelativeTo = relativeTo;
+					_Instance._RelativeTo = relativeTo;
 				}
 
-				return m_Instance;
+				return _Instance;
 			}
 
-			private IEntity m_RelativeTo;
-
-			public IEntity RelativeTo { get => m_RelativeTo; set => m_RelativeTo = value; }
-
-			public LocationComparer(IEntity relativeTo)
+            public LocationComparer(IEntity relativeTo)
 			{
-				m_RelativeTo = relativeTo;
+				_RelativeTo = relativeTo;
 			}
 
 			private int GetDistance(IPoint3D p)
 			{
-				int x = m_RelativeTo.X - p.X;
-				int y = m_RelativeTo.Y - p.Y;
-				int z = m_RelativeTo.Z - p.Z;
+				int x = _RelativeTo.X - p.X;
+				int y = _RelativeTo.Y - p.Y;
+				int z = _RelativeTo.Z - p.Z;
 
 				x *= 11;
 				y *= 11;

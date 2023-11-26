@@ -1013,18 +1013,6 @@ namespace Server
 			ArtData.Measure(bmp, out xMin, out yMin, out xMax, out yMax);
 		}
 
-		public static Rectangle MeasureBound(Bitmap bmp)
-		{
-			Measure(bmp, out int xMin, out int yMin, out int xMax, out int yMax);
-			return new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
-		}
-
-		public static Size MeasureSize(Bitmap bmp)
-		{
-			Measure(bmp, out int xMin, out int yMin, out int xMax, out int yMax);
-			return new Size(xMax - xMin, yMax - yMin);
-		}
-
 		private void SetFlag(ImplFlag flag, bool value)
 		{
 			if (value)
@@ -1711,41 +1699,14 @@ namespace Server
 			to.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, number, "", ""));
 		}
 
-		public void LabelTo(Mobile to, int number, string args)
-		{
-			to.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, number, "", args));
-		}
-
 		public void LabelTo(Mobile to, string text)
 		{
 			to.Send(new UnicodeMessage(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, "ENU", "", text));
 		}
 
-		public void LabelTo(Mobile to, string format, params object[] args)
-		{
-			LabelTo(to, string.Format(format, args));
-		}
-
 		public void LabelToAffix(Mobile to, int number, AffixType type, string affix)
 		{
 			to.Send(new MessageLocalizedAffix(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, number, "", type, affix, ""));
-		}
-
-		public void LabelToAffix(Mobile to, int number, AffixType type, string affix, string args)
-		{
-			to.Send(new MessageLocalizedAffix(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, number, "", type, affix, args));
-		}
-
-		public virtual void LabelLootTypeTo(Mobile to)
-		{
-			if (m_LootType == LootType.Blessed)
-			{
-				LabelTo(to, 1041362); // (blessed)
-			}
-			else if (m_LootType == LootType.Cursed)
-			{
-				LabelTo(to, "(cursed)");
-			}
 		}
 
 		public bool AtWorldPoint(int x, int y)
@@ -1941,18 +1902,16 @@ namespace Server
 		[CommandProperty(AccessLevel.GameMaster)]
 		public virtual bool IsArtifact => this is IArtifact && ((IArtifact)this).ArtifactRarity > 0;
 
-		private static TimeSpan m_DDT = TimeSpan.FromMinutes(Config.Get("General.DefaultItemDecayTime", 60));
-
-		public static TimeSpan DefaultDecayTime { get => m_DDT; set => m_DDT = value; }
-
 		[CommandProperty(AccessLevel.GameMaster)]
 		public virtual int DecayMultiplier => 1;
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public virtual bool DefaultDecaySetting => true;
 
-		[CommandProperty(AccessLevel.Decorator)]
-		public virtual TimeSpan DecayTime => TimeSpan.FromMinutes(m_DDT.TotalMinutes * DecayMultiplier);
+        private static readonly TimeSpan _DefaultDecayTime = TimeSpan.FromMinutes(Config.Get("General.DefaultItemDecayTime", 60));
+
+        [CommandProperty(AccessLevel.Decorator)]
+		public virtual TimeSpan DecayTime => TimeSpan.FromMinutes(_DefaultDecayTime.TotalMinutes * DecayMultiplier);
 
 		[CommandProperty(AccessLevel.Decorator)]
 		public virtual bool Decays => DefaultDecaySetting && Movable && Visible && !HonestyItem;
@@ -2457,15 +2416,7 @@ namespace Server
 			Light = 0x08000000
 		}
 
-		private static void SetSaveFlag(ref SaveFlag flags, SaveFlag toSet, bool setIf)
-		{
-			if (setIf)
-			{
-				flags |= toSet;
-			}
-		}
-
-		private static bool GetSaveFlag(SaveFlag flags, SaveFlag toGet)
+        private static bool GetSaveFlag(SaveFlag flags, SaveFlag toGet)
 		{
 			return (flags & toGet) != 0;
 		}
@@ -5899,34 +5850,11 @@ namespace Server
 
             ItemSocket first = null;
 
-            for (var index = 0; index < Sockets.Count; index++)
+            for (int index = 0; index < Sockets.Count; index++)
             {
-                var s = Sockets[index];
+                ItemSocket s = Sockets[index];
 
                 if (s.GetType() == typeof(T))
-                {
-                    first = s;
-                    break;
-                }
-            }
-
-            return first as T;
-		}
-
-		public T GetSocket<T>(Func<T, bool> predicate) where T : ItemSocket
-		{
-			if (Sockets == null)
-			{
-				return null;
-			}
-
-            ItemSocket first = null;
-
-            for (var index = 0; index < Sockets.Count; index++)
-            {
-                var s = Sockets[index];
-
-                if (s.GetType() == typeof(T) && (predicate == null || predicate(s as T)))
                 {
                     first = s;
                     break;
