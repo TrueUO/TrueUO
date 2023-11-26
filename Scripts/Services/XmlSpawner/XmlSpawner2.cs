@@ -152,16 +152,16 @@ namespace Server.Mobiles
         private Item m_SetPropertyItem;
 
         private bool m_skipped = false;
-        private int m_KillReset = defKillReset;      // number of spawn ticks that pass without kills before killcount gets reset to zero
+        private int m_KillReset = defKillReset; // number of spawn ticks that pass without kills before killcount gets reset to zero
         private int m_spawncheck = 0;
         private TODModeType m_TODMode = TODModeType.Realtime;
-        private string m_GumpState;
+        private string m_GumpState; // NEED TO REMOVE
         private bool m_ExternalTriggering;
         private bool m_ExternalTrigger;
-        private int m_SequentialSpawning = -1;      // off by default
+        private int m_SequentialSpawning = -1; // off by default
         private DateTime m_SeqEnd;
-        private Region m_Region;    // 2004.02.08 :: Omega Red
-        private string m_RegionName = string.Empty; // 2004.02.08 :: Omega Red
+        private Region m_Region; 
+        private string m_RegionName = string.Empty;
         private AccessLevel m_TriggerAccessLevel = AccessLevel.Player;
 
         public List<XmlTextEntryBook> m_TextEntryBook;
@@ -219,33 +219,6 @@ namespace Server.Mobiles
 
         public int FastestPlayerSpeed { get; set; } = 0;
 
-        public int NearbyPlayerCount
-        {
-            get
-            {
-                int count = 0;
-                if (ProximityRange >= 0)
-                {
-                    IPooledEnumerable eable = GetMobilesInRange(ProximityRange);
-
-                    foreach (Mobile m in eable)
-                    {
-                        if (m != null && m.Player) count++;
-                    }
-
-                    eable.Free();
-                }
-
-                return count;
-            }
-        }
-
-        public Point3D MostRecentSpawnPosition
-        {
-            get => mostRecentSpawnPosition;
-            set => mostRecentSpawnPosition = value;
-        }
-
         public TimeSpan GameTOD
         {
             get
@@ -281,8 +254,6 @@ namespace Server.Mobiles
 
         private readonly bool sectorIsActive = false;
         private bool UseSectorActivate = false;
-
-        public bool SingleSector => UseSectorActivate;
 
         public bool InActivationRange(Sector s1, Sector s2)
         {
@@ -1518,13 +1489,6 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string GumpState
-        {
-            get => m_GumpState;
-            set => m_GumpState = value;
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public int SequentialSpawn
         {
             get => m_SequentialSpawning;
@@ -1958,7 +1922,6 @@ namespace Server.Mobiles
                 }
             }
 
-            ShowTagList(this);
             int count = 0;
             Console.WriteLine("Registered SkillsTotal = {0}", count);
         }
@@ -2252,8 +2215,6 @@ namespace Server.Mobiles
         #endregion
 
         #region Initialization
-        public delegate bool AssignSettingsHandler(string argname, string value);
-
         public static void Initialize()
         {
             // initialize the default waypoint name
@@ -2376,21 +2337,6 @@ namespace Server.Mobiles
                 {
                     LogFailure("Format: XmlSet <propertyName> <value>");
                 }
-            }
-        }
-
-        public void ShowTagList(XmlSpawner spawner)
-        {
-            int count = 0;
-
-            Console.WriteLine("{0} tags", spawner.m_KeywordTagList.Count);
-
-            for (var index = 0; index < spawner.m_KeywordTagList.Count; index++)
-            {
-                BaseXmlSpawner.KeywordTag tag = spawner.m_KeywordTagList[index];
-                count++;
-
-                Console.WriteLine("tag {0} : {1}", count, BaseXmlSpawner.TagInfo(tag));
             }
         }
 
@@ -8310,16 +8256,6 @@ namespace Server.Mobiles
             }
         }
 
-        public void DoSectorTimer(TimeSpan delay)
-        {
-            if (m_SectorTimer != null)
-                m_SectorTimer.Stop();
-
-            m_SectorTimer = new SectorTimer(this, delay);
-
-            m_SectorTimer.Start();
-        }
-
         private class SectorTimer : Timer
         {
             private readonly XmlSpawner m_Spawner;
@@ -9299,7 +9235,6 @@ namespace Server.Mobiles
             public bool Available; // temporary variable used to calculate weighted spawn probabilities
 
             public List<object> SpawnedObjects;
-            public string[] PropertyArgs;
             public double SequentialResetTime;
             public int EntryOrder;  // used for sorting
             public bool RequireSurface = true;

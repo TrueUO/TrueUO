@@ -389,14 +389,6 @@ namespace Server.Mobiles
             }
         }
 
-        public static string TagInfo(KeywordTag tag)
-        {
-            if (tag != null)
-                return $"{tag.Typename} : type={tag.Type} cond={tag.m_Condition} go={tag.m_Goto} del={tag.m_Delay} end={tag.m_End}";
-
-            return null;
-        }
-
         public static void RemoveFromTagList(XmlSpawner spawner, KeywordTag tag)
         {
             for (int i = 0; i < spawner.m_KeywordTagList.Count; i++)
@@ -2722,13 +2714,6 @@ namespace Server.Mobiles
         #endregion
 
         #region Spawn methods
-
-        public static void AddSpawnItem(XmlSpawner spawner, object invoker, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            string propertyString, out string status_str)
-        {
-            AddSpawnItem(spawner, invoker, theSpawn, item, location, map, trigmob, requiresurface, null, propertyString, false, out status_str);
-        }
-
         public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
             List<XmlSpawner.SpawnPositionInfo> spawnpositioning, string propertyString, bool smartspawn, out string status_str)
         {
@@ -2826,13 +2811,6 @@ namespace Server.Mobiles
             // apply the parsed arguments from the typestring using setcommand
             // be sure to do this after setting map and location so that errors dont place the mob on the internal map
             ApplyObjectStringProperties(spawner, propertyString, item, trigmob, spawner, out status_str);
-        }
-
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName,
-            Mobile triggermob, Map map, out string status_str)
-        {
-            return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName,
-                triggermob, map, out status_str, 0);
         }
 
         public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, Mobile triggermob, Map map, out string status_str, byte loops)
