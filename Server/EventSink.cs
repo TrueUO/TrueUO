@@ -10,8 +10,6 @@ using Server.Network;
 
 namespace Server
 {
-	public delegate void WorldBroadcastEventHandler(WorldBroadcastEventArgs e);
-
 	public delegate void CharacterCreatedEventHandler(CharacterCreatedEventArgs e);
 
 	public delegate void OpenDoorMacroEventHandler(OpenDoorMacroEventArgs e);
@@ -115,22 +113,6 @@ namespace Server
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
-
-	public class WorldBroadcastEventArgs : EventArgs
-	{
-		public int Hue { get; }
-		public bool Ascii { get; }
-		public AccessLevel Access { get; }
-		public string Text { get; }
-
-		public WorldBroadcastEventArgs(int hue, bool ascii, AccessLevel access, string text)
-		{
-			Hue = hue;
-			Ascii = ascii;
-			Access = access;
-			Text = text;
-		}
-	}
 
 	public class ClientVersionReceivedArgs : EventArgs
 	{
@@ -1080,7 +1062,6 @@ namespace Server
 
 	public static class EventSink
 	{
-		public static event WorldBroadcastEventHandler WorldBroadcast;
 		public static event CharacterCreatedEventHandler CharacterCreated;
 		public static event OpenDoorMacroEventHandler OpenDoorMacroUsed;
 		public static event SpeechEventHandler Speech;
@@ -1134,11 +1115,6 @@ namespace Server
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
-
-		public static void InvokeWorldBroadcast(WorldBroadcastEventArgs e)
-        {
-            WorldBroadcast?.Invoke(e);
-        }
 
 		public static void InvokeClientVersionReceived(ClientVersionReceivedArgs e)
         {

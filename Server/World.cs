@@ -72,15 +72,6 @@ namespace Server
 
 		public static void Broadcast(int hue, bool ascii, AccessLevel access, string text)
 		{
-			WorldBroadcastEventArgs e = new WorldBroadcastEventArgs(hue, ascii, access, text);
-
-			EventSink.InvokeWorldBroadcast(e);
-
-			hue = e.Hue;
-			ascii = e.Ascii;
-			text = e.Text;
-			access = e.Access;
-
 			if (string.IsNullOrWhiteSpace(text))
 			{
 				return;
