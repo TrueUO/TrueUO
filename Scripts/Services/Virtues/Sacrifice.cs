@@ -155,7 +155,7 @@ namespace Server.Services.Virtues
 
                 bool gainedPath = false;
 
-                if (VirtueHelper.Award(from, VirtueName.Sacrifice, toGain, ref gainedPath))
+                if (VirtueHelper.Award(from, VirtueName.Sacrifice, toGain))
                 {
                     if (gainedPath)
                     {

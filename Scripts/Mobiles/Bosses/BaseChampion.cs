@@ -122,7 +122,7 @@ namespace Server.Mobiles
 
                 int pointsToGain = 800;
 
-                if (VirtueHelper.Award(m, VirtueName.Valor, pointsToGain, ref gainedPath))
+                if (VirtueHelper.Award(m, VirtueName.Valor, pointsToGain))
                 {
                     if (gainedPath)
                         m.SendLocalizedMessage(1054032); // You have gained a path in Valor!

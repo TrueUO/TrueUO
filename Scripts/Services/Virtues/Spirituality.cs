@@ -171,7 +171,7 @@ namespace Server.Services.Virtues
             int points = Math.Min(50, amount);
             bool gainedPath = false;
 
-            if (VirtueHelper.Award(mobile, VirtueName.Spirituality, points, ref gainedPath))
+            if (VirtueHelper.Award(mobile, VirtueName.Spirituality, points))
             {
                 if (gainedPath)
                     mobile.SendLocalizedMessage(1155833); // You have gained a path in Spirituality!

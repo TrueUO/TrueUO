@@ -440,7 +440,7 @@ namespace Server.Services.Virtues
 
             bool gainedPath = false;
 
-            if (VirtueHelper.Award(m_Source, VirtueName.Honor, gain, ref gainedPath))
+            if (VirtueHelper.Award(m_Source, VirtueName.Honor, gain))
             {
                 if (gainedPath)
                     m_Source.SendLocalizedMessage(1063226); // You have gained a path in Honor!

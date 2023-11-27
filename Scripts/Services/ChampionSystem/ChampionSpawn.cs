@@ -567,7 +567,7 @@ namespace Server.Engines.CannedEvil
 
                                 int pointsToGain = mobSubLevel * 40;
 
-                                if (VirtueHelper.Award(pm, VirtueName.Valor, pointsToGain, ref gainedPath))
+                                if (VirtueHelper.Award(pm, VirtueName.Valor, pointsToGain))
                                 {
                                     if (gainedPath)
                                         pm.SendLocalizedMessage(1054032); // You have gained a path in Valor!

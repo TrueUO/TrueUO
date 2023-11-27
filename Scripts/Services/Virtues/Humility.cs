@@ -219,7 +219,7 @@ namespace Server.Services.Virtues
             {
                 bool gainedPath = false;
 
-                if (VirtueHelper.Award(attacker, VirtueName.Humility, points, ref gainedPath))
+                if (VirtueHelper.Award(attacker, VirtueName.Humility, points))
                 {
                     if (gainedPath)
                         attacker.SendLocalizedMessage(1155811); // You have gained a path in Humility!
