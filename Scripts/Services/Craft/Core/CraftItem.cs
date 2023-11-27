@@ -1993,12 +1993,9 @@ namespace Server.Engines.Craft
                         from.AddToBackpack(item);
                     }
 
-                    EventSink.InvokeCraftSuccess(new CraftSuccessEventArgs(from, item, tool is Item itemTool ? itemTool : null));
-
                     if (from.IsStaff())
                     {
-                        CommandLogging.WriteLine(
-                            from, "Crafting {0} with craft system {1}", CommandLogging.Format(item), craftSystem.GetType().Name);
+                        CommandLogging.WriteLine(from, "Crafting {0} with craft system {1}", CommandLogging.Format(item), craftSystem.GetType().Name);
                     }
                 }
 

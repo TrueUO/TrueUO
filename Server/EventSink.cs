@@ -100,8 +100,6 @@ namespace Server
 
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
-	public delegate void CraftSuccessEventHandler(CraftSuccessEventArgs e);
-
 	public delegate void QuestCompleteEventHandler(QuestCompleteEventArgs e);
 
 	public delegate void ItemDeletedEventHandler(ItemDeletedEventArgs e);
@@ -970,20 +968,6 @@ namespace Server
 		public Region NewRegion => m_NewRegion;
 	}
 
-	public class CraftSuccessEventArgs : EventArgs
-	{
-		public Mobile Crafter { get; }
-		public Item Tool { get; }
-		public Item CraftedItem { get; }
-
-		public CraftSuccessEventArgs(Mobile m, Item i, Item t)
-		{
-			Crafter = m;
-			Tool = t;
-			CraftedItem = i;
-		}
-	}
-
 	public class QuestCompleteEventArgs : EventArgs
 	{
 		public Type QuestType { get; }
@@ -1194,7 +1178,6 @@ namespace Server
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnKilledByEventHandler OnKilledBy;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
-		public static event CraftSuccessEventHandler CraftSuccess;
 		public static event QuestCompleteEventHandler QuestComplete;
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event TargetedSpellEventHandler TargetedSpell;
@@ -1435,11 +1418,6 @@ namespace Server
 		public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
         {
             OnEnterRegion?.Invoke(e);
-        }
-
-		public static void InvokeCraftSuccess(CraftSuccessEventArgs e)
-        {
-            CraftSuccess?.Invoke(e);
         }
 
 		public static void InvokeQuestComplete(QuestCompleteEventArgs e)
