@@ -114,8 +114,6 @@ namespace Server
 
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
 
-	public delegate void RepairItemEventHandler(RepairItemEventArgs e);
-
 	public delegate void VirtueLevelChangeEventHandler(VirtueLevelChangeEventArgs e);
 
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
@@ -1074,20 +1072,6 @@ namespace Server
 		}
 	}
 
-	public class RepairItemEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Item Tool { get; set; }
-		public IEntity Repaired { get; set; }
-
-		public RepairItemEventArgs(Mobile m, Item tool, IEntity repaired)
-		{
-			Mobile = m;
-			Tool = tool;
-			Repaired = repaired;
-		}
-	}
-
 	public class VirtueLevelChangeEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -1185,7 +1169,6 @@ namespace Server
 		public static event EquipMacroEventHandler EquipMacro;
 		public static event UnequipMacroEventHandler UnequipMacro;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
-		public static event RepairItemEventHandler RepairItem;
 		public static event VirtueLevelChangeEventHandler VirtueLevelChange;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
@@ -1453,11 +1436,6 @@ namespace Server
 		public static void InvokeUnequipMacro(UnequipMacroEventArgs e)
         {
             UnequipMacro?.Invoke(e);
-        }
-
-		public static void InvokeRepairItem(RepairItemEventArgs e)
-        {
-            RepairItem?.Invoke(e);
         }
 
 		public static void InvokeVirtueLevelChange(VirtueLevelChangeEventArgs e)
