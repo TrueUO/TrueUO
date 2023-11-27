@@ -49,8 +49,6 @@ namespace Server.Items
 
                 v.SayTo(from, 503246); // Ah! it feels good to be working again.
 
-                EventSink.InvokePlacePlayerVendor(new PlacePlayerVendorEventArgs(from, v));
-
                 Delete();
             }
             else
@@ -91,8 +89,6 @@ namespace Server.Items
                         v.MoveToWorld(from.Location, from.Map);
 
                         v.SayTo(from, 503246); // Ah! it feels good to be working again.
-
-                        EventSink.InvokePlacePlayerVendor(new PlacePlayerVendorEventArgs(from, v));
 
                         Delete();
                     }

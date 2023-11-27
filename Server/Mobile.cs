@@ -5960,12 +5960,7 @@ namespace Server
 		public virtual int MaxWeight => int.MaxValue;
 
 		public virtual void Obtained(Item item)
-		{
-			if (item != m_Backpack && item != m_BankBox)
-			{
-				EventSink.InvokeOnItemObtained(new OnItemObtainedEventArgs(this, item));
-			}
-		}
+		{ }
 
 		public void AddItem(Item item)
 		{
@@ -9204,8 +9199,6 @@ namespace Server
 					m_NetState.Send(new MobileUpdate(this));
 
 					ClearFastwalkStack();
-
-					EventSink.InvokeTeleportMovement(new TeleportMovementEventArgs(this, oldLocation, newLocation));
 				}
 
 				Map map = m_Map;

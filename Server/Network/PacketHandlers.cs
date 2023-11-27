@@ -265,9 +265,7 @@ namespace Server.Network
 		}
 
 		public static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
-		{
-			EventSink.InvokeQuestGumpRequest(new QuestGumpRequestArgs(state.Mobile));
-		}
+		{ }
 
 		public static void EncodedCommand(NetState state, PacketReader pvSrc)
 		{

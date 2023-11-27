@@ -10,8 +10,6 @@ using Server.Network;
 
 namespace Server
 {
-	public delegate void OnItemObtainedEventHandler(OnItemObtainedEventArgs e);
-
 	public delegate void CheckEquipItemEventHandler(CheckEquipItemEventArgs e);
 
 	public delegate void WorldBroadcastEventHandler(WorldBroadcastEventArgs e);
@@ -98,8 +96,6 @@ namespace Server
 
 	public delegate void GuildGumpRequestHandler(GuildGumpRequestArgs e);
 
-	public delegate void QuestGumpRequestHandler(QuestGumpRequestArgs e);
-
 	public delegate void ClientVersionReceivedHandler(ClientVersionReceivedArgs e);
 
 	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
@@ -134,30 +130,9 @@ namespace Server
 
 	public delegate void AlterItemEventHandler(AlterItemEventArgs e);
 
-	public delegate void PlacePlayerVendorEventHandler(PlacePlayerVendorEventArgs e);
-
-	public delegate void AccountGoldChangeEventHandler(AccountGoldChangeEventArgs e);
-
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
-	public delegate void TeleportMovementEventHandler(TeleportMovementEventArgs e);
-
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
-
-	public class OnItemObtainedEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly Item m_Item;
-
-		public OnItemObtainedEventArgs(Mobile from, Item item)
-		{
-			m_Mobile = from;
-			m_Item = item;
-		}
-
-		public Mobile Mobile => m_Mobile;
-		public Item Item => m_Item;
-	}
 
 	public class CheckEquipItemEventArgs : EventArgs
 	{
@@ -237,18 +212,6 @@ namespace Server
 		public Mobile Mobile => m_Mobile;
 
 		public GuildGumpRequestArgs(Mobile mobile)
-		{
-			m_Mobile = mobile;
-		}
-	}
-
-	public class QuestGumpRequestArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public QuestGumpRequestArgs(Mobile mobile)
 		{
 			m_Mobile = mobile;
 		}
@@ -1233,32 +1196,6 @@ namespace Server
 		}
 	}
 
-	public class PlacePlayerVendorEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
-
-		public PlacePlayerVendorEventArgs(Mobile m, Mobile vendor)
-		{
-			Mobile = m;
-			Vendor = vendor;
-		}
-	}
-
-	public class AccountGoldChangeEventArgs : EventArgs
-	{
-		public IAccount Account { get; set; }
-		public double OldAmount { get; set; }
-		public double NewAmount { get; set; }
-
-		public AccountGoldChangeEventArgs(IAccount account, double oldAmount, double newAmount)
-		{
-			Account = account;
-			OldAmount = oldAmount;
-			NewAmount = newAmount;
-		}
-	}
-
 	public class ContainerDroppedToEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -1270,20 +1207,6 @@ namespace Server
 			Mobile = m;
 			Container = container;
 			Dropped = dropped;
-		}
-	}
-
-	public class TeleportMovementEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Point3D OldLocation { get; set; }
-		public Point3D NewLocation { get; set; }
-
-		public TeleportMovementEventArgs(Mobile m, Point3D oldLoc, Point3D newLoc)
-		{
-			Mobile = m;
-			OldLocation = oldLoc;
-			NewLocation = newLoc;
 		}
 	}
 
@@ -1301,7 +1224,6 @@ namespace Server
 
 	public static class EventSink
 	{
-		public static event OnItemObtainedEventHandler OnItemObtained;
 		public static event CheckEquipItemEventHandler CheckEquipItem;
 		public static event WorldBroadcastEventHandler WorldBroadcast;
 		public static event CharacterCreatedEventHandler CharacterCreated;
@@ -1346,7 +1268,6 @@ namespace Server
 		public static event CreateGuildHandler CreateGuild;
 		public static event ServerStartedEventHandler ServerStarted;
 		public static event GuildGumpRequestHandler GuildGumpRequest;
-		public static event QuestGumpRequestHandler QuestGumpRequest;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnKilledByEventHandler OnKilledBy;
@@ -1364,16 +1285,8 @@ namespace Server
 		public static event JoinGuildEventHandler JoinGuild;
 		public static event RepairItemEventHandler RepairItem;
 		public static event AlterItemEventHandler AlterItem;
-		public static event PlacePlayerVendorEventHandler PlacePlayerVendor;
-		public static event AccountGoldChangeEventHandler AccountGoldChange;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
-		public static event TeleportMovementEventHandler TeleportMovement;
 		public static event MultiDesignQueryHandler MultiDesign;
-
-		public static void InvokeOnItemObtained(OnItemObtainedEventArgs e)
-        {
-            OnItemObtained?.Invoke(e);
-        }
 
 		public static void InvokeCheckEquipItem(CheckEquipItemEventArgs e)
         {
@@ -1413,11 +1326,6 @@ namespace Server
 		public static void InvokeGuildGumpRequest(GuildGumpRequestArgs e)
         {
             GuildGumpRequest?.Invoke(e);
-        }
-
-		public static void InvokeQuestGumpRequest(QuestGumpRequestArgs e)
-        {
-            QuestGumpRequest?.Invoke(e);
         }
 
 		public static void InvokeFastWalk(FastWalkEventArgs e)
@@ -1685,24 +1593,9 @@ namespace Server
             AlterItem?.Invoke(e);
         }
 
-		public static void InvokePlacePlayerVendor(PlacePlayerVendorEventArgs e)
-        {
-            PlacePlayerVendor?.Invoke(e);
-        }
-
-		public static void InvokeAccountGoldChange(AccountGoldChangeEventArgs e)
-        {
-            AccountGoldChange?.Invoke(e);
-        }
-
 		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)
         {
             ContainerDroppedTo?.Invoke(e);
-        }
-
-		public static void InvokeTeleportMovement(TeleportMovementEventArgs e)
-        {
-            TeleportMovement?.Invoke(e);
         }
 
 		public static void InvokeMultiDesignQuery(MultiDesignQueryEventArgs e)
