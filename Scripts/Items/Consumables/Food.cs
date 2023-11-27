@@ -158,8 +158,6 @@ namespace Server.Items
 
                 Consume();
 
-                EventSink.InvokeOnConsume(new OnConsumeEventArgs(from, this));
-
                 return true;
             }
 

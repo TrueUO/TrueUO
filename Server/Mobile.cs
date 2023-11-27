@@ -1422,8 +1422,6 @@ namespace Server
                 if (oldValue != value)
                 {
                     m_Hunger = value;
-
-                    EventSink.InvokeHungerChanged(new HungerChangedEventArgs(this, oldValue));
                 }
             }
         }
@@ -3634,8 +3632,6 @@ namespace Server
             {
                 m_AutoManifestTimer.Stop();
             }
-
-            Timer.DelayCall(EventSink.InvokeMobileDeleted, new MobileDeletedEventArgs(this));
         }
 
         public virtual bool AllowSkillUse(SkillName name)
@@ -6340,7 +6336,6 @@ namespace Server
 					}
 
 					OnFameChange(oldValue);
-					EventSink.InvokeFameChange(new FameChangeEventArgs(this, oldValue, m_Fame));
 				}
 			}
 		}
@@ -6360,7 +6355,6 @@ namespace Server
 				{
 					m_Karma = value;
 					OnKarmaChange(old);
-					EventSink.InvokeKarmaChange(new KarmaChangeEventArgs(this, old, m_Karma));
 				}
 			}
 		}
@@ -9210,8 +9204,6 @@ namespace Server
 					m_NetState.Send(new MobileUpdate(this));
 
 					ClearFastwalkStack();
-
-					EventSink.InvokeTeleportMovement(new TeleportMovementEventArgs(this, oldLocation, newLocation));
 				}
 
 				Map map = m_Map;
@@ -10232,7 +10224,6 @@ namespace Server
 
 			Timer.DelayCall(() =>
             {
-                EventSink.InvokeMobileCreated(new MobileCreatedEventArgs(this));
                 m_InternalCanRegen = true;
                 OnCreate();
             });

@@ -1718,10 +1718,7 @@ namespace Server.Accounting
                 return false;
             }
 
-            double oldAmount = TotalCurrency;
             TotalCurrency += amount;
-
-            EventSink.InvokeAccountGoldChange(new AccountGoldChangeEventArgs(this, oldAmount, TotalCurrency));
 
             return true;
         }
@@ -1787,10 +1784,8 @@ namespace Server.Accounting
                 return false;
             }
 
-            double oldAmount = TotalCurrency;
             TotalCurrency -= amount;
 
-            EventSink.InvokeAccountGoldChange(new AccountGoldChangeEventArgs(this, oldAmount, TotalCurrency));
             return true;
         }
 

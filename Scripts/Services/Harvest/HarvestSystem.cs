@@ -92,7 +92,6 @@ namespace Server.Engines.Harvest
             if (!CheckHarvest(from, tool))
                 return false;
 
-            EventSink.InvokeResourceHarvestAttempt(new ResourceHarvestAttemptEventArgs(from, tool, this));
             from.Target = new HarvestTarget(tool, this);
             return true;
         }
@@ -210,13 +209,13 @@ namespace Server.Engines.Harvest
                         }
 
                         BonusHarvestResource bonus = def.GetBonusResource();
-                        Item bonusItem = null;
 
                         if (bonus != null && bonus.Type != null && skillBase >= bonus.ReqSkill)
                         {
                             if (bonus.RequiredMap == null || bonus.RequiredMap == from.Map)
                             {
-                                bonusItem = Construct(bonus.Type, from, tool);
+                                Item bonusItem = Construct(bonus.Type, from, tool);
+
                                 Caddellite.OnHarvest(from, tool, this, bonusItem, false);
 
                                 if (Give(from, bonusItem, true))    //Bonuses always allow placing at feet, even if pack is full irregrdless of def
@@ -229,8 +228,6 @@ namespace Server.Engines.Harvest
                                 }
                             }
                         }
-
-                        EventSink.InvokeResourceHarvestSuccess(new ResourceHarvestSuccessEventArgs(from, tool, item, bonusItem, this));
                     }
 
                     OnToolUsed(from, tool, item != null);

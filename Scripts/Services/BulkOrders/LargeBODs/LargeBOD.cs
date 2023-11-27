@@ -162,7 +162,6 @@ namespace Server.Engines.BulkOrders
         {
             if (IsChildOf(from.Backpack) || InSecureTrade || RootParent is PlayerVendor)
             {
-                EventSink.InvokeBODUsed(new BODUsedEventArgs(from, this));
                 from.SendGump(new LargeBODGump(from, this));
             }
             else
