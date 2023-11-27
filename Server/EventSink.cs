@@ -110,12 +110,6 @@ namespace Server
 
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
-	public delegate void OnPropertyChangedEventHandler(OnPropertyChangedEventArgs e);
-
-	public delegate void ResourceHarvestAttemptEventHandler(ResourceHarvestAttemptEventArgs e);
-
-	public delegate void ResourceHarvestSuccessEventHandler(ResourceHarvestSuccessEventArgs e);
-
 	public delegate void CraftSuccessEventHandler(CraftSuccessEventArgs e);
 
 	public delegate void SkillCapChangeEventHandler(SkillCapChangeEventArgs e);
@@ -1057,56 +1051,6 @@ namespace Server
 		public Region NewRegion => m_NewRegion;
 	}
 
-	public class OnPropertyChangedEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; }
-		public PropertyInfo Property { get; }
-		public object Instance { get; }
-		public object OldValue { get; }
-		public object NewValue { get; }
-
-		public OnPropertyChangedEventArgs(Mobile m, object instance, PropertyInfo prop, object oldValue, object newValue)
-		{
-			Mobile = m;
-			Property = prop;
-			Instance = instance;
-			OldValue = oldValue;
-			NewValue = newValue;
-		}
-	}
-
-	public class ResourceHarvestAttemptEventArgs : EventArgs
-	{
-		public Mobile Harvester { get; }
-		public Item Tool { get; }
-		public object HarvestSystem { get; }
-
-		public ResourceHarvestAttemptEventArgs(Mobile m, Item i, object o)
-		{
-			Harvester = m;
-			Tool = i;
-			HarvestSystem = o;
-		}
-	}
-
-	public class ResourceHarvestSuccessEventArgs : EventArgs
-	{
-		public Mobile Harvester { get; }
-		public Item Tool { get; }
-		public Item Resource { get; }
-		public Item BonusResource { get; }
-		public object HarvestSystem { get; }
-
-		public ResourceHarvestSuccessEventArgs(Mobile m, Item i, Item r, Item b, object o)
-		{
-			Harvester = m;
-			Tool = i;
-			Resource = r;
-			BonusResource = b;
-			HarvestSystem = o;
-		}
-	}
-
 	public class CraftSuccessEventArgs : EventArgs
 	{
 		public Mobile Crafter { get; }
@@ -1477,9 +1421,6 @@ namespace Server
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnKilledByEventHandler OnKilledBy;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
-		public static event OnPropertyChangedEventHandler OnPropertyChanged;
-		public static event ResourceHarvestAttemptEventHandler ResourceHarvestAttempt;
-		public static event ResourceHarvestSuccessEventHandler ResourceHarvestSuccess;
 		public static event CraftSuccessEventHandler CraftSuccess;
 		public static event SkillCapChangeEventHandler SkillCapChange;
 		public static event StatCapChangeEventHandler StatCapChange;
@@ -1751,21 +1692,6 @@ namespace Server
 		public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
         {
             OnEnterRegion?.Invoke(e);
-        }
-
-		public static void InvokeOnPropertyChanged(OnPropertyChangedEventArgs e)
-        {
-            OnPropertyChanged?.Invoke(e);
-        }
-
-		public static void InvokeResourceHarvestAttempt(ResourceHarvestAttemptEventArgs e)
-        {
-            ResourceHarvestAttempt?.Invoke(e);
-        }
-
-		public static void InvokeResourceHarvestSuccess(ResourceHarvestSuccessEventArgs e)
-        {
-            ResourceHarvestSuccess?.Invoke(e);
         }
 
 		public static void InvokeCraftSuccess(CraftSuccessEventArgs e)
