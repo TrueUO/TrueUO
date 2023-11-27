@@ -857,7 +857,6 @@ namespace Server.Items
             if (canLoot && !m_HasLooted.Contains(item))
             {
                 m_HasLooted.Add(item);
-                EventSink.InvokeCorpseLoot(new CorpseLootEventArgs(from, this, item));
             }
 
             return canLoot;

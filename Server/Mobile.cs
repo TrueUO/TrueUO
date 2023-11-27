@@ -1422,8 +1422,6 @@ namespace Server
                 if (oldValue != value)
                 {
                     m_Hunger = value;
-
-                    EventSink.InvokeHungerChanged(new HungerChangedEventArgs(this, oldValue));
                 }
             }
         }
@@ -3634,8 +3632,6 @@ namespace Server
             {
                 m_AutoManifestTimer.Stop();
             }
-
-            Timer.DelayCall(EventSink.InvokeMobileDeleted, new MobileDeletedEventArgs(this));
         }
 
         public virtual bool AllowSkillUse(SkillName name)
@@ -5964,12 +5960,7 @@ namespace Server
 		public virtual int MaxWeight => int.MaxValue;
 
 		public virtual void Obtained(Item item)
-		{
-			if (item != m_Backpack && item != m_BankBox)
-			{
-				EventSink.InvokeOnItemObtained(new OnItemObtainedEventArgs(this, item));
-			}
-		}
+		{ }
 
 		public void AddItem(Item item)
 		{
@@ -6340,7 +6331,6 @@ namespace Server
 					}
 
 					OnFameChange(oldValue);
-					EventSink.InvokeFameChange(new FameChangeEventArgs(this, oldValue, m_Fame));
 				}
 			}
 		}
@@ -6360,7 +6350,6 @@ namespace Server
 				{
 					m_Karma = value;
 					OnKarmaChange(old);
-					EventSink.InvokeKarmaChange(new KarmaChangeEventArgs(this, old, m_Karma));
 				}
 			}
 		}
@@ -9210,8 +9199,6 @@ namespace Server
 					m_NetState.Send(new MobileUpdate(this));
 
 					ClearFastwalkStack();
-
-					EventSink.InvokeTeleportMovement(new TeleportMovementEventArgs(this, oldLocation, newLocation));
 				}
 
 				Map map = m_Map;
@@ -10126,9 +10113,7 @@ namespace Server
 		///     <seealso cref="Item.OnItemUsed" />
 		/// </summary>
 		public virtual void OnItemUsed(Mobile from, Item item)
-		{
-			EventSink.InvokeOnItemUse(new OnItemUseEventArgs(from, item));
-		}
+		{ }
 
         public virtual bool CheckHasTradeDrop(Mobile from, Item item, Item target)
         {
@@ -10232,7 +10217,6 @@ namespace Server
 
 			Timer.DelayCall(() =>
             {
-                EventSink.InvokeMobileCreated(new MobileCreatedEventArgs(this));
                 m_InternalCanRegen = true;
                 OnCreate();
             });
@@ -11660,14 +11644,7 @@ namespace Server
 			{
 				if (m_StatCap != value)
 				{
-					int old = m_StatCap;
-
 					m_StatCap = value;
-
-					if (old != m_StatCap)
-					{
-						EventSink.InvokeStatCapChange(new StatCapChangeEventArgs(this, old, m_StatCap));
-					}
 
 					Delta(MobileDelta.StatCap);
 				}

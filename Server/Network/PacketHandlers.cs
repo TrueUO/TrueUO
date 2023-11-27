@@ -1,4 +1,3 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,7 +14,6 @@ using Server.Prompts;
 using Server.Targeting;
 
 using CV = Server.ClientVersion;
-#endregion
 
 namespace Server.Network
 {
@@ -188,19 +186,7 @@ namespace Server.Network
             return handler;
         }
 
-		public static void RemoveExtendedHandler(int packetID)
-		{
-			if (packetID >= 0 && packetID < 0x100)
-			{
-				m_ExtendedHandlersLow[packetID] = null;
-			}
-			else
-			{
-				m_ExtendedHandlersHigh.Remove(packetID);
-			}
-		}
-
-		public static void RegisterEncoded(int packetID, bool ingame, OnEncodedPacketReceive onReceive)
+        public static void RegisterEncoded(int packetID, bool ingame, OnEncodedPacketReceive onReceive)
 		{
 			if (packetID >= 0 && packetID < 0x100)
 			{
@@ -223,19 +209,7 @@ namespace Server.Network
             return handler;
         }
 
-		public static void RemoveEncodedHandler(int packetID)
-		{
-			if (packetID >= 0 && packetID < 0x100)
-			{
-				m_EncodedHandlersLow[packetID] = null;
-			}
-			else
-			{
-				m_EncodedHandlersHigh.Remove(packetID);
-			}
-		}
-
-		public static void RegisterThrottler(int packetID, ThrottlePacketCallback t)
+        public static void RegisterThrottler(int packetID, ThrottlePacketCallback t)
 		{
 			PacketHandler ph = GetHandler(packetID);
 
@@ -251,7 +225,7 @@ namespace Server.Network
 		private static void UnhandledBF(NetState state, PacketReader pvSrc)
 		{ }
 
-		public static void Empty(NetState state, PacketReader pvSrc)
+        private static void Empty(NetState state, PacketReader pvSrc)
 		{ }
 
 		public static void SetAbility(NetState state, IEntity e, EncodedReader reader)
@@ -264,10 +238,8 @@ namespace Server.Network
 			EventSink.InvokeGuildGumpRequest(new GuildGumpRequestArgs(state.Mobile));
 		}
 
-		public static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
-		{
-			EventSink.InvokeQuestGumpRequest(new QuestGumpRequestArgs(state.Mobile));
-		}
+        private static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
+		{ }
 
 		public static void EncodedCommand(NetState state, PacketReader pvSrc)
 		{
@@ -732,7 +704,7 @@ namespace Server.Network
 			}
 		}
 
-		public static void AccountID(NetState state, PacketReader pvSrc)
+        private static void AccountID(NetState state, PacketReader pvSrc)
 		{ }
 
 		public static bool VerifyGC(NetState state)
@@ -1638,10 +1610,7 @@ namespace Server.Network
 			}
 		}
 
-		private const int BadFood = unchecked((int)0xBAADF00D);
-		private const int BadUOTD = unchecked((int)0xFFCEFFCE);
-
-		public static void MovementReq(NetState state, PacketReader pvSrc)
+        public static void MovementReq(NetState state, PacketReader pvSrc)
 		{
 			Direction dir = (Direction)pvSrc.ReadByte();
 			int seq = pvSrc.ReadByte();
@@ -1669,24 +1638,22 @@ namespace Server.Network
 			}
 		}
 
-		public static int[] m_ValidAnimations =
+        private static int[] _ValidAnimations =
         {
 			6, 21, 32, 33, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
 			120, 121, 123, 124, 125, 126, 127, 128
 		};
 
-		public static int[] ValidAnimations { get => m_ValidAnimations; set => m_ValidAnimations = value; }
-
-		public static void Animate(NetState state, PacketReader pvSrc)
+        public static void Animate(NetState state, PacketReader pvSrc)
 		{
 			Mobile from = state.Mobile;
 			int action = pvSrc.ReadInt32();
 
 			bool ok = false;
 
-			for (int i = 0; !ok && i < m_ValidAnimations.Length; ++i)
+			for (int i = 0; !ok && i < _ValidAnimations.Length; ++i)
 			{
-				ok = action == m_ValidAnimations[i];
+				ok = action == _ValidAnimations[i];
 			}
 
 			if (from != null && ok && from.Alive && from.Body.IsHuman && !from.Mounted)
@@ -1973,14 +1940,10 @@ namespace Server.Network
 		}
 
 		public static void StunRequest(NetState state, PacketReader pvSrc)
-		{
-			EventSink.InvokeStunRequest(new StunRequestEventArgs(state.Mobile));
-		}
+		{ }
 
 		public static void DisarmRequest(NetState state, PacketReader pvSrc)
-		{
-			EventSink.InvokeDisarmRequest(new DisarmRequestEventArgs(state.Mobile));
-		}
+		{ }
 
 		public static void StatLockChange(NetState state, PacketReader pvSrc)
 		{
@@ -2747,8 +2710,7 @@ namespace Server.Network
 
 		private const int m_AuthIDWindowSize = 128;
 
-		private static readonly Dictionary<uint, AuthIDPersistence> m_AuthIDWindow =
-			new Dictionary<uint, AuthIDPersistence>(m_AuthIDWindowSize);
+		private static readonly Dictionary<uint, AuthIDPersistence> m_AuthIDWindow = new Dictionary<uint, AuthIDPersistence>(m_AuthIDWindowSize);
 
 		private static uint GenerateAuthID(NetState state)
 		{
@@ -2787,22 +2749,7 @@ namespace Server.Network
 			return authID;
 		}
 
-		public static bool GetAuth(NetState state, out TimeSpan age, out ClientVersion version)
-		{
-			age = TimeSpan.Zero;
-			version = null;
-
-
-			if (m_AuthIDWindow.TryGetValue(state.AuthID, out AuthIDPersistence ap))
-			{
-				age = DateTime.UtcNow - ap.Age;
-				version = ap.Version;
-			}
-
-			return false;
-		}
-
-		public static void GameLogin(NetState state, PacketReader pvSrc)
+        public static void GameLogin(NetState state, PacketReader pvSrc)
 		{
 			if (state.SentFirstPacket)
 			{
@@ -2814,12 +2761,11 @@ namespace Server.Network
 
 			uint authID = pvSrc.ReadUInt32();
 
-			if (m_AuthIDWindow.ContainsKey(authID))
+			if (m_AuthIDWindow.TryGetValue(authID, out AuthIDPersistence value))
 			{
-				AuthIDPersistence ap = m_AuthIDWindow[authID];
-				m_AuthIDWindow.Remove(authID);
+                m_AuthIDWindow.Remove(authID);
 
-				state.Version = ap.Version;
+				state.Version = value.Version;
 			}
 			else if (m_ClientVerification)
 			{

@@ -316,8 +316,6 @@ namespace Server.Engines.Craft
 
                 origItem.Delete();
 
-                EventSink.InvokeAlterItem(new AlterItemEventArgs(from, m_Tool is Item item ? item : m_Contract, origItem, newitem));
-
                 number = 1094727; // You have altered the item.
             }
 
