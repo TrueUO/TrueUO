@@ -114,8 +114,6 @@ namespace Server
 
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
 
-	public delegate void VirtueLevelChangeEventHandler(VirtueLevelChangeEventArgs e);
-
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
@@ -1072,22 +1070,6 @@ namespace Server
 		}
 	}
 
-	public class VirtueLevelChangeEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public int OldLevel { get; set; }
-		public int NewLevel { get; set; }
-		public int Virtue { get; set; }
-
-		public VirtueLevelChangeEventArgs(Mobile m, int oldLevel, int newLevel, int virtue)
-		{
-			Mobile = m;
-			OldLevel = oldLevel;
-			NewLevel = newLevel;
-			Virtue = virtue;
-		}
-	}
-
 	public class ContainerDroppedToEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -1169,7 +1151,6 @@ namespace Server
 		public static event EquipMacroEventHandler EquipMacro;
 		public static event UnequipMacroEventHandler UnequipMacro;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
-		public static event VirtueLevelChangeEventHandler VirtueLevelChange;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
 
@@ -1436,11 +1417,6 @@ namespace Server
 		public static void InvokeUnequipMacro(UnequipMacroEventArgs e)
         {
             UnequipMacro?.Invoke(e);
-        }
-
-		public static void InvokeVirtueLevelChange(VirtueLevelChangeEventArgs e)
-        {
-            VirtueLevelChange?.Invoke(e);
         }
 
 		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)
