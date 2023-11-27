@@ -265,9 +265,7 @@ namespace Server.Network
 		}
 
 		public static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
-		{
-			EventSink.InvokeQuestGumpRequest(new QuestGumpRequestArgs(state.Mobile));
-		}
+		{ }
 
 		public static void EncodedCommand(NetState state, PacketReader pvSrc)
 		{
@@ -1973,14 +1971,10 @@ namespace Server.Network
 		}
 
 		public static void StunRequest(NetState state, PacketReader pvSrc)
-		{
-			EventSink.InvokeStunRequest(new StunRequestEventArgs(state.Mobile));
-		}
+		{ }
 
 		public static void DisarmRequest(NetState state, PacketReader pvSrc)
-		{
-			EventSink.InvokeDisarmRequest(new DisarmRequestEventArgs(state.Mobile));
-		}
+		{ }
 
 		public static void StatLockChange(NetState state, PacketReader pvSrc)
 		{

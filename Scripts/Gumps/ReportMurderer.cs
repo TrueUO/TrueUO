@@ -95,11 +95,6 @@ namespace Server.Gumps
 
                 Titles.AwardFame(g, fameAward, false);
                 Titles.AwardKarma(g, karmaAward, true);
-
-                if (killers.Contains(g))
-                {
-                    EventSink.InvokePlayerMurdered(new PlayerMurderedEventArgs(g, m));
-                }
             }
 
             if (m is PlayerMobile mobile && mobile.NpcGuild == NpcGuild.ThievesGuild)

@@ -32,10 +32,6 @@ namespace Server
 
 	public delegate void HelpRequestEventHandler(HelpRequestEventArgs e);
 
-	public delegate void DisarmRequestEventHandler(DisarmRequestEventArgs e);
-
-	public delegate void StunRequestEventHandler(StunRequestEventArgs e);
-
 	public delegate void OpenSpellbookRequestEventHandler(OpenSpellbookRequestEventArgs e);
 
 	public delegate void CastSpellRequestEventHandler(CastSpellRequestEventArgs e);
@@ -96,8 +92,6 @@ namespace Server
 
 	public delegate void GuildGumpRequestHandler(GuildGumpRequestArgs e);
 
-	public delegate void QuestGumpRequestHandler(QuestGumpRequestArgs e);
-
 	public delegate void ClientVersionReceivedHandler(ClientVersionReceivedArgs e);
 
 	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
@@ -122,13 +116,9 @@ namespace Server
 
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
 
-	public delegate void JoinGuildEventHandler(JoinGuildEventArgs e);
-
 	public delegate void RepairItemEventHandler(RepairItemEventArgs e);
 
 	public delegate void VirtueLevelChangeEventHandler(VirtueLevelChangeEventArgs e);
-
-	public delegate void PlayerMurderedEventHandler(PlayerMurderedEventArgs e);
 
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
@@ -212,18 +202,6 @@ namespace Server
 		public Mobile Mobile => m_Mobile;
 
 		public GuildGumpRequestArgs(Mobile mobile)
-		{
-			m_Mobile = mobile;
-		}
-	}
-
-	public class QuestGumpRequestArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public QuestGumpRequestArgs(Mobile mobile)
 		{
 			m_Mobile = mobile;
 		}
@@ -629,30 +607,6 @@ namespace Server
 		{
 			m_Mobile = m;
 			m_Type = type;
-		}
-	}
-
-	public class StunRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public StunRequestEventArgs(Mobile m)
-		{
-			m_Mobile = m;
-		}
-	}
-
-	public class DisarmRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public DisarmRequestEventArgs(Mobile m)
-		{
-			m_Mobile = m;
 		}
 	}
 
@@ -1136,18 +1090,6 @@ namespace Server
 		}
 	}
 
-	public class JoinGuildEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public BaseGuild Guild { get; set; }
-
-		public JoinGuildEventArgs(Mobile m, BaseGuild g)
-		{
-			Mobile = m;
-			Guild = g;
-		}
-	}
-
 	public class RepairItemEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -1175,18 +1117,6 @@ namespace Server
 			OldLevel = oldLevel;
 			NewLevel = newLevel;
 			Virtue = virtue;
-		}
-	}
-
-	public class PlayerMurderedEventArgs : EventArgs
-	{
-		public Mobile Murderer { get; set; }
-		public Mobile Victim { get; set; }
-
-		public PlayerMurderedEventArgs(Mobile murderer, Mobile victim)
-		{
-			Murderer = murderer;
-			Victim = victim;
 		}
 	}
 
@@ -1229,8 +1159,6 @@ namespace Server
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
 		public static event HelpRequestEventHandler HelpRequest;
-		public static event DisarmRequestEventHandler DisarmRequest;
-		public static event StunRequestEventHandler StunRequest;
 		public static event OpenSpellbookRequestEventHandler OpenSpellbookRequest;
 		public static event CastSpellRequestEventHandler CastSpellRequest;
 		public static event BandageTargetRequestEventHandler BandageTargetRequest;
@@ -1262,7 +1190,6 @@ namespace Server
 		public static event CreateGuildHandler CreateGuild;
 		public static event ServerStartedEventHandler ServerStarted;
 		public static event GuildGumpRequestHandler GuildGumpRequest;
-		public static event QuestGumpRequestHandler QuestGumpRequest;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnKilledByEventHandler OnKilledBy;
@@ -1275,10 +1202,8 @@ namespace Server
 		public static event EquipMacroEventHandler EquipMacro;
 		public static event UnequipMacroEventHandler UnequipMacro;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
-		public static event JoinGuildEventHandler JoinGuild;
 		public static event RepairItemEventHandler RepairItem;
 		public static event VirtueLevelChangeEventHandler VirtueLevelChange;
-		public static event PlayerMurderedEventHandler PlayerMurdered;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
 
@@ -1320,11 +1245,6 @@ namespace Server
 		public static void InvokeGuildGumpRequest(GuildGumpRequestArgs e)
         {
             GuildGumpRequest?.Invoke(e);
-        }
-
-		public static void InvokeQuestGumpRequest(QuestGumpRequestArgs e)
-        {
-            QuestGumpRequest?.Invoke(e);
         }
 
 		public static void InvokeFastWalk(FastWalkEventArgs e)
@@ -1442,16 +1362,6 @@ namespace Server
             OpenSpellbookRequest?.Invoke(e);
         }
 
-		public static void InvokeDisarmRequest(DisarmRequestEventArgs e)
-        {
-            DisarmRequest?.Invoke(e);
-        }
-
-		public static void InvokeStunRequest(StunRequestEventArgs e)
-        {
-            StunRequest?.Invoke(e);
-        }
-
 		public static void InvokeHelpRequest(HelpRequestEventArgs e)
         {
             HelpRequest?.Invoke(e);
@@ -1567,11 +1477,6 @@ namespace Server
             UnequipMacro?.Invoke(e);
         }
 
-		public static void InvokeJoinGuild(JoinGuildEventArgs e)
-        {
-            JoinGuild?.Invoke(e);
-        }
-
 		public static void InvokeRepairItem(RepairItemEventArgs e)
         {
             RepairItem?.Invoke(e);
@@ -1580,11 +1485,6 @@ namespace Server
 		public static void InvokeVirtueLevelChange(VirtueLevelChangeEventArgs e)
         {
             VirtueLevelChange?.Invoke(e);
-        }
-
-		public static void InvokePlayerMurdered(PlayerMurderedEventArgs e)
-        {
-            PlayerMurdered?.Invoke(e);
         }
 
 		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)

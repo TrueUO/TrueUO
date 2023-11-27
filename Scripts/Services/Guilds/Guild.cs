@@ -1455,8 +1455,6 @@ namespace Server.Guilds
                 Members.Add(m);
                 m.Guild = this;
 
-                EventSink.InvokeJoinGuild(new JoinGuildEventArgs(m, this));
-
                 m.GuildFealty = null;
 
                 if (m is PlayerMobile mobile)
