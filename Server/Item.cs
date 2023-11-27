@@ -1579,15 +1579,6 @@ namespace Server
 				return true;
 			}
 
-			CheckEquipItemEventArgs e = new CheckEquipItemEventArgs(m, this, message);
-
-			EventSink.InvokeCheckEquipItem(e);
-
-			if (e.Item != this || e.Item.Deleted || e.Block)
-			{
-				return false;
-			}
-
 			if (m.AccessLevel < AccessLevel.GameMaster && BlessedFor != null && BlessedFor != m)
 			{
 				if (message)

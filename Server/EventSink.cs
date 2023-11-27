@@ -10,8 +10,6 @@ using Server.Network;
 
 namespace Server
 {
-	public delegate void CheckEquipItemEventHandler(CheckEquipItemEventArgs e);
-
 	public delegate void WorldBroadcastEventHandler(WorldBroadcastEventArgs e);
 
 	public delegate void CharacterCreatedEventHandler(CharacterCreatedEventArgs e);
@@ -117,22 +115,6 @@ namespace Server
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
-
-	public class CheckEquipItemEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; }
-		public Item Item { get; }
-		public bool Message { get; }
-
-		public bool Block { get; set; }
-
-		public CheckEquipItemEventArgs(Mobile m, Item item, bool message)
-		{
-			Mobile = m;
-			Item = item;
-			Message = message;
-		}
-	}
 
 	public class WorldBroadcastEventArgs : EventArgs
 	{
@@ -1098,7 +1080,6 @@ namespace Server
 
 	public static class EventSink
 	{
-		public static event CheckEquipItemEventHandler CheckEquipItem;
 		public static event WorldBroadcastEventHandler WorldBroadcast;
 		public static event CharacterCreatedEventHandler CharacterCreated;
 		public static event OpenDoorMacroEventHandler OpenDoorMacroUsed;
@@ -1153,11 +1134,6 @@ namespace Server
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
-
-		public static void InvokeCheckEquipItem(CheckEquipItemEventArgs e)
-        {
-            CheckEquipItem?.Invoke(e);
-        }
 
 		public static void InvokeWorldBroadcast(WorldBroadcastEventArgs e)
         {
