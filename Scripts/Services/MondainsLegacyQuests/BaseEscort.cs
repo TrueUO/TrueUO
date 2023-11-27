@@ -340,7 +340,7 @@ namespace Server.Engines.Quests
                             {
                                 pm.SendLocalizedMessage(1053004); // You must wait about a day before you can gain in compassion again.
                             }
-                            else if (VirtueHelper.Award(pm, VirtueName.Compassion, escort.Compassion, ref gainedPath))
+                            else if (VirtueHelper.Award(pm, VirtueName.Compassion, escort.Compassion))
                             {
                                 pm.SendLocalizedMessage(1074949, null, 0x2A);  // You have demonstrated your compassion!  Your kind actions have been noted.
 

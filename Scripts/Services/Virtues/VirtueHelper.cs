@@ -56,7 +56,7 @@ namespace Server.Services.Virtues
             return 21000;
         }
 
-        public static bool Award(Mobile from, VirtueName virtue, int amount, ref bool gainedPath)
+        public static bool Award(Mobile from, VirtueName virtue, int amount)
         {
             int current = from.Virtues.GetValue((int)virtue);
 
@@ -77,17 +77,7 @@ namespace Server.Services.Virtues
                 amount = maxAmount - current;
             }
 
-            VirtueLevel oldLevel = GetLevel(from, virtue);
-
             from.Virtues.SetValue((int)virtue, current + amount);
-
-            VirtueLevel newLevel = GetLevel(from, virtue);
-            gainedPath = (newLevel != oldLevel);
-
-            if (gainedPath)
-            {
-                EventSink.InvokeVirtueLevelChange(new VirtueLevelChangeEventArgs(from, (int)oldLevel, (int)newLevel, (int)virtue));
-            }
 
             return true;
         }

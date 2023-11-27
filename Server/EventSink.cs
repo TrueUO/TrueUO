@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
-
 using Server.Accounting;
 using Server.Commands;
 using Server.Guilds;
@@ -132,19 +130,11 @@ namespace Server
 
 	public delegate void JoinGuildEventHandler(JoinGuildEventArgs e);
 
-	public delegate void ValidVendorPurchaseEventHandler(ValidVendorPurchaseEventArgs e);
-
-	public delegate void ValidVendorSellEventHandler(ValidVendorSellEventArgs e);
-
 	public delegate void RepairItemEventHandler(RepairItemEventArgs e);
 
 	public delegate void AlterItemEventHandler(AlterItemEventArgs e);
 
 	public delegate void PlacePlayerVendorEventHandler(PlacePlayerVendorEventArgs e);
-
-	public delegate void VirtueLevelChangeEventHandler(VirtueLevelChangeEventArgs e);
-
-	public delegate void PlayerMurderedEventHandler(PlayerMurderedEventArgs e);
 
 	public delegate void AccountGoldChangeEventHandler(AccountGoldChangeEventArgs e);
 
@@ -1213,38 +1203,6 @@ namespace Server
 		}
 	}
 
-	public class ValidVendorPurchaseEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
-		public IEntity Bought { get; set; }
-		public int AmountPerUnit { get; set; }
-
-		public ValidVendorPurchaseEventArgs(Mobile m, Mobile vendor, IEntity bought, int costPer)
-		{
-			Mobile = m;
-			Vendor = vendor;
-			Bought = bought;
-			AmountPerUnit = costPer;
-		}
-	}
-
-	public class ValidVendorSellEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
-		public IEntity Sold { get; set; }
-		public int AmountPerUnit { get; set; }
-
-		public ValidVendorSellEventArgs(Mobile m, Mobile vendor, IEntity sold, int costPer)
-		{
-			Mobile = m;
-			Vendor = vendor;
-			Sold = sold;
-			AmountPerUnit = costPer;
-		}
-	}
-
 	public class RepairItemEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -1284,34 +1242,6 @@ namespace Server
 		{
 			Mobile = m;
 			Vendor = vendor;
-		}
-	}
-
-	public class VirtueLevelChangeEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public int OldLevel { get; set; }
-		public int NewLevel { get; set; }
-		public int Virtue { get; set; }
-
-		public VirtueLevelChangeEventArgs(Mobile m, int oldLevel, int newLevel, int virtue)
-		{
-			Mobile = m;
-			OldLevel = oldLevel;
-			NewLevel = newLevel;
-			Virtue = virtue;
-		}
-	}
-
-	public class PlayerMurderedEventArgs : EventArgs
-	{
-		public Mobile Murderer { get; set; }
-		public Mobile Victim { get; set; }
-
-		public PlayerMurderedEventArgs(Mobile murderer, Mobile victim)
-		{
-			Murderer = murderer;
-			Victim = victim;
 		}
 	}
 
@@ -1432,13 +1362,9 @@ namespace Server
 		public static event UnequipMacroEventHandler UnequipMacro;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event JoinGuildEventHandler JoinGuild;
-		public static event ValidVendorPurchaseEventHandler ValidVendorPurchase;
-		public static event ValidVendorSellEventHandler ValidVendorSell;
 		public static event RepairItemEventHandler RepairItem;
 		public static event AlterItemEventHandler AlterItem;
 		public static event PlacePlayerVendorEventHandler PlacePlayerVendor;
-		public static event VirtueLevelChangeEventHandler VirtueLevelChange;
-		public static event PlayerMurderedEventHandler PlayerMurdered;
 		public static event AccountGoldChangeEventHandler AccountGoldChange;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event TeleportMovementEventHandler TeleportMovement;
@@ -1749,16 +1675,6 @@ namespace Server
             JoinGuild?.Invoke(e);
         }
 
-		public static void InvokeValidVendorPurchase(ValidVendorPurchaseEventArgs e)
-        {
-            ValidVendorPurchase?.Invoke(e);
-        }
-
-		public static void InvokeValidVendorSell(ValidVendorSellEventArgs e)
-        {
-            ValidVendorSell?.Invoke(e);
-        }
-
 		public static void InvokeRepairItem(RepairItemEventArgs e)
         {
             RepairItem?.Invoke(e);
@@ -1772,16 +1688,6 @@ namespace Server
 		public static void InvokePlacePlayerVendor(PlacePlayerVendorEventArgs e)
         {
             PlacePlayerVendor?.Invoke(e);
-        }
-
-		public static void InvokeVirtueLevelChange(VirtueLevelChangeEventArgs e)
-        {
-            VirtueLevelChange?.Invoke(e);
-        }
-
-		public static void InvokePlayerMurdered(PlayerMurderedEventArgs e)
-        {
-            PlayerMurdered?.Invoke(e);
         }
 
 		public static void InvokeAccountGoldChange(AccountGoldChangeEventArgs e)

@@ -1080,7 +1080,7 @@ namespace Server.Mobiles
 
                 if (honestySocket.HonestyOwner == this)
                 {
-                    VirtueHelper.Award(from, VirtueName.Honesty, 120, ref gainedPath);
+                    VirtueHelper.Award(from, VirtueName.Honesty, 120);
                     from.SendMessage(gainedPath ? "You have gained a path in Honesty!" : "You have gained in Honesty.");
                     SayTo(from, 1074582); //Ah!  You found my property.  Thank you for your honesty in returning it to me.
                     dropped.Delete();
@@ -2143,9 +2143,6 @@ namespace Server.Mobiles
 
                         int singlePrice = ssi.GetSellPriceFor(resp.Item, this);
                         GiveGold += singlePrice * amount;
-
-                        EventSink.InvokeValidVendorSell(new ValidVendorSellEventArgs(seller, this, resp.Item,
-                            singlePrice));
 
                         break;
                     }

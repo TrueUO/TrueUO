@@ -436,11 +436,11 @@ namespace Server.Services.Virtues
 
             if (honestySocket != null && honestySocket.HonestyRegion == reg.Name)
             {
-                VirtueHelper.Award(from, VirtueName.Honesty, 60, ref gainedPath);
+                VirtueHelper.Award(from, VirtueName.Honesty, 60);
             }
             else
             {
-                VirtueHelper.Award(from, VirtueName.Honesty, 30, ref gainedPath);
+                VirtueHelper.Award(from, VirtueName.Honesty, 30);
             }
 
             PrivateOverheadMessage(

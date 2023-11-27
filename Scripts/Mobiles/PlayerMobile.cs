@@ -3720,7 +3720,7 @@ namespace Server.Mobiles
 
                 bool gainedPath = false;
 
-                if (VirtueHelper.Award(m, VirtueName.Justice, pointsToGain, ref gainedPath))
+                if (VirtueHelper.Award(m, VirtueName.Justice, pointsToGain))
                 {
                     if (gainedPath)
                     {

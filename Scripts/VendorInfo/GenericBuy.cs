@@ -293,8 +293,6 @@ namespace Server.Mobiles
                     }
                 }
             }
-
-            EventSink.InvokeValidVendorPurchase(new ValidVendorPurchaseEventArgs(buyer, vendor, entity, m_Price));
         }
 
         public void OnSold(BaseVendor vendor, int amount)
