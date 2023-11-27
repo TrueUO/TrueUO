@@ -60,8 +60,6 @@ namespace Server.ContextMenus
 				item.GetContextMenuEntries(from, list);
 			}
 
-			EventSink.InvokeContextMenu(new ContextMenuEventArgs(From, Target, list));
-
             for (var index = 0; index < list.Count; index++)
             {
                 ContextMenuEntry e = list[index];
