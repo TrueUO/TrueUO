@@ -10,8 +10,6 @@ using Server.Network;
 
 namespace Server
 {
-	public delegate void OnItemObtainedEventHandler(OnItemObtainedEventArgs e);
-
 	public delegate void CheckEquipItemEventHandler(CheckEquipItemEventArgs e);
 
 	public delegate void WorldBroadcastEventHandler(WorldBroadcastEventArgs e);
@@ -106,15 +104,9 @@ namespace Server
 
 	public delegate void OnKilledByEventHandler(OnKilledByEventArgs e);
 
-	public delegate void OnItemUseEventHandler(OnItemUseEventArgs e);
-
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
 	public delegate void CraftSuccessEventHandler(CraftSuccessEventArgs e);
-
-	public delegate void SkillCapChangeEventHandler(SkillCapChangeEventArgs e);
-
-	public delegate void StatCapChangeEventHandler(StatCapChangeEventArgs e);
 
 	public delegate void QuestCompleteEventHandler(QuestCompleteEventArgs e);
 
@@ -132,15 +124,7 @@ namespace Server
 
 	public delegate void JoinGuildEventHandler(JoinGuildEventArgs e);
 
-	public delegate void ValidVendorPurchaseEventHandler(ValidVendorPurchaseEventArgs e);
-
-	public delegate void ValidVendorSellEventHandler(ValidVendorSellEventArgs e);
-
 	public delegate void RepairItemEventHandler(RepairItemEventArgs e);
-
-	public delegate void AlterItemEventHandler(AlterItemEventArgs e);
-
-	public delegate void PlacePlayerVendorEventHandler(PlacePlayerVendorEventArgs e);
 
 	public delegate void VirtueLevelChangeEventHandler(VirtueLevelChangeEventArgs e);
 
@@ -149,21 +133,6 @@ namespace Server
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
-
-	public class OnItemObtainedEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly Item m_Item;
-
-		public OnItemObtainedEventArgs(Mobile from, Item item)
-		{
-			m_Mobile = from;
-			m_Item = item;
-		}
-
-		public Mobile Mobile => m_Mobile;
-		public Item Item => m_Item;
-	}
 
 	public class CheckEquipItemEventArgs : EventArgs
 	{
@@ -1029,21 +998,6 @@ namespace Server
 		public Mobile KilledBy => m_KilledBy;
 	}
 
-	public class OnItemUseEventArgs : EventArgs
-	{
-		private readonly Mobile m_From;
-		private readonly Item m_Item;
-
-		public OnItemUseEventArgs(Mobile from, Item item)
-		{
-			m_From = from;
-			m_Item = item;
-		}
-
-		public Mobile From => m_From;
-		public Item Item => m_Item;
-	}
-
 	public class OnEnterRegionEventArgs : EventArgs
 	{
 		private readonly Mobile m_From;
@@ -1073,36 +1027,6 @@ namespace Server
 			Crafter = m;
 			Tool = t;
 			CraftedItem = i;
-		}
-	}
-
-	public class SkillCapChangeEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; }
-		public Skill Skill { get; }
-		public double OldCap { get; }
-		public double NewCap { get; }
-
-		public SkillCapChangeEventArgs(Mobile from, Skill skill, double oldCap, double newCap)
-		{
-			Mobile = from;
-			Skill = skill;
-			OldCap = oldCap;
-			NewCap = newCap;
-		}
-	}
-
-	public class StatCapChangeEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; }
-		public int OldCap { get; }
-		public int NewCap { get; }
-
-		public StatCapChangeEventArgs(Mobile from, int oldCap, int newCap)
-		{
-			Mobile = from;
-			OldCap = oldCap;
-			NewCap = newCap;
 		}
 	}
 
@@ -1224,38 +1148,6 @@ namespace Server
 		}
 	}
 
-	public class ValidVendorPurchaseEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
-		public IEntity Bought { get; set; }
-		public int AmountPerUnit { get; set; }
-
-		public ValidVendorPurchaseEventArgs(Mobile m, Mobile vendor, IEntity bought, int costPer)
-		{
-			Mobile = m;
-			Vendor = vendor;
-			Bought = bought;
-			AmountPerUnit = costPer;
-		}
-	}
-
-	public class ValidVendorSellEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
-		public IEntity Sold { get; set; }
-		public int AmountPerUnit { get; set; }
-
-		public ValidVendorSellEventArgs(Mobile m, Mobile vendor, IEntity sold, int costPer)
-		{
-			Mobile = m;
-			Vendor = vendor;
-			Sold = sold;
-			AmountPerUnit = costPer;
-		}
-	}
-
 	public class RepairItemEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -1267,34 +1159,6 @@ namespace Server
 			Mobile = m;
 			Tool = tool;
 			Repaired = repaired;
-		}
-	}
-
-	public class AlterItemEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Item Tool { get; set; }
-		public Item OldItem { get; set; }
-		public Item NewItem { get; set; }
-
-		public AlterItemEventArgs(Mobile m, Item tool, Item oldItem, Item newItem)
-		{
-			Mobile = m;
-			Tool = tool;
-			OldItem = oldItem;
-			NewItem = newItem;
-		}
-	}
-
-	public class PlacePlayerVendorEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
-
-		public PlacePlayerVendorEventArgs(Mobile m, Mobile vendor)
-		{
-			Mobile = m;
-			Vendor = vendor;
 		}
 	}
 
@@ -1354,7 +1218,6 @@ namespace Server
 
 	public static class EventSink
 	{
-		public static event OnItemObtainedEventHandler OnItemObtained;
 		public static event CheckEquipItemEventHandler CheckEquipItem;
 		public static event WorldBroadcastEventHandler WorldBroadcast;
 		public static event CharacterCreatedEventHandler CharacterCreated;
@@ -1403,11 +1266,8 @@ namespace Server
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnKilledByEventHandler OnKilledBy;
-		public static event OnItemUseEventHandler OnItemUse;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
 		public static event CraftSuccessEventHandler CraftSuccess;
-		public static event SkillCapChangeEventHandler SkillCapChange;
-		public static event StatCapChangeEventHandler StatCapChange;
 		public static event QuestCompleteEventHandler QuestComplete;
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event TargetedSpellEventHandler TargetedSpell;
@@ -1416,20 +1276,11 @@ namespace Server
 		public static event UnequipMacroEventHandler UnequipMacro;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event JoinGuildEventHandler JoinGuild;
-		public static event ValidVendorPurchaseEventHandler ValidVendorPurchase;
-		public static event ValidVendorSellEventHandler ValidVendorSell;
 		public static event RepairItemEventHandler RepairItem;
-		public static event AlterItemEventHandler AlterItem;
-		public static event PlacePlayerVendorEventHandler PlacePlayerVendor;
 		public static event VirtueLevelChangeEventHandler VirtueLevelChange;
 		public static event PlayerMurderedEventHandler PlayerMurdered;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
-
-		public static void InvokeOnItemObtained(OnItemObtainedEventArgs e)
-        {
-            OnItemObtained?.Invoke(e);
-        }
 
 		public static void InvokeCheckEquipItem(CheckEquipItemEventArgs e)
         {
@@ -1671,11 +1522,6 @@ namespace Server
             OnKilledBy?.Invoke(e);
         }
 
-		public static void InvokeOnItemUse(OnItemUseEventArgs e)
-        {
-            OnItemUse?.Invoke(e);
-        }
-
 		public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
         {
             OnEnterRegion?.Invoke(e);
@@ -1684,16 +1530,6 @@ namespace Server
 		public static void InvokeCraftSuccess(CraftSuccessEventArgs e)
         {
             CraftSuccess?.Invoke(e);
-        }
-
-		public static void InvokeSkillCapChange(SkillCapChangeEventArgs e)
-        {
-            SkillCapChange?.Invoke(e);
-        }
-
-		public static void InvokeStatCapChange(StatCapChangeEventArgs e)
-        {
-            StatCapChange?.Invoke(e);
         }
 
 		public static void InvokeQuestComplete(QuestCompleteEventArgs e)
@@ -1736,29 +1572,9 @@ namespace Server
             JoinGuild?.Invoke(e);
         }
 
-		public static void InvokeValidVendorPurchase(ValidVendorPurchaseEventArgs e)
-        {
-            ValidVendorPurchase?.Invoke(e);
-        }
-
-		public static void InvokeValidVendorSell(ValidVendorSellEventArgs e)
-        {
-            ValidVendorSell?.Invoke(e);
-        }
-
 		public static void InvokeRepairItem(RepairItemEventArgs e)
         {
             RepairItem?.Invoke(e);
-        }
-
-		public static void InvokeAlterItem(AlterItemEventArgs e)
-        {
-            AlterItem?.Invoke(e);
-        }
-
-		public static void InvokePlacePlayerVendor(PlacePlayerVendorEventArgs e)
-        {
-            PlacePlayerVendor?.Invoke(e);
         }
 
 		public static void InvokeVirtueLevelChange(VirtueLevelChangeEventArgs e)
