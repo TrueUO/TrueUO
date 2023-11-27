@@ -1,4 +1,3 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,11 +6,9 @@ using System.Reflection;
 
 using Server.Accounting;
 using Server.Commands;
-using Server.ContextMenus;
 using Server.Guilds;
 using Server.Items;
 using Server.Network;
-#endregion
 
 namespace Server
 {
@@ -113,23 +110,13 @@ namespace Server
 
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
-	public delegate void OnConsumeEventHandler(OnConsumeEventArgs e);
-
 	public delegate void OnPropertyChangedEventHandler(OnPropertyChangedEventArgs e);
-
-	public delegate void BODUsedEventHandler(BODUsedEventArgs e);
-
-	public delegate void BODOfferEventHandler(BODOfferEventArgs e);
 
 	public delegate void ResourceHarvestAttemptEventHandler(ResourceHarvestAttemptEventArgs e);
 
 	public delegate void ResourceHarvestSuccessEventHandler(ResourceHarvestSuccessEventArgs e);
 
 	public delegate void CraftSuccessEventHandler(CraftSuccessEventArgs e);
-
-	public delegate void SkillGainEventHandler(SkillGainEventArgs e);
-
-	public delegate void SkillCheckEventHandler(SkillCheckEventArgs e);
 
 	public delegate void SkillCapChangeEventHandler(SkillCapChangeEventArgs e);
 
@@ -1070,30 +1057,6 @@ namespace Server
 		public Region NewRegion => m_NewRegion;
 	}
 
-	public class OnConsumeEventArgs : EventArgs
-	{
-		private readonly Mobile m_Consumer;
-		private readonly Item m_Consumed;
-		private readonly int m_Quantity;
-
-		public OnConsumeEventArgs(Mobile consumer, Item consumed)
-			: this(consumer, consumed, 1)
-		{ }
-
-		public OnConsumeEventArgs(Mobile consumer, Item consumed, int quantity)
-		{
-			m_Consumer = consumer;
-			m_Consumed = consumed;
-			m_Quantity = quantity;
-		}
-
-		public Mobile Consumer => m_Consumer;
-
-		public Item Consumed => m_Consumed;
-
-		public int Quantity => m_Quantity;
-	}
-
 	public class OnPropertyChangedEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; }
@@ -1109,30 +1072,6 @@ namespace Server
 			Instance = instance;
 			OldValue = oldValue;
 			NewValue = newValue;
-		}
-	}
-
-	public class BODUsedEventArgs : EventArgs
-	{
-		public Mobile User { get; }
-		public Item BODItem { get; }
-
-		public BODUsedEventArgs(Mobile m, Item i)
-		{
-			User = m;
-			BODItem = i;
-		}
-	}
-
-	public class BODOfferEventArgs : EventArgs
-	{
-		public Mobile Player { get; }
-		public Mobile Vendor { get; }
-
-		public BODOfferEventArgs(Mobile p, Mobile v)
-		{
-			Player = p;
-			Vendor = v;
 		}
 	}
 
@@ -1179,34 +1118,6 @@ namespace Server
 			Crafter = m;
 			Tool = t;
 			CraftedItem = i;
-		}
-	}
-
-	public class SkillGainEventArgs : EventArgs
-	{
-		public int Gained { get; }
-		public Mobile From { get; }
-		public Skill Skill { get; }
-
-		public SkillGainEventArgs(Mobile from, Skill skill, int toGain)
-		{
-			From = from;
-			Skill = skill;
-			Gained = toGain;
-		}
-	}
-
-	public class SkillCheckEventArgs : EventArgs
-	{
-		public bool Success { get; set; }
-		public Mobile From { get; set; }
-		public Skill Skill { get; set; }
-
-		public SkillCheckEventArgs(Mobile from, Skill skill, bool success)
-		{
-			From = from;
-			Skill = skill;
-			Success = success;
 		}
 	}
 
@@ -1566,15 +1477,10 @@ namespace Server
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnKilledByEventHandler OnKilledBy;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
-		public static event OnConsumeEventHandler OnConsume;
 		public static event OnPropertyChangedEventHandler OnPropertyChanged;
-		public static event BODUsedEventHandler BODUsed;
-		public static event BODOfferEventHandler BODOffered;
 		public static event ResourceHarvestAttemptEventHandler ResourceHarvestAttempt;
 		public static event ResourceHarvestSuccessEventHandler ResourceHarvestSuccess;
 		public static event CraftSuccessEventHandler CraftSuccess;
-		public static event SkillGainEventHandler SkillGain;
-		public static event SkillCheckEventHandler SkillCheck;
 		public static event SkillCapChangeEventHandler SkillCapChange;
 		public static event StatCapChangeEventHandler StatCapChange;
 		public static event QuestCompleteEventHandler QuestComplete;
@@ -1847,24 +1753,9 @@ namespace Server
             OnEnterRegion?.Invoke(e);
         }
 
-		public static void InvokeOnConsume(OnConsumeEventArgs e)
-        {
-            OnConsume?.Invoke(e);
-        }
-
 		public static void InvokeOnPropertyChanged(OnPropertyChangedEventArgs e)
         {
             OnPropertyChanged?.Invoke(e);
-        }
-
-		public static void InvokeBODUsed(BODUsedEventArgs e)
-        {
-            BODUsed?.Invoke(e);
-        }
-
-		public static void InvokeBODOffered(BODOfferEventArgs e)
-        {
-            BODOffered?.Invoke(e);
         }
 
 		public static void InvokeResourceHarvestAttempt(ResourceHarvestAttemptEventArgs e)
@@ -1880,16 +1771,6 @@ namespace Server
 		public static void InvokeCraftSuccess(CraftSuccessEventArgs e)
         {
             CraftSuccess?.Invoke(e);
-        }
-
-		public static void InvokeSkillGain(SkillGainEventArgs e)
-        {
-            SkillGain?.Invoke(e);
-        }
-
-		public static void InvokeSkillCheck(SkillCheckEventArgs e)
-        {
-            SkillCheck?.Invoke(e);
         }
 
 		public static void InvokeSkillCapChange(SkillCapChangeEventArgs e)

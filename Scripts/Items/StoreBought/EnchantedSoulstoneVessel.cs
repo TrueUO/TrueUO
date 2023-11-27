@@ -1,6 +1,5 @@
 using Server.Engines.VeteranRewards;
 using Server.Network;
-using System;
 
 namespace Server.Items
 {

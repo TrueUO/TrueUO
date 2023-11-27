@@ -120,7 +120,6 @@ namespace Server.Misc
             if (gains > 0)
             {
                 Gain(from, skill, gains);
-                EventSink.InvokeSkillCheck(new SkillCheckEventArgs(from, skill, true));
                 return true;
             }
 
@@ -142,8 +141,6 @@ namespace Server.Misc
                     Gain(from, skill);
                 }
             }
-
-            EventSink.InvokeSkillCheck(new SkillCheckEventArgs(from, skill, success));
 
             return success;
         }
@@ -326,8 +323,6 @@ namespace Server.Misc
                 if (!from.Player || (skills.Total + toGain <= skills.Cap))
                 {
                     skill.BaseFixedPoint = Math.Min(skill.CapFixedPoint, skill.BaseFixedPoint + toGain);
-
-                    EventSink.InvokeSkillGain(new SkillGainEventArgs(from, skill, toGain));
 
                     if (from is PlayerMobile)
                     {
