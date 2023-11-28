@@ -3667,10 +3667,11 @@ namespace Server.Mobiles
             GemOfSalvation.OnPlayerDeath(mobile);
             GiftOfLifeSpell.OnPlayerDeath(mobile);
             HalloweenHauntings.OnPlayerDeath(mobile);
-            KhaldunRevenant.OnPlayerDeath(mobile);
             ReportMurdererGump.OnPlayerDeath(mobile);
             ViceVsVirtueSystem.OnPlayerDeath(mobile);
-            
+
+            KhaldunRevenant.PlayerDeath(mobile);
+
             Engines.PartySystem.Party.OnPlayerDeath(mobile);
         }
 

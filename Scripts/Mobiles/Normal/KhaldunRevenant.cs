@@ -65,7 +65,7 @@ namespace Server.Mobiles
         public override bool BardImmune => true;
         public override Poison PoisonImmune => Poison.Lethal;
        
-        public static void OnPlayerDeath(Mobile m)
+        public static void PlayerDeath(Mobile m)
         {
             Mobile lastKiller = m.LastKiller;
 
