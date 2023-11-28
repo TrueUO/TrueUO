@@ -455,16 +455,11 @@ namespace Server.Engines.Points
 
         public static void OnKilledBy(BaseCreature killed, Mobile killer)
         {
-            OnKilledBy(killed, killer);
-        }
-
-        public static void OnKilledBy(Mobile victim, Mobile damager)
-        {
             for (var index = 0; index < Systems.Count; index++)
             {
                 var s = Systems[index];
 
-                s.ProcessKill(victim, damager);
+                s.ProcessKill(killed, killer);
             }
         }
 
