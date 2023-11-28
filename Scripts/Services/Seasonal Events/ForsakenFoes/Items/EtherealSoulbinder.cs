@@ -119,21 +119,14 @@ namespace Server.Items
             m_SoulPoint = reader.ReadDouble();
         }
 
-        public static void Initialize()
+        public static void OnCreatureDeath(Mobile creature, Mobile killer)
         {
-            EventSink.CreatureDeath += CreatureDeath;
-        }
-
-        public static void CreatureDeath(CreatureDeathEventArgs e)
-        {
-            Mobile killer = e.Killer;
-
             if (killer is BaseCreature kbc && kbc.Controlled && kbc.ControlMaster != null)
             {
                 killer = kbc.ControlMaster;
             }
 
-            if (e.Creature is BaseCreature bc && bc.IsSoulBound && killer is PlayerMobile pm && pm.Backpack != null)
+            if (creature is BaseCreature bc && bc.IsSoulBound && killer is PlayerMobile pm && pm.Backpack != null)
             {
                 EtherealSoulbinder es = null;
 

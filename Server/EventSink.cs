@@ -40,8 +40,6 @@ namespace Server
 
 	public delegate void RenameRequestEventHandler(RenameRequestEventArgs e);
 
-	public delegate void CreatureDeathEventHandler(CreatureDeathEventArgs e);
-
 	public delegate void VirtueGumpRequestEventHandler(VirtueGumpRequestEventArgs e);
 
 	public delegate void VirtueItemRequestEventHandler(VirtueItemRequestEventArgs e);
@@ -364,45 +362,6 @@ namespace Server
 		{
 			m_Mobile = mobile;
 			m_VirtueID = virtueID;
-		}
-	}
-
-	public class CreatureDeathEventArgs : EventArgs
-	{
-		public Mobile Creature { get; }
-		public Mobile Killer { get; }
-		public Container Corpse { get; }
-
-		public List<Item> ForcedLoot { get; private set; }
-
-		public bool PreventDefault { get; set; }
-		public bool PreventDelete { get; set; }
-		public bool ClearCorpse { get; set; }
-
-		public CreatureDeathEventArgs(Mobile creature)
-			: this(creature, creature.LastKiller, creature.Corpse)
-		{ }
-
-		public CreatureDeathEventArgs(Mobile creature, Mobile killer, Container corpse)
-		{
-			Creature = creature;
-			Killer = killer;
-			Corpse = corpse;
-
-			ForcedLoot = new List<Item>();
-		}
-
-		public void ClearLoot(bool free)
-		{
-			if (free)
-			{
-				ForcedLoot.Clear();
-				ForcedLoot.TrimExcess();
-			}
-			else
-			{
-				ForcedLoot = new List<Item>();
-			}
 		}
 	}
 
@@ -998,7 +957,6 @@ namespace Server
 		public static event AnimateRequestEventHandler AnimateRequest;
 		public static event SocketConnectEventHandler SocketConnect;
 		public static event RenameRequestEventHandler RenameRequest;
-		public static event CreatureDeathEventHandler CreatureDeath;
 		public static event VirtueGumpRequestEventHandler VirtueGumpRequest;
 		public static event VirtueItemRequestEventHandler VirtueItemRequest;
 		public static event VirtueMacroRequestEventHandler VirtueMacroRequest;
@@ -1120,11 +1078,6 @@ namespace Server
 		public static void InvokeVirtueMacroRequest(VirtueMacroRequestEventArgs e)
         {
             VirtueMacroRequest?.Invoke(e);
-        }
-
-		public static void InvokeCreatureDeath(CreatureDeathEventArgs e)
-        {
-            CreatureDeath?.Invoke(e);
         }
 
 		public static void InvokeRenameRequest(RenameRequestEventArgs e)

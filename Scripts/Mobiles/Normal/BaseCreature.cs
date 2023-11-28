@@ -24,6 +24,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Server.Engines.Points;
 using Server.Engines.Quests;
+using Server.Engines.RisingTide;
 
 #endregion
 
@@ -454,9 +455,24 @@ namespace Server.Mobiles
             }
         }
 
-        #region Bonding
-        public const bool BondingEnabled = true;
+        #region ForcedLoot
+        public List<Item> ForcedLoot { get; private set; }
 
+        public void ClearLoot(bool free)
+        {
+            if (free)
+            {
+                ForcedLoot.Clear();
+                ForcedLoot.TrimExcess();
+            }
+            else
+            {
+                ForcedLoot = new List<Item>();
+            }
+        }
+        #endregion
+
+        #region Bonding
         public virtual bool IsBondable => !Summoned && !m_Allured && !(this is IRepairableMobile);
         public virtual TimeSpan BondingDelay => TimeSpan.FromDays(7.0);
         public virtual TimeSpan BondingAbandonDelay => TimeSpan.FromDays(1.0);
@@ -5878,44 +5894,36 @@ namespace Server.Mobiles
                     }
                 }
 
-                CreatureDeathEventArgs e = new CreatureDeathEventArgs(this, LastKiller, c);
+                Aggression.OnCreatureDeath(this);
 
-                EventSink.InvokeCreatureDeath(e);
+                EtherealSoulbinder.OnCreatureDeath(this, LastKiller);
+
+                IngredientDropEntry.OnCreatureDeath(this, LastKiller, c);
+
+                if (RisingTideEvent.Instance.Running)
+                {
+                    PlunderBeaconAddon.OnCreatureDeath(this);
+                }
+
+                TimeOfLegends.OnCreatureDeath(this, LastKiller, c);
+
+                if (DeleteCorpseOnDeath)
+                {
+                    c.Delete();
+                }
 
                 if (!c.Deleted)
                 {
-                    int i;
-
-                    if (e.ClearCorpse)
-                    {
-                        i = c.Items.Count;
-
-                        while (--i >= 0)
-                        {
-                            if (i >= c.Items.Count)
-                            {
-                                continue;
-                            }
-
-                            Item o = c.Items[i];
-
-                            if (o != null && !o.Deleted)
-                            {
-                                o.Delete();
-                            }
-                        }
-                    }
-
-                    i = e.ForcedLoot.Count;
+                    int i = ForcedLoot.Count;
 
                     while (--i >= 0)
                     {
-                        if (i >= e.ForcedLoot.Count)
+                        if (i >= ForcedLoot.Count)
                         {
                             continue;
                         }
 
-                        Item o = e.ForcedLoot[i];
+                        Item o = ForcedLoot[i];
 
                         if (o != null && !o.Deleted)
                         {
@@ -5923,20 +5931,20 @@ namespace Server.Mobiles
                         }
                     }
 
-                    e.ClearLoot(false);
+                    ClearLoot(false);
                 }
                 else
                 {
-                    int i = e.ForcedLoot.Count;
+                    int i = ForcedLoot.Count;
 
                     while (--i >= 0)
                     {
-                        if (i >= e.ForcedLoot.Count)
+                        if (i >= ForcedLoot.Count)
                         {
                             continue;
                         }
 
-                        Item o = e.ForcedLoot[i];
+                        Item o = ForcedLoot[i];
 
                         if (o != null && !o.Deleted)
                         {
@@ -5944,20 +5952,10 @@ namespace Server.Mobiles
                         }
                     }
 
-                    e.ClearLoot(true);
+                    ClearLoot(true);
                 }
 
                 base.OnDeath(c);
-
-                if (e.PreventDefault)
-                {
-                    return;
-                }
-
-                if (DeleteCorpseOnDeath && !e.PreventDelete)
-                {
-                    c.Delete();
-                }
             }
         }
 

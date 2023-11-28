@@ -16,9 +16,9 @@ namespace Server
             CommandSystem.Register("DecorateTOL", AccessLevel.GameMaster, DecorateTOL_OnCommand);
 
             if (DateTime.UtcNow < _EndCurrencyWarning)
+            {
                 EventSink.Login += OnLogin;
-
-            EventSink.CreatureDeath += CheckRecipeDrop;
+            }
         }
 
         private static readonly DateTime _EndCurrencyWarning = new DateTime(2017, 3, 1, 1, 1, 1);
@@ -96,13 +96,11 @@ namespace Server
                     });
         }
 
-        public static void CheckRecipeDrop(CreatureDeathEventArgs e)
+        public static void OnCreatureDeath(Mobile creature, Mobile killer, Container corpse)
         {
-            BaseCreature bc = (BaseCreature) e.Creature;
-            Container c = e.Corpse;
-            Mobile killer = e.Killer;
+            BaseCreature bc = (BaseCreature)creature;
 
-            if (SpellHelper.IsEodon(c.Map, c.Location))
+            if (SpellHelper.IsEodon(corpse.Map, corpse.Location))
             {
                 double chance = (double)bc.Fame / 1000000;
                 int luck = 0;
@@ -122,14 +120,14 @@ namespace Server
                         Item item = Loot.Construct(_ArmorDropTypes[Utility.Random(_ArmorDropTypes.Length)]);
 
                         if (item != null)
-                            c.DropItem(item);
+                            corpse.DropItem(item);
                     }
                     else
                     {
                         Item scroll = new RecipeScroll(_RecipeTypes[Utility.Random(_RecipeTypes.Length)]);
 
                         if (scroll != null)
-                            c.DropItem(scroll);
+                            corpse.DropItem(scroll);
                     }
                 }
             }
