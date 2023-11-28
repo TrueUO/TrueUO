@@ -22,6 +22,8 @@ namespace Server
 
         public static void Initialize()
         {
+            EventSink.OnKilledBy += OnKilledBy;
+
             CommandSystem.Register("DecorateML", AccessLevel.Administrator, DecorateML_OnCommand);
             CommandSystem.Register("DecorateMLDelete", AccessLevel.Administrator, DecorateMLDelete_OnCommand);
 
@@ -67,6 +69,17 @@ namespace Server
             {
                 ArcaneCircleAddon addon = new ArcaneCircleAddon();
                 addon.MoveToWorld(new Point3D(1431, 1696, 0), Map.Felucca);
+            }
+        }
+
+        public static void OnKilledBy(OnKilledByEventArgs e)
+        {
+            BaseCreature killed = e.Killed as BaseCreature;
+            Mobile killer = e.KilledBy;
+
+            if (killed != null && killer != null && killer.Alive && killed.GivesMLMinorArtifact && CheckArtifactChance(killer, killed))
+            {
+                GiveArtifactTo(killer);
             }
         }
 
