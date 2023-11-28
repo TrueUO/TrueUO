@@ -38,7 +38,7 @@ using Server.Targeting;
 
 using System;
 using System.Collections.Generic;
-
+using Server.Engines.Chat;
 using RankDefinition = Server.Guilds.RankDefinition;
 #endregion
 
@@ -803,8 +803,6 @@ namespace Server.Mobiles
 
             EventSink.Login += OnLogin;
             EventSink.Logout += OnLogout;
-            EventSink.Connected += EventSink_Connected;
-            EventSink.Disconnected += EventSink_Disconnected;
 
             #region Enchanced Client
             EventSink.TargetedSkill += Targeted_Skill;
@@ -1504,9 +1502,14 @@ namespace Server.Mobiles
             BaseEscort.DeleteEscort(pm);
         }
 
-        private static void EventSink_Connected(ConnectedEventArgs e)
+        public override void OnConnected(Mobile m)
         {
-            if (e.Mobile is PlayerMobile pm)
+            base.OnConnected(m);
+
+            // Checks young timer.
+            Accounting.Account.OnConnected(m);
+
+            if (m is PlayerMobile pm)
             {
                 pm.m_SessionStart = DateTime.UtcNow;
 
@@ -1517,46 +1520,42 @@ namespace Server.Mobiles
 
                 pm.LastOnline = DateTime.UtcNow;
             }
-            
-            DisguiseTimers.StartTimer(e.Mobile);
 
-            Timer.DelayCall(TimeSpan.Zero, ClearSpecialMovesCallback, e.Mobile);
+            DisguiseTimers.StartTimer(m);
+
+            Timer.DelayCall(TimeSpan.Zero, ClearSpecialMovesCallback, m);
         }
 
-        private static void ClearSpecialMovesCallback(object state)
+        public override void OnDisconnected(Mobile m)
         {
-            Mobile from = (Mobile)state;
+            base.OnDisconnected(m);
 
-            SpecialMove.ClearAllMoves(from);
-        }
+            // Young timer
+            Accounting.Account.OnDisconnected(m);
 
-        private static void EventSink_Disconnected(DisconnectedEventArgs e)
-        {
-            Mobile from = e.Mobile;
-            DesignContext context = DesignContext.Find(from);
-
+            DesignContext context = DesignContext.Find(m);
             if (context != null)
             {
                 /* Client disconnected
-				*  - Remove design context
-				*  - Eject all from house
-				*  - Restore relocated entities
-				*/
+                 *  - Remove design context
+                 *  - Eject all from house
+                 *  - Restore relocated entities
+                 */
                 // Remove design context
-                DesignContext.Remove(from);
+                DesignContext.Remove(m);
 
                 // Eject all from house
-                from.RevealingAction();
+                m.RevealingAction();
 
-                var list = context.Foundation.GetItems();
-                for (var index = 0; index < list.Count; index++)
+                List<Item> list = context.Foundation.GetItems();
+                for (int index = 0; index < list.Count; index++)
                 {
                     Item item = list[index];
                     item.Location = context.Foundation.BanLocation;
                 }
 
-                var mobiles = context.Foundation.GetMobiles();
-                for (var index = 0; index < mobiles.Count; index++)
+                List<Mobile> mobiles = context.Foundation.GetMobiles();
+                for (int index = 0; index < mobiles.Count; index++)
                 {
                     Mobile mobile = mobiles[index];
                     mobile.Location = context.Foundation.BanLocation;
@@ -1566,7 +1565,7 @@ namespace Server.Mobiles
                 context.Foundation.RestoreRelocatedEntities();
             }
 
-            if (e.Mobile is PlayerMobile pm)
+            if (m is PlayerMobile pm)
             {
                 pm.m_GameTime += DateTime.UtcNow - pm.m_SessionStart;
 
@@ -1580,7 +1579,21 @@ namespace Server.Mobiles
                 pm.AutoStablePets();
             }
 
-            DisguiseTimers.StopTimer(from);            
+            DisguiseTimers.StopTimer(m);
+
+            BaseBoat.OnDisconnected(m);
+
+            // Remove from public chat
+            Channel.OnDisconnected(m);
+
+            ShadowguardController.OnDisconnected(m);
+        }
+
+        private static void ClearSpecialMovesCallback(object state)
+        {
+            Mobile from = (Mobile)state;
+
+            SpecialMove.ClearAllMoves(from);
         }
 
         public override void RevealingAction()

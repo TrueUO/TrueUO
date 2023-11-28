@@ -40,10 +40,6 @@ namespace Server
 
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
-	public delegate void ConnectedEventHandler(ConnectedEventArgs e);
-
-	public delegate void DisconnectedEventHandler(DisconnectedEventArgs e);
-
 	public delegate void RenameRequestEventHandler(RenameRequestEventArgs e);
 
 	public delegate void PlayerDeathEventHandler(PlayerDeathEventArgs e);
@@ -475,30 +471,6 @@ namespace Server
 		{
 			m_Socket = s;
 			AllowConnection = true;
-		}
-	}
-
-	public class ConnectedEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public ConnectedEventArgs(Mobile m)
-		{
-			m_Mobile = m;
-		}
-	}
-
-	public class DisconnectedEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public DisconnectedEventArgs(Mobile m)
-		{
-			m_Mobile = m;
 		}
 	}
 
@@ -1077,8 +1049,6 @@ namespace Server
 		public static event AnimateRequestEventHandler AnimateRequest;
 		public static event LogoutEventHandler Logout;
 		public static event SocketConnectEventHandler SocketConnect;
-		public static event ConnectedEventHandler Connected;
-		public static event DisconnectedEventHandler Disconnected;
 		public static event RenameRequestEventHandler RenameRequest;
 		public static event PlayerDeathEventHandler PlayerDeath;
 		public static event CreatureDeathEventHandler CreatureDeath;
@@ -1229,16 +1199,6 @@ namespace Server
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
         {
             SocketConnect?.Invoke(e);
-        }
-
-		public static void InvokeConnected(ConnectedEventArgs e)
-        {
-            Connected?.Invoke(e);
-        }
-
-		public static void InvokeDisconnected(DisconnectedEventArgs e)
-        {
-            Disconnected?.Invoke(e);
         }
 
 		public static void InvokeAnimateRequest(AnimateRequestEventArgs e)

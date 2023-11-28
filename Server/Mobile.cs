@@ -8182,10 +8182,10 @@ namespace Server
 			}
 		}
 
-		public virtual void OnConnected()
+		public virtual void OnConnected(Mobile m)
 		{ }
 
-		public virtual void OnDisconnected()
+		public virtual void OnDisconnected(Mobile m)
 		{ }
 
 		public virtual void OnNetStateChanged()
@@ -8227,9 +8227,6 @@ namespace Server
 						m_Spell.OnConnectionChanged();
 					}
 
-					//if ( m_Spell != null )
-					//	m_Spell.FinishSequence();
-
 					if (m_NetState != null)
 					{
 						m_NetState.CancelAllTrades();
@@ -8242,15 +8239,11 @@ namespace Server
 						box.Close();
 					}
 
-					// REMOVED:
-					//m_Actions.Clear();
-
 					m_NetState = value;
 
 					if (m_NetState == null)
 					{
-						OnDisconnected();
-						EventSink.InvokeDisconnected(new DisconnectedEventArgs(this));
+						OnDisconnected(this);
 
                         // Disconnected, start the logout timer
                         var logoutDelay = GetLogoutDelay();
@@ -8261,11 +8254,9 @@ namespace Server
 					}
 					else
 					{
-						OnConnected();
-						EventSink.InvokeConnected(new ConnectedEventArgs(this));
+						OnConnected(this);
 
                         // Connected, stop the logout timer and if needed, move to the world
-
                         if (TimerRegistry.HasTimer(_LogoutTimerID, this))
                         {
                             TimerRegistry.RemoveFromRegistry(_LogoutTimerID, this);
