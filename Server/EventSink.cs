@@ -110,6 +110,8 @@ namespace Server
 
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
 
+	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
+
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
 
 	public class ClientVersionReceivedArgs : EventArgs
@@ -1032,6 +1034,20 @@ namespace Server
 		}
 	}
 
+	public class ContainerDroppedToEventArgs : EventArgs
+	{
+		public Mobile Mobile { get; set; }
+		public Container Container { get; set; }
+		public Item Dropped { get; set; }
+
+		public ContainerDroppedToEventArgs(Mobile m, Container container, Item dropped)
+		{
+			Mobile = m;
+			Container = container;
+			Dropped = dropped;
+		}
+	}
+
 	public class MultiDesignQueryEventArgs : EventArgs
 	{
 		public NetState State { get; set; }
@@ -1097,6 +1113,7 @@ namespace Server
 		public static event EquipMacroEventHandler EquipMacro;
 		public static event UnequipMacroEventHandler UnequipMacro;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
+		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
 
 		public static void InvokeClientVersionReceived(ClientVersionReceivedArgs e)
@@ -1352,6 +1369,11 @@ namespace Server
 		public static void InvokeUnequipMacro(UnequipMacroEventArgs e)
         {
             UnequipMacro?.Invoke(e);
+        }
+
+		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)
+        {
+            ContainerDroppedTo?.Invoke(e);
         }
 
 		public static void InvokeMultiDesignQuery(MultiDesignQueryEventArgs e)

@@ -3,8 +3,6 @@ using Server.ContextMenus;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
-using Server.Services.Virtues;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -158,38 +156,7 @@ namespace Server.Items
 
             ItemFlags.SetTaken(dropped, true);
 
-            // Check if Siege Blessed
-            if (Siege.SiegeShard)
-            {
-                if (this != from.Backpack && from is PlayerMobile mobile && mobile.BlessedItem != null && mobile.BlessedItem == dropped)
-                {
-                    mobile.BlessedItem = null;
-                    dropped.LootType = LootType.Regular;
-
-                    mobile.SendLocalizedMessage(1075292, dropped.Name != null ? dropped.Name : "#" + dropped.LabelNumber); // ~1_NAME~ has been unblessed.
-                }
-            }
-
-            // Check if Honesty Item
-            if (HonestyVirtue.Enabled)
-            {
-                HonestyItemSocket honestySocket = dropped.GetSocket<HonestyItemSocket>();
-                if (honestySocket != null && honestySocket.HonestyPickup == DateTime.MinValue)
-                {
-                    honestySocket.HonestyPickup = DateTime.UtcNow;
-                    honestySocket.StartHonestyTimer();
-
-                    if (honestySocket.HonestyOwner == null)
-                    {
-                        HonestyVirtue.AssignOwner(honestySocket);
-                    }
-
-                    if (from != null)
-                    {
-                        from.SendLocalizedMessage(1151536); // You have three hours to turn this item in for Honesty credit, otherwise it will cease to be a quest item.
-                    }
-                }
-            }
+            EventSink.InvokeContainerDroppedTo(new ContainerDroppedToEventArgs(from, this, dropped));
 
             if (!EnchantedHotItemSocket.CheckDrop(from, this, dropped))
                 return false;
@@ -230,35 +197,7 @@ namespace Server.Items
 
             ItemFlags.SetTaken(item, true);
 
-            // Check if Siege Blessed
-            if (Siege.SiegeShard)
-            {
-                if (this != from.Backpack && from is PlayerMobile mobile && mobile.BlessedItem != null && mobile.BlessedItem == item)
-                {
-                    mobile.BlessedItem = null;
-                    item.LootType = LootType.Regular;
-
-                    mobile.SendLocalizedMessage(1075292, item.Name != null ? item.Name : "#" + item.LabelNumber); // ~1_NAME~ has been unblessed.
-                }
-            }
-
-            // Check if Honesty Item
-            if (HonestyVirtue.Enabled)
-            {
-                HonestyItemSocket honestySocket = item.GetSocket<HonestyItemSocket>();
-                if (honestySocket != null && honestySocket.HonestyPickup == DateTime.MinValue)
-                {
-                    honestySocket.HonestyPickup = DateTime.UtcNow;
-                    honestySocket.StartHonestyTimer();
-
-                    if (honestySocket.HonestyOwner == null)
-                    {
-                        HonestyVirtue.AssignOwner(honestySocket);
-                    }
-
-                    from.SendLocalizedMessage(1151536); // You have three hours to turn this item in for Honesty credit, otherwise it will cease to be a quest item.
-                }
-            }
+            EventSink.InvokeContainerDroppedTo(new ContainerDroppedToEventArgs(from, this, item));
 
             if (!EnchantedHotItemSocket.CheckDrop(from, this, item))
                 return false;

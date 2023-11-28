@@ -220,6 +220,29 @@ namespace Server
                 Utility.PopColor();
 
                 ColUtility.Free(toReset);
+
+                EventSink.ContainerDroppedTo += OnDropped;
+            }
+        }
+
+        public static void OnDropped(ContainerDroppedToEventArgs e)
+        {
+            if (!SiegeShard)
+                return;
+
+            Item item = e.Dropped;
+            Mobile from = e.Mobile;
+            Container cont = e.Container;
+
+            if (item != null)
+            {
+                if (cont != from.Backpack && from is PlayerMobile mobile && mobile.BlessedItem != null && mobile.BlessedItem == item)
+                {
+                    mobile.BlessedItem = null;
+                    item.LootType = LootType.Regular;
+
+                    mobile.SendLocalizedMessage(1075292, item.Name != null ? item.Name : "#" + item.LabelNumber); // ~1_NAME~ has been unblessed.
+                }
             }
         }
 
