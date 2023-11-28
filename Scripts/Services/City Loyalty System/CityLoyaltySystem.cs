@@ -679,7 +679,6 @@ namespace Server.Engines.CityLoyalty
 
         public static void Initialize()
         {
-            EventSink.Login += OnLogin;
             Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), OnTick);
 
             CommandSystem.Register("ElectionStartTime", AccessLevel.Administrator, e => Gumps.BaseGump.SendGump(new ElectionStartTimeGump(e.Mobile as PlayerMobile)));
@@ -719,51 +718,6 @@ namespace Server.Engines.CityLoyalty
             }
 
             return false;
-        }
-
-        public static void OnLogin(LoginEventArgs e)
-        {
-            if (!Enabled)
-            {
-                return;
-            }
-
-            if (!(e.Mobile is PlayerMobile pm))
-            {
-                return;
-            }
-
-            CityLoyaltySystem sys = GetCitizenship(pm);
-
-            if (sys != null)
-            {
-                if (sys.ActiveTradeDeal != TradeDeal.None)
-                {
-                    CityLoyaltyEntry entry = sys.GetPlayerEntry<CityLoyaltyEntry>(pm, true);
-
-                    if (entry != null && entry.UtilizingTradeDeal)
-                    {
-                        BuffInfo.AddBuff(pm, new BuffInfo(BuffIcon.CityTradeDeal, 1154168, 1154169, new TextDefinition((int)sys.ActiveTradeDeal), true));
-                        ActivateTradeDeal(pm, sys.ActiveTradeDeal);
-                    }
-                }
-
-                int message;
-
-                if (pm.LastOnline + LoveAtrophyDuration > DateTime.UtcNow)
-                {
-                    message = 1152913; // The moons of Trammel and Felucca align to preserve your virtue status and city loyalty.
-                }
-                else
-                {
-                    message = 1152912; // The moons of Trammel and Felucca fail to preserve your virtue status and city loyalty.
-                }
-
-                Timer.DelayCall(TimeSpan.FromSeconds(.7), () =>
-                {
-                    pm.SendLocalizedMessage(message);
-                });
-            }
         }
 
         public static void ActivateTradeDeal(Mobile m, TradeDeal deal)
