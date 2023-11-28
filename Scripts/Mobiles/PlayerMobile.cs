@@ -1225,6 +1225,9 @@ namespace Server.Mobiles
                 return;
             }
 
+            // Adjust lighting 
+            from.CheckLightLevels(true);
+
             if (from is PlayerMobile pm)
             {
                 pm.ClaimAutoStabledPets();
@@ -1233,6 +1236,41 @@ namespace Server.Mobiles
                 ReportMurdererGump.CheckMurderer(pm);
 
                 QuestHelper.QuestionQuestCheck(pm);
+
+                if (CityLoyaltySystem.Enabled)
+                {
+                    CityLoyaltySystem sys = CityLoyaltySystem.GetCitizenship(pm);
+
+                    if (sys != null)
+                    {
+                        if (sys.ActiveTradeDeal != TradeDeal.None)
+                        {
+                            CityLoyaltyEntry entry = sys.GetPlayerEntry<CityLoyaltyEntry>(pm, true);
+
+                            if (entry != null && entry.UtilizingTradeDeal)
+                            {
+                                BuffInfo.AddBuff(pm, new BuffInfo(BuffIcon.CityTradeDeal, 1154168, 1154169, new TextDefinition((int)sys.ActiveTradeDeal), true));
+                                CityLoyaltySystem.ActivateTradeDeal(pm, sys.ActiveTradeDeal);
+                            }
+                        }
+
+                        int message;
+
+                        if (pm.LastOnline + CityLoyaltySystem.LoveAtrophyDuration > DateTime.UtcNow)
+                        {
+                            message = 1152913; // The moons of Trammel and Felucca align to preserve your virtue status and city loyalty.
+                        }
+                        else
+                        {
+                            message = 1152912; // The moons of Trammel and Felucca fail to preserve your virtue status and city loyalty.
+                        }
+
+                        Timer.DelayCall(TimeSpan.FromSeconds(.7), () =>
+                        {
+                            pm.SendLocalizedMessage(message);
+                        });
+                    }
+                }
             }
 
             if (Siege.SiegeShard && from.Map == Map.Trammel && from.AccessLevel == AccessLevel.Player)
@@ -1253,6 +1291,16 @@ namespace Server.Mobiles
             }
 
             from.CheckStatTimers();
+
+            // StormLevelGump - Invalid location check gump
+            if ((from.Map == Map.Trammel && from.Region.IsPartOf("Blackthorn Castle") || Engines.Fellowship.ForsakenFoesEvent.Instance.Running && from.Region.IsPartOf("BlackthornDungeon") || from.Region.IsPartOf("Ver Lor Reg")) && from.Player && from.AccessLevel == AccessLevel.Player && from.CharacterOut)
+            {
+                StormLevelGump menu = new StormLevelGump(from);
+                menu.BeginClose();
+                from.SendGump(menu);
+            }
+
+            BaseBeverage.CheckHeaveTimer(from);
         }
 
         private bool m_NoDeltaRecursion;
