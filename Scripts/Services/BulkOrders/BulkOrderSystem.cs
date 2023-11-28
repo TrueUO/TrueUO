@@ -684,10 +684,6 @@ namespace Server.Engines.BulkOrders
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
-        {
-        }
-
         public static string FilePath = Path.Combine("Saves/CraftContext", "BODs.bin");
 
         public static void Configure()
