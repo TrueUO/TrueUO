@@ -64,14 +64,9 @@ namespace Server.Mobiles
         public override bool AlwaysAttackable => true;
         public override bool BardImmune => true;
         public override Poison PoisonImmune => Poison.Lethal;
-        public static void Initialize()
+       
+        public static void OnPlayerDeath(Mobile m)
         {
-            EventSink.PlayerDeath += EventSink_PlayerDeath;
-        }
-
-        public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
-        {
-            Mobile m = e.Mobile;
             Mobile lastKiller = m.LastKiller;
 
             if (lastKiller is BaseCreature creature)

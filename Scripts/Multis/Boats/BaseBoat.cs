@@ -78,7 +78,6 @@ namespace Server.Multis
         {
             new UpdateAllTimer().Start();
             EventSink.WorldSave += EventSink_WorldSave;
-            EventSink.PlayerDeath += EventSink_PlayerDeath;
         }
 
         public static void UpdateAllComponents()
@@ -116,9 +115,9 @@ namespace Server.Multis
             ForceRemovePilot(m);
         }
 
-        public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
+        public static void OnPlayerDeath(Mobile m)
         {
-            ForceRemovePilot(e.Mobile);
+            ForceRemovePilot(m);
         }
 
         public static void ForceRemovePilot(Mobile m)

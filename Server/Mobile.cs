@@ -3959,7 +3959,7 @@ namespace Server
 				Stam = 0;
 				Mana = 0;
 
-				EventSink.InvokePlayerDeath(new PlayerDeathEventArgs(this, LastKiller, c));
+                OnPlayerDeath(this);
 
 				ProcessDeltaQueue();
 
@@ -3968,6 +3968,9 @@ namespace Server
 				CheckStatTimers();
 			}
 		}
+
+        public virtual void OnPlayerDeath(Mobile mobile)
+        { }
 
 		#region Get*Sound
 		public virtual int GetAngerSound()

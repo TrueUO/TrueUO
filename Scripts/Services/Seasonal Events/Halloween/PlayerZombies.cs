@@ -58,14 +58,12 @@ namespace Server.Engines.Events
                 m_Timer = Timer.DelayCall(tick, tick, Timer_Callback);
 
                 m_ClearTimer = Timer.DelayCall(clear, clear, Clear_Callback);
-
-                EventSink.PlayerDeath += EventSink_PlayerDeath;
             }
         }
 
-        public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
+        public static void OnPlayerDeath(Mobile m)
         {
-            if (e.Mobile != null && !e.Mobile.Deleted && e.Mobile is PlayerMobile player) /* not sure .. better safe than sorry? */
+            if (m != null && !m.Deleted && m is PlayerMobile player) /* not sure .. better safe than sorry? */
             {
                 if (m_Timer.Running && !m_DeathQueue.Contains(player) && m_DeathQueue.Count < m_DeathQueueLimit)
                 {

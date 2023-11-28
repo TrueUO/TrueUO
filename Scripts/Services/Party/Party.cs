@@ -45,8 +45,7 @@ namespace Server.Engines.PartySystem
         public static void Initialize()
         {
             EventSink.Login += EventSink_Login;
-            EventSink.PlayerDeath += EventSink_PlayerDeath;
-
+            
             CommandSystem.Register("ListenToParty", AccessLevel.GameMaster, ListenToParty_OnCommand);
         }
 
@@ -79,9 +78,8 @@ namespace Server.Engines.PartySystem
             }
         }
 
-        public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
+        public static void OnPlayerDeath(Mobile from)
         {
-            Mobile from = e.Mobile;
             Party p = Get(from);
 
             if (p != null)

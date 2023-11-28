@@ -39,7 +39,9 @@ using Server.Targeting;
 using System;
 using System.Collections.Generic;
 using Server.Engines.Chat;
+using Server.Engines.Events;
 using Server.Engines.InstancedPeerless;
+using Server.Spells.Spellweaving;
 using RankDefinition = Server.Guilds.RankDefinition;
 #endregion
 
@@ -3653,6 +3655,23 @@ namespace Server.Mobiles
             }
 
             return res;
+        }
+
+        public override void OnPlayerDeath(Mobile mobile)
+        {
+            base.OnPlayerDeath(mobile);
+
+            Aggression.OnPlayerDeath(mobile);
+            BaseBoat.OnPlayerDeath(mobile);
+            EodonianPotion.OnPlayerDeath(mobile);
+            GemOfSalvation.OnPlayerDeath(mobile);
+            GiftOfLifeSpell.OnPlayerDeath(mobile);
+            HalloweenHauntings.OnPlayerDeath(mobile);
+            KhaldunRevenant.OnPlayerDeath(mobile);
+            ReportMurdererGump.OnPlayerDeath(mobile);
+            ViceVsVirtueSystem.OnPlayerDeath(mobile);
+            
+            Engines.PartySystem.Party.OnPlayerDeath(mobile);
         }
 
         public override void OnDeath(Container c)

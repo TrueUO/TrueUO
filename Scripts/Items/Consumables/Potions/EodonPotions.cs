@@ -63,11 +63,6 @@ namespace Server.Items
             }
         }
 
-        public static void Initialize()
-        {
-            EventSink.PlayerDeath += EventSink_PlayerDeath;
-        }
-
         public EodonianPotion(int id, PotionEffect effect)
             : base(id, effect)
         {
@@ -276,12 +271,12 @@ namespace Server.Items
             }
         }
 
-        public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
+        public static void OnPlayerDeath(Mobile m)
         {
             if (Contexts != null)
             {
-                if (e.Mobile != null && Contexts.ContainsKey(e.Mobile))
-                    Contexts.Remove(e.Mobile);
+                if (m != null && Contexts.ContainsKey(m))
+                    Contexts.Remove(m);
 
                 if (Contexts.Count == 0)
                     EndTimer();

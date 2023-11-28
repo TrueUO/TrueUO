@@ -40,8 +40,6 @@ namespace Server
 
 	public delegate void RenameRequestEventHandler(RenameRequestEventArgs e);
 
-	public delegate void PlayerDeathEventHandler(PlayerDeathEventArgs e);
-
 	public delegate void CreatureDeathEventHandler(CreatureDeathEventArgs e);
 
 	public delegate void VirtueGumpRequestEventHandler(VirtueGumpRequestEventArgs e);
@@ -366,24 +364,6 @@ namespace Server
 		{
 			m_Mobile = mobile;
 			m_VirtueID = virtueID;
-		}
-	}
-
-	public class PlayerDeathEventArgs : EventArgs
-	{
-		public Mobile Mobile { get; }
-		public Mobile Killer { get; }
-		public Container Corpse { get; }
-
-		public PlayerDeathEventArgs(Mobile mobile)
-			: this(mobile, mobile.LastKiller, mobile.Corpse)
-		{ }
-
-		public PlayerDeathEventArgs(Mobile mobile, Mobile killer, Container corpse)
-		{
-			Mobile = mobile;
-			Killer = killer;
-			Corpse = corpse;
 		}
 	}
 
@@ -1018,7 +998,6 @@ namespace Server
 		public static event AnimateRequestEventHandler AnimateRequest;
 		public static event SocketConnectEventHandler SocketConnect;
 		public static event RenameRequestEventHandler RenameRequest;
-		public static event PlayerDeathEventHandler PlayerDeath;
 		public static event CreatureDeathEventHandler CreatureDeath;
 		public static event VirtueGumpRequestEventHandler VirtueGumpRequest;
 		public static event VirtueItemRequestEventHandler VirtueItemRequest;
@@ -1141,11 +1120,6 @@ namespace Server
 		public static void InvokeVirtueMacroRequest(VirtueMacroRequestEventArgs e)
         {
             VirtueMacroRequest?.Invoke(e);
-        }
-
-		public static void InvokePlayerDeath(PlayerDeathEventArgs e)
-        {
-            PlayerDeath?.Invoke(e);
         }
 
 		public static void InvokeCreatureDeath(CreatureDeathEventArgs e)
