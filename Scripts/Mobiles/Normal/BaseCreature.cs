@@ -5914,20 +5914,23 @@ namespace Server.Mobiles
 
                 if (!c.Deleted)
                 {
-                    int i = ForcedLoot.Count;
-
-                    while (--i >= 0)
+                    if (ForcedLoot != null)
                     {
-                        if (i >= ForcedLoot.Count)
-                        {
-                            continue;
-                        }
+                        int i = ForcedLoot.Count;
 
-                        Item o = ForcedLoot[i];
-
-                        if (o != null && !o.Deleted)
+                        while (--i >= 0)
                         {
-                            c.DropItem(o);
+                            if (i >= ForcedLoot.Count)
+                            {
+                                continue;
+                            }
+
+                            Item o = ForcedLoot[i];
+
+                            if (o != null && !o.Deleted)
+                            {
+                                c.DropItem(o);
+                            }
                         }
                     }
 
@@ -5935,21 +5938,24 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    int i = ForcedLoot.Count;
-
-                    while (--i >= 0)
+                    if (ForcedLoot != null)
                     {
-                        if (i >= ForcedLoot.Count)
+                        int i = ForcedLoot.Count;
+
+                        while (--i >= 0)
                         {
-                            continue;
+                            if (i >= ForcedLoot.Count)
+                            {
+                                continue;
+                            }
+
+                            Item o = ForcedLoot[i];
+
+                            if (o != null && !o.Deleted)
+                            {
+                                o.Delete();
+                            }   
                         }
-
-                        Item o = ForcedLoot[i];
-
-                        if (o != null && !o.Deleted)
-                        {
-                            o.Delete();
-                        }   
                     }
 
                     ClearLoot(true);

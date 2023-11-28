@@ -3736,7 +3736,7 @@ namespace Server.Mobiles
             BaseBoat.OnPlayerDeath(this);
             EodonianPotion.OnPlayerDeath(this);
             GemOfSalvation.OnPlayerDeath(this);
-            GiftOfLifeSpell.OnPlayerDeath(this);
+            GiftOfLifeSpell.HandleDeath(this);
             HalloweenHauntings.OnPlayerDeath(this);
             KhaldunRevenant.OnPlayerDeath(this);
             ReportMurdererGump.OnPlayerDeath(this);

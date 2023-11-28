@@ -28,11 +28,6 @@ namespace Server.Spells.Spellweaving
             EventSink.Login += Login;
         }
 
-        public static void OnPlayerDeath(Mobile m)
-        {
-            HandleDeath(m);
-        }
-
         public static void HandleDeath(Mobile m)
         {
             if (m_Table.ContainsKey(m))
