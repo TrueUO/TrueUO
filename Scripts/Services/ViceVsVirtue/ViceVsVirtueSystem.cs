@@ -442,7 +442,6 @@ namespace Server.Engines.VvV
                 return;
 
             EventSink.Login += OnLogin;
-            EventSink.PlayerDeath += OnPlayerDeath;
 
             Commands.CommandSystem.Register("BattleProps", AccessLevel.GameMaster, e =>
                 {
@@ -525,14 +524,14 @@ namespace Server.Engines.VvV
             }
         }
 
-        public static void OnPlayerDeath(PlayerDeathEventArgs e)
+        public static void OnPlayerDeath(Mobile m)
         {
             if (!Enabled)
             {
                 return;
             }
 
-            if (e.Mobile is PlayerMobile pm && Instance != null)
+            if (m is PlayerMobile pm && Instance != null)
             {
                 Instance.HandlePlayerDeath(pm);
             }

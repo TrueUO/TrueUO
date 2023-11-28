@@ -17,7 +17,6 @@ namespace Server.Misc
         public static void Initialize()
         {
             EventSink.AggressiveAction += EventSink_AggressiveAction;
-            EventSink.PlayerDeath += EventSink_PlayerDeath;
             EventSink.CreatureDeath += EventSink_CreatureDeath;
         }
 
@@ -39,21 +38,19 @@ namespace Server.Misc
             BuffInfo.AddBuff(aggressed, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Delay, aggressed, true));
         }
 
-        public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
+        public static void OnPlayerDeath(Mobile killed)
         {
-            Mobile killed = e.Mobile;
-
-            for (var index = 0; index < killed.Aggressed.Count; index++)
+            for (int index = 0; index < killed.Aggressed.Count; index++)
             {
-                var m1 = killed.Aggressed[index];
+                AggressorInfo m1 = killed.Aggressed[index];
 
                 Mobile m = m1.Defender;
                 CheckCombat(m);
             }
 
-            for (var index = 0; index < killed.Aggressors.Count; index++)
+            for (int index = 0; index < killed.Aggressors.Count; index++)
             {
-                var x = killed.Aggressors[index];
+                AggressorInfo x = killed.Aggressors[index];
 
                 Mobile m = x.Attacker;
                 CheckCombat(m);

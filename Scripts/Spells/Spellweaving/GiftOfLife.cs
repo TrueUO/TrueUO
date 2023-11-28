@@ -25,13 +25,12 @@ namespace Server.Spells.Spellweaving
         public double HitsScalar => ((Caster.Skills.Spellweaving.Value / 2.4) + FocusLevel) / 100;
         public static void Initialize()
         {
-            EventSink.PlayerDeath += HandleDeath;
             EventSink.Login += Login;
         }
 
-        public static void HandleDeath(PlayerDeathEventArgs e)
+        public static void OnPlayerDeath(Mobile m)
         {
-            HandleDeath(e.Mobile);
+            HandleDeath(m);
         }
 
         public static void HandleDeath(Mobile m)
