@@ -43,6 +43,7 @@ using Server.Engines.Events;
 using Server.Engines.InstancedPeerless;
 using Server.Spells.Spellweaving;
 using RankDefinition = Server.Guilds.RankDefinition;
+using System.Reflection;
 #endregion
 
 namespace Server.Mobiles
@@ -3657,24 +3658,6 @@ namespace Server.Mobiles
             return res;
         }
 
-        public override void OnPlayerDeath(Mobile mobile)
-        {
-            base.OnPlayerDeath(mobile);
-
-            Aggression.OnPlayerDeath(mobile);
-            BaseBoat.OnPlayerDeath(mobile);
-            EodonianPotion.OnPlayerDeath(mobile);
-            GemOfSalvation.OnPlayerDeath(mobile);
-            GiftOfLifeSpell.OnPlayerDeath(mobile);
-            HalloweenHauntings.OnPlayerDeath(mobile);
-            ReportMurdererGump.OnPlayerDeath(mobile);
-            ViceVsVirtueSystem.OnPlayerDeath(mobile);
-
-            KhaldunRevenant.PlayerDeath(mobile);
-
-            Engines.PartySystem.Party.OnPlayerDeath(mobile);
-        }
-
         public override void OnDeath(Container c)
         {
             if (NetState != null)
@@ -3748,6 +3731,18 @@ namespace Server.Mobiles
                     Criminal = true;
                 }
             }
+
+            Aggression.OnPlayerDeath(this);
+            BaseBoat.OnPlayerDeath(this);
+            EodonianPotion.OnPlayerDeath(this);
+            GemOfSalvation.OnPlayerDeath(this);
+            GiftOfLifeSpell.OnPlayerDeath(this);
+            HalloweenHauntings.OnPlayerDeath(this);
+            KhaldunRevenant.OnPlayerDeath(this);
+            ReportMurdererGump.OnPlayerDeath(this);
+            ViceVsVirtueSystem.OnPlayerDeath(this);
+
+            Engines.PartySystem.Party.OnPlayerDeath(this);
 
             if (killer != null && Murderer && DateTime.UtcNow >= killer.m_NextJustAward)
             {

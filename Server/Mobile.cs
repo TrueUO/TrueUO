@@ -3959,8 +3959,6 @@ namespace Server
 				Stam = 0;
 				Mana = 0;
 
-                OnPlayerDeath(this);
-
 				ProcessDeltaQueue();
 
 				Send(DeathStatus.Instantiate(false));
@@ -3968,9 +3966,6 @@ namespace Server
 				CheckStatTimers();
 			}
 		}
-
-        public virtual void OnPlayerDeath(Mobile mobile)
-        { }
 
 		#region Get*Sound
 		public virtual int GetAngerSound()
