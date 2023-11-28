@@ -39,6 +39,7 @@ using Server.Targeting;
 using System;
 using System.Collections.Generic;
 using Server.Engines.Chat;
+using Server.Engines.InstancedPeerless;
 using RankDefinition = Server.Guilds.RankDefinition;
 #endregion
 
@@ -802,7 +803,6 @@ namespace Server.Mobiles
             }
 
             EventSink.Login += OnLogin;
-            EventSink.Logout += OnLogout;
 
             #region Enchanced Client
             EventSink.TargetedSkill += Targeted_Skill;
@@ -1481,27 +1481,6 @@ namespace Server.Mobiles
             InvalidateProperties();
         }
 
-        private static void Disconnect(object state)
-        {
-            NetState ns = ((Mobile)state).NetState;
-
-            ns?.Dispose();
-        }
-
-        private static void OnLogout(LogoutEventArgs e)
-        {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm == null)
-                return;
-
-            BaseFamiliar.OnLogout(pm);
-
-            BasketOfHerbs.CheckBonus(pm);
-
-            BaseEscort.DeleteEscort(pm);
-        }
-
         public override void OnConnected(Mobile m)
         {
             base.OnConnected(m);
@@ -1524,6 +1503,13 @@ namespace Server.Mobiles
             DisguiseTimers.StartTimer(m);
 
             Timer.DelayCall(TimeSpan.Zero, ClearSpecialMovesCallback, m);
+        }
+
+        private static void ClearSpecialMovesCallback(object state)
+        {
+            Mobile from = (Mobile)state;
+
+            SpecialMove.ClearAllMoves(from);
         }
 
         public override void OnDisconnected(Mobile m)
@@ -1589,11 +1575,31 @@ namespace Server.Mobiles
             ShadowguardController.OnDisconnected(m);
         }
 
-        private static void ClearSpecialMovesCallback(object state)
+        private static void Disconnect(object state)
         {
-            Mobile from = (Mobile)state;
+            NetState ns = ((Mobile)state).NetState;
 
-            SpecialMove.ClearAllMoves(from);
+            ns?.Dispose();
+        }
+
+        public override void OnLogout(Mobile m)
+        {
+            base.OnLogout(m);
+
+            PlayerMobile pm = m as PlayerMobile;
+
+            if (pm == null)
+            {
+                return;
+            }
+
+            ChampionSpawnRegion.OnLogout(pm);
+            BaseEscort.DeleteEscort(pm);
+            BaseFamiliar.OnLogout(pm);
+            BasketOfHerbs.CheckBonus(pm);
+            InstanceRegion.OnLogout(pm);
+            ScrollOfAlacrity.OnLogout(pm);
+            Engines.PartySystem.Party.OnLogout(pm);
         }
 
         public override void RevealingAction()
