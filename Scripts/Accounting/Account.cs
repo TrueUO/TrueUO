@@ -873,8 +873,6 @@ namespace Server.Accounting
 
         public static void Initialize()
         {
-            EventSink.Connected += EventSink_Connected;
-            EventSink.Disconnected += EventSink_Disconnected;
             EventSink.Login += EventSink_Login;
         }
 
@@ -1586,9 +1584,9 @@ namespace Server.Accounting
             return Username;
         }
 
-        private static void EventSink_Connected(ConnectedEventArgs e)
+        public static void OnConnected(Mobile m)
         {
-            Account acc = e.Mobile.Account as Account;
+            Account acc = m.Account as Account;
 
             if (acc == null)
             {
@@ -1604,9 +1602,9 @@ namespace Server.Accounting
             acc.m_YoungTimer.Start();
         }
 
-        private static void EventSink_Disconnected(DisconnectedEventArgs e)
+        public static void OnDisconnected(Mobile m)
         {
-            Account acc = e.Mobile.Account as Account;
+            Account acc = m.Account as Account;
 
             if (acc == null)
             {
@@ -1619,9 +1617,9 @@ namespace Server.Accounting
                 acc.m_YoungTimer = null;
             }
 
-            if (e.Mobile is PlayerMobile m)
+            if (m is PlayerMobile pm)
             {
-                acc.m_TotalGameTime += DateTime.UtcNow - m.SessionStart;
+                acc.m_TotalGameTime += DateTime.UtcNow - pm.SessionStart;
             }
         }
 

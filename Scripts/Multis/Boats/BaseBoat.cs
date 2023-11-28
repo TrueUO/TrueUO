@@ -78,7 +78,6 @@ namespace Server.Multis
         {
             new UpdateAllTimer().Start();
             EventSink.WorldSave += EventSink_WorldSave;
-            EventSink.Disconnected += EventSink_Disconnected;
             EventSink.PlayerDeath += EventSink_PlayerDeath;
         }
 
@@ -112,9 +111,9 @@ namespace Server.Multis
             new UpdateAllTimer().Start();
         }
 
-        public static void EventSink_Disconnected(DisconnectedEventArgs e)
+        public static void OnDisconnected(Mobile m)
         {
-            ForceRemovePilot(e.Mobile);
+            ForceRemovePilot(m);
         }
 
         public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)

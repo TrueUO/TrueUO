@@ -53,7 +53,6 @@ namespace Server.Engines.Shadowguard
         public static void Initialize()
         {
             EventSink.Login += OnLogin;
-            EventSink.Disconnected += OnDisconnected;
 
             CommandSystem.Register("AddController", AccessLevel.Administrator, e =>
                 {
@@ -762,12 +761,14 @@ namespace Server.Engines.Shadowguard
             StartTimer();
         }
 
-        private static void OnDisconnected(DisconnectedEventArgs e)
+        public static void OnDisconnected(Mobile m)
         {
-            ShadowguardEncounter encounter = GetEncounter(e.Mobile.Location, e.Mobile.Map);
+            ShadowguardEncounter encounter = GetEncounter(m.Location, m.Map);
 
             if (encounter != null)
-                encounter.CheckPlayerStatus(e.Mobile);
+            {
+                encounter.CheckPlayerStatus(m);
+            }
         }
 
         private static void OnLogin(LoginEventArgs e)
