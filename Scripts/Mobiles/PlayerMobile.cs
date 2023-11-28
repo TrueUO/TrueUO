@@ -803,7 +803,6 @@ namespace Server.Mobiles
             }
 
             EventSink.Login += OnLogin;
-            EventSink.Connected += EventSink_Connected;
             EventSink.Disconnected += EventSink_Disconnected;
 
             #region Enchanced Client
@@ -1545,14 +1544,12 @@ namespace Server.Mobiles
 
         public override void OnLogout(Mobile m)
         {
-            PlayerMobile pm = m as PlayerMobile;
+            base.OnLogout(m);
 
-            if (pm == null)
+            if (m is not PlayerMobile pm)
             {
                 return;
             }
-
-            Console.WriteLine("WE GOT HERE!");
 
             // Party System Check
             Party party = Engines.PartySystem.Party.Get(pm);
@@ -1627,9 +1624,11 @@ namespace Server.Mobiles
             }
         }
 
-        private static void EventSink_Connected(ConnectedEventArgs e)
+        public override void OnConnected(Mobile m)
         {
-            if (e.Mobile is PlayerMobile pm)
+            base.OnConnected(m);
+
+            if (m is PlayerMobile pm)
             {
                 pm.m_SessionStart = DateTime.UtcNow;
 
@@ -1639,11 +1638,19 @@ namespace Server.Mobiles
                 pm.BedrollLogout = false;
 
                 pm.LastOnline = DateTime.UtcNow;
-            }
-            
-            DisguiseTimers.StartTimer(e.Mobile);
 
-            Timer.DelayCall(TimeSpan.Zero, ClearSpecialMovesCallback, e.Mobile);
+                if (pm.Account is Account acc && acc.Young && acc.m_YoungTimer == null)
+                {
+                    acc.m_YoungTimer = new Account.YoungTimer(acc);
+                    acc.m_YoungTimer.Start();
+
+                    Console.WriteLine($"{pm.Name} got here");
+                }
+            }
+
+            DisguiseTimers.StartTimer(m);
+
+            Timer.DelayCall(TimeSpan.Zero, ClearSpecialMovesCallback, m);
         }
 
         private static void ClearSpecialMovesCallback(object state)

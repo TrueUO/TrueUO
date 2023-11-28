@@ -182,7 +182,8 @@ namespace Server.Accounting
         private List<AccountComment> m_Comments;
         private List<AccountTag> m_Tags;
         private TimeSpan m_TotalGameTime;
-        private Timer m_YoungTimer;
+
+        public Timer m_YoungTimer;
 
         public Account(string username, string password)
         {
@@ -873,7 +874,6 @@ namespace Server.Accounting
 
         public static void Initialize()
         {
-            EventSink.Connected += EventSink_Connected;
             EventSink.Disconnected += EventSink_Disconnected;
             EventSink.Login += EventSink_Login;
         }
@@ -1586,24 +1586,6 @@ namespace Server.Accounting
             return Username;
         }
 
-        private static void EventSink_Connected(ConnectedEventArgs e)
-        {
-            Account acc = e.Mobile.Account as Account;
-
-            if (acc == null)
-            {
-                return;
-            }
-
-            if (!acc.Young || acc.m_YoungTimer != null)
-            {
-                return;
-            }
-
-            acc.m_YoungTimer = new YoungTimer(acc);
-            acc.m_YoungTimer.Start();
-        }
-
         private static void EventSink_Disconnected(DisconnectedEventArgs e)
         {
             Account acc = e.Mobile.Account as Account;
@@ -1652,7 +1634,7 @@ namespace Server.Accounting
             m.SendAsciiMessage("You will enjoy the benefits and relatively safe status of a young player for {0} more hour{1}.", hours, hours != 1 ? "s" : "");
         }
 
-        private class YoungTimer : Timer
+        public class YoungTimer : Timer
         {
             private readonly Account _Account;
 

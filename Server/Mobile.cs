@@ -8185,7 +8185,7 @@ namespace Server
 			}
 		}
 
-		public virtual void OnConnected()
+		public virtual void OnConnected(Mobile m)
 		{ }
 
 		public virtual void OnDisconnected()
@@ -8264,11 +8264,9 @@ namespace Server
 					}
 					else
 					{
-						OnConnected();
-						EventSink.InvokeConnected(new ConnectedEventArgs(this));
-
+						OnConnected(this);
+						
                         // Connected, stop the logout timer and if needed, move to the world
-
                         if (TimerRegistry.HasTimer(_LogoutTimerID, this))
                         {
                             TimerRegistry.RemoveFromRegistry(_LogoutTimerID, this);
