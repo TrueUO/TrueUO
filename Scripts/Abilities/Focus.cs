@@ -8,11 +8,6 @@ namespace Server.Items
         private static readonly Dictionary<Mobile, FocusInfo> m_Table = new Dictionary<Mobile, FocusInfo>();
         private const int DefaultDamageBonus = -40;
 
-        public static void Initialize()
-        {
-            EventSink.Login += OnLogin;
-        }
-
         public class FocusInfo
         {
             public Mobile Target { get; set; }
@@ -25,9 +20,9 @@ namespace Server.Items
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            if (e.Mobile is PlayerMobile pm)
+            if (m is PlayerMobile pm)
             {
                 UpdateBuff(pm);
             }

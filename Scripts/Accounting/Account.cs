@@ -871,11 +871,6 @@ namespace Server.Accounting
             return BitConverter.ToString(hashed);
         }
 
-        public static void Initialize()
-        {
-            EventSink.Login += EventSink_Login;
-        }
-
         /// <summary>
         ///     Deserializes a list of string values from an xml element. Null values are not added to the list.
         /// </summary>
@@ -1623,23 +1618,23 @@ namespace Server.Accounting
             }
         }
 
-        private static void EventSink_Login(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            PlayerMobile m = e.Mobile as PlayerMobile;
+            PlayerMobile pm = m as PlayerMobile;
 
-            if (m == null)
+            if (pm == null)
             {
                 return;
             }
 
-            Account acc = m.Account as Account;
+            Account acc = pm.Account as Account;
 
             if (acc == null)
             {
                 return;
             }
 
-            if (!m.Young || !acc.Young)
+            if (!pm.Young || !acc.Young)
             {
                 return;
             }
@@ -1647,7 +1642,7 @@ namespace Server.Accounting
             TimeSpan ts = _YoungDuration - acc.TotalGameTime;
             int hours = Math.Max((int)ts.TotalHours, 0);
 
-            m.SendAsciiMessage("You will enjoy the benefits and relatively safe status of a young player for {0} more hour{1}.", hours, hours != 1 ? "s" : "");
+            pm.SendAsciiMessage("You will enjoy the benefits and relatively safe status of a young player for {0} more hour{1}.", hours, hours != 1 ? "s" : "");
         }
 
         private class YoungTimer : Timer

@@ -25,18 +25,15 @@ namespace Server.Gumps
         public static void Initialize()
         {
             CommandSystem.Register("StormLevelGump", AccessLevel.Administrator, StormLevel_OnCommand);
-            EventSink.Login += OnLogin;
         }
 
-        private static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            var from = e.Mobile;
-
-            if ((from.Map == Map.Trammel && from.Region.IsPartOf("Blackthorn Castle") || Engines.Fellowship.ForsakenFoesEvent.Instance.Running && from.Region.IsPartOf("BlackthornDungeon") || from.Region.IsPartOf("Ver Lor Reg")) && from.Player && from.AccessLevel == AccessLevel.Player && from.CharacterOut)
+            if ((m.Map == Map.Trammel && m.Region.IsPartOf("Blackthorn Castle") || Engines.Fellowship.ForsakenFoesEvent.Instance.Running && m.Region.IsPartOf("BlackthornDungeon") || m.Region.IsPartOf("Ver Lor Reg")) && m.Player && m.AccessLevel == AccessLevel.Player && m.CharacterOut)
             {
-                var menu = new StormLevelGump(from);
+                StormLevelGump menu = new StormLevelGump(m);
                 menu.BeginClose();
-                from.SendGump(menu);
+                m.SendGump(menu);
             }
         }
 

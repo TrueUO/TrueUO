@@ -12,11 +12,6 @@ namespace Server.Regions
         {
         }
 
-        public static void Initialize()
-        {
-            EventSink.Login += Desert_OnLogin;
-        }
-
         public override void OnEnter(Mobile m)
         {
             if (m.NetState != null && !TransformationSpellHelper.UnderTransformation(m, typeof(AnimalForm)) && m.AccessLevel < AccessLevel.GameMaster)
@@ -33,12 +28,12 @@ namespace Server.Regions
             }
         }
 
-        private static void Desert_OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            Mobile m = e.Mobile;
-
             if (m.Region.IsPartOf<TwistedWealdDesert>() && m.AccessLevel < AccessLevel.GameMaster)
+            {
                 m.SendSpeedControl(SpeedControlType.WalkSpeed);
+            }
         }
     }
 }

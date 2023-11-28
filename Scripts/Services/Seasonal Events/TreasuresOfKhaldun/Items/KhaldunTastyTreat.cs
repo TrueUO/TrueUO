@@ -85,11 +85,6 @@ namespace Server.Items
 
         public static Dictionary<BaseCreature, DateTime> Table { get; set; }
 
-        public static void Initialize()
-        {
-            EventSink.Login += OnLogin;
-        }
-
         public static bool UnderInfluence(BaseCreature bc)
         {
             return Table != null && Table.ContainsKey(bc);
@@ -172,9 +167,9 @@ namespace Server.Items
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            if (e.Mobile is PlayerMobile pm)
+            if (m is PlayerMobile pm)
             {
                 Timer.DelayCall(() => Caddellite.UpdateBuff(pm));
             }

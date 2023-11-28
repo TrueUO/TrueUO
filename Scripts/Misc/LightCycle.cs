@@ -31,17 +31,15 @@ namespace Server
         {
             new LightCycleTimer(Clock.SecondsPerUOMinute).Start();
 
-            EventSink.Login += OnLogin;
-
             CommandSystem.Register("GlobalLight", AccessLevel.GameMaster, Light_OnCommand);
         }
 
-        public static void OnLogin(LoginEventArgs args)
+        public static void OnLogin(Mobile m)
         {
-            Mobile m = args.Mobile;
-
             if (m != null)
+            {
                 m.CheckLightLevels(true);
+            }
         }
 
         public static int ComputeLevelFor(Mobile from)

@@ -10,7 +10,6 @@ namespace Server.Engines.Despise
     {
         public static void Initialize()
         {
-            EventSink.Login += OnLogin;
             EventSink.OnEnterRegion += OnEnterRegion;
 
             if (m_Instance != null)
@@ -591,10 +590,8 @@ namespace Server.Engines.Despise
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile from)
         {
-            Mobile from = e.Mobile;
-
             DespiseController controller = m_Instance;
 
             if (controller != null && controller.LowerRegion != null)
