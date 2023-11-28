@@ -427,7 +427,6 @@ namespace Server.Engines.Points
             EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
             EventSink.QuestComplete += CompleteQuest;
-            EventSink.OnKilledBy += OnKilledBy;
 
             Systems = new List<PointsSystem>();
 
@@ -454,9 +453,9 @@ namespace Server.Engines.Points
             JollyRogerData = new JollyRogerData();
         }
 
-        public static void OnKilledBy(OnKilledByEventArgs e)
+        public static void OnKilledBy(BaseCreature killed, Mobile killer)
         {
-            OnKilledBy(e.Killed, e.KilledBy);
+            OnKilledBy(killed, killer);
         }
 
         public static void OnKilledBy(Mobile victim, Mobile damager)
