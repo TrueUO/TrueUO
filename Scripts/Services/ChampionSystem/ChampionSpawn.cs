@@ -1433,7 +1433,6 @@ namespace Server.Engines.CannedEvil
     {
         public static void Initialize()
         {
-            EventSink.Logout += OnLogout;
             EventSink.Login += OnLogin;
         }
 
@@ -1468,53 +1467,6 @@ namespace Server.Engines.CannedEvil
             }
 
             return base.OnMoveInto(m, d, newLocation, oldLocation);
-        }
-
-        public static void OnLogout(LogoutEventArgs e)
-        {
-            Mobile m = e.Mobile;
-
-            if (m is PlayerMobile && m.Region.IsPartOf<ChampionSpawnRegion>() && m.AccessLevel == AccessLevel.Player && m.Map == Map.Felucca)
-            {
-                if (m.Alive && m.Backpack != null)
-                {
-                    List<Item> list = new List<Item>();
-                    foreach (Item i in m.Backpack.Items)
-                    {
-                        if (i.LootType == LootType.Cursed)
-                        {
-                            list.Add(i);
-                        }
-                    }
-
-                    for (var index = 0; index < list.Count; index++)
-                    {
-                        Item item = list[index];
-
-                        item.MoveToWorld(m.Location, m.Map);
-                    }
-
-                    ColUtility.Free(list);
-                }
-
-                Timer.DelayCall(TimeSpan.FromMilliseconds(250), () =>
-                {
-                    Map map = m.LogoutMap;
-
-                    Point3D loc = ExorcismSpell.GetNearestShrine(m, ref map);
-
-                    if (loc != Point3D.Zero)
-                    {
-                        m.LogoutLocation = loc;
-                        m.LogoutMap = map;
-                    }
-                    else
-                    {
-                        m.LogoutLocation = new Point3D(989, 520, -50);
-                        m.LogoutMap = Map.Malas;
-                    }
-                });
-            }
         }
 
         public static void OnLogin(LoginEventArgs e)

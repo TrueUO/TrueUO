@@ -679,7 +679,8 @@ namespace Server.Items
 
     public class WaitTeleporter : KeywordTeleporter
     {
-        private static Dictionary<Mobile, TeleportingInfo> m_Table;
+        public static Dictionary<Mobile, TeleportingInfo> Table;
+
         private int m_StartNumber;
         private string m_StartMessage;
         private int m_ProgressNumber;
@@ -711,23 +712,7 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            m_Table = new Dictionary<Mobile, TeleportingInfo>();
-
-            EventSink.Logout += EventSink_Logout;
-        }
-
-        public static void EventSink_Logout(LogoutEventArgs e)
-        {
-            Mobile from = e.Mobile;
-            TeleportingInfo info;
-
-            if (from == null || !m_Table.TryGetValue(from, out info))
-            {
-                return;
-            }
-
-            info.Timer.Stop();
-            m_Table.Remove(from);
+            Table = new Dictionary<Mobile, TeleportingInfo>();
         }
 
         public static string FormatTime(TimeSpan ts)
@@ -752,7 +737,7 @@ namespace Server.Items
         {
             TeleportingInfo info;
 
-            if (m_Table.TryGetValue(m, out info))
+            if (Table.TryGetValue(m, out info))
             {
                 if (info.Teleporter == this)
                 {
@@ -769,7 +754,7 @@ namespace Server.Items
 
                         if (m_ShowTimeRemaining)
                         {
-                            m.SendMessage("Time remaining: {0}", FormatTime(m_Table[m].Timer.Next - DateTime.UtcNow));
+                            m.SendMessage("Time remaining: {0}", FormatTime(Table[m].Timer.Next - DateTime.UtcNow));
                         }
 
                         Timer.DelayCall(TimeSpan.FromSeconds(5), EndLock, m);
@@ -796,13 +781,13 @@ namespace Server.Items
             }
             else
             {
-                m_Table[m] = new TeleportingInfo(this, Timer.DelayCall(Delay, DoTeleport, m));
+                Table[m] = new TeleportingInfo(this, Timer.DelayCall(Delay, DoTeleport, m));
             }
         }
 
         public override void DoTeleport(Mobile m)
         {
-            m_Table.Remove(m);
+            Table.Remove(m);
 
             base.DoTeleport(m);
         }
@@ -836,7 +821,7 @@ namespace Server.Items
             m.EndAction(this);
         }
 
-        private class TeleportingInfo
+        public class TeleportingInfo
         {
             private readonly WaitTeleporter m_Teleporter;
             private readonly Timer m_Timer;

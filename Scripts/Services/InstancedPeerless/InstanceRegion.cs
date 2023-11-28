@@ -10,11 +10,6 @@ namespace Server.Engines.InstancedPeerless
 
         public PeerlessInstance Owner => m_Owner;
 
-        public static void Initialize()
-        {
-            EventSink.Logout += EventSink_Logout;
-        }
-
         public override bool OnBeginSpellCast(Mobile m, ISpell s)
         {
             if (s is RecallSpell || s is SacredJourneySpell)
@@ -37,16 +32,6 @@ namespace Server.Engines.InstancedPeerless
         public override TimeSpan GetLogoutDelay(Mobile m)
         {
             return TimeSpan.FromMinutes(10.0);
-        }
-
-        private static void EventSink_Logout(LogoutEventArgs e)
-        {
-            Mobile from = e.Mobile;
-
-            if (from.Region is InstanceRegion region)
-            {
-                region.Owner.Kick(from);
-            }
         }
 
         public override void OnExit(Mobile m)

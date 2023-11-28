@@ -1885,12 +1885,15 @@ namespace Server
             return Region.GetLogoutDelay(this);
         }
 
+        public virtual void OnLogout(Mobile m)
+        { }
+
         private void DoLogout()
         {
             if (m_Map != Map.Internal)
             {
-                EventSink.InvokeLogout(new LogoutEventArgs(this));
-
+                OnLogout(this);
+                
                 m_LogoutLocation = m_Location;
                 m_LogoutMap = m_Map;
 

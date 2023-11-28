@@ -44,7 +44,6 @@ namespace Server.Engines.PartySystem
         }
         public static void Initialize()
         {
-            EventSink.Logout += EventSink_Logout;
             EventSink.Login += EventSink_Login;
             EventSink.PlayerDeath += EventSink_PlayerDeath;
 
@@ -113,17 +112,6 @@ namespace Server.Engines.PartySystem
                 new RejoinTimer(from).Start();
             else
                 from.Party = null;
-        }
-
-        public static void EventSink_Logout(LogoutEventArgs e)
-        {
-            Mobile from = e.Mobile;
-            Party p = Get(from);
-
-            if (p != null)
-                p.Remove(from);
-
-            from.Party = null;
         }
 
         public static Party Get(Mobile m)

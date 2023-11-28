@@ -7,6 +7,7 @@ using Server.Engines.CannedEvil;
 using Server.Engines.CityLoyalty;
 using Server.Engines.Craft;
 using Server.Engines.Help;
+using Server.Engines.InstancedPeerless;
 using Server.Engines.PartySystem;
 using Server.Engines.Points;
 using Server.Engines.Quests;
@@ -802,7 +803,6 @@ namespace Server.Mobiles
             }
 
             EventSink.Login += OnLogin;
-            EventSink.Logout += OnLogout;
             EventSink.Connected += EventSink_Connected;
             EventSink.Disconnected += EventSink_Disconnected;
 
@@ -1237,6 +1237,8 @@ namespace Server.Mobiles
 
                 QuestHelper.QuestionQuestCheck(pm);
 
+
+
                 if (CityLoyaltySystem.Enabled)
                 {
                     CityLoyaltySystem sys = CityLoyaltySystem.GetCitizenship(pm);
@@ -1301,6 +1303,9 @@ namespace Server.Mobiles
             }
 
             BaseBeverage.CheckHeaveTimer(from);
+
+            // ScrollOfAlacrity start
+            Timer.DelayCall(TimeSpan.FromSeconds(1), () => ScrollOfAlacrity.StartTimer(from));
         }
 
         private bool m_NoDeltaRecursion;
@@ -1538,18 +1543,88 @@ namespace Server.Mobiles
             ns?.Dispose();
         }
 
-        private static void OnLogout(LogoutEventArgs e)
+        public override void OnLogout(Mobile m)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
+            PlayerMobile pm = m as PlayerMobile;
 
             if (pm == null)
+            {
                 return;
+            }
+
+            Console.WriteLine("WE GOT HERE!");
+
+            // Party System Check
+            Party party = Engines.PartySystem.Party.Get(pm);
+            if (party != null)
+            {
+                party.Remove(pm);
+            }
+            pm.Party = null;
 
             BaseFamiliar.OnLogout(pm);
 
             BasketOfHerbs.CheckBonus(pm);
 
             BaseEscort.DeleteEscort(pm);
+
+            ScrollOfAlacrity.StopTimer(pm);
+
+            // Do we need this teleporter?
+            if (WaitTeleporter.Table.TryGetValue(pm, out WaitTeleporter.TeleportingInfo info))
+            {
+                info.Timer.Stop();
+                WaitTeleporter.Table.Remove(pm);
+            }
+
+            // Peerless region check
+            if (pm.Region is InstanceRegion region)
+            {
+                region.Owner.Kick(pm);
+            }
+
+            // ChampionSpawn check
+            if (pm.Region.IsPartOf<ChampionSpawnRegion>() && pm.AccessLevel == AccessLevel.Player && pm.Map == Map.Felucca)
+            {
+                if (pm.Alive && pm.Backpack != null)
+                {
+                    List<Item> list = new List<Item>();
+                    foreach (Item i in pm.Backpack.Items)
+                    {
+                        if (i.LootType == LootType.Cursed)
+                        {
+                            list.Add(i);
+                        }
+                    }
+
+                    for (var index = 0; index < list.Count; index++)
+                    {
+                        Item item = list[index];
+
+                        item.MoveToWorld(pm.Location, pm.Map);
+                    }
+
+                    ColUtility.Free(list);
+                }
+
+                Timer.DelayCall(TimeSpan.FromMilliseconds(250), () =>
+                {
+                    Map map = pm.LogoutMap;
+
+                    Point3D loc = ExorcismSpell.GetNearestShrine(pm, ref map);
+
+                    if (loc != Point3D.Zero)
+                    {
+                        pm.LogoutLocation = loc;
+                        pm.LogoutMap = map;
+                    }
+                    else
+                    {
+                        pm.LogoutLocation = new Point3D(989, 520, -50);
+                        pm.LogoutMap = Map.Malas;
+                    }
+                });
+            }
         }
 
         private static void EventSink_Connected(ConnectedEventArgs e)
