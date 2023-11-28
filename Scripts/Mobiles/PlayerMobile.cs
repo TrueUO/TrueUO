@@ -43,7 +43,7 @@ using Server.Engines.Events;
 using Server.Engines.InstancedPeerless;
 using Server.Spells.Spellweaving;
 using RankDefinition = Server.Guilds.RankDefinition;
-using System.Reflection;
+
 #endregion
 
 namespace Server.Mobiles

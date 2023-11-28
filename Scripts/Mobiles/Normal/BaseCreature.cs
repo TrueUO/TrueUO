@@ -5949,7 +5949,7 @@ namespace Server.Mobiles
                         if (o != null && !o.Deleted)
                         {
                             o.Delete();
-                        }
+                        }   
                     }
 
                     ClearLoot(true);
