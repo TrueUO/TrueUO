@@ -88,8 +88,6 @@ namespace Server
 
 	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
 
-	public delegate void OnKilledByEventHandler(OnKilledByEventArgs e);
-
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
 	public delegate void QuestCompleteEventHandler(QuestCompleteEventArgs e);
@@ -867,21 +865,6 @@ namespace Server
 		public bool Blocked { get; set; }
 	}
 
-	public class OnKilledByEventArgs : EventArgs
-	{
-		private readonly Mobile m_Killed;
-		private readonly Mobile m_KilledBy;
-
-		public OnKilledByEventArgs(Mobile killed, Mobile killedBy)
-		{
-			m_Killed = killed;
-			m_KilledBy = killedBy;
-		}
-
-		public Mobile Killed => m_Killed;
-		public Mobile KilledBy => m_KilledBy;
-	}
-
 	public class OnEnterRegionEventArgs : EventArgs
 	{
 		private readonly Mobile m_From;
@@ -1074,7 +1057,6 @@ namespace Server
 		public static event GuildGumpRequestHandler GuildGumpRequest;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
-		public static event OnKilledByEventHandler OnKilledBy;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
 		public static event QuestCompleteEventHandler QuestComplete;
 		public static event ItemDeletedEventHandler ItemDeleted;
@@ -1284,11 +1266,6 @@ namespace Server
 		public static void InvokeAfterWorldSave(AfterWorldSaveEventArgs e)
         {
             AfterWorldSave?.Invoke(e);
-        }
-
-		public static void InvokeOnKilledBy(OnKilledByEventArgs e)
-        {
-            OnKilledBy?.Invoke(e);
         }
 
 		public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
