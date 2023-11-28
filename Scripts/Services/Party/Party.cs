@@ -44,7 +44,6 @@ namespace Server.Engines.PartySystem
         }
         public static void Initialize()
         {
-            EventSink.Logout += EventSink_Logout;
             EventSink.Login += EventSink_Login;
             EventSink.PlayerDeath += EventSink_PlayerDeath;
 
@@ -115,15 +114,14 @@ namespace Server.Engines.PartySystem
                 from.Party = null;
         }
 
-        public static void EventSink_Logout(LogoutEventArgs e)
+        public static void OnLogout(Mobile m)
         {
-            Mobile from = e.Mobile;
-            Party p = Get(from);
+            Party p = Get(m);
 
             if (p != null)
-                p.Remove(from);
+                p.Remove(m);
 
-            from.Party = null;
+            m.Party = null;
         }
 
         public static Party Get(Mobile m)

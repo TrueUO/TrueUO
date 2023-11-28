@@ -1433,7 +1433,6 @@ namespace Server.Engines.CannedEvil
     {
         public static void Initialize()
         {
-            EventSink.Logout += OnLogout;
             EventSink.Login += OnLogin;
         }
 
@@ -1470,10 +1469,8 @@ namespace Server.Engines.CannedEvil
             return base.OnMoveInto(m, d, newLocation, oldLocation);
         }
 
-        public static void OnLogout(LogoutEventArgs e)
+        public static void OnLogout(Mobile m)
         {
-            Mobile m = e.Mobile;
-
             if (m is PlayerMobile && m.Region.IsPartOf<ChampionSpawnRegion>() && m.AccessLevel == AccessLevel.Player && m.Map == Map.Felucca)
             {
                 if (m.Alive && m.Backpack != null)

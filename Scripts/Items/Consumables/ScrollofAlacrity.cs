@@ -121,7 +121,6 @@ namespace Server.Items
         public static void Configure()
         {
             EventSink.Login += OnLogin;
-            EventSink.Logout += OnLogout;
         }
 
         private static void OnLogin(LoginEventArgs e)
@@ -129,9 +128,9 @@ namespace Server.Items
             Timer.DelayCall(TimeSpan.FromSeconds(1), () => StartTimer(e.Mobile));
         }
 
-        private static void OnLogout(LogoutEventArgs e)
+        public static void OnLogout(Mobile m)
         {
-            StopTimer(e.Mobile);
+            StopTimer(m);
         }
 
         public class ExpireTimer : Timer

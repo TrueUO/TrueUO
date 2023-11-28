@@ -36,8 +36,6 @@ namespace Server
 
 	public delegate void AnimateRequestEventHandler(AnimateRequestEventArgs e);
 
-	public delegate void LogoutEventHandler(LogoutEventArgs e);
-
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
 	public delegate void RenameRequestEventHandler(RenameRequestEventArgs e);
@@ -443,18 +441,6 @@ namespace Server
 			m_From = from;
 			m_Target = target;
 			m_Name = name;
-		}
-	}
-
-	public class LogoutEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public LogoutEventArgs(Mobile m)
-		{
-			m_Mobile = m;
 		}
 	}
 
@@ -1030,7 +1016,6 @@ namespace Server
 		public static event CastSpellRequestEventHandler CastSpellRequest;
 		public static event BandageTargetRequestEventHandler BandageTargetRequest;
 		public static event AnimateRequestEventHandler AnimateRequest;
-		public static event LogoutEventHandler Logout;
 		public static event SocketConnectEventHandler SocketConnect;
 		public static event RenameRequestEventHandler RenameRequest;
 		public static event PlayerDeathEventHandler PlayerDeath;
@@ -1171,11 +1156,6 @@ namespace Server
 		public static void InvokeRenameRequest(RenameRequestEventArgs e)
         {
             RenameRequest?.Invoke(e);
-        }
-
-		public static void InvokeLogout(LogoutEventArgs e)
-        {
-            Logout?.Invoke(e);
         }
 
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
