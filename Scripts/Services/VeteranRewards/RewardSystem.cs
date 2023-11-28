@@ -604,35 +604,29 @@ namespace Server.Engines.VeteranRewards
             };
         }
 
-        public static void Initialize()
+        public static void OnLogin(Mobile m)
         {
-            if (Enabled)
-                EventSink.Login += EventSink_Login;
-        }
-
-        private static void EventSink_Login(LoginEventArgs e)
-        {
-            if (!e.Mobile.Alive)
+            if (!m.Alive)
                 return;
 
             int cur, max, level;
 
-            ComputeRewardInfo(e.Mobile, out cur, out max, out level);
+            ComputeRewardInfo(m, out cur, out max, out level);
 
             if (level > SkillCapBonusLevels)
                 level = SkillCapBonusLevels;
             else if (level < 0)
                 level = 0;
 
-            e.Mobile.SkillsCap = SkillCap + SkillCapBonus;
+            m.SkillsCap = SkillCap + SkillCapBonus;
 
-            if (e.Mobile is PlayerMobile && !((PlayerMobile)e.Mobile).HasStatReward && HasHalfLevel(e.Mobile))
+            if (m is PlayerMobile && !((PlayerMobile)m).HasStatReward && HasHalfLevel(m))
             {
-                Gumps.BaseGump.SendGump(new StatRewardGump((PlayerMobile)e.Mobile));
+                Gumps.BaseGump.SendGump(new StatRewardGump((PlayerMobile)m));
             }
 
             if (cur < max)
-                e.Mobile.SendGump(new RewardNoticeGump(e.Mobile));
+                m.SendGump(new RewardNoticeGump(m));
         }
     }
 }

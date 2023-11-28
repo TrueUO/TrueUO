@@ -39,10 +39,18 @@ using Server.Targeting;
 using System;
 using System.Collections.Generic;
 using Server.Engines.Chat;
+using Server.Engines.Despise;
+using Server.Engines.Doom;
 using Server.Engines.Events;
 using Server.Engines.InstancedPeerless;
+using Server.Engines.NewMagincia;
+using Server.Engines.Plants;
+using Server.Engines.VeteranRewards;
+using Server.Services.TownCryer;
 using Server.Spells.Spellweaving;
+using Aggression = Server.Misc.Aggression;
 using RankDefinition = Server.Guilds.RankDefinition;
+using Server.Events.Halloween;
 
 #endregion
 
@@ -805,8 +813,6 @@ namespace Server.Mobiles
                 PacketHandlers.RegisterThrottler(0x02, MovementThrottle_Callback);
             }
 
-            EventSink.Login += OnLogin;
-
             #region Enchanced Client
             EventSink.TargetedSkill += Targeted_Skill;
             EventSink.EquipMacro += EquipMacro;
@@ -1195,25 +1201,23 @@ namespace Server.Mobiles
             }
         }
 
-        private static void OnLogin(LoginEventArgs e)
+        public override void OnLogin()
         {
-            Mobile from = e.Mobile;
-
-            CheckAtrophies(from);
+            CheckAtrophies(this);
 
             if (AccountHandler.LockdownLevel > AccessLevel.VIP)
             {
                 string notice;
 
-                Account acct = from.Account as Account;
+                Account acct = Account as Account;
 
-                if (acct == null || !acct.HasAccess(from.NetState))
+                if (acct == null || !acct.HasAccess(NetState))
                 {
-                    notice = from.IsPlayer() ? "The server is currently under lockdown. No players are allowed to log in at this time." : "The server is currently under lockdown. You do not have sufficient access level to connect.";
+                    notice = IsPlayer() ? "The server is currently under lockdown. No players are allowed to log in at this time." : "The server is currently under lockdown. You do not have sufficient access level to connect.";
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), Disconnect, from);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.0), Disconnect, this);
                 }
-                else if (from.AccessLevel >= AccessLevel.Administrator)
+                else if (AccessLevel >= AccessLevel.Administrator)
                 {
                     notice = "The server is currently under lockdown. As you are an administrator, you may change this from the [Admin gump.";
                 }
@@ -1222,38 +1226,93 @@ namespace Server.Mobiles
                     notice = "The server is currently under lockdown. You have sufficient access level to connect.";
                 }
 
-                from.SendGump(new NoticeGump(1060637, 30720, notice, 0xFFC000, 300, 140, null, null));
+                SendGump(new NoticeGump(1060637, 30720, notice, 0xFFC000, 300, 140, null, null));
                 return;
             }
 
-            if (from is PlayerMobile pm)
+            ClaimAutoStabledPets();
+            ValidateEquipment();
+
+            ReportMurdererGump.CheckMurderer(this);
+
+            QuestHelper.QuestionQuestCheck(this);
+
+            if (Siege.SiegeShard && Map == Map.Trammel && AccessLevel == AccessLevel.Player)
             {
-                pm.ClaimAutoStabledPets();
-                pm.ValidateEquipment();
-
-                ReportMurdererGump.CheckMurderer(pm);
-
-                QuestHelper.QuestionQuestCheck(pm);
+                Map = Map.Felucca;
             }
 
-            if (Siege.SiegeShard && from.Map == Map.Trammel && from.AccessLevel == AccessLevel.Player)
-            {
-                from.Map = Map.Felucca;
-            }
-
-            if (from.NetState != null && from.NetState.IsEnhancedClient && from.Mount is EtherealMount fromMount)
+            if (NetState != null && NetState.IsEnhancedClient && Mount is EtherealMount fromMount)
             {
                 Timer.DelayCall(TimeSpan.FromSeconds(1), mount =>
                 {
-                    if (mount.IsChildOf(from.Backpack))
+                    if (mount.IsChildOf(Backpack))
                     {
-                        mount.Rider = from;
+                        mount.Rider = this;
                     }
                 },
                 fromMount);
             }
 
-            from.CheckStatTimers();
+            CheckStatTimers();
+
+            Accounting.Account.OnLogin(this);
+            AnimalForm.OnLogin(this);
+            BaseBeverage.OnLogin(this);
+            Caddellite.OnLogin(this);
+            ChampionSpawnRegion.OnLogin(this);
+            CityLoyaltySystem.OnLogin(this);
+            CorgulRegion.OnLogin(this);
+            DespiseController.OnLogin(this);
+            FellowshipMedallion.OnLogin(this);
+            Focus.OnLogin(this);
+            GiftGiving.OnLogin(this);
+            GiftOfLifeSpell.OnLogin(this);
+            HouseRegion.OnLogin(this);
+            HumilityProofGump.OnLogin(this);
+            KhaldunTastyTreat.OnLogin(this);
+            LampRoomRegion.OnLogin(this);
+            LightCycle.OnLogin(this);
+            LoginStats.OnLogin(this);
+            MaginciaLottoSystem.OnLogin(this);
+            MasteryInfo.OnLogin(this);
+            PlantSystem.OnLogin(this);
+            PotionOfGloriousFortune.OnLogin(this);
+            QuestSystem.OnLogin(this);
+            ResponseEntry.OnLogin(this);
+            ScrollOfAlacrity.OnLogin(this);
+            ShadowguardController.OnLogin(this);
+            ShardPoller.OnLogin(this);
+            StormLevelGump.OnLogin(this);
+            Strandedness.OnLogin(this);
+            TwistedWealdDesert.OnLogin(this);
+
+            Engines.PartySystem.Party.OnLogin(this);
+
+            if (PreventInaccess.Enabled)
+            {
+                PreventInaccess.OnLogin(this);
+            }
+
+            if (RewardSystem.Enabled)
+            {
+                RewardSystem.OnLogin(this);
+            }
+
+            if (TownCryerSystem.Enabled)
+            {
+                TownCryerSystem.OnLogin(this);
+            }
+
+            if (ViceVsVirtueSystem.Enabled)
+            {
+                ViceVsVirtueSystem.OnLogin(this);
+            }
+
+            if (Siege.SiegeShard)
+            {
+                Siege.OnLogin(this);
+            }
         }
 
         private bool m_NoDeltaRecursion;
@@ -3737,10 +3796,14 @@ namespace Server.Mobiles
             EodonianPotion.OnPlayerDeath(this);
             GemOfSalvation.OnPlayerDeath(this);
             GiftOfLifeSpell.HandleDeath(this);
-            HalloweenHauntings.OnPlayerDeath(this);
             KhaldunRevenant.OnPlayerDeath(this);
             ReportMurdererGump.OnPlayerDeath(this);
             ViceVsVirtueSystem.OnPlayerDeath(this);
+
+            if (DateTime.UtcNow >= HalloweenSettings.StartHalloween && DateTime.UtcNow <= HalloweenSettings.FinishHalloween)
+            {
+                HalloweenHauntings.OnPlayerDeath(this);
+            }
 
             Engines.PartySystem.Party.OnPlayerDeath(this);
 

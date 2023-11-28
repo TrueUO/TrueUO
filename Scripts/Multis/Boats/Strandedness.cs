@@ -86,11 +86,6 @@ namespace Server.Misc
                 new Point2D( 1240, 1003 )
         };
 
-        public static void Initialize()
-        {
-            EventSink.Login += EventSink_Login;
-        }
-
         private static bool IsStranded(Mobile from)
         {
             Map map = from.Map;
@@ -122,10 +117,8 @@ namespace Server.Misc
             return false;
         }
 
-        public static void EventSink_Login(LoginEventArgs e)
+        public static void OnLogin(Mobile from)
         {
-            Mobile from = e.Mobile;
-
             if (!IsStranded(from))
                 return;
 

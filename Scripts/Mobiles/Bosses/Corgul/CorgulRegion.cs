@@ -10,8 +10,6 @@ namespace Server.Regions
     {
         public static void Initialize()
         {
-            EventSink.Login += OnLogin;
-
             Timer.DelayCall(TimeSpan.FromSeconds(30), () =>
             {
                 for (var index = 0; index < Regions.Count; index++)
@@ -218,10 +216,8 @@ namespace Server.Regions
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile from)
         {
-            Mobile from = e.Mobile;
-
             Region reg = Find(from.Location, from.Map);
 
             if (reg is CorgulRegion region)

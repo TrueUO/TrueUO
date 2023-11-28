@@ -2383,11 +2383,10 @@ namespace Server.Network
 
 			state.Send(new MapChange(m));
 
-			EventSink.InvokeLogin(new LoginEventArgs(m));
-
 			Console.WriteLine("Client: {0}: Entered World ({1})", state, m);
 
-			m.SendEverything();
+            m.OnLogin();
+            m.SendEverything();
 			m.ClearFastwalkStack();
 		}
 

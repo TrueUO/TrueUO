@@ -1904,6 +1904,11 @@ namespace Server
         }
         #endregion
 
+        public virtual void OnLogin()
+        {
+            // Called in Packets and used in PlayerMobile.cs
+        }
+
         #region Combat Timer
         private static readonly string _CombatTimerPlayerID = "CombatTimerPlayer";
         private static readonly string _CombatTimerID = "CombatTimer";

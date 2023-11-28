@@ -52,8 +52,6 @@ namespace Server.Engines.Shadowguard
 
         public static void Initialize()
         {
-            EventSink.Login += OnLogin;
-
             CommandSystem.Register("AddController", AccessLevel.Administrator, e =>
                 {
                     if (Instance == null)
@@ -771,10 +769,8 @@ namespace Server.Engines.Shadowguard
             }
         }
 
-        private static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            Mobile m = e.Mobile;
-
             if (m.AccessLevel > AccessLevel.GameMaster)
                 return;
 

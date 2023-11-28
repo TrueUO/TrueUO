@@ -44,8 +44,6 @@ namespace Server.Engines.PartySystem
         }
         public static void Initialize()
         {
-            EventSink.Login += EventSink_Login;
-            
             CommandSystem.Register("ListenToParty", AccessLevel.GameMaster, ListenToParty_OnCommand);
         }
 
@@ -101,15 +99,14 @@ namespace Server.Engines.PartySystem
             }
         }
 
-        public static void EventSink_Login(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            Mobile from = e.Mobile;
-            Party p = Get(from);
+            Party p = Get(m);
 
             if (p != null)
-                new RejoinTimer(from).Start();
+                new RejoinTimer(m).Start();
             else
-                from.Party = null;
+                m.Party = null;
         }
 
         public static void OnLogout(Mobile m)

@@ -266,14 +266,9 @@ namespace Server.Items
             }
         }
 
-        public static void Initialize()
+        public static void OnLogin(Mobile m)
         {
-            EventSink.Login += OnLogin;
-        }
-
-        public static void OnLogin(LoginEventArgs e)
-        {
-            if (e.Mobile is PlayerMobile pm && Table != null)
+            if (m is PlayerMobile pm && Table != null)
             {
                 var list = Table.FirstOrDefault(x => x.Mobile == pm);
 

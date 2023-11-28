@@ -441,8 +441,6 @@ namespace Server.Engines.VvV
             if (!Enabled)
                 return;
 
-            EventSink.Login += OnLogin;
-
             Commands.CommandSystem.Register("BattleProps", AccessLevel.GameMaster, e =>
                 {
                     if (Instance.Battle != null)
@@ -495,14 +493,14 @@ namespace Server.Engines.VvV
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
             if (!Enabled)
             {
                 return;
             }
 
-            if (e.Mobile is PlayerMobile pm && Instance != null)
+            if (m is PlayerMobile pm && Instance != null)
             {
                 Timer.DelayCall(TimeSpan.FromSeconds(1), Instance.CheckResignation, pm);
                 Timer.DelayCall(TimeSpan.FromSeconds(2), Instance.CheckBattleStatus, pm);

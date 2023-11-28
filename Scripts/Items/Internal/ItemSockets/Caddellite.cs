@@ -16,11 +16,6 @@ namespace Server.Items
             }
         }
 
-        public static void Initialize()
-        {
-            EventSink.Login += OnLogin;
-        }
-
         public static bool CheckDamage(Mobile from, Server.DamageType type)
         {
             if (from is BaseCreature creature)
@@ -178,9 +173,9 @@ namespace Server.Items
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            if (e.Mobile is PlayerMobile pm)
+            if (m is PlayerMobile pm)
             {
                 UpdateBuff(pm);
             }

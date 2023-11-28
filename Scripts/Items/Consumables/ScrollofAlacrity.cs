@@ -118,14 +118,9 @@ namespace Server.Items
 
         private static readonly List<AlacrityArray> Table = new List<AlacrityArray>();
 
-        public static void Configure()
+        public static void OnLogin(Mobile m)
         {
-            EventSink.Login += OnLogin;
-        }
-
-        private static void OnLogin(LoginEventArgs e)
-        {
-            Timer.DelayCall(TimeSpan.FromSeconds(1), () => StartTimer(e.Mobile));
+            Timer.DelayCall(TimeSpan.FromSeconds(1), () => StartTimer(m));
         }
 
         public static void OnLogout(Mobile m)

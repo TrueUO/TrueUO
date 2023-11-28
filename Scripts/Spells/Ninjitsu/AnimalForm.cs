@@ -13,18 +13,13 @@ namespace Server.Spells.Ninjitsu
 {
     public class AnimalForm : NinjaSpell
     {
-        public static void Initialize()
+        public static void OnLogin(Mobile m)
         {
-            EventSink.Login += OnLogin;
-        }
-
-        public static void OnLogin(LoginEventArgs e)
-        {
-            AnimalFormContext context = GetContext(e.Mobile);
+            AnimalFormContext context = GetContext(m);
 
             if (context != null && context.SpeedBoost)
             {
-                e.Mobile.SendSpeedControl(SpeedControlType.MountSpeed);
+                m.SendSpeedControl(SpeedControlType.MountSpeed);
             }
         }
 

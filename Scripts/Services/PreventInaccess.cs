@@ -29,15 +29,10 @@ namespace Server.Misc
         public static void Initialize()
         {
             m_MoveHistory = new Dictionary<Mobile, LocationInfo>();
-
-            if (Enabled)
-                EventSink.Login += OnLogin;
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile from)
         {
-            Mobile from = e.Mobile;
-
             if (from == null || from.IsPlayer())
                 return;
 

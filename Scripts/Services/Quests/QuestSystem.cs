@@ -13,11 +13,6 @@ namespace Server.Engines.Quests
 
     public abstract class QuestSystem
     {
-        public static void Configure()
-        {
-            EventSink.Login += OnLogin;
-        }
-
         private PlayerMobile m_From;
         private ArrayList m_Objectives;
         private ArrayList m_Conversations;
@@ -170,9 +165,9 @@ namespace Server.Engines.Quests
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            if (e.Mobile is PlayerMobile pm)
+            if (m is PlayerMobile pm)
             {
                 if (pm.Quest != null)
                 {

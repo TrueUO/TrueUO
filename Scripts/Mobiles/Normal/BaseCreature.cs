@@ -455,23 +455,6 @@ namespace Server.Mobiles
             }
         }
 
-        #region ForcedLoot
-        public List<Item> ForcedLoot { get; private set; }
-
-        public void ClearLoot(bool free)
-        {
-            if (free)
-            {
-                ForcedLoot.Clear();
-                ForcedLoot.TrimExcess();
-            }
-            else
-            {
-                ForcedLoot = new List<Item>();
-            }
-        }
-        #endregion
-
         #region Bonding
         public virtual bool IsBondable => !Summoned && !m_Allured && !(this is IRepairableMobile);
         public virtual TimeSpan BondingDelay => TimeSpan.FromDays(7.0);
@@ -5910,55 +5893,6 @@ namespace Server.Mobiles
                 if (DeleteCorpseOnDeath)
                 {
                     c.Delete();
-                }
-
-                if (!c.Deleted)
-                {
-                    if (ForcedLoot != null)
-                    {
-                        int i = ForcedLoot.Count;
-
-                        while (--i >= 0)
-                        {
-                            if (i >= ForcedLoot.Count)
-                            {
-                                continue;
-                            }
-
-                            Item o = ForcedLoot[i];
-
-                            if (o != null && !o.Deleted)
-                            {
-                                c.DropItem(o);
-                            }
-                        }
-                    }
-
-                    ClearLoot(false);
-                }
-                else
-                {
-                    if (ForcedLoot != null)
-                    {
-                        int i = ForcedLoot.Count;
-
-                        while (--i >= 0)
-                        {
-                            if (i >= ForcedLoot.Count)
-                            {
-                                continue;
-                            }
-
-                            Item o = ForcedLoot[i];
-
-                            if (o != null && !o.Deleted)
-                            {
-                                o.Delete();
-                            }   
-                        }
-                    }
-
-                    ClearLoot(true);
                 }
 
                 base.OnDeath(c);

@@ -16,8 +16,6 @@ namespace Server
 
 	public delegate void SpeechEventHandler(SpeechEventArgs e);
 
-	public delegate void LoginEventHandler(LoginEventArgs e);
-
 	public delegate void ServerListEventHandler(ServerListEventArgs e);
 
 	public delegate void MovementEventHandler(MovementEventArgs e);
@@ -741,18 +739,6 @@ namespace Server
 		}
 	}
 
-	public class LoginEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public LoginEventArgs(Mobile mobile)
-		{
-			m_Mobile = mobile;
-		}
-	}
-
 	public class WorldSaveEventArgs : EventArgs
 	{
         public WorldSaveEventArgs()
@@ -767,14 +753,12 @@ namespace Server
 		}
 	}
 
-
 	public class AfterWorldSaveEventArgs : EventArgs
 	{
 		public AfterWorldSaveEventArgs()
 		{
 		}
 	}
-
 
 	public class FastWalkEventArgs : EventArgs
 	{
@@ -945,7 +929,6 @@ namespace Server
 		public static event CharacterCreatedEventHandler CharacterCreated;
 		public static event OpenDoorMacroEventHandler OpenDoorMacroUsed;
 		public static event SpeechEventHandler Speech;
-		public static event LoginEventHandler Login;
 		public static event ServerListEventHandler ServerList;
 		public static event MovementEventHandler Movement;
 		public static event CrashedEventHandler Crashed;
@@ -1133,11 +1116,6 @@ namespace Server
 		public static void InvokeServerList(ServerListEventArgs e)
         {
             ServerList?.Invoke(e);
-        }
-
-		public static void InvokeLogin(LoginEventArgs e)
-        {
-            Login?.Invoke(e);
         }
 
 		public static void InvokeSpeech(SpeechEventArgs e)

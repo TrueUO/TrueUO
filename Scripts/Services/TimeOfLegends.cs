@@ -14,14 +14,7 @@ namespace Server
         public static void Initialize()
         {
             CommandSystem.Register("DecorateTOL", AccessLevel.GameMaster, DecorateTOL_OnCommand);
-
-            if (DateTime.UtcNow < _EndCurrencyWarning)
-            {
-                EventSink.Login += OnLogin;
-            }
         }
-
-        private static readonly DateTime _EndCurrencyWarning = new DateTime(2017, 3, 1, 1, 1, 1);
 
         public static bool FindItem(int x, int y, int z, Map map, Item test)
         {
@@ -84,16 +77,6 @@ namespace Server
             CommandSystem.Handle(e.Mobile, CommandSystem.Prefix + "XmlLoad Spawns/Eodon.xml");
 
             e.Mobile.SendMessage("Time Of Legends world generating complete.");
-        }
-
-        public static void OnLogin(LoginEventArgs e)
-        {
-            if (e.Mobile is PlayerMobile && e.Mobile.AccessLevel == AccessLevel.Player)
-                Timer.DelayCall(TimeSpan.FromSeconds(5), () =>
-                    {
-                        if (!e.Mobile.HasGump(typeof(NewCurrencyHelpGump)))
-                            e.Mobile.SendGump(new NewCurrencyHelpGump());
-                    });
         }
 
         public static void OnCreatureDeath(Mobile creature, Mobile killer, Container corpse)

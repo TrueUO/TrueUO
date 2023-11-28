@@ -356,14 +356,10 @@ namespace Server.Engines.Plants
 
             if (!Misc.AutoRestart.Enabled)
                 EventSink.WorldSave += EventSink_WorldSave;
-
-            EventSink.Login += EventSink_Login;
         }
 
-        private static void EventSink_Login(LoginEventArgs args)
+        public static void OnLogin(Mobile from)
         {
-            Mobile from = args.Mobile;
-
             if (from.Backpack != null)
             {
                 List<PlantItem> plants = from.Backpack.FindItemsByType<PlantItem>();
