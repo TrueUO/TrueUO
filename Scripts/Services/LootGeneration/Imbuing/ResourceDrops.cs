@@ -37,8 +37,6 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            EventSink.CreatureDeath += OnCreatureDeath;
-
             m_IngredientTable = new List<IngredientDropEntry>();
 
             // Imbuing Gems
@@ -150,17 +148,17 @@ namespace Server.Items
             m_IngredientTable.Add(new IngredientDropEntry(typeof(BaseCreature), false, "Skeletal Dragon", 0.05, typeof(EssencePersistence)));
         }
 
-        public static void OnCreatureDeath(CreatureDeathEventArgs e)
+        public static void OnCreatureDeath(Mobile creature, Mobile killer, Container corpse)
         {
-            BaseCreature bc = e.Creature as BaseCreature;
-            Container c = e.Corpse;
+            BaseCreature bc = creature as BaseCreature;
+            Container c = corpse;
 
             if (bc != null && c != null && !c.Deleted && !bc.Controlled && !bc.Summoned)
             {
                 CheckDrop(bc, c);
             }
 
-            if (e.Killer is BaseVoidCreature vc)
+            if (killer is BaseVoidCreature vc)
             {
                 vc.Mutate(VoidEvolution.Killing);
             }
