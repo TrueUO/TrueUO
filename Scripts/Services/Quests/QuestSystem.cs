@@ -15,7 +15,6 @@ namespace Server.Engines.Quests
     {
         public static void Configure()
         {
-            EventSink.OnKilledBy += OnKilledBy;
             EventSink.Login += OnLogin;
         }
 
@@ -155,19 +154,6 @@ namespace Server.Engines.Quests
 
                 if (obj.GetTimerEvent())
                     obj.CheckProgress();
-            }
-        }
-
-        public static void OnKilledBy(OnKilledByEventArgs e)
-        {
-            if (e.KilledBy is PlayerMobile pm && e.Killed is BaseCreature bc)
-            {
-                QuestSystem qs = pm.Quest;
-
-                if (qs != null)
-                {
-                    qs.OnKill(bc, bc.Corpse);
-                }
             }
         }
 

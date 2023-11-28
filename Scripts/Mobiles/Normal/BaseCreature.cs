@@ -22,6 +22,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Server.Engines.Points;
+using Server.Engines.Quests;
+
 #endregion
 
 namespace Server.Mobiles
@@ -5691,7 +5694,24 @@ namespace Server.Mobiles
                 Paragon.GiveArtifactTo(mob);
             }
 
-            EventSink.InvokeOnKilledBy(new OnKilledByEventArgs(this, mob));
+            if (mob != null && mob.Alive && GivesMLMinorArtifact && MondainsLegacy.CheckArtifactChance(mob, this))
+            {
+                MondainsLegacy.GiveArtifactTo(mob);
+            }
+
+            if (mob is PlayerMobile pm)
+            {
+                QuestSystem qs = pm.Quest;
+
+                if (qs != null)
+                {
+                    qs.OnKill(this, this.Corpse);
+                }
+
+                QuestHelper.CheckCreature(pm, this);
+            }
+
+            PointsSystem.OnKilledBy(this, mob); // victim = this, damager = mob
         }
 
         public override void OnDeath(Container c)
