@@ -194,10 +194,11 @@ namespace Server.Engines.Craft
             _Systems[9] = DefTailoring.CraftSystem;
             _Systems[10] = DefTinkering.CraftSystem;
 
+            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
-        public static void OnSave()
+        public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
                 FilePath,

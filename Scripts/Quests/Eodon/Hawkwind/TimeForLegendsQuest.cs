@@ -64,7 +64,7 @@ namespace Server.Engines.Quests.TimeLord
         public static Type TargetOfTheDay { get; set; }
         public static DateTime NextTarget { get; set; }
 
-        public static void OnSave()
+        public static void OnSave(WorldSaveEventArgs e)
         {
             Timer.DelayCall(TimeSpan.FromSeconds(30), () =>
             {
@@ -78,6 +78,8 @@ namespace Server.Engines.Quests.TimeLord
 
         public static void Initialize()
         {
+            EventSink.WorldSave += OnSave;
+
             TargetOfTheDay = _Targets[Utility.Random(_Targets.Length)];
 
             Commands.CommandSystem.Register("NewTargetOfTheDay", AccessLevel.GameMaster, e =>

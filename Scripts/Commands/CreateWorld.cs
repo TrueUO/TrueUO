@@ -595,10 +595,11 @@ namespace Server.Gumps
 
         public static void Configure()
         {
+            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
-        public static void OnSave()
+        public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
                 FilePath,

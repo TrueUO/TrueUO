@@ -12,10 +12,11 @@ namespace Server.Engines.Help
         [CallPriority(900)]
         public static void Configure()
         {
+            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
-        public static void OnSave()
+        private static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
                 _FilePath,

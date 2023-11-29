@@ -71,6 +71,7 @@ namespace Server.Engines.UOStore
 
             CommandSystem.Register("Store", AccessLevel.Player, e => OpenStore(e.Mobile as PlayerMobile));
 
+            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
@@ -997,7 +998,7 @@ namespace Server.Engines.UOStore
             return null;
         }
 
-        public static void OnSave()
+        public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(FilePath, Serialize);
         }

@@ -105,9 +105,9 @@ namespace Server.Engines.CannedEvil
             m_MaxKill[3] = Config.Get("Champions.Rank4MaxKills", 32);
 
             EventSink.WorldLoad += EventSink_WorldLoad;
+            EventSink.WorldSave += EventSink_WorldSave;
         }
-
-        public static void OnSave()
+        private static void EventSink_WorldSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
                 m_Path,

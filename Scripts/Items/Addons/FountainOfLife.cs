@@ -249,7 +249,12 @@ namespace Server.Items
 
         public static List<FountainOfLife> ToProcess { get; } = new List<FountainOfLife>();
 
-        public static void CheckRecharge()
+        public static void Initialize()
+        {
+            EventSink.AfterWorldSave += CheckRecharge;
+        }
+
+        public static void CheckRecharge(AfterWorldSaveEventArgs e)
         {
             for (int i = 0; i < ToProcess.Count; i++)
             {

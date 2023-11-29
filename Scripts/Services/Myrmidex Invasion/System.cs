@@ -135,6 +135,7 @@ namespace Server.Engines.MyrmidexInvasion
         {
             System = new MyrmidexInvasionSystem();
 
+            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
 
             CommandSystem.Register("GetAllianceEntry", AccessLevel.GameMaster, e =>
@@ -156,7 +157,7 @@ namespace Server.Engines.MyrmidexInvasion
             });
         }
 
-        public static void OnSave()
+        public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
                 FilePath,
