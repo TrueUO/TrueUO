@@ -70,8 +70,6 @@ namespace Server
 
 	public delegate void FastWalkEventHandler(FastWalkEventArgs e);
 
-	public delegate void ServerStartedEventHandler();
-
 	public delegate void CreateGuildHandler(CreateGuildEventArgs e);
 
 	public delegate void GuildGumpRequestHandler(GuildGumpRequestArgs e);
@@ -958,7 +956,6 @@ namespace Server
 		public static event SetAbilityEventHandler SetAbility;
 		public static event FastWalkEventHandler FastWalk;
 		public static event CreateGuildHandler CreateGuild;
-		public static event ServerStartedEventHandler ServerStarted;
 		public static event GuildGumpRequestHandler GuildGumpRequest;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
@@ -981,11 +978,6 @@ namespace Server
 		public static void InvokeClientTypeReceived(ClientTypeReceivedArgs e)
         {
             ClientTypeReceived?.Invoke(e);
-        }
-
-		public static void InvokeServerStarted()
-        {
-            ServerStarted?.Invoke();
         }
 
 		public static void InvokeCreateGuild(CreateGuildEventArgs e)
