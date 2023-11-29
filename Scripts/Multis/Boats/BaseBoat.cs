@@ -77,6 +77,7 @@ namespace Server.Multis
         public static void Initialize()
         {
             new UpdateAllTimer().Start();
+            EventSink.WorldSave += EventSink_WorldSave;
         }
 
         public static void UpdateAllComponents()
@@ -104,7 +105,7 @@ namespace Server.Multis
             toDelete.TrimExcess();
         }
 
-        public static void OnSave()
+        private static void EventSink_WorldSave(WorldSaveEventArgs e)
         {
             new UpdateAllTimer().Start();
         }

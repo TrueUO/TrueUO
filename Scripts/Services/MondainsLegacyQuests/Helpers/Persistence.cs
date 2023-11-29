@@ -74,13 +74,14 @@ namespace Server.Engines.Quests
 
         public static void Configure()
         {
+            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
 
             QuestData = new Dictionary<PlayerMobile, List<BaseQuest>>();
             ChainData = new Dictionary<PlayerMobile, Dictionary<QuestChain, BaseChain>>();
         }
 
-        public static void OnSave()
+        public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
                 FilePath,

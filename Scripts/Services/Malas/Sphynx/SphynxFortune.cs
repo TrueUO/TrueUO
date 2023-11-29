@@ -41,6 +41,7 @@ namespace Server.Engines.SphynxFortune
 
         public static void Configure()
         {
+            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
@@ -248,7 +249,7 @@ namespace Server.Engines.SphynxFortune
             m_Timer.Start();
         }
 
-        public static void OnSave()
+        public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
                 FilePath,

@@ -15,6 +15,7 @@ namespace Server.Items
 
         public static void Configure()
         {
+            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
@@ -54,7 +55,7 @@ namespace Server.Items
             }
         }
 
-        public static void OnSave()
+        public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
                 FilePath,
