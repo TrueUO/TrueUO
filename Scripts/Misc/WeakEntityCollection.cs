@@ -52,13 +52,7 @@ namespace Server
 
         public static void Configure()
         {
-            EventSink.WorldSave += OnWorldSave;
             EventSink.WorldLoad += OnWorldLoad;
-        }
-
-        private static void OnWorldSave(WorldSaveEventArgs e)
-        {
-            Save();
         }
 
         private static void OnWorldLoad()
@@ -66,7 +60,7 @@ namespace Server
             Load();
         }
 
-        private static void Save()
+        public static void Save()
         {
             Persistence.Serialize(
                 _FilePath,

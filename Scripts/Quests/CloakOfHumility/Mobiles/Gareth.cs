@@ -13,7 +13,6 @@ namespace Server.Engines.Quests
 
         public static void Configure()
         {
-            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
@@ -51,7 +50,7 @@ namespace Server.Engines.Quests
             AddItem(new LongPants(546));
         }
 
-        public static void OnSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             Persistence.Serialize(
                 _FilePath,

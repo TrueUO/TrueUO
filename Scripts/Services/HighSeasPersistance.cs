@@ -13,7 +13,6 @@ namespace Server.Items
 
         public static void Configure()
         {
-            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
 
             SeaMarketRegion.RestrictBoats = DefaultRestrictBoats;
@@ -31,7 +30,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CharydbisSpawner CharydbisSpawner { get { return CharydbisSpawner.SpawnInstance; } set { } }
 
-        public static void OnSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             Persistence.Serialize(
                 FilePath,

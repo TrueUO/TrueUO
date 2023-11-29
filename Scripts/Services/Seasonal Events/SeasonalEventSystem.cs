@@ -56,9 +56,7 @@ namespace Server.Engines.SeasonalEvents
         {
             LoadEntries();
 
-            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
-            EventSink.AfterWorldSave += AfterSave;
 
             CommandSystem.Register("SeasonSystemGump", AccessLevel.Administrator, SendGump);
         }
@@ -165,7 +163,7 @@ namespace Server.Engines.SeasonalEvents
             }
         }
 
-        public static void OnSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             Persistence.Serialize(
                 FilePath,
@@ -203,7 +201,7 @@ namespace Server.Engines.SeasonalEvents
                 });
         }
 
-        public static void AfterSave(AfterWorldSaveEventArgs e)
+        public static void AfterSave()
         {
             for (int i = 0; i < Entries.Count; i++)
             {
