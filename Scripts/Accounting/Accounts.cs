@@ -12,7 +12,6 @@ namespace Server.Accounting
         public static void Configure()
         {
             EventSink.WorldLoad += Load;
-            EventSink.WorldSave += Save;
         }
 
         static Accounts()
@@ -82,7 +81,7 @@ namespace Server.Accounting
             }
         }
 
-        public static void Save(WorldSaveEventArgs e)
+        public static void Save()
         {
             if (!Directory.Exists("Saves/Accounts"))
             {

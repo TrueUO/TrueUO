@@ -4,16 +4,10 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    [TypeAlias("drNO.ThieveItems.SeedOflife")]
     public class SeedOfLife : Item
     {
         private static readonly Dictionary<PlayerMobile, DateTime> SeedUsageList = new Dictionary<PlayerMobile, DateTime>();
         private static TimeSpan Cooldown = TimeSpan.FromMinutes(10);
-
-        public static void Initialize()
-        {
-            EventSink.AfterWorldSave += CheckCleanup;
-        }
 
         public override int LabelNumber => 1094937;  // seed of life
 
@@ -26,7 +20,7 @@ namespace Server.Items
             Stackable = true;
         }
 
-        public static void CheckCleanup(AfterWorldSaveEventArgs e)
+        public static void CheckCleanup()
         {
             DoCleanup();
             ManaDraught.DoCleanup();

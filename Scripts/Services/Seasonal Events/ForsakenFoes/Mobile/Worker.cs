@@ -27,11 +27,10 @@ namespace Server.Engines.Fellowship
 
         public static void Configure()
         {
-            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
-        public static void OnSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             Persistence.Serialize(
                 FilePath,

@@ -20,7 +20,6 @@ namespace Server.Engines.Quests
 
         public static void Configure()
         {
-            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
         }
 
@@ -88,7 +87,7 @@ namespace Server.Engines.Quests
             PurchaseList = new List<CooperativeArray>();
         }
 
-        public static void OnSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             Persistence.Serialize(
                 FilePath,

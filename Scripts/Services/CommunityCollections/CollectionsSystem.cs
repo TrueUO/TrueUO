@@ -14,7 +14,6 @@ namespace Server.Services.Community_Collections
 
         public static void Configure()
         {
-            EventSink.WorldSave += EventSink_WorldSave;
             EventSink.WorldLoad += EventSink_WorldLoad;
         }
 
@@ -34,7 +33,7 @@ namespace Server.Services.Community_Collections
             m_Mobiles.Remove(mob);
         }
 
-        private static void EventSink_WorldSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             List<BaseCollectionMobile> newMobiles = new List<BaseCollectionMobile>();
 

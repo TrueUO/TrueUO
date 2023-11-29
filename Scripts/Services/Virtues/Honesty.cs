@@ -41,7 +41,6 @@ namespace Server.Services.Virtues
         public static void Initialize()
         {
             EventSink.ItemDeleted += OnItemDeleted;
-            EventSink.AfterWorldSave += OnAfterSave;
 
             VirtueGump.Register(106, OnVirtueUsed);
 
@@ -66,7 +65,7 @@ namespace Server.Services.Virtues
             }
         }
 
-        private static void OnAfterSave(AfterWorldSaveEventArgs e)
+        public static void OnAfterSave()
         {
             World.WaitForWriteCompletion();
 

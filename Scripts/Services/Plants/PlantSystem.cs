@@ -353,9 +353,6 @@ namespace Server.Engines.Plants
         public static void Configure()
         {
             EventSink.WorldLoad += EventSink_WorldLoad;
-
-            if (!Misc.AutoRestart.Enabled)
-                EventSink.WorldSave += EventSink_WorldSave;
         }
 
         public static void OnLogin(Mobile from)
@@ -412,7 +409,7 @@ namespace Server.Engines.Plants
             GrowAll();
         }
 
-        private static void EventSink_WorldSave(WorldSaveEventArgs args)
+        public static void OnSave()
         {
             GrowAll();
         }

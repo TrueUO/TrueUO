@@ -32,13 +32,11 @@ namespace Server
         {
             if (SiegeShard)
             {
-                EventSink.AfterWorldSave += OnAfterSave;
-                EventSink.WorldSave += OnSave;
                 EventSink.WorldLoad += OnLoad;
             }
         }
 
-        public static void OnSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             Persistence.Serialize(FilePath, OnSerialize);
         }
@@ -285,7 +283,7 @@ namespace Server
             return !(Region.Find(p, map) is DungeonRegion) && !SpellHelper.IsAnyT2A(map, p) && !SpellHelper.IsIlshenar(map, p);
         }
 
-        public static void OnAfterSave(AfterWorldSaveEventArgs e)
+        public static void OnAfterSave()
         {
             CheckTime();
         }

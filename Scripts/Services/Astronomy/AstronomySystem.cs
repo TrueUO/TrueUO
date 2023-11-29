@@ -36,7 +36,6 @@ namespace Server.Engines.Astronomy
         {
             if (Enabled)
             {
-                EventSink.WorldSave += OnSave;
                 EventSink.WorldLoad += OnLoad;
 
                 Constellations = new List<ConstellationInfo>();
@@ -322,7 +321,7 @@ namespace Server.Engines.Astronomy
             }
         }
 
-        public static void OnSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             Persistence.Serialize(
                 FilePath,

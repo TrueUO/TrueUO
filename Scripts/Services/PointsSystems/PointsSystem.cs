@@ -349,7 +349,7 @@ namespace Server.Engines.Points
             return null;
         }
 
-        public static void OnSave(WorldSaveEventArgs e)
+        public static void OnSave()
         {
             Persistence.Serialize(
                 FilePath,
@@ -424,7 +424,6 @@ namespace Server.Engines.Points
 
         public static void Configure()
         {
-            EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
             EventSink.QuestComplete += CompleteQuest;
 
