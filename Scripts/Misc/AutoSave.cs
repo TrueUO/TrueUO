@@ -138,24 +138,17 @@ namespace Server.Misc
                 }
                 else
                 {
-                    bool delete = true;
-
                     try
                     {
                         dir.MoveTo(tempRoot);
-
-                        delete = !ArchivedSaves.Process(tempRoot);
                     }
                     catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
 
-                    if (delete)
+                    try
                     {
-                        try
-                        {
-                            dir.Delete(true);
-                        }
-                        catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
+                        dir.Delete(true);
                     }
+                    catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                 }
             }
 
