@@ -603,8 +603,6 @@ namespace Server
 
 		public static void Run()
 		{
-			EventSink.InvokeServerStarted();
-
 			try
 			{
 				long now, last = TickCount;
