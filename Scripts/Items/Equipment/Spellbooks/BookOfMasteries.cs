@@ -50,35 +50,43 @@ namespace Server.Items
             SimpleContextMenuEntry menu = new SimpleContextMenuEntry(from, 1151948, m =>
                 {
                     if (m is PlayerMobile mobile && IsChildOf(mobile.Backpack) && CheckCooldown(mobile))
+                    {
                         BaseGump.SendGump(new MasterySelectionGump(mobile, this));
+                    }
                 });
 
             if (!IsChildOf(from.Backpack) || !CheckCooldown(from))
+            {
                 menu.Enabled = false;
+            }
 
             list.Add(menu);
         }
 
-        private static Dictionary<Mobile, DateTime> m_Cooldown = new Dictionary<Mobile, DateTime>();
+        private static Dictionary<Mobile, DateTime> _Cooldown = new Dictionary<Mobile, DateTime>();
 
         public static void AddToCooldown(Mobile from)
         {
-            if (m_Cooldown == null)
-                m_Cooldown = new Dictionary<Mobile, DateTime>();
+            if (_Cooldown == null)
+            {
+                _Cooldown = new Dictionary<Mobile, DateTime>();
+            }
 
-            m_Cooldown[from] = DateTime.UtcNow + TimeSpan.FromMinutes(10);
+            _Cooldown[from] = DateTime.UtcNow + TimeSpan.FromMinutes(10);
         }
 
         public static bool CheckCooldown(Mobile from)
         {
             if (from.AccessLevel > AccessLevel.Player)
-                return true;
-
-            if (m_Cooldown != null && m_Cooldown.ContainsKey(from))
             {
-                if (m_Cooldown[from] < DateTime.UtcNow)
+                return true;
+            }
+
+            if (_Cooldown != null && _Cooldown.TryGetValue(from, out DateTime value))
+            {
+                if (value < DateTime.UtcNow)
                 {
-                    m_Cooldown.Remove(from);
+                    _Cooldown.Remove(from);
                     return true;
                 }
 

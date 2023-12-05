@@ -6,46 +6,47 @@ namespace Server.Spells.First
 {
     public class WeakenSpell : MagerySpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Weaken", "Des Mani",
             212,
             9031,
             Reagent.Garlic,
             Reagent.Nightshade);
 
-        public static Dictionary<Mobile, Timer> m_Table = new Dictionary<Mobile, Timer>();
+        private static Dictionary<Mobile, Timer> _Table = new Dictionary<Mobile, Timer>();
 
         public static bool IsUnderEffects(Mobile m)
         {
-            return m_Table.ContainsKey(m);
+            return _Table.ContainsKey(m);
         }
 
         public static void RemoveEffects(Mobile m, bool removeMod = true)
         {
-            if (m_Table.ContainsKey(m))
+            if (_Table.TryGetValue(m, out Timer value))
             {
-                Timer t = m_Table[m];
-
-                if (t != null && t.Running)
+                if (value != null && value.Running)
                 {
-                    t.Stop();
+                    value.Stop();
                 }
 
                 BuffInfo.RemoveBuff(m, BuffIcon.Weaken);
 
                 if (removeMod)
+                {
                     m.RemoveStatMod("[Magic] Str Curse");
+                }
 
-                m_Table.Remove(m);
+                _Table.Remove(m);
             }
         }
 
         public WeakenSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
         public override SpellCircle Circle => SpellCircle.First;
+
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
@@ -94,10 +95,12 @@ namespace Server.Spells.First
                         TimeSpan length = SpellHelper.GetDuration(Caster, m);
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Weaken, 1075837, length, m, percentage.ToString()));
 
-                        if (m_Table.ContainsKey(m))
-                            m_Table[m].Stop();
+                        if (_Table.TryGetValue(m, out Timer value))
+                        {
+                            value.Stop();
+                        }
 
-                        m_Table[m] = Timer.DelayCall(length, () =>
+                        _Table[m] = Timer.DelayCall(length, () =>
                         {
                             RemoveEffects(m);
                         });
@@ -110,24 +113,25 @@ namespace Server.Spells.First
 
         public class InternalTarget : Target
         {
-            private readonly WeakenSpell m_Owner;
+            private readonly WeakenSpell _Owner;
+
             public InternalTarget(WeakenSpell owner)
                 : base(10, false, TargetFlags.Harmful)
             {
-                m_Owner = owner;
+                _Owner = owner;
             }
 
             protected override void OnTarget(Mobile from, object o)
             {
                 if (o is Mobile mobile)
                 {
-                    m_Owner.Target(mobile);
+                    _Owner.Target(mobile);
                 }
             }
 
             protected override void OnTargetFinish(Mobile from)
             {
-                m_Owner.FinishSequence();
+                _Owner.FinishSequence();
             }
         }
     }
