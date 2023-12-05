@@ -55,7 +55,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
@@ -127,11 +127,9 @@ namespace Server.Items
 
         public static void RemoveEffects(Mobile m)
         {
-            if (_SlowEffects != null && _SlowEffects.ContainsKey(m))
+            if (_SlowEffects != null && _SlowEffects.Remove(m))
             {
                 m.SendSpeedControl(SpeedControlType.Disable);
-
-                _SlowEffects.Remove(m);
 
                 if (_SlowEffects.Count == 0)
                 {
@@ -175,13 +173,12 @@ namespace Server.Items
 
         public static void EndDelay(Mobile m)
         {
-            if (_Delay != null && _Delay.ContainsKey(m))
+            if (_Delay != null && _Delay.TryGetValue(m, out Timer value))
             {
-                Timer timer = _Delay[m];
-
-                if (timer != null)
+                if (value != null)
                 {
-                    timer.Stop();
+                    value.Stop();
+
                     _Delay.Remove(m);
 
                     if (_Delay.Count == 0)
@@ -194,24 +191,28 @@ namespace Server.Items
 
         private class ThrowTarget : Target
         {
-            private readonly ExplodingTarPotion m_Potion;
+            private readonly ExplodingTarPotion _Potion;
 
-            public ExplodingTarPotion Potion => m_Potion;
+            public ExplodingTarPotion Potion => _Potion;
 
             public ThrowTarget(ExplodingTarPotion potion) : base(12, true, TargetFlags.None)
             {
-                m_Potion = potion;
+                _Potion = potion;
             }
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (m_Potion.Deleted || m_Potion.Map == Map.Internal)
+                if (_Potion.Deleted || _Potion.Map == Map.Internal)
+                {
                     return;
+                }
 
                 IPoint3D p = targeted as IPoint3D;
 
                 if (p == null || from.Map == null)
+                {
                     return;
+                }
 
                 AddDelay(from);
 
@@ -222,12 +223,16 @@ namespace Server.Items
                 IEntity to;
 
                 if (p is Mobile mobile)
+                {
                     to = mobile;
+                }
                 else
+                {
                     to = new Entity(Serial.Zero, new Point3D(p), from.Map);
+                }
 
-                Effects.SendMovingEffect(from, to, 0xF0D, 7, 0, false, false, m_Potion.Hue, 0);
-                Timer.DelayCall(TimeSpan.FromSeconds(1.0), m_Potion.Explode_Callback, new object[] { from, new Point3D(p), from.Map });
+                Effects.SendMovingEffect(from, to, 0xF0D, 7, 0, false, false, _Potion.Hue, 0);
+                Timer.DelayCall(TimeSpan.FromSeconds(1.0), _Potion.Explode_Callback, new object[] { from, new Point3D(p), from.Map });
             }
         }
     }
