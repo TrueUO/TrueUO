@@ -1,13 +1,11 @@
-﻿using Server.Mobiles;
+using Server.Mobiles;
 
 namespace Server.Items
 {
-    [TypeAlias("drNO.ThieveItems.BalmOfProtection")]
     public class BalmOfProtection : BaseBalmOrLotion
     {
         public static double HandleDamage(PlayerMobile pm, double damage)
         {
-
             if (IsUnderThieveConsumableEffect(pm, ThieveConsumableEffect.BalmOfProtectionEffect))
             {
                 int rnd = 50 + Utility.Random(51);
@@ -15,10 +13,8 @@ namespace Server.Items
                 damage = damage - (damage * (rnd / 100.0));
                 return damage;
             }
-            else
-            {
-                return damage;
-            }
+
+            return damage;
         }
 
         public override int LabelNumber => 1094943;  // Balm of Protection
@@ -42,19 +38,16 @@ namespace Server.Items
         {
         }
 
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
