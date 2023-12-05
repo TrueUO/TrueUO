@@ -7,7 +7,7 @@ namespace Server.Spells.Fourth
 {
     public class CurseSpell : MagerySpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Curse", "Des Sanct",
             227,
             9031,
@@ -15,10 +15,10 @@ namespace Server.Spells.Fourth
             Reagent.Garlic,
             Reagent.SulfurousAsh);
 
-        private static readonly Dictionary<Mobile, Timer> m_UnderEffect = new Dictionary<Mobile, Timer>();
+        private static readonly Dictionary<Mobile, Timer> _UnderEffect = new Dictionary<Mobile, Timer>();
 
         public CurseSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -27,12 +27,15 @@ namespace Server.Spells.Fourth
         public static void AddEffect(Mobile m, TimeSpan duration, int strOffset, int dexOffset, int intOffset)
         {
             if (m == null)
-                return;
-
-            if (m_UnderEffect.ContainsKey(m))
             {
-                m_UnderEffect[m].Stop();
-                m_UnderEffect[m] = null;
+                return;
+            }
+
+            if (_UnderEffect.TryGetValue(m, out Timer value))
+            {
+                value.Stop();
+
+                _UnderEffect[m] = null;
             }
 
             // my spell is stronger, so lets remove the lesser spell
@@ -51,30 +54,35 @@ namespace Server.Spells.Fourth
                 FeeblemindSpell.RemoveEffects(m, false);
             }
 
-            m_UnderEffect[m] = Timer.DelayCall(duration, RemoveEffect, m); //= new CurseTimer(m, duration, strOffset, dexOffset, intOffset);
+            _UnderEffect[m] = Timer.DelayCall(duration, RemoveEffect, m);
+
             m.UpdateResistances();
         }
 
         public static void RemoveEffect(Mobile m)
         {
             if (!WeakenSpell.IsUnderEffects(m))
+            {
                 m.RemoveStatMod("[Magic] Str Curse");
+            }
 
             if (!ClumsySpell.IsUnderEffects(m))
+            {
                 m.RemoveStatMod("[Magic] Dex Curse");
+            }
 
             if (!FeeblemindSpell.IsUnderEffects(m))
+            {
                 m.RemoveStatMod("[Magic] Int Curse");
+            }
 
             BuffInfo.RemoveBuff(m, BuffIcon.Curse);
 
-            if (m_UnderEffect.ContainsKey(m))
+            if (_UnderEffect.TryGetValue(m, out Timer value))
             {
-                Timer t = m_UnderEffect[m];
+                value?.Stop();
 
-                t?.Stop();
-
-                m_UnderEffect.Remove(m);
+                _UnderEffect.Remove(m);
             }
 
             m.UpdateResistances();
@@ -82,7 +90,7 @@ namespace Server.Spells.Fourth
 
         public static bool UnderEffect(Mobile m)
         {
-            return m_UnderEffect.ContainsKey(m);
+            return _UnderEffect.ContainsKey(m);
         }
 
         public override void OnCast()
@@ -170,22 +178,24 @@ namespace Server.Spells.Fourth
 
         private class InternalTarget : Target
         {
-            private readonly CurseSpell m_Owner;
+            private readonly CurseSpell _Owner;
             public InternalTarget(CurseSpell owner)
                 : base(10, false, TargetFlags.Harmful)
             {
-                m_Owner = owner;
+                _Owner = owner;
             }
 
             protected override void OnTarget(Mobile from, object o)
             {
                 if (o is Mobile mobile)
-                    m_Owner.Target(mobile);
+                {
+                    _Owner.Target(mobile);
+                }
             }
 
             protected override void OnTargetFinish(Mobile from)
             {
-                m_Owner.FinishSequence();
+                _Owner.FinishSequence();
             }
         }
     }
