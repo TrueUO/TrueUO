@@ -18,14 +18,9 @@ namespace Server.Misc
             m_Givers.Add(giver);
         }
 
-        public static void Initialize()
+        public static void OnLogin(Mobile m)
         {
-            EventSink.Login += EventSink_Login;
-        }
-
-        private static void EventSink_Login(LoginEventArgs e)
-        {
-            Account acct = e.Mobile.Account as Account;
+            Account acct = m.Account as Account;
 
             if (acct == null)
                 return;
@@ -45,7 +40,7 @@ namespace Server.Misc
                 if (acct.LastLogin >= giver.Start)
                     continue; // already got one
 
-                giver.DelayGiveGift(TimeSpan.FromSeconds(5.0), e.Mobile);
+                giver.DelayGiveGift(TimeSpan.FromSeconds(5.0), m);
             }
 
             acct.LastLogin = now;

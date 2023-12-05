@@ -7,8 +7,6 @@ namespace Server.Engines.Chat
     {
         public static void Initialize()
         {
-            EventSink.Disconnected += EventSink_Disconnected;
-
             // TODO: Add a configuration framework to define static channels outside of code, for example as XML under the Data/ directory.
             AddStaticChannel("Help");
             AddStaticChannel("General");
@@ -16,9 +14,9 @@ namespace Server.Engines.Chat
             AddStaticChannel("Looking For Group");
         }
 
-        private static void EventSink_Disconnected(DisconnectedEventArgs e)
+        public static void OnDisconnected(Mobile m)
         {
-            ChatUser.RemoveChatUser(e.Mobile);
+            ChatUser.RemoveChatUser(m);
         }
 
         public static void AddStaticChannel(string name)

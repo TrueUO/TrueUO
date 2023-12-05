@@ -1,4 +1,3 @@
-using Server.Network;
 using System;
 using System.Collections.Generic;
 
@@ -81,14 +80,6 @@ namespace Server.Spells.Mysticism
             BuffInfo.RemoveBuff(m, BuffIcon.PoisonImmunity);
         }
 
-        public static void OnLogin(LoginEventArgs e)
-        {
-            TransformContext context = TransformationSpellHelper.GetContext(e.Mobile);
-
-            if (context != null && context.Type == typeof(StoneFormSpell))
-                e.Mobile.SendSpeedControl(SpeedControlType.WalkSpeed);
-        }
-
         public static int GetMaxResistBonus(Mobile m)
         {
             if (TransformationSpellHelper.UnderTransformation(m, typeof(StoneFormSpell)))
@@ -97,44 +88,6 @@ namespace Server.Spells.Mysticism
             }
 
             return 0;
-        }
-
-        public static int GetResistanceBonus(Mobile m)
-        {
-            if (TransformationSpellHelper.UnderTransformation(m, typeof(StoneFormSpell)))
-            {
-                return GetResBonus(m);
-            }
-
-            return 0;
-        }
-
-        public static int GetDamageBonus(Mobile m)
-        {
-            if (TransformationSpellHelper.UnderTransformation(m, typeof(StoneFormSpell)))
-            {
-                return GetDamBonus(m);
-            }
-
-            return 0;
-        }
-
-        public static double StatOffsetReduction(Mobile caster, Mobile m)
-        {
-            if (TransformationSpellHelper.UnderTransformation(m, typeof(StoneFormSpell)))
-            {
-                int prim = (int)m.Skills[SkillName.Mysticism].Value;
-                int sec = (int)m.Skills[SkillName.Imbuing].Value;
-
-                if (m.Skills[SkillName.Focus].Value > sec)
-                    sec = (int)m.Skills[SkillName.Focus].Value;
-
-                caster.SendLocalizedMessage(1080192); // Your target resists your ability reduction magic.
-
-                return (double)(prim + sec) / 480;
-            }
-
-            return 1.0;
         }
 
         private static int GetResBonus(Mobile m)

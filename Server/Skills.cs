@@ -349,18 +349,8 @@ namespace Server
 		public double Cap
 		{
 			get => m_Cap / 10.0;
-			set
-			{
-				double old = m_Cap / 10;
-
-				CapFixedPoint = (int)(value * 10.0);
-
-				if (old != value && Owner.Owner != null)
-				{
-					EventSink.InvokeSkillCapChange(new SkillCapChangeEventArgs(Owner.Owner, this, old, value));
-				}
-			}
-		}
+			set => CapFixedPoint = (int)(value * 10.0);
+        }
 
 		private static bool m_UseStatMods;
 

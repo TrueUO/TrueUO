@@ -216,30 +216,6 @@ namespace Server.Engines.Craft
             return c;
         }
 
-        public void OnMade(Mobile m, CraftItem item)
-        {
-            CraftContext c = GetContext(m);
-
-            if (c != null)
-                c.OnMade(item);
-        }
-
-        public void OnRepair(Mobile m, ITool tool, Item deed, Item addon, IEntity e)
-        {
-            Item source;
-
-            if (tool is Item item)
-            {
-                source = item;
-            }
-            else
-            {
-                source = deed ?? addon;
-            }
-
-            EventSink.InvokeRepairItem(new RepairItemEventArgs(m, source, e));
-        }
-
         private void AddSystem(CraftSystem system)
         {
             if (Systems == null)

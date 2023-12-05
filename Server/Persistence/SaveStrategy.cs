@@ -41,9 +41,9 @@ namespace Server
         {
             Dictionary<Serial, Mobile> mobiles = World.Mobiles;
 
-            using BinaryFileWriter idx = new(World.MobileIndexPath, false);
-            using BinaryFileWriter tdb = new(World.MobileTypesPath, false);
-            using GenericWriter bin = new BinaryFileWriter(World.MobileDataPath, true);
+            BinaryFileWriter idx = new BinaryFileWriter(World.MobileIndexPath, false);
+            BinaryFileWriter tdb = new BinaryFileWriter(World.MobileTypesPath, false);
+            BinaryFileWriter bin = new BinaryFileWriter(World.MobileDataPath, true);
 
             idx.Write(mobiles.Count);
             foreach (Mobile m in mobiles.Values)
@@ -62,19 +62,22 @@ namespace Server
             }
 
             tdb.Write(World.m_MobileTypes.Count);
+
             for (int i = 0; i < World.m_MobileTypes.Count; ++i)
-            {
                 tdb.Write(World.m_MobileTypes[i].FullName);
-            }
+
+            idx.Close();
+            tdb.Close();
+            bin.Close();
         }
 
         private void SaveItems()
         {
             Dictionary<Serial, Item> items = World.Items;
 
-            using BinaryFileWriter idx = new(World.ItemIndexPath, false);
-            using BinaryFileWriter tdb = new(World.ItemTypesPath, false);
-            using GenericWriter bin = new BinaryFileWriter(World.ItemDataPath, true);
+            BinaryFileWriter idx = new BinaryFileWriter(World.ItemIndexPath, false);
+            BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false);
+            BinaryFileWriter bin = new BinaryFileWriter(World.ItemDataPath, true);
 
             idx.Write(items.Count);
             foreach (Item item in items.Values)
@@ -98,16 +101,19 @@ namespace Server
             }
 
             tdb.Write(World.m_ItemTypes.Count);
+
             for (int i = 0; i < World.m_ItemTypes.Count; ++i)
-            {
                 tdb.Write(World.m_ItemTypes[i].FullName);
-            }
+
+            idx.Close();
+            tdb.Close();
+            bin.Close();
         }
 
         private void SaveGuilds()
         {
-            using BinaryFileWriter idx = new(World.GuildIndexPath, false);
-            using GenericWriter bin = new BinaryFileWriter(World.GuildDataPath, true);
+            BinaryFileWriter idx = new BinaryFileWriter(World.GuildIndexPath, false);
+            BinaryFileWriter bin = new BinaryFileWriter(World.GuildDataPath, true);
 
             idx.Write(BaseGuild.List.Count);
             foreach (BaseGuild guild in BaseGuild.List.Values)
@@ -122,6 +128,9 @@ namespace Server
 
                 idx.Write((int)(bin.Position - start));
             }
+
+            idx.Close();
+            bin.Close();
         }
     }
 }

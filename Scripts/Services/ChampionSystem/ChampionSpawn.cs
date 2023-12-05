@@ -1431,12 +1431,6 @@ namespace Server.Engines.CannedEvil
 
     public class ChampionSpawnRegion : BaseRegion
     {
-        public static void Initialize()
-        {
-            EventSink.Logout += OnLogout;
-            EventSink.Login += OnLogin;
-        }
-
         public override bool YoungProtected => false;
 
         private readonly ChampionSpawn m_Spawn;
@@ -1470,10 +1464,8 @@ namespace Server.Engines.CannedEvil
             return base.OnMoveInto(m, d, newLocation, oldLocation);
         }
 
-        public static void OnLogout(LogoutEventArgs e)
+        public static void OnLogout(Mobile m)
         {
-            Mobile m = e.Mobile;
-
             if (m is PlayerMobile && m.Region.IsPartOf<ChampionSpawnRegion>() && m.AccessLevel == AccessLevel.Player && m.Map == Map.Felucca)
             {
                 if (m.Alive && m.Backpack != null)
@@ -1517,10 +1509,8 @@ namespace Server.Engines.CannedEvil
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            Mobile m = e.Mobile;
-
             if (m is PlayerMobile && !m.Alive && (m.Corpse == null || m.Corpse.Deleted) && m.Region.IsPartOf<ChampionSpawnRegion>() && m.Map == Map.Felucca)
             {
                 Map map = m.Map;

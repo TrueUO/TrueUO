@@ -25,8 +25,6 @@ namespace Server.Spells.SkillMasteries
         {
             Infos = new List<MasteryInfo>();
 
-            EventSink.Login += OnLogin;
-
             Infos.Add(new MasteryInfo(typeof(InspireSpell), 700, SkillName.Provocation));
             Infos.Add(new MasteryInfo(typeof(InvigorateSpell), 701, SkillName.Provocation));
 
@@ -430,12 +428,12 @@ namespace Server.Spells.SkillMasteries
             BuffInfo.RemoveBuff(m, BuffIcon.Boarding);
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            Mobile m = e.Mobile;
-
             if (m.Skills.CurrentMastery > 0)
+            {
                 OnMasteryChanged(m, m.Skills.CurrentMastery);
+            }
         }
 
         public static int GetSpellID(PassiveSpell spell)

@@ -28,17 +28,12 @@ namespace Server.Regions
         [CommandProperty(AccessLevel.GameMaster)]
         public BaseHouse House { get; }
 
-        public static void Initialize()
+        public static void OnLogin(Mobile m)
         {
-            EventSink.Login += OnLogin;
-        }
+            BaseHouse house = BaseHouse.FindHouseAt(m);
 
-        public static void OnLogin(LoginEventArgs e)
-        {
-            BaseHouse house = BaseHouse.FindHouseAt(e.Mobile);
-
-            if (house != null && !house.Public && !house.IsFriend(e.Mobile))
-                e.Mobile.Location = house.BanLocation;
+            if (house != null && !house.Public && !house.IsFriend(m))
+                m.Location = house.BanLocation;
         }
 
         public override bool AllowHousing(Mobile from, Point3D p)

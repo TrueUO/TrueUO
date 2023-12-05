@@ -871,13 +871,6 @@ namespace Server.Accounting
             return BitConverter.ToString(hashed);
         }
 
-        public static void Initialize()
-        {
-            EventSink.Connected += EventSink_Connected;
-            EventSink.Disconnected += EventSink_Disconnected;
-            EventSink.Login += EventSink_Login;
-        }
-
         /// <summary>
         ///     Deserializes a list of string values from an xml element. Null values are not added to the list.
         /// </summary>
@@ -1586,9 +1579,9 @@ namespace Server.Accounting
             return Username;
         }
 
-        private static void EventSink_Connected(ConnectedEventArgs e)
+        public static void OnConnected(Mobile m)
         {
-            Account acc = e.Mobile.Account as Account;
+            Account acc = m.Account as Account;
 
             if (acc == null)
             {
@@ -1604,9 +1597,9 @@ namespace Server.Accounting
             acc.m_YoungTimer.Start();
         }
 
-        private static void EventSink_Disconnected(DisconnectedEventArgs e)
+        public static void OnDisconnected(Mobile m)
         {
-            Account acc = e.Mobile.Account as Account;
+            Account acc = m.Account as Account;
 
             if (acc == null)
             {
@@ -1619,29 +1612,29 @@ namespace Server.Accounting
                 acc.m_YoungTimer = null;
             }
 
-            if (e.Mobile is PlayerMobile m)
+            if (m is PlayerMobile pm)
             {
-                acc.m_TotalGameTime += DateTime.UtcNow - m.SessionStart;
+                acc.m_TotalGameTime += DateTime.UtcNow - pm.SessionStart;
             }
         }
 
-        private static void EventSink_Login(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            PlayerMobile m = e.Mobile as PlayerMobile;
+            PlayerMobile pm = m as PlayerMobile;
 
-            if (m == null)
+            if (pm == null)
             {
                 return;
             }
 
-            Account acc = m.Account as Account;
+            Account acc = pm.Account as Account;
 
             if (acc == null)
             {
                 return;
             }
 
-            if (!m.Young || !acc.Young)
+            if (!pm.Young || !acc.Young)
             {
                 return;
             }
@@ -1649,7 +1642,7 @@ namespace Server.Accounting
             TimeSpan ts = _YoungDuration - acc.TotalGameTime;
             int hours = Math.Max((int)ts.TotalHours, 0);
 
-            m.SendAsciiMessage("You will enjoy the benefits and relatively safe status of a young player for {0} more hour{1}.", hours, hours != 1 ? "s" : "");
+            pm.SendAsciiMessage("You will enjoy the benefits and relatively safe status of a young player for {0} more hour{1}.", hours, hours != 1 ? "s" : "");
         }
 
         private class YoungTimer : Timer
@@ -1718,10 +1711,7 @@ namespace Server.Accounting
                 return false;
             }
 
-            double oldAmount = TotalCurrency;
             TotalCurrency += amount;
-
-            EventSink.InvokeAccountGoldChange(new AccountGoldChangeEventArgs(this, oldAmount, TotalCurrency));
 
             return true;
         }
@@ -1787,10 +1777,8 @@ namespace Server.Accounting
                 return false;
             }
 
-            double oldAmount = TotalCurrency;
             TotalCurrency -= amount;
 
-            EventSink.InvokeAccountGoldChange(new AccountGoldChangeEventArgs(this, oldAmount, TotalCurrency));
             return true;
         }
 

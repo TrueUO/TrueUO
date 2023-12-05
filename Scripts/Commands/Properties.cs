@@ -271,8 +271,6 @@ namespace Server.Commands
                     long v = Convert.ToInt64(obj) + realValues[i];
                     object toSet = Convert.ChangeType(v, realProps[i].PropertyType);
                     realProps[i].SetValue(realObjs[i], toSet, null);
-
-                    EventSink.InvokeOnPropertyChanged(new OnPropertyChangedEventArgs(m, realObjs[i], realProps[i], obj, toSet));
                 }
                 catch
                 {
@@ -425,10 +423,7 @@ namespace Server.Commands
                     return "Invalid -null- value, propery not set.";
                 }
 
-                object oldValue = prop.GetValue(obj, null);
                 prop.SetValue(obj, toSet, null);
-
-                EventSink.InvokeOnPropertyChanged(new OnPropertyChangedEventArgs(m, obj, prop, oldValue, toSet));
 
                 return "Property has been set.";
             }
@@ -453,10 +448,7 @@ namespace Server.Commands
                     return "Invalid -null- value, propery not set.";
                 }
 
-                object oldValue = prop.GetValue(obj, null);
                 prop.SetValue(obj, toSet, null);
-
-                EventSink.InvokeOnPropertyChanged(new OnPropertyChangedEventArgs(null, obj, prop, oldValue, toSet));
 
                 return "Property has been set.";
             }

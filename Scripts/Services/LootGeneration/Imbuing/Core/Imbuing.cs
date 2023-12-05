@@ -20,14 +20,7 @@ namespace Server.SkillHandlers
             CommandSystem.Register("GetTotalMods", AccessLevel.GameMaster, GetTotalMods_OnCommand);
         }
 
-        private static void OnLogin(LoginEventArgs e)
-        {
-            if (!e.Mobile.CanBeginAction(typeof(Imbuing)))
-                e.Mobile.EndAction(typeof(Imbuing));
-        }
-
         private static readonly Dictionary<Mobile, ImbuingContext> m_ContextTable = new Dictionary<Mobile, ImbuingContext>();
-        public static Dictionary<Mobile, ImbuingContext> ContextTable => m_ContextTable;
 
         public static TimeSpan OnUse(Mobile from)
         {

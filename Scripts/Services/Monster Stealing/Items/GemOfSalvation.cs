@@ -18,16 +18,9 @@ namespace Server.Items
             LootType = LootType.Blessed;
         }
 
-        public static void Initialize()
+        public static void OnPlayerDeath(Mobile m)
         {
-            EventSink.PlayerDeath += PlayerDeath;
-        }
-
-        public static void PlayerDeath(PlayerDeathEventArgs args)
-        {
-            PlayerMobile pm = (PlayerMobile)args.Mobile;
-
-            if (pm != null && pm.Backpack != null)
+            if (m is PlayerMobile pm && pm.Backpack != null)
             {
                 GemOfSalvation gem = pm.Backpack.FindItemByType<GemOfSalvation>();
 

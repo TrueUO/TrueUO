@@ -61,9 +61,11 @@ namespace Server
 		public abstract bool End();
 	}
 
-	public abstract class GenericWriter : IDisposable
+	public abstract class GenericWriter
 	{
-		public abstract long Position { get; }
+        public abstract void Close();
+
+        public abstract long Position { get; }
 
         public abstract void WriteObjectType(object value);
         public abstract void WriteObjectType(Type value);
@@ -115,16 +117,6 @@ namespace Server
 		public abstract void WriteMobileList<T>(List<T> list, bool tidy) where T : Mobile;
 
 		public abstract void WriteGuildList<T>(List<T> list, bool tidy) where T : BaseGuild;
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-        }
     }
     
 	public class BinaryFileWriter : GenericWriter
@@ -171,25 +163,14 @@ namespace Server
             }
         }
 
-        protected override void Dispose(bool disposing)
+        public override void Close()
         {
-            if (disposing)
+            if (_Index > 0)
             {
-                if (_Index > 0)
-                {
-                    Flush();
-                }
-
-                _File.Close();
-                _File = null;
+                Flush();
             }
 
-            base.Dispose(disposing);
-        }
-
-        ~BinaryFileWriter()
-        {
-            Dispose(false);
+            _File.Close();
         }
 
         public override void WriteEncodedInt(int value)

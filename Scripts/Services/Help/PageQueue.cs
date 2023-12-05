@@ -171,14 +171,11 @@ namespace Server.Engines.Help
         {
             Entries = new List<ResponseEntry>();
 
-            EventSink.Login += Login;
             EventSink.BeforeWorldSave += BeforeSave;
         }
 
-        public static void Login(LoginEventArgs args)
+        public static void OnLogin(Mobile m)
         {
-            Mobile m = args.Mobile;
-
             Timer.DelayCall(TimeSpan.FromSeconds(2.0), () =>
             {
                 List<ResponseEntry> entries = Entries.Where(e => e.Sender == m).ToList();

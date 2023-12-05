@@ -92,12 +92,9 @@ namespace Server.Misc
                 }
             }
         }
-        public override string DefaultName => "shard poller";
-        public static void Initialize()
-        {
-            EventSink.Login += EventSink_Login;
-        }
 
+        public override string DefaultName => "shard poller";
+        
         public bool HasAlreadyVoted(NetState ns)
         {
             for (int i = 0; i < m_Options.Length; ++i)
@@ -209,12 +206,12 @@ namespace Server.Misc
             Active = false;
         }
 
-        private static void EventSink_Login(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
             if (m_ActivePollers.Count == 0)
                 return;
 
-            Timer.DelayCall(TimeSpan.FromSeconds(1.0), EventSink_Login_Callback, e.Mobile);
+            Timer.DelayCall(TimeSpan.FromSeconds(1.0), EventSink_Login_Callback, m);
         }
 
         private static void EventSink_Login_Callback(object state)

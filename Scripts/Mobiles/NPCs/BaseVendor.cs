@@ -135,8 +135,6 @@ namespace Server.Mobiles
                     return;
                 }
 
-                EventSink.InvokeBODOffered(new BODOfferEventArgs(m_From, m_Vendor));
-
                 if (m_Vendor.SupportsBulkOrders(m_From) && m_From is PlayerMobile pm)
                 {
                     if (BulkOrderSystem.CanGetBulkOrder(pm, m_Vendor.BODType) || pm.AccessLevel > AccessLevel.Player)
@@ -2145,9 +2143,6 @@ namespace Server.Mobiles
 
                         int singlePrice = ssi.GetSellPriceFor(resp.Item, this);
                         GiveGold += singlePrice * amount;
-
-                        EventSink.InvokeValidVendorSell(new ValidVendorSellEventArgs(seller, this, resp.Item,
-                            singlePrice));
 
                         break;
                     }

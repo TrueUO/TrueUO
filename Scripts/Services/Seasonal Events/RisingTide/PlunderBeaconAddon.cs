@@ -1,5 +1,4 @@
 using Server.Mobiles;
-using Server.Engines.RisingTide;
 using System;
 using System.Collections.Generic;
 
@@ -578,25 +577,17 @@ namespace Server.Items
             }
         }
 
-        public static void Initialize()
+        public static void OnCreatureDeath(Mobile creature)
         {
-            if (RisingTideEvent.Instance.Running)
-            {
-                EventSink.CreatureDeath += OnCreatureDeath;
-            }
-        }
-
-        public static void OnCreatureDeath(CreatureDeathEventArgs e)
-        {
-            var killed = e.Creature as BaseCreature;
+            BaseCreature killed = creature as BaseCreature;
 
             bool any = false;
 
             if (Beacons != null)
             {
-                for (var index = 0; index < Beacons.Count; index++)
+                for (int index = 0; index < Beacons.Count; index++)
                 {
-                    var b = Beacons[index];
+                    PlunderBeaconAddon b = Beacons[index];
 
                     if (b.Spawn != null && b.Spawn.ContainsKey(killed))
                     {
@@ -612,7 +603,7 @@ namespace Server.Items
 
                 if (chance >= Utility.RandomDouble())
                 {
-                    var m = killed.RandomPlayerWithLootingRights();
+                    Mobile m = killed.RandomPlayerWithLootingRights();
 
                     if (m != null)
                     {

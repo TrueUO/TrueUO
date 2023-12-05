@@ -23,41 +23,19 @@ namespace Server.Spells.Spellweaving
         public override double RequiredSkill => 38.0;
         public override int RequiredMana => 70;
         public double HitsScalar => ((Caster.Skills.Spellweaving.Value / 2.4) + FocusLevel) / 100;
-        public static void Initialize()
-        {
-            EventSink.PlayerDeath += HandleDeath;
-            EventSink.Login += Login;
-        }
-
-        public static void HandleDeath(PlayerDeathEventArgs e)
-        {
-            HandleDeath(e.Mobile);
-        }
-
+        
         public static void HandleDeath(Mobile m)
         {
             if (m_Table.ContainsKey(m))
                 Timer.DelayCall(TimeSpan.FromSeconds(Utility.RandomMinMax(2, 4)), HandleDeath_OnCallback, m);
         }
 
-        public static void Login(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            Mobile m = e.Mobile;
-
             if (m_Table.TryGetValue(m, out ExpireTimer value) && value.EndTime > DateTime.UtcNow)
             {
                 BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.GiftOfLife, 1031615, 1075807, value.EndTime - DateTime.UtcNow, m, null, true));
             }
-        }
-
-        public static void OnLogin(LoginEventArgs e)
-        {
-            Mobile m = e.Mobile;
-
-            if (m == null || m.Alive || m_Table[m] == null)
-                return;
-
-            HandleDeath_OnCallback(m);
         }
 
         public override void OnCast()

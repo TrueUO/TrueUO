@@ -1,34 +1,43 @@
-#region References
 using System;
 using System.IO;
-#endregion
 
 namespace Server
 {
 	public static class Persistence
     {
         public static void SerializeBlock(GenericWriter writer, Action<GenericWriter> serializer)
-        {
-            byte[] data = Array.Empty<byte>();
+		{
+			byte[] data = Array.Empty<byte>();
 
-            if (serializer != null)
-            {
-                using MemoryStream ms = new MemoryStream();
-                using BinaryFileWriter w = new BinaryFileWriter(ms, true);
+			if (serializer != null)
+			{
+				using (MemoryStream ms = new MemoryStream())
+				{
+					BinaryFileWriter w = new BinaryFileWriter(ms, true);
 
-                serializer(w);
-                w.Flush();
-                data = ms.ToArray();
-            }
+					try
+					{
+						serializer(w);
 
-            writer.Write(0x0C0FFEE0);
-            writer.Write(data.Length);
+						w.Flush();
 
-            for (int i = 0; i < data.Length; i++)
-            {
-                writer.Write(data[i]);
-            }
-        }
+						data = ms.ToArray();
+					}
+					finally
+					{
+						w.Close();
+					}
+				}
+			}
+
+			writer.Write(0x0C0FFEE0);
+			writer.Write(data.Length);
+
+			for (var i = 0; i < data.Length; i++)
+			{
+				writer.Write(data[i]);
+			}
+		}
 
         public static void DeserializeBlock(GenericReader reader, Action<GenericReader> deserializer)
         {
@@ -85,10 +94,18 @@ namespace Server
             using (file.Create()) { /* just creating the file */ }
 
             using (FileStream fs = file.OpenWrite())
-            using (BinaryFileWriter writer = new BinaryFileWriter(fs, true))
             {
-                serializer(writer);
-                writer.Flush();
+                BinaryFileWriter writer = new BinaryFileWriter(fs, true);
+
+                try
+                {
+                    serializer(writer);
+                }
+                finally
+                {
+                    writer.Flush();
+                    writer.Close();
+                }
             }
         }
 

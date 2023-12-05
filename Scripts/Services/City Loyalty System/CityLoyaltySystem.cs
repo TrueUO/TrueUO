@@ -679,7 +679,6 @@ namespace Server.Engines.CityLoyalty
 
         public static void Initialize()
         {
-            EventSink.Login += OnLogin;
             Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), OnTick);
 
             CommandSystem.Register("ElectionStartTime", AccessLevel.Administrator, e => Gumps.BaseGump.SendGump(new ElectionStartTimeGump(e.Mobile as PlayerMobile)));
@@ -721,14 +720,14 @@ namespace Server.Engines.CityLoyalty
             return false;
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
             if (!Enabled)
             {
                 return;
             }
 
-            if (!(e.Mobile is PlayerMobile pm))
+            if (!(m is PlayerMobile pm))
             {
                 return;
             }

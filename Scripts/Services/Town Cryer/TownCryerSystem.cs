@@ -89,8 +89,6 @@ namespace Server.Services.TownCryer
         {
             if (Enabled)
             {
-                EventSink.Login += OnLogin;
-
                 NewsEntries.Add(new TownCryerNewsEntry(1159346, 1159347, 0x9D3E, null, "https://uo.com/wiki/ultima-online-wiki/combat/jolly-roger/")); // Jolly Roger
                 NewsEntries.Add(new TownCryerNewsEntry(1159262, 1159263, 0x64E, null, "https://uo.com/wiki/ultima-online-wiki/seasonal-events/halloween-treasures-of-the-sea/")); // Forsaken Foes
                 NewsEntries.Add(new TownCryerNewsEntry(1158944, 1158945, 0x9CEA, null, "https://uo.com/wiki/ultima-online-wiki/combat/pvm-player-versus-monster/rising-tide/")); // Rising Tide
@@ -172,9 +170,9 @@ namespace Server.Services.TownCryer
             BaseGump.SendGump(new TownCrierQuestCompleteGump(pm, title, body, gumpID));
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile m)
         {
-            if (Enabled && e.Mobile is PlayerMobile mobile && !IsExempt(mobile))
+            if (Enabled && m is PlayerMobile mobile && !IsExempt(mobile))
             {
                 Timer.DelayCall(TimeSpan.FromSeconds(1), player =>
                 {

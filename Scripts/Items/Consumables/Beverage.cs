@@ -957,14 +957,9 @@ namespace Server.Items
         #region Effects of achohol
         private static readonly Hashtable m_Table = new Hashtable();
 
-        public static void Initialize()
+        public static void OnLogin(Mobile m)
         {
-            EventSink.Login += EventSink_Login;
-        }
-
-        private static void EventSink_Login(LoginEventArgs e)
-        {
-            CheckHeaveTimer(e.Mobile);
+            CheckHeaveTimer(m);
         }
 
         public static void CheckHeaveTimer(Mobile from)

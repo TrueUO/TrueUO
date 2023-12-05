@@ -15,15 +15,12 @@ namespace Server.Misc
 
         public static void Initialize()
         {
-            EventSink.ServerStarted += () =>
-            {
-                ListenCommands();
+            ListenCommands();
 
-                if (_HearConsole)
-                {
-                    Console.WriteLine("Now listening to the whole shard.");
-                }
-            };
+            if (_HearConsole)
+            {
+                Console.WriteLine("Now listening to the whole shard.");
+            }
 
             EventSink.Speech += args =>
             {

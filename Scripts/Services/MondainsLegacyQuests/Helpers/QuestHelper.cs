@@ -9,11 +9,6 @@ namespace Server.Engines.Quests
 {
     public class QuestHelper
     {
-        public static void Initialize()
-        {
-            EventSink.OnKilledBy += OnKilledBy;
-        }
-
         public static void RemoveAcceleratedSkillgain(PlayerMobile from)
         {
             Region region = from.Region;
@@ -705,11 +700,11 @@ namespace Server.Engines.Quests
             }
         }
 
-        public static void OnKilledBy(OnKilledByEventArgs e)
+        public static void OnKilledBy(BaseCreature killed, Mobile killer)
         {
-            if (e.KilledBy is PlayerMobile pm)
+            if (killer is PlayerMobile pm)
             {
-                CheckCreature(pm, e.Killed);
+                CheckCreature(pm, killed);
             }
         }
 

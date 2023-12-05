@@ -96,16 +96,11 @@ namespace Server.Items
             reader.ReadInt();
         }
 
-        public static void Initialize()
+        public static void OnLogin(Mobile m)
         {
-            EventSink.Login += OnLogin;
-        }
-
-        public static void OnLogin(LoginEventArgs e)
-        {
-            if (e.Mobile is PlayerMobile pm)
+            if (m is PlayerMobile pm)
             {
-                var medallion = CheckMedallion(pm);
+                IFellowshipMedallion medallion = CheckMedallion(pm);
 
                 if (medallion != null)
                 {

@@ -33,8 +33,6 @@ namespace Server.Engines.NewMagincia
 
         public static void Initialize()
         {
-            EventSink.Login += OnLogin;
-
             if (m_Instance != null)
                 m_Instance.PruneMessages();
         }
@@ -463,9 +461,8 @@ namespace Server.Engines.NewMagincia
             }
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnLogin(Mobile from)
         {
-            Mobile from = e.Mobile;
             CheckMessages(from);
 
             var messages = GetMessages(from);

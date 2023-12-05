@@ -93,16 +93,16 @@ namespace Server.Items
 
         public static void EndBlock(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null && _Table.Remove(m))
             {
-                _Table.Remove(m);
-
                 BuffInfo.RemoveBuff(m, BuffIcon.Block);
 
                 m.SendLocalizedMessage(1150286); // You no longer try to block the next attack.
 
                 if (_Table.Count == 0)
+                {
                     _Table = null;
+                }
             }
         }
 

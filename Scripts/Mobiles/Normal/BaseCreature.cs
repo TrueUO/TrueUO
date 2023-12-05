@@ -22,6 +22,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Server.Engines.Points;
+using Server.Engines.Quests;
+using Server.Engines.RisingTide;
+
 #endregion
 
 namespace Server.Mobiles
@@ -452,8 +456,6 @@ namespace Server.Mobiles
         }
 
         #region Bonding
-        public const bool BondingEnabled = true;
-
         public virtual bool IsBondable => !Summoned && !m_Allured && !(this is IRepairableMobile);
         public virtual TimeSpan BondingDelay => TimeSpan.FromDays(7.0);
         public virtual TimeSpan BondingAbandonDelay => TimeSpan.FromDays(1.0);
@@ -5691,7 +5693,10 @@ namespace Server.Mobiles
                 Paragon.GiveArtifactTo(mob);
             }
 
-            EventSink.InvokeOnKilledBy(new OnKilledByEventArgs(this, mob));
+            MondainsLegacy.OnKilledBy(this, mob);
+            PointsSystem.OnKilledBy(this, mob);
+            QuestHelper.OnKilledBy(this, mob);
+            QuestSystem.OnKilledBy(this, mob);
         }
 
         public override void OnDeath(Container c)
@@ -5872,86 +5877,25 @@ namespace Server.Mobiles
                     }
                 }
 
-                CreatureDeathEventArgs e = new CreatureDeathEventArgs(this, LastKiller, c);
+                Aggression.OnCreatureDeath(this);
 
-                EventSink.InvokeCreatureDeath(e);
+                EtherealSoulbinder.OnCreatureDeath(this, LastKiller);
 
-                if (!c.Deleted)
+                IngredientDropEntry.OnCreatureDeath(this, LastKiller, c);
+
+                if (RisingTideEvent.Instance.Running)
                 {
-                    int i;
-
-                    if (e.ClearCorpse)
-                    {
-                        i = c.Items.Count;
-
-                        while (--i >= 0)
-                        {
-                            if (i >= c.Items.Count)
-                            {
-                                continue;
-                            }
-
-                            Item o = c.Items[i];
-
-                            if (o != null && !o.Deleted)
-                            {
-                                o.Delete();
-                            }
-                        }
-                    }
-
-                    i = e.ForcedLoot.Count;
-
-                    while (--i >= 0)
-                    {
-                        if (i >= e.ForcedLoot.Count)
-                        {
-                            continue;
-                        }
-
-                        Item o = e.ForcedLoot[i];
-
-                        if (o != null && !o.Deleted)
-                        {
-                            c.DropItem(o);
-                        }
-                    }
-
-                    e.ClearLoot(false);
-                }
-                else
-                {
-                    int i = e.ForcedLoot.Count;
-
-                    while (--i >= 0)
-                    {
-                        if (i >= e.ForcedLoot.Count)
-                        {
-                            continue;
-                        }
-
-                        Item o = e.ForcedLoot[i];
-
-                        if (o != null && !o.Deleted)
-                        {
-                            o.Delete();
-                        }
-                    }
-
-                    e.ClearLoot(true);
+                    PlunderBeaconAddon.OnCreatureDeath(this);
                 }
 
-                base.OnDeath(c);
+                TimeOfLegends.OnCreatureDeath(this, LastKiller, c);
 
-                if (e.PreventDefault)
-                {
-                    return;
-                }
-
-                if (DeleteCorpseOnDeath && !e.PreventDelete)
+                if (DeleteCorpseOnDeath)
                 {
                     c.Delete();
                 }
+
+                base.OnDeath(c);
             }
         }
 

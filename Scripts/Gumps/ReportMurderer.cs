@@ -25,15 +25,8 @@ namespace Server.Gumps
             BuildGump();
         }
 
-        public static void Initialize()
+        public static void OnPlayerDeath(Mobile m)
         {
-            EventSink.PlayerDeath += EventSink_PlayerDeath;
-        }
-
-        public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
-        {
-            Mobile m = e.Mobile;
-
             List<Mobile> killers = new List<Mobile>();
             List<Mobile> toGive = new List<Mobile>();
 
@@ -95,11 +88,6 @@ namespace Server.Gumps
 
                 Titles.AwardFame(g, fameAward, false);
                 Titles.AwardKarma(g, karmaAward, true);
-
-                if (killers.Contains(g))
-                {
-                    EventSink.InvokePlayerMurdered(new PlayerMurderedEventArgs(g, m));
-                }
             }
 
             if (m is PlayerMobile mobile && mobile.NpcGuild == NpcGuild.ThievesGuild)

@@ -14,14 +14,7 @@ namespace Server
         public static void Initialize()
         {
             CommandSystem.Register("DecorateTOL", AccessLevel.GameMaster, DecorateTOL_OnCommand);
-
-            if (DateTime.UtcNow < _EndCurrencyWarning)
-                EventSink.Login += OnLogin;
-
-            EventSink.CreatureDeath += CheckRecipeDrop;
         }
-
-        private static readonly DateTime _EndCurrencyWarning = new DateTime(2017, 3, 1, 1, 1, 1);
 
         public static bool FindItem(int x, int y, int z, Map map, Item test)
         {
@@ -86,23 +79,11 @@ namespace Server
             e.Mobile.SendMessage("Time Of Legends world generating complete.");
         }
 
-        public static void OnLogin(LoginEventArgs e)
+        public static void OnCreatureDeath(Mobile creature, Mobile killer, Container corpse)
         {
-            if (e.Mobile is PlayerMobile && e.Mobile.AccessLevel == AccessLevel.Player)
-                Timer.DelayCall(TimeSpan.FromSeconds(5), () =>
-                    {
-                        if (!e.Mobile.HasGump(typeof(NewCurrencyHelpGump)))
-                            e.Mobile.SendGump(new NewCurrencyHelpGump());
-                    });
-        }
+            BaseCreature bc = (BaseCreature)creature;
 
-        public static void CheckRecipeDrop(CreatureDeathEventArgs e)
-        {
-            BaseCreature bc = (BaseCreature) e.Creature;
-            Container c = e.Corpse;
-            Mobile killer = e.Killer;
-
-            if (SpellHelper.IsEodon(c.Map, c.Location))
+            if (SpellHelper.IsEodon(corpse.Map, corpse.Location))
             {
                 double chance = (double)bc.Fame / 1000000;
                 int luck = 0;
@@ -122,14 +103,14 @@ namespace Server
                         Item item = Loot.Construct(_ArmorDropTypes[Utility.Random(_ArmorDropTypes.Length)]);
 
                         if (item != null)
-                            c.DropItem(item);
+                            corpse.DropItem(item);
                     }
                     else
                     {
                         Item scroll = new RecipeScroll(_RecipeTypes[Utility.Random(_RecipeTypes.Length)]);
 
                         if (scroll != null)
-                            c.DropItem(scroll);
+                            corpse.DropItem(scroll);
                     }
                 }
             }
