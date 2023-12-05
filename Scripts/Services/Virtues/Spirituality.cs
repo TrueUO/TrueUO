@@ -1,15 +1,13 @@
-#region References
 using Server.Mobiles;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-#endregion
 
 namespace Server.Services.Virtues
 {
     public class SpiritualityVirtue
     {
-        public static Dictionary<Mobile, SpiritualityContext> ActiveTable { get; set; }
+        private static Dictionary<Mobile, SpiritualityContext> ActiveTable { get; set; }
 
         public static void Initialize()
         {
@@ -21,10 +19,14 @@ namespace Server.Services.Virtues
         public static void OnVirtueUsed(Mobile from)
         {
             if (!from.Alive)
+            {
                 return;
+            }
 
             if (VirtueHelper.GetLevel(from, VirtueName.Spirituality) < VirtueLevel.Seeker)
+            {
                 from.SendLocalizedMessage(1155829); // You must be a Seeker of Spirituality to invoke this Virtue.
+            }
             else
             {
                 from.SendLocalizedMessage(1155827); // Target whom you wish to embrace with your Spirituality
@@ -93,7 +95,9 @@ namespace Server.Services.Virtues
                             }
                         }
                         else
+                        {
                             from.SendLocalizedMessage(1155837); // You can only embrace players and pets with Spirituality.
+                        }
                     });
             }
         }
@@ -101,28 +105,26 @@ namespace Server.Services.Virtues
         public static bool IsEmbracee(Mobile m)
         {
             if (ActiveTable == null)
+            {
                 return false;
+            }
 
             return GetContext(m) != null;
-        }
-
-        public static bool IsEmbracer(Mobile m)
-        {
-            if (ActiveTable == null)
-                return false;
-
-            return ActiveTable.ContainsKey(m);
         }
 
         public static SpiritualityContext GetContext(Mobile m)
         {
             if (ActiveTable == null)
+            {
                 return null;
+            }
 
             foreach (SpiritualityContext context in ActiveTable.Values)
             {
                 if (context.Mobile == m)
+                {
                     return context;
+                }
             }
 
             return null;
@@ -131,7 +133,9 @@ namespace Server.Services.Virtues
         public static void GetDamageReduction(Mobile victim, ref int damage)
         {
             if (ActiveTable == null)
+            {
                 return;
+            }
 
             SpiritualityContext context = GetContext(victim);
 
@@ -150,19 +154,15 @@ namespace Server.Services.Virtues
                 {
                     victim.SendLocalizedMessage(1155840); // Your spirit is no longer embraced. You feel less powerful.
 
-                    if (ActiveTable.ContainsKey(victim) && ActiveTable[victim] == context)
+                    if (ActiveTable.TryGetValue(victim, out SpiritualityContext value) && value == context)
                     {
                         ActiveTable.Remove(victim);
                     }
                 }
                 else
-                    BuffInfo.AddBuff(
-                        victim,
-                        new BuffInfo(
-                            BuffIcon.Spirituality,
-                            1155824,
-                            1155825,
-                            $"{context.Reduction}\t{context.Pool}")); // ~1_VAL~% Reduction to Incoming Damage<br>~2_VAL~ Shield HP Remaining
+                {
+                    BuffInfo.AddBuff(victim, new BuffInfo(BuffIcon.Spirituality, 1155824, 1155825, $"{context.Reduction}\t{context.Pool}")); // ~1_VAL~% Reduction to Incoming Damage<br>~2_VAL~ Shield HP Remaining
+                }
             }
         }
 
@@ -174,12 +174,18 @@ namespace Server.Services.Virtues
             if (VirtueHelper.Award(mobile, VirtueName.Spirituality, points, ref gainedPath))
             {
                 if (gainedPath)
+                {
                     mobile.SendLocalizedMessage(1155833); // You have gained a path in Spirituality!
+                }
                 else
+                {
                     mobile.SendLocalizedMessage(1155832); // You have gained in Spirituality.
+                }
             }
             else
+            {
                 mobile.SendLocalizedMessage(1155831); // You cannot gain more Spirituality.
+            }
         }
 
         public class SpiritualityContext
@@ -200,27 +206,39 @@ namespace Server.Services.Virtues
             private static int GetPool(Mobile user)
             {
                 if (VirtueHelper.IsKnight(user, VirtueName.Spirituality))
+                {
                     return 200;
+                }
 
                 if (VirtueHelper.IsFollower(user, VirtueName.Spirituality))
+                {
                     return 100;
+                }
 
                 if (VirtueHelper.IsSeeker(user, VirtueName.Spirituality))
+                {
                     return 50;
+                }
 
                 return 0;
             }
 
-            public static int GetReduction(Mobile m)
+            private static int GetReduction(Mobile m)
             {
                 if (VirtueHelper.IsKnight(m, VirtueName.Spirituality))
+                {
                     return 20;
+                }
 
                 if (VirtueHelper.IsFollower(m, VirtueName.Spirituality))
+                {
                     return 10;
+                }
 
                 if (VirtueHelper.IsSeeker(m, VirtueName.Spirituality))
+                {
                     return 5;
+                }
 
                 return 0;
             }

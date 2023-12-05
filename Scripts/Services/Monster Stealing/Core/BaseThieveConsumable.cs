@@ -17,8 +17,8 @@ namespace Server.Items
 
     public class ThieveConsumableInfo
     {
-        public ThieveConsumableEffect Effect;
-        public Timer EffectTimer;
+        public readonly ThieveConsumableEffect Effect;
+        public readonly Timer EffectTimer;
 
         public ThieveConsumableInfo(BaseThieveConsumable.InternalTimer t, ThieveConsumableEffect e)
         {
@@ -52,7 +52,7 @@ namespace Server.Items
             }
         }
 
-        public TimeSpan m_EffectDuration;
+        protected TimeSpan m_EffectDuration;
         protected ThieveConsumableEffect m_EffectType;
 
         public override void OnDoubleClick(Mobile m)
@@ -69,7 +69,6 @@ namespace Server.Items
 
         protected virtual void ApplyEffect(PlayerMobile pm)
         {
-
             if (m_EffectDuration == TimeSpan.Zero)
             {
                 m_EffectDuration = TimeSpan.FromMinutes(30);
@@ -80,22 +79,22 @@ namespace Server.Items
 
             ThieveConsumableInfo info = new ThieveConsumableInfo(t, m_EffectType);
 
-            if (EffectTable.TryGetValue(pm, out ThieveConsumableInfo value))
+            if (_EffectTable.TryGetValue(pm, out ThieveConsumableInfo value))
             {
                 RemoveEffect(pm, value.Effect);
             }
 
-            EffectTable.Add(pm, info);
+            _EffectTable.Add(pm, info);
             Consume();
         }
 
-        protected static void RemoveEffect(PlayerMobile pm, ThieveConsumableEffect effectType)
+        private static void RemoveEffect(PlayerMobile pm, ThieveConsumableEffect effectType)
         {
-            if (EffectTable.ContainsKey(pm))
+            if (_EffectTable.TryGetValue(pm, out ThieveConsumableInfo value))
             {
+                value.EffectTimer.Stop();
 
-                EffectTable[pm].EffectTimer.Stop();
-                EffectTable.Remove(pm);
+                _EffectTable.Remove(pm);
 
                 pm.SendLocalizedMessage(1095134);//The effects of the balm or lotion have worn off.
 
@@ -105,7 +104,6 @@ namespace Server.Items
                 }
                 else if (effectType == ThieveConsumableEffect.StoneSkinLotionEffect)
                 {
-
                     List<ResistanceMod> list = pm.ResistanceMods;
 
                     for (int i = 0; i < list.Count; i++)
@@ -121,7 +119,7 @@ namespace Server.Items
             }
         }
 
-        private static readonly Dictionary<PlayerMobile, ThieveConsumableInfo> EffectTable = new Dictionary<PlayerMobile, ThieveConsumableInfo>();
+        private static readonly Dictionary<PlayerMobile, ThieveConsumableInfo> _EffectTable = new Dictionary<PlayerMobile, ThieveConsumableInfo>();
 
         public static bool CanUse(PlayerMobile pm, BaseThieveConsumable consum)
         {
@@ -129,15 +127,13 @@ namespace Server.Items
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         public static bool IsUnderThieveConsumableEffect(PlayerMobile pm, ThieveConsumableEffect eff)
         {
-            if (EffectTable.ContainsKey(pm) && EffectTable[pm].Effect == eff)
+            if (_EffectTable.TryGetValue(pm, out ThieveConsumableInfo value) && value.Effect == eff)
             {
                 return true;
             }
@@ -147,7 +143,7 @@ namespace Server.Items
 
         public static ThieveConsumableEffect CheckThieveConsumable(PlayerMobile pm)
         {
-            if (EffectTable.TryGetValue(pm, out ThieveConsumableInfo value))
+            if (_EffectTable.TryGetValue(pm, out ThieveConsumableInfo value))
             {
                 return value.Effect;
             }
@@ -160,11 +156,9 @@ namespace Server.Items
         {
         }
 
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write((int)m_EffectType);
@@ -174,8 +168,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_EffectType = (ThieveConsumableEffect)reader.ReadInt();
             m_EffectDuration = reader.ReadTimeSpan();
