@@ -1,12 +1,9 @@
-#region References
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
 using Server.Engines.Khaldun;
-
-#endregion
 
 namespace Server.SkillHandlers
 {
@@ -17,9 +14,9 @@ namespace Server.SkillHandlers
             SkillInfo.Table[32].Callback = OnUse;
         }
 
-        public static Dictionary<Mobile, Timer> Table;
+        private static Dictionary<Mobile, Timer> _Table;
 
-        public static TimeSpan OnUse(Mobile m)
+        private static TimeSpan OnUse(Mobile m)
         {
             if (m.Spell != null && m.Spell.IsCasting)
             {
@@ -33,9 +30,9 @@ namespace Server.SkillHandlers
             return TimeSpan.Zero;
         }
 
-        public static bool BeginSpiritSpeak(Mobile m)
+        private static bool BeginSpiritSpeak(Mobile m)
         {
-            if (Table == null || !Table.ContainsKey(m))
+            if (_Table == null || !_Table.ContainsKey(m))
             {
                 m.RevealingAction();
                 m.Freeze(TimeSpan.FromSeconds(1));
@@ -44,10 +41,12 @@ namespace Server.SkillHandlers
                 m.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1062074, "", false); // Anh Mi Sah Ko
                 m.PlaySound(0x24A);
 
-                if (Table == null)
-                    Table = new Dictionary<Mobile, Timer>();
+                if (_Table == null)
+                {
+                    _Table = new Dictionary<Mobile, Timer>();
+                }
 
-                Table[m] = new SpiritSpeakTimerNew(m);
+                _Table[m] = new SpiritSpeakTimerNew(m);
                 return true;
             }
 
@@ -56,32 +55,32 @@ namespace Server.SkillHandlers
 
         public static bool IsInSpiritSpeak(Mobile m)
         {
-            return Table != null && Table.ContainsKey(m);
+            return _Table != null && _Table.ContainsKey(m);
         }
 
-        public static void Remove(Mobile m)
+        private static void Remove(Mobile m)
         {
-            if (Table != null && Table.ContainsKey(m))
+            if (_Table != null && _Table.TryGetValue(m, out Timer value))
             {
-                if (Table[m] != null)
+                if (value != null)
                 {
-                    Table[m].Stop();
+                    value.Stop();
                 }
 
                 m.SendSpeedControl(m.Region is Regions.TwistedWealdDesert ? SpeedControlType.WalkSpeed : SpeedControlType.Disable);
 
-                Table.Remove(m);
+                _Table.Remove(m);
 
-                if (Table.Count == 0)
+                if (_Table.Count == 0)
                 {
-                    Table = null;
+                    _Table = null;
                 }
             }
         }
 
         public static void CheckDisrupt(Mobile m)
         {
-            if (Table != null && Table.ContainsKey(m))
+            if (_Table != null && _Table.ContainsKey(m))
             {
                 if (m is PlayerMobile)
                 {
@@ -99,7 +98,7 @@ namespace Server.SkillHandlers
 
         private class SpiritSpeakTimerNew : Timer
         {
-            public Mobile Caster { get; }
+            private Mobile Caster { get; }
 
             public SpiritSpeakTimerNew(Mobile m)
                 : base(TimeSpan.FromSeconds(1))

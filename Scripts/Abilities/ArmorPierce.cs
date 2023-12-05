@@ -8,7 +8,7 @@ namespace Server.Items
     /// </summary>
     public class ArmorPierce : WeaponAbility
     {
-        public static Dictionary<Mobile, Timer> _Table = new Dictionary<Mobile, Timer>();
+        private static Dictionary<Mobile, Timer> _Table = new Dictionary<Mobile, Timer>();
 
         public override SkillName GetSecondarySkill(Mobile from)
         {
@@ -22,7 +22,9 @@ namespace Server.Items
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
             if (!Validate(attacker) || !CheckMana(attacker, true))
+            {
                 return;
+            }
 
             ClearCurrentAbility(attacker);
 
@@ -31,12 +33,14 @@ namespace Server.Items
             defender.SendLocalizedMessage(1153764); // Your armor has been pierced!
             defender.SendLocalizedMessage(1063351); // Your attacker pierced your armor!            
 
-            if (_Table.ContainsKey(defender))
+            if (_Table.TryGetValue(defender, out Timer value))
             {
                 if (attacker.Weapon is BaseRanged)
+                {
                     return;
+                }
 
-                _Table[defender].Stop();
+                value.Stop();
             }
 
             BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.ArmorPierce, 1028860, 1154367, TimeSpan.FromSeconds(3), defender, "10"));
@@ -58,7 +62,9 @@ namespace Server.Items
         public static bool IsUnderEffects(Mobile m)
         {
             if (m == null)
+            {
                 return false;
+            }
 
             return _Table.ContainsKey(m);
         }

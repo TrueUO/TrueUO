@@ -1,10 +1,8 @@
-#region References
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-#endregion
 
 namespace Server.Services.Virtues
 {
@@ -36,7 +34,9 @@ namespace Server.Services.Virtues
         public static void OnVirtueUsed(Mobile from)
         {
             if (VirtueHelper.GetLevel(from, VirtueName.Humility) < VirtueLevel.Seeker)
+            {
                 from.SendLocalizedMessage(1155812); // You must be at least a Seeker of Humility to Invoke this ability.
+            }
             else if (from.Alive)
             {
                 from.SendLocalizedMessage(1155817); // Target the pet you wish to embrace with your Humility.
@@ -158,21 +158,27 @@ namespace Server.Services.Virtues
 
         public static int GetRegenBonus(Mobile mobile)
         {
-            if (ActiveTable == null || !ActiveTable.ContainsKey(mobile))
-                return 0;
-
-            Mobile user = ActiveTable[mobile];
-
-            if (user != null)
+            if (ActiveTable == null || !ActiveTable.TryGetValue(mobile, out Mobile value))
             {
-                if (VirtueHelper.IsKnight(user, VirtueName.Humility))
+                return 0;
+            }
+
+            if (value != null)
+            {
+                if (VirtueHelper.IsKnight(value, VirtueName.Humility))
+                {
                     return 30;
+                }
 
-                if (VirtueHelper.IsFollower(user, VirtueName.Humility))
+                if (VirtueHelper.IsFollower(value, VirtueName.Humility))
+                {
                     return 20;
+                }
 
-                if (VirtueHelper.IsSeeker(user, VirtueName.Humility))
+                if (VirtueHelper.IsSeeker(value, VirtueName.Humility))
+                {
                     return 10;
+                }
             }
 
             return 0;
@@ -181,19 +187,22 @@ namespace Server.Services.Virtues
         public static void HumilityHunt(Mobile from)
         {
             if (!from.Alive)
-                return;
-
-            if (HuntTable.ContainsKey(from))
             {
-                if (!HuntTable[from].Expiring)
+                return;
+            }
+
+            if (HuntTable.TryGetValue(from, out HumilityHuntContext value))
+            {
+                if (!value.Expiring)
                 {
-                    HuntTable[from].Expiring = true;
+                    value.Expiring = true;
 
                     from.SendLocalizedMessage(1155800); // You have ended your journey on the Path of Humility.
                 }
                 else
-                    from.SendLocalizedMessage(
-                        1155796); // You have already ended your journey on the Path of Humility.  You must wait before you restart your path.
+                {
+                    from.SendLocalizedMessage(1155796); // You have already ended your journey on the Path of Humility.  You must wait before you restart your path.
+                }
             }
             else
             {
@@ -201,10 +210,8 @@ namespace Server.Services.Virtues
                 {
                     HuntTable[pm] = new HumilityHuntContext(pm, new List<Mobile>(pm.AllFollowers));
 
-                    pm.SendLocalizedMessage(1155802,
-                        "70"); // You have begun your journey on the Path of Humility.  Your resists have been debuffed by ~1_DEBUFF~.
-                    pm.SendLocalizedMessage(
-                        1155858); // You are now on a Humility Hunt. For each kill while you forgo the protection of resists," you shall continue on your path to Humility.  You may end your Hunt by speaking ""Lum Lum Lum"" at any time.
+                    pm.SendLocalizedMessage(1155802, "70"); // You have begun your journey on the Path of Humility.  Your resists have been debuffed by ~1_DEBUFF~.
+                    pm.SendLocalizedMessage(1155858); // You are now on a Humility Hunt. For each kill while you forgo the protection of resists," you shall continue on your path to Humility.  You may end your Hunt by speaking ""Lum Lum Lum"" at any time.
 
                     BuffInfo.AddBuff(pm, new BuffInfo(BuffIcon.HumilityDebuff, 1025327, 1155806, "70"));
                 }
@@ -213,7 +220,7 @@ namespace Server.Services.Virtues
 
         public static void RegisterKill(Mobile attacker, BaseCreature killed, int count)
         {
-            int points = Math.Min(60, Math.Max(1, (killed.Fame / 5000) * 10)) / count;
+            int points = Math.Min(60, Math.Max(1, killed.Fame / 5000 * 10)) / count;
 
             if (attacker != null && HuntTable.ContainsKey(attacker))
             {
@@ -222,31 +229,24 @@ namespace Server.Services.Virtues
                 if (VirtueHelper.Award(attacker, VirtueName.Humility, points, ref gainedPath))
                 {
                     if (gainedPath)
+                    {
                         attacker.SendLocalizedMessage(1155811); // You have gained a path in Humility!
+                    }
                     else
+                    {
                         attacker.SendLocalizedMessage(1155809); // You have gained in Humility!
+                    }
                 }
                 else
+                {
                     attacker.SendLocalizedMessage(1155808); // You cannot gain more Humility.
+                }
             }
         }
 
         public static bool IsInHunt(Mobile m)
         {
             return HuntTable != null && HuntTable.ContainsKey(m);
-        }
-
-        public static bool IsInHunt(PlayerMobile pm)
-        {
-            return HuntTable.ContainsKey(pm);
-        }
-
-        public static void TryAddPetToHunt(Mobile owner, Mobile pet)
-        {
-            if (HuntTable.ContainsKey(owner) && pet is BaseCreature creature && creature.GetMaster() == owner)
-            {
-                HuntTable[owner].AddPet(creature);
-            }
         }
 
         public static void OnHuntExpired(Mobile m)
@@ -298,7 +298,7 @@ namespace Server.Services.Virtues
 
                 owner.FixedEffect(0x373A, 10, 16);
 
-                for (var index = 0; index < mod.Length; index++)
+                for (int index = 0; index < mod.Length; index++)
                 {
                     ResistanceMod mods = mod[index];
 
@@ -307,12 +307,12 @@ namespace Server.Services.Virtues
 
                 Table[owner] = mod;
 
-                for (var i = 0; i < pets.Count; i++)
+                for (int i = 0; i < pets.Count; i++)
                 {
-                    var m = pets[i];
+                    Mobile m = pets[i];
                     mod = GetMod;
 
-                    for (var index = 0; index < mod.Length; index++)
+                    for (int index = 0; index < mod.Length; index++)
                     {
                         ResistanceMod mods = mod[index];
 
@@ -324,30 +324,11 @@ namespace Server.Services.Virtues
                 }
             }
 
-            public void AddPet(Mobile pet)
-            {
-                if (!_Expiring && !Table.ContainsKey(pet))
-                {
-                    ResistanceMod[] mod = GetMod;
-
-                    pet.FixedEffect(0x373A, 10, 16);
-
-                    for (var index = 0; index < mod.Length; index++)
-                    {
-                        ResistanceMod mods = mod[index];
-
-                        pet.AddResistanceMod(mods);
-                    }
-
-                    Table[pet] = mod;
-                }
-            }
-
             private void DoExpire()
             {
                 foreach (KeyValuePair<Mobile, ResistanceMod[]> kvp in Table)
                 {
-                    for (var index = 0; index < kvp.Value.Length; index++)
+                    for (int index = 0; index < kvp.Value.Length; index++)
                     {
                         ResistanceMod mod = kvp.Value[index];
 
