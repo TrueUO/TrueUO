@@ -8,7 +8,7 @@ namespace Server.Engines.CreatureStealing
 {
     class StealingHandler
     {
-        private static readonly Type[] SpecialItemList =
+        private static readonly Type[] _SpecialItemList =
         {
             typeof(SeedOfLife),
             typeof(BalmOfStrength),
@@ -36,7 +36,7 @@ namespace Server.Engines.CreatureStealing
             {
                 int chance = GetStealingChance(thief, bc, stealing);
 
-                if ((Utility.Random(100) + 1) <= chance)
+                if (Utility.Random(100) + 1 <= chance)
                 {
                     thief.SendLocalizedMessage(1094947);//You successfully steal a special item from the creature!
 
@@ -48,7 +48,7 @@ namespace Server.Engines.CreatureStealing
                     }
                     else
                     {
-                        item = Activator.CreateInstance(SpecialItemList[Utility.Random(SpecialItemList.Length - 2)]) as Item;
+                        item = Activator.CreateInstance(_SpecialItemList[Utility.Random(_SpecialItemList.Length - 2)]) as Item;
                     }
 
                     stolen = item;
@@ -59,7 +59,9 @@ namespace Server.Engines.CreatureStealing
         public static void HandleSmugglersEdgeSteal(BaseCreature from, PlayerMobile thief)
         {
             if (from.HasBeenStolen || !CheckLocation(thief, from))
+            {
                 return;
+            }
 
             if (0.05 > Utility.RandomDouble())
             {
@@ -67,22 +69,30 @@ namespace Server.Engines.CreatureStealing
                 double realSkill = thief.Skills[SkillName.Stealing].Value;
 
                 if (realSkill > tempSkill)
+                {
                     tempSkill = realSkill;
+                }
 
                 if (tempSkill > 100)
                 {
                     int chance = GetStealingChance(thief, from, tempSkill);
 
                     if (realSkill <= 109.9)
+                    {
                         chance += 1;
+                    }
                     else if (realSkill <= 114.9)
+                    {
                         chance += 2;
+                    }
                     else if (realSkill >= 115.0)
+                    {
                         chance += 3;
+                    }
 
                     if (chance >= Utility.Random(100))
                     {
-                        if (Activator.CreateInstance(SpecialItemList[Utility.Random(SpecialItemList.Length)]) is Item item)
+                        if (Activator.CreateInstance(_SpecialItemList[Utility.Random(_SpecialItemList.Length)]) is Item item)
                         {
                             thief.AddToBackpack(item);
 

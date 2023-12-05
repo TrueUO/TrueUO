@@ -6,8 +6,8 @@ namespace Server.Items
 {
     public class ManaDraught : Item
     {
-        private static readonly Dictionary<PlayerMobile, DateTime> DaughtUsageList = new Dictionary<PlayerMobile, DateTime>();
-        private static TimeSpan Cooldown = TimeSpan.FromMinutes(10);
+        private static readonly Dictionary<PlayerMobile, DateTime> _DaughtUsageList = new Dictionary<PlayerMobile, DateTime>();
+        private static readonly TimeSpan _Cooldown = TimeSpan.FromMinutes(10);
 
         public override int LabelNumber => 1094938;  // Mana Draught
 
@@ -23,9 +23,9 @@ namespace Server.Items
         {
             List<PlayerMobile> toRemove = new List<PlayerMobile>();
 
-            foreach (PlayerMobile pm in DaughtUsageList.Keys)
+            foreach (PlayerMobile pm in _DaughtUsageList.Keys)
             {
-                if (DaughtUsageList[pm] < DateTime.Now + Cooldown)
+                if (_DaughtUsageList[pm] < DateTime.Now + _Cooldown)
                 {
                     toRemove.Add(pm);
                 }
@@ -35,63 +35,10 @@ namespace Server.Items
             {
                 PlayerMobile pm = toRemove[index];
 
-                DaughtUsageList.Remove(pm);
+                _DaughtUsageList.Remove(pm);
             }
 
             toRemove.Clear();
-        }
-
-        private bool CheckUse(PlayerMobile pm)
-        {
-            if (DaughtUsageList.TryGetValue(pm, out DateTime value))
-            {
-                if (value + Cooldown >= DateTime.Now)
-                {
-                    return false;
-                }
-
-                return true;
-            }
-
-            return true;
-        }
-
-        private void OnUsed(PlayerMobile by)
-        {
-            if (CheckUse(by))
-            {
-                DoHeal(by);
-            }
-            else
-            {
-                by.SendLocalizedMessage(1079263, ((int)((DaughtUsageList[by] + Cooldown) - DateTime.Now).TotalSeconds).ToString());
-            }
-        }
-
-        private void DoHeal(PlayerMobile pm)
-        {
-            int toHeal = Utility.RandomMinMax(25, 40);
-
-            int diff = pm.ManaMax - pm.Mana;
-            if (diff == 0)
-            {
-                pm.SendLocalizedMessage(1095127); //You are already at full mana 
-                return;
-            }
-            toHeal = Math.Min(toHeal, diff);
-
-            pm.Mana += toHeal;
-            Consume();
-            if (!DaughtUsageList.ContainsKey(pm))
-            {
-                DaughtUsageList.Add(pm, DateTime.Now);
-            }
-            else
-            {
-                DaughtUsageList[pm] = DateTime.Now;
-            }
-
-            pm.SendLocalizedMessage(1095128);//The sour draught instantly restores some of your mana!
         }
 
         public ManaDraught(Serial serial)
@@ -99,19 +46,16 @@ namespace Server.Items
         {
         }
 
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

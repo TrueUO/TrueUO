@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Server.Items
 {
@@ -7,7 +7,7 @@ namespace Server.Items
         private int _UsesRemaining;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int UsesRemaining { get { return _UsesRemaining; } set { _UsesRemaining = value; InvalidateProperties(); } }
+        public int UsesRemaining { get => _UsesRemaining; set { _UsesRemaining = value; InvalidateProperties(); } }
 
         public DateTime NextRecharge { get; set; }
 
@@ -56,8 +56,8 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
+
             writer.Write(_UsesRemaining);
             writer.Write(NextRecharge);
 
@@ -71,8 +71,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
             _UsesRemaining = reader.ReadInt();
             NextRecharge = reader.ReadDateTime();
         }
