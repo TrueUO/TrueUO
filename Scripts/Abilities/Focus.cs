@@ -5,8 +5,8 @@ namespace Server.Items
 {
     public class Focus
     {
-        private static readonly Dictionary<Mobile, FocusInfo> m_Table = new Dictionary<Mobile, FocusInfo>();
-        private const int DefaultDamageBonus = -40;
+        private static readonly Dictionary<Mobile, FocusInfo> _Table = new Dictionary<Mobile, FocusInfo>();
+        private const int _DefaultDamageBonus = -40;
 
         public class FocusInfo
         {
@@ -39,34 +39,27 @@ namespace Server.Items
 
             if (item == null)
             {
-                if (m_Table.ContainsKey(from))
+                if (_Table.Remove(from))
                 {
-                    m_Table.Remove(from);
                     BuffInfo.RemoveBuff(from, BuffIcon.RageFocusingBuff);
                 }
             }
             else if (item is BaseWeapon weapon && weapon.ExtendedWeaponAttributes.Focus > 0)
             {
-                if (m_Table.TryGetValue(from, out FocusInfo value))
+                if (_Table.TryGetValue(from, out FocusInfo value))
                 {
-                    FocusInfo info = value;
-
-                    BuffInfo.AddBuff(from, new BuffInfo(BuffIcon.RageFocusingBuff, 1151393, 1151394,
-                        $"{(info.Target == null ? "NONE" : info.Target.Name)}\t{info.DamageBonus}"));
+                    BuffInfo.AddBuff(from, new BuffInfo(BuffIcon.RageFocusingBuff, 1151393, 1151394, $"{(value.Target == null ? "NONE" : value.Target.Name)}\t{value.DamageBonus}"));
                 }
 
-                m_Table[from] = new FocusInfo(target, DefaultDamageBonus);
+                _Table[from] = new FocusInfo(target, _DefaultDamageBonus);
             }
         }
 
         public static int GetBonus(Mobile from, Mobile target)
         {
-            if (m_Table.TryGetValue(from, out FocusInfo value))
+            if (_Table.TryGetValue(from, out FocusInfo value) && value.Target == target)
             {
-                if (value.Target == target)
-                {
-                    return value.DamageBonus;
-                }
+                return value.DamageBonus;
             }
 
             return 0;
@@ -74,7 +67,7 @@ namespace Server.Items
 
         public static void OnHit(Mobile attacker, Mobile defender)
         {
-            if (m_Table.TryGetValue(attacker, out FocusInfo value))
+            if (_Table.TryGetValue(attacker, out FocusInfo value))
             {
                 if (value.Target == null)
                 {
@@ -83,18 +76,26 @@ namespace Server.Items
                 else if (value.Target == defender)
                 {
                     if (value.DamageBonus < -40)
+                    {
                         value.DamageBonus += 10;
+                    }
                     else
+                    {
                         value.DamageBonus += 8;
+                    }
                 }
                 else
                 {
                     if (value.DamageBonus >= -50)
-                        value.DamageBonus = DefaultDamageBonus;
+                    {
+                        value.DamageBonus = _DefaultDamageBonus;
+                    }
                 }
 
                 if (value.Target != defender)
+                {
                     value.Target = defender;
+                }
 
                 UpdateBuff(attacker, defender);
             }

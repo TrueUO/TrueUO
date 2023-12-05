@@ -18,12 +18,12 @@ namespace Server.Items
 
         public override int BaseMana => 20;
 
-        private static readonly Dictionary<Mobile, Timer> m_Registry = new Dictionary<Mobile, Timer>();
-        public static Dictionary<Mobile, Timer> Registry => m_Registry;
+        private static readonly Dictionary<Mobile, Timer> _Registry = new Dictionary<Mobile, Timer>();
+        public static Dictionary<Mobile, Timer> Registry => _Registry;
 
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
-            if (!Validate(attacker))	//Mana check after check that there are targets
+            if (!Validate(attacker)) // Mana check after check that there are targets
             {
                 return;
             }
@@ -64,14 +64,14 @@ namespace Server.Items
                 attacker.FixedEffect(0x3728, 10, 15);
                 attacker.PlaySound(0x2A1);
 
-                if (m_Registry.ContainsKey(attacker))
+                if (_Registry.ContainsKey(attacker))
                 {
                     RemoveFromRegistry(attacker);
                 }
 
-                m_Registry[attacker] = new InternalTimer(attacker, targets);
+                _Registry[attacker] = new InternalTimer(attacker, targets);
 
-                for (var index = 0; index < targets.Count; index++)
+                for (int index = 0; index < targets.Count; index++)
                 {
                     Mobile target = targets[index];
 
@@ -89,32 +89,35 @@ namespace Server.Items
                 }
 
                 if (attacker is BaseCreature bc)
+                {
                     PetTrainingHelper.OnWeaponAbilityUsed(bc, SkillName.Ninjitsu);
+                }
             }
         }
 
         public static void RemoveFromRegistry(Mobile from)
         {
-            if (m_Registry.ContainsKey(from))
+            if (_Registry.TryGetValue(from, out Timer value))
             {
-                m_Registry[from].Stop();
-                m_Registry.Remove(from);
+                value.Stop();
+
+                _Registry.Remove(from);
             }
         }
 
         private class InternalTimer : Timer
         {
-            private readonly Mobile m_Attacker;
-            private readonly List<Mobile> m_List;
-            private readonly long m_Start;
+            private readonly Mobile _Attacker;
+            private readonly List<Mobile> _List;
+            private readonly long _Start;
 
             public InternalTimer(Mobile attacker, List<Mobile> list)
                 : base(TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(500))
             {
-                m_Attacker = attacker;
-                m_List = list;
+                _Attacker = attacker;
+                _List = list;
 
-                m_Start = Core.TickCount;
+                _Start = Core.TickCount;
 
                 DoHit();
 
@@ -123,37 +126,38 @@ namespace Server.Items
 
             protected override void OnTick()
             {
-                if (m_Attacker.Alive)
-                    DoHit();
-
-                if (!m_Attacker.Alive || m_Start + 2000 < Core.TickCount)
+                if (_Attacker.Alive)
                 {
-                    ColUtility.Free(m_List);
-                    RemoveFromRegistry(m_Attacker);
+                    DoHit();
+                }
+
+                if (!_Attacker.Alive || _Start + 2000 < Core.TickCount)
+                {
+                    ColUtility.Free(_List);
+                    RemoveFromRegistry(_Attacker);
                 }
             }
 
             private void DoHit()
             {
-                if (m_List == null)
+                if (_List == null)
                 {
                     return;
                 }
 
-                for (var index = 0; index < m_List.Count; index++)
+                for (int index = 0; index < _List.Count; index++)
                 {
-                    Mobile m = m_List[index];
+                    Mobile m = _List[index];
 
-                    if (m_Attacker.InRange(m.Location, 2) && m.Alive && m.Map == m_Attacker.Map)
+                    if (_Attacker.InRange(m.Location, 2) && m.Alive && m.Map == _Attacker.Map)
                     {
-                        m_Attacker.FixedEffect(0x3728, 10, 15);
-                        m_Attacker.PlaySound(0x2A1);
+                        _Attacker.FixedEffect(0x3728, 10, 15);
+                        _Attacker.PlaySound(0x2A1);
 
-                        int skill = m_Attacker is BaseCreature ? (int) m_Attacker.Skills[SkillName.Ninjitsu].Value : (int) Math.Max(m_Attacker.Skills[SkillName.Bushido].Value,
-                                m_Attacker.Skills[SkillName.Ninjitsu].Value);
+                        int skill = _Attacker is BaseCreature ? (int) _Attacker.Skills[SkillName.Ninjitsu].Value : (int) Math.Max(_Attacker.Skills[SkillName.Bushido].Value, _Attacker.Skills[SkillName.Ninjitsu].Value);
 
                         int baseMin = Math.Max(5, (skill / 50) * 5);
-                        AOS.Damage(m, m_Attacker, Utility.RandomMinMax(baseMin, (baseMin * 3) + 2), 100, 0, 0, 0, 0);
+                        AOS.Damage(m, _Attacker, Utility.RandomMinMax(baseMin, (baseMin * 3) + 2), 100, 0, 0, 0, 0);
                     }
                 }
             }

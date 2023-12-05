@@ -10,7 +10,9 @@ namespace Server.Items
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
             if (!Validate(attacker) || !CheckMana(attacker, true))
+            {
                 return;
+            }
 
             ClearCurrentAbility(attacker);
 
@@ -20,62 +22,67 @@ namespace Server.Items
             defender.FixedParticles(0x3789, 10, 25, 5032, EffectLayer.Head);
             defender.PlaySound(0x1F8);
 
-            if (m_Registry.ContainsKey(defender))
+            if (_Registry.TryGetValue(defender, out PsychicAttackTimer value))
             {
-                if (!m_Registry[defender].DoneIncrease)
+                if (!value.DoneIncrease)
                 {
-                    m_Registry[defender].SpellDamageMalus *= 2;
-                    m_Registry[defender].ManaCostMalus *= 2;
+                    value.SpellDamageMalus *= 2;
+                    value.ManaCostMalus *= 2;
                 }
             }
             else
-                m_Registry[defender] = new PsychicAttackTimer(defender);
+            {
+                _Registry[defender] = new PsychicAttackTimer(defender);
+            }
 
             BuffInfo.RemoveBuff(defender, BuffIcon.PsychicAttack);
 
-            string args = $"{m_Registry[defender].SpellDamageMalus}\t{m_Registry[defender].ManaCostMalus}";
+            string args = $"{_Registry[defender].SpellDamageMalus}\t{_Registry[defender].ManaCostMalus}";
             BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.PsychicAttack, 1151296, 1151297, args));
         }
 
-        private static readonly Dictionary<Mobile, PsychicAttackTimer> m_Registry = new Dictionary<Mobile, PsychicAttackTimer>();
-        public static Dictionary<Mobile, PsychicAttackTimer> Registry => m_Registry;
+        private static readonly Dictionary<Mobile, PsychicAttackTimer> _Registry = new Dictionary<Mobile, PsychicAttackTimer>();
+        public static Dictionary<Mobile, PsychicAttackTimer> Registry => _Registry;
 
         public static void RemoveEffects(Mobile defender)
         {
             if (defender == null)
+            {
                 return;
+            }
 
             BuffInfo.RemoveBuff(defender, BuffIcon.PsychicAttack);
 
-            m_Registry.Remove(defender);
+            _Registry.Remove(defender);
 
             defender.SendLocalizedMessage(1150292); // You recover from the effects of the psychic attack.
         }
 
         public class PsychicAttackTimer : Timer
         {
-            private readonly Mobile m_Defender;
-            private int m_SpellDamageMalus;
-            private int m_ManaCostMalus;
-            private bool m_DoneIncrease;
+            private readonly Mobile _Defender;
+            private int _SpellDamageMalus;
+            private int _ManaCostMalus;
+            private bool _DoneIncrease;
 
-            public int SpellDamageMalus { get => m_SpellDamageMalus; set { m_SpellDamageMalus = value; m_DoneIncrease = true; } }
-            public int ManaCostMalus { get => m_ManaCostMalus; set { m_ManaCostMalus = value; m_DoneIncrease = true; } }
-            public bool DoneIncrease => m_DoneIncrease;
+            public int SpellDamageMalus { get => _SpellDamageMalus; set { _SpellDamageMalus = value; _DoneIncrease = true; } }
+            public int ManaCostMalus { get => _ManaCostMalus; set { _ManaCostMalus = value; _DoneIncrease = true; } }
+            public bool DoneIncrease => _DoneIncrease;
 
             public PsychicAttackTimer(Mobile defender)
                 : base(TimeSpan.FromSeconds(10))
             {
-                m_Defender = defender;
-                m_SpellDamageMalus = 15;
-                m_ManaCostMalus = 15;
-                m_DoneIncrease = false;
+                _Defender = defender;
+                _SpellDamageMalus = 15;
+                _ManaCostMalus = 15;
+                _DoneIncrease = false;
+
                 Start();
             }
 
             protected override void OnTick()
             {
-                RemoveEffects(m_Defender);
+                RemoveEffects(_Defender);
                 Stop();
             }
         }
