@@ -67,13 +67,20 @@ namespace Server
                 return;
             }
 
-            var timer = GetTimer(id, instance, true);
+            RegistryTimer<T> timer = GetTimer(id, instance, true);
 
-            if(Debug) Console.WriteLine("Registering: {0} - {1}...", id, instance);
+            if(Debug)
+            {
+                Console.WriteLine("Registering: {0} - {1}...", id, instance);
+            }
 
             if (timer == null)
             {
-                if (Debug) Console.WriteLine("Timer not Found, creating new one...");
+                if (Debug)
+                {
+                    Console.WriteLine("Timer not Found, creating new one...");
+                }
+
                 timer = new RegistryTimer<T>(delay == TimeSpan.Zero ? ProcessDelay(duration) : delay, callback, removeOnExpire, checkDeleted);
 
                 Timers[id].Add(timer);
@@ -86,7 +93,11 @@ namespace Server
 
             if (!timer.Registry.ContainsKey(instance))
             {
-                if (Debug) Console.WriteLine("Adding {0} to the timer registry!", instance);
+                if (Debug)
+                {
+                    Console.WriteLine("Adding {0} to the timer registry!", instance);
+                }
+
                 timer.Registry[instance] = Core.TickCount + (long)duration.TotalMilliseconds;
             }
             else if (Debug)
@@ -97,12 +108,14 @@ namespace Server
 
         public static void RemoveFromRegistry<T>(string id, T instance)
         {
-            var timer = GetTimerFor(id, instance);
+            RegistryTimer<T> timer = GetTimerFor(id, instance);
 
-            if (timer != null && timer.Registry.ContainsKey(instance))
+            if (timer != null && timer.Registry.Remove(instance))
             {
-                timer.Registry.Remove(instance);
-                if (Debug) Console.WriteLine("Removing {0} from the registry", instance);
+                if (Debug)
+                {
+                    Console.WriteLine("Removing {0} from the registry", instance);
+                }
 
                 if (timer.Registry.Count == 0)
                 {
@@ -113,7 +126,7 @@ namespace Server
 
         public static bool UpdateRegistry<T>(string id, T instance, TimeSpan duration)
         {
-            var timer = GetTimerFor(id, instance);
+            RegistryTimer<T> timer = GetTimerFor(id, instance);
 
             if (Debug)
             {
@@ -141,13 +154,13 @@ namespace Server
 
         public static RegistryTimer<T> GetTimer<T>(string id, T instance, bool create)
         {
-            if (Timers.ContainsKey(id))
+            if (Timers.TryGetValue(id, out List<Timer> value))
             {
                 Timer first = null;
 
-                for (var index = 0; index < Timers[id].Count; index++)
+                for (int index = 0; index < value.Count; index++)
                 {
-                    var t = Timers[id][index];
+                    Timer t = value[index];
 
                     if (t is RegistryTimer<T> regTimer && regTimer.Registry.Count < _RegistryThreshold)
                     {
@@ -169,13 +182,13 @@ namespace Server
 
         public static RegistryTimer<T> GetTimerFor<T>(string id, T instance)
         {
-            if (Timers.ContainsKey(id))
+            if (Timers.TryGetValue(id, out List<Timer> value))
             {
                 Timer first = null;
 
-                for (var index = 0; index < Timers[id].Count; index++)
+                for (int index = 0; index < value.Count; index++)
                 {
-                    var t = Timers[id][index];
+                    Timer t = value[index];
 
                     if (t is RegistryTimer<T> timer && timer.Registry.ContainsKey(instance))
                     {
@@ -198,15 +211,20 @@ namespace Server
         public static void UnregisterTimer(Timer timer)
         {
             timer.Stop();
-            var id = GetTimerID(timer);
 
-            if (!string.IsNullOrEmpty(id) && Timers.ContainsKey(id))
+            string id = GetTimerID(timer);
+
+            if (!string.IsNullOrEmpty(id) && Timers.TryGetValue(id, out List<Timer> value))
             {
-                Timers[id].Remove(timer);
+                value.Remove(timer);
 
-                if (Timers[id].Count == 0)
+                if (value.Count == 0)
                 {
-                    if (Debug) Console.WriteLine("Remove {0} from the timer list", id);
+                    if (Debug)
+                    {
+                        Console.WriteLine("Remove {0} from the timer list", id);
+                    }
+
                     Timers.Remove(id);
                 }
             }
@@ -214,11 +232,11 @@ namespace Server
 
         public static string GetTimerID(Timer timer)
         {
-            foreach (var kvp in Timers)
+            foreach (KeyValuePair<string, List<Timer>> kvp in Timers)
             {
-                for (var index = 0; index < kvp.Value.Count; index++)
+                for (int index = 0; index < kvp.Value.Count; index++)
                 {
-                    var t = kvp.Value[index];
+                    Timer t = kvp.Value[index];
 
                     if (t == timer)
                     {
@@ -232,7 +250,7 @@ namespace Server
 
         public static TimeSpan ProcessDelay(TimeSpan duration)
         {
-            var seconds = duration.TotalSeconds;
+            double seconds = duration.TotalSeconds;
 
             if (seconds >= 86400) // 1 day
             {
@@ -249,7 +267,7 @@ namespace Server
                 return TimeSpan.FromSeconds(1);
             }
 
-            var mils = duration.TotalMilliseconds;
+            double mils = duration.TotalMilliseconds;
 
             if (mils < 10)
             {
@@ -290,7 +308,7 @@ namespace Server
         {
             List<T> instances = new List<T>();
 
-            foreach (var v in Registry.Keys)
+            foreach (T v in Registry.Keys)
             {
                 if (Registry[v] <= Core.TickCount || CheckDeleted && v is IEntity e && e.Deleted)
                 {
@@ -300,11 +318,15 @@ namespace Server
 
             for (int i = 0; i < instances.Count; i++)
             {
-                var instance = instances[i];
+                T instance = instances[i];
 
                 if (IsDeleted(instance))
                 {
-                    if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Deleted]: {0}", instance);
+                    if (TimerRegistry.Debug)
+                    {
+                        Console.WriteLine("Removing from Registry [Deleted]: {0}", instance);
+                    }
+
                     Registry.Remove(instance);
                 }
                 else
@@ -316,7 +338,11 @@ namespace Server
 
                     if (IsExpired(instance))
                     {
-                        if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Processed]: {0}", instance);
+                        if (TimerRegistry.Debug)
+                        {
+                            Console.WriteLine("Removing from Registry [Processed]: {0}", instance);
+                        }
+
                         Registry.Remove(instance);
                     }
                 }

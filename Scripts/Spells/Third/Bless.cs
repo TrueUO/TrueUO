@@ -6,7 +6,7 @@ namespace Server.Spells.Third
 {
     public class BlessSpell : MagerySpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Bless", "Rel Sanct",
             203,
             9061,
@@ -23,21 +23,23 @@ namespace Server.Spells.Third
         public static void AddBless(Mobile m, TimeSpan duration)
         {
             if (_Table == null)
-                _Table = new Dictionary<Mobile, InternalTimer>();
-
-            if (_Table.ContainsKey(m))
             {
-                _Table[m].Stop();
+                _Table = new Dictionary<Mobile, InternalTimer>();
+            }
+
+            if (_Table.TryGetValue(m, out InternalTimer value))
+            {
+                value.Stop();
             }
 
             _Table[m] = new InternalTimer(m, duration);
         }
 
-        public static void RemoveBless(Mobile m, bool early = false)
+        public static void RemoveBless(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null && _Table.TryGetValue(m, out InternalTimer value))
             {
-                _Table[m].Stop();
+                value.Stop();
                 m.Delta(MobileDelta.Stat);
 
                 _Table.Remove(m);
@@ -45,7 +47,7 @@ namespace Server.Spells.Third
         }
 
         public BlessSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -102,24 +104,25 @@ namespace Server.Spells.Third
 
         private class InternalTarget : Target
         {
-            private readonly BlessSpell m_Owner;
+            private readonly BlessSpell _Owner;
+
             public InternalTarget(BlessSpell owner)
                 : base(10, false, TargetFlags.Beneficial)
             {
-                m_Owner = owner;
+                _Owner = owner;
             }
 
             protected override void OnTarget(Mobile from, object o)
             {
                 if (o is Mobile mobile)
                 {
-                    m_Owner.Target(mobile);
+                    _Owner.Target(mobile);
                 }
             }
 
             protected override void OnTargetFinish(Mobile from)
             {
-                m_Owner.FinishSequence();
+                _Owner.FinishSequence();
             }
         }
 
