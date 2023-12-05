@@ -29,7 +29,7 @@ namespace Server.Spells.Mysticism
     {
         public override SpellCircle Circle => SpellCircle.Second;
 
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
                 "Purge", "An Ort Sanct ",
                 230,
                 9022,
@@ -39,7 +39,7 @@ namespace Server.Spells.Mysticism
                 Reagent.FertileDirt
             );
 
-        public PurgeMagicSpell(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+        public PurgeMagicSpell(Mobile caster, Item scroll) : base(caster, scroll, _Info)
         {
         }
 
@@ -53,13 +53,15 @@ namespace Server.Spells.Mysticism
             Mobile target = o as Mobile;
 
             if (target == null)
+            {
                 return;
+            }
 
-            if (m_CurseTable.ContainsKey(Caster))
+            if (_CurseTable.ContainsKey(Caster))
             {
                 Caster.SendLocalizedMessage(1154212); //You may not use the Purge Magic spell while you are under its curse.
             }
-            else if (m_ImmuneTable.ContainsKey(target) || m_CurseTable.ContainsKey(target))
+            else if (_ImmuneTable.ContainsKey(target) || _CurseTable.ContainsKey(target))
             {
                 Caster.SendLocalizedMessage(1080119); // Your Purge Magic has been resisted!
             }
@@ -86,45 +88,64 @@ namespace Server.Spells.Mysticism
                         switch (type)
                         {
                             case BuffType.MagicReflect:
+                            {
                                 MagicReflectSpell.EndReflect(target);
                                 arg = "magic reflect";
                                 break;
+                            }
                             case BuffType.ReactiveArmor:
+                            {
                                 ReactiveArmorSpell.EndArmor(target);
                                 arg = "reactive armor";
                                 break;
+                            }
                             case BuffType.Protection:
+                            {
                                 ProtectionSpell.EndProtection(target);
                                 arg = "protection";
                                 break;
+                            }
                             case BuffType.Transformation:
+                            {
                                 TransformationSpellHelper.RemoveContext(target, true);
                                 arg = "transformation spell";
                                 break;
+                            }
                             case BuffType.StrBonus:
+                            {
                                 arg = "strength bonus";
                                 target.RemoveStatMod("[Magic] Str Buff");
                                 BuffInfo.RemoveBuff(target, BuffIcon.Strength);
                                 break;
+                            }
                             case BuffType.DexBonus:
+                            {
                                 arg = "dexterity bonus";
                                 target.RemoveStatMod("[Magic] Dex Buff");
                                 BuffInfo.RemoveBuff(target, BuffIcon.Agility);
                                 break;
+                            }
                             case BuffType.IntBonus:
+                            {
                                 arg = "intelligence bonus";
                                 target.RemoveStatMod("[Magic] Int Buff");
                                 BuffInfo.RemoveBuff(target, BuffIcon.Cunning);
                                 break;
+                            }
                             case BuffType.BarrabHemolymph:
+                            {
                                 arg = "Barrab hemolymph";
                                 EodonianPotion.RemoveEffects(target, PotionEffect.Barrab);
                                 break;
+                            }
                             case BuffType.UraliTrance:
+                            {
                                 arg = "Urali Trance";
                                 EodonianPotion.RemoveEffects(target, PotionEffect.Urali);
                                 break;
+                            }
                             case BuffType.Bless:
+                            {
                                 arg = "bless";
                                 target.RemoveStatMod("[Magic] Str Buff");
                                 target.RemoveStatMod("[Magic] Dex Buff");
@@ -132,6 +153,7 @@ namespace Server.Spells.Mysticism
                                 BuffInfo.RemoveBuff(target, BuffIcon.Bless);
                                 BlessSpell.RemoveBless(target);
                                 break;
+                            }
                         }
 
                         target.SendLocalizedMessage(1080117, arg); //Your ~1_ABILITY_NAME~ has been purged.
@@ -140,9 +162,11 @@ namespace Server.Spells.Mysticism
                         int duration = (int)((Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value) / 15);
 
                         if (duration <= 0)
+                        {
                             duration = 1;
+                        }
 
-                        m_ImmuneTable.Add(target, new ImmuneTimer(target, TimeSpan.FromSeconds(duration)));
+                        _ImmuneTable.Add(target, new ImmuneTimer(target, TimeSpan.FromSeconds(duration)));
                     }
                     else
                     {
@@ -151,9 +175,11 @@ namespace Server.Spells.Mysticism
                         int duration = (int)((Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value) / 28);
 
                         if (duration <= 0)
+                        {
                             duration = 1;
+                        }
 
-                        m_CurseTable.Add(target, new CurseTimer(target, Caster, TimeSpan.FromSeconds(duration)));
+                        _CurseTable.Add(target, new CurseTimer(target, Caster, TimeSpan.FromSeconds(duration)));
                     }
                 }
             }
@@ -213,45 +239,46 @@ namespace Server.Spells.Mysticism
             return type;
         }
 
-        private static readonly Dictionary<Mobile, ImmuneTimer> m_ImmuneTable = new Dictionary<Mobile, ImmuneTimer>();
-        private static readonly Dictionary<Mobile, CurseTimer> m_CurseTable = new Dictionary<Mobile, CurseTimer>();
+        private static readonly Dictionary<Mobile, ImmuneTimer> _ImmuneTable = new Dictionary<Mobile, ImmuneTimer>();
+        private static readonly Dictionary<Mobile, CurseTimer> _CurseTable = new Dictionary<Mobile, CurseTimer>();
 
         public static void RemoveImmunity(Mobile from)
         {
-            if (m_ImmuneTable.ContainsKey(from))
+            if (_ImmuneTable.TryGetValue(from, out ImmuneTimer value))
             {
-                m_ImmuneTable[from].Stop();
-                m_ImmuneTable.Remove(from);
+                value.Stop();
+
+                _ImmuneTable.Remove(from);
             }
         }
 
         public static void RemoveCurse(Mobile from, Mobile caster)
         {
-            if (m_CurseTable.ContainsKey(from))
+            if (_CurseTable.TryGetValue(from, out CurseTimer value))
             {
-                m_CurseTable[from].Stop();
+                value.Stop();
 
-                if (DateTime.UtcNow > m_CurseTable[from].StartTime)
+                if (DateTime.UtcNow > value.StartTime)
                 {
-                    TimeSpan inEffect = DateTime.UtcNow - m_CurseTable[from].StartTime;
+                    TimeSpan inEffect = DateTime.UtcNow - value.StartTime;
 
                     int damage = 5 * (int)inEffect.TotalSeconds;
 
                     from.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
                     from.PlaySound(0x307);
 
-                    m_CurseTable.Remove(from);
+                    _CurseTable.Remove(from);
 
                     AOS.Damage(from, caster, damage, 0, 0, 0, 0, 0, 100, 0);
                 }
             }
 
-            m_ImmuneTable[from] = new ImmuneTimer(from, TimeSpan.FromSeconds(16));
+            _ImmuneTable[from] = new ImmuneTimer(from, TimeSpan.FromSeconds(16));
         }
 
         public static void OnMobileDoDamage(Mobile from)
         {
-            if (from != null && m_CurseTable.TryGetValue(from, out CurseTimer value))
+            if (from != null && _CurseTable.TryGetValue(from, out CurseTimer value))
             {
                 RemoveCurse(from, value.Caster);
             }
@@ -259,22 +286,23 @@ namespace Server.Spells.Mysticism
 
         public static bool IsUnderCurseEffects(Mobile from)
         {
-            return m_CurseTable.ContainsKey(from);
+            return _CurseTable.ContainsKey(from);
         }
 
         private class ImmuneTimer : Timer
         {
-            private readonly Mobile m_Mobile;
+            private readonly Mobile _Mobile;
 
             public ImmuneTimer(Mobile mob, TimeSpan duration) : base(duration)
             {
-                m_Mobile = mob;
+                _Mobile = mob;
+
                 Start();
             }
 
             protected override void OnTick()
             {
-                RemoveImmunity(m_Mobile);
+                RemoveImmunity(_Mobile);
             }
         }
 

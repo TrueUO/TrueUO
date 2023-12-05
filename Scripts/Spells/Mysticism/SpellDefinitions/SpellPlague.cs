@@ -7,7 +7,7 @@ namespace Server.Spells.Mysticism
 {
     public class SpellPlagueSpell : MysticSpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
                 "Spell Plague", "Vas Rel Jux Ort",
                 230,
                 9022,
@@ -20,7 +20,7 @@ namespace Server.Spells.Mysticism
         public override SpellCircle Circle => SpellCircle.Seventh;
 
         public SpellPlagueSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -34,7 +34,9 @@ namespace Server.Spells.Mysticism
             Mobile m = o as Mobile;
 
             if (m == null)
+            {
                 return;
+            }
 
             if (!(m is PlayerMobile || m is BaseCreature))
             {
@@ -56,10 +58,14 @@ namespace Server.Spells.Mysticism
                 m.FixedParticles(0x375A, 1, 17, 9919, 1161, 7, EffectLayer.Waist);
                 m.FixedParticles(0x3728, 1, 13, 9502, 1161, 7, (EffectLayer)255);
 
-                if (!m_Table.ContainsKey(m) || m_Table[m] == null)
-                    m_Table.Add(m, new List<SpellPlagueTimer>());
+                if (!_Table.TryGetValue(m, out List<SpellPlagueTimer> value) || value == null)
+                {
+                    value = new List<SpellPlagueTimer>();
 
-                m_Table[m].Add(new SpellPlagueTimer(Caster, m, TimeSpan.FromSeconds(8)));
+                    _Table.Add(m, value);
+                }
+
+                value.Add(new SpellPlagueTimer(Caster, m, TimeSpan.FromSeconds(8)));
 
                 BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.SpellPlague, 1031690, 1080167, TimeSpan.FromSeconds(8), m));
 
@@ -69,15 +75,15 @@ namespace Server.Spells.Mysticism
             FinishSequence();
         }
 
-        private static readonly Dictionary<Mobile, List<SpellPlagueTimer>> m_Table = new Dictionary<Mobile, List<SpellPlagueTimer>>();
+        private static readonly Dictionary<Mobile, List<SpellPlagueTimer>> _Table = new Dictionary<Mobile, List<SpellPlagueTimer>>();
 
         public static bool HasSpellPlague(Mobile from)
         {
-            foreach (KeyValuePair<Mobile, List<SpellPlagueTimer>> kvp in m_Table)
+            foreach (KeyValuePair<Mobile, List<SpellPlagueTimer>> kvp in _Table)
             {
                 if (kvp.Value != null)
                 {
-                    for (var index = 0; index < kvp.Value.Count; index++)
+                    for (int index = 0; index < kvp.Value.Count; index++)
                     {
                         SpellPlagueTimer timer = kvp.Value[index];
 
@@ -94,25 +100,33 @@ namespace Server.Spells.Mysticism
 
         public static void OnMobileDamaged(Mobile from)
         {
-            if (m_Table.ContainsKey(from) && m_Table[from].Count > 0 && m_Table[from][0].NextUse < DateTime.UtcNow)
+            if (_Table.TryGetValue(from, out List<SpellPlagueTimer> value) && value.Count > 0 && value[0].NextUse < DateTime.UtcNow)
             {
-                int amount = m_Table[from][0].Amount;
+                int amount = value[0].Amount;
                 bool doExplosion = false;
                 double mod = from.Skills[SkillName.MagicResist].Value >= 70.0 ? (from.Skills[SkillName.MagicResist].Value / 1000 * 3) : 0.0;
 
                 if (mod < 0)
-                    mod = .01;
+                {
+                    mod = 0.01;
+                }
 
-                if (amount == 0 && .90 - mod > Utility.RandomDouble())
+                if (amount == 0 && 0.90 - mod > Utility.RandomDouble())
+                {
                     doExplosion = true;
-                else if (amount == 1 && .60 - mod > Utility.RandomDouble())
+                }
+                else if (amount == 1 && 0.60 - mod > Utility.RandomDouble())
+                {
                     doExplosion = true;
-                else if (amount == 2 && .30 - mod > Utility.RandomDouble())
+                }
+                else if (amount == 2 && 0.30 - mod > Utility.RandomDouble())
+                {
                     doExplosion = true;
+                }
 
                 if (doExplosion)
                 {
-                    SpellPlagueTimer timer = m_Table[from][0];
+                    SpellPlagueTimer timer = value[0];
 
                     timer.NextUse = DateTime.UtcNow + TimeSpan.FromSeconds(1.5);
 
@@ -128,9 +142,9 @@ namespace Server.Spells.Mysticism
 
             if (initial)
             {
-                var sdiBonus = SpellHelper.GetSpellDamageBonus(caster, from, SkillName.Mysticism, from is PlayerMobile);
+                int sdiBonus = SpellHelper.GetSpellDamageBonus(caster, from, SkillName.Mysticism, from is PlayerMobile);
 
-                damage *= (100 + sdiBonus);
+                damage *= 100 + sdiBonus;
                 damage /= 100;
             }
             else
@@ -155,7 +169,7 @@ namespace Server.Spells.Mysticism
 
         public static int BonusDamage(Mobile caster)
         {
-            var skill = Math.Max(caster.Skills[SkillName.Focus].Value, caster.Skills[SkillName.Imbuing].Value);
+            double skill = Math.Max(caster.Skills[SkillName.Focus].Value, caster.Skills[SkillName.Imbuing].Value);
 
             if (skill <= 20)
             {
@@ -222,25 +236,25 @@ namespace Server.Spells.Mysticism
 
         public static void RemoveFromList(Mobile from)
         {
-            if (m_Table.ContainsKey(from) && m_Table[from].Count > 0)
+            if (_Table.TryGetValue(from, out List<SpellPlagueTimer> value) && value.Count > 0)
             {
-                Mobile caster = m_Table[from][0].Caster;
+                Mobile caster = value[0].Caster;
 
-                m_Table[from].Remove(m_Table[from][0]);
+                value.Remove(value[0]);
 
-                if (m_Table[from].Count == 0)
+                if (value.Count == 0)
                 {
-                    m_Table.Remove(from);
+                    _Table.Remove(from);
                     BuffInfo.RemoveBuff(from, BuffIcon.SpellPlague);
                 }
 
-                foreach (KeyValuePair<Mobile, List<SpellPlagueTimer>> kvp in m_Table)
+                foreach (KeyValuePair<Mobile, List<SpellPlagueTimer>> kvp in _Table)
                 {
-                    for (var index = 0; index < kvp.Value.Count; index++)
+                    for (int index = 0; index < kvp.Value.Count; index++)
                     {
-                        SpellPlagueTimer Ttimer = kvp.Value[index];
+                        SpellPlagueTimer timer = kvp.Value[index];
 
-                        if (Ttimer.Caster == caster)
+                        if (timer.Caster == caster)
                         {
                             return;
                         }
@@ -253,7 +267,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public SpellPlagueSpell Owner { get; }
+            private SpellPlagueSpell Owner { get; }
 
             public InternalTarget(SpellPlagueSpell owner)
                 : this(owner, false)
@@ -269,10 +283,14 @@ namespace Server.Spells.Mysticism
             protected override void OnTarget(Mobile from, object o)
             {
                 if (o == null)
+                {
                     return;
+                }
 
                 if (!from.CanSee(o))
+                {
                     from.SendLocalizedMessage(500237); // Target can not be seen.
+                }
                 else
                 {
                     SpellHelper.Turn(from, o);
@@ -289,33 +307,37 @@ namespace Server.Spells.Mysticism
 
     public class SpellPlagueTimer : Timer
     {
-        private readonly Mobile m_Caster;
-        private readonly Mobile m_Owner;
-        private int m_Amount;
-        private DateTime m_NextUse;
+        private readonly Mobile _Caster;
+        private readonly Mobile _Owner;
+        private int _Amount;
+        private DateTime _NextUse;
 
-        public Mobile Caster => m_Caster;
+        public Mobile Caster => _Caster;
+
         public int Amount
         {
-            get => m_Amount;
+            get => _Amount;
             set
             {
-                m_Amount = value;
+                _Amount = value;
 
-                if (m_Amount >= 3)
+                if (_Amount >= 3)
+                {
                     EndTimer();
+                }
             }
         }
 
-        public DateTime NextUse { get => m_NextUse; set => m_NextUse = value; }
+        public DateTime NextUse { get => _NextUse; set => _NextUse = value; }
 
         public SpellPlagueTimer(Mobile caster, Mobile owner, TimeSpan duration)
             : base(duration)
         {
-            m_Caster = caster;
-            m_Owner = owner;
-            m_Amount = 0;
-            m_NextUse = DateTime.UtcNow;
+            _Caster = caster;
+            _Owner = owner;
+            _Amount = 0;
+            _NextUse = DateTime.UtcNow;
+
             Start();
         }
 
@@ -327,7 +349,7 @@ namespace Server.Spells.Mysticism
         private void EndTimer()
         {
             Stop();
-            SpellPlagueSpell.RemoveFromList(m_Owner);
+            SpellPlagueSpell.RemoveFromList(_Owner);
         }
     }
 }
