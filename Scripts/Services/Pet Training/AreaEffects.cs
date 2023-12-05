@@ -26,11 +26,11 @@ namespace Server.Mobiles
 
                 List<AreaEffect> list = new List<AreaEffect>();
 
-                var af = profile.GetAreaEffects();
+                AreaEffect[] af = profile.GetAreaEffects();
 
-                for (var index = 0; index < af.Length; index++)
+                for (int index = 0; index < af.Length; index++)
                 {
-                    var a = af[index];
+                    AreaEffect a = af[index];
 
                     if (!a.IsInCooldown(bc))
                     {
@@ -88,7 +88,9 @@ namespace Server.Mobiles
         public virtual void DoEffects(BaseCreature creature, Mobile combatant)
         {
             if (creature.Map == null || creature.Map == Map.Internal)
+            {
                 return;
+            }
 
             int count = 0;
 
@@ -135,7 +137,7 @@ namespace Server.Mobiles
                     from.InLOS(to);
         }
 
-        public List<BaseCreature> _Cooldown;
+        private List<BaseCreature> _Cooldown;
 
         public bool IsInCooldown(BaseCreature m)
         {
@@ -149,7 +151,9 @@ namespace Server.Mobiles
             if (cooldown != TimeSpan.MinValue)
             {
                 if (_Cooldown == null)
+                {
                     _Cooldown = new List<BaseCreature>();
+                }
 
                 _Cooldown.Add(bc);
                 Timer.DelayCall(cooldown, RemoveFromCooldown, bc);
@@ -227,13 +231,11 @@ namespace Server.Mobiles
                 _Table = new Dictionary<Mobile, Timer>();
             }
 
-            if (_Table.ContainsKey(defender))
+            if (_Table.TryGetValue(defender, out Timer value))
             {
-                Timer timer = _Table[defender];
-
-                if (timer != null)
+                if (value != null)
                 {
-                    timer.Stop();
+                    value.Stop();
                 }
 
                 _Table[defender] = creature is LadyMelisande ? Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender) : Timer.DelayCall(TimeSpan.FromSeconds(4), EndNausea, defender);
@@ -251,15 +253,15 @@ namespace Server.Mobiles
 
         public static void EndNausea(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null && _Table.Remove(m))
             {
-                _Table.Remove(m);
-
                 BuffInfo.RemoveBuff(m, BuffIcon.AuraOfNausea);
                 m.Delta(MobileDelta.WeaponDamage);
 
                 if (_Table.Count == 0)
+                {
                     _Table = null;
+                }
             }
         }
 
@@ -306,7 +308,9 @@ namespace Server.Mobiles
         public override void DoEffects(BaseCreature creature, Mobile combatant)
         {
             if (_DoingEffect)
+            {
                 return;
+            }
 
             Server.Effects.SendTargetParticles(creature, 0x3709, 10, 15, 2724, 0, 9907, EffectLayer.LeftFoot, 0);
             creature.PlaySound(0x348);
@@ -316,6 +320,7 @@ namespace Server.Mobiles
             Timer.DelayCall(TimeSpan.FromSeconds(1.0), () =>
                 {
                     base.DoEffects(creature, combatant);
+
                     _DoingEffect = false;
                 });
         }
@@ -353,10 +358,10 @@ namespace Server.Mobiles
         {
             m.ApplyPoison(creature, GetPoison(creature));
 
-            Server.Effects.SendLocationParticles(
-                EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0x36B0, 1, 14, 63, 7, 9915, 0);
+            Server.Effects.SendLocationParticles(EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0x36B0, 1, 14, 63, 7, 9915, 0);
 
             Server.Effects.PlaySound(m.Location, m.Map, 0x229);
+
             int damage = GetDamage(creature);
 
             if (damage > 0)
@@ -398,9 +403,9 @@ namespace Server.Mobiles
 
         public int GetDamage(BaseCreature bc)
         {
-            for (var index = 0; index < _DamageCreatures.Length; index++)
+            for (int index = 0; index < _DamageCreatures.Length; index++)
             {
-                var t = _DamageCreatures[index];
+                Type t = _DamageCreatures[index];
 
                 if (t == bc.GetType())
                 {
@@ -502,23 +507,23 @@ namespace Server.Mobiles
 
             public static void Initialize()
             {
-                var defaul = new AuraDefinition();
+                AuraDefinition defaul = new AuraDefinition();
                 Definitions.Add(defaul);
 
-                var cora = new AuraDefinition(typeof(CoraTheSorceress))
+                AuraDefinition cora = new AuraDefinition(typeof(CoraTheSorceress))
                 {
                     Damage = 10,
                     Fire = 0
                 };
                 Definitions.Add(cora);
 
-                var fireAura = new AuraDefinition(typeof(FlameElemental), typeof(FireDaemon), typeof(LesserFlameElemental))
+                AuraDefinition fireAura = new AuraDefinition(typeof(FlameElemental), typeof(FireDaemon), typeof(LesserFlameElemental))
                 {
                     Damage = 7
                 };
                 Definitions.Add(fireAura);
 
-                var coldAura = new AuraDefinition(typeof(ColdDrake), typeof(FrostDrake), typeof(FrostDragon), typeof(SnowElemental), typeof(FrostMite), typeof(IceFiend), typeof(IceElemental), typeof(CorporealBrume))
+                AuraDefinition coldAura = new AuraDefinition(typeof(ColdDrake), typeof(FrostDrake), typeof(FrostDragon), typeof(SnowElemental), typeof(FrostMite), typeof(IceFiend), typeof(IceElemental), typeof(CorporealBrume))
                 {
                     Damage = 15,
                     Fire = 0,
@@ -531,15 +536,15 @@ namespace Server.Mobiles
             {
                 AuraDefinition def = null;
 
-                for (var index = 0; index < Definitions.Count; index++)
+                for (int index = 0; index < Definitions.Count; index++)
                 {
-                    var d = Definitions[index];
+                    AuraDefinition d = Definitions[index];
 
                     bool any = false;
 
-                    for (var i = 0; i < d.Uses.Length; i++)
+                    for (int i = 0; i < d.Uses.Length; i++)
                     {
-                        var t = d.Uses[i];
+                        Type t = d.Uses[i];
 
                         if (t == bc.GetType())
                         {
