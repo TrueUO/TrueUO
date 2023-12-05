@@ -419,7 +419,7 @@ namespace Server.Mobiles
 
         public static void RemoveFromTable(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null)
             {
                 _Table.Remove(m);
             }
@@ -496,7 +496,7 @@ namespace Server.Mobiles
 
         public static void RemoveFromTable(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null)
             {
                 _Table.Remove(m);
             }
@@ -1109,10 +1109,8 @@ namespace Server.Mobiles
 
             protected override void OnTick()
             {
-                if (_Table != null && _Table.ContainsKey(Defender))
+                if (_Table != null && _Table.Remove(Defender))
                 {
-                    _Table.Remove(Defender);
-
                     BuffInfo.RemoveBuff(Defender, BuffIcon.HowlOfCacophony);
                     Defender.SendSpeedControl(SpeedControlType.Disable);
                 }
@@ -1164,7 +1162,7 @@ namespace Server.Mobiles
 
         public static void Expire(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null)
             {
                 _Table.Remove(m);
             }
@@ -1239,7 +1237,7 @@ namespace Server.Mobiles
 
         public static void Expire(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null)
             {
                 _Table.Remove(m);
             }
@@ -1378,9 +1376,10 @@ namespace Server.Mobiles
 
         public static void EndFire(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null && _Table.TryGetValue(m, out InternalTimer value))
             {
-                _Table[m].Stop();
+                value.Stop();
+
                 _Table.Remove(m);
                 m.SendLocalizedMessage(1070843); // The fiery breath dissipates.
             }
@@ -1484,7 +1483,7 @@ namespace Server.Mobiles
 
             protected override void OnTick()
             {
-                if (_Table != null && _Table.ContainsKey(Defender))
+                if (_Table != null)
                 {
                     _Table.Remove(Defender);
                 }
@@ -1750,12 +1749,16 @@ namespace Server.Mobiles
             public void DoExpire()
             {
                 for (int i = 0; i < m_Mods.Count; ++i)
+                {
                     m_Mobile.RemoveResistanceMod(m_Mods[i]);
+                }
 
                 Stop();
 
-                if (_Table != null && _Table.ContainsKey(m_Mobile))
+                if (_Table != null)
+                {
                     _Table.Remove(m_Mobile);
+                }
             }
 
             protected override void OnTick()

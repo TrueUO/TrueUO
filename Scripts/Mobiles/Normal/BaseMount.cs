@@ -23,7 +23,7 @@ namespace Server.Mobiles
 
     public abstract class BaseMount : BaseCreature, IMount
     {
-        private static readonly Dictionary<Mobile, BlockEntry> m_Table = new Dictionary<Mobile, BlockEntry>();
+        private static readonly Dictionary<Mobile, BlockEntry> _Table = new Dictionary<Mobile, BlockEntry>();
         private Mobile m_Rider;
 
         public BaseMount(string name, int bodyID, int itemID, AIType aiType, FightMode fightMode, int rangePerception, int rangeFight, double activeSpeed, double passiveSpeed)
@@ -221,7 +221,7 @@ namespace Server.Mobiles
             DateTime expiration = DateTime.UtcNow + duration;
             BlockEntry entry = null;
 
-            if (m_Table.TryGetValue(mob, out BlockEntry value))
+            if (_Table.TryGetValue(mob, out BlockEntry value))
             {
                 entry = value;
             }
@@ -233,7 +233,7 @@ namespace Server.Mobiles
             }
             else
             {
-                m_Table[mob] = entry = new BlockEntry(mob, mount, type, expiration);
+                _Table[mob] = entry = new BlockEntry(mob, mount, type, expiration);
             }
 
             BuffInfo.AddBuff(mob, new BuffInfo(BuffIcon.DismountPrevention, 1075635, 1075636, duration, mob));
@@ -241,8 +241,10 @@ namespace Server.Mobiles
 
         public static void ClearMountPrevention(Mobile mob)
         {
-            if (mob != null && m_Table.ContainsKey(mob))
-                m_Table.Remove(mob);
+            if (mob != null)
+            {
+                _Table.Remove(mob);
+            }
         }
 
         public static BlockMountType GetMountPrevention(Mobile mob)
@@ -257,7 +259,7 @@ namespace Server.Mobiles
 
             BlockEntry entry = null;
 
-            if (m_Table.TryGetValue(mob, out BlockEntry value))
+            if (_Table.TryGetValue(mob, out BlockEntry value))
             {
                 entry = value;
             }
@@ -338,7 +340,7 @@ namespace Server.Mobiles
 
         public static void ExpireMountPrevention(Mobile m)
         {
-            m_Table.Remove(m);
+            _Table.Remove(m);
 
             BuffInfo.RemoveBuff(m, BuffIcon.DismountPrevention);
         }
@@ -346,11 +348,9 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(NextMountAbility);
-
             writer.Write(m_Rider);
             writer.Write(InternalItem);
         }
@@ -385,7 +385,7 @@ namespace Server.Mobiles
 
             Mobile owner = GetMaster();
 
-            if (owner != null && m_Table.TryGetValue(owner, out BlockEntry value))
+            if (owner != null && _Table.TryGetValue(owner, out BlockEntry value))
             {
                 if (value.m_Type >= BlockMountType.RidingSwipe && value.m_Mount == this)
                 {
@@ -397,26 +397,15 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            NextMountAbility = reader.ReadDateTime();
+            m_Rider = reader.ReadMobile();
+            InternalItem = reader.ReadItem();
 
-            switch (version)
+            if (InternalItem == null)
             {
-                case 1:
-                    {
-                        NextMountAbility = reader.ReadDateTime();
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        m_Rider = reader.ReadMobile();
-                        InternalItem = reader.ReadItem();
-
-                        if (InternalItem == null)
-                            Delete();
-
-                        break;
-                    }
+                Delete();
             }
         }
 
@@ -504,24 +493,24 @@ namespace Server.Mobiles
         public virtual void OnRiderDamaged(Mobile from, ref int amount, bool willKill)
         {
             if (m_Rider == null)
+            {
                 return;
+            }
 
             Mobile attacker = from;
 
             if (attacker == null)
+            {
                 attacker = m_Rider.FindMostRecentDamager(true);
+            }
 
             if (!(attacker == this || attacker == m_Rider || willKill || DateTime.UtcNow > NextMountAbility))
             {
                 if (DoMountAbility(amount, from))
+                {
                     NextMountAbility = DateTime.UtcNow + MountAbilityDelay;
+                }
             }
-        }
-
-        [Obsolete("Call: OnRiderDamaged(Mobile from, ref int amount, bool willKill)")]
-        public virtual void OnRiderDamaged(int amount, Mobile from, bool willKill)
-        {
-            OnRiderDamaged(from, ref amount, willKill);
         }
 
         public virtual bool DoMountAbility(int damage, Mobile attacker)
@@ -640,7 +629,6 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Mount);
@@ -649,20 +637,13 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            m_Mount = reader.ReadMobile() as BaseMount;
 
-            switch (version)
+            if (m_Mount == null)
             {
-                case 0:
-                    {
-                        m_Mount = reader.ReadMobile() as BaseMount;
-
-                        if (m_Mount == null)
-                            Delete();
-
-                        break;
-                    }
+                Delete();
             }
         }
     }
