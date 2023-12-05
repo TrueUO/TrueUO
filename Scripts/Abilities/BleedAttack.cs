@@ -14,20 +14,20 @@ namespace Server.Items
     /// </summary>
     public class BleedAttack : WeaponAbility
     {
-        private static readonly Dictionary<Mobile, BleedTimer> m_BleedTable = new Dictionary<Mobile, BleedTimer>();
+        private static readonly Dictionary<Mobile, BleedTimer> _BleedTable = new Dictionary<Mobile, BleedTimer>();
 
         public override int BaseMana => 30;
 
         public static bool IsBleeding(Mobile m)
         {
-            return m_BleedTable.ContainsKey(m);
+            return _BleedTable.ContainsKey(m);
         }
 
         public static void BeginBleed(Mobile m, Mobile from, bool splintering = false)
         {
-            BleedTimer timer = null;
+            BleedTimer timer;
 
-            if (m_BleedTable.TryGetValue(m, out BleedTimer value))
+            if (_BleedTable.TryGetValue(m, out BleedTimer value))
             {
                 if (splintering)
                 {
@@ -43,7 +43,7 @@ namespace Server.Items
             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bleed, 1075829, 1075830, TimeSpan.FromSeconds(10), m, "1\t10\t2"));
 
             timer = new BleedTimer(from, m, CheckBloodDrink(from));
-            m_BleedTable[m] = timer;
+            _BleedTable[m] = timer;
             timer.Start();
 
             from.SendLocalizedMessage(1060159); // Your target is bleeding!
@@ -64,7 +64,9 @@ namespace Server.Items
             if (m.Alive && !m.IsDeadBondedPet)
             {
                 if (!m.Player)
+                {
                     damage *= 2;
+                }
 
                 m.PlaySound(0x133);
                 AOS.Damage(m, from, damage, false, 0, 0, 0, 0, 0, 0, 100, false, false, false);
@@ -91,20 +93,25 @@ namespace Server.Items
         {
             Timer t = null;
 
-            if (m_BleedTable.ContainsKey(m))
+            if (_BleedTable.TryGetValue(m, out BleedTimer value))
             {
-                t = m_BleedTable[m];
-                m_BleedTable.Remove(m);
+                t = value;
+
+                _BleedTable.Remove(m);
             }
 
             if (t == null)
+            {
                 return;
+            }
 
             t.Stop();
             BuffInfo.RemoveBuff(m, BuffIcon.Bleed);
 
             if (message)
+            {
                 m.SendLocalizedMessage(1060167); // The bleeding wounds have healed, you are no longer bleeding!
+            }
         }
 
         public static bool CheckBloodDrink(Mobile attacker)
@@ -115,7 +122,9 @@ namespace Server.Items
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
             if (!Validate(attacker) || !CheckMana(attacker, true))
+            {
                 return;
+            }
 
             ClearCurrentAbility(attacker);
 
@@ -133,39 +142,41 @@ namespace Server.Items
 
         private class BleedTimer : Timer
         {
-            private readonly Mobile m_From;
-            private readonly Mobile m_Mobile;
-            private int m_Count;
-            private readonly int m_MaxCount;
-            private readonly bool m_BloodDrinker;
+            private readonly Mobile _From;
+            private readonly Mobile _Mobile;
+            private int _Count;
+            private readonly int _MaxCount;
+            private readonly bool _BloodDrinker;
 
-            public BleedTimer(Mobile from, Mobile m, bool blooddrinker)
+            public BleedTimer(Mobile from, Mobile m, bool bloodDrinker)
                 : base(TimeSpan.FromSeconds(2.0), TimeSpan.FromSeconds(2.0))
             {
-                m_From = from;
-                m_Mobile = m;
-                m_BloodDrinker = blooddrinker;
+                _From = from;
+                _Mobile = m;
+                _BloodDrinker = bloodDrinker;
 
-                m_MaxCount = Spells.SkillMasteries.ResilienceSpell.UnderEffects(m) ? 3 : 5;
+                _MaxCount = Spells.SkillMasteries.ResilienceSpell.UnderEffects(m) ? 3 : 5;
             }
 
             protected override void OnTick()
             {
-                if (!m_Mobile.Alive || m_Mobile.Deleted)
+                if (!_Mobile.Alive || _Mobile.Deleted)
                 {
-                    EndBleed(m_Mobile, true);
+                    EndBleed(_Mobile, true);
                 }
                 else
                 {
-                    int damage = 0;
+                    if (!Spells.SkillMasteries.WhiteTigerFormSpell.HasBleedMod(_From, out int damage))
+                    {
+                        damage = Math.Max(1, Utility.RandomMinMax(5 - _Count, (5 - _Count) * 2));
+                    }
 
-                    if (!Spells.SkillMasteries.WhiteTigerFormSpell.HasBleedMod(m_From, out damage))
-                        damage = Math.Max(1, Utility.RandomMinMax(5 - m_Count, (5 - m_Count) * 2));
+                    DoBleed(_Mobile, _From, damage, _BloodDrinker);
 
-                    DoBleed(m_Mobile, m_From, damage, m_BloodDrinker);
-
-                    if (++m_Count == m_MaxCount)
-                        EndBleed(m_Mobile, true);
+                    if (++_Count == _MaxCount)
+                    {
+                        EndBleed(_Mobile, true);
+                    }
                 }
             }
         }

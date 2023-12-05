@@ -15,7 +15,7 @@ namespace Server.SkillHandlers
 
     public class Tracking
     {
-        private static readonly Dictionary<Mobile, TrackingInfo> m_Table = new Dictionary<Mobile, TrackingInfo>();
+        private static readonly Dictionary<Mobile, TrackingInfo> _Table = new Dictionary<Mobile, TrackingInfo>();
 
         public static void Initialize()
         {
@@ -37,14 +37,12 @@ namespace Server.SkillHandlers
         {
             TrackingInfo info = new TrackingInfo(target);
 
-            m_Table[tracker] = info;
+            _Table[tracker] = info;
         }
 
         public static double GetStalkingBonus(Mobile tracker, Mobile target)
         {
-            TrackingInfo info;
-
-            m_Table.TryGetValue(tracker, out info);
+            _Table.TryGetValue(tracker, out TrackingInfo info);
 
             if (info == null || info.m_Target != target || info.m_Map != target.Map)
             {
@@ -56,14 +54,14 @@ namespace Server.SkillHandlers
 
             double bonus = Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
 
-            m_Table.Remove(tracker);
+            _Table.Remove(tracker);
 
             return Math.Min(bonus, 10 + tracker.Skills.Tracking.Value / 10);
         }
 
         public static void ClearTrackingInfo(Mobile tracker)
         {
-            m_Table.Remove(tracker);
+            _Table.Remove(tracker);
         }
 
         private class TrackingInfo
@@ -137,7 +135,7 @@ namespace Server.SkillHandlers
         private static readonly bool CustomTargetNumbers = Config.Get("Tracking.CustomTargetNumbers", false);
         private static readonly bool NotifyPlayer = Config.Get("Tracking.NotifyPlayer", false);
 
-        private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>
+        private readonly Dictionary<Body, string> _BodyNames = new Dictionary<Body, string>
         {
             {0x2EB, "wraith"},
             {0x2EC, "wraith"},
@@ -177,7 +175,7 @@ namespace Server.SkillHandlers
             {0x09, NameList.RandomName("daemon")}
         };
 
-        private static readonly TrackTypeDelegate[] m_Delegates =
+        private static readonly TrackTypeDelegate[] _Delegates =
         {
             IsAnimal,
             IsMonster,
@@ -185,16 +183,16 @@ namespace Server.SkillHandlers
             IsPlayer
         };
 
-        private readonly Mobile m_From;
-        private readonly int m_Range;
-        private readonly List<Mobile> m_List;
+        private readonly Mobile _From;
+        private readonly int _Range;
+        private readonly List<Mobile> _List;
 
         private TrackWhoGump(Mobile from, List<Mobile> list, int range)
             : base(20, 30)
         {
-            m_From = from;
-            m_List = list;
-            m_Range = range;
+            _From = from;
+            _List = list;
+            _Range = range;
 
             AddPage(0);
 
@@ -246,9 +244,9 @@ namespace Server.SkillHandlers
 
                 string name = m.Name;
 
-                if (m.Player && (m.Body.IsAnimal || m.Body.IsMonster) && bodyNames.ContainsKey(m.Body))
+                if (m.Player && (m.Body.IsAnimal || m.Body.IsMonster) && _BodyNames.ContainsKey(m.Body))
                 {
-                    bodyNames.TryGetValue(m.Body, out name);
+                    _BodyNames.TryGetValue(m.Body, out name);
                 }
 
                 if (!m.Player && m is BaseCreature bc && !(bc.Controlled && bc.ControlMaster is PlayerMobile) && name != null && name.StartsWith("a "))
@@ -275,7 +273,7 @@ namespace Server.SkillHandlers
                 return;
             }
 
-            TrackTypeDelegate check = m_Delegates[type];
+            TrackTypeDelegate check = _Delegates[type];
 
             from.CheckSkill(SkillName.Tracking, 21.1, 100.0); // Passive gain
 
@@ -370,17 +368,17 @@ namespace Server.SkillHandlers
         {
             int index = info.ButtonID - 1;
 
-            if (index >= 0 && index < m_List.Count && index < TotalTargetsBySkill(m_From))
+            if (index >= 0 && index < _List.Count && index < TotalTargetsBySkill(_From))
             {
-                Mobile m = m_List[index];
+                Mobile m = _List[index];
 
                 if (RegionTracking)
                 {
-                    m_From.QuestArrow = new TrackArrow(m_From, m, m_Range);
+                    _From.QuestArrow = new TrackArrow(_From, m, _Range);
                 }
                 else
                 {
-                    m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier));
+                    _From.QuestArrow = new TrackArrow(_From, m, _Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier));
                 }
 
                 if (NotifyPlayer && m.Player)
@@ -388,7 +386,7 @@ namespace Server.SkillHandlers
                     m.SendLocalizedMessage(1042971, "Your presence has been detected in this area."); // ~1_NOTHING~
                 }
 
-                Tracking.AddInfo(m_From, m);
+                Tracking.AddInfo(_From, m);
             }
         }
 
@@ -441,7 +439,7 @@ namespace Server.SkillHandlers
             return list;
         }
 
-        private static readonly Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
+        private static readonly Dictionary<Map, List<Rectangle2D[]>> _MapAreas = new Dictionary<Map, List<Rectangle2D[]>>
         {
             {Map.Trammel, new List<Rectangle2D[]> {
             //Tram
@@ -489,9 +487,9 @@ namespace Server.SkillHandlers
         {
             List<Mobile> mobiles = null;
 
-            for (var i = 0; i < mapAreas[from.Map].Count; i++)
+            for (var i = 0; i < _MapAreas[from.Map].Count; i++)
             {
-                Rectangle2D[] areas = mapAreas[from.Map][i];
+                Rectangle2D[] areas = _MapAreas[from.Map][i];
 
                 foreach (var defined in areas)
                 {
@@ -506,7 +504,6 @@ namespace Server.SkillHandlers
                             Rectangle2D search = new Rectangle2D(new Point2D(intersect.Left, intersect.Top), new Point2D(intersect.Right, intersect.Bottom));
 
                             mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(search)));
-
                         }
 
                         break;
@@ -521,7 +518,7 @@ namespace Server.SkillHandlers
         {
             List<Mobile> mobiles = null;
 
-            if (mapAreas.ContainsKey(from.Map))
+            if (_MapAreas.ContainsKey(from.Map))
             {
                 mobiles = GetMobsFromArrayBounds(from, range);
             }

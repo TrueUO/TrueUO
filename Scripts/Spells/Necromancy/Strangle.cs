@@ -7,15 +7,17 @@ namespace Server.Spells.Necromancy
 {
     public class StrangleSpell : NecromancerSpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Strangle", "In Bal Nox",
             209,
             9031,
             Reagent.DaemonBlood,
             Reagent.NoxCrystal);
-        private static readonly Hashtable m_Table = new Hashtable();
+
+        private static readonly Hashtable _Table = new Hashtable();
+
         public StrangleSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -25,22 +27,24 @@ namespace Server.Spells.Necromancy
 
         public static bool UnderEffects(Mobile m)
         {
-            return m_Table.ContainsKey(m);
+            return _Table.ContainsKey(m);
         }
 
         public static bool RemoveCurse(Mobile m)
         {
-            Timer t = (Timer)m_Table[m];
+            Timer t = (Timer)_Table[m];
 
             if (t == null)
+            {
                 return false;
+            }
 
             t.Stop();
             m.SendLocalizedMessage(1061687); // You can breath normally again.
 
             BuffInfo.RemoveBuff(m, BuffIcon.Strangle);
 
-            m_Table.Remove(m);
+            _Table.Remove(m);
             return true;
         }
 
@@ -90,12 +94,12 @@ namespace Server.Spells.Necromancy
             {
                 Caster.SendLocalizedMessage(1095250); // Your target resists strangle.
             }
-            else if (!m_Table.ContainsKey(m))
+            else if (!_Table.ContainsKey(m))
             {
                 Timer t = new InternalTimer(m, Caster, strength);
                 t.Start();
 
-                m_Table[m] = t;
+                _Table[m] = t;
 
                 //Calculations for the buff bar
                 double spiritlevel = Caster.Skills[SkillName.SpiritSpeak].Value / 10;
@@ -138,7 +142,7 @@ namespace Server.Spells.Necromancy
 
         private class InternalTimer : Timer
         {
-            private readonly Mobile m_Target, m_From;
+            private readonly Mobile _Target, _From;
             private readonly double m_MinBaseDamage, m_MaxBaseDamage;
 
             private DateTime m_NextHit;
@@ -149,8 +153,8 @@ namespace Server.Spells.Necromancy
             public InternalTimer(Mobile target, Mobile from, double strength)
                 : base(TimeSpan.FromSeconds(0.1), TimeSpan.FromSeconds(0.1))
             {
-                m_Target = target;
-                m_From = from;
+                _Target = target;
+                _From = from;
 
                 double spiritLevel = from.Skills[SkillName.SpiritSpeak].Value / 10;
 
@@ -163,20 +167,22 @@ namespace Server.Spells.Necromancy
                 m_Count = (int)spiritLevel;
 
                 if (m_Count < 4)
+                {
                     m_Count = 4;
+                }
 
                 m_MaxCount = m_Count;
             }
 
             protected override void OnTick()
             {
-                if (!m_Target.Alive)
+                if (!_Target.Alive)
                 {
-                    m_Table.Remove(m_Target);
+                    _Table.Remove(_Target);
                     Stop();
                 }
 
-                if (!m_Target.Alive || DateTime.UtcNow < m_NextHit)
+                if (!_Target.Alive || DateTime.UtcNow < m_NextHit)
                     return;
 
                 --m_Count;
@@ -197,8 +203,8 @@ namespace Server.Spells.Necromancy
 
                 if (m_Count == 0)
                 {
-                    m_Target.SendLocalizedMessage(1061687); // You can breath normally again.
-                    m_Table.Remove(m_Target);
+                    _Target.SendLocalizedMessage(1061687); // You can breath normally again.
+                    _Table.Remove(_Target);
                     Stop();
                 }
                 else
@@ -207,40 +213,49 @@ namespace Server.Spells.Necromancy
 
                     double damage = m_MinBaseDamage + (Utility.RandomDouble() * (m_MaxBaseDamage - m_MinBaseDamage));
 
-                    damage *= (3 - (((double)m_Target.Stam / m_Target.StamMax) * 2));
+                    damage *= 3 - (double)_Target.Stam / _Target.StamMax * 2;
 
                     if (damage < 1)
+                    {
                         damage = 1;
+                    }
 
-                    if (!m_Target.Player)
+                    if (!_Target.Player)
+                    {
                         damage *= 1.75;
+                    }
 
-                    AOS.Damage(m_Target, m_From, (int)damage, 0, 0, 0, 100, 0);
+                    AOS.Damage(_Target, _From, (int)damage, 0, 0, 0, 100, 0);
 
                     if (0.60 <= Utility.RandomDouble()) // OSI: randomly revealed between first and third damage tick, guessing 60% chance
-                        m_Target.RevealingAction();
+                    {
+                        _Target.RevealingAction();
+                    }
                 }
             }
         }
 
         private class InternalTarget : Target
         {
-            private readonly StrangleSpell m_Owner;
+            private readonly StrangleSpell _Owner;
+
             public InternalTarget(StrangleSpell owner)
                 : base(10, false, TargetFlags.Harmful)
             {
-                m_Owner = owner;
+                _Owner = owner;
             }
 
             protected override void OnTarget(Mobile from, object o)
             {
                 if (o is Mobile mobile)
-                    m_Owner.Target(mobile);
+                {
+                    _Owner.Target(mobile);
+                }
             }
 
             protected override void OnTargetFinish(Mobile from)
             {
-                m_Owner.FinishSequence();
+                _Owner.FinishSequence();
             }
         }
     }
