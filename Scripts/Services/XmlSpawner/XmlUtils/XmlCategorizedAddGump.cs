@@ -30,17 +30,7 @@ namespace Server.Gumps
             }
             else
             {
-                if (gump is XmlAddGump xmladdgump)
-                {
-                    //Commands.Handle( from, String.Format( "{0}Add {1}", Commands.CommandPrefix, m_Type.Name ) );
-                    if (xmladdgump.defs?.NameList != null && index >= 0 && index < xmladdgump.defs.NameList.Length)
-                    {
-                        xmladdgump.defs.NameList[index] = m_Type.Name;
-                        XmlAddGump.Refresh(from, true);
-                    }
-                    from.SendGump(new XmlCategorizedAddGump(from, m_Parent, page, index, xmladdgump));
-                }
-                else if (gump is XmlSpawnerGump spawnerGump)
+                if (gump is XmlSpawnerGump spawnerGump)
                 {
                     XmlSpawner m_Spawner = spawnerGump.m_Spawner;
 
@@ -255,15 +245,6 @@ namespace Server.Gumps
 
             m_Index = index;
             m_Gump = gump;
-
-            if (gump is XmlAddGump xmladdgump)
-            {
-                if (xmladdgump.defs != null)
-                {
-                    xmladdgump.defs.CurrentCategory = category;
-                    xmladdgump.defs.CurrentCategoryPage = page;
-                }
-            }
 
             Initialize(page);
         }

@@ -104,7 +104,7 @@ namespace Server.Mobiles
             public bool Dosearchnull;
             public bool Dosearcherr;
             public bool Dosearchage;
-            public bool Dohidevalidint = false;
+            public bool Dohidevalidint;
             public bool Searchagedirection;
             public double Searchage;
             public int Searchrange;
@@ -171,7 +171,7 @@ namespace Server.Mobiles
         private string SaveFilename;
         private string CommandString;
 
-        private bool SelectAll = false;
+        private bool SelectAll;
 
         private ArrayList m_SearchList;
 
