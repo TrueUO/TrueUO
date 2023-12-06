@@ -9,7 +9,7 @@ namespace Server.Items
         public override int LabelNumber => 1075493; // Basket of Herbs
 
         private static readonly Dictionary<Mobile, BasketOfHerbs> _Table = new Dictionary<Mobile, BasketOfHerbs>();
-        private SkillMod m_SkillMod;
+        private SkillMod _SkillMod;
 
         [Constructable]
         public BasketOfHerbs()
@@ -31,7 +31,9 @@ namespace Server.Items
                     BaseHouse house = BaseHouse.FindHouseAt(this);
 
                     if (house != null && house.IsOwner(from) && !_Table.ContainsKey(from))
+                    {
                         AddBonus(from);
+                    }
                 }
             }
             else
@@ -42,34 +44,34 @@ namespace Server.Items
 
         public override void OnRemoved(object parent)
         {
-            if (m_SkillMod != null)
+            if (_SkillMod != null)
             {
-                _Table.Remove(m_SkillMod.Owner);
+                _Table.Remove(_SkillMod.Owner);
 
-                m_SkillMod.Remove();
+                _SkillMod.Remove();
             }
 
-            m_SkillMod = null;
+            _SkillMod = null;
 
             base.OnRemoved(parent);
         }
 
         public static void CheckBonus(Mobile m)
         {
-            if (m != null && _Table.ContainsKey(m) && _Table[m] != null)
+            if (m != null && _Table.TryGetValue(m, out BasketOfHerbs value) && value != null)
             {
-                _Table[m].RemoveBonus();
+                value.RemoveBonus();
             }
         }
 
         public void AddBonus(Mobile m)
         {
-            m_SkillMod = new DefaultSkillMod(SkillName.Cooking, true, 10)
+            _SkillMod = new DefaultSkillMod(SkillName.Cooking, true, 10)
             {
                 ObeyCap = true
             };
 
-            m.AddSkillMod(m_SkillMod);
+            m.AddSkillMod(_SkillMod);
 
             _Table[m] = this;
 
@@ -78,12 +80,12 @@ namespace Server.Items
 
         public void RemoveBonus()
         {
-            m_SkillMod.Owner.SendLocalizedMessage(1075541); // The scent of herbs gradually fades away...
+            _SkillMod.Owner.SendLocalizedMessage(1075541); // The scent of herbs gradually fades away...
 
-            _Table.Remove(m_SkillMod.Owner);
+            _Table.Remove(_SkillMod.Owner);
 
-            m_SkillMod.Remove();
-            m_SkillMod = null;            
+            _SkillMod.Remove();
+            _SkillMod = null;            
         }
 
         public BasketOfHerbs(Serial serial)

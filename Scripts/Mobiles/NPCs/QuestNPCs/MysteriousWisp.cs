@@ -2,7 +2,6 @@ using Server.ContextMenus;
 using Server.Engines.Quests;
 using Server.Items;
 using Server.SkillHandlers;
-
 using System;
 using System.Collections.Generic;
 
@@ -11,14 +10,14 @@ namespace Server.Mobiles
     [CorpseName("a wisp corpse")]
     public class MysteriousWisp : BaseCreature
     {
-        public static readonly int MinBudget = 300;
-        public static readonly int MaxBudget = 600;
-        public static readonly int ItemCount = 10;
+        private const int _MinBudget = 300;
+        private const int _MaxBudget = 600;
+        private const int _ItemCount = 10;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool ForceRestock { get => false; set { if (value) DoRestock(true); } }
 
-        private readonly Dictionary<Mobile, int> m_Conversation = new Dictionary<Mobile, int>();
+        private readonly Dictionary<Mobile, int> _Conversation = new Dictionary<Mobile, int>();
 
         [Constructable]
         public MysteriousWisp()
@@ -56,24 +55,26 @@ namespace Server.Mobiles
             SetSkill(SkillName.Wrestling, 80.0);
 
             if (Backpack != null)
+            {
                 Backpack.Delete();
+            }
 
             DoRestock();
         }
 
         public override bool HandlesOnSpeech(Mobile from)
         {
-            return m_Conversation.ContainsKey(from);
+            return _Conversation.ContainsKey(from);
         }
 
         public override void OnDoubleClick(Mobile from)
         {
             if (from.InRange(Location, 4))
             {
-                if (!m_Conversation.ContainsKey(from))
+                if (!_Conversation.ContainsKey(from))
                 {
-                    SayTo(from, m_Responses[0]);
-                    m_Conversation[from] = 1;
+                    SayTo(from, _Responses[0]);
+                    _Conversation[from] = 1;
                 }
 
                 if (Backpack != null)
@@ -118,35 +119,36 @@ namespace Server.Mobiles
 
         public override void OnSpeech(SpeechEventArgs e)
         {
-            if (!m_Conversation.ContainsKey(e.Mobile))
-                return;
-
-            string speech = e.Speech.ToLower();
-            int idx = m_Conversation[e.Mobile];
-
-            if (idx < 0 || idx >= m_Keywords.Length)
+            if (!_Conversation.TryGetValue(e.Mobile, out int value))
             {
-                m_Conversation.Remove(e.Mobile);
                 return;
             }
 
-            foreach (string str in m_Keywords[idx])
+            if (value < 0 || value >= _Keywords.Length)
+            {
+                _Conversation.Remove(e.Mobile);
+                return;
+            }
+
+            string speech = e.Speech.ToLower();
+
+            foreach (string str in _Keywords[value])
             {
                 if (speech.Contains(str))
                 {
-                    SayTo(e.Mobile, m_Responses[idx]);
+                    SayTo(e.Mobile, _Responses[value]);
 
-                    if (idx + 1 >= m_Keywords.Length)
-                        m_Conversation.Remove(e.Mobile);
+                    if (value + 1 >= _Keywords.Length)
+                        _Conversation.Remove(e.Mobile);
                     else
-                        m_Conversation[e.Mobile]++;
+                        _Conversation[e.Mobile]++;
 
                     break;
                 }
             }
         }
 
-        private readonly string[][] m_Keywords =
+        private readonly string[][] _Keywords =
         {
             Array.Empty<string>(),
             new[] { "corporeal" },
@@ -163,7 +165,7 @@ namespace Server.Mobiles
             new[] { "trade" }
         };
 
-        private readonly int[] m_Responses =
+        private readonly int[] _Responses =
         {
             1153441,
             1153443,
@@ -198,12 +200,12 @@ namespace Server.Mobiles
 
             if (wipe)
             {
-                count = ItemCount;
+                count = _ItemCount;
                 ColUtility.SafeDelete(Backpack.Items);
             }
             else
             {
-                count = ItemCount - Backpack.Items.Count;
+                count = _ItemCount - Backpack.Items.Count;
             }
 
             if (count > 0)
@@ -225,7 +227,7 @@ namespace Server.Mobiles
 
                     do
                     {
-                        RunicReforging.GenerateRandomItem(item, null, Utility.RandomMinMax(MinBudget, MaxBudget), 0, ReforgedPrefix.None, ReforgedSuffix.None);
+                        RunicReforging.GenerateRandomItem(item, null, Utility.RandomMinMax(_MinBudget, _MaxBudget), 0, ReforgedPrefix.None, ReforgedSuffix.None);
 
                         if (++failSafe == 25 && Imbuing.GetTotalWeight(item, -1, false, true) == 0)
                         {
@@ -299,16 +301,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                reader.ReadInt();
-                reader.ReadInt();
-                reader.ReadInt();
-                reader.ReadInt();
-                reader.ReadDouble();
-            }
+            reader.ReadInt();
 
             Timer.DelayCall(() => DoRestock(true));
         }
