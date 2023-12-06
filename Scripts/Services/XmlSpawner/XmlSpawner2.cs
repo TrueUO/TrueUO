@@ -58,7 +58,7 @@ namespace Server.Mobiles
         public static string XmlSpawnDir = "XmlSpawner";            // default directory for saving/loading .xml files with [xmlload [xmlsave
         private const int MaxSmartSectorListSize = 1024;        // maximum sector list size for use in smart spawning. This gives a 512x512 tile range.
 
-        private static string defwaypointname = null;            // default waypoint name will get assigned in Initialize
+        private static string defwaypointname;            // default waypoint name will get assigned in Initialize
         public static AccessLevel DiskAccessLevel = AccessLevel.Administrator; // minimum access level required by commands that can access the disk such as XmlLoad, XmlSave, and the Save function of XmlEdit
         private static int MaxMoveCheck = 10; // limit number of players that can be checked for triggering in a single OnMovement tick
 
@@ -74,8 +74,8 @@ namespace Server.Mobiles
         private static TimeSpan defTODEnd = TimeSpan.FromMinutes(0);
         private static TimeSpan defDuration = TimeSpan.FromMinutes(0);
         private static TimeSpan defDespawnTime = TimeSpan.FromHours(0);
-        private static bool defIsGroup = false;
-        private static int defTeam = 0;
+        private static bool defIsGroup;
+        private static int defTeam;
         private static int defProximityTriggerSound = defaultTriggerSound;
         private static int defAmount = 1;
         private static bool defRelativeHome = true;
@@ -87,7 +87,7 @@ namespace Server.Mobiles
         private static TODModeType defTODMode = TODModeType.Realtime;
 
         private static Timer m_GlobalSectorTimer;
-        private static bool SmartSpawningSystemEnabled = false;
+        private static bool SmartSpawningSystemEnabled;
 
         private static WarnTimer2 m_WarnTimer;
 
@@ -102,8 +102,8 @@ namespace Server.Mobiles
         #region Variable declarations
         private string m_Name = string.Empty;
         private string m_UniqueId = string.Empty;
-        private bool m_PlayerCreated = false;
-        private bool m_HomeRangeIsRelative = false;
+        private bool m_PlayerCreated;
+        private bool m_HomeRangeIsRelative;
         private int m_Team;
         private int m_HomeRange;
         private int m_StackAmount;
@@ -151,9 +151,9 @@ namespace Server.Mobiles
         private Mobile m_mob_who_triggered;
         private Item m_SetPropertyItem;
 
-        private bool m_skipped = false;
+        private bool m_skipped;
         private int m_KillReset = defKillReset;      // number of spawn ticks that pass without kills before killcount gets reset to zero
-        private int m_spawncheck = 0;
+        private int m_spawncheck;
         private TODModeType m_TODMode = TODModeType.Realtime;
         private string m_GumpState;
         private bool m_ExternalTriggering;
@@ -167,12 +167,12 @@ namespace Server.Mobiles
         public List<XmlTextEntryBook> m_TextEntryBook;
         private XmlSpawnerGump m_SpawnerGump;
 
-        private bool m_AllowGhostTriggering = false;
-        private bool m_AllowNPCTriggering = false;
+        private bool m_AllowGhostTriggering;
+        private bool m_AllowNPCTriggering;
         private string m_ConfigFile;
-        private bool m_OnHold = false;
-        private bool m_HoldSequence = false;
-        private bool m_SpawnOnTrigger = false;
+        private bool m_OnHold;
+        private bool m_HoldSequence;
+        private bool m_SpawnOnTrigger;
 
         private List<MovementInfo> m_MovementList;
         private MovementTimer m_MovementTimer;
@@ -185,23 +185,23 @@ namespace Server.Mobiles
 
         private string m_SkillTrigger;
         private SkillName m_skill_that_triggered;
-        private bool m_FreeRun = false;     // override for all other triggering modes
+        private bool m_FreeRun;     // override for all other triggering modes
 
         private Map currentmap;
 
-        public bool m_IsInactivated = false;
-        private bool m_SmartSpawning = false;
+        public bool m_IsInactivated;
+        private bool m_SmartSpawning;
         private SectorTimer m_SectorTimer;
 
         private List<Static> m_ShowBoundsItems = new List<Static>();
 
         public List<BaseXmlSpawner.TypeInfo> PropertyInfoList = null;   // used to optimize property info lookup used by set and get property methods.
 
-        private Dictionary<string, List<Item>> spawnPositionWayTable = null;  // used to optimize #waypoint lookup
+        private Dictionary<string, List<Item>> spawnPositionWayTable;  // used to optimize #waypoint lookup
 
-        private bool inrespawn = false;
+        private bool inrespawn;
 
-        private List<Sector> sectorList = null;
+        private List<Sector> sectorList;
 
         private Point3D mostRecentSpawnPosition = Point3D.Zero;
 
@@ -215,9 +215,9 @@ namespace Server.Mobiles
         #region Properties
         public bool DebugThis { get; set; } = false;
 
-        public int MovingPlayerCount { get; set; } = 0;
+        public int MovingPlayerCount { get; set; }
 
-        public int FastestPlayerSpeed { get; set; } = 0;
+        public int FastestPlayerSpeed { get; set; }
 
         public int NearbyPlayerCount
         {
@@ -1957,10 +1957,6 @@ namespace Server.Mobiles
                     }
                 }
             }
-
-            ShowTagList(this);
-            int count = 0;
-            Console.WriteLine("Registered SkillsTotal = {0}", count);
         }
 
         #endregion
@@ -2376,21 +2372,6 @@ namespace Server.Mobiles
                 {
                     LogFailure("Format: XmlSet <propertyName> <value>");
                 }
-            }
-        }
-
-        public void ShowTagList(XmlSpawner spawner)
-        {
-            int count = 0;
-
-            Console.WriteLine("{0} tags", spawner.m_KeywordTagList.Count);
-
-            for (var index = 0; index < spawner.m_KeywordTagList.Count; index++)
-            {
-                BaseXmlSpawner.KeywordTag tag = spawner.m_KeywordTagList[index];
-                count++;
-
-                Console.WriteLine("tag {0} : {1}", count, BaseXmlSpawner.TagInfo(tag));
             }
         }
 
@@ -5568,55 +5549,6 @@ namespace Server.Mobiles
                 }
             }
         }
-
-        // special defrag pass to remove spawn object tags, which are placeholders for the special keyword spawn spec entries
-        public void ClearTags(bool all)
-        {
-            if (m_SpawnObjects == null)
-            {
-                return;
-            }
-
-            bool removed = false;
-
-            List<BaseXmlSpawner.KeywordTag> ToDelete = new List<BaseXmlSpawner.KeywordTag>();
-
-            for (var index = 0; index < m_SpawnObjects.Count; index++)
-            {
-                SpawnObject so = m_SpawnObjects[index];
-                for (int x = 0; x < so.SpawnedObjects.Count; x++)
-                {
-                    object o = so.SpawnedObjects[x];
-
-                    if (o is BaseXmlSpawner.KeywordTag sot &&
-                        (all || (sot.Flags & BaseXmlSpawner.KeywordFlags.Defrag) != 0)
-                    ) // clear the tags except for gump and delay tags
-                    {
-                        ToDelete.Add(sot);
-                        so.SpawnedObjects.Remove(o);
-                        x--;
-                        removed = true;
-                    }
-                }
-            }
-
-            for (int x = ToDelete.Count - 1; x >= 0; --x) // each (BaseXmlSpawner.KeywordTag i in ToDelete)
-            {
-                BaseXmlSpawner.KeywordTag i = ToDelete[x];
-                if (i != null && !i.Deleted)
-                {
-                    i.Delete();
-                }
-            }
-
-            // full clear of the taglist
-            if (all)
-                m_KeywordTagList.Clear();
-
-            // Check if anything has been removed
-            if (removed)
-                InvalidateProperties();
-        }
         #endregion
 
         #region SequentialSpawning methods
@@ -6004,7 +5936,7 @@ namespace Server.Mobiles
 
         #region Spawn methods
 
-        int killcount_held = 0;
+        int killcount_held;
 
         public void OnTick()
         {
@@ -6031,10 +5963,6 @@ namespace Server.Mobiles
 
             // killcount will be updated in Defrag
             Defrag(true);
-
-            // remove any keyword tags that were made
-            // note, tags only last a single ontick except for WAIT type
-            ClearTags(false);
 
             if (!m_DisableGlobalAutoReset && startcount == m_killcount && !m_refractActivated && !m_skipped)
             {
@@ -6147,9 +6075,6 @@ namespace Server.Mobiles
                         m_mob_who_triggered = null;
                     }
                 }
-
-                // remove any keyword tags that were made except for WAIT type
-                ClearTags(false);
 
                 // and clear triggering flags
                 if (!OnHold && !FreeRun)
@@ -6469,8 +6394,7 @@ namespace Server.Mobiles
                 {
                     string status_str = null;
 
-                    bool completedtypespawn = BaseXmlSpawner.SpawnTypeKeyword(this, TheSpawn, typeName, substitutedtypeName,
-                        m_mob_who_triggered, Map, out status_str, loops);
+                    bool completedtypespawn = BaseXmlSpawner.SpawnTypeKeyword(this, TheSpawn, typeName, substitutedtypeName, out status_str);
 
                     if (status_str != null)
                     {
@@ -6557,7 +6481,7 @@ namespace Server.Mobiles
                             // be sure to do this after setting map and location so that errors dont place the mob on the internal map
                             string status_str;
 
-                            BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m, m_mob_who_triggered, this, out status_str);
+                            BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m, out status_str);
 
                             if (status_str != null)
                             {
@@ -6576,7 +6500,7 @@ namespace Server.Mobiles
                         {
                             string status_str;
 
-                            BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, m_mob_who_triggered, requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
+                            BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
 
                             if (status_str != null)
                             {
@@ -6791,7 +6715,6 @@ namespace Server.Mobiles
             // reset the protection against runaway looping
             ClearSpawnedThisTick = true;
             RemoveSpawnObjects();
-            ClearTags(true);
             ResetAllFlags();
             status_str = "";
             m_killcount = 0;
@@ -6840,8 +6763,6 @@ namespace Server.Mobiles
                 m_mob_who_triggered = null;
             }
 
-            ClearTags(true);
-
             inrespawn = false;
 
             return triedtospawn;
@@ -6880,8 +6801,6 @@ namespace Server.Mobiles
             {
                 m_mob_who_triggered = null;
             }
-
-            ClearTags(true);
 
             inrespawn = false;
         }
@@ -7922,7 +7841,6 @@ namespace Server.Mobiles
 
             Defrag(false);
 
-            ClearTags(true);
             List<object> deletelist = new List<object>();
 
             for (var index = 0; index < m_SpawnObjects.Count; index++)
@@ -7976,7 +7894,6 @@ namespace Server.Mobiles
 
             Defrag(false);
 
-            ClearTags(true);
             List<object> deletelist = new List<object>();
 
             for (var index = 0; index < m_SpawnObjects.Count; index++)
@@ -8012,7 +7929,6 @@ namespace Server.Mobiles
 
             Defrag(false);
 
-            ClearTags(true);
             List<object> deletelist = new List<object>();
 
             for (var index = 0; index < m_SpawnObjects.Count; index++)
@@ -8534,14 +8450,11 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
+            writer.Write(32);
 
-            writer.Write(32); // version
-                              // version 31
             writer.Write(m_DisableGlobalAutoReset);
-            // Version 30
             writer.Write(m_AllowNPCTriggering);
 
-            // Version 29
             if (m_SpawnObjects != null)
             {
                 writer.Write(m_SpawnObjects.Count);
@@ -8555,7 +8468,6 @@ namespace Server.Mobiles
                 writer.Write(0);
             }
 
-            // Version 28
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -8564,7 +8476,6 @@ namespace Server.Mobiles
                 }
             }
 
-            // Version 27
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -8573,10 +8484,8 @@ namespace Server.Mobiles
                 }
             }
 
-            // Version 26
             writer.Write(m_SpawnOnTrigger);
 
-            // Version 24
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -8601,17 +8510,14 @@ namespace Server.Mobiles
                 writer.Write(false);
             }
 
-            // Version 23
             writer.Write(IsInactivated);
             writer.Write(m_SmartSpawning);
-            // Version 22
             writer.Write(m_SkillTrigger);
             writer.Write((int)m_skill_that_triggered);
             writer.Write(m_FreeRun);
             writer.Write(m_mob_who_triggered);
-            // Version 21
             writer.Write(m_DespawnTime);
-            // Version 20
+          
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -8619,17 +8525,20 @@ namespace Server.Mobiles
                     writer.Write(m_SpawnObjects[i].RequireSurface);
                 }
             }
-            // Version 19
+           
             writer.Write(m_ConfigFile);
             writer.Write(m_OnHold);
             writer.Write(m_HoldSequence);
+
             // compute the number of tags to save
             int tagcount = 0;
             for (int i = 0; i < m_KeywordTagList.Count; i++)
             {
                 // only save WAIT type keywords or other keywords that have the save flag set
                 if ((m_KeywordTagList[i].Flags & BaseXmlSpawner.KeywordFlags.Serialize) != 0)
+                {
                     tagcount++;
+                }
             }
             writer.Write(tagcount);
             // and write them out
@@ -8640,16 +8549,11 @@ namespace Server.Mobiles
                     m_KeywordTagList[i].Serialize(writer);
                 }
             }
-            // Version 18
+
             writer.Write(m_AllowGhostTriggering);
-            // Version 17
-            // removed in version 25
-            //writer.Write( m_TextEntryBook);
-            // Version 16
             writer.Write(m_SequentialSpawning);
-            // write out the remaining time until sequential reset
             writer.Write(NextSeqReset);
-            // Write the spawn object list
+          
             if (m_SpawnObjects != null)
             {
                 for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -8662,51 +8566,30 @@ namespace Server.Mobiles
                     writer.Write(so.KillsNeeded);
                 }
             }
-            writer.Write(m_RegionName);
 
-            // Version 15
+            writer.Write(m_RegionName);
             writer.Write(m_ExternalTriggering);
             writer.Write(m_ExternalTrigger);
-
-            // Version 14
             writer.Write(m_NoItemTriggerName);
-
-            // Version 13
             writer.Write(m_GumpState);
 
-            // Version 12
             int todtype = (int)m_TODMode;
             writer.Write(todtype);
 
-            // Version 11
             writer.Write(m_KillReset);
             writer.Write(m_skipped);
             writer.Write(m_spawncheck);
-
-            // Version 10
             writer.Write(m_SetPropertyItem);
-
-            // Version 9
             writer.Write(m_TriggerProbability);
-
-            // Version 8
             writer.Write(m_MobPropertyName);
             writer.Write(m_MobTriggerName);
             writer.Write(m_PlayerPropertyName);
-
-            // Version 7
             writer.Write(m_SpeechTrigger);
-
-            // Version 6
             writer.Write(m_ItemTriggerName);
-
-            // Version 5
             writer.Write(m_ProximityTriggerMessage);
             writer.Write(m_ObjectPropertyItem);
             writer.Write(m_ObjectPropertyName);
             writer.Write(m_killcount);
-
-            // Version 4
             writer.Write(m_ProximityRange);
             writer.Write(m_ProximityTriggerSound);
             writer.Write(m_proximityActivated);
@@ -8717,20 +8600,16 @@ namespace Server.Mobiles
             writer.Write(m_TODEnd);
             writer.Write(m_MinRefractory);
             writer.Write(m_MaxRefractory);
+
             if (m_refractActivated)
                 writer.Write(m_RefractEnd - DateTime.UtcNow);
             if (m_durActivated)
                 writer.Write(m_DurEnd - DateTime.UtcNow);
-            // Version 3
-            writer.Write(m_ShowContainerStatic);
-            // Version 2
-            writer.Write(m_Duration);
 
-            // Version 1
+            writer.Write(m_ShowContainerStatic);
+            writer.Write(m_Duration);
             writer.Write(m_UniqueId);
             writer.Write(m_HomeRangeIsRelative);
-
-            // Version 0
             writer.Write(m_Name);
             writer.Write(m_X);
             writer.Write(m_Y);
@@ -8787,8 +8666,8 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
+
             bool haveproximityrange = false;
             bool hasnewobjectinfo = false;
             int tmpSpawnListSize = 0;
@@ -8860,18 +8739,9 @@ namespace Server.Mobiles
                     {
                         m_SpawnOnTrigger = reader.ReadBool();
 
-                        if (version < 32)
-                        {
-                            // Delete First & Last Modified
-                            reader.ReadDateTime();
-                            reader.ReadDateTime();
-                        }
                         goto case 25;
                     }
                 case 25:
-                    {
-                        goto case 24;
-                    }
                 case 24:
                     {
                         tmpRestrictKillsToSubgroup = new List<bool>(tmpSpawnListSize);
@@ -8938,14 +8808,6 @@ namespace Server.Mobiles
                         m_OnHold = reader.ReadBool();
                         m_HoldSequence = reader.ReadBool();
 
-                        if (version < 32)
-                        {
-                            // // Delete First & Last Modified By
-                            // // Delete First & Last Modified By
-                            reader.ReadString();
-                            reader.ReadString();
-                        }
-
                         // deserialize the keyword tag list
                         int tagcount = reader.ReadInt();
                         m_KeywordTagList = new List<BaseXmlSpawner.KeywordTag>(tagcount);
@@ -8962,9 +8824,6 @@ namespace Server.Mobiles
                         goto case 17;
                     }
                 case 17:
-                    {
-                        goto case 16;
-                    }
                 case 16:
                     {
                         hasnewobjectinfo = true;
@@ -9112,15 +8971,18 @@ namespace Server.Mobiles
                         m_Y = reader.ReadInt();
                         m_Width = reader.ReadInt();
                         m_Height = reader.ReadInt();
+
                         //we HAVE to check if the area is even or if coordinates point to the original spawner, otherwise it's custom area!
                         if (m_Width == m_Height && (m_Width % 2) == 0 && (m_X + m_Width / 2) == X && (m_Y + m_Height / 2) == Y)
                             m_SpawnRange = m_Width / 2;
                         else
                             m_SpawnRange = -1;
+
                         if (!haveproximityrange)
                         {
                             m_ProximityRange = -1;
                         }
+
                         m_WayPoint = reader.ReadItem() as WayPoint;
                         m_Group = reader.ReadBool();
                         m_MinDelay = reader.ReadTimeSpan();
@@ -9189,32 +9051,31 @@ namespace Server.Mobiles
                                 }
                             }
                         }
+
                         // now have to reintegrate the later version spawnobject information into the earlier version desered objects
                         if (hasnewobjectinfo && tmpSpawnListSize == SpawnListSize)
                         {
                             for (int i = 0; i < SpawnListSize; ++i)
                             {
                                 SpawnObject so = m_SpawnObjects[i];
-
                                 so.SubGroup = tmpSubGroup[i];
                                 so.SequentialResetTime = tmpSequentialResetTime[i];
                                 so.SequentialResetTo = tmpSequentialResetTo[i];
                                 so.KillsNeeded = tmpKillsNeeded[i];
-                                if (version > 19)
-                                    so.RequireSurface = tmpRequireSurface[i];
+                                so.RequireSurface = tmpRequireSurface[i];
+
                                 bool restrictkills = false;
                                 bool clearadvance = true;
                                 double mind = -1;
                                 double maxd = -1;
                                 DateTime nextspawn = DateTime.MinValue;
-                                if (version > 23)
-                                {
-                                    restrictkills = tmpRestrictKillsToSubgroup[i];
-                                    clearadvance = tmpClearOnAdvance[i];
-                                    mind = tmpMinDelay[i];
-                                    maxd = tmpMaxDelay[i];
-                                    nextspawn = tmpNextSpawn[i];
-                                }
+
+                                restrictkills = tmpRestrictKillsToSubgroup[i];
+                                clearadvance = tmpClearOnAdvance[i];
+                                mind = tmpMinDelay[i];
+                                maxd = tmpMaxDelay[i];
+                                nextspawn = tmpNextSpawn[i];
+
                                 so.RestrictKillsToSubgroup = restrictkills;
                                 so.ClearOnAdvance = clearadvance;
                                 so.MinDelay = mind;
@@ -9222,32 +9083,23 @@ namespace Server.Mobiles
                                 so.NextSpawn = nextspawn;
 
                                 bool disablespawn = false;
-                                if (version > 26)
-                                {
-                                    disablespawn = tmpDisableSpawn[i];
-                                }
+                                disablespawn = tmpDisableSpawn[i];
                                 so.Disabled = disablespawn;
 
                                 int packrange = -1;
-                                if (version > 27)
-                                {
-                                    packrange = tmpPackRange[i];
-                                }
+                                packrange = tmpPackRange[i];
                                 so.PackRange = packrange;
 
                                 int spawnsper = 1;
-                                if (version > 28)
-                                {
-                                    spawnsper = tmpSpawnsPer[i];
-                                }
+                                spawnsper = tmpSpawnsPer[i];
                                 so.SpawnsPerTick = spawnsper;
-
                             }
                         }
 
                         break;
                     }
             }
+
             if (m_RegionName != null)
             {
                 Timer.DelayCall(delegate { if (!Deleted && m_RegionName != null) RegionName = m_RegionName; });
@@ -9329,7 +9181,7 @@ namespace Server.Mobiles
             public int SpawnsPerTick { get; set; } = 1;
             public int SequentialResetTo { get; set; }
             public int KillsNeeded { get; set; }
-            public bool RestrictKillsToSubgroup { get; set; } = false;
+            public bool RestrictKillsToSubgroup { get; set; } 
             public bool ClearOnAdvance { get; set; } = true;
             public double MinDelay { get; set; } = -1;
             public double MaxDelay { get; set; } = -1;

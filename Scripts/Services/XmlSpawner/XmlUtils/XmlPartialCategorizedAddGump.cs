@@ -216,15 +216,7 @@ namespace Server.Gumps
                         {
                             Type type = ((SearchEntry)m_SearchResults[index]).EntryType;
 
-                            if (m_Gump is XmlAddGump mXmlAddGump && type != null)
-                            {
-                                if (mXmlAddGump.defs?.NameList != null && m_EntryIndex >= 0 && m_EntryIndex < mXmlAddGump.defs.NameList.Length)
-                                {
-                                    mXmlAddGump.defs.NameList[m_EntryIndex] = type.Name;
-                                    XmlAddGump.Refresh(from, true);
-                                }
-                            }
-                            else if (m_Spawner != null && type != null)
+                            if (m_Spawner != null && type != null)
                             {
                                 XmlSpawnerGump xg = m_Spawner.SpawnerGump;
 
