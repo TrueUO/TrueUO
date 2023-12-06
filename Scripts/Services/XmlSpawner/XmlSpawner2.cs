@@ -102,7 +102,6 @@ namespace Server.Mobiles
         #region Variable declarations
         private string m_Name = string.Empty;
         private string m_UniqueId = string.Empty;
-        private bool m_PlayerCreated;
         private bool m_HomeRangeIsRelative;
         private int m_Team;
         private int m_HomeRange;
@@ -152,16 +151,15 @@ namespace Server.Mobiles
         private Item m_SetPropertyItem;
 
         private bool m_skipped;
-        private int m_KillReset = defKillReset;      // number of spawn ticks that pass without kills before killcount gets reset to zero
+        private int m_KillReset = defKillReset; // number of spawn ticks that pass without kills before killcount gets reset to zero
         private int m_spawncheck;
         private TODModeType m_TODMode = TODModeType.Realtime;
-        private string m_GumpState;
         private bool m_ExternalTriggering;
         private bool m_ExternalTrigger;
-        private int m_SequentialSpawning = -1;      // off by default
+        private int m_SequentialSpawning = -1; // off by default
         private DateTime m_SeqEnd;
-        private Region m_Region;    // 2004.02.08 :: Omega Red
-        private string m_RegionName = string.Empty; // 2004.02.08 :: Omega Red
+        private Region m_Region;
+        private string m_RegionName = string.Empty; 
         private AccessLevel m_TriggerAccessLevel = AccessLevel.Player;
 
         public List<XmlTextEntryBook> m_TextEntryBook;
@@ -169,7 +167,6 @@ namespace Server.Mobiles
 
         private bool m_AllowGhostTriggering;
         private bool m_AllowNPCTriggering;
-        private string m_ConfigFile;
         private bool m_OnHold;
         private bool m_HoldSequence;
         private bool m_SpawnOnTrigger;
@@ -562,12 +559,6 @@ namespace Server.Mobiles
                 if (sectorList != null) return sectorList.Count;
                 return 0;
             }
-        }
-
-        public bool PlayerCreated
-        {
-            get => m_PlayerCreated;
-            set => m_PlayerCreated = value;
         }
 
         public bool OnHold
@@ -1518,13 +1509,6 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string GumpState
-        {
-            get => m_GumpState;
-            set => m_GumpState = value;
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public int SequentialSpawn
         {
             get => m_SequentialSpawning;
@@ -1588,13 +1572,6 @@ namespace Server.Mobiles
         {
             get => m_AllowNPCTriggering;
             set => m_AllowNPCTriggering = value;
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string ConfigFile
-        {
-            get => m_ConfigFile;
-            set => m_ConfigFile = value;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -5026,7 +5003,6 @@ namespace Server.Mobiles
                 dr["AllowGhostTriggering"] = sp.m_AllowGhostTriggering;
                 dr["AllowNPCTriggering"] = sp.m_AllowNPCTriggering;
                 dr["SpawnOnTrigger"] = sp.m_SpawnOnTrigger;
-                dr["ConfigFile"] = sp.m_ConfigFile;
                 dr["SmartSpawning"] = sp.m_SmartSpawning;
                 dr["TickReset"] = sp.m_DisableGlobalAutoReset;
 
@@ -5225,7 +5201,6 @@ namespace Server.Mobiles
         public XmlSpawner()
             : base(BaseItemId)
         {
-            m_PlayerCreated = true;
             m_UniqueId = Guid.NewGuid().ToString();
             SpawnRange = defSpawnRange;
 
@@ -5239,7 +5214,6 @@ namespace Server.Mobiles
         public XmlSpawner(int amount, int minDelay, int maxDelay, int team, int homeRange, string creatureName)
             : base(BaseItemId)
         {
-            m_PlayerCreated = true;
             m_UniqueId = Guid.NewGuid().ToString();
             SpawnRange = homeRange;
             SpawnObject[] so = new SpawnObject[1];
@@ -5255,7 +5229,6 @@ namespace Server.Mobiles
         public XmlSpawner(int amount, int minDelay, int maxDelay, int team, int homeRange, int spawnRange, string creatureName)
             : base(BaseItemId)
         {
-            m_PlayerCreated = true;
             m_UniqueId = Guid.NewGuid().ToString();
             SpawnRange = spawnRange;
             SpawnObject[] so = new SpawnObject[1];
@@ -5271,7 +5244,6 @@ namespace Server.Mobiles
         public XmlSpawner(string creatureName)
             : base(BaseItemId)
         {
-            m_PlayerCreated = true;
             m_UniqueId = Guid.NewGuid().ToString();
             SpawnObject[] so = new SpawnObject[1];
             so[0] = new SpawnObject(creatureName, 1);
@@ -5298,7 +5270,6 @@ namespace Server.Mobiles
                 triggerProbability, setPropertyItem, isGroup, todMode, killReset, externalTriggering, sequentialSpawning, regionName, allowghost, allownpc, spawnontrigger, configfile,
                 despawnTime, skillTrigger, smartSpawning, wayPoint);
         }
-
 
         public void InitSpawn(int x, int y, int width, int height, string name, int maxCount, TimeSpan minDelay, TimeSpan maxDelay, TimeSpan duration,
             int proximityRange, int proximityTriggerSound, int amount, int team, int homeRange, bool isRelativeHomeRange, SpawnObject[] objectsToSpawn,
@@ -5367,12 +5338,7 @@ namespace Server.Mobiles
             m_AllowNPCTriggering = allownpc;
             m_SpawnOnTrigger = spawnontrigger;
             m_SmartSpawning = smartSpawning;
-            ConfigFile = configfile;
             m_WayPoint = wayPoint;
-
-            // set the totalitem property to -1 so that it doesnt show up in the item count of containers
-            //TotalItems = -1;
-            //UpdateTotal(this, TotalType.Items, -1);
 
             // Create the array of spawned objects
             m_SpawnObjects = new List<SpawnObject>();
@@ -6619,7 +6585,6 @@ namespace Server.Mobiles
             m_refractActivated = false;
             m_mob_who_triggered = null;
             m_killcount = 0;
-            m_GumpState = null;
             FreeRun = false;
         }
 
@@ -8450,7 +8415,7 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(32);
+            writer.Write(33);
 
             writer.Write(m_DisableGlobalAutoReset);
             writer.Write(m_AllowNPCTriggering);
@@ -8525,8 +8490,7 @@ namespace Server.Mobiles
                     writer.Write(m_SpawnObjects[i].RequireSurface);
                 }
             }
-           
-            writer.Write(m_ConfigFile);
+            
             writer.Write(m_OnHold);
             writer.Write(m_HoldSequence);
 
@@ -8571,7 +8535,6 @@ namespace Server.Mobiles
             writer.Write(m_ExternalTriggering);
             writer.Write(m_ExternalTrigger);
             writer.Write(m_NoItemTriggerName);
-            writer.Write(m_GumpState);
 
             int todtype = (int)m_TODMode;
             writer.Write(todtype);
@@ -8687,19 +8650,17 @@ namespace Server.Mobiles
 
             switch (version)
             {
+                case 33:
                 case 32:
-                case 31:
+                    {
+                        // 12/6/2023 - Start to clean up and eventually reset seri/deser
+                        goto case 3;
+                    }
+                case 3:
                     {
                         m_DisableGlobalAutoReset = reader.ReadBool();
-                        goto case 30;
-                    }
-                case 30:
-                    {
                         m_AllowNPCTriggering = reader.ReadBool();
-                        goto case 29;
-                    }
-                case 29:
-                    {
+
                         tmpSpawnListSize = reader.ReadInt();
                         tmpSpawnsPer = new List<int>(tmpSpawnListSize);
                         for (int i = 0; i < tmpSpawnListSize; ++i)
@@ -8707,43 +8668,26 @@ namespace Server.Mobiles
                             int spawnsper = reader.ReadInt();
 
                             tmpSpawnsPer.Add(spawnsper);
-
                         }
-                        goto case 28;
-                    }
-                case 28:
-                    {
+
                         tmpPackRange = new List<int>(tmpSpawnListSize);
                         for (int i = 0; i < tmpSpawnListSize; ++i)
                         {
                             int packrange = reader.ReadInt();
 
                             tmpPackRange.Add(packrange);
-
                         }
-                        goto case 27;
-                    }
-                case 27:
-                    {
+
                         tmpDisableSpawn = new List<bool>(tmpSpawnListSize);
                         for (int i = 0; i < tmpSpawnListSize; ++i)
                         {
                             bool disablespawn = reader.ReadBool();
 
                             tmpDisableSpawn.Add(disablespawn);
-
                         }
-                        goto case 26;
-                    }
-                case 26:
-                    {
+
                         m_SpawnOnTrigger = reader.ReadBool();
 
-                        goto case 25;
-                    }
-                case 25:
-                case 24:
-                    {
                         tmpRestrictKillsToSubgroup = new List<bool>(tmpSpawnListSize);
                         tmpClearOnAdvance = new List<bool>(tmpSpawnListSize);
                         tmpMinDelay = new List<double>(tmpSpawnListSize);
@@ -8770,41 +8714,27 @@ namespace Server.Mobiles
                         {
                             m_ShowBoundsItems = reader.ReadStrongItemList<Static>();
                         }
-                        goto case 23;
-                    }
-                case 23:
-                    {
+
                         IsInactivated = reader.ReadBool();
                         SmartSpawning = reader.ReadBool();
-
-                        goto case 22;
-                    }
-                case 22:
-                    {
-                        SkillTrigger = reader.ReadString();    // note this will also register the skill
+                        SkillTrigger = reader.ReadString();
                         m_skill_that_triggered = (SkillName)reader.ReadInt();
                         m_FreeRun = reader.ReadBool();
                         m_mob_who_triggered = reader.ReadMobile();
-                        goto case 21;
-                    }
-                case 21:
-                    {
                         m_DespawnTime = reader.ReadTimeSpan();
-                        goto case 20;
-                    }
-                case 20:
-                    {
+
                         tmpRequireSurface = new List<bool>(tmpSpawnListSize);
                         for (int i = 0; i < tmpSpawnListSize; ++i)
                         {
                             bool requiresurface = reader.ReadBool();
                             tmpRequireSurface.Add(requiresurface);
                         }
-                        goto case 19;
-                    }
-                case 19:
-                    {
-                        m_ConfigFile = reader.ReadString();
+
+                        if (version < 33)
+                        {
+                            reader.ReadString();
+                        }
+
                         m_OnHold = reader.ReadBool();
                         m_HoldSequence = reader.ReadBool();
 
@@ -8816,16 +8746,13 @@ namespace Server.Mobiles
                             BaseXmlSpawner.KeywordTag tag = new BaseXmlSpawner.KeywordTag(null, this);
                             tag.Deserialize(reader);
                         }
-                        goto case 18;
-                    }
-                case 18:
-                    {
+
                         m_AllowGhostTriggering = reader.ReadBool();
-                        goto case 17;
+                        goto case 2;
                     }
-                case 17:
-                case 16:
+                case 2:
                     {
+                        // What is going on here with hasnewobjectinfo?
                         hasnewobjectinfo = true;
                         m_SequentialSpawning = reader.ReadInt();
                         TimeSpan seqdelay = reader.ReadTimeSpan();
@@ -8847,26 +8774,19 @@ namespace Server.Mobiles
                             tmpKillsNeeded.Add(killsneeded);
                         }
                         m_RegionName = reader.ReadString();
-                        goto case 15;
+                        goto case 1;
                     }
-                case 15:
+                case 1:
                     {
                         m_ExternalTriggering = reader.ReadBool();
                         m_ExternalTrigger = reader.ReadBool();
-                        goto case 14;
-                    }
-                case 14:
-                    {
                         m_NoItemTriggerName = reader.ReadString();
-                        goto case 13;
-                    }
-                case 13:
-                    {
-                        m_GumpState = reader.ReadString();
-                        goto case 12;
-                    }
-                case 12:
-                    {
+
+                        if (version < 33)
+                        {
+                            reader.ReadString();
+                        }
+
                         int todtype = reader.ReadInt();
                         switch (todtype)
                         {
@@ -8877,52 +8797,22 @@ namespace Server.Mobiles
                                 m_TODMode = TODModeType.Realtime;
                                 break;
                         }
-                        goto case 11;
-                    }
-                case 11:
-                    {
+
                         m_KillReset = reader.ReadInt();
                         m_skipped = reader.ReadBool();
                         m_spawncheck = reader.ReadInt();
-                        goto case 10;
-                    }
-                case 10:
-                    {
                         m_SetPropertyItem = reader.ReadItem();
-                        goto case 9;
-                    }
-                case 9:
-                    {
                         m_TriggerProbability = reader.ReadDouble();
-                        goto case 8;
-                    }
-                case 8:
-                    {
                         m_MobPropertyName = reader.ReadString();
                         m_MobTriggerName = reader.ReadString();
                         m_PlayerPropertyName = reader.ReadString();
-                        goto case 7;
-                    }
-                case 7:
-                    {
                         m_SpeechTrigger = reader.ReadString();
-                        goto case 6;
-                    }
-                case 6:
-                    {
                         m_ItemTriggerName = reader.ReadString();
-                        goto case 5;
-                    }
-                case 5:
-                    {
                         m_ProximityTriggerMessage = reader.ReadString();
                         m_ObjectPropertyItem = reader.ReadItem();
                         m_ObjectPropertyName = reader.ReadString();
                         m_killcount = reader.ReadInt();
-                        goto case 4;
-                    }
-                case 4:
-                    {
+
                         haveproximityrange = true;
                         m_ProximityRange = reader.ReadInt();
                         m_ProximityTriggerSound = reader.ReadInt();
@@ -8934,6 +8824,7 @@ namespace Server.Mobiles
                         m_TODEnd = reader.ReadTimeSpan();
                         m_MinRefractory = reader.ReadTimeSpan();
                         m_MaxRefractory = reader.ReadTimeSpan();
+
                         if (m_refractActivated)
                         {
                             TimeSpan delay = reader.ReadTimeSpan();
@@ -8944,20 +8835,9 @@ namespace Server.Mobiles
                             TimeSpan delay = reader.ReadTimeSpan();
                             DoTimer2(delay);
                         }
-                        goto case 3;
-                    }
-                case 3:
-                    {
+
                         m_ShowContainerStatic = reader.ReadItem() as Static;
-                        goto case 2;
-                    }
-                case 2:
-                    {
                         m_Duration = reader.ReadTimeSpan();
-                        goto case 1;
-                    }
-                case 1:
-                    {
                         m_UniqueId = reader.ReadString();
                         m_HomeRangeIsRelative = reader.ReadBool();
                         goto case 0;

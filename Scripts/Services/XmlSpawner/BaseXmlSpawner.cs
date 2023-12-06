@@ -234,16 +234,15 @@ namespace Server.Mobiles
 
             public void Serialize(GenericWriter writer)
             {
-                writer.Write(1); // version
-                                 // Version 1
+                writer.Write(1);
+
                 writer.Write((int)Flags);
-                // Version 0
                 writer.Write(m_Spawner);
                 writer.Write(Type);
                 writer.Write(Serial);
+
                 if (Type == 0)
                 {
-                    // save any timer information
                     writer.Write(m_End - DateTime.UtcNow);
                     writer.Write(m_Delay);
                     writer.Write(m_Condition);
@@ -253,9 +252,11 @@ namespace Server.Mobiles
                     writer.Write(m_TrigMob);
                 }
             }
+
             public void Deserialize(GenericReader reader)
             {
                 int version = reader.ReadInt();
+
                 switch (version)
                 {
                     case 1:
@@ -265,9 +266,9 @@ namespace Server.Mobiles
                         m_Spawner = (XmlSpawner)reader.ReadItem();
                         Type = reader.ReadInt();
                         Serial = reader.ReadInt();
+
                         if (Type == 0)
                         {
-                            // get any timer info
                             TimeSpan delay = reader.ReadTimeSpan();
                             m_Delay = reader.ReadTimeSpan();
                             m_Condition = reader.ReadString();
