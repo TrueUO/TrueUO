@@ -12,10 +12,10 @@ namespace Server.Regions
 {
     public class SeaMarketRegion : BaseRegion
     {
-        private static readonly TimeSpan KickDuration = TimeSpan.FromMinutes(20);
+        private static readonly TimeSpan _KickDuration = TimeSpan.FromMinutes(20);
 
-        private static SeaMarketRegion m_Region1;
-        private static SeaMarketRegion m_Region2;
+        private static SeaMarketRegion _Region1;
+        private static SeaMarketRegion _Region2;
 
         private Timer m_Timer;
 
@@ -34,20 +34,20 @@ namespace Server.Regions
 
                 if (value)
                 {
-                    m_Region1?.StartTimer();
-                    m_Region2?.StartTimer();
+                    _Region1?.StartTimer();
+                    _Region2?.StartTimer();
                 }
                 else
                 {
-                    m_Region1?.StopTimer();
-                    m_Region2?.StopTimer();
+                    _Region1?.StopTimer();
+                    _Region2?.StopTimer();
                 }
             }
         }
 
-        public static Rectangle2D[] Bounds => m_Bounds;
+        public static Rectangle2D[] Bounds => _Bounds;
 
-        private static readonly Rectangle2D[] m_Bounds =
+        private static readonly Rectangle2D[] _Bounds =
         {
             new Rectangle2D(4529, 2296, 45, 112)
         };
@@ -59,13 +59,13 @@ namespace Server.Regions
 
         public override void OnRegister()
         {
-            if (m_Region1 == null)
+            if (_Region1 == null)
             {
-                m_Region1 = this;
+                _Region1 = this;
             }
-            else if (m_Region2 == null)
+            else if (_Region2 == null)
             {
-                m_Region2 = this;
+                _Region2 = this;
             }
         }
 
@@ -94,12 +94,14 @@ namespace Server.Regions
 
         #region Pirate Blabbing
         public static Dictionary<Mobile, DateTime> m_PirateBlabTable = new Dictionary<Mobile, DateTime>();
-        private static readonly TimeSpan BlabDuration = TimeSpan.FromMinutes(1);
+        private static readonly TimeSpan _BlabDuration = TimeSpan.FromMinutes(1);
 
         public static void TryPirateBlab(Mobile from, Mobile npc)
         {
             if (m_PirateBlabTable.ContainsKey(from) && m_PirateBlabTable[from] > DateTime.UtcNow || BountyQuestSpawner.Bounties.Count <= 0)
+            {
                 return;
+            }
 
             //Make of list of bounties on their map
             List<Mobile> bounties = new List<Mobile>();
@@ -126,16 +128,20 @@ namespace Server.Regions
                     string locArgs;
 
                     if (Sextant.Format(loc, map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
+                    {
                         locArgs = $"{yLat}°{yMins}'{(ySouth ? "S" : "N")},{xLong}°{xMins}'{(xEast ? "E" : "W")}";
+                    }
                     else
+                    {
                         locArgs = "?????";
+                    }
 
-                    var combine = string.Format("{0}\t{1}", capt.PirateName > -1 ? string.Format("#{0}", capt.PirateName) : capt.Name, locArgs);
+                    string combine = $"{(capt.PirateName > -1 ? $"#{capt.PirateName}" : capt.Name)}\t{locArgs}";
 
                     int cliloc = Utility.RandomMinMax(1149856, 1149865);
                     npc.SayTo(from, cliloc, combine);
 
-                    m_PirateBlabTable[from] = DateTime.UtcNow + BlabDuration;
+                    m_PirateBlabTable[from] = DateTime.UtcNow + _BlabDuration;
                 }
             }
 
@@ -144,15 +150,17 @@ namespace Server.Regions
 
         public static void CheckBlab_Callback()
         {
-            CheckBabble(m_Region1);
-            CheckBabble(m_Region2);
+            CheckBabble(_Region1);
+            CheckBabble(_Region2);
             CheckBabble(TokunoDocksRegion.Instance);
         }
 
         public static void CheckBabble(Region r)
         {
             if (r == null)
+            {
                 return;
+            }
 
             foreach (Mobile player in r.GetEnumeratedMobiles())
             {
@@ -179,7 +187,9 @@ namespace Server.Regions
         public void StartTimer()
         {
             if (m_Timer != null)
+            {
                 m_Timer.Stop();
+            }
 
             m_Timer = new InternalTimer(this);
             m_Timer.Start();
@@ -188,7 +198,9 @@ namespace Server.Regions
         public void StopTimer()
         {
             if (m_Timer != null)
+            {
                 m_Timer.Stop();
+            }
 
             m_Timer = null;
         }
@@ -225,9 +237,13 @@ namespace Server.Regions
                 DateTime moveBy = kvp.Value;
 
                 if (boat == null || !boats.Contains(boat) || boat.Deleted)
+                {
                     toRemove.Add(boat);
+                }
                 else if (DateTime.UtcNow >= moveBy && KickBoat(boat))
+                {
                     toRemove.Add(boat);
+                }
                 else
                 {
                     if (boat.Owner != null && boat.Owner.NetState != null)
@@ -243,7 +259,7 @@ namespace Server.Regions
                 }
             }
 
-            for (var index = 0; index < boats.Count; index++)
+            for (int index = 0; index < boats.Count; index++)
             {
                 BaseBoat boat = boats[index];
 
@@ -253,7 +269,7 @@ namespace Server.Regions
                 }
             }
 
-            for (var index = 0; index < toRemove.Count; index++)
+            for (int index = 0; index < toRemove.Count; index++)
             {
                 BaseBoat b = toRemove[index];
 
@@ -267,30 +283,36 @@ namespace Server.Regions
         public void AddToTable(BaseBoat boat)
         {
             if (m_BoatTable.ContainsKey(boat))
+            {
                 return;
+            }
 
-            m_BoatTable.Add(boat, DateTime.UtcNow + KickDuration);
+            m_BoatTable.Add(boat, DateTime.UtcNow + _KickDuration);
 
             if (boat.Owner != null && boat.Owner.NetState != null)
-                boat.Owner.SendMessage("You can only dock your boat here for {0} minutes.", (int)KickDuration.TotalMinutes);
+            {
+                boat.Owner.SendMessage("You can only dock your boat here for {0} minutes.", (int)_KickDuration.TotalMinutes);
+            }
         }
 
-        private readonly Rectangle2D[] m_KickLocs =
+        private readonly Rectangle2D[] _KickLocs =
         {
-            new Rectangle2D(m_Bounds[0].X - 100, m_Bounds[0].X - 100, 200 + m_Bounds[0].Width, 100),
-            new Rectangle2D(m_Bounds[0].X - 100, m_Bounds[0].Y, 100, m_Bounds[0].Height + 100),
-            new Rectangle2D(m_Bounds[0].X, m_Bounds[0].Y + m_Bounds[0].Height, m_Bounds[0].Width + 100, 100),
-            new Rectangle2D(m_Bounds[0].X + m_Bounds[0].Width, m_Bounds[0].Y, 100, m_Bounds[0].Height)
+            new Rectangle2D(_Bounds[0].X - 100, _Bounds[0].X - 100, 200 + _Bounds[0].Width, 100),
+            new Rectangle2D(_Bounds[0].X - 100, _Bounds[0].Y, 100, _Bounds[0].Height + 100),
+            new Rectangle2D(_Bounds[0].X, _Bounds[0].Y + _Bounds[0].Height, _Bounds[0].Width + 100, 100),
+            new Rectangle2D(_Bounds[0].X + _Bounds[0].Width, _Bounds[0].Y, 100, _Bounds[0].Height)
         };
 
         public bool KickBoat(BaseBoat boat)
         {
             if (boat == null || boat.Deleted)
+            {
                 return false;
+            }
 
             for (int i = 0; i < 25; i++)
             {
-                Rectangle2D rec = m_KickLocs[Utility.Random(m_KickLocs.Length)];
+                Rectangle2D rec = _KickLocs[Utility.Random(_KickLocs.Length)];
 
                 int x = Utility.RandomMinMax(rec.X, rec.X + rec.Width);
                 int y = Utility.RandomMinMax(rec.Y, rec.Y + rec.Height);
@@ -303,27 +325,33 @@ namespace Server.Regions
                     boat.Teleport(x - boat.X, y - boat.Y, z - boat.Z);
 
                     if (boat.Owner != null && boat.Owner.NetState != null)
+                    {
                         boat.SendMessageToAllOnBoard(1149785); //A strong tide comes and carries your boat to deeper water.
+                    }
+
                     return true;
                 }
             }
+
             return false;
         }
 
         private class InternalTimer : Timer
         {
-            private readonly SeaMarketRegion m_Region;
+            private readonly SeaMarketRegion _Region;
 
             public InternalTimer(SeaMarketRegion reg)
                 : base(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1))
             {
-                m_Region = reg;
+                _Region = reg;
             }
 
             protected override void OnTick()
             {
-                if (m_Region != null)
-                    m_Region.OnTick();
+                if (_Region != null)
+                {
+                    _Region.OnTick();
+                }
             }
         }
 
@@ -350,66 +378,6 @@ namespace Server.Regions
             m_RestrictBoats = reader.ReadBool();
 
             Timer.DelayCall(TimeSpan.FromSeconds(30), StartTimers_Callback);
-        }
-
-        public static void GetBoatInfo_OnCommand(CommandEventArgs e)
-        {
-            List<BaseBoat> boats = new List<BaseBoat>(m_Region1.BoatTable.Keys);
-            List<DateTime> times = new List<DateTime>(m_Region1.BoatTable.Values);
-
-            e.Mobile.SendMessage("========Boat Info for Felucca as Follows===========");
-            e.Mobile.SendMessage("Boats: {0}", boats.Count);
-
-            if (!m_RestrictBoats)
-                e.Mobile.SendMessage("Boat restriction is currenlty disabled.");
-
-            Console.WriteLine("========Boat Info as Follows===========");
-            Console.WriteLine("Boats: {0}", boats.Count);
-
-            if (!m_RestrictBoats)
-                Console.WriteLine("Boat restriction is currenlty disabled.");
-
-            for (int i = 0; i < boats.Count; i++)
-            {
-                BaseBoat boat = boats[i];
-
-                if (boat == null || boat.Deleted)
-                    continue;
-
-                e.Mobile.SendMessage("Boat Name: {0}; Boat Owner: {1}; Expires: {2}", boat.ShipName, boat.Owner, times[i]);
-
-                Console.WriteLine("Boat Name: {0}; Boat Owner: {1}; Expires: {2}", boat.ShipName, boat.Owner, times[i]);
-            }
-
-            boats.Clear();
-            times.Clear();
-
-            boats = new List<BaseBoat>(m_Region2.BoatTable.Keys);
-            times = new List<DateTime>(m_Region2.BoatTable.Values);
-
-            e.Mobile.SendMessage("========Boat Info for Trammel as Follows===========");
-            e.Mobile.SendMessage("Boats: {0}", boats.Count);
-
-            if (!m_RestrictBoats)
-                e.Mobile.SendMessage("Boat restriction is currenlty disabled.");
-
-            Console.WriteLine("========Boat Info as Follows===========");
-            Console.WriteLine("Boats: {0}", boats.Count);
-
-            if (!m_RestrictBoats)
-                Console.WriteLine("Boat restriction is currenlty disabled.");
-
-            for (int i = 0; i < boats.Count; i++)
-            {
-                BaseBoat boat = boats[i];
-
-                if (boat == null || boat.Deleted)
-                    continue;
-
-                e.Mobile.SendMessage("Boat Name: {0}; Boat Owner: {1}; Expires: {2}", boat.ShipName, boat.Owner, times[i]);
-
-                Console.WriteLine("Boat Name: {0}; Boat Owner: {1}; Expires: {2}", boat.ShipName, boat.Owner, times[i]);
-            }
         }
 
         public static void SetRestriction_OnCommand(CommandEventArgs e)

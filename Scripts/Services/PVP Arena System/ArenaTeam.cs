@@ -38,16 +38,7 @@ namespace Server.Engines.ArenaSystem
 
         public bool RemoveParticipant(PlayerMobile pm)
         {
-            if (Players == null)
-                return false;
-
-            if (Players.ContainsKey(pm))
-            {
-                Players.Remove(pm);
-                return true;
-            }
-
-            return false;
+            return Players != null && Players.Remove(pm);
         }
 
         public bool Contains(PlayerMobile pm)

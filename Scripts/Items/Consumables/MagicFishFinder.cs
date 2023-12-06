@@ -6,7 +6,7 @@ namespace Server.Items
 {
     public class MagicalFishFinder : Item
     {
-        public const int DecayPeriod = 4;
+        private const int _DecayPeriod = 4;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime Expires { get; set; }
@@ -23,31 +23,37 @@ namespace Server.Items
         {
             Hue = 2500;
 
-            Expires = DateTime.UtcNow + TimeSpan.FromHours(DecayPeriod);
+            Expires = DateTime.UtcNow + TimeSpan.FromHours(_DecayPeriod);
             m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), CheckDecay);
         }
 
         public void CheckDecay()
         {
             if (Expires < DateTime.UtcNow)
+            {
                 Decay();
+            }
             else
+            {
                 InvalidateProperties();
+            }
         }
 
         public void Decay()
         {
             if (RootParent is Mobile mobile)
             {
-                Mobile parent = mobile;
-
                 if (Name == null)
-                    parent.SendLocalizedMessage(1072515, "#" + LabelNumber); // The ~1_name~ expired...
+                {
+                    mobile.SendLocalizedMessage(1072515, "#" + LabelNumber); // The ~1_name~ expired...
+                }
                 else
-                    parent.SendLocalizedMessage(1072515, Name); // The ~1_name~ expired...
+                {
+                    mobile.SendLocalizedMessage(1072515, Name); // The ~1_name~ expired...
+                }
 
-                Effects.SendLocationParticles(EffectItem.Create(parent.Location, parent.Map, EffectItem.DefaultDuration), 0x3728, 8, 20, 5042);
-                Effects.PlaySound(parent.Location, parent.Map, 0x201);
+                Effects.SendLocationParticles(EffectItem.Create(mobile.Location, mobile.Map, EffectItem.DefaultDuration), 0x3728, 8, 20, 5042);
+                Effects.PlaySound(mobile.Location, mobile.Map, 0x201);
             }
             else
             {
@@ -65,7 +71,9 @@ namespace Server.Items
             int left = 0;
 
             if (DateTime.UtcNow < Expires)
+            {
                 left = (int)(Expires - DateTime.UtcNow).TotalSeconds;
+            }
 
             list.Add(1072517, left.ToString()); // Lifespan: ~1_val~ seconds
         }
@@ -84,20 +92,22 @@ namespace Server.Items
         public override void OnDoubleClick(Mobile m)
         {
             if (IsChildOf(m.Backpack))
+            {
                 CheckUpdate(m);
+            }
         }
 
         public void CheckUpdate(Mobile m)
         {
-            if (Schools.ContainsKey(m.Map))
+            if (Schools.TryGetValue(m.Map, out List<SchoolEntry> value))
             {
                 SchoolEntry entry = null;
 
-                for (var index = 0; index < Schools[m.Map].Count; index++)
+                for (int index = 0; index < value.Count; index++)
                 {
-                    var e = Schools[m.Map][index];
+                    SchoolEntry e = value[index];
 
-                    if (m.InRange(e.Location, SchoolRange))
+                    if (m.InRange(e.Location, _SchoolRange))
                     {
                         entry = e;
                         break;
@@ -110,11 +120,11 @@ namespace Server.Items
                     return;
                 }
 
-                for (var index = 0; index < Schools[m.Map].Count; index++)
+                for (int index = 0; index < value.Count; index++)
                 {
-                    var e = Schools[m.Map][index];
+                    SchoolEntry e = value[index];
 
-                    if (m.InRange(e.Location, MessageRange))
+                    if (m.InRange(e.Location, _MessageRange))
                     {
                         entry = e;
                         break;
@@ -136,7 +146,7 @@ namespace Server.Items
             }
         }
 
-        public string GetDirectionString(Direction d)
+        public static string GetDirectionString(Direction d)
         {
             return $"#{1152639 + (int)d}";
         }
@@ -144,17 +154,19 @@ namespace Server.Items
         public static bool HasSchool(Mobile m)
         {
             if (m == null || !m.Alive || m.Backpack == null)
+            {
                 return false;
+            }
 
-            if (m.Backpack.FindItemByType<MagicalFishFinder>() != null && Schools.ContainsKey(m.Map))
+            if (m.Backpack.FindItemByType<MagicalFishFinder>() != null && Schools.TryGetValue(m.Map, out List<SchoolEntry> value))
             {
                 SchoolEntry entry = null;
 
-                for (var index = 0; index < Schools[m.Map].Count; index++)
+                for (int index = 0; index < value.Count; index++)
                 {
-                    var e = Schools[m.Map][index];
+                    SchoolEntry e = value[index];
 
-                    if (m.InRange(e.Location, SchoolRange))
+                    if (m.InRange(e.Location, _SchoolRange))
                     {
                         entry = e;
                         break;
@@ -192,13 +204,17 @@ namespace Server.Items
             Expires = reader.ReadDateTime();
 
             if (Expires < DateTime.UtcNow)
+            {
                 Decay();
+            }
             else
+            {
                 m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), CheckDecay);
+            }
         }
 
-        public static int MessageRange = 100;
-        public static int SchoolRange = 20;
+        private const int _MessageRange = 100;
+        private const int _SchoolRange = 20;
 
         public static Dictionary<Map, List<SchoolEntry>> Schools { get; set; }
 
@@ -216,72 +232,80 @@ namespace Server.Items
                 int amount = 150;
 
                 if (kvp.Key == Map.Ilshenar || kvp.Key == Map.Tokuno)
+                {
                     amount = 50;
+                }
 
                 for (int i = 0; i < amount; i++)
                 {
                     Point3D p;
-                    int failsafe = 0;
+                    int failSafe = 0;
 
                     do
                     {
                         p = SOS.FindLocation(kvp.Key);
-                        failsafe++;
+                        failSafe++;
                     }
-                    while (p == Point3D.Zero && failsafe < 10);
+                    while (p == Point3D.Zero && failSafe < 10);
 
                     kvp.Value.Add(new SchoolEntry(kvp.Key, new Point2D(p.X, p.Y)));
                 }
 
                 if (kvp.Value.Count == 0)
+                {
                     Console.WriteLine("Warning: {0} has 0 School entries!", kvp.Key);
+                }
             }
 
             CommandSystem.Register("MoveToSchool", AccessLevel.GameMaster, e =>
                 {
                     Mobile m = e.Mobile;
 
-                    if (Schools.ContainsKey(m.Map))
+                    if (Schools.TryGetValue(m.Map, out List<SchoolEntry> value))
                     {
-                        SchoolEntry entry = Schools[m.Map][Utility.Random(Schools[m.Map].Count)];
+                        SchoolEntry entry = value[Utility.Random(value.Count)];
 
                         if (entry != null)
                         {
                             m.MoveToWorld(new Point3D(entry.Location.X, entry.Location.Y, m.Map.GetAverageZ(entry.Location.X, entry.Location.Y)), m.Map);
                         }
                         else
+                        {
                             m.SendMessage("Bad entry");
+                        }
                     }
                     else
+                    {
                         m.SendMessage("Bad map");
+                    }
                 });
         }
 
         public static void ExpireSchool(Map map, SchoolEntry entry)
         {
-            if (Schools.ContainsKey(map) && Schools[map].Contains(entry))
+            if (Schools.TryGetValue(map, out List<SchoolEntry> value) && value.Contains(entry))
             {
-                Schools[map].Remove(entry);
+                value.Remove(entry);
 
                 Point3D p;
-                int failsafe = 0;
+                int failSafe = 0;
 
                 do
                 {
                     p = SOS.FindLocation(map);
-                    failsafe++;
+                    failSafe++;
                 }
-                while (p == Point3D.Zero && failsafe < 10);
-
-                Schools[map].Add(new SchoolEntry(map, new Point2D(p.X, p.Y)));
+                while (p == Point3D.Zero && failSafe < 10);
+                value.Add(new SchoolEntry(map, new Point2D(p.X, p.Y)));
             }
         }
 
         public class SchoolEntry
         {
             public Point2D Location { get; }
-            public bool HasFished { get; set; }
-            public Map Map { get; }
+
+            private bool HasFished { get; set; }
+            private Map Map { get; }
 
             public SchoolEntry(Map map, Point2D location)
             {
