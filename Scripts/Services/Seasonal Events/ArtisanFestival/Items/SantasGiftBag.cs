@@ -22,19 +22,19 @@ namespace Server.Engines.ArtisanFestival
         {
             if (from is PlayerMobile pm && from.InRange(GetWorldLocation(), 3))
             {
-                var festival = ArtisanFestivalEvent.Instance;
+                ArtisanFestivalEvent festival = ArtisanFestivalEvent.Instance;
 
                 if (festival.Running && festival.ClaimPeriod)
                 {
-                    if (festival.Winners != null && festival.Winners.ContainsKey(pm))
+                    if (festival.Winners != null && festival.Winners.TryGetValue(pm, out bool value))
                     {
-                        if (festival.Winners[pm])
+                        if (value)
                         {
                             pm.SendLocalizedMessage(1157282); // You have already claimed your Artisan Festival reward.
                         }
                         else
                         {
-                            var reward = new FestivalGiftBox();
+                            FestivalGiftBox reward = new FestivalGiftBox();
 
                             if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, reward, false))
                             {

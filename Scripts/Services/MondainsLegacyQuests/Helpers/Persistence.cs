@@ -6,70 +6,33 @@ namespace Server.Engines.Quests
 {
     public static class MondainQuestData
     {
-        public static string FilePath = Path.Combine("Saves/Quests", "MLQuests.bin");
+        private static readonly string _FilePath = Path.Combine("Saves/Quests", "MLQuests.bin");
 
         public static Dictionary<PlayerMobile, List<BaseQuest>> QuestData { get; set; }
         public static Dictionary<PlayerMobile, Dictionary<QuestChain, BaseChain>> ChainData { get; set; }
 
         public static List<BaseQuest> GetQuests(PlayerMobile pm)
         {
-            if (!QuestData.ContainsKey(pm))
+            if (!QuestData.TryGetValue(pm, out List<BaseQuest> value))
             {
-                QuestData[pm] = new List<BaseQuest>();
+                value = new List<BaseQuest>();
+
+                QuestData[pm] = value;
             }
 
-            return QuestData[pm];
+            return value;
         }
 
         public static Dictionary<QuestChain, BaseChain> GetChains(PlayerMobile pm)
         {
-            if (!ChainData.ContainsKey(pm))
+            if (!ChainData.TryGetValue(pm, out Dictionary<QuestChain, BaseChain> value))
             {
-                ChainData[pm] = new Dictionary<QuestChain, BaseChain>();
+                value = new Dictionary<QuestChain, BaseChain>();
+
+                ChainData[pm] = value;
             }
 
-            return ChainData[pm];
-        }
-
-        public static void AddQuest(PlayerMobile pm, BaseQuest q)
-        {
-            if (!QuestData.ContainsKey(pm) || QuestData[pm] == null)
-                QuestData[pm] = new List<BaseQuest>();
-
-            QuestData[pm].Add(q);
-        }
-
-        public static void AddChain(PlayerMobile pm, QuestChain id, BaseChain chain)
-        {
-            if (pm == null)
-                return;
-
-            if (!ChainData.ContainsKey(pm) || ChainData[pm] == null)
-                ChainData[pm] = new Dictionary<QuestChain, BaseChain>();
-
-            ChainData[pm].Add(id, chain);
-        }
-
-        public static void RemoveQuest(PlayerMobile pm, BaseQuest quest)
-        {
-            if (QuestData.ContainsKey(pm) && QuestData[pm].Contains(quest))
-            {
-                QuestData[pm].Remove(quest);
-
-                if (QuestData[pm].Count == 0)
-                    QuestData.Remove(pm);
-            }
-        }
-
-        public static void RemoveChain(PlayerMobile pm, QuestChain chain)
-        {
-            if (ChainData.ContainsKey(pm) && ChainData[pm].ContainsKey(chain))
-            {
-                ChainData[pm].Remove(chain);
-
-                if (ChainData[pm].Count == 0)
-                    ChainData.Remove(pm);
-            }
+            return value;
         }
 
         public static void Configure()
@@ -84,7 +47,7 @@ namespace Server.Engines.Quests
         public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
-                FilePath,
+                _FilePath,
                 writer =>
                 {
                     writer.Write(0);
@@ -110,7 +73,7 @@ namespace Server.Engines.Quests
         public static void OnLoad()
         {
             Persistence.Deserialize(
-                FilePath,
+                _FilePath,
                 reader =>
                 {
                     int version = reader.ReadInt();

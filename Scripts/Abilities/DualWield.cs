@@ -8,9 +8,8 @@ namespace Server.Items
     /// </summary>
     public class DualWield : WeaponAbility
     {
-        private static readonly Dictionary<Mobile, DualWieldTimer> m_Registry = new Dictionary<Mobile, DualWieldTimer>();
-
-        public static Dictionary<Mobile, DualWieldTimer> Registry => m_Registry;
+        private static readonly Dictionary<Mobile, DualWieldTimer> _Registry = new Dictionary<Mobile, DualWieldTimer>();
+        public static Dictionary<Mobile, DualWieldTimer> Registry => _Registry;
 
         public override int BaseMana => 20;
 
@@ -24,11 +23,13 @@ namespace Server.Items
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
             if (!Validate(attacker) || !CheckMana(attacker, true))
+            {
                 return;
+            }
 
             if (HasRegistry(attacker))
             {
-                DualWieldTimer timer = m_Registry[attacker];
+                DualWieldTimer timer = _Registry[attacker];
 
                 if (timer.DualHitChance < .75)
                 {
@@ -38,7 +39,7 @@ namespace Server.Items
                     BuffInfo.RemoveBuff(attacker, BuffIcon.DualWield);
                     BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.DualWield, 1151294, 1151293, timer.Expires - DateTime.UtcNow, attacker, (timer.DualHitChance * 100).ToString()));
 
-                    attacker.SendLocalizedMessage(timer.DualHitChance == .75 ? 1150283 : 1150282); // Dual wield level increased to peak! : Dual wield level increased!
+                    attacker.SendLocalizedMessage(timer.DualHitChance == 0.75 ? 1150283 : 1150282); // Dual wield level increased to peak! : Dual wield level increased!
                 }
 
                 ClearCurrentAbility(attacker);
@@ -60,20 +61,23 @@ namespace Server.Items
 
         public static bool HasRegistry(Mobile attacker)
         {
-            return m_Registry.ContainsKey(attacker);
+            return _Registry.ContainsKey(attacker);
         }
 
         public static void RemoveFromRegistry(Mobile from)
         {
-            if (m_Registry.ContainsKey(from))
+            if (_Registry.TryGetValue(from, out DualWieldTimer value))
             {
                 from.SendLocalizedMessage(1150285); // You no longer try to strike with both weapons at the same time.
 
-                m_Registry[from].Stop();
-                m_Registry.Remove(from);
+                value.Stop();
+
+                _Registry.Remove(from);
 
                 if (from.Weapon is BaseWeapon weapon)
+                {
                     weapon.ProcessingMultipleHits = false;
+                }
             }
         }
 
@@ -82,14 +86,14 @@ namespace Server.Items
         /// </summary>
         public static void DoHit(Mobile attacker, Mobile defender, int damage)
         {
-            if (HasRegistry(attacker) && attacker.Weapon is BaseWeapon wep && m_Registry[attacker].DualHitChance > Utility.RandomDouble())
+            if (HasRegistry(attacker) && attacker.Weapon is BaseWeapon wep && _Registry[attacker].DualHitChance > Utility.RandomDouble())
             {
-                if (!m_Registry[attacker].SecondHit)
+                if (!_Registry[attacker].SecondHit)
                 {
                     wep.ProcessingMultipleHits = true;
-                    m_Registry[attacker].SecondHit = true;
+                    _Registry[attacker].SecondHit = true;
                     wep.OnHit(attacker, defender, .6);
-                    m_Registry[attacker].SecondHit = false;
+                    _Registry[attacker].SecondHit = false;
                 }
                 else if (wep.ProcessingMultipleHits)
                 {
@@ -105,7 +109,7 @@ namespace Server.Items
             public DateTime Expires { get; set; }
             public bool SecondHit { get; set; }
 
-            private readonly TimeSpan Duration = TimeSpan.FromSeconds(8);
+            private readonly TimeSpan _Duration = TimeSpan.FromSeconds(8);
 
             public DualWieldTimer(Mobile owner, double dualHitChance)
                 : base(TimeSpan.FromMilliseconds(250), TimeSpan.FromMilliseconds(250))
@@ -113,7 +117,7 @@ namespace Server.Items
                 Owner = owner;
                 DualHitChance = dualHitChance;
 
-                Expires = DateTime.UtcNow + Duration;
+                Expires = DateTime.UtcNow + _Duration;
 
                 Start();
             }

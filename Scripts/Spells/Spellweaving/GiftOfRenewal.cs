@@ -6,17 +6,16 @@ namespace Server.Spells.Spellweaving
 {
     public class GiftOfRenewalSpell : ArcanistSpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Gift of Renewal", "Olorisstra",
             -1);
 
         public override TimeSpan CastDelayBase => TimeSpan.FromSeconds(3.0);
-
         public override double RequiredSkill => 0.0;
         public override int RequiredMana => 24;
 
         public GiftOfRenewalSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -102,17 +101,17 @@ namespace Server.Spells.Spellweaving
 
         public class InternalTimer : Timer
         {
-            public GiftOfRenewalInfo m_Info;
+            private GiftOfRenewalInfo _Info;
 
             public InternalTimer(GiftOfRenewalInfo info)
                 : base(TimeSpan.FromSeconds(2.0), TimeSpan.FromSeconds(2.0))
             {
-                m_Info = info;
+                _Info = info;
             }
 
             protected override void OnTick()
             {
-                Mobile m = m_Info.m_Mobile;
+                Mobile m = _Info.m_Mobile;
 
                 if (!m_Table.ContainsKey(m))
                 {
@@ -128,25 +127,20 @@ namespace Server.Spells.Spellweaving
                 }
 
                 if (m.Hits >= m.HitsMax)
+                {
                     return;
+                }
 
-                int toHeal = m_Info.m_HitsPerRound;
+                int toHeal = _Info.m_HitsPerRound;
 
-                SpellHelper.Heal(toHeal, m, m_Info.m_Caster);
+                SpellHelper.Heal(toHeal, m, _Info.m_Caster);
                 m.FixedParticles(0x376A, 9, 32, 5005, EffectLayer.Waist);
             }
         }
 
-        public static bool IsUnderEffects(Mobile m)
-        {
-            return m_Table.ContainsKey(m);
-        }
-
         public static bool StopEffect(Mobile m)
         {
-            GiftOfRenewalInfo info;
-
-            if (m_Table.TryGetValue(m, out info))
+            if (m_Table.TryGetValue(m, out GiftOfRenewalInfo info))
             {
                 m_Table.Remove(m);
 
@@ -163,25 +157,25 @@ namespace Server.Spells.Spellweaving
 
         public class InternalTarget : Target
         {
-            private readonly GiftOfRenewalSpell m_Owner;
+            private readonly GiftOfRenewalSpell _Owner;
 
             public InternalTarget(GiftOfRenewalSpell owner)
                 : base(10, false, TargetFlags.Beneficial)
             {
-                m_Owner = owner;
+                _Owner = owner;
             }
 
             protected override void OnTarget(Mobile m, object o)
             {
                 if (o is Mobile mobile)
                 {
-                    m_Owner.Target(mobile);
+                    _Owner.Target(mobile);
                 }
             }
 
             protected override void OnTargetFinish(Mobile m)
             {
-                m_Owner.FinishSequence();
+                _Owner.FinishSequence();
             }
         }
     }

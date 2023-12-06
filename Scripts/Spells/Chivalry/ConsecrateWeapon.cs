@@ -6,15 +6,15 @@ namespace Server.Spells.Chivalry
 {
     public class ConsecrateWeaponSpell : PaladinSpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Consecrate Weapon", "Consecrus Arma",
             -1,
             9002);
 
-        private static readonly Dictionary<Mobile, ConsecratedWeaponContext> m_Table = new Dictionary<Mobile, ConsecratedWeaponContext>();
+        private static readonly Dictionary<Mobile, ConsecratedWeaponContext> _Table = new Dictionary<Mobile, ConsecratedWeaponContext>();
 
         public ConsecrateWeaponSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -24,6 +24,7 @@ namespace Server.Spells.Chivalry
         public override int RequiredTithing => 10;
         public override int MantraNumber => 1060720;// Consecrus Arma
         public override bool BlocksMovement => false;
+
         public override void OnCast()
         {
             BaseWeapon weapon = (BaseWeapon) Caster.Weapon;
@@ -65,23 +66,20 @@ namespace Server.Spells.Chivalry
                 IEntity to = new Entity(Serial.Zero, new Point3D(Caster.X, Caster.Y, Caster.Z + 50), Caster.Map);
                 Effects.SendMovingParticles(from, to, itemID, 1, 0, false, false, 33, 3, 9501, 1, 0, EffectLayer.Head, 0x100);
 
-                double seconds = ComputePowerValue(20);
+                double seconds;
+                int casterKarma = Caster.Karma;
 
-                // TODO: Should caps be applied?
-
-                int pkarma = Caster.Karma;
-
-                if (pkarma > 5000)
+                if (casterKarma > 5000)
                     seconds = 11.0;
-                else if (pkarma >= 4999)
+                else if (casterKarma >= 4999)
                     seconds = 10.0;
-                else if (pkarma >= 3999)
+                else if (casterKarma >= 3999)
                     seconds = 9.00;
-                else if (pkarma >= 2999)
+                else if (casterKarma >= 2999)
                     seconds = 8.0;
-                else if (pkarma >= 1999)
+                else if (casterKarma >= 1999)
                     seconds = 7.0;
-                else if (pkarma >= 999)
+                else if (casterKarma >= 999)
                     seconds = 6.0;
                 else
                     seconds = 5.0;
@@ -91,7 +89,7 @@ namespace Server.Spells.Chivalry
 
                 if (IsUnderEffects(Caster))
                 {
-                    context = m_Table[Caster];
+                    context = _Table[Caster];
 
                     if (context.Timer != null)
                     {
@@ -109,7 +107,7 @@ namespace Server.Spells.Chivalry
                 weapon.ConsecratedContext = context;
                 context.Timer = Timer.DelayCall(duration, RemoveEffects, Caster);
 
-                m_Table[Caster] = context;
+                _Table[Caster] = context;
 
                 BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ConsecrateWeapon, 1151385, 1151386, duration, Caster, $"{context.ConsecrateProcChance}\t{context.ConsecrateDamageBonus}"));
             }
@@ -119,18 +117,16 @@ namespace Server.Spells.Chivalry
 
         public static bool IsUnderEffects(Mobile m)
         {
-            return m_Table.ContainsKey(m);
+            return _Table.ContainsKey(m);
         }
 
         public static void RemoveEffects(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
+            if (_Table.TryGetValue(m, out ConsecratedWeaponContext value))
             {
-                ConsecratedWeaponContext context = m_Table[m];
+                value.Expire();
 
-                context.Expire();
-
-                m_Table.Remove(m);
+                _Table.Remove(m);
             }
         }
     }

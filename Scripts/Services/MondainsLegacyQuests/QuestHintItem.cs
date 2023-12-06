@@ -55,25 +55,37 @@ namespace Server.Items
         public override void OnMovement(Mobile from, Point3D oldLocation)
         {
             if (!from.Player)
+            {
                 return;
+            }
 
-            if (m_Table.ContainsKey(from) && m_Table[from] < DateTime.Now)
+            if (m_Table.TryGetValue(from, out DateTime value) && value < DateTime.Now)
+            {
                 m_Table.Remove(from);
+            }
 
             if (!m_Table.ContainsKey(from) && from.InRange(Location, m_Range))
             {
                 if (QuestItemType != null && !FindItem())
+                {
                     return;
+                }
 
                 if (QuestType != null && QuestHelper.GetQuest((PlayerMobile)from, QuestType) == null)
+                {
                     return;
+                }
 
                 m_Table[from] = DateTime.Now + TimeSpan.FromMinutes(3);
 
                 if (m_Number > 0)
+                {
                     from.SendLocalizedMessage(m_Number);
+                }
                 else if (m_String != null)
+                {
                     from.SendMessage(m_String);
+                }
             }
         }
 
@@ -105,7 +117,6 @@ namespace Server.Items
             writer.Write(1); // version
 
             writer.Write(m_Range);
-
             writer.Write(m_Number);
             writer.Write(m_String);
         }
@@ -113,19 +124,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 1:
-                    m_Range = reader.ReadInt();
-                    goto case 0;
-                case 0:
-                    m_Number = reader.ReadInt();
-                    m_String = reader.ReadString();
-                    break;
-            }
-
+            m_Range = reader.ReadInt();
+            m_Number = reader.ReadInt();
+            m_String = reader.ReadString();
         }
     }
 }

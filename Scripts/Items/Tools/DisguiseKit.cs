@@ -1,4 +1,3 @@
-#region References
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
@@ -8,7 +7,6 @@ using Server.Spells.Fifth;
 using Server.Spells.Seventh;
 using System;
 using System.Collections.Generic;
-#endregion
 
 namespace Server.Items
 {
@@ -30,14 +28,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
         }
 
@@ -99,7 +95,9 @@ namespace Server.Items
 
     public class DisguiseGump : Gump
     {
-        private static readonly DisguiseEntry[] m_HairEntries = {new DisguiseEntry(8251, 50700, 0, 5, 1011052), // Short
+        private static readonly DisguiseEntry[] _HairEntries =
+        {
+            new DisguiseEntry(8251, 50700, 0, 5, 1011052), // Short
 			new DisguiseEntry(8261, 60710, 0, 3, 1011047), // Pageboy
 			new DisguiseEntry(8252, 60708, 0, -5, 1011053), // Long
 			new DisguiseEntry(8264, 60901, 0, 5, 1011048), // Receding
@@ -110,7 +108,9 @@ namespace Server.Items
 			null, new DisguiseEntry(0, 0, 0, 0, 1011051) // None
 		};
 
-        private static readonly DisguiseEntry[] m_BeardEntries = {new DisguiseEntry(8269, 50906, 0, 0, 1011401), // Vandyke
+        private static readonly DisguiseEntry[] _BeardEntries =
+        {
+            new DisguiseEntry(8269, 50906, 0, 0, 1011401), // Vandyke
 			new DisguiseEntry(8257, 50808, 0, -2, 1011062), // Mustache
 			new DisguiseEntry(8255, 50802, 0, 0, 1011060), // Short beard
 			new DisguiseEntry(8268, 50905, 0, -10, 1011061), // Long beard
@@ -119,16 +119,16 @@ namespace Server.Items
 			null, new DisguiseEntry(0, 0, 0, 0, 1011051) // None
 		};
 
-        private readonly Mobile m_From;
-        private readonly DisguiseKit m_Kit;
-        private readonly bool m_Used;
+        private readonly Mobile _From;
+        private readonly DisguiseKit _Kit;
+        private readonly bool _Used;
 
         public DisguiseGump(Mobile from, DisguiseKit kit, bool startAtHair, bool used)
             : base(50, 50)
         {
-            m_From = from;
-            m_Kit = kit;
-            m_Used = used;
+            _From = from;
+            _Kit = kit;
+            _Used = used;
 
             from.CloseGump(typeof(DisguiseGump));
 
@@ -147,17 +147,17 @@ namespace Server.Items
 
             if (from.Female || from.Body.IsFemale)
             {
-                DrawEntries(0, 1, -1, m_HairEntries, -1);
+                DrawEntries(0, 1, -1, _HairEntries, -1);
             }
             else if (startAtHair)
             {
-                DrawEntries(0, 1, 2, m_HairEntries, 1011056);
-                DrawEntries(1, 2, 1, m_BeardEntries, 1011059);
+                DrawEntries(0, 1, 2, _HairEntries, 1011056);
+                DrawEntries(1, 2, 1, _BeardEntries, 1011059);
             }
             else
             {
-                DrawEntries(1, 1, 2, m_BeardEntries, 1011059);
-                DrawEntries(0, 2, 1, m_HairEntries, 1011056);
+                DrawEntries(1, 1, 2, _BeardEntries, 1011059);
+                DrawEntries(0, 2, 1, _HairEntries, 1011056);
             }
         }
 
@@ -166,7 +166,7 @@ namespace Server.Items
             if (info.ButtonID == 0)
             {
                 // Disguises wear off after 2 hours. : You're looking good.
-                m_From.SendLocalizedMessage(m_Used ? 501706 : 501707);
+                _From.SendLocalizedMessage(_Used ? 501706 : 501707);
                 return;
             }
 
@@ -183,7 +183,7 @@ namespace Server.Items
 
             bool hair = (type == 0);
 
-            DisguiseEntry[] entries = (hair ? m_HairEntries : m_BeardEntries);
+            DisguiseEntry[] entries = (hair ? _HairEntries : _BeardEntries);
 
             if (index >= 0 && index < entries.Length)
             {
@@ -194,19 +194,19 @@ namespace Server.Items
                     return;
                 }
 
-                if (!m_Kit.ValidateUse(m_From))
+                if (!_Kit.ValidateUse(_From))
                 {
                     return;
                 }
 
-                if (!hair && (m_From.Female || m_From.Body.IsFemale))
+                if (!hair && (_From.Female || _From.Body.IsFemale))
                 {
                     return;
                 }
 
-                m_From.NameMod = NameList.RandomName(m_From.Female ? "female" : "male");
+                _From.NameMod = NameList.RandomName(_From.Female ? "female" : "male");
 
-                if (m_From is PlayerMobile pm)
+                if (_From is PlayerMobile pm)
                 {
                     if (hair)
                     {
@@ -218,14 +218,14 @@ namespace Server.Items
                     }
                 }
 
-                m_From.SendGump(new DisguiseGump(m_From, m_Kit, hair, true));
+                _From.SendGump(new DisguiseGump(_From, _Kit, hair, true));
 
-                DisguiseTimers.RemoveTimer(m_From);
+                DisguiseTimers.RemoveTimer(_From);
 
-                DisguiseTimers.CreateTimer(m_From, TimeSpan.FromHours(2.0));
-                DisguiseTimers.StartTimer(m_From);
+                DisguiseTimers.CreateTimer(_From, TimeSpan.FromHours(2.0));
+                DisguiseTimers.StartTimer(_From);
 
-                BuffInfo.AddBuff(m_From, new BuffInfo(BuffIcon.Disguised, 1075821, 1075820, TimeSpan.FromHours(2.0), m_From));
+                BuffInfo.AddBuff(_From, new BuffInfo(BuffIcon.Disguised, 1075821, 1075820, TimeSpan.FromHours(2.0), _From));
             }
         }
 
@@ -283,78 +283,53 @@ namespace Server.Items
 
     public class DisguiseTimers
     {
-        private static readonly Dictionary<Mobile, InternalTimer> m_Timers = new Dictionary<Mobile, InternalTimer>();
-
-        public static Dictionary<Mobile, InternalTimer> Timers => m_Timers;
+        private static readonly Dictionary<Mobile, InternalTimer> _Timers = new Dictionary<Mobile, InternalTimer>();
+        public static Dictionary<Mobile, InternalTimer> Timers => _Timers;
 
         public static void CreateTimer(Mobile m, TimeSpan delay)
         {
-            if (m != null)
+            if (m != null && !_Timers.ContainsKey(m))
             {
-                if (!m_Timers.ContainsKey(m))
-                {
-                    m_Timers[m] = new InternalTimer(m, delay);
-                }
+                _Timers[m] = new InternalTimer(m, delay);
             }
         }
 
         public static void StartTimer(Mobile m)
         {
-            if (m_Timers.TryGetValue(m, out InternalTimer value))
+            if (_Timers.TryGetValue(m, out InternalTimer value) && value != null)
             {
-                if (value != null)
-                {
-                    value.Start();
-                }
+                value.Start();
             }
         }
 
         public static bool IsDisguised(Mobile m)
         {
-            return m_Timers.ContainsKey(m);
+            return _Timers.ContainsKey(m);
         }
 
-        public static bool StopTimer(Mobile m)
+        public static void StopTimer(Mobile m)
         {
-            if (m_Timers.TryGetValue(m, out InternalTimer value))
+            if (_Timers.TryGetValue(m, out InternalTimer value) && value != null)
             {
-                if (value != null)
-                {
-                    value.Stop();
-                }
-
-                return true;
+                value.Stop();
             }
-
-            return false;
         }
 
-        public static bool RemoveTimer(Mobile m)
+        public static void RemoveTimer(Mobile m)
         {
-            if (m_Timers.ContainsKey(m))
+            if (_Timers.TryGetValue(m, out InternalTimer value) && value != null)
             {
-                InternalTimer t = m_Timers[m];
+                value.Stop();
 
-                if (t != null)
-                {
-                    t.Stop();
-                    m_Timers.Remove(m);
-                }
-
-                return true;
+                _Timers.Remove(m);
             }
-
-            return false;
         }
 
         public static TimeSpan TimeRemaining(Mobile m)
         {
-            if (m_Timers.TryGetValue(m, out InternalTimer value))
+            if (_Timers.TryGetValue(m, out InternalTimer value) && value != null && value.Expires > DateTime.UtcNow)
             {
-                if (value != null && value.Expires > DateTime.UtcNow)
-                {
-                    return value.Expires - DateTime.UtcNow;
-                }
+                return value.Expires - DateTime.UtcNow;
             }
 
             return TimeSpan.Zero;
@@ -362,28 +337,28 @@ namespace Server.Items
 
         public class InternalTimer : Timer
         {
-            private readonly Mobile m_Player;
+            private readonly Mobile _Player;
 
             public DateTime Expires { get; }
 
             public InternalTimer(Mobile m, TimeSpan delay)
                 : base(delay)
             {
-                m_Player = m;
+                _Player = m;
                 
                 Expires = DateTime.UtcNow + delay;
             }
 
             protected override void OnTick()
             {
-                m_Player.NameMod = null;
+                _Player.NameMod = null;
 
-                if (m_Player is PlayerMobile mobile)
+                if (_Player is PlayerMobile mobile)
                 {
                     mobile.SetHairMods(-1, -1);
                 }
 
-                RemoveTimer(m_Player);
+                RemoveTimer(_Player);
             }
         }
     }

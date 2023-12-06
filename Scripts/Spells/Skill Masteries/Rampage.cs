@@ -14,7 +14,7 @@ namespace Server.Spells.SkillMasteries
 {
     public class RampageSpell : SkillMasterySpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
                 "Rampage", "",
                 -1,
                 9002
@@ -23,11 +23,10 @@ namespace Server.Spells.SkillMasteries
         public override int RequiredMana => 20;
         public override int DamageThreshold => 0;
         public override bool CheckManaBeforeCast => !HasSpell(Caster, GetType());
-
         public override SkillName CastSkill => SkillName.Wrestling;
 
         public RampageSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -56,9 +55,9 @@ namespace Server.Spells.SkillMasteries
                 {
                     Caster.PlaySound(Caster.Female ? 0x338 : 0x44A);
                 }
-                else if (Caster is BaseCreature)
+                else if (Caster is BaseCreature bc)
                 {
-                    Caster.PlaySound(((BaseCreature)Caster).GetAngerSound());
+                    Caster.PlaySound(bc.GetAngerSound());
                 }
             }
         }
@@ -88,21 +87,15 @@ namespace Server.Spells.SkillMasteries
         public void AddToTable()
         {
             if (_Table == null)
+            {
                 _Table = new Dictionary<Mobile, RampageContext>();
+            }
 
             RampageContext c;
 
             _Table[Caster] = c = new RampageContext(this);
 
-            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Rampage, 1155929, 1155893, TimeSpan.FromSeconds(60), Caster,
-                string.Format("{0}\t{1}\t{1}\t{1}\t{2}\t{3}\t{4}\t{5}",
-                (1 + GetMasteryLevel()).ToString(),
-                GetMasteryLevel().ToString(),
-                c.HitsRegen.ToString(),
-                c.StamRegen.ToString(),
-                c.SwingSpeed.ToString(),
-                c.Focus.ToString()
-                )));
+            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Rampage, 1155929, 1155893, TimeSpan.FromSeconds(60), Caster, $"{1 + GetMasteryLevel()}\t{GetMasteryLevel()}\t{GetMasteryLevel()}\t{GetMasteryLevel()}\t{c.HitsRegen}\t{c.StamRegen}\t{c.SwingSpeed}\t{c.Focus}"));
             //Each successful hit or offensive spell grants:<br>+~1_VAL~ Hit Point Regeneration<br>+~2_VAL~ Stamina Regeneration<br>+~3_VAL~ Swing Speed Increase.<br>+~4_VAL~ Casting Focus.<br>(Once you miss your target this buff will end)<br>Current totals:<br>+~5_VAL~ Hit Point Regeneration<br>+~6_VAL~ Stamina Regeneration<br>+~7_VAL~ Swing Speed Increase.<br>+~8_VAL~ Casting Focus.<br>
         }
 
@@ -125,56 +118,56 @@ namespace Server.Spells.SkillMasteries
 
         public override void OnHit(Mobile defender, ref int damage)
         {
-            if (_Table != null && _Table.ContainsKey(Caster))
+            if (_Table != null && _Table.TryGetValue(Caster, out RampageContext value))
             {
                 Caster.PlaySound(0x3B4);
 
-                RampageContext c = _Table[Caster];
-                c.IncreaseBuffs();
+                value.IncreaseBuffs();
 
                 BuffInfo.RemoveBuff(Caster, BuffIcon.Rampage);
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Rampage, 1155929, 1155893, TimeSpan.FromSeconds(60), Caster,
-                    string.Format("{0}\t{1}\t{1}\t{1}\t{2}\t{3}\t{4}\t{5}",
-                    (1 + GetMasteryLevel()).ToString(),
-                    GetMasteryLevel().ToString(),
-                    c.HitsRegen.ToString(),
-                    c.StamRegen.ToString(),
-                    c.SwingSpeed.ToString(),
-                    c.Focus.ToString()
-                    )));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Rampage, 1155929, 1155893, TimeSpan.FromSeconds(60), Caster, $"{1 + GetMasteryLevel()}\t{GetMasteryLevel()}\t{GetMasteryLevel()}\t{GetMasteryLevel()}\t{value.HitsRegen}\t{value.StamRegen}\t{value.SwingSpeed}\t{value.Focus}"));
             }
         }
 
-        public static bool RemoveFromTable(Mobile m)
+        private static void RemoveFromTable(Mobile m)
         {
-            bool removed = false;
-
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null && _Table.Remove(m))
             {
-                removed = true;
-                _Table.Remove(m);
-
                 BuffInfo.RemoveBuff(m, BuffIcon.Rampage);
             }
 
             if (_Table != null && _Table.Count == 0)
+            {
                 _Table = null;
-
-            return removed;
+            }
         }
 
         public static int GetBonus(Mobile m, BonusType type)
         {
-            if (_Table == null || !_Table.ContainsKey(m))
+            if (_Table == null || !_Table.TryGetValue(m, out RampageContext value))
+            {
                 return 0;
+            }
 
             switch (type)
             {
                 default:
-                case BonusType.HitPointRegen: return _Table[m].HitsRegen;
-                case BonusType.StamRegen: return _Table[m].StamRegen;
-                case BonusType.Focus: return _Table[m].Focus;
-                case BonusType.SwingSpeed: return _Table[m].SwingSpeed;
+                case BonusType.HitPointRegen:
+                {
+                    return value.HitsRegen;
+                }
+                case BonusType.StamRegen:
+                {
+                    return value.StamRegen;
+                }
+                case BonusType.Focus:
+                {
+                    return value.Focus;
+                }
+                case BonusType.SwingSpeed:
+                {
+                    return value.SwingSpeed;
+                }
             }
         }
 

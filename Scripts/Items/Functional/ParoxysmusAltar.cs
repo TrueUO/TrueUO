@@ -6,15 +6,15 @@ namespace Server.Items
 {
     public class ParoxysmusAltar : PeerlessAltar
     {
-        public static Dictionary<Mobile, Timer> ProtectionTable = new Dictionary<Mobile, Timer>();
+        private static readonly Dictionary<Mobile, Timer> _ProtectionTable = new Dictionary<Mobile, Timer>();
 
         public override int KeyCount => 16;
         public override MasterKey MasterKey => new ParoxysmusKey();
 
         public override Type[] Keys => new[]
         {
-            typeof( CoagulatedLegs ), typeof( PartiallyDigestedTorso ),
-            typeof( GelatanousSkull ), typeof( SpleenOfThePutrefier )
+            typeof(CoagulatedLegs), typeof(PartiallyDigestedTorso),
+            typeof(GelatanousSkull), typeof(SpleenOfThePutrefier)
         };
 
         public override BasePeerless Boss => new ChiefParoxysmus();
@@ -29,38 +29,36 @@ namespace Server.Items
             ExitDest = new Point3D(5623, 3038, 15);
         }
 
-        public override Rectangle2D[] BossBounds => m_Bounds;
+        public override Rectangle2D[] BossBounds => _Bounds;
 
-        private readonly Rectangle2D[] m_Bounds =
+        private readonly Rectangle2D[] _Bounds =
         {
             new Rectangle2D(6501, 351, 35, 48)
         };
 
         public static void AddProtection(Mobile m)
         {
-            if (ProtectionTable != null && !ProtectionTable.ContainsKey(m))
+            if (_ProtectionTable != null && !_ProtectionTable.ContainsKey(m))
             {
-                ProtectionTable[m] = Timer.DelayCall(TimeSpan.FromMinutes(5), () => Damage(m));
+                _ProtectionTable[m] = Timer.DelayCall(TimeSpan.FromMinutes(5), () => Damage(m));
             }
         }
 
         public static bool IsUnderEffects(Mobile m)
         {
-            return ProtectionTable != null && ProtectionTable.ContainsKey(m);
+            return _ProtectionTable != null && _ProtectionTable.ContainsKey(m);
         }
 
         public static void Damage(Mobile m)
         {
-            Timer t;
-
-            if (ProtectionTable.TryGetValue(m, out t))
+            if (_ProtectionTable.TryGetValue(m, out Timer t))
             {
                 if (t != null)
                 {
                     t.Stop();
                 }
 
-                ProtectionTable.Remove(m);
+                _ProtectionTable.Remove(m);
             }
         }
 
@@ -73,9 +71,9 @@ namespace Server.Items
             base.Serialize(writer);
             writer.Write(1); // version
 
-            writer.Write(ProtectionTable.Count);
+            writer.Write(_ProtectionTable.Count);
 
-            foreach (KeyValuePair<Mobile, Timer> kvp in ProtectionTable)
+            foreach (KeyValuePair<Mobile, Timer> kvp in _ProtectionTable)
             {
                 writer.Write(kvp.Key);
                 writer.Write(kvp.Value.Next);
@@ -85,27 +83,16 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
+            int count = reader.ReadInt();
+
+            for (int i = 0; i < count; ++i)
             {
-                case 1:
-                    {
-                        int count = reader.ReadInt();
+                Mobile m = reader.ReadMobile();
+                DateTime end = reader.ReadDateTime();
 
-                        for (int i = 0; i < count; ++i)
-                        {
-                            Mobile m = reader.ReadMobile();
-                            DateTime end = reader.ReadDateTime();
-
-                            ProtectionTable[m] = Timer.DelayCall(end - DateTime.UtcNow, () => Damage(m));
-                        }
-                        break;
-                    }
-                case 0:
-                    {
-                        break;
-                    }
+                _ProtectionTable[m] = Timer.DelayCall(end - DateTime.UtcNow, () => Damage(m));
             }
         }
     }
@@ -134,15 +121,12 @@ namespace Server.Items
         {
         }
 
-        public override void OnDoubleClickDead(Mobile from)
-        {
-            base.OnDoubleClickDead(from);
-        }
-
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.Alive)
+            {
                 return;
+            }
 
             if (!from.InRange(GetWorldLocation(), 2))
             {

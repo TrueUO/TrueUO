@@ -9,7 +9,7 @@ namespace Server.Items
 {
     public class ShrineOfSingularity : Item
     {
-        private static readonly TimeSpan FailDelay = TimeSpan.FromHours(2);
+        private static readonly TimeSpan _FailDelay = TimeSpan.FromHours(2);
 
         [Constructable]
         public ShrineOfSingularity() : base(0x48A8)
@@ -24,6 +24,7 @@ namespace Server.Items
         }
 
         public override bool HandlesOnSpeech => true;
+
         public override void OnSpeech(SpeechEventArgs e)
         {
             if (e.Mobile is PlayerMobile pm)
@@ -38,7 +39,7 @@ namespace Server.Items
                     e.Handled = true;
                     e.Mobile.PlaySound(0xF9);
 
-                    var quest = QuestHelper.GetQuest<QuestOfSingularity>(pm);
+                    QuestOfSingularity quest = QuestHelper.GetQuest<QuestOfSingularity>(pm);
 
                     if (HasDelay(pm) && pm.AccessLevel == AccessLevel.Player)
                     {
@@ -71,25 +72,27 @@ namespace Server.Items
 
         public static void AddToTable(Mobile from)
         {
-            m_RestartTable[from] = DateTime.UtcNow + FailDelay;
+            m_RestartTable[from] = DateTime.UtcNow + _FailDelay;
         }
 
-        public static bool HasDelay(Mobile from)
+        private static bool HasDelay(Mobile from)
         {
-            if (m_RestartTable.ContainsKey(from))
+            if (m_RestartTable.TryGetValue(from, out DateTime value))
             {
-                if (m_RestartTable[from] < DateTime.UtcNow)
+                if (value < DateTime.UtcNow)
+                {
                     m_RestartTable.Remove(from);
+                }
             }
 
             return m_RestartTable.ContainsKey(from);
         }
 
-        public static void DefragDelays_Callback()
+        private static void DefragDelays_Callback()
         {
             List<Mobile> list = new List<Mobile>(m_RestartTable.Keys);
 
-            for (var index = 0; index < list.Count; index++)
+            for (int index = 0; index < list.Count; index++)
             {
                 Mobile mob = list[index];
 
@@ -111,29 +114,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Instance = this;
-
-            if (version == 0)
-            {
-                Item book = new BookOfCircles
-                {
-                    Movable = false
-                };
-                book.MoveToWorld(new Point3D(1000, 3991, -33), Map.TerMur);
-
-                book = new ShrineMantra
-                {
-                    Movable = false
-                };
-                book.MoveToWorld(new Point3D(994, 3991, -33), Map.TerMur);
-            }
-
-            if (version == 1)
-            {
-                Timer.DelayCall(() => SpawnerPersistence.Delete("shrineofsingularity"));
-            }
         }
 
         public static ShrineOfSingularity Instance { get; set; }
