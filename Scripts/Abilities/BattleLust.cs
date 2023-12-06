@@ -6,23 +6,25 @@ namespace Server
 {
     public class BattleLust
     {
-        private static readonly Dictionary<Mobile, BattleLustTimer> m_Table = new Dictionary<Mobile, BattleLustTimer>();
-        public static bool UnderBattleLust(Mobile m)
-        {
-            return m_Table.ContainsKey(m);
-        }
+        private static readonly Dictionary<Mobile, BattleLustTimer> _Table = new Dictionary<Mobile, BattleLustTimer>();
 
         public static int GetBonus(Mobile attacker, Mobile defender)
         {
-            if (!m_Table.ContainsKey(attacker))
+            if (!_Table.TryGetValue(attacker, out BattleLustTimer value))
+            {
                 return 0;
+            }
 
-            int bonus = m_Table[attacker].Bonus * attacker.Aggressed.Count;
+            int bonus = value.Bonus * attacker.Aggressed.Count;
 
             if (defender is PlayerMobile && bonus > 45)
+            {
                 bonus = 45;
+            }
             else if (bonus > 90)
+            {
                 bonus = 90;
+            }
 
             return bonus;
         }
@@ -30,37 +32,45 @@ namespace Server
         public static void IncreaseBattleLust(Mobile m, int damage)
         {
             if (damage < 30)
-                return;
-            if (AosWeaponAttributes.GetValue(m, AosWeaponAttribute.BattleLust) == 0)
-                return;
-            if (m_Table.ContainsKey(m))
             {
-                if (m_Table[m].CanGain)
-                {
-                    if (m_Table[m].Bonus < 16)
-                        m_Table[m].Bonus++;
+                return;
+            }
 
-                    m_Table[m].CanGain = false;
+            if (AosWeaponAttributes.GetValue(m, AosWeaponAttribute.BattleLust) == 0)
+            {
+                return;
+            }
+
+            if (_Table.TryGetValue(m, out BattleLustTimer value))
+            {
+                if (value.CanGain)
+                {
+                    if (value.Bonus < 16)
+                    {
+                        value.Bonus++;
+                    }
+
+                    value.CanGain = false;
                 }
             }
             else
             {
                 BattleLustTimer blt = new BattleLustTimer(m, 1);
                 blt.Start();
-                m_Table.Add(m, blt);
+                _Table.Add(m, blt);
                 m.SendLocalizedMessage(1113748); // The damage you received fuels your battle fury.
             }
         }
 
         public static bool DecreaseBattleLust(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
+            if (_Table.TryGetValue(m, out BattleLustTimer value))
             {
-                m_Table[m].Bonus--;
+                value.Bonus--;
 
-                if (m_Table[m].Bonus <= 0)
+                if (value.Bonus <= 0)
                 {
-                    m_Table.Remove(m);
+                    _Table.Remove(m);
 
                     // No Message?
                     //m.SendLocalizedMessage( 0 ); //
@@ -76,31 +86,35 @@ namespace Server
         {
             public int Bonus;
             public bool CanGain;
-            private readonly Mobile m_Mobile;
-            private int m_Count;
+
+            private readonly Mobile _Mobile;
+            private int _Count;
+
             public BattleLustTimer(Mobile m, int bonus)
                 : base(TimeSpan.FromSeconds(2.0), TimeSpan.FromSeconds(2.0))
             {
-                m_Mobile = m;
+                _Mobile = m;
                 Bonus = bonus;
-                m_Count = 1;
+                _Count = 1;
             }
 
             protected override void OnTick()
             {
-                m_Count %= 3;
+                _Count %= 3;
 
-                if (m_Count == 0)
+                if (_Count == 0)
                 {
-                    if (!DecreaseBattleLust(m_Mobile))
+                    if (!DecreaseBattleLust(_Mobile))
+                    {
                         Stop();
+                    }
                 }
                 else
                 {
                     CanGain = true;
                 }
 
-                m_Count++;
+                _Count++;
             }
         }
     }

@@ -1,33 +1,31 @@
-#region References
 using Server.Commands;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.Xml;
-#endregion
 
 namespace Server.Regions
 {
     public class GuardedRegion : BaseRegion
     {
-        private static readonly object[] m_GuardParams = new object[1];
+        private static readonly object[] _GuardParams = new object[1];
 
-        private readonly Dictionary<Mobile, GuardTimer> m_GuardCandidates = new Dictionary<Mobile, GuardTimer>();
+        private readonly Dictionary<Mobile, GuardTimer> _GuardCandidates = new Dictionary<Mobile, GuardTimer>();
 
-        private readonly Type m_GuardType;
+        private readonly Type _GuardType;
 
-        private bool m_Disabled;
+        private bool _Disabled;
 
         public GuardedRegion(string name, Map map, int priority, params Rectangle3D[] area)
             : base(name, map, priority, area)
         {
-            m_GuardType = DefaultGuardType;
+            _GuardType = DefaultGuardType;
         }
 
         public GuardedRegion(string name, Map map, int priority, params Rectangle2D[] area)
             : base(name, map, priority, area)
         {
-            m_GuardType = DefaultGuardType;
+            _GuardType = DefaultGuardType;
         }
 
         public GuardedRegion(XmlElement xml, Map map, Region parent)
@@ -35,17 +33,17 @@ namespace Server.Regions
         {
             XmlElement el = xml["guards"];
 
-            if (ReadType(el, "type", ref m_GuardType, false))
+            if (ReadType(el, "type", ref _GuardType, false))
             {
-                if (!typeof(Mobile).IsAssignableFrom(m_GuardType))
+                if (!typeof(Mobile).IsAssignableFrom(_GuardType))
                 {
                     Console.WriteLine("Invalid guard type for region '{0}'", this);
-                    m_GuardType = DefaultGuardType;
+                    _GuardType = DefaultGuardType;
                 }
             }
             else
             {
-                m_GuardType = DefaultGuardType;
+                _GuardType = DefaultGuardType;
             }
 
             bool disabled = false;
@@ -56,7 +54,7 @@ namespace Server.Regions
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Disabled { get => m_Disabled; set => m_Disabled = value; }
+        public bool Disabled { get => _Disabled; set => _Disabled = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual bool AllowReds => true;
@@ -89,7 +87,7 @@ namespace Server.Regions
 
         public virtual bool IsDisabled()
         {
-            return m_Disabled;
+            return _Disabled;
         }
 
         public virtual bool CheckVendorAccess(BaseVendor vendor, Mobile from)
@@ -136,11 +134,11 @@ namespace Server.Regions
 
             if (useGuard == null)
             {
-                m_GuardParams[0] = focus;
+                _GuardParams[0] = focus;
 
                 try
                 {
-                    Activator.CreateInstance(m_GuardType, m_GuardParams);
+                    Activator.CreateInstance(_GuardType, _GuardParams);
                 }
                 catch (Exception e)
                 {
@@ -240,8 +238,7 @@ namespace Server.Regions
 
             if (IsGuardCandidate(m))
             {
-                GuardTimer timer = null;
-                m_GuardCandidates.TryGetValue(m, out timer);
+                _GuardCandidates.TryGetValue(m, out GuardTimer timer);
 
                 if (autoCallGuards)
                 {
@@ -250,16 +247,16 @@ namespace Server.Regions
                     if (timer != null)
                     {
                         timer.Stop();
-                        m_GuardCandidates.Remove(m);
+                        _GuardCandidates.Remove(m);
                         m.SendLocalizedMessage(502276); // Guards can no longer be called on you.
                     }
                 }
                 else if (timer == null)
                 {
-                    timer = new GuardTimer(m, m_GuardCandidates);
+                    timer = new GuardTimer(m, _GuardCandidates);
                     timer.Start();
 
-                    m_GuardCandidates[m] = timer;
+                    _GuardCandidates[m] = timer;
                     m.SendLocalizedMessage(502275); // Guards can now be called on you!
 
                     Map map = m.Map;
@@ -292,7 +289,7 @@ namespace Server.Regions
                             fakeCall.Say(Utility.RandomList(1007037, 501603, 1013037, 1013038, 1013039, 1013041, 1013042, 1013043, 1013052));
                             MakeGuard(m);
                             timer.Stop();
-                            m_GuardCandidates.Remove(m);
+                            _GuardCandidates.Remove(m);
                             m.SendLocalizedMessage(502276); // Guards can no longer be called on you.
                         }
                     }
@@ -318,15 +315,14 @@ namespace Server.Regions
             {
                 if (IsGuardCandidate(m))
                 {
-                    if (m_GuardCandidates.ContainsKey(m) || !AllowReds && m.Murderer && m.Region.IsPartOf(this))
+                    if (_GuardCandidates.ContainsKey(m) || !AllowReds && m.Murderer && m.Region.IsPartOf(this))
                     {
-                        GuardTimer timer = null;
-                        m_GuardCandidates.TryGetValue(m, out timer);
+                        _GuardCandidates.TryGetValue(m, out GuardTimer timer);
 
                         if (timer != null)
                         {
                             timer.Stop();
-                            m_GuardCandidates.Remove(m);
+                            _GuardCandidates.Remove(m);
                         }
 
                         MakeGuard(m);
@@ -437,22 +433,21 @@ namespace Server.Regions
 
         private class GuardTimer : Timer
         {
-            private readonly Mobile m_Mobile;
-            private readonly Dictionary<Mobile, GuardTimer> m_Table;
+            private readonly Mobile _Mobile;
+            private readonly Dictionary<Mobile, GuardTimer> _Table;
 
             public GuardTimer(Mobile m, Dictionary<Mobile, GuardTimer> table)
                 : base(TimeSpan.FromSeconds(15.0))
             {
-                m_Mobile = m;
-                m_Table = table;
+                _Mobile = m;
+                _Table = table;
             }
 
             protected override void OnTick()
             {
-                if (m_Table.ContainsKey(m_Mobile))
+                if (_Table.Remove(_Mobile))
                 {
-                    m_Table.Remove(m_Mobile);
-                    m_Mobile.SendLocalizedMessage(502276); // Guards can no longer be called on you.
+                    _Mobile.SendLocalizedMessage(502276); // Guards can no longer be called on you.
                 }
             }
         }
