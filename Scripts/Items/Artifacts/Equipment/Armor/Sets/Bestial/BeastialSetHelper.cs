@@ -5,18 +5,17 @@ namespace Server
 {
     public class BestialSetHelper
     {
-        public static readonly int BerserkHue = 1255;
-
-        public static Dictionary<Mobile, BerserkTimer> _Table;
+        private const int _BerserkHue = 1255;
+        private static Dictionary<Mobile, BerserkTimer> _Table;
 
         public static void OnHeal(Mobile healed, Mobile healer, ref int toHeal)
         {
-            if (_Table == null || !_Table.ContainsKey(healed))
+            if (_Table == null || !_Table.TryGetValue(healed, out BerserkTimer value))
             {
                 return;
             }
 
-            int block = TotalPieces(healed) * _Table[healed].Level + 2;
+            int block = TotalPieces(healed) * value.Level + 2;
 
             toHeal = Math.Max(1, toHeal - block);
 
@@ -29,22 +28,21 @@ namespace Server
 
             if (equipped > 0 && victim.Hits - damage < victim.HitsMax / 2)
             {
-                if (_Table == null || !_Table.ContainsKey(victim))
+                if (_Table == null || !_Table.TryGetValue(victim, out BerserkTimer value))
                 {
                     AddBerserk(victim);
                     return;
                 }
 
-                if (!_Table[victim].Running)
+                if (!value.Running)
                 {
                     return;
                 }
 
-                int absorb = equipped * _Table[victim].Level + 2;
+                int absorb = equipped * value.Level + 2;
 
                 damage = Math.Max(1, damage - absorb);
-
-                _Table[victim].DamageTaken += damage;
+                value.DamageTaken += damage;
 
                 victim.SendLocalizedMessage(1151539, absorb.ToString()); // In your rage, you shrug off ~1_VALUE~ points of damage.
             }
@@ -67,18 +65,17 @@ namespace Server
 
         public static void OnAdded(Mobile m, Item item)
         {
-            if (_Table != null && _Table.ContainsKey(m) && _Table[m].Running && item is ISetItem setItem && setItem.SetID == SetItem.Bestial)
+            if (_Table != null && _Table.TryGetValue(m, out BerserkTimer value) && value.Running && item is ISetItem setItem && setItem.SetID == SetItem.Bestial)
             {
-                item.Hue = BerserkHue + _Table[m].Level;
+                item.Hue = _BerserkHue + value.Level;
             }
         }
 
         public static void OnRemoved(Mobile m, Item item)
         {
-            if (TotalPieces(m) == 0)
+            if (TotalPieces(m) == 0 && _Table != null && _Table.TryGetValue(m, out BerserkTimer value))
             {
-                if (_Table != null && _Table.ContainsKey(m))
-                    _Table[m].EndBerserk();
+                value.EndBerserk();
             }
 
             if (item is ISetItem setItem && setItem.SetID == SetItem.Bestial)
@@ -89,7 +86,7 @@ namespace Server
 
         public static void DoHue(Mobile m, int hue)
         {
-            for (var index = 0; index < m.Items.Count; index++)
+            for (int index = 0; index < m.Items.Count; index++)
             {
                 Item i = m.Items[index];
 
@@ -106,9 +103,9 @@ namespace Server
         {
             int count = 0;
 
-            for (var index = 0; index < m.Items.Count; index++)
+            for (int index = 0; index < m.Items.Count; index++)
             {
-                var i = m.Items[index];
+                Item i = m.Items[index];
 
                 if (i is ISetItem item && item.SetID == SetItem.Bestial)
                 {
@@ -119,22 +116,21 @@ namespace Server
             return count;
         }
 
-        public static void AddBerserk(Mobile m)
+        private static void AddBerserk(Mobile m)
         {
             if (_Table == null)
+            {
                 _Table = new Dictionary<Mobile, BerserkTimer>();
+            }
 
             _Table[m] = new BerserkTimer(m);
         }
 
-        public static void RemoveBerserk(Mobile m)
+        private static void RemoveBerserk(Mobile m)
         {
-            if (_Table != null && _Table.ContainsKey(m))
+            if (_Table != null && _Table.Remove(m) && _Table.Count == 0)
             {
-                _Table.Remove(m);
-
-                if (_Table.Count == 0)
-                    _Table = null;
+                _Table = null;
             }
         }
 
@@ -148,9 +144,10 @@ namespace Server
             private int _DamageTaken;
 
             public Mobile Mobile { get; set; }
+
             public int DamageTaken
             {
-                get { return _DamageTaken; }
+                get => _DamageTaken;
                 set
                 {
                     int level = Level;
@@ -159,25 +156,31 @@ namespace Server
                     _DamageTaken = value;
 
                     if (old < _DamageTaken)
+                    {
                         LastDamage = DateTime.UtcNow;
+                    }
 
                     if (level < Level)
                     {
-                        int hue = BerserkHue + Level;
+                        int hue = _BerserkHue + Level;
 
                         DoHue(Mobile, hue);
 
                         if (level < 5)
+                        {
                             Mobile.SendLocalizedMessage(1151533, "", hue); //Your rage grows!
+                        }
                     }
                     else if (level > Level && level > 0)
                     {
-                        int hue = BerserkHue + Level;
+                        int hue = _BerserkHue + Level;
 
                         DoHue(Mobile, hue);
 
                         if (level > 1)
+                        {
                             Mobile.SendLocalizedMessage(1151534, "", hue); //Your rage recedes.
+                        }
                     }
                 }
             }
@@ -211,7 +214,7 @@ namespace Server
                 }
                 else if (Mobile.HueMod == StartHue || Mobile.HueMod == -1)
                 {
-                    DoHue(Mobile, BerserkHue);
+                    DoHue(Mobile, _BerserkHue);
 
                     Mobile.SendLocalizedMessage(1151532); //You enter a berserk rage!
                 }
@@ -224,7 +227,7 @@ namespace Server
                 Mobile.HueMod = StartHue;
                 Mobile.SendLocalizedMessage(1151535); //Your berserk rage has subsided. 
 
-                for (var index = 0; index < Mobile.Items.Count; index++)
+                for (int index = 0; index < Mobile.Items.Count; index++)
                 {
                     Item item = Mobile.Items[index];
 

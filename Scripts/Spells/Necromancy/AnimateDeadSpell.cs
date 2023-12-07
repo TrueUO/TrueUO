@@ -9,7 +9,7 @@ namespace Server.Spells.Necromancy
 {
     public class AnimateDeadSpell : NecromancerSpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Animate Dead", "Uus Corp",
             203,
             9031,
@@ -17,12 +17,11 @@ namespace Server.Spells.Necromancy
             Reagent.DaemonBlood);
 
         public override TimeSpan CastDelayBase => TimeSpan.FromSeconds(1.75);
-
         public override double RequiredSkill => 40.0;
         public override int RequiredMana => 23;
 
         public AnimateDeadSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -58,24 +57,28 @@ namespace Server.Spells.Necromancy
 
         private static CreatureGroup FindGroup(Type type)
         {
-            for (int i = 0; i < m_Groups.Length; ++i)
+            for (int i = 0; i < _Groups.Length; ++i)
             {
-                CreatureGroup group = m_Groups[i];
+                CreatureGroup group = _Groups[i];
                 Type[] types = group.m_Types;
 
-                bool contains = (types.Length == 0);
+                bool contains = types.Length == 0;
 
                 for (int j = 0; !contains && j < types.Length; ++j)
+                {
                     contains = types[j].IsAssignableFrom(type);
+                }
 
                 if (contains)
+                {
                     return group;
+                }
             }
 
             return null;
         }
 
-        private static readonly CreatureGroup[] m_Groups =
+        private static readonly CreatureGroup[] _Groups =
         {
             // Undead group--empty
             new CreatureGroup(SlayerGroup.GetEntryByName(SlayerName.Silver).Types, Array.Empty<SummonEntry>()),
@@ -149,11 +152,9 @@ namespace Server.Spells.Necromancy
             })
         };
 
-        public void Target(object obj)
+        private void Target(object obj)
         {
-            Corpse c = obj as Corpse;
-
-            if (c == null)
+            if (obj is not Corpse c)
             {
                 Caster.SendLocalizedMessage(1061084); // You cannot animate that.
             }
@@ -200,26 +201,24 @@ namespace Server.Spells.Necromancy
             FinishSequence();
         }
 
-        private static readonly Dictionary<Mobile, List<DamageTimer>> m_Table = new Dictionary<Mobile, List<DamageTimer>>();
+        private static readonly Dictionary<Mobile, List<DamageTimer>> _Table = new Dictionary<Mobile, List<DamageTimer>>();
 
-        public static void Unregister(DamageTimer timer)
+        private static void UnRegister(DamageTimer timer)
         {
-            var master = timer.Master;
+            Mobile master = timer.Master;
 
-            if (m_Table.ContainsKey(master))
+            if (_Table.TryGetValue(master, out List<DamageTimer> value))
             {
-                var list = m_Table[master];
-
                 if (timer.Running)
                 {
                     timer.Stop();
                 }
 
-                list.Remove(timer);
+                value.Remove(timer);
 
-                if (list.Count == 0)
+                if (value.Count == 0)
                 {
-                    m_Table.Remove(master);
+                    _Table.Remove(master);
                 }
             }
         }
@@ -227,14 +226,19 @@ namespace Server.Spells.Necromancy
         public static void Register(Mobile master, BaseCreature summoned)
         {
             if (master == null)
-                return;
-
-            if (!m_Table.ContainsKey(master))
             {
-                m_Table[master] = new List<DamageTimer>();
+                return;
             }
 
-            List<DamageTimer> list = m_Table[master];
+            if (!_Table.TryGetValue(master, out List<DamageTimer> value))
+            {
+                value = new List<DamageTimer>();
+
+                _Table[master] = value;
+            }
+
+            List<DamageTimer> list = value;
+
             list.Add(new DamageTimer(master, summoned));
 
             if (list.Count > 3)
@@ -254,12 +258,16 @@ namespace Server.Spells.Necromancy
             CreatureGroup group = (CreatureGroup)states[4];
 
             if (corpse.Animated)
+            {
                 return;
+            }
 
             Mobile owner = corpse.Owner;
 
             if (owner == null)
+            {
                 return;
+            }
 
             double necromancy = caster.Skills[SkillName.Necromancy].Value;
             double spiritSpeak = caster.Skills[SkillName.SpiritSpeak].Value;
@@ -272,10 +280,14 @@ namespace Server.Spells.Necromancy
             casterAbility *= 18;
 
             if (casterAbility > owner.Fame)
+            {
                 casterAbility = owner.Fame;
+            }
 
             if (casterAbility < 0)
+            {
                 casterAbility = 0;
+            }
 
             Type toSummon = null;
             SummonEntry[] entries = group.m_Entries;
@@ -292,7 +304,9 @@ namespace Server.Spells.Necromancy
                 SummonEntry entry = entries[i];
 
                 if (casterAbility < entry.m_Requirement)
+                {
                     continue;
+                }
 
                 Type[] animates = entry.m_ToSummon;
 
@@ -300,7 +314,9 @@ namespace Server.Spells.Necromancy
             }
 
             if (toSummon == null)
+            {
                 return;
+            }
 
             BaseCreature summoned = null;
 
@@ -314,7 +330,9 @@ namespace Server.Spells.Necromancy
             }
 
             if (summoned == null)
+            {
                 return;
+            }
 
             BaseCreature bc = summoned;
 
@@ -328,7 +346,9 @@ namespace Server.Spells.Necromancy
             BaseCreature.Summon(summoned, false, caster, loc, 0x28, TimeSpan.FromDays(1.0));
 
             if (summoned is SkeletalDragon dragon)
+            {
                 Scale(dragon, 50); // lose 50% hp and strength
+            }
 
             summoned.Fame = 0;
             summoned.Karma = -1500;
@@ -351,29 +371,31 @@ namespace Server.Spells.Necromancy
             toScale = bc.HitsMaxSeed;
 
             if (toScale > 0)
+            {
                 bc.HitsMaxSeed = AOS.Scale(toScale, scalar);
+            }
 
             bc.Hits = bc.Hits; // refresh hits
         }
 
         public class InternalTarget : Target
         {
-            private readonly AnimateDeadSpell m_Owner;
+            private readonly AnimateDeadSpell _Owner;
 
             public InternalTarget(AnimateDeadSpell owner)
                 : base(10, false, TargetFlags.None)
             {
-                m_Owner = owner;
+                _Owner = owner;
             }
 
             protected override void OnTarget(Mobile from, object o)
             {
-                m_Owner.Target(o);
+                _Owner.Target(o);
             }
 
             protected override void OnTargetFinish(Mobile from)
             {
-                m_Owner.FinishSequence();
+                _Owner.FinishSequence();
             }
         }
 
@@ -394,7 +416,7 @@ namespace Server.Spells.Necromancy
             {
                 if (Summon.Deleted)
                 {
-                    Unregister(this);
+                    UnRegister(this);
                     Stop();
                 }
                 else
@@ -406,7 +428,7 @@ namespace Server.Spells.Necromancy
                     else
                     {
                         Summon.Kill();
-                        Unregister(this);
+                        UnRegister(this);
                         Stop();
                     }
                 }

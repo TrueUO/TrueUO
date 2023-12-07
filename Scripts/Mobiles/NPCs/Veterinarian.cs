@@ -24,7 +24,7 @@ namespace Server.Mobiles
             m_SBInfos.Add(new SBVeterinarian());
         }
 
-        private static readonly Dictionary<Mobile, Timer> m_ExpireTable = new Dictionary<Mobile, Timer>();
+        private static readonly Dictionary<Mobile, Timer> _ExpireTable = new Dictionary<Mobile, Timer>();
 
         public static BaseCreature[] GetDeadPets(Mobile from)
         {
@@ -52,14 +52,20 @@ namespace Server.Mobiles
         public static int GetResurrectionFee(BaseCreature bc)
         {
             if (bc is KotlAutomaton)
+            {
                 return 0;
+            }
 
             int fee = (int)(100 + Math.Pow(1.1041, bc.MinTameSkill));
 
             if (fee > 30000)
+            {
                 fee = 30000;
+            }
             else if (fee < 100)
+            {
                 fee = 100;
+            }
 
             return fee;
         }
@@ -74,7 +80,7 @@ namespace Server.Mobiles
                 {
                     m.Frozen = true;
 
-                    m_ExpireTable[m] = Timer.DelayCall(TimeSpan.FromMinutes(1.0), ResetExpire, m);
+                    _ExpireTable[m] = Timer.DelayCall(TimeSpan.FromMinutes(1.0), ResetExpire, m);
 
                     m.CloseGump(typeof(VetResurrectGump));
                     m.SendGump(new VetResurrectGump(this, pets));
@@ -82,19 +88,19 @@ namespace Server.Mobiles
             }
         }
 
-        public static void ResetExpire(Mobile m)
+        private static void ResetExpire(Mobile m)
         {
             m.Frozen = false;
             m.CloseGump(typeof(VetResurrectGump));
 
-            if (m_ExpireTable.ContainsKey(m))
+            if (_ExpireTable.TryGetValue(m, out Timer value))
             {
-                Timer t = m_ExpireTable[m];
+                if (value != null)
+                {
+                    value.Stop();
+                }
 
-                if (t != null)
-                    t.Stop();
-
-                m_ExpireTable.Remove(m);
+                _ExpireTable.Remove(m);
             }
         }
 
@@ -106,27 +112,24 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            /*int version = */
             reader.ReadInt();
         }
     }
 
     public class VetResurrectGump : Gump
     {
-        private readonly BaseCreature[] m_Pets;
+        private readonly BaseCreature[] _Pets;
 
         public VetResurrectGump(Veterinarian vet, BaseCreature[] pets)
             : base(150, 50)
         {
-            m_Pets = pets;
+            _Pets = pets;
 
             AddPage(0);
 
@@ -160,9 +163,9 @@ namespace Server.Mobiles
             AddImageTiled(0, 396, 395, 1, 0x23C5);
             AddImageTiled(0, 0, 1, 397, 0x23C3);
 
-            for (int i = 0, yOffset = 0; i < m_Pets.Length; i++, yOffset += 35)
+            for (int i = 0, yOffset = 0; i < _Pets.Length; i++, yOffset += 35)
             {
-                BaseCreature pet = m_Pets[i];
+                BaseCreature pet = _Pets[i];
 
                 AddRadio(30, 102 + yOffset, 0x25FF, 0x2602, i == 0, i);
                 AddLabel(70, 107 + yOffset, 0x47E, $"{pet.Name}  {Veterinarian.GetResurrectionFee(pet)}");
@@ -186,9 +189,9 @@ namespace Server.Mobiles
                     }
                 case 1:
                     {
-                        for (int i = 0; i < m_Pets.Length; i++)
+                        for (int i = 0; i < _Pets.Length; i++)
                         {
-                            BaseCreature pet = m_Pets[i];
+                            BaseCreature pet = _Pets[i];
 
                             if (info.IsSwitched(i))
                             {
@@ -210,16 +213,22 @@ namespace Server.Mobiles
                                     pet.ResurrectPet();
 
                                     for (int j = 0; j < pet.Skills.Length; ++j) // Decrease all skills on pet.
+                                    {
                                         pet.Skills[j].Base -= 0.2;
+                                    }
 
                                     if (pet.Map == Map.Internal)
+                                    {
                                         pet.MoveToWorld(from.Location, from.Map);
+                                    }
 
                                     from.SendLocalizedMessage(1060398, fee.ToString()); // ~1_AMOUNT~ gold has been withdrawn from your bank box.
                                     from.SendLocalizedMessage(1060022, Banker.GetBalance(from).ToString(), 0x16); // You have ~1_AMOUNT~ gold in cash remaining in your bank box.
                                 }
                                 else
+                                {
                                     from.SendLocalizedMessage(1060020); // Unfortunately, you do not have enough cash in your bank to cover the cost of the healing.
+                                }
 
                                 break;
                             }
