@@ -266,13 +266,13 @@ namespace Server.Engines.HuntsmasterChallenge
 
                     if (owner != null)
                     {
-                        if (!m_UnclaimedWinners.ContainsKey(owner))
+                        if (!m_UnclaimedWinners.TryGetValue(owner, out int value))
                         {
                             m_UnclaimedWinners[owner] = 1;
                         }
                         else
                         {
-                            m_UnclaimedWinners[owner]++;
+                            m_UnclaimedWinners[owner] = ++value;
                         }
                     }
                 }

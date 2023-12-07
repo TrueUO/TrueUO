@@ -9,7 +9,7 @@ namespace Server.Spells.Mysticism
     {
         public override SpellCircle Circle => SpellCircle.Third;
 
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
                 "Sleep", "In Zu",
                 230,
                 9022,
@@ -18,7 +18,8 @@ namespace Server.Spells.Mysticism
                 Reagent.BlackPearl
             );
 
-        public SleepSpell(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
+        public SleepSpell(Mobile caster, Item scroll)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -40,7 +41,7 @@ namespace Server.Spells.Mysticism
             {
                 Caster.SendLocalizedMessage(1080134); //Your target is already immobilized and cannot be slept.
             }
-            else if (m_ImmunityList.Contains(target))
+            else if (_ImmunityList.Contains(target))
             {
                 Caster.SendLocalizedMessage(1080135); //Your target cannot be put to sleep.
             }
@@ -57,26 +58,28 @@ namespace Server.Spells.Mysticism
                     target.SendLocalizedMessage(1080137); //You resist sleep.
                 }
                 else
+                {
                     DoSleep(Caster, target, TimeSpan.FromSeconds(duration));
+                }
             }
 
             FinishSequence();
         }
 
-        private static readonly Dictionary<Mobile, SleepTimer> m_Table = new Dictionary<Mobile, SleepTimer>();
-        private static readonly List<Mobile> m_ImmunityList = new List<Mobile>();
+        private static readonly Dictionary<Mobile, SleepTimer> _Table = new Dictionary<Mobile, SleepTimer>();
+        private static readonly List<Mobile> _ImmunityList = new List<Mobile>();
 
         public static void DoSleep(Mobile caster, Mobile target, TimeSpan duration)
         {
             target.Combatant = null;
             target.SendSpeedControl(SpeedControlType.WalkSpeed);
 
-            if (m_Table.TryGetValue(target, out SleepTimer value))
+            if (_Table.TryGetValue(target, out SleepTimer value))
             {
                 value.Stop();
             }
 
-            m_Table[target] = new SleepTimer(target, duration);
+            _Table[target] = new SleepTimer(target, duration);
 
             BuffInfo.AddBuff(target, new BuffInfo(BuffIcon.Sleep, 1080139, 1080140, duration, target));
 
@@ -85,62 +88,66 @@ namespace Server.Spells.Mysticism
 
         public static void AddToSleepTable(Mobile from, TimeSpan duration)
         {
-            m_Table.Add(from, new SleepTimer(from, duration));
+            _Table.Add(from, new SleepTimer(from, duration));
         }
 
         public static bool IsUnderSleepEffects(Mobile from)
         {
-            return m_Table.ContainsKey(from);
+            return _Table.ContainsKey(from);
         }
 
         public static void OnDamage(Mobile from)
         {
-            if (m_Table.ContainsKey(from))
+            if (_Table.ContainsKey(from))
+            {
                 EndSleep(from);
+            }
         }
 
         public class SleepTimer : Timer
         {
-            private readonly Mobile m_Target;
-            private readonly DateTime m_EndTime;
+            private readonly Mobile _Target;
+            private readonly DateTime _EndTime;
 
             public SleepTimer(Mobile target, TimeSpan duration)
                 : base(TimeSpan.Zero, TimeSpan.FromSeconds(0.5))
             {
-                m_EndTime = DateTime.UtcNow + duration;
-                m_Target = target;
+                _EndTime = DateTime.UtcNow + duration;
+                _Target = target;
+
                 Start();
             }
 
             protected override void OnTick()
             {
-                if (m_EndTime < DateTime.UtcNow)
+                if (_EndTime < DateTime.UtcNow)
                 {
-                    EndSleep(m_Target);
+                    EndSleep(_Target);
                     Stop();
                 }
                 else
                 {
-                    Effects.SendTargetParticles(m_Target, 0x3779, 1, 32, 0x13BA, EffectLayer.Head);
+                    Effects.SendTargetParticles(_Target, 0x3779, 1, 32, 0x13BA, EffectLayer.Head);
                 }
             }
         }
 
         public static void EndSleep(Mobile target)
         {
-            if (m_Table.ContainsKey(target))
+            if (_Table.TryGetValue(target, out SleepTimer value))
             {
                 target.SendSpeedControl(SpeedControlType.Disable);
 
-                m_Table[target].Stop();
-                m_Table.Remove(target);
+                value.Stop();
+
+                _Table.Remove(target);
 
                 BuffInfo.RemoveBuff(target, BuffIcon.Sleep);
 
-                double immduration = target.Skills[SkillName.MagicResist].Value / 10;
+                double immuneDuration = target.Skills[SkillName.MagicResist].Value / 10;
 
-                m_ImmunityList.Add(target);
-                Timer.DelayCall(TimeSpan.FromSeconds(immduration), RemoveImmunity_Callback, target);
+                _ImmunityList.Add(target);
+                Timer.DelayCall(TimeSpan.FromSeconds(immuneDuration), RemoveImmunity_Callback, target);
 
                 target.Delta(MobileDelta.WeaponDamage);
             }
@@ -150,7 +157,7 @@ namespace Server.Spells.Mysticism
         {
             Mobile m = (Mobile)state;
 
-            m_ImmunityList.Remove(m);
+            _ImmunityList.Remove(m);
         }
 
         public class InternalTarget : Target
@@ -171,10 +178,14 @@ namespace Server.Spells.Mysticism
             protected override void OnTarget(Mobile from, object o)
             {
                 if (o == null)
+                {
                     return;
+                }
 
                 if (!from.CanSee(o))
+                {
                     from.SendLocalizedMessage(500237); // Target can not be seen.
+                }
                 else
                 {
                     SpellHelper.Turn(from, o);

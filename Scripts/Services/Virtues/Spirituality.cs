@@ -83,10 +83,8 @@ namespace Server.Services.Virtues
                                     TimeSpan.FromMinutes(20),
                                     () =>
                                     {
-                                        if (ActiveTable != null && ActiveTable.ContainsKey(from))
+                                        if (ActiveTable != null && ActiveTable.Remove(from))
                                         {
-                                            ActiveTable.Remove(from);
-
                                             m.SendLocalizedMessage(1155840); // Your spirit is no longer embraced. You feel less powerful.
 
                                             BuffInfo.RemoveBuff(m, BuffIcon.Spirituality);

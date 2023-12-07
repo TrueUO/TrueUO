@@ -19,14 +19,11 @@ namespace Server.Engines.Quests
 
         public Mobile Player => m_Player;
         public double Reputation { get => m_Reputation; set => m_Reputation = value; }
-        public bool HasRecievedBritGal { get => m_HasRecievedBritGal; set => m_HasRecievedBritGal = value; }
         public Dictionary<int, int> HaveFished => m_HaveFished;
         public Dictionary<int, int> TimesFished => m_TimesFished;
 
         private static readonly Dictionary<Mobile, PlayerFishingEntry> m_FishingEntries = new Dictionary<Mobile, PlayerFishingEntry>();
         public static Dictionary<Mobile, PlayerFishingEntry> FishingEntries => m_FishingEntries;
-
-        public static readonly double RewardAmount = 15000;
 
         public PlayerFishingEntry(Mobile from)
         {
@@ -143,7 +140,9 @@ namespace Server.Engines.Quests
                 index = Utility.Random(eligibleIndex);
 
                 if (!chosen.Contains(index))
+                {
                     break;
+                }
             }
 
             if (m_HaveFished.TryGetValue(index, out int value))
@@ -161,20 +160,27 @@ namespace Server.Engines.Quests
             int index = FishQuestHelper.GetIndexForType(type);
 
             if (index < 0)
+            {
                 return;
+            }
 
             m_Reputation -= 20;
 
-            if (m_HaveFished.ContainsKey(index))
+            if (m_HaveFished.TryGetValue(index, out int value))
             {
-                if (m_HaveFished[index] > 10)
+                if (value > 10)
+                {
                     m_HaveFished[index] -= 5;
+                }
                 else
+                {
                     m_HaveFished[index] = 5;
+                }
             }
             else
+            {
                 m_HaveFished.Add(index, 10);
-
+            }
         }
 
         public void OnQuestComplete(FishQuestObjective obj)
@@ -185,15 +191,21 @@ namespace Server.Engines.Quests
 
                 int index = FishQuestHelper.GetIndexForType(type);
 
-                if (m_HaveFished.ContainsKey(index))
+                if (m_HaveFished.TryGetValue(index, out int value))
                 {
-                    if (m_HaveFished[index] >= 20)
+                    if (value >= 20)
+                    {
                         m_HaveFished[index] = 10;
+                    }
                     else
+                    {
                         m_HaveFished[index] += 5;
+                    }
                 }
                 else
+                {
                     m_HaveFished.Add(index, 15);
+                }
 
                 m_TimesFished.TryAdd(index, 0);
 
@@ -264,7 +276,9 @@ namespace Server.Engines.Quests
         public void GetFishMongerReputation(Mobile from)
         {
             if (from == null)
+            {
                 return;
+            }
 
             from.SendMessage("You have earned {0} amount of reputation with the Fish Mongers.", GetStatus());
         }
@@ -273,20 +287,36 @@ namespace Server.Engines.Quests
         {
             double points = m_Reputation;
 
-            if (points < 500)
-                return m_Status[0];
-            if (points < 1000)
-                return m_Status[1];
-            if (points < 5000)
-                return m_Status[2];
-            if (points < 15000)
-                return m_Status[3];
-            if (points < 50000)
-                return m_Status[4];
-            return m_Status[5];
+            switch (points)
+            {
+                case < 500:
+                {
+                    return _Status[0];
+                }
+                case < 1000:
+                {
+                    return _Status[1];
+                }
+                case < 5000:
+                {
+                    return _Status[2];
+                }
+                case < 15000:
+                {
+                    return _Status[3];
+                }
+                case < 50000:
+                {
+                    return _Status[4];
+                }
+                default:
+                {
+                    return _Status[5];
+                }
+            }
         }
 
-        private readonly string[] m_Status =
+        private readonly string[] _Status =
         {
             "a small",
             "a fair",
@@ -301,9 +331,13 @@ namespace Server.Engines.Quests
             PlayerFishingEntry entry = GetEntry(e.Mobile);
 
             if (entry != null)
+            {
                 entry.GetFishMongerReputation(e.Mobile);
+            }
             else
+            {
                 e.Mobile.SendMessage("You have no reputation with the Fish Mongers.");
+            }
         }
     }
 }
