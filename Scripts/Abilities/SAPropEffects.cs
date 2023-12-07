@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Server.Items
 {
     /// <summary>
-    /// Used for complex weapon/armor properties introduced in Stagyian Abyss
+    /// Used for complex weapon/armor properties introduced in Stygian Abyss
     /// </summary>
     public class PropertyEffect
     {
@@ -132,24 +132,6 @@ namespace Server.Items
             }
 
             return false;
-        }
-
-        public static T GetContextForAttacker<T>(Mobile from) where T : PropertyEffect
-        {
-            PropertyEffect first = null;
-
-            for (var index = 0; index < Effects.Count; index++)
-            {
-                var e = Effects[index];
-
-                if (e.Attacker == from && e.GetType() == typeof(T))
-                {
-                    first = e;
-                    break;
-                }
-            }
-
-            return first as T;
         }
 
         public static T GetContextForVictim<T>(Mobile from) where T : PropertyEffect
@@ -692,7 +674,6 @@ namespace Server.Items
             base.RemoveEffects();
 
             BuffInfo.RemoveBuff(Victim, BuffIcon.Swarm);
-            //AddImmunity(Victim);
         }
 
         public static void CheckRemove(Mobile victim)
@@ -725,14 +706,6 @@ namespace Server.Items
             ColUtility.Free(list);
 
             return _Immunity.ContainsKey(m);
-        }
-
-        public static void AddImmunity(Mobile m)
-        {
-            if (_Immunity == null)
-                _Immunity = new Dictionary<Mobile, DateTime>();
-
-            _Immunity[m] = DateTime.UtcNow + TimeSpan.FromSeconds(60);
         }
     }
 
@@ -776,7 +749,6 @@ namespace Server.Items
             base.RemoveEffects();
 
             BuffInfo.RemoveBuff(Victim, BuffIcon.Sparks);
-            //AddImmunity(Victim);
         }
 
         public static bool IsImmune(Mobile m)
@@ -799,16 +771,6 @@ namespace Server.Items
             ColUtility.Free(list);
 
             return _Immunity.ContainsKey(m);
-        }
-
-        public static void AddImmunity(Mobile m)
-        {
-            if (_Immunity == null)
-            {
-                _Immunity = new Dictionary<Mobile, DateTime>();
-            }
-
-            _Immunity[m] = DateTime.UtcNow + TimeSpan.FromSeconds(60);
         }
     }
 }
