@@ -7,19 +7,16 @@ namespace Server.Spells.SkillMasteries
 {
     public class InjectedStrikeSpell : SkillMasterySpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
                 "Injected Strike", "",
                 -1,
                 9002
             );
 
         public override int RequiredMana => 30;
-
         public override SkillName CastSkill => SkillName.Poisoning;
         public override SkillName DamageSkill => SkillName.Anatomy;
-
         public override bool CancelsWeaponAbility => true;
-
         public override TimeSpan CastDelayBase => TimeSpan.FromSeconds(1.0);
 
         public override void GetCastSkills(out double min, out double max)
@@ -29,7 +26,7 @@ namespace Server.Spells.SkillMasteries
         }
 
         public InjectedStrikeSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -46,11 +43,8 @@ namespace Server.Spells.SkillMasteries
             {
                 if (weapon.Poison == null || weapon.PoisonCharges == 0)
                 {
-                    BasePoisonPotion poison = GetLastPotion(Caster);
-
                     Caster.SendLocalizedMessage(502137); // Select the poison you wish to use.
                     Caster.Target = new MasteryTarget(this, autoEnd: false);
-
                     return;
                 }
 
@@ -61,20 +55,24 @@ namespace Server.Spells.SkillMasteries
                         BeginTimer();
                         Caster.SendLocalizedMessage(1156138); // You ready your weapon to unleash an injected strike!
 
-                        int bonus = 30;
+                        const int bonus = 30;
 
                         // Your next successful attack will poison your target and reduce its poison resist by:<br>~1_VAL~% PvM<br>~2_VAL~% PvP
-                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.InjectedStrike, 1155927, 1156163, $"{bonus.ToString()}\t{(bonus / 2).ToString()}"));
+                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.InjectedStrike, 1155927, 1156163, $"{bonus}\t{bonus / 2}"));
                         Caster.FixedParticles(0x3728, 0x1, 0xA, 0x251E, 0x4F7, 7, (EffectLayer)2, 0);
 
                         weapon.InvalidateProperties();
                     }
                 }
                 else
+                {
                     Caster.SendLocalizedMessage(501775); // This spell is already in effect.
+                }
             }
             else
+            {
                 Caster.SendLocalizedMessage(1060179); //You must be wielding a weapon to use this ability!
+            }
 
             FinishSequence();
         }
@@ -117,10 +115,13 @@ namespace Server.Spells.SkillMasteries
                 }
             }
             else if (potion == null)
+            {
                 Caster.SendLocalizedMessage(502143); // The poison vial not usable.
+            }
             else
+            {
                 Caster.SendLocalizedMessage(1060179); //You must be wielding a weapon to use this ability!
-
+            }
         }
 
         private void ApplyPoison(BaseWeapon weapon, BasePoisonPotion potion)
@@ -144,21 +145,28 @@ namespace Server.Spells.SkillMasteries
 
             if (potion.Deleted)
             {
-                if (_LastPotion != null && _LastPotion.ContainsKey(Caster) && _LastPotion[Caster] == potion)
+                if (_LastPotion != null && _LastPotion.TryGetValue(Caster, out BasePoisonPotion value) && value == potion)
                 {
                     _LastPotion.Remove(Caster);
 
                     if (_LastPotion.Count == 0)
+                    {
                         _LastPotion = null;
+                    }
                 }
             }
             else
             {
                 if (_LastPotion == null)
+                {
                     _LastPotion = new Dictionary<Mobile, BasePoisonPotion>();
+                }
 
-                if (!_LastPotion.ContainsKey(Caster) || _LastPotion[Caster] != potion)
-                    _LastPotion[Caster] = potion;
+                if (!_LastPotion.TryGetValue(Caster, out BasePoisonPotion value) || value != potion)
+                {
+                    value = potion;
+                    _LastPotion[Caster] = value;
+                }
             }
         }
 
@@ -172,7 +180,9 @@ namespace Server.Spells.SkillMasteries
             BaseWeapon weapon = GetWeapon();
 
             if (!CheckWeapon())
+            {
                 return;
+            }
 
             Poison p = weapon.Poison;
 
@@ -186,12 +196,19 @@ namespace Server.Spells.SkillMasteries
             int noChargeChance = MasteryInfo.NonPoisonConsumeChance(Caster);
 
             if (noChargeChance == 0 || noChargeChance < Utility.Random(100))
+            {
                 --weapon.PoisonCharges;
+            }
             else
+            {
                 Caster.SendLocalizedMessage(1156095); // Your mastery of poisoning allows you to use your poison charge without consuming it.
+            }
 
             int maxLevel = Caster.Skills[SkillName.Poisoning].Fixed / 200;
-            if (maxLevel < 0) maxLevel = 0;
+            if (maxLevel < 0)
+            {
+                maxLevel = 0;
+            }
 
             #region Mondain's Legacy
             if (p == Poison.DarkGlow)
@@ -202,7 +219,7 @@ namespace Server.Spells.SkillMasteries
                 p = Poison.GetPoison(maxLevel);
             #endregion
 
-            if ((Caster.Skills[SkillName.Poisoning].Value / 100.0) > Utility.RandomDouble() && p.Level < 3)
+            if (Caster.Skills[SkillName.Poisoning].Value / 100.0 > Utility.RandomDouble() && p.Level < 3)
             {
                 int level = p.Level + 1;
                 Poison newPoison = Poison.GetPoison(level);
@@ -254,15 +271,19 @@ namespace Server.Spells.SkillMasteries
 
         private static Dictionary<Mobile, BasePoisonPotion> _LastPotion;
 
-        public static BasePoisonPotion GetLastPotion(Mobile m)
+        private static BasePoisonPotion GetLastPotion(Mobile m)
         {
-            if (_LastPotion == null || !_LastPotion.ContainsKey(m))
+            if (_LastPotion == null || !_LastPotion.TryGetValue(m, out BasePoisonPotion value))
+            {
                 return null;
+            }
 
-            if (_LastPotion[m] == null || _LastPotion[m].Deleted)
+            if (value == null || value.Deleted)
+            {
                 return null;
+            }
 
-            return _LastPotion[m];
+            return value;
         }
     }
 }
