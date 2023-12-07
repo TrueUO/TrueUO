@@ -289,7 +289,7 @@ namespace Server.Mobiles
 
                     BuffInfo.RemoveBuff(m, BuffIcon.DragonTurtleDebuff);
 
-                    if (_Affected != null && _Affected.ContainsKey(m))
+                    if (_Affected != null)
                     {
                         _Affected.Remove(m);
                     }

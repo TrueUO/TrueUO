@@ -1,10 +1,10 @@
 using Server.Engines.Harvest;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Server.Items
 {
-
     public class NiterDeposit : Item
     {
         public enum NiterSize
@@ -155,35 +155,58 @@ namespace Server.Items
 
         public static bool HasBeenChecked(HarvestBank bank)
         {
-            if (m_BankTable.ContainsKey(bank) && m_BankTable[bank] < DateTime.UtcNow)
-                m_BankTable.Remove(bank);
+            if (_BankTable.TryGetValue(bank, out DateTime value) && value < DateTime.UtcNow)
+            {
+                _BankTable.Remove(bank);
+            }
 
-            return m_BankTable.ContainsKey(bank);
+            return _BankTable.ContainsKey(bank);
         }
 
-        private static readonly Dictionary<HarvestBank, DateTime> m_BankTable = new Dictionary<HarvestBank, DateTime>();
+        private static readonly Dictionary<HarvestBank, DateTime> _BankTable = new Dictionary<HarvestBank, DateTime>();
 
         public static void AddBank(HarvestBank bank)
         {
             if (bank == null)
+            {
                 return;
+            }
 
-            m_BankTable[bank] = DateTime.UtcNow + TimeSpan.FromMinutes(5);
+            _BankTable[bank] = DateTime.UtcNow + TimeSpan.FromMinutes(5);
         }
 
-        public void DefragBanks()
+        private static void DefragBanks()
         {
             List<HarvestBank> toRemove = new List<HarvestBank>();
 
-            foreach (KeyValuePair<HarvestBank, DateTime> kvp in m_BankTable)
+            foreach (KeyValuePair<HarvestBank, DateTime> kvp in _BankTable)
+            {
                 if (kvp.Value < DateTime.UtcNow)
+                {
                     toRemove.Add(kvp.Key);
+                }
+            }
 
             foreach (HarvestBank bank in toRemove)
-                m_BankTable.Remove(bank);
+            {
+                _BankTable.Remove(bank);
+            }
         }
 
-        public NiterDeposit(Serial serial) : base(serial) { }
+        public NiterDeposit(Serial serial) :
+            base(serial)
+        {
+        }
+
+        public static void Initialize()
+        {
+            EventSink.AfterWorldSave += DoDefrag;
+        }
+
+        private static void DoDefrag(AfterWorldSaveEventArgs e)
+        {
+            Timer.DelayCall(TimeSpan.FromSeconds(30), DefragBanks);
+        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -192,8 +215,6 @@ namespace Server.Items
 
             writer.Write(m_Hits);
             writer.Write((int)m_Size);
-
-            Timer.DelayCall(TimeSpan.FromSeconds(30), DefragBanks);
         }
 
         public override void Deserialize(GenericReader reader)

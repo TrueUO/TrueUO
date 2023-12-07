@@ -77,9 +77,9 @@ namespace Server.Misc
                         {
                             IPAddress ip = a.LoginIPs[0];
 
-                            if (m_IPTable.ContainsKey(ip))
+                            if (m_IPTable.TryGetValue(ip, out int value))
                             {
-                                m_IPTable[ip]++;
+                                m_IPTable[ip] = ++value;
                             }
                             else
                             {
@@ -196,10 +196,12 @@ namespace Server.Misc
 
         public static bool CanCreate(IPAddress ip)
         {
-            if (!IPTable.ContainsKey(ip) || IPLimiter.IsExempt(ip))
+            if (!IPTable.TryGetValue(ip, out int value) || IPLimiter.IsExempt(ip))
+            {
                 return true;
+            }
 
-            return IPTable[ip] < MaxAccountsPerIP;
+            return value < MaxAccountsPerIP;
         }
 
         public static void EventSink_AccountLogin(AccountLoginEventArgs e)
