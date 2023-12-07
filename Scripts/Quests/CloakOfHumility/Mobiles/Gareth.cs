@@ -61,7 +61,7 @@ namespace Server.Engines.Quests
 
                     writer.Write(_Table.Count);
 
-                    foreach (var t in _Table)
+                    foreach (KeyValuePair<Mobile, HumilityQuestStatus> t in _Table)
                     {
                         writer.Write(t.Key);
                         writer.Write((int)t.Value);
@@ -81,8 +81,8 @@ namespace Server.Engines.Quests
 
                     for (int i = count; i > 0; i--)
                     {
-                        var m = reader.ReadMobile();
-                        var s = (HumilityQuestStatus)reader.ReadInt();
+                        Mobile m = reader.ReadMobile();
+                        HumilityQuestStatus s = (HumilityQuestStatus)reader.ReadInt();
 
                         if (m != null)
                         {
@@ -99,13 +99,9 @@ namespace Server.Engines.Quests
 
         public static void AddQuestStatus(Mobile m, HumilityQuestStatus status)
         {
-            if (_Table.ContainsKey(m))
+            if (!_Table.TryAdd(m, status))
             {
                 _Table[m] = status;
-            }
-            else
-            {
-                _Table.Add(m, status);
             }
         }
 
@@ -130,7 +126,7 @@ namespace Server.Engines.Quests
 
             if (CheckQuestStatus(player, HumilityQuestStatus.RewardRefused))
             {
-                var quest = new HumilityProofGump
+                HumilityProofGump quest = new HumilityProofGump
                 {
                     Owner = player,
                     Quester = this

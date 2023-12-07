@@ -5080,13 +5080,9 @@ namespace Server.Mobiles
                 m_Collections = new Dictionary<Collection, int>();
             }
 
-            if (m_Collections.ContainsKey(collection))
+            if (!m_Collections.TryAdd(collection, points))
             {
                 m_Collections[collection] += points;
-            }
-            else
-            {
-                m_Collections.Add(collection, points);
             }
         }
 
@@ -6206,16 +6202,14 @@ namespace Server.Mobiles
 
         public void RemoveBuff(BuffIcon b)
         {
-            if (m_BuffTable == null || !m_BuffTable.ContainsKey(b))
+            if (m_BuffTable == null || !m_BuffTable.TryGetValue(b, out BuffInfo value))
             {
                 return;
             }
 
-            BuffInfo info = m_BuffTable[b];
-
-            if (info.Timer != null && info.Timer.Running)
+            if (value.Timer != null && value.Timer.Running)
             {
-                info.Timer.Stop();
+                value.Timer.Stop();
             }
 
             m_BuffTable.Remove(b);

@@ -6,13 +6,13 @@ namespace Server.Spells.Chivalry
 {
     public class EnemyOfOneSpell : PaladinSpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Enemy of One", "Forul Solum",
             -1,
             9002);
 
         public EnemyOfOneSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -52,7 +52,6 @@ namespace Server.Spells.Chivalry
             {
                 PlayEffects();
 
-                // TODO: validate formula
                 int seconds = ComputePowerValue(1);
                 Utility.FixMinMax(ref seconds, 67, 228);
 
@@ -64,7 +63,7 @@ namespace Server.Spells.Chivalry
 
                 EnemyOfOneContext context = new EnemyOfOneContext(Caster, timer, expire);
                 context.OnCast();
-                m_Table[Caster] = context;
+                _Table[Caster] = context;
             }
 
             FinishSequence();
@@ -79,41 +78,43 @@ namespace Server.Spells.Chivalry
             Caster.FixedParticles(0x37B9, 1, 30, 9502, 43, 3, EffectLayer.Head);
         }
 
-        private static readonly Dictionary<Mobile, EnemyOfOneContext> m_Table = new Dictionary<Mobile, EnemyOfOneContext>();
+        private static readonly Dictionary<Mobile, EnemyOfOneContext> _Table = new Dictionary<Mobile, EnemyOfOneContext>();
 
         public static EnemyOfOneContext GetContext(Mobile m)
         {
-            if (!m_Table.ContainsKey(m))
+            if (!_Table.TryGetValue(m, out EnemyOfOneContext value))
+            {
                 return null;
+            }
 
-            return m_Table[m];
+            return value;
         }
 
         public static bool UnderEffect(Mobile m)
         {
-            return m_Table.ContainsKey(m);
+            return _Table.ContainsKey(m);
         }
 
         public static void RemoveEffect(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
+            if (_Table.TryGetValue(m, out EnemyOfOneContext value))
             {
-                EnemyOfOneContext context = m_Table[m];
+                _Table.Remove(m);
 
-                m_Table.Remove(m);
-
-                context.OnRemoved();
+                value.OnRemoved();
 
                 m.PlaySound(0x1F8);
             }
         }
 
-        public static Dictionary<Type, string> NameCache { get; set; }
+        private static Dictionary<Type, string> NameCache { get; set; }
 
         public static void Configure()
         {
             if (NameCache == null)
+            {
                 NameCache = new Dictionary<Type, string>();
+            }
         }
 
         public static string GetTypeName(Mobile defender)
@@ -133,33 +134,30 @@ namespace Server.Spells.Chivalry
             return AddNameToCache(t);
         }
 
-        public static string AddNameToCache(Type t)
+        private static string AddNameToCache(Type t)
         {
             string name = t.Name;
 
-            if (name != null)
+            for (int i = 0; i < name.Length; i++)
             {
-                for (int i = 0; i < name.Length; i++)
+                if (i > 0 && char.IsUpper(name[i]))
                 {
-                    if (i > 0 && char.IsUpper(name[i]))
-                    {
-                        name = name.Insert(i, " ");
-                        i++;
-                    }
+                    name = name.Insert(i, " ");
+                    i++;
                 }
-
-                if (name.EndsWith("y"))
-                {
-                    name = name.Substring(0, name.Length - 1);
-                    name = name + "ies";
-                }
-                else if (!name.EndsWith("s"))
-                {
-                    name = name + "s";
-                }
-
-                NameCache[t] = name.ToLower();
             }
+
+            if (name.EndsWith('y'))
+            {
+                name = name.Substring(0, name.Length - 1);
+                name += "ies";
+            }
+            else if (!name.EndsWith('s'))
+            {
+                name += "s";
+            }
+
+            NameCache[t] = name.ToLower();
 
             return name;
         }
@@ -226,7 +224,9 @@ namespace Server.Spells.Chivalry
             m_DamageScalar = 10 + ((chivalry - 40) * 9) / 10;
 
             if (m_PlayerOrPet != null)
+            {
                 m_DamageScalar /= 2;
+            }
         }
 
         private void UpdateBuffInfo()

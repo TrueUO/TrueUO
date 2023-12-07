@@ -28,9 +28,9 @@ namespace Server.Items
 
             int count = 0;
 
-            for (var index = 0; index < m.Items.Count; index++)
+            for (int index = 0; index < m.Items.Count; index++)
             {
-                var i = m.Items[index];
+                Item i = m.Items[index];
 
                 if (i is IEpiphanyArmor eArmor && eArmor.Alignment == armor.Alignment && eArmor.Type == armor.Type)
                 {
@@ -44,21 +44,34 @@ namespace Server.Items
         public static int GetBonus(Mobile m, IEpiphanyArmor armor)
         {
             if (m == null)
+            {
                 return 0;
+            }
 
             switch (armor.Alignment)
             {
-                default: return 0;
+                default:
+                {
+                    return 0;
+                }
                 case Alignment.Good:
+                {
                     if (m.Karma <= 0)
+                    {
                         return 0;
+                    }
 
                     return Math.Min(20, m.Karma / (Titles.MaxKarma / 20));
+                }
                 case Alignment.Evil:
+                {
                     if (m.Karma >= 0)
+                    {
                         return 0;
+                    }
 
                     return Math.Min(20, -m.Karma / (Titles.MaxKarma / 20));
+                }
             }
         }
 
@@ -76,7 +89,7 @@ namespace Server.Items
         {
             IEpiphanyArmor item = null;
 
-            for (var index = 0; index < m.Items.Count; index++)
+            for (int index = 0; index < m.Items.Count; index++)
             {
                 Item mItem = m.Items[index];
 
@@ -97,18 +110,20 @@ namespace Server.Items
                 Table = new Dictionary<Mobile, Dictionary<SurgeType, int>>();
             }
 
-            if (!Table.ContainsKey(m))
+            if (!Table.TryGetValue(m, out Dictionary<SurgeType, int> value))
             {
-                Table[m] = new Dictionary<SurgeType, int>();
+                value = new Dictionary<SurgeType, int>();
+
+                Table[m] = value;
             }
 
-            if (!Table[m].ContainsKey(type))
+            if (!value.TryGetValue(type, out int typeValue))
             {
-                Table[m][type] = damage;
+                value[type] = damage;
             }
             else
             {
-                damage += Table[m][type];
+                damage += typeValue;
             }
 
             int freq = GetFrequency(m, item);
@@ -116,19 +131,28 @@ namespace Server.Items
 
             if (freq > 0 && bonus > 0 && damage > Utility.Random(10000 / freq))
             {
-                Table[m].Remove(type);
+                value.Remove(type);
 
-                if (Table[m].Count == 0)
+                if (value.Count == 0)
                 {
                     Table.Remove(m);
                 }
 
                 switch (type)
                 {
-                    case SurgeType.Hits: m.Hits = Math.Min(m.HitsMax, m.Hits + bonus); break;
-                    case SurgeType.Stam: m.Hits = Math.Min(m.HitsMax, m.Hits + bonus); break;
+                    case SurgeType.Hits:
+                    {
+                        m.Hits = Math.Min(m.HitsMax, m.Hits + bonus); break;
+                    }
+                    case SurgeType.Stam:
+                    {
+                        m.Hits = Math.Min(m.HitsMax, m.Hits + bonus); break;
+                    }
                     default:
-                    case SurgeType.Mana: m.Hits = Math.Min(m.HitsMax, m.Hits + bonus); break;
+                    case SurgeType.Mana:
+                    {
+                        m.Hits = Math.Min(m.HitsMax, m.Hits + bonus); break;
+                    }
                 }
             }
             else
@@ -139,7 +163,7 @@ namespace Server.Items
 
         public static void OnKarmaChange(Mobile m)
         {
-            for (var index = 0; index < m.Items.Count; index++)
+            for (int index = 0; index < m.Items.Count; index++)
             {
                 Item item = m.Items[index];
 
@@ -153,20 +177,28 @@ namespace Server.Items
         public static void AddProperties(IEpiphanyArmor item, ObjectPropertyList list)
         {
             if (item == null)
+            {
                 return;
+            }
 
             switch (item.Type)
             {
                 case SurgeType.Hits:
+                {
                     list.Add(1150829 + (int)item.Alignment); // Set Ability: good healing burst
                     break;
+                }
                 case SurgeType.Stam: // NOTE: This doesn't exist on EA, but put it in here anyways!
+                {
                     list.Add(1149953, $"Set Ability\t{(item.Alignment == Alignment.Evil ? "evil stamina burst" : "good stamina burst")}");
                     break;
+                }
                 default:
                 case SurgeType.Mana:
+                {
                     list.Add(1150240 + (int)item.Alignment); // Set Ability: evil mana burst
                     break;
+                }
             }
 
             if (item is Item eItem)

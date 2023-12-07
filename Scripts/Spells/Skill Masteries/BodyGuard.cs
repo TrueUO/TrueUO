@@ -8,7 +8,7 @@ namespace Server.Spells.SkillMasteries
 {
     public class BodyGuardSpell : SkillMasterySpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo _Info = new SpellInfo(
                 "Body Guard", "",
                 -1,
                 9002
@@ -25,15 +25,15 @@ namespace Server.Spells.SkillMasteries
         private double _Block;
 
         public BodyGuardSpell(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
         public override bool CheckCast()
         {
-            if (_Table != null && _Table.ContainsKey(Caster))
+            if (_Table != null && _Table.TryGetValue(Caster, out Mobile value))
             {
-                RemoveGumpTimer(_Table[Caster], Caster);
+                RemoveGumpTimer(value, Caster);
                 return false;
             }
 
@@ -83,7 +83,9 @@ namespace Server.Spells.SkillMasteries
         protected override void OnTarget(object o)
         {
             if (!HasShield())
+            {
                 return;
+            }
 
             Mobile protectee = o as Mobile;
             Mobile master = null;
@@ -150,8 +152,8 @@ namespace Server.Spells.SkillMasteries
                 Caster.SendLocalizedMessage(1049452, "\t" + toGuard.Name); // You are now protecting ~2_NAME~.
                 toGuard.SendLocalizedMessage(1049451, Caster.Name); // You are now being protected by ~1_NAME~.
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Bodyguard, 1155924, 1156061, TimeSpan.FromSeconds(90), Caster, $"{Caster.Name}\t{((int) (_Block + 5)).ToString()}\t{toGuard.Name}\t{((int) _Block).ToString()}"));
-                BuffInfo.AddBuff(toGuard, new BuffInfo(BuffIcon.Bodyguard, 1155924, 1156061, TimeSpan.FromSeconds(90), toGuard, $"{Caster.Name}\t{((int) (_Block + 5)).ToString()}\t{toGuard.Name}\t{((int) _Block).ToString()}"));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Bodyguard, 1155924, 1156061, TimeSpan.FromSeconds(90), Caster, $"{Caster.Name}\t{(int) (_Block + 5)}\t{toGuard.Name}\t{(int) _Block}"));
+                BuffInfo.AddBuff(toGuard, new BuffInfo(BuffIcon.Bodyguard, 1155924, 1156061, TimeSpan.FromSeconds(90), toGuard, $"{Caster.Name}\t{(int) (_Block + 5)}\t{toGuard.Name}\t{(int) _Block}"));
                 //~1_NAME~ receives ~2_DAMAGE~% of all damage dealt to ~3_NAME~. All damage dealt to ~3_NAME~ will be reduced by ~4_DAMAGE~%. Body guard must be within 2 tiles. 
             }
 
@@ -161,7 +163,9 @@ namespace Server.Spells.SkillMasteries
         private bool HasShield()
         {
             if (!Caster.Player)
+            {
                 return true;
+            }
 
             BaseShield shield = Caster.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
 
@@ -224,13 +228,16 @@ namespace Server.Spells.SkillMasteries
 
         public static void RemoveGumpTimer(Mobile m, Mobile caster)
         {
-            if (_Table != null && _Table.ContainsKey(caster))
+            if (_Table != null)
+            {
                 _Table.Remove(caster);
+            }
 
             if (m.HasGump(typeof(AcceptBodyguardGump)))
             {
                 m.CloseGump(typeof(AcceptBodyguardGump));
                 m.SendLocalizedMessage(1156103); // Bodyguard has expired.
+
                 caster.SendLocalizedMessage(1156103); // Bodyguard has expired.
             }
         }
@@ -238,7 +245,9 @@ namespace Server.Spells.SkillMasteries
         public static void AddGumpTimer(Mobile m, Mobile caster)
         {
             if (_Table == null)
+            {
                 _Table = new Dictionary<Mobile, Mobile>();
+            }
 
             _Table[caster] = m;
 
@@ -258,15 +267,15 @@ namespace Server.Spells.SkillMasteries
 
     public class AcceptBodyguardGump : Gump
     {
-        private readonly Mobile m_Protector;
-        private readonly Mobile m_Protectee;
-        private readonly BodyGuardSpell m_Spell;
+        private readonly Mobile _Protector;
+        private readonly Mobile _Protectee;
+        private readonly BodyGuardSpell _Spell;
 
         public AcceptBodyguardGump(Mobile protector, Mobile protectee, BodyGuardSpell spell) : base(150, 50)
         {
-            m_Protector = protector;
-            m_Protectee = protectee;
-            m_Spell = spell;
+            _Protector = protector;
+            _Protectee = protectee;
+            _Spell = spell;
 
             Closable = false;
 
@@ -311,9 +320,13 @@ namespace Server.Spells.SkillMasteries
                 bool okay = info.IsSwitched(1);
 
                 if (okay)
-                    m_Spell.AcceptBodyGuard(m_Protectee);
+                {
+                    _Spell.AcceptBodyGuard(_Protectee);
+                }
                 else
-                    m_Spell.DeclineBodyGuard(m_Protectee);
+                {
+                    _Spell.DeclineBodyGuard(_Protectee);
+                }
             }
         }
     }

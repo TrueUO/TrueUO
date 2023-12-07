@@ -9,9 +9,9 @@ namespace Server.Items
     {
         public override int LabelNumber => 1153872; // Compassion Sage
 
-        public static readonly string FilePath = Path.Combine("Saves/Misc", "CompassionSage.bin");
+        private static readonly string _FilePath = Path.Combine("Saves/Misc", "CompassionSage.bin");
 
-        public static readonly Dictionary<Mobile, DateTime> Table = new Dictionary<Mobile, DateTime>();
+        private static readonly Dictionary<Mobile, DateTime> _Table = new Dictionary<Mobile, DateTime>();
 
         public static void Configure()
         {
@@ -33,13 +33,13 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (Table.ContainsKey(from) && Table[from] > DateTime.UtcNow)
+            if (_Table.TryGetValue(from, out DateTime value) && value > DateTime.UtcNow)
             {
                 from.SendLocalizedMessage(1053004); // You must wait about a day before you can gain in compassion again.
                 return;
             }
 
-            Table.Remove(from);
+            _Table.Remove(from);
 
             bool gainedPath = false;
 
@@ -48,9 +48,12 @@ namespace Server.Items
                 from.SendLocalizedMessage(1053002); // You have gained in compassion.
 
                 if (gainedPath)
+                {
                     from.SendLocalizedMessage(1053005); // You have achieved a path in compassion!                    
+                }
 
-                Table[from] = DateTime.UtcNow + TimeSpan.FromDays(1.0);
+                _Table[from] = DateTime.UtcNow + TimeSpan.FromDays(1.0);
+
                 Consume();
             }
         }
@@ -58,14 +61,14 @@ namespace Server.Items
         public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
-                FilePath,
+                _FilePath,
                 writer =>
                 {
                     writer.Write(0);
 
-                    writer.Write(Table.Count);
+                    writer.Write(_Table.Count);
 
-                    foreach (var l in Table)
+                    foreach (var l in _Table)
                     {
                         writer.Write(l.Key);
                         writer.Write(l.Value);
@@ -76,7 +79,7 @@ namespace Server.Items
         public static void OnLoad()
         {
             Persistence.Deserialize(
-                FilePath,
+                _FilePath,
                 reader =>
                 {
                     int version = reader.ReadInt();
@@ -89,7 +92,7 @@ namespace Server.Items
 
                         if (m != null && dt > DateTime.UtcNow)
                         {
-                            Table[m] = dt;
+                            _Table[m] = dt;
                         }
                     }
                 });

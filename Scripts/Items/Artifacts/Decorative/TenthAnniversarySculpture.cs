@@ -101,7 +101,7 @@ namespace Server.Items
                 {
                     Mobile m = list[i];
 
-                    if (sculpture.RewardCooldown.ContainsKey(m) && sculpture.RewardCooldown[m] < DateTime.UtcNow)
+                    if (sculpture.RewardCooldown.TryGetValue(m, out DateTime value) && value < DateTime.UtcNow)
                     {
                         sculpture.RewardCooldown.Remove(m);
                     }
@@ -197,11 +197,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
+
             m_RewardCooldown = new Dictionary<Mobile, DateTime>();
 
             AddSculpture(this);
-
         }
     }
 }

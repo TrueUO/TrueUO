@@ -9,13 +9,15 @@ namespace Server.Spells.Ninjitsu
 {
     public class MirrorImage : NinjaSpell
     {
-        private static readonly Dictionary<Mobile, int> m_CloneCount = new Dictionary<Mobile, int>();
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly Dictionary<Mobile, int> _CloneCount = new Dictionary<Mobile, int>();
+
+        private static readonly SpellInfo _Info = new SpellInfo(
             "Mirror Image", null,
             -1,
             9002);
+
         public MirrorImage(Mobile caster, Item scroll)
-            : base(caster, scroll, m_Info)
+            : base(caster, scroll, _Info)
         {
         }
 
@@ -26,31 +28,41 @@ namespace Server.Spells.Ninjitsu
 
         public static bool HasClone(Mobile m)
         {
-            return m_CloneCount.ContainsKey(m);
+            return _CloneCount.ContainsKey(m);
         }
 
         public static void AddClone(Mobile m)
         {
             if (m == null)
+            {
                 return;
+            }
 
-            if (m_CloneCount.ContainsKey(m))
-                m_CloneCount[m]++;
+            if (_CloneCount.TryGetValue(m, out int value))
+            {
+                _CloneCount[m] = ++value;
+            }
             else
-                m_CloneCount[m] = 1;
+            {
+                _CloneCount[m] = 1;
+            }
         }
 
         public static void RemoveClone(Mobile m)
         {
             if (m == null)
-                return;
-
-            if (m_CloneCount.ContainsKey(m))
             {
-                m_CloneCount[m]--;
+                return;
+            }
 
-                if (m_CloneCount[m] == 0)
-                    m_CloneCount.Remove(m);
+            if (_CloneCount.TryGetValue(m, out int value))
+            {
+                _CloneCount[m] = --value;
+
+                if (value == 0)
+                {
+                    _CloneCount.Remove(m);
+                }
             }
         }
 
@@ -62,7 +74,7 @@ namespace Server.Spells.Ninjitsu
                 return false;
             }
 
-            if ((Caster.Followers + 1) > Caster.FollowersMax)
+            if (Caster.Followers + 1 > Caster.FollowersMax)
             {
                 Caster.SendLocalizedMessage(1063133); // You cannot summon a mirror image because you have too many followers.
                 return false;
@@ -101,7 +113,7 @@ namespace Server.Spells.Ninjitsu
             {
                 Caster.SendLocalizedMessage(1063132); // You cannot use this ability while mounted.
             }
-            else if ((Caster.Followers + 1) > Caster.FollowersMax)
+            else if (Caster.Followers + 1 > Caster.FollowersMax)
             {
                 Caster.SendLocalizedMessage(1063133); // You cannot summon a mirror image because you have too many followers.
             }
@@ -156,6 +168,7 @@ namespace Server.Mobiles
         public override bool AlwaysAttackable => m_Caster is Travesty;
 
         private Mobile m_Caster;
+
         public Clone(Mobile caster)
             : base(AIType.AI_Melee, FightMode.None, 10, 1, 0.2, 0.4)
         {
@@ -296,12 +309,14 @@ namespace Server.Mobiles
             if (master != null && master.Map == m_Mobile.Map && master.InRange(m_Mobile, m_Mobile.RangePerception))
             {
                 int iCurrDist = (int)m_Mobile.GetDistanceToSqrt(master);
-                bool bRun = (iCurrDist > 5);
+                bool bRun = iCurrDist > 5;
 
                 WalkMobileRange(master, 2, bRun, 0, 1);
             }
             else
+            {
                 WalkRandom(2, 2, 1);
+            }
 
             return true;
         }

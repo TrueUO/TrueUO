@@ -5,7 +5,6 @@ using System;
 
 namespace Server.Items
 {
-    [TypeAlias("drNO.ThieveItems.GemOfSalvation")]
     public class GemOfSalvation : Item
     {
         public override int LabelNumber => 1094939;  // Gem of Salvation
@@ -33,9 +32,13 @@ namespace Server.Items
                             TimeSpan left = pm.NextGemOfSalvationUse - DateTime.UtcNow;
 
                             if (left >= TimeSpan.FromMinutes(1.0))
+                            {
                                 pm.SendLocalizedMessage(1095131, ((left.Hours * 60) + left.Minutes).ToString()); // Your spirit lacks cohesion. You must wait ~1_minutes~ minutes before invoking the power of a Gem of Salvation.
+                            }
                             else
+                            {
                                 pm.SendLocalizedMessage(1095130, left.Seconds.ToString()); // Your spirit lacks cohesion. You must wait ~1_seconds~ seconds before invoking the power of a Gem of Salvation.
+                            }
                         }
                         else
                         {
@@ -61,44 +64,43 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class GemResurrectGump : ResurrectGump
     {
-        private readonly GemOfSalvation m_Gem;
-        private readonly PlayerMobile m_Mobile;
+        private readonly GemOfSalvation _Gem;
+        private readonly PlayerMobile _Mobile;
 
         public GemResurrectGump(PlayerMobile pm, GemOfSalvation gem)
             : base(pm, ResurrectMessage.GemOfSalvation)
         {
-            m_Gem = gem;
-            m_Mobile = pm;
+            _Gem = gem;
+            _Mobile = pm;
         }
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
-            m_Mobile.CloseGump(typeof(ResurrectGump));
+            _Mobile.CloseGump(typeof(ResurrectGump));
 
-            if (info.ButtonID == 1 && !m_Gem.Deleted && m_Gem.IsChildOf(m_Mobile.Backpack))
+            if (info.ButtonID == 1 && !_Gem.Deleted && _Gem.IsChildOf(_Mobile.Backpack))
             {
-                if (m_Mobile.Map == null || !m_Mobile.Map.CanFit(m_Mobile.Location, 16, false, false))
+                if (_Mobile.Map == null || !_Mobile.Map.CanFit(_Mobile.Location, 16, false, false))
                 {
-                    m_Mobile.SendLocalizedMessage(502391); // Thou can not be resurrected there!
+                    _Mobile.SendLocalizedMessage(502391); // Thou can not be resurrected there!
                     return;
                 }
 
-                m_Mobile.PlaySound(0x214);
-                m_Mobile.Resurrect();
+                _Mobile.PlaySound(0x214);
+                _Mobile.Resurrect();
 
-                m_Mobile.SendLocalizedMessage(1095132); // The gem infuses you with its power and is destroyed in the process.
+                _Mobile.SendLocalizedMessage(1095132); // The gem infuses you with its power and is destroyed in the process.
 
-                m_Gem.Delete();
+                _Gem.Delete();
 
-                m_Mobile.NextGemOfSalvationUse = DateTime.UtcNow + TimeSpan.FromHours(6);
+                _Mobile.NextGemOfSalvationUse = DateTime.UtcNow + TimeSpan.FromHours(6);
             }
         }
     }
 }
-

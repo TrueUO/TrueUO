@@ -7,6 +7,7 @@ namespace Server.Items
     public class RecipeScroll : Item
     {
         private int m_RecipeID;
+
         public RecipeScroll(Recipe r)
             : this(r.ID)
         {
@@ -36,16 +37,20 @@ namespace Server.Items
                 InvalidateProperties();
             }
         }
+
         public Recipe Recipe
         {
             get
             {
-                if (Recipe.Recipes.ContainsKey(m_RecipeID))
-                    return Recipe.Recipes[m_RecipeID];
+                if (Recipe.Recipes.TryGetValue(m_RecipeID, out Recipe value))
+                {
+                    return value;
+                }
 
                 return null;
             }
         }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -53,7 +58,9 @@ namespace Server.Items
             Recipe r = Recipe;
 
             if (r != null)
+            {
                 list.Add(1049644, r.TextDefinition.ToString()); // [~1_stuff~]
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -94,7 +101,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_RecipeID);
@@ -103,7 +109,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
