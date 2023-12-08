@@ -32,11 +32,11 @@ namespace Server.Engines.ArtisanFestival
 
         public void OnFlip(Mobile m)
         {
-            var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
+            int[] list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
             if (list != null)
             {
-                var index = Array.IndexOf(list, ItemID);
+                int index = Array.IndexOf(list, ItemID);
 
                 if (index == 0 || index == 2)
                 {
@@ -66,7 +66,7 @@ namespace Server.Engines.ArtisanFestival
 
         private int GetLitID()
         {
-            var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
+            int[] list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
             if (list != null)
             {
@@ -78,7 +78,7 @@ namespace Server.Engines.ArtisanFestival
 
         private int GetUnlitID()
         {
-            var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
+            int[] list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
             if (list != null)
             {
@@ -122,8 +122,6 @@ namespace Server.Engines.ArtisanFestival
     {
         public override int LabelNumber => 1125137;
 
-        public bool EastFacing => IDTable.Any(list => Array.IndexOf(list, ItemID) == 1);
-
         [Constructable]
         public RewardPillow()
             : this(null)
@@ -142,11 +140,11 @@ namespace Server.Engines.ArtisanFestival
 
         public void OnFlip(Mobile m)
         {
-            var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
+            int[] list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
             if (list != null)
             {
-                var index = Array.IndexOf(list, ItemID);
+                int index = Array.IndexOf(list, ItemID);
 
                 if (index == 0)
                 {
@@ -204,8 +202,6 @@ namespace Server.Engines.ArtisanFestival
     {
         public override int LabelNumber => 1125147;
 
-        public bool EastFacing => IDTable.Any(list => Array.IndexOf(list, ItemID) == 1);
-
         [Constructable]
         public RewardPainting()
             : this(null)
@@ -224,11 +220,11 @@ namespace Server.Engines.ArtisanFestival
 
         public void OnFlip(Mobile m)
         {
-            var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
+            int[] list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
             if (list != null)
             {
-                var index = Array.IndexOf(list, ItemID);
+                int index = Array.IndexOf(list, ItemID);
 
                 if (index == 0)
                 {
@@ -250,23 +246,33 @@ namespace Server.Engines.ArtisanFestival
 
             if (m.Karma < 0)
             {
-                return IDTable[Utility.RandomMinMax(4, 7)][0];
+                return IDTable[Utility.RandomMinMax(8, 15)][0];
             }
 
-            return IDTable[Utility.RandomMinMax(0, 3)][0];
+            return IDTable[Utility.RandomMinMax(0, 7)][0];
         }
 
         private static int[][] IDTable =
         {
+            // GOOD KARMA
             new[] { 0x9E31, 0x9E32 },
             new[] { 0x9E33, 0x9E34 },
             new[] { 0xA0A4, 0xA0A3 },
             new[] { 0xA0A8, 0xA0A7 },
+            new[] { 0xA246, 0xA247 },
+            new[] { 0xA248, 0xA249 },
+            new[] { 0xA48B, 0xA48C },
+            new[] { 0xA48D, 0xA48E },
 
+            // BAD KARMA
             new[] { 0x9E2D, 0x9E2E },
             new[] { 0x9E2F, 0x9E30 },
             new[] { 0xA0A6, 0xA0A5 },
-            new[] { 0xA0AA, 0xA0A9 }
+            new[] { 0xA0AA, 0xA0A9 },
+            new[] { 0xA242, 0xA243 },
+            new[] { 0xA244, 0xA245 },
+            new[] { 0xA489, 0xA48A },
+            new[] { 0xA48F, 0xA490 }
         };
 
         public override void Serialize(GenericWriter writer)
@@ -312,11 +318,11 @@ namespace Server.Engines.ArtisanFestival
             }
             else
             {
-                var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
+                int[] list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
                 if (list != null)
                 {
-                    var index = Array.IndexOf(list, ItemID);
+                    int index = Array.IndexOf(list, ItemID);
 
                     if (index == 0)
                     {
@@ -347,6 +353,7 @@ namespace Server.Engines.ArtisanFestival
 
         private static int[][] IDTable =
         {
+            // GOOD KARMA
             new[] { 0x9E80, 0x9DEE },
             new[] { 0x9E82, 0x9DF6 },
             new[] { 0xA065, 0xA066 },
@@ -356,6 +363,7 @@ namespace Server.Engines.ArtisanFestival
             new[] { 0xA499, 0xA49A },
             new[] { 0xA49E, 0xA49F },
 
+            // BAD KARMA
             new[] { 0x9E81, 0x9DF2 },
             new[] { 0x9E83, 0x9DFA },
             new[] { 0xA060, 0xA061 },
@@ -364,6 +372,96 @@ namespace Server.Engines.ArtisanFestival
             new[] { 0xA261, 0xA262 },
             new[] { 0xA4A3, 0xA4A4 },
             new[] { 0xA4A8, 0xA4A9 }
+        };
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class RewardStainedGlassWindow : Item, IFlipable
+    {
+        public override int LabelNumber => 1126510; // stained glass window
+
+        [Constructable]
+        public RewardStainedGlassWindow()
+            : this(null)
+        {
+        }
+
+        public RewardStainedGlassWindow(Mobile m)
+            : base(GetID(m))
+        {
+        }
+
+        public RewardStainedGlassWindow(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public void OnFlip(Mobile m)
+        {
+            int[] list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
+
+            if (list != null)
+            {
+                int index = Array.IndexOf(list, ItemID);
+
+                if (index == 0)
+                {
+                    ItemID = list[1];
+                }
+                else
+                {
+                    ItemID = list[0];
+                }
+            }
+        }
+
+        private static int GetID(Mobile m)
+        {
+            if (m == null)
+            {
+                return IDTable[Utility.Random(IDTable.Length)][0];
+            }
+
+            if (m.Karma < 0)
+            {
+                return IDTable[Utility.RandomMinMax(8, 15)][0];
+            }
+
+            return IDTable[Utility.RandomMinMax(0, 7)][0];
+        }
+
+        private static int[][] IDTable =
+        {
+            // GOOD KARMA
+            new[] { 0xAD7D, 0xAD7E },
+            new[] { 0xAD7F, 0xAD80 },
+            new[] { 0xA9DA, 0xA9DB },
+            new[] { 0xA9DC, 0xA9DD },
+            new[] { 0xA7BF, 0xA7C0 },
+            new[] { 0xA7C1, 0xA7C2 },
+            new[] { 0xA5FA, 0xA5FB },
+            new[] { 0xA5FC, 0xA5FD },
+
+            // BAD KARMA
+            new[] { 0xAD79, 0xAD7A },
+            new[] { 0xAD7B, 0xAD7C },
+            new[] { 0xA9D6, 0xA9D7 },
+            new[] { 0xA9D8, 0xA9D9 },
+            new[] { 0xA7BB, 0xA7BC },
+            new[] { 0xA7BD, 0xA7BE },
+            new[] { 0xA5F6, 0xA5F7 },
+            new[] { 0xA5F8, 0xA5F9 }
         };
 
         public override void Serialize(GenericWriter writer)
