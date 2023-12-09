@@ -92,12 +92,7 @@ namespace Server
 			return interned;
 		}
 
-		public static void Intern(ref IPAddress ipAddress)
-		{
-			ipAddress = Intern(ipAddress);
-		}
-
-		public static bool IsValidIP(string text)
+        public static bool IsValidIP(string text)
 		{
 			bool valid = true;
 
@@ -149,137 +144,7 @@ namespace Server
 			return sb.ToString();
 		}
 
-		public static bool IPMatchCIDR(string cidr, IPAddress ip)
-		{
-			if (ip == null || ip.AddressFamily == AddressFamily.InterNetworkV6)
-			{
-				return false; //Just worry about IPv4 for now
-			}
-
-			/*
-            string[] str = cidr.Split( '/' );
-
-            if ( str.Length != 2 )
-            return false;
-
-            /* **************************************************
-            IPAddress cidrPrefix;
-
-            if ( !IPAddress.TryParse( str[0], out cidrPrefix ) )
-            return false;
-            * */
-
-			/*
-            string[] dotSplit = str[0].Split( '.' );
-
-            if ( dotSplit.Length != 4 )		//At this point and time, and for speed sake, we'll only worry about IPv4
-            return false;
-
-            byte[] bytes = new byte[4];
-
-            for ( int i = 0; i < 4; i++ )
-            {
-            byte.TryParse( dotSplit[i], out bytes[i] );
-            }
-
-            uint cidrPrefix = OrderedAddressValue( bytes );
-
-            int cidrLength = Utility.ToInt32( str[1] );
-            //The below solution is the fastest solution of the three
-
-            */
-
-			byte[] bytes = new byte[4];
-			string[] split = cidr.Split('.');
-			bool cidrBits = false;
-			int cidrLength = 0;
-
-			for (int i = 0; i < 4; i++)
-			{
-				int part = 0;
-
-				int partBase = 10;
-
-				string pattern = split[i];
-
-				for (int j = 0; j < pattern.Length; j++)
-				{
-					char c = pattern[j];
-
-					if (c == 'x' || c == 'X')
-					{
-						partBase = 16;
-					}
-					else if (c >= '0' && c <= '9')
-					{
-						int offset = c - '0';
-
-						if (cidrBits)
-						{
-							cidrLength *= partBase;
-							cidrLength += offset;
-						}
-						else
-						{
-							part *= partBase;
-							part += offset;
-						}
-					}
-					else if (c >= 'a' && c <= 'f')
-					{
-						int offset = 10 + (c - 'a');
-
-						if (cidrBits)
-						{
-							cidrLength *= partBase;
-							cidrLength += offset;
-						}
-						else
-						{
-							part *= partBase;
-							part += offset;
-						}
-					}
-					else if (c >= 'A' && c <= 'F')
-					{
-						int offset = 10 + (c - 'A');
-
-						if (cidrBits)
-						{
-							cidrLength *= partBase;
-							cidrLength += offset;
-						}
-						else
-						{
-							part *= partBase;
-							part += offset;
-						}
-					}
-					else if (c == '/')
-					{
-						if (cidrBits || i != 3) //If there's two '/' or the '/' isn't in the last byte
-						{
-							return false;
-						}
-
-						partBase = 10;
-						cidrBits = true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-
-				bytes[i] = (byte)part;
-			}
-
-			uint cidrPrefix = OrderedAddressValue(bytes);
-
-			return IPMatchCIDR(cidrPrefix, ip, cidrLength);
-		}
-
-		public static bool IPMatchCIDR(IPAddress cidrPrefix, IPAddress ip, int cidrLength)
+        public static bool IPMatchCIDR(IPAddress cidrPrefix, IPAddress ip, int cidrLength)
 		{
 			if (cidrPrefix == null || ip == null || cidrPrefix.AddressFamily == AddressFamily.InterNetworkV6)
 			//Ignore IPv6 for now
@@ -293,19 +158,7 @@ namespace Server
 			return IPMatchCIDR(cidrValue, ipValue, cidrLength);
 		}
 
-		public static bool IPMatchCIDR(uint cidrPrefixValue, IPAddress ip, int cidrLength)
-		{
-			if (ip == null || ip.AddressFamily == AddressFamily.InterNetworkV6)
-			{
-				return false;
-			}
-
-			uint ipValue = SwapUnsignedInt((uint)GetLongAddressValue(ip));
-
-			return IPMatchCIDR(cidrPrefixValue, ipValue, cidrLength);
-		}
-
-		public static bool IPMatchCIDR(uint cidrPrefixValue, uint ipValue, int cidrLength)
+        public static bool IPMatchCIDR(uint cidrPrefixValue, uint ipValue, int cidrLength)
 		{
 			if (cidrLength <= 0 || cidrLength >= 32) //if invalid cidr Length, just compare IPs
 			{
@@ -333,44 +186,7 @@ namespace Server
 					 ((source & 0xFF000000) >> 0x18);
 		}
 
-		public static bool TryConvertIPv6toIPv4(ref IPAddress address)
-		{
-			if (!Socket.OSSupportsIPv6 || address.AddressFamily == AddressFamily.InterNetwork)
-			{
-				return true;
-			}
-
-			byte[] addr = address.GetAddressBytes();
-			if (addr.Length == 16) //sanity 0 - 15 //10 11 //12 13 14 15
-			{
-				if (addr[10] != 0xFF || addr[11] != 0xFF)
-				{
-					return false;
-				}
-
-				for (int i = 0; i < 10; i++)
-				{
-					if (addr[i] != 0)
-					{
-						return false;
-					}
-				}
-
-				byte[] v4Addr = new byte[4];
-
-				for (int i = 0; i < 4; i++)
-				{
-					v4Addr[i] = addr[12 + i];
-				}
-
-				address = new IPAddress(v4Addr);
-				return true;
-			}
-
-			return false;
-		}
-
-		public static bool IPMatch(string val, IPAddress ip, ref bool valid)
+        public static bool IPMatch(string val, IPAddress ip, ref bool valid)
 		{
 			valid = true;
 
@@ -605,25 +421,7 @@ namespace Server
 			}
 		}
 
-		public static DateTimeOffset GetXMLDateTimeOffset(string dateTimeOffsetString, DateTimeOffset defaultValue)
-		{
-			try
-			{
-				return XmlConvert.ToDateTimeOffset(dateTimeOffsetString);
-			}
-			catch
-			{
-
-				if (DateTimeOffset.TryParse(dateTimeOffsetString, out DateTimeOffset d))
-				{
-					return d;
-				}
-
-				return defaultValue;
-			}
-		}
-
-		public static TimeSpan GetXMLTimeSpan(string timeSpanString, TimeSpan defaultValue)
+        public static TimeSpan GetXMLTimeSpan(string timeSpanString, TimeSpan defaultValue)
 		{
 			try
 			{
@@ -696,14 +494,7 @@ namespace Server
 			return p1.m_X >= p2.m_X - range && p1.m_X <= p2.m_X + range && p1.m_Y >= p2.m_Y - range && p1.m_Y <= p2.m_Y + range;
 		}
 
-		public static bool InUpdateRange(Point2D p1, Point2D p2)
-		{
-			int range = Core.GlobalUpdateRange;
-
-			return p1.m_X >= p2.m_X - range && p1.m_X <= p2.m_X + range && p1.m_Y >= p2.m_Y - range && p1.m_Y <= p2.m_Y + range;
-		}
-
-		public static bool InUpdateRange(Mobile m, IPoint3D p)
+        public static bool InUpdateRange(Mobile m, IPoint3D p)
 		{
 			return InUpdateRange(m, m, p);
 		}
@@ -777,31 +568,7 @@ namespace Server
             return Direction.Up;
         }
 
-		public static object GetArrayCap(Array array, int index)
-		{
-			return GetArrayCap(array, index, null);
-		}
-
-		public static object GetArrayCap(Array array, int index, object emptyValue)
-        {
-            if (array.Length > 0)
-			{
-				if (index < 0)
-				{
-					index = 0;
-				}
-				else if (index >= array.Length)
-				{
-					index = array.Length - 1;
-				}
-
-				return array.GetValue(index);
-			}
-
-            return emptyValue;
-        }
-
-		#region Random
+        #region Random
         /// <summary>
         /// Enables or disables floating dice. 
         /// Floating dice uses a double to obtain a lower average value range.
@@ -849,77 +616,7 @@ namespace Server
 			return RandomImpl.NextBool();
 		}
 
-#if MONO
-		public static TEnum RandomEnum<TEnum>() where TEnum : struct, IConvertible            
-#else
-		public static TEnum RandomEnum<TEnum>() where TEnum : Enum
-#endif
-		{
-			if (Enum.GetValues(typeof(TEnum)) is TEnum[] values && values.Length > 0)
-				return RandomList(values);
-
-			return default;
-		}
-        
-#if MONO
-		public static TEnum RandomMinMax<TEnum>(TEnum min, TEnum max) where TEnum : struct, IConvertible            
-#else
-		public static TEnum RandomMinMax<TEnum>(TEnum min, TEnum max) where TEnum : Enum
-#endif
-		{
-			if (Enum.GetValues(typeof(TEnum)) is TEnum[] values && values.Length > 0)
-			{
-				int curIdx = -1;
-				int minIdx = -1;
-				int maxIdx = -1;
-
-                for (var index = 0; index < values.Length; index++)
-                {
-                    TEnum val = values[index];
-
-                    ++curIdx;
-
-                    if (Equals(val, min))
-                    {
-                        minIdx = curIdx;
-                    }
-                    else if (Equals(val, max))
-                    {
-                        maxIdx = curIdx;
-                    }
-                }
-
-                if (minIdx == 0 && maxIdx == values.Length - 1)
-                {
-                    return RandomList(values);
-                }
-
-                curIdx = -1;
-
-				if (minIdx >= 0)
-				{
-					if (minIdx == maxIdx)
-                    {
-                        curIdx = minIdx;
-                    }
-                    else if (maxIdx > minIdx)
-                    {
-                        curIdx = RandomMinMax(minIdx, maxIdx);
-                    }
-                }
-
-				if (curIdx >= 0 && curIdx < values.Length)
-                {
-                    return values[curIdx];
-                }
-
-                return RandomList(min, max);
-			}
-
-			return default;
-		}
-
-		public static double RandomMinMax(double min, double max)
+        public static double RandomMinMax(double min, double max)
 		{
 			if (min > max)
 			{
@@ -1177,45 +874,13 @@ namespace Server
 			return RandomList(0x03, 0x0D, 0x13, 0x1C, 0x21, 0x30, 0x37, 0x3A, 0x44, 0x59);
 		}
 
-		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
-		public static int ClipSkinHue(int hue)
-        {
-            if (hue < 1002)
-			{
-				return 1002;
-			}
-
-            if (hue > 1058)
-            {
-                return 1058;
-            }
-
-            return hue;
-        }
-
-		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
+        //[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
 		public static int RandomSkinHue()
 		{
 			return Random(1002, 57) | 0x8000;
 		}
 
-		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
-		public static int ClipHairHue(int hue)
-        {
-            if (hue < 1102)
-			{
-				return 1102;
-			}
-
-            if (hue > 1149)
-            {
-                return 1149;
-            }
-
-            return hue;
-        }
-
-		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
+        //[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
 		public static int RandomHairHue()
 		{
 			return Random(1102, 48);
@@ -1287,21 +952,7 @@ namespace Server
 			}
 		}
 
-		public static ArrayList BuildArrayList(IEnumerable enumerable)
-		{
-			IEnumerator e = enumerable.GetEnumerator();
-
-			ArrayList list = new ArrayList();
-
-			while (e.MoveNext())
-			{
-				list.Add(e.Current);
-			}
-
-			return list;
-		}
-
-		public static bool RangeCheck(IPoint2D p1, IPoint2D p2, int range)
+        public static bool RangeCheck(IPoint2D p1, IPoint2D p2, int range)
 		{
 			return (p1.X >= (p2.X - range)) && (p1.X <= (p2.X + range)) && (p1.Y >= (p2.Y - range)) && (p2.Y <= (p2.Y + range));
 		}
@@ -1549,26 +1200,11 @@ namespace Server
 			return output;
 		}
 
-		public static string RemoveHtml(string str)
-		{
-			return str.Replace("<", "").Replace(">", "").Trim();
-		}
-
-		public static bool IsNumeric(string str)
-		{
-			return !Regex.IsMatch(str, "[^0-9]");
-		}
-
-		public static bool IsAlpha(string str)
+        public static bool IsAlpha(string str)
 		{
 			return !Regex.IsMatch(str, "[^a-z]", RegexOptions.IgnoreCase);
 		}
-
-		public static bool IsAlphaNumeric(string str)
-		{
-			return !Regex.IsMatch(str, "[^a-z0-9]", RegexOptions.IgnoreCase);
-		}
-	}
+    }
 
 	public static class ColUtility
 	{
@@ -1603,29 +1239,7 @@ namespace Server
             Free(l);
 		}
 
-		public static void ForEach<TKey, TValue>(IDictionary<TKey, TValue> dictionary, Action<KeyValuePair<TKey, TValue>> action)
-		{
-			if (dictionary == null || dictionary.Count == 0 || action == null)
-				return;
-
-            List<KeyValuePair<TKey, TValue>> l = new List<KeyValuePair<TKey, TValue>>();
-
-            foreach (var pair in dictionary)
-            {
-                l.Add(pair);
-            }
-
-            for (var index = 0; index < l.Count; index++)
-            {
-                KeyValuePair<TKey, TValue> kvp = l[index];
-
-                action(kvp);
-            }
-
-            Free(l);
-		}
-
-		public static void ForEach<TKey, TValue>(IDictionary<TKey, TValue> dictionary, Action<TKey, TValue> action)
+        public static void ForEach<TKey, TValue>(IDictionary<TKey, TValue> dictionary, Action<TKey, TValue> action)
 		{
 			if (dictionary == null || dictionary.Count == 0 || action == null)
 				return;
