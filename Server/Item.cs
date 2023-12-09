@@ -1,14 +1,11 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-
 using Server.ContextMenus;
 using Server.Items;
 using Server.Network;
 using Server.Targeting;
-#endregion
 
 namespace Server
 {
@@ -650,7 +647,6 @@ namespace Server
 	public enum ExpandFlag
 	{
 		None = 0x000,
-
 		Name = 0x001,
 		Items = 0x002,
 		Bounce = 0x004,
@@ -808,7 +804,7 @@ namespace Server
 			{
 				if (Parent is Container container)
 				{
-					if (value < 0 || value > 0x7C || !container.IsFreePosition(value))
+					if (value > 0x7C || !container.IsFreePosition(value))
 					{
 						m_GridLocation = container.GetNewPosition(0);
 					}
@@ -1011,18 +1007,6 @@ namespace Server
 		public static void Measure(Bitmap bmp, out int xMin, out int yMin, out int xMax, out int yMax)
 		{
 			ArtData.Measure(bmp, out xMin, out yMin, out xMax, out yMax);
-		}
-
-		public static Rectangle MeasureBound(Bitmap bmp)
-		{
-			Measure(bmp, out int xMin, out int yMin, out int xMax, out int yMax);
-			return new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
-		}
-
-		public static Size MeasureSize(Bitmap bmp)
-		{
-			Measure(bmp, out int xMin, out int yMin, out int xMax, out int yMax);
-			return new Size(xMax - xMin, yMax - yMin);
 		}
 
 		private void SetFlag(ImplFlag flag, bool value)
@@ -1368,7 +1352,7 @@ namespace Server
 		{
 			if (Sockets != null)
             {
-                for (var index = 0; index < Sockets.Count; index++)
+                for (int index = 0; index < Sockets.Count; index++)
                 {
                     ItemSocket socket = Sockets[index];
                     socket.GetProperties(list);
@@ -1380,7 +1364,7 @@ namespace Server
         {
             if (Sockets != null)
             {
-                for (var index = 0; index < Sockets.Count; index++)
+                for (int index = 0; index < Sockets.Count; index++)
                 {
                     ItemSocket socket = Sockets[index];
                     socket.GetCraftedProperties(list);
@@ -1626,12 +1610,7 @@ namespace Server
 			}
 		}
 
-		public virtual bool DisplayContextMenu(Mobile from)
-		{
-			return ContextMenu.Display(from, this);
-		}
-
-		public virtual bool VerifyMove(Mobile from)
+        public virtual bool VerifyMove(Mobile from)
 		{
 			return Movable;
 		}
@@ -1702,44 +1681,17 @@ namespace Server
 			to.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, number, "", ""));
 		}
 
-		public void LabelTo(Mobile to, int number, string args)
-		{
-			to.Send(new MessageLocalized(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, number, "", args));
-		}
-
-		public void LabelTo(Mobile to, string text)
+        public void LabelTo(Mobile to, string text)
 		{
 			to.Send(new UnicodeMessage(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, "ENU", "", text));
 		}
 
-		public void LabelTo(Mobile to, string format, params object[] args)
-		{
-			LabelTo(to, string.Format(format, args));
-		}
-
-		public void LabelToAffix(Mobile to, int number, AffixType type, string affix)
+        public void LabelToAffix(Mobile to, int number, AffixType type, string affix)
 		{
 			to.Send(new MessageLocalizedAffix(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, number, "", type, affix, ""));
 		}
 
-		public void LabelToAffix(Mobile to, int number, AffixType type, string affix, string args)
-		{
-			to.Send(new MessageLocalizedAffix(m_Serial, m_ItemID, MessageType.Label, 0x3B2, 3, number, "", type, affix, args));
-		}
-
-		public virtual void LabelLootTypeTo(Mobile to)
-		{
-			if (m_LootType == LootType.Blessed)
-			{
-				LabelTo(to, 1041362); // (blessed)
-			}
-			else if (m_LootType == LootType.Cursed)
-			{
-				LabelTo(to, "(cursed)");
-			}
-		}
-
-		public bool AtWorldPoint(int x, int y)
+        public bool AtWorldPoint(int x, int y)
 		{
 			return m_Parent == null && m_Location.m_X == x && m_Location.m_Y == y;
 		}
@@ -2046,9 +1998,9 @@ namespace Server
 
             if (Sockets != null && item.Sockets != null)
             {
-                for (var index = 0; index < Sockets.Count; index++)
+                for (int index = 0; index < Sockets.Count; index++)
                 {
-                    var s = Sockets[index];
+                    ItemSocket s = Sockets[index];
 
                     if (!item.HasSocket(s.GetType()))
                     {
@@ -2056,9 +2008,9 @@ namespace Server
                     }
                 }
 
-                for (var index = 0; index < item.Sockets.Count; index++)
+                for (int index = 0; index < item.Sockets.Count; index++)
                 {
-                    var s = item.Sockets[index];
+                    ItemSocket s = item.Sockets[index];
 
                     if (!HasSocket(s.GetType()))
                     {
@@ -2439,7 +2391,7 @@ namespace Server
 			LocationShortXY = 0x00040000,
 			LocationByteXY = 0x00080000,
 			ImplFlags = 0x00100000,
-			InsuredFor = 0x00200000,
+			UNUSED = 0x00200000,
 			BlessedFor = 0x00400000,
 			HeldBy = 0x00800000,
 			IntWeight = 0x01000000,
@@ -2448,15 +2400,7 @@ namespace Server
 			Light = 0x08000000
 		}
 
-		private static void SetSaveFlag(ref SaveFlag flags, SaveFlag toSet, bool setIf)
-		{
-			if (setIf)
-			{
-				flags |= toSet;
-			}
-		}
-
-		private static bool GetSaveFlag(SaveFlag flags, SaveFlag toGet)
+        private static bool GetSaveFlag(SaveFlag flags, SaveFlag toGet)
 		{
 			return (flags & toGet) != 0;
 		}
@@ -2473,7 +2417,7 @@ namespace Server
 
 			if (Sockets != null)
             {
-                for (var index = 0; index < Sockets.Count; index++)
+                for (int index = 0; index < Sockets.Count; index++)
                 {
                     ItemSocket socket = Sockets[index];
                     ItemSocket.Save(socket, writer);
@@ -3161,12 +3105,6 @@ namespace Server
 						m_Flags = (ImplFlag)reader.ReadEncodedInt();
 					}
 
-                    if (version < 15 && GetSaveFlag(flags, SaveFlag.InsuredFor))
-                    {
-                        /*m_InsuredFor = */
-                        reader.ReadMobile();
-                    }
-
 					if (GetSaveFlag(flags, SaveFlag.BlessedFor))
 					{
 						AcquireCompactInfo().m_BlessedFor = reader.ReadMobile();
@@ -3181,267 +3119,6 @@ namespace Server
 					{
 						AcquireCompactInfo().m_SavedFlags = reader.ReadEncodedInt();
 					}
-
-					if (m_Map != null && m_Parent == null)
-					{
-						m_Map.OnEnter(this);
-					}
-
-					break;
-				}
-				case 5:
-				{
-					SaveFlag flags = (SaveFlag)reader.ReadInt();
-
-					LastMoved = reader.ReadDeltaTime();
-
-					if (GetSaveFlag(flags, SaveFlag.Direction))
-					{
-						m_Direction = (Direction)reader.ReadByte();
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Bounce))
-					{
-						AcquireCompactInfo().m_Bounce = BounceInfo.Deserialize(reader);
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.LootType))
-					{
-						m_LootType = (LootType)reader.ReadByte();
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.LocationFull))
-					{
-						m_Location = reader.ReadPoint3D();
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.ItemID))
-					{
-						m_ItemID = reader.ReadInt();
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Hue))
-					{
-						m_Hue = reader.ReadInt();
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Amount))
-					{
-						m_Amount = reader.ReadInt();
-					}
-					else
-					{
-						m_Amount = 1;
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Layer))
-					{
-						m_Layer = (Layer)reader.ReadByte();
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Name))
-					{
-						string name = reader.ReadString();
-
-						if (name != DefaultName)
-						{
-							AcquireCompactInfo().m_Name = name;
-						}
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Parent))
-					{
-						Serial parent = reader.ReadInt();
-
-						if (parent.IsMobile)
-						{
-							m_Parent = World.FindMobile(parent);
-						}
-						else if (parent.IsItem)
-						{
-							m_Parent = World.FindItem(parent);
-						}
-						else
-						{
-							m_Parent = null;
-						}
-
-						if (m_Parent == null && (parent.IsMobile || parent.IsItem))
-						{
-							Delete();
-						}
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Items))
-					{
-						List<Item> items = reader.ReadStrongItemList();
-
-						if (this is Container)
-						{
-							(this as Container).m_Items = items;
-						}
-						else
-						{
-							AcquireCompactInfo().m_Items = items;
-						}
-					}
-
-					double weight;
-
-					if (GetSaveFlag(flags, SaveFlag.IntWeight))
-					{
-						weight = reader.ReadEncodedInt();
-					}
-					else if (GetSaveFlag(flags, SaveFlag.WeightNot1or0))
-					{
-						weight = reader.ReadDouble();
-					}
-					else if (GetSaveFlag(flags, SaveFlag.WeightIs0))
-					{
-						weight = 0.0;
-					}
-					else
-					{
-						weight = 1.0;
-					}
-
-					if (weight != DefaultWeight)
-					{
-						AcquireCompactInfo().m_Weight = weight;
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Map))
-					{
-						m_Map = reader.ReadMap();
-					}
-					else
-					{
-						m_Map = Map.Internal;
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Visible))
-					{
-						SetFlag(ImplFlag.Visible, reader.ReadBool());
-					}
-					else
-					{
-						SetFlag(ImplFlag.Visible, true);
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Movable))
-					{
-						SetFlag(ImplFlag.Movable, reader.ReadBool());
-					}
-					else
-					{
-						SetFlag(ImplFlag.Movable, true);
-					}
-
-					if (GetSaveFlag(flags, SaveFlag.Stackable))
-					{
-						SetFlag(ImplFlag.Stackable, reader.ReadBool());
-					}
-
-					if (m_Map != null && m_Parent == null)
-					{
-						m_Map.OnEnter(this);
-					}
-
-					break;
-				}
-				case 4: 
-				case 3:
-				{
-					m_Direction = (Direction)reader.ReadInt();
-
-					goto case 2;
-				}
-				case 2:
-				{
-					AcquireCompactInfo().m_Bounce = BounceInfo.Deserialize(reader);
-					LastMoved = reader.ReadDeltaTime();
-
-					goto case 1;
-				}
-				case 1:
-				{
-					m_LootType = (LootType)reader.ReadByte(); 
-
-					goto case 0;
-				}
-				case 0:
-				{
-					m_Location = reader.ReadPoint3D();
-					m_ItemID = reader.ReadInt();
-					m_Hue = reader.ReadInt();
-					m_Amount = reader.ReadInt();
-					m_Layer = (Layer)reader.ReadByte();
-
-					string name = reader.ReadString();
-
-					if (name != DefaultName)
-					{
-						AcquireCompactInfo().m_Name = name;
-					}
-
-					Serial parent = reader.ReadInt();
-
-					if (parent.IsMobile)
-					{
-						m_Parent = World.FindMobile(parent);
-					}
-					else if (parent.IsItem)
-					{
-						m_Parent = World.FindItem(parent);
-					}
-					else
-					{
-						m_Parent = null;
-					}
-
-					if (m_Parent == null && (parent.IsMobile || parent.IsItem))
-					{
-						Delete();
-					}
-
-					int count = reader.ReadInt();
-
-					if (count > 0)
-					{
-						List<Item> items = new List<Item>(count);
-
-						for (int i = 0; i < count; ++i)
-						{
-							Item item = reader.ReadItem();
-
-							if (item != null)
-							{
-								items.Add(item);
-							}
-						}
-
-						if (this is Container)
-						{
-							(this as Container).m_Items = items;
-						}
-						else
-						{
-							AcquireCompactInfo().m_Items = items;
-						}
-					}
-
-					double weight = reader.ReadDouble();
-
-					if (weight != DefaultWeight)
-					{
-						AcquireCompactInfo().m_Weight = weight;
-					}
-
-					m_Map = reader.ReadMap();
-					SetFlag(ImplFlag.Visible, reader.ReadBool());
-					SetFlag(ImplFlag.Movable, reader.ReadBool());
-
-					Stackable = reader.ReadBool();
 
 					if (m_Map != null && m_Parent == null)
 					{
@@ -3481,12 +3158,7 @@ namespace Server
 			}
 		}
 
-		public virtual int GetMaxUpdateRange()
-		{
-			return Core.GlobalMaxUpdateRange;
-		}
-
-		public virtual int GetUpdateRange(Mobile m)
+        public virtual int GetUpdateRange(Mobile m)
 		{
 			return m.NetState == null ? Core.GlobalUpdateRange : m.NetState.UpdateRange;
 		}
@@ -5272,17 +4944,7 @@ namespace Server
 			eable.Free();
 		}
 
-		public void SendLocalizedMessageTo(Mobile to, int number, AffixType affixType, string affix, string args)
-		{
-			if (Deleted || !to.CanSee(this))
-			{
-				return;
-			}
-
-			to.Send(new MessageLocalizedAffix(Serial, ItemID, MessageType.Regular, 0x3B2, 3, number, "", affixType, affix, args));
-		}
-
-		#region OnDoubleClick[...]
+        #region OnDoubleClick[...]
 		public virtual void OnDoubleClick(Mobile from)
 		{ }
 
@@ -5585,10 +5247,6 @@ namespace Server
 			}
 		}
 
-		private static bool m_ScissorCopyLootType;
-
-		public static bool ScissorCopyLootType { get => m_ScissorCopyLootType; set => m_ScissorCopyLootType = value; }
-
 		public virtual void ScissorHelper(Mobile from, Item newItem, int amountPerOldItem)
 		{
 			ScissorHelper(from, newItem, amountPerOldItem, true);
@@ -5609,9 +5267,8 @@ namespace Server
 			Map thisMap = Map;
 			object thisParent = m_Parent;
 			Point3D worldLoc = GetWorldLocation();
-			LootType type = LootType;
 
-			if (Amount == 0)
+            if (Amount == 0)
 			{
 				Delete();
 			}
@@ -5623,12 +5280,7 @@ namespace Server
 				newItem.Hue = ourHue;
 			}
 
-			if (m_ScissorCopyLootType)
-			{
-				newItem.LootType = type;
-			}
-
-			if (!(thisParent is Container) || !((Container)thisParent).TryDropItem(from, newItem, false))
+			if (!(thisParent is Container container) || !container.TryDropItem(from, newItem, false))
 			{
 				newItem.MoveToWorld(worldLoc, thisMap);
 			}
@@ -5848,17 +5500,14 @@ namespace Server
 			InvalidateProperties();
 		}
 
-		public bool RemoveSocket<T>()
+		public void RemoveSocket<T>()
 		{
 			ItemSocket socket = GetSocket(typeof(T));
 
 			if (socket != null)
 			{
 				RemoveItemSocket(socket);
-				return true;
 			}
-
-			return false;
 		}
 
 		public void RemoveItemSocket(ItemSocket socket)
@@ -5888,9 +5537,9 @@ namespace Server
 
             ItemSocket first = null;
 
-            for (var index = 0; index < Sockets.Count; index++)
+            for (int index = 0; index < Sockets.Count; index++)
             {
-                var s = Sockets[index];
+                ItemSocket s = Sockets[index];
 
                 if (s.GetType() == typeof(T))
                 {
@@ -5902,39 +5551,16 @@ namespace Server
             return first as T;
 		}
 
-		public T GetSocket<T>(Func<T, bool> predicate) where T : ItemSocket
+        public ItemSocket GetSocket(Type type)
 		{
 			if (Sockets == null)
 			{
 				return null;
 			}
 
-            ItemSocket first = null;
-
-            for (var index = 0; index < Sockets.Count; index++)
+            for (int index = 0; index < Sockets.Count; index++)
             {
-                var s = Sockets[index];
-
-                if (s.GetType() == typeof(T) && (predicate == null || predicate(s as T)))
-                {
-                    first = s;
-                    break;
-                }
-            }
-
-            return first as T;
-		}
-
-		public ItemSocket GetSocket(Type type)
-		{
-			if (Sockets == null)
-			{
-				return null;
-			}
-
-            for (var index = 0; index < Sockets.Count; index++)
-            {
-                var s = Sockets[index];
+                ItemSocket s = Sockets[index];
 
                 if (s.GetType() == type)
                 {
@@ -5952,9 +5578,9 @@ namespace Server
 				return false;
 			}
 
-            for (var index = 0; index < Sockets.Count; index++)
+            for (int index = 0; index < Sockets.Count; index++)
             {
-                var s = Sockets[index];
+                ItemSocket s = Sockets[index];
 
                 if (s.GetType() == typeof(T))
                 {
@@ -5972,9 +5598,9 @@ namespace Server
 				return false;
 			}
 
-            for (var index = 0; index < Sockets.Count; index++)
+            for (int index = 0; index < Sockets.Count; index++)
             {
-                var s = Sockets[index];
+                ItemSocket s = Sockets[index];
 
                 if (s.GetType() == t)
                 {
