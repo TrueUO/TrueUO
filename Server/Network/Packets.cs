@@ -212,19 +212,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class ObjectHelpResponse : Packet
-	{
-		public ObjectHelpResponse(IEntity e, string text)
-			: base(0xB7)
-		{
-			EnsureCapacity(9 + (text.Length * 2));
-
-			m_Stream.Write(e.Serial);
-			m_Stream.WriteBigUniNull(text);
-		}
-	}
-
-	public sealed class VendorBuyContent : Packet
+    public sealed class VendorBuyContent : Packet
 	{
 		public VendorBuyContent(IReadOnlyList<BuyItemState> list)
 			: base(0x3C)
@@ -414,75 +402,7 @@ namespace Server.Network
 		}
 	}
 
-	public class EquipmentInfo
-	{
-		public int Number { get; }
-
-		public Mobile Crafter { get; }
-
-		public bool Unidentified { get; }
-
-		public EquipInfoAttribute[] Attributes { get; }
-
-		public EquipmentInfo(int number, Mobile crafter, bool unidentified, EquipInfoAttribute[] attributes)
-		{
-			Number = number;
-			Crafter = crafter;
-			Unidentified = unidentified;
-			Attributes = attributes;
-		}
-	}
-
-	public sealed class DisplayEquipmentInfo : Packet
-	{
-		public DisplayEquipmentInfo(IEntity item, EquipmentInfo info)
-			: base(0xBF)
-		{
-			EquipInfoAttribute[] attrs = info.Attributes;
-
-			EnsureCapacity(
-				17 + (info.Crafter == null ? 0 : 6 + info.Crafter.TitleName == null ? 0 : info.Crafter.TitleName.Length) +
-				(info.Unidentified ? 4 : 0) + (attrs.Length * 6));
-
-			m_Stream.Write((short)0x10);
-			m_Stream.Write(item.Serial);
-
-			m_Stream.Write(info.Number);
-
-			if (info.Crafter != null)
-			{
-				string name = info.Crafter.TitleName;
-
-				m_Stream.Write(-3);
-
-				if (name == null)
-				{
-					m_Stream.Write((ushort)0);
-				}
-				else
-				{
-					int length = name.Length;
-					m_Stream.Write((ushort)length);
-					m_Stream.WriteAsciiFixed(name, length);
-				}
-			}
-
-			if (info.Unidentified)
-			{
-				m_Stream.Write(-4);
-			}
-
-			for (int i = 0; i < attrs.Length; ++i)
-			{
-				m_Stream.Write(attrs[i].Number);
-				m_Stream.Write((short)attrs[i].Charges);
-			}
-
-			m_Stream.Write(-1);
-		}
-	}
-
-	public sealed class ChangeUpdateRange : Packet
+    public sealed class ChangeUpdateRange : Packet
 	{
 		private static readonly ChangeUpdateRange[] m_Cache = new ChangeUpdateRange[0x100];
 
@@ -564,53 +484,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class ChangeCharacter : Packet
-	{
-		public ChangeCharacter(IAccount a)
-			: base(0x81)
-		{
-			EnsureCapacity(305);
-
-			int count = 0;
-
-			for (int i = 0; i < a.Length; ++i)
-			{
-				if (a[i] != null)
-				{
-					++count;
-				}
-			}
-
-			m_Stream.Write((byte)count);
-			m_Stream.Write((byte)0);
-
-			for (int i = 0; i < a.Length; ++i)
-			{
-				if (a[i] != null)
-				{
-					string name = a[i].Name;
-
-					if (name == null)
-					{
-						name = "-null-";
-					}
-					else if ((name = name.Trim()).Length == 0)
-					{
-						name = "-empty-";
-					}
-
-					m_Stream.WriteAsciiFixed(name, 30);
-					m_Stream.Fill(30); // password
-				}
-				else
-				{
-					m_Stream.Fill(60);
-				}
-			}
-		}
-	}
-
-	public sealed class DeathStatus : Packet
+    public sealed class DeathStatus : Packet
 	{
 		public static readonly Packet Dead = SetStatic(new DeathStatus(true));
 		public static readonly Packet Alive = SetStatic(new DeathStatus(false));
@@ -654,14 +528,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class InvalidMapEnable : Packet
-	{
-		public InvalidMapEnable()
-			: base(0xC6, 1)
-		{ }
-	}
-
-	public sealed class BondedStatus : Packet
+    public sealed class BondedStatus : Packet
 	{
 		public BondedStatus(int val1, Serial serial, int val2)
 			: base(0xBF)
@@ -829,17 +696,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class PersonalLightLevelZero : Packet
-	{
-		public PersonalLightLevelZero(IEntity m)
-			: base(0x4E, 6)
-		{
-			m_Stream.Write(m.Serial);
-			m_Stream.Write((byte)0);
-		}
-	}
-
-	[Flags]
+    [Flags]
 	public enum CMEFlags
 	{
 		None = 0x00,
@@ -1070,109 +927,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class UnkD3 : Packet
-	{
-		public UnkD3(Mobile beholder, Mobile beheld)
-			: base(0xD3)
-		{
-			EnsureCapacity(256);
-
-			//int
-			//short
-			//short
-			//short
-			//byte
-			//byte
-			//short
-			//byte
-			//byte
-			//short
-			//short
-			//short
-			//while ( int != 0 )
-			//{
-			//short
-			//byte
-			//short
-			//}
-
-			m_Stream.Write(beheld.Serial);
-			m_Stream.Write((short)beheld.Body);
-			m_Stream.Write((short)beheld.X);
-			m_Stream.Write((short)beheld.Y);
-			m_Stream.Write((sbyte)beheld.Z);
-			m_Stream.Write((byte)beheld.Direction);
-			m_Stream.Write((ushort)beheld.Hue);
-			m_Stream.Write((byte)beheld.GetPacketFlags());
-			m_Stream.Write((byte)Notoriety.Compute(beholder, beheld));
-
-			m_Stream.Write((short)0);
-			m_Stream.Write((short)0);
-			m_Stream.Write((short)0);
-
-			m_Stream.Write(0);
-		}
-	}
-
-	public sealed class GQRequest : Packet
-	{
-		public GQRequest()
-			: base(0xC3)
-		{
-			EnsureCapacity(256);
-
-			m_Stream.Write(1);
-			m_Stream.Write(2); // ID
-			m_Stream.Write(3); // Customer ? (this)
-			m_Stream.Write(4); // Customer this (?)
-			m_Stream.Write(0);
-			m_Stream.Write((short)0);
-			m_Stream.Write((short)6);
-			m_Stream.Write((byte)'r');
-			m_Stream.Write((byte)'e');
-			m_Stream.Write((byte)'g');
-			m_Stream.Write((byte)'i');
-			m_Stream.Write((byte)'o');
-			m_Stream.Write((byte)'n');
-			m_Stream.Write(7); // Call time in seconds
-			m_Stream.Write((short)2); // Map (0=fel,1=tram,2=ilsh)
-			m_Stream.Write(8); // X
-			m_Stream.Write(9); // Y
-			m_Stream.Write(10); // Z
-			m_Stream.Write(11); // Volume
-			m_Stream.Write(12); // Rank
-			m_Stream.Write(-1);
-			m_Stream.Write(1); // type
-		}
-	}
-
-	/// <summary>
-	///     Causes the client to walk in a given direction. It does not send a movement request.
-	/// </summary>
-	public sealed class PlayerMove : Packet
-	{
-		public PlayerMove(Direction d)
-			: base(0x97, 2)
-		{
-			m_Stream.Write((byte)d);
-			// @4C63B0
-		}
-	}
-
-	/// <summary>
-	///     Displays a message "There are currently [count] available calls in the global queue.".
-	/// </summary>
-	public sealed class GQCount : Packet
-	{
-		public GQCount(int unk, int count)
-			: base(0xCB, 7)
-		{
-			m_Stream.Write((short)unk);
-			m_Stream.Write(count);
-		}
-	}
-
-	/// <summary>
+    /// <summary>
 	///     Asks the client for it's version
 	/// </summary>
 	public sealed class ClientVersionReq : Packet
@@ -1184,21 +939,7 @@ namespace Server.Network
 		}
 	}
 
-	/// <summary>
-	///     Asks the client for it's "assist version". (Perhaps for UOAssist?)
-	/// </summary>
-	public sealed class AssistVersionReq : Packet
-	{
-		public AssistVersionReq(int unk)
-			: base(0xBE)
-		{
-			EnsureCapacity(7);
-
-			m_Stream.Write(unk);
-		}
-	}
-
-	public enum EffectType
+    public enum EffectType
 	{
 		Moving = 0x00,
 		Lightning = 0x01,
@@ -1852,23 +1593,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class NullFastwalkStack : Packet
-	{
-		public NullFastwalkStack()
-			: base(0xBF)
-		{
-			EnsureCapacity(256);
-			m_Stream.Write((short)0x1);
-			m_Stream.Write(0x0);
-			m_Stream.Write(0x0);
-			m_Stream.Write(0x0);
-			m_Stream.Write(0x0);
-			m_Stream.Write(0x0);
-			m_Stream.Write(0x0);
-		}
-	}
-
-	public sealed class RemoveItem : Packet
+    public sealed class RemoveItem : Packet
 	{
 		public RemoveItem(IEntity item)
 			: base(0x1D, 5)
@@ -1938,16 +1663,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class Sequence : Packet
-	{
-		public Sequence(int num)
-			: base(0x7B, 2)
-		{
-			m_Stream.Write((byte)num);
-		}
-	}
-
-	public sealed class SkillChange : Packet
+    public sealed class SkillChange : Packet
 	{
 		public SkillChange(Skill skill)
 			: base(0x3A)
@@ -2329,143 +2045,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class DisplayGumpFast : Packet, IGumpWriter
-	{
-		private int m_LayoutLength;
-
-		public int TextEntries { get; set; }
-		public int Switches { get; set; }
-
-		public DisplayGumpFast(Gump g)
-			: base(0xB0)
-		{
-			m_Buffer[0] = (byte)' ';
-
-			EnsureCapacity(4096);
-
-			m_Stream.Write(g.Serial);
-			m_Stream.Write(g.TypeID);
-			m_Stream.Write(g.X);
-			m_Stream.Write(g.Y);
-			m_Stream.Write((ushort)0xFFFF);
-		}
-
-		private static readonly byte[] m_True = Gump.StringToBuffer(" 1");
-		private static readonly byte[] m_False = Gump.StringToBuffer(" 0");
-
-		private static readonly byte[] m_BeginTextSeparator = Gump.StringToBuffer(" @");
-		private static readonly byte[] m_EndTextSeparator = Gump.StringToBuffer("@");
-
-		private readonly byte[] m_Buffer = new byte[48];
-
-		public void AppendLayout(bool val)
-		{
-			AppendLayout(val ? m_True : m_False);
-		}
-
-		public void AppendLayout(int val)
-		{
-			string toString = val.ToString();
-			int bytes = Encoding.ASCII.GetBytes(toString, 0, toString.Length, m_Buffer, 1) + 1;
-
-			m_Stream.Write(m_Buffer, 0, bytes);
-			m_LayoutLength += bytes;
-		}
-
-		public void AppendLayoutNS(int val)
-		{
-			string toString = val.ToString();
-			int bytes = Encoding.ASCII.GetBytes(toString, 0, toString.Length, m_Buffer, 1);
-
-			m_Stream.Write(m_Buffer, 1, bytes);
-			m_LayoutLength += bytes;
-		}
-
-		public void AppendLayout(string text)
-		{
-			AppendLayout(m_BeginTextSeparator);
-
-			int length = text.Length;
-			m_Stream.WriteAsciiFixed(text, length);
-			m_LayoutLength += length;
-
-			AppendLayout(m_EndTextSeparator);
-		}
-
-		public void AppendLayout(byte[] buffer)
-		{
-			int length = buffer.Length;
-			m_Stream.Write(buffer, 0, length);
-			m_LayoutLength += length;
-		}
-
-		public void WriteStrings(List<string> text)
-		{
-			m_Stream.Seek(19, SeekOrigin.Begin);
-			m_Stream.Write((ushort)m_LayoutLength);
-			m_Stream.Seek(0, SeekOrigin.End);
-
-			m_Stream.Write((ushort)text.Count);
-
-			for (int i = 0; i < text.Count; ++i)
-			{
-				string v = text[i];
-
-				if (v == null)
-				{
-					v = string.Empty;
-				}
-
-				int length = (ushort)v.Length;
-
-				m_Stream.Write((ushort)length);
-				m_Stream.WriteBigUniFixed(v, length);
-			}
-		}
-
-		public void Flush()
-		{ }
-	}
-
-	public sealed class DisplayGump : Packet
-	{
-		public DisplayGump(Gump g, string layout, IReadOnlyList<string> text)
-			: base(0xB0)
-		{
-			if (layout == null)
-			{
-				layout = "";
-			}
-
-			EnsureCapacity(256);
-
-			m_Stream.Write(g.Serial);
-			m_Stream.Write(g.TypeID);
-			m_Stream.Write(g.X);
-			m_Stream.Write(g.Y);
-			m_Stream.Write((ushort)(layout.Length + 1));
-			m_Stream.WriteAsciiNull(layout);
-
-			m_Stream.Write((ushort)text.Count);
-
-			for (int i = 0; i < text.Count; ++i)
-			{
-				string v = text[i];
-
-				if (v == null)
-				{
-					v = "";
-				}
-
-				int length = (ushort)v.Length;
-
-				m_Stream.Write((ushort)length);
-				m_Stream.WriteBigUniFixed(v, length);
-			}
-		}
-	}
-
-	public sealed class DisplayPaperdoll : Packet
+    public sealed class DisplayPaperdoll : Packet
 	{
 		public DisplayPaperdoll(Mobile m, string text, bool canLift)
 			: base(0x88, 66)
@@ -2551,26 +2131,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class ScrollMessage : Packet
-	{
-		public ScrollMessage(int type, int tip, string text)
-			: base(0xA6)
-		{
-			if (text == null)
-			{
-				text = "";
-			}
-
-			EnsureCapacity(10 + text.Length);
-
-			m_Stream.Write((byte)type);
-			m_Stream.Write(tip);
-			m_Stream.Write((ushort)text.Length);
-			m_Stream.WriteAsciiFixed(text, text.Length);
-		}
-	}
-
-	public sealed class CurrentTime : Packet
+    public sealed class CurrentTime : Packet
 	{
 		public CurrentTime()
 			: base(0x5B, 4)
@@ -2805,18 +2366,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class PathfindMessage : Packet
-	{
-		public PathfindMessage(IPoint3D p)
-			: base(0x38, 7)
-		{
-			m_Stream.Write((short)p.X);
-			m_Stream.Write((short)p.Y);
-			m_Stream.Write((short)p.Z);
-		}
-	}
-
-	// unsure of proper format, client crashes
+    // unsure of proper format, client crashes
 	public sealed class MobileName : Packet
 	{
 		public MobileName(IEntity m)
@@ -3464,19 +3014,11 @@ namespace Server.Network
 			Map = m;
 		}
 
-		public CityInfo(string city, string building, int x, int y, int z, Map m)
-			: this(city, building, 0, x, y, z, m)
-		{ }
-
-		public CityInfo(string city, string building, int description, int x, int y, int z)
+        public CityInfo(string city, string building, int description, int x, int y, int z)
 			: this(city, building, description, x, y, z, Map.Trammel)
 		{ }
 
-		public CityInfo(string city, string building, int x, int y, int z)
-			: this(city, building, 0, x, y, z, Map.Trammel)
-		{ }
-
-		public string City { get; set; }
+        public string City { get; set; }
 		public string Building { get; set; }
 		public int Description { get; set; }
 		public int X { get => m_Location.X; set => m_Location.X = value; }
@@ -3524,75 +3066,15 @@ namespace Server.Network
 		}
 	}
 
+    // Can eventually be deleted.
 	[Flags]
 	public enum ThirdPartyFeature : ulong
 	{
-		FilterWeather = 1 << 0,
-		FilterLight = 1 << 1,
-
-		SmartTarget = 1 << 2,
-		RangedTarget = 1 << 3,
-
-		AutoOpenDoors = 1 << 4,
-
-		DequipOnCast = 1 << 5,
-		AutoPotionEquip = 1 << 6,
-
-		ProtectHeals = 1 << 7,
-
-		LoopedMacros = 1 << 8,
-
-		UseOnceAgent = 1 << 9,
-		RestockAgent = 1 << 10,
-		SellAgent = 1 << 11,
-		BuyAgent = 1 << 12,
-
-		PotionHotkeys = 1 << 13,
-
-		RandomTargets = 1 << 14,
-		ClosestTargets = 1 << 15, // All closest target hotkeys
-		OverheadHealth = 1 << 16, // Health and Mana/Stam messages shown over player's heads
-
-		AutolootAgent = 1 << 17,
-		BoneCutterAgent = 1 << 18,
-		AdvancedMacros = 1 << 19,
-		AutoRemount = 1 << 20,
-		AutoBandage = 1 << 21,
-		EnemyTargetShare = 1 << 22,
-		FilterSeason = 1 << 23,
-		SpellTargetShare = 1 << 24,
-
-		All = ulong.MaxValue
 	}
-
 	public static class FeatureProtection
 	{
-		private static ThirdPartyFeature m_Disabled = 0;
-
-		public static ThirdPartyFeature DisabledFeatures => m_Disabled;
-
-		public static void Disable(ThirdPartyFeature feature)
-		{
-			SetDisabled(feature, true);
-		}
-
-		public static void Enable(ThirdPartyFeature feature)
-		{
-			SetDisabled(feature, false);
-		}
-
-        private static void SetDisabled(ThirdPartyFeature feature, bool value)
-		{
-			if (value)
-			{
-				m_Disabled |= feature;
-			}
-			else
-			{
-				m_Disabled &= ~feature;
-			}
-		}
-	}
+        public static ThirdPartyFeature DisabledFeatures => 0;
+    }
 
 	public sealed class CharacterList : Packet
 	{
@@ -3853,17 +3335,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class FollowMessage : Packet
-	{
-		public FollowMessage(Serial serial1, Serial serial2)
-			: base(0x15, 9)
-		{
-			m_Stream.Write(serial1);
-			m_Stream.Write(serial2);
-		}
-	}
-
-	public sealed class AccountLoginAck : Packet
+    public sealed class AccountLoginAck : Packet
 	{
 		public AccountLoginAck(IReadOnlyList<ServerInfo> info)
 			: base(0xA8)
@@ -3887,32 +3359,7 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class DisplaySignGump : Packet
-	{
-		public DisplaySignGump(Serial serial, int gumpID, string unknown, string caption)
-			: base(0x8B)
-		{
-			if (unknown == null)
-			{
-				unknown = "";
-			}
-			if (caption == null)
-			{
-				caption = "";
-			}
-
-			EnsureCapacity(16 + unknown.Length + caption.Length);
-
-			m_Stream.Write(serial);
-			m_Stream.Write((short)gumpID);
-			m_Stream.Write((short)unknown.Length);
-			m_Stream.WriteAsciiFixed(unknown, unknown.Length);
-			m_Stream.Write((short)(caption.Length + 1));
-			m_Stream.WriteAsciiFixed(caption, caption.Length + 1);
-		}
-	}
-
-	public sealed class GodModeReply : Packet
+    public sealed class GodModeReply : Packet
 	{
 		public GodModeReply(bool reply)
 			: base(0x2B, 2)
@@ -3958,9 +3405,7 @@ namespace Server.Network
 
 		private PacketState m_State;
 
-		public int PacketID => m_PacketID;
-
-		public PacketState State => m_State;
+        public PacketState State => m_State;
 
 		protected Packet(int packetID)
 		{
