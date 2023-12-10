@@ -364,7 +364,7 @@ namespace Server.Mobiles
                                     item = new KrampusCoinPurse(m.Karma);
                                     break;
                                 case 1:
-                                    item = new CardOfSemidar(Utility.RandomMinMax(0, 6));
+                                    item = new CardOfSemidar(CardOfSemidar.CardType.Krampus);
                                     break;
                                 case 2:
                                     item = new NiceTitleDeed();

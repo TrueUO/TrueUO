@@ -28,12 +28,7 @@ namespace Server
 	public interface IPooledEnumerable<out T> : IPooledEnumerable, IEnumerable<T>
 	{ }
 
-	public interface IPooledEnumerator<out T> : IEnumerator<T>
-	{
-		void Free();
-	}
-
-	public static class PooledEnumeration
+    public static class PooledEnumeration
 	{
 		public delegate IEnumerable<T> Selector<out T>(Sector sector, Rectangle2D bounds);
 
@@ -202,12 +197,7 @@ namespace Server
 			return Map.PooledEnumerable<Item>.Instantiate(map, bounds, ItemSelector ?? SelectItems);
 		}
 
-		public static Map.PooledEnumerable<BaseMulti> GetMultis(Map map, Rectangle2D bounds)
-		{
-			return Map.PooledEnumerable<BaseMulti>.Instantiate(map, bounds, MultiSelector ?? SelectMultis);
-		}
-
-		public static Map.PooledEnumerable<StaticTile[]> GetMultiTiles(Map map, Rectangle2D bounds)
+        public static Map.PooledEnumerable<StaticTile[]> GetMultiTiles(Map map, Rectangle2D bounds)
 		{
 			return Map.PooledEnumerable<StaticTile[]>.Instantiate(map, bounds, MultiTileSelector ?? SelectMultiTiles);
 		}
@@ -495,12 +485,7 @@ namespace Server
 			return v / 2;
 		}
 
-        public IPooledEnumerable<IEntity> GetObjectsInRange(Point3D p)
-		{
-            return GetObjectsInRange(p, Core.GlobalMaxUpdateRange);
-		}
-
-		public IPooledEnumerable<IEntity> GetObjectsInRange(Point3D p, int range)
+        public IPooledEnumerable<IEntity> GetObjectsInRange(Point3D p, int range)
 		{
 			return GetObjectsInBounds(new Rectangle2D(p.m_X - range, p.m_Y - range, range * 2 + 1, range * 2 + 1));
 		}
@@ -540,12 +525,7 @@ namespace Server
 			return PooledEnumeration.GetItems(this, bounds);
 		}
 
-		public IPooledEnumerable<Mobile> GetMobilesInRange(Point3D p)
-		{
-            return GetMobilesInRange(p, Core.GlobalMaxUpdateRange);
-		}
-
-		public IPooledEnumerable<Mobile> GetMobilesInRange(Point3D p, int range)
+        public IPooledEnumerable<Mobile> GetMobilesInRange(Point3D p, int range)
 		{
 			return GetMobilesInBounds(new Rectangle2D(p.m_X - range, p.m_Y - range, range * 2 + 1, range * 2 + 1));
 		}
@@ -561,42 +541,22 @@ namespace Server
 		}
 
         #region CanFit
-		public bool CanFit(Point3D p, int height, bool checkBlocksFit)
-		{
-			return CanFit(p.m_X, p.m_Y, p.m_Z, height, checkBlocksFit, true, true);
-		}
-
-		public bool CanFit(Point3D p, int height, bool checkBlocksFit, bool checkMobiles)
+        public bool CanFit(Point3D p, int height, bool checkBlocksFit, bool checkMobiles)
 		{
 			return CanFit(p.m_X, p.m_Y, p.m_Z, height, checkBlocksFit, checkMobiles, true, false);
 		}
 
-		public bool CanFit(Point2D p, int z, int height, bool checkBlocksFit)
-		{
-			return CanFit(p.m_X, p.m_Y, z, height, checkBlocksFit, true, true, false);
-		}
-
-		public bool CanFit(Point3D p, int height)
+        public bool CanFit(Point3D p, int height)
 		{
 			return CanFit(p.m_X, p.m_Y, p.m_Z, height, false, true, true, false);
 		}
 
-		public bool CanFit(Point2D p, int z, int height)
-		{
-			return CanFit(p.m_X, p.m_Y, z, height, false, true, true, false);
-		}
-
-		public bool CanFit(int x, int y, int z, int height)
+        public bool CanFit(int x, int y, int z, int height)
 		{
 			return CanFit(x, y, z, height, false, true, true, false);
 		}
 
-		public bool CanFit(int x, int y, int z, int height, bool checksBlocksFit)
-		{
-			return CanFit(x, y, z, height, checksBlocksFit, true, true, false);
-		}
-
-		public bool CanFit(int x, int y, int z, int height, bool checkBlocksFit, bool checkMobiles)
+        public bool CanFit(int x, int y, int z, int height, bool checkBlocksFit, bool checkMobiles)
 		{
 			return CanFit(x, y, z, height, checkBlocksFit, checkMobiles, true, false);
 		}
@@ -903,22 +863,7 @@ namespace Server
 			eable.Free();
 			return null;
 		}
-
-		public IEnumerable<TMob> FindMobiles<TMob>(Point3D p, int range = 0) where TMob : Mobile
-		{
-			IPooledEnumerable<Mobile> eable = GetMobilesInRange(p, range);
-
-			foreach (Mobile m in eable)
-			{
-				if (m.GetType() == typeof(TMob))
-				{
-					yield return m as TMob;
-				}
-			}
-
-			eable.Free();
-		}
-		#endregion
+        #endregion
 
 		#region Spawn Position
 		public Point3D GetSpawnPosition(Point3D center, int range)

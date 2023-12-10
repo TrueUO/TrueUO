@@ -28,12 +28,13 @@ namespace Server.Engines.ArtisanFestival
 
         private Item RandomGift(Mobile m)
         {
-            switch (Utility.Random(4))
+            switch (Utility.Random(5))
             {
                 default: return new RewardLantern(m);
                 case 1: return new RewardPillow(m);
                 case 2: return new RewardPainting(m);
                 case 3: return new RewardSculpture(m);
+                case 4: return new RewardStainedGlassWindow(m);
             }
         }
 
