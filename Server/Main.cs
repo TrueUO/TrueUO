@@ -148,7 +148,7 @@ namespace Server
 
 			string fullPath = null;
 
-            for (var index = 0; index < DataDirectories.Count; index++)
+            for (int index = 0; index < DataDirectories.Count; index++)
             {
                 string p = DataDirectories[index];
                 fullPath = Path.Combine(p, path);
@@ -169,21 +169,7 @@ namespace Server
 			return FindDataFile(string.Format(format, args));
 		}
 
-		#region Expansions
 		public static Expansion Expansion => Expansion.EJ;
-
-		public static bool T2A => Expansion >= Expansion.T2A;
-		public static bool UOR => Expansion >= Expansion.UOR;
-		public static bool UOTD => Expansion >= Expansion.UOTD;
-		public static bool LBR => Expansion >= Expansion.LBR;
-		public static bool AOS => Expansion >= Expansion.AOS;
-		public static bool SE => Expansion >= Expansion.SE;
-		public static bool ML => Expansion >= Expansion.ML;
-		public static bool SA => Expansion >= Expansion.SA;
-		public static bool HS => Expansion >= Expansion.HS;
-		public static bool TOL => Expansion >= Expansion.TOL;
-		public static bool EJ => Expansion >= Expansion.EJ;
-        #endregion
 
         public static string ExePath => _ExePath ?? (_ExePath = IsWindows ? Path.ChangeExtension(Assembly.Location, ".exe") : Assembly.Location);
 
@@ -252,7 +238,7 @@ namespace Server
 				{
 					try
                     {
-                        for (var index = 0; index < MessagePump.Listeners.Length; index++)
+                        for (int index = 0; index < MessagePump.Listeners.Length; index++)
                         {
                             Listener l = MessagePump.Listeners[index];
                             l.Dispose();
@@ -592,9 +578,8 @@ namespace Server
 
 			MessagePump = new MessagePump();
 
-            for (var index = 0; index < Map.AllMaps.Count; index++)
+            for (int index = 0; index < Map.AllMaps.Count; index++)
             {
-                Map m = Map.AllMaps[index];
                 TileMatrix.Force();
             }
 
@@ -714,7 +699,7 @@ namespace Server
 
 			VerifySerialization(Assembly.GetCallingAssembly());
 
-            for (var index = 0; index < ScriptCompiler.Assemblies.Length; index++)
+            for (int index = 0; index < ScriptCompiler.Assemblies.Length; index++)
             {
                 Assembly a = ScriptCompiler.Assemblies[index];
                 VerifySerialization(a);
@@ -889,7 +874,7 @@ namespace Server
 
 		public override void Write(char ch)
         {
-            for (var index = 0; index < _Streams.Count; index++)
+            for (int index = 0; index < _Streams.Count; index++)
             {
                 TextWriter t = _Streams[index];
 
@@ -899,7 +884,7 @@ namespace Server
 
 		public override void WriteLine(string line)
         {
-            for (var index = 0; index < _Streams.Count; index++)
+            for (int index = 0; index < _Streams.Count; index++)
             {
                 TextWriter t = _Streams[index];
 
