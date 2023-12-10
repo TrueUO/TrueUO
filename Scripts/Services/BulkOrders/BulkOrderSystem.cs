@@ -25,10 +25,9 @@ namespace Server.Engines.BulkOrders
     public class BulkOrderSystem
     {
         // Logic (EA says 3 cached): 2 cached, 1 in the pipe if the last bod > 6 hours = 3
-        public static readonly int MaxCachedDeeds = 2;
-        public static readonly int Delay = 6;
+        public const int MaxCachedDeeds = 2;
+        public const int Delay = 6;
 
-        public static readonly bool NewSystemEnabled = true;
         public static BulkOrderSystem Instance { get; set; }
 
         public Dictionary<PlayerMobile, BODContext> BODPlayerData { get; set; }
@@ -684,7 +683,7 @@ namespace Server.Engines.BulkOrders
             }
         }
 
-        public static string FilePath = Path.Combine("Saves/CraftContext", "BODs.bin");
+        private static readonly string _FilePath = Path.Combine("Saves/CraftContext", "BODs.bin");
 
         public static void Configure()
         {
@@ -700,7 +699,7 @@ namespace Server.Engines.BulkOrders
         public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
-                FilePath,
+                _FilePath,
                 writer =>
                 {
                     writer.Write(0);
@@ -712,7 +711,7 @@ namespace Server.Engines.BulkOrders
         public static void OnLoad()
         {
             Persistence.Deserialize(
-                FilePath,
+                _FilePath,
                 reader =>
                 {
                     int version = reader.ReadInt();
@@ -858,9 +857,6 @@ namespace Server.Engines.BulkOrders
         [CommandProperty(AccessLevel.GameMaster)]
         public int PendingRewardPoints { get; set; }
 
-        // Legacy System
-        private readonly DateTime _NextBulkOrder;
-
         public override string ToString()
         {
             return "...";
@@ -886,7 +882,7 @@ namespace Server.Engines.BulkOrders
             else if (LastBulkOrder + TimeSpan.FromHours(BulkOrderSystem.Delay) < DateTime.UtcNow)
             {
                 CachedDeeds++;
-                LastBulkOrder = LastBulkOrder + TimeSpan.FromHours(BulkOrderSystem.Delay);
+                LastBulkOrder += TimeSpan.FromHours(BulkOrderSystem.Delay);
             }
         }
 
@@ -894,47 +890,23 @@ namespace Server.Engines.BulkOrders
         {
             int version = reader.ReadInt();
 
-            if (reader.ReadInt() == 0)
-            {
-                switch (version)
-                {
-                    case 1:
-                    case 0:
-                        _CachedDeeds = reader.ReadInt();
-                        LastBulkOrder = reader.ReadDateTime();
-                        BankedPoints = reader.ReadDouble();
-                        PendingRewardPoints = reader.ReadInt();
-                        break;
-                }
-            }
-            else
-            {
-                _NextBulkOrder = reader.ReadDateTime();
-            }
+            if (version < 2)
+                reader.ReadInt();
 
-            if (version == 0 && _CachedDeeds > BulkOrderSystem.MaxCachedDeeds)
-            {
-                _CachedDeeds = BulkOrderSystem.MaxCachedDeeds;
-            }
+            _CachedDeeds = reader.ReadInt();
+            LastBulkOrder = reader.ReadDateTime();
+            BankedPoints = reader.ReadDouble();
+            PendingRewardPoints = reader.ReadInt();
         }
 
         public void Serialize(GenericWriter writer)
         {
-            writer.Write(1);
+            writer.Write(2);
 
-            if (BulkOrderSystem.NewSystemEnabled)
-            {
-                writer.Write(0);
-                writer.Write(_CachedDeeds);
-                writer.Write(LastBulkOrder);
-                writer.Write(BankedPoints);
-                writer.Write(PendingRewardPoints);
-            }
-            else
-            {
-                writer.Write(1);
-                writer.Write(_NextBulkOrder);
-            }
+            writer.Write(_CachedDeeds);
+            writer.Write(LastBulkOrder);
+            writer.Write(BankedPoints);
+            writer.Write(PendingRewardPoints);
         }
     }
 
