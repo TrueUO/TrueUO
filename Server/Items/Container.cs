@@ -1,11 +1,7 @@
-#region References
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-
 using Server.Network;
-#endregion
 
 namespace Server.Items
 {
@@ -347,288 +343,8 @@ namespace Server.Items
 			return true;
 		}
 
-		private class GroupComparer : IComparer
-		{
-			private readonly CheckItemGroup m_Grouper;
-
-			public GroupComparer(CheckItemGroup grouper)
-			{
-				m_Grouper = grouper;
-			}
-
-			public int Compare(object x, object y)
-			{
-				Item a = (Item)x;
-				Item b = (Item)y;
-
-				return m_Grouper(a, b);
-			}
-		}
-
-		#region Consume[...]
-		public bool ConsumeTotalGrouped(Type type, int amount, bool recurse, OnItemConsumed callback, CheckItemGroup grouper)
-		{
-			return ConsumeTotalGrouped(type, amount, recurse, null, callback, grouper);
-		}
-
-		public bool ConsumeTotalGrouped(Type type, int amount, bool recurse, ResValidator validator, OnItemConsumed callback, CheckItemGroup grouper)
-		{
-			if (grouper == null)
-			{
-				throw new ArgumentNullException();
-			}
-
-			Item[] typedItems = FindItemsByType(type, recurse);
-
-			List<List<Item>> groups = new List<List<Item>>();
-			int idx = 0;
-
-			while (idx < typedItems.Length)
-			{
-				Item a = typedItems[idx++];
-
-				if (validator != null && !validator(a))
-					continue;
-
-				List<Item> group = new List<Item>
-				{
-					a
-				};
-
-				while (idx < typedItems.Length)
-				{
-					Item b = typedItems[idx];
-
-					if (validator != null && !validator(b))
-						continue;
-
-					int v = grouper(a, b);
-
-					if (v == 0)
-					{
-						group.Add(b);
-					}
-					else
-					{
-						break;
-					}
-
-					++idx;
-				}
-
-				groups.Add(group);
-			}
-
-			Item[][] items = new Item[groups.Count][];
-			int[] totals = new int[groups.Count];
-
-			bool hasEnough = false;
-
-			for (int i = 0; i < groups.Count; ++i)
-			{
-				items[i] = groups[i].ToArray();
-				//items[i] = (Item[])(((ArrayList)groups[i]).ToArray( typeof( Item ) ));
-
-				for (int j = 0; j < items[i].Length; ++j)
-				{
-					totals[i] += items[i][j].Amount;
-				}
-
-				if (totals[i] >= amount)
-				{
-					hasEnough = true;
-				}
-			}
-
-			if (!hasEnough)
-			{
-				return false;
-			}
-
-			for (int i = 0; i < items.Length; ++i)
-			{
-				if (totals[i] >= amount)
-				{
-					int need = amount;
-
-					for (int j = 0; j < items[i].Length; ++j)
-					{
-						Item item = items[i][j];
-
-						int theirAmount = item.Amount;
-
-						if (theirAmount < need)
-						{
-							if (callback != null)
-							{
-								callback(item, theirAmount);
-							}
-
-							item.Delete();
-							need -= theirAmount;
-						}
-						else
-						{
-							if (callback != null)
-							{
-								callback(item, need);
-							}
-
-							item.Consume(need);
-							break;
-						}
-					}
-
-					break;
-				}
-			}
-
-			return true;
-		}
-
-		public int ConsumeTotalGrouped(
-			Type[] types, int[] amounts, bool recurse, OnItemConsumed callback, CheckItemGroup grouper)
-		{
-			return ConsumeTotalGrouped(types, amounts, recurse, null, callback, grouper);
-		}
-
-		public int ConsumeTotalGrouped(
-			Type[] types, int[] amounts, bool recurse, ResValidator validator, OnItemConsumed callback, CheckItemGroup grouper)
-		{
-			if (types.Length != amounts.Length)
-			{
-				throw new ArgumentException();
-			}
-
-            if (grouper == null)
-            {
-                throw new ArgumentNullException();
-            }
-
-            Item[][][] items = new Item[types.Length][][];
-			int[][] totals = new int[types.Length][];
-
-			for (int i = 0; i < types.Length; ++i)
-			{
-				Item[] typedItems = FindItemsByType(types[i], recurse);
-
-				List<List<Item>> groups = new List<List<Item>>();
-				int idx = 0;
-
-				while (idx < typedItems.Length)
-				{
-					Item a = typedItems[idx++];
-
-					if (validator != null && !validator(a))
-						continue;
-
-					List<Item> group = new List<Item>
-					{
-						a
-					};
-
-					while (idx < typedItems.Length)
-					{
-						Item b = typedItems[idx];
-
-						if (validator != null && !validator(b))
-							continue;
-
-						int v = grouper(a, b);
-
-						if (v == 0)
-						{
-							group.Add(b);
-						}
-						else
-						{
-							break;
-						}
-
-						++idx;
-					}
-
-					groups.Add(group);
-				}
-
-				items[i] = new Item[groups.Count][];
-				totals[i] = new int[groups.Count];
-
-				bool hasEnough = false;
-
-				for (int j = 0; j < groups.Count; ++j)
-				{
-					items[i][j] = groups[j].ToArray();
-					//items[i][j] = (Item[])(((ArrayList)groups[j]).ToArray( typeof( Item ) ));
-
-					for (int k = 0; k < items[i][j].Length; ++k)
-					{
-						totals[i][j] += items[i][j][k].Amount;
-					}
-
-					if (totals[i][j] >= amounts[i])
-					{
-						hasEnough = true;
-					}
-				}
-
-				if (!hasEnough)
-				{
-					return i;
-				}
-			}
-
-			for (int i = 0; i < items.Length; ++i)
-			{
-				for (int j = 0; j < items[i].Length; ++j)
-				{
-					if (totals[i][j] >= amounts[i])
-					{
-						int need = amounts[i];
-
-						for (int k = 0; k < items[i][j].Length; ++k)
-						{
-							Item item = items[i][j][k];
-
-							int theirAmount = item.Amount;
-
-							if (theirAmount < need)
-							{
-								if (callback != null)
-								{
-									callback(item, theirAmount);
-								}
-
-								item.Delete();
-								need -= theirAmount;
-							}
-							else
-							{
-								if (callback != null)
-								{
-									callback(item, need);
-								}
-
-								item.Consume(need);
-								break;
-							}
-						}
-
-						break;
-					}
-				}
-			}
-
-			return -1;
-		}
-
-		public int ConsumeTotalGrouped(
-			Type[][] types, int[] amounts, bool recurse, OnItemConsumed callback, CheckItemGroup grouper)
-		{
-			return ConsumeTotalGrouped(types, amounts, recurse, null, callback, grouper);
-		}
-
-		public int ConsumeTotalGrouped(
+        #region Consume[...]
+        public int ConsumeTotalGrouped(
 			Type[][] types, int[] amounts, bool recurse, ResValidator validator, OnItemConsumed callback, CheckItemGroup grouper)
 		{
 			if (types.Length != amounts.Length)
@@ -757,88 +473,12 @@ namespace Server.Items
 			return -1;
 		}
 
-		public int ConsumeTotal(Type[][] types, int[] amounts)
+        public int ConsumeTotal(Type[] types, int[] amounts)
 		{
 			return ConsumeTotal(types, amounts, true, null);
 		}
 
-		public int ConsumeTotal(Type[][] types, int[] amounts, bool recurse)
-		{
-			return ConsumeTotal(types, amounts, recurse, null);
-		}
-
-		public int ConsumeTotal(Type[][] types, int[] amounts, bool recurse, OnItemConsumed callback)
-		{
-			if (types.Length != amounts.Length)
-			{
-				throw new ArgumentException();
-			}
-
-			Item[][] items = new Item[types.Length][];
-			int[] totals = new int[types.Length];
-
-			for (int i = 0; i < types.Length; ++i)
-			{
-				items[i] = FindItemsByType(types[i], recurse);
-
-				for (int j = 0; j < items[i].Length; ++j)
-				{
-					totals[i] += items[i][j].Amount;
-				}
-
-				if (totals[i] < amounts[i])
-				{
-					return i;
-				}
-			}
-
-			for (int i = 0; i < types.Length; ++i)
-			{
-				int need = amounts[i];
-
-				for (int j = 0; j < items[i].Length; ++j)
-				{
-					Item item = items[i][j];
-
-					int theirAmount = item.Amount;
-
-					if (theirAmount < need)
-					{
-						if (callback != null)
-						{
-							callback(item, theirAmount);
-						}
-
-						item.Delete();
-						need -= theirAmount;
-					}
-					else
-					{
-						if (callback != null)
-						{
-							callback(item, need);
-						}
-
-						item.Consume(need);
-						break;
-					}
-				}
-			}
-
-			return -1;
-		}
-
-		public int ConsumeTotal(Type[] types, int[] amounts)
-		{
-			return ConsumeTotal(types, amounts, true, null);
-		}
-
-		public int ConsumeTotal(Type[] types, int[] amounts, bool recurse)
-		{
-			return ConsumeTotal(types, amounts, recurse, null);
-		}
-
-		public int ConsumeTotal(Type[] types, int[] amounts, bool recurse, OnItemConsumed callback)
+        public int ConsumeTotal(Type[] types, int[] amounts, bool recurse, OnItemConsumed callback)
 		{
 			if (types.Length != amounts.Length)
 			{
@@ -1018,70 +658,7 @@ namespace Server.Items
 		#endregion
 
 		#region Get[BestGroup]Amount
-		public int GetBestGroupAmount(Type type, bool recurse, CheckItemGroup grouper)
-		{
-			if (grouper == null)
-			{
-				throw new ArgumentNullException();
-			}
-
-			int best = 0;
-
-			Item[] typedItems = FindItemsByType(type, recurse);
-
-			List<List<Item>> groups = new List<List<Item>>();
-			int idx = 0;
-
-			while (idx < typedItems.Length)
-			{
-				Item a = typedItems[idx++];
-				List<Item> group = new List<Item>
-				{
-					a
-				};
-
-				while (idx < typedItems.Length)
-				{
-					Item b = typedItems[idx];
-					int v = grouper(a, b);
-
-					if (v == 0)
-					{
-						group.Add(b);
-					}
-					else
-					{
-						break;
-					}
-
-					++idx;
-				}
-
-				groups.Add(group);
-			}
-
-			for (int i = 0; i < groups.Count; ++i)
-			{
-				Item[] items = groups[i].ToArray();
-
-				//Item[] items = (Item[])(((ArrayList)groups[i]).ToArray( typeof( Item ) ));
-				int total = 0;
-
-				for (int j = 0; j < items.Length; ++j)
-				{
-					total += items[j].Amount;
-				}
-
-				if (total >= best)
-				{
-					best = total;
-				}
-			}
-
-			return best;
-		}
-
-		public int GetBestGroupAmount(Type[] types, bool recurse, CheckItemGroup grouper)
+        public int GetBestGroupAmount(Type[] types, bool recurse, CheckItemGroup grouper)
 		{
 			if (grouper == null)
 			{
@@ -1143,72 +720,7 @@ namespace Server.Items
 			return best;
 		}
 
-		public int GetBestGroupAmount(Type[][] types, bool recurse, CheckItemGroup grouper)
-		{
-			if (grouper == null)
-			{
-				throw new ArgumentNullException();
-			}
-
-			int best = 0;
-
-			for (int i = 0; i < types.Length; ++i)
-			{
-				Item[] typedItems = FindItemsByType(types[i], recurse);
-
-				List<List<Item>> groups = new List<List<Item>>();
-				int idx = 0;
-
-				while (idx < typedItems.Length)
-				{
-					Item a = typedItems[idx++];
-					List<Item> group = new List<Item>
-					{
-						a
-					};
-
-					while (idx < typedItems.Length)
-					{
-						Item b = typedItems[idx];
-						int v = grouper(a, b);
-
-						if (v == 0)
-						{
-							group.Add(b);
-						}
-						else
-						{
-							break;
-						}
-
-						++idx;
-					}
-
-					groups.Add(group);
-				}
-
-				for (int j = 0; j < groups.Count; ++j)
-				{
-					Item[] items = groups[j].ToArray();
-					//Item[] items = (Item[])(((ArrayList)groups[j]).ToArray( typeof( Item ) ));
-					int total = 0;
-
-					for (int k = 0; k < items.Length; ++k)
-					{
-						total += items[k].Amount;
-					}
-
-					if (total >= best)
-					{
-						best = total;
-					}
-				}
-			}
-
-			return best;
-		}
-
-		public int GetAmount(Type type)
+        public int GetAmount(Type type)
 		{
 			return GetAmount(type, true);
 		}
@@ -1470,12 +982,7 @@ namespace Server.Items
 			return FindItemByType<T>(true);
 		}
 
-		public T FindItemByType<T>(Predicate<T> predicate) where T : Item
-		{
-			return FindItemByType(true, predicate);
-		}
-
-		public T FindItemByType<T>(bool recurse) where T : Item
+        public T FindItemByType<T>(bool recurse) where T : Item
 		{
 			return FindItemByType<T>(recurse, null);
 		}
@@ -1553,14 +1060,12 @@ namespace Server.Items
 			MaxItems = 0x00000001,
 			GumpID = 0x00000002,
 			DropSound = 0x00000004,
-			LiftOverride = 0x00000008,
-			GridPositions = 0x00000010
+			LiftOverride = 0x00000008
 		}
 
 		public override void Serialize(GenericWriter writer)
 		{
 			base.Serialize(writer);
-
 			writer.Write(3); // version
 
 			SaveFlag flags = SaveFlag.None;
@@ -1571,17 +1076,6 @@ namespace Server.Items
 			SetSaveFlag(ref flags, SaveFlag.LiftOverride, m_LiftOverride);
 
 			writer.Write((byte)flags);
-
-			/*if (GetSaveFlag(flags, SaveFlag.GridPositions))
-            {
-                writer.Write(_Positions.Count);
-
-                foreach (var kvp in _Positions)
-                {
-                    writer.Write(kvp.Key);
-                    writer.Write(kvp.Value);
-                }
-            }*/
 
 			if (GetSaveFlag(flags, SaveFlag.MaxItems))
 			{
@@ -1602,84 +1096,38 @@ namespace Server.Items
 		public override void Deserialize(GenericReader reader)
 		{
 			base.Deserialize(reader);
+			reader.ReadInt();
 
-			int version = reader.ReadInt();
+            SaveFlag flags = (SaveFlag)reader.ReadByte();
 
-			switch (version)
-			{
-				case 3:
-				case 2:
-				{
-					SaveFlag flags = (SaveFlag)reader.ReadByte();
+            if (GetSaveFlag(flags, SaveFlag.MaxItems))
+            {
+                m_MaxItems = reader.ReadEncodedInt();
+            }
+            else
+            {
+                m_MaxItems = -1;
+            }
 
-					if (GetSaveFlag(flags, SaveFlag.MaxItems))
-					{
-						m_MaxItems = reader.ReadEncodedInt();
-					}
-					else
-					{
-						m_MaxItems = -1;
-					}
+            if (GetSaveFlag(flags, SaveFlag.GumpID))
+            {
+                m_GumpID = reader.ReadEncodedInt();
+            }
+            else
+            {
+                m_GumpID = -1;
+            }
 
-					if (GetSaveFlag(flags, SaveFlag.GumpID))
-					{
-						m_GumpID = reader.ReadEncodedInt();
-					}
-					else
-					{
-						m_GumpID = -1;
-					}
+            if (GetSaveFlag(flags, SaveFlag.DropSound))
+            {
+                m_DropSound = reader.ReadEncodedInt();
+            }
+            else
+            {
+                m_DropSound = -1;
+            }
 
-					if (GetSaveFlag(flags, SaveFlag.DropSound))
-					{
-						m_DropSound = reader.ReadEncodedInt();
-					}
-					else
-					{
-						m_DropSound = -1;
-					}
-
-					m_LiftOverride = GetSaveFlag(flags, SaveFlag.LiftOverride);
-
-					break;
-				}
-				case 1:
-				{
-					m_MaxItems = reader.ReadInt();
-					goto case 0;
-				}
-				case 0:
-				{
-					if (version < 1)
-					{
-						m_MaxItems = m_GlobalMaxItems;
-					}
-
-					m_GumpID = reader.ReadInt();
-					m_DropSound = reader.ReadInt();
-
-					if (m_GumpID == DefaultGumpID)
-					{
-						m_GumpID = -1;
-					}
-
-					if (m_DropSound == DefaultDropSound)
-					{
-						m_DropSound = -1;
-					}
-
-					if (m_MaxItems == DefaultMaxItems)
-					{
-						m_MaxItems = -1;
-					}
-
-					//m_Bounds = new Rectangle2D( reader.ReadPoint2D(), reader.ReadPoint2D() );
-					reader.ReadPoint2D();
-					reader.ReadPoint2D();
-
-					break;
-				}
-			}
+            m_LiftOverride = GetSaveFlag(flags, SaveFlag.LiftOverride);
 
 			UpdateContainerData();
 		}
@@ -1687,8 +1135,7 @@ namespace Server.Items
 		private static int m_GlobalMaxItems = 125;
 		private static int m_GlobalMaxWeight = 400;
 
-		public static int GlobalMaxItems { get => m_GlobalMaxItems; set => m_GlobalMaxItems = value; }
-		public static int GlobalMaxWeight { get => m_GlobalMaxWeight; set => m_GlobalMaxWeight = value; }
+        public static int GlobalMaxWeight { get => m_GlobalMaxWeight; set => m_GlobalMaxWeight = value; }
 
 		public Container(int itemID)
 			: base(itemID)
@@ -2059,13 +1506,13 @@ namespace Server.Items
 	{
 		static ContainerData()
 		{
-			m_Table = new Dictionary<int, ContainerData>();
+			_Table = new Dictionary<int, ContainerData>();
 
 			string path = Path.Combine(Core.BaseDirectory, "Data/containers.cfg");
 
 			if (!File.Exists(path))
 			{
-				m_Default = new ContainerData(0x3C, new Rectangle2D(44, 65, 142, 94), 0x48);
+				_Default = new ContainerData(0x3C, new Rectangle2D(44, 65, 142, 94), 0x48);
 				return;
 			}
 
@@ -2107,9 +1554,9 @@ namespace Server.Items
 
 							ContainerData data = new ContainerData(gumpID, bounds, dropSound);
 
-							if (m_Default == null)
+							if (_Default == null)
 							{
-								m_Default = data;
+								_Default = data;
 							}
 
 							if (split.Length >= 4)
@@ -2120,13 +1567,13 @@ namespace Server.Items
 								{
 									int id = Utility.ToInt32(aIDs[i]);
 
-									if (m_Table.ContainsKey(id))
+									if (_Table.ContainsKey(id))
 									{
 										Console.WriteLine(@"Warning: double ItemID entry in Data\containers.cfg");
 									}
 									else
 									{
-										m_Table[id] = data;
+										_Table[id] = data;
 									}
 								}
 							}
@@ -2137,42 +1584,42 @@ namespace Server.Items
 				}
 			}
 
-			if (m_Default == null)
+			if (_Default == null)
 			{
-				m_Default = new ContainerData(0x3C, new Rectangle2D(44, 65, 142, 94), 0x48);
+				_Default = new ContainerData(0x3C, new Rectangle2D(44, 65, 142, 94), 0x48);
 			}
 		}
 
-		private static ContainerData m_Default;
-		private static readonly Dictionary<int, ContainerData> m_Table;
+		private static ContainerData _Default;
+		private static readonly Dictionary<int, ContainerData> _Table;
 
-		public static ContainerData Default { get => m_Default; set => m_Default = value; }
+		public static ContainerData Default { get => _Default; set => _Default = value; }
 
 		public static ContainerData GetData(int itemID)
 		{
-			m_Table.TryGetValue(itemID, out ContainerData data);
+			_Table.TryGetValue(itemID, out ContainerData data);
 
 			if (data != null)
 			{
 				return data;
 			}
 
-            return m_Default;
+            return _Default;
         }
 
-		private readonly int m_GumpID;
-		private readonly Rectangle2D m_Bounds;
-		private readonly int m_DropSound;
+		private readonly int _GumpID;
+		private readonly Rectangle2D _Bounds;
+		private readonly int _DropSound;
 
-		public int GumpID => m_GumpID;
-		public Rectangle2D Bounds => m_Bounds;
-		public int DropSound => m_DropSound;
+		public int GumpID => _GumpID;
+		public Rectangle2D Bounds => _Bounds;
+		public int DropSound => _DropSound;
 
 		public ContainerData(int gumpID, Rectangle2D bounds, int dropSound)
 		{
-			m_GumpID = gumpID;
-			m_Bounds = bounds;
-			m_DropSound = dropSound;
+			_GumpID = gumpID;
+			_Bounds = bounds;
+			_DropSound = dropSound;
 		}
 	}
 }
