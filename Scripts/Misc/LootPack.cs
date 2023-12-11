@@ -135,7 +135,7 @@ namespace Server
                     continue;
                 }
 
-                Item item = entry.Construct(from, luckChance, stage, hasBeenStolenFrom);
+                Item item = entry.Construct(from);
 
                 if (item != null)
                 {
@@ -354,14 +354,6 @@ namespace Server
             new LootPackItem(typeof(DaemonBlood), 1),
             new LootPackItem(typeof(NoxCrystal), 1),
             new LootPackItem(typeof(PigIron), 1)
-        };
-
-        public static readonly LootPackItem[] MysticRegItems =
-        {
-            new LootPackItem(typeof(Bone), 1),
-            new LootPackItem(typeof(DragonBlood), 1),
-            new LootPackItem(typeof(FertileDirt), 1),
-            new LootPackItem(typeof(DaemonBone), 1)
         };
 
         public static readonly LootPackItem[] PeerlessResourceItems =
@@ -590,7 +582,6 @@ namespace Server
 
         public static readonly LootPack MageryRegs = new LootPack(new[] { new LootPackEntry(false, true, MageryRegItems, 100.00, 1) });
         public static readonly LootPack NecroRegs = new LootPack(new[] { new LootPackEntry(false, true, NecroRegItems, 100.00, 1) });
-        public static readonly LootPack MysticRegs = new LootPack(new[] { new LootPackEntry(false, true, MysticRegItems, 100.00, 1) });
         public static readonly LootPack PeerlessResource = new LootPack(new[] { new LootPackEntry(false, true, PeerlessResourceItems, 100.00, 1) });
 
         public static readonly LootPack Gems = new LootPack(new[] { new LootPackEntry(false, true, GemItems, 100.00, 1) });
@@ -610,34 +601,9 @@ namespace Server
         public static readonly LootPack PeculiarSeed4 = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(4), 1) }, 33.3, 1) });
         public static readonly LootPack BonsaiSeed = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomBonsaiSeed(), 1) }, 25.0, 1) });
 
-        public static LootPack LootItems(LootPackItem[] items)
-        {
-            return new LootPack(new[] { new LootPackEntry(false, false, items, 100.0, 1) });
-        }
-
         public static LootPack LootItems(LootPackItem[] items, int amount)
         {
             return new LootPack(new[] { new LootPackEntry(false, false, items, 100.0, amount) });
-        }
-
-        public static LootPack LootItems(LootPackItem[] items, double chance)
-        {
-            return new LootPack(new[] { new LootPackEntry(false, false, items, chance, 1) });
-        }
-
-        public static LootPack LootItems(LootPackItem[] items, double chance, int amount)
-        {
-            return new LootPack(new[] { new LootPackEntry(false, false, items, chance, amount) });
-        }
-
-        public static LootPack LootItems(LootPackItem[] items, double chance, int amount, bool resource)
-        {
-            return new LootPack(new[] { new LootPackEntry(false, resource, items, chance, amount) });
-        }
-
-        public static LootPack LootItems(LootPackItem[] items, double chance, int amount, bool spawn, bool steal)
-        {
-            return new LootPack(new[] { new LootPackEntry(spawn, steal, items, chance, amount) });
         }
 
         public static LootPack LootItem<T>() where T : Item
@@ -829,7 +795,7 @@ namespace Server
             return true;
         }
 
-        public Item Construct(IEntity from, int luckChance, LootStage stage, bool hasBeenStolenFrom)
+        public Item Construct(IEntity from)
         {
             int totalChance = 0;
 
@@ -859,7 +825,7 @@ namespace Server
 
                     if (loot != null)
                     {
-                        return Mutate(from, luckChance, loot);
+                        return Mutate(from, loot);
                     }
                 }
 
@@ -869,7 +835,7 @@ namespace Server
             return null;
         }
 
-        public Item Mutate(IEntity from, int luckChance, Item item)
+        public Item Mutate(IEntity from, Item item)
         {
             if (item != null)
             {
@@ -893,9 +859,7 @@ namespace Server
                 }
                 else if (item is BaseInstrument instr)
                 {
-                    SlayerName slayer = SlayerName.None;
-
-                    slayer = BaseRunicTool.GetRandomSlayer();
+                    SlayerName slayer = BaseRunicTool.GetRandomSlayer();
 
                     if (slayer == SlayerName.None)
                     {
@@ -918,10 +882,6 @@ namespace Server
 
         public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, string quantity)
             : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), false)
-        { }
-
-        public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, string quantity, bool standardLoot)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), standardLoot)
         { }
 
         public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity)
@@ -1031,21 +991,15 @@ namespace Server
 
     public class LootPackDice
     {
-        private int m_Count, m_Sides, m_Bonus;
-
-        public int Count { get => m_Count; set => m_Count = value; }
-
-        public int Sides { get => m_Sides; set => m_Sides = value; }
-
-        public int Bonus { get => m_Bonus; set => m_Bonus = value; }
+        private readonly int _Count, _Sides, _Bonus;
 
         public int Roll()
         {
-            int v = m_Bonus;
+            int v = _Bonus;
 
-            for (int i = 0; i < m_Count; ++i)
+            for (int i = 0; i < _Count; ++i)
             {
-                v += Utility.Random(1, m_Sides);
+                v += Utility.Random(1, _Sides);
             }
 
             return v;
@@ -1061,7 +1015,7 @@ namespace Server
                 return;
             }
 
-            m_Count = Utility.ToInt32(str.Substring(start, index - start));
+            _Count = Utility.ToInt32(str.Substring(start, index - start));
 
             bool negative;
 
@@ -1078,7 +1032,7 @@ namespace Server
                 index = str.Length;
             }
 
-            m_Sides = Utility.ToInt32(str.Substring(start, index - start));
+            _Sides = Utility.ToInt32(str.Substring(start, index - start));
 
             if (index == str.Length)
             {
@@ -1088,19 +1042,19 @@ namespace Server
             start = index + 1;
             index = str.Length;
 
-            m_Bonus = Utility.ToInt32(str.Substring(start, index - start));
+            _Bonus = Utility.ToInt32(str.Substring(start, index - start));
 
             if (negative)
             {
-                m_Bonus *= -1;
+                _Bonus *= -1;
             }
         }
 
         public LootPackDice(int count, int sides, int bonus)
         {
-            m_Count = count;
-            m_Sides = sides;
-            m_Bonus = bonus;
+            _Count = count;
+            _Sides = sides;
+            _Bonus = bonus;
         }
     }
 }
