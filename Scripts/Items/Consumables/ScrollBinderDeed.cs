@@ -45,6 +45,10 @@ namespace Server.Items
             Hue = 1636;
         }
 
+        public ScrollBinderDeed(Serial serial) : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -107,7 +111,7 @@ namespace Server.Items
             }
         }
 
-        public void OnTarget(Mobile from, object targeted)
+        private void OnTarget(Mobile from, object targeted)
         {
             if (targeted is Item item && !item.IsChildOf(from.Backpack))
             {
@@ -331,7 +335,7 @@ namespace Server.Items
                             }
                             else if (newValue > Needed)
                             {
-                                from.SendGump(new BinderWarningGump(newValue, this, sot, Needed));
+                                from.SendGump(new BinderWarningGump(this, sot, Needed));
                             }
                             else
                             {
@@ -380,46 +384,48 @@ namespace Server.Items
             }
         }
 
-        public void GiveItem(Mobile from, Item item)
+        private static void GiveItem(Mobile from, Item item)
         {
             Container pack = from.Backpack;
 
             if (pack == null || !pack.TryDropItem(from, item, false))
+            {
                 item.MoveToWorld(from.Location, from.Map);
+            }
         }
 
         private class InternalTarget : Target
         {
-            private readonly ScrollBinderDeed m_Binder;
+            private readonly ScrollBinderDeed _Binder;
 
             public InternalTarget(ScrollBinderDeed binder) : base(-1, false, TargetFlags.None)
             {
-                m_Binder = binder;
+                _Binder = binder;
             }
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (m_Binder != null && !m_Binder.Deleted && m_Binder.IsChildOf(from.Backpack))
-                    m_Binder.OnTarget(from, targeted);
+                if (_Binder != null && !_Binder.Deleted && _Binder.IsChildOf(from.Backpack))
+                {
+                    _Binder.OnTarget(from, targeted);
+                }
             }
         }
 
         private class BinderWarningGump : Gump
         {
-            private readonly double m_Value;
-            private readonly int m_Needed;
-            private readonly ScrollOfTranscendence m_Scroll;
-            private readonly ScrollBinderDeed m_Binder;
+            private readonly int _Needed;
+            private readonly ScrollOfTranscendence _Scroll;
+            private readonly ScrollBinderDeed _Binder;
 
-            public BinderWarningGump(double value, ScrollBinderDeed binder, ScrollOfTranscendence scroll, int needed)
+            public BinderWarningGump(ScrollBinderDeed binder, ScrollOfTranscendence scroll, int needed)
                 : base(340, 340)
             {
                 TypeID = 0x236C;
 
-                m_Value = value;
-                m_Needed = needed;
-                m_Scroll = scroll;
-                m_Binder = binder;
+                _Needed = needed;
+                _Scroll = scroll;
+                _Binder = binder;
 
                 AddPage(0);
 
@@ -442,18 +448,14 @@ namespace Server.Items
             {
                 Mobile from = sender.Mobile;
 
-                if (info.ButtonID == 1 && m_Scroll != null && m_Binder != null)
+                if (info.ButtonID == 1 && _Scroll != null && _Binder != null)
                 {
-                    m_Binder.GiveItem(from, new ScrollOfTranscendence(m_Scroll.Skill, m_Needed));
-                    m_Scroll.Delete();
-                    m_Binder.Delete();
+                    GiveItem(from, new ScrollOfTranscendence(_Scroll.Skill, _Needed));
+                    _Scroll.Delete();
+                    _Binder.Delete();
                     from.SendLocalizedMessage(1113145); // You've completed your binding and received an upgraded version of your scroll!
                 }
             }
-        }
-
-        public ScrollBinderDeed(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -471,34 +473,13 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
-            if (v < 2)
-            {
-                m_Skill = (SkillName)reader.ReadInt();
-                m_Value = reader.ReadDouble();
-                m_Needed = (int)reader.ReadDouble();
-                m_Has = reader.ReadDouble();
-
-                switch (reader.ReadInt())
-                {
-                    case 0: m_BinderType = BinderType.None; break;
-                    case 1: m_BinderType = BinderType.PowerScroll; break;
-                    case 2: m_BinderType = BinderType.StatScroll; break;
-                    case 3: m_BinderType = BinderType.SOT; break;
-                }
-            }
-            else
-            {
-                m_BinderType = (BinderType)reader.ReadInt();
-                m_Skill = (SkillName)reader.ReadInt();
-                m_Value = reader.ReadDouble();
-                m_Needed = reader.ReadInt();
-                m_Has = reader.ReadDouble();
-            }
-
-            if (Hue != 1636)
-                Hue = 1636;
+            m_BinderType = (BinderType)reader.ReadInt();
+            m_Skill = (SkillName)reader.ReadInt();
+            m_Value = reader.ReadDouble();
+            m_Needed = reader.ReadInt();
+            m_Has = reader.ReadDouble();
         }
     }
 }
