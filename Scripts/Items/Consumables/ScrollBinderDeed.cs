@@ -1,3 +1,4 @@
+using System;
 using Server.Gumps;
 using Server.Network;
 using Server.Targeting;
@@ -77,9 +78,13 @@ namespace Server.Items
                         int number;
 
                         if (Needed == 2)
+                        {
                             number = 1113148; // ~1_type~ transcendence: ~2_given~/2.0
+                        }
                         else
+                        {
                             number = 1113620; // ~1_type~ transcendence: ~2_given~/5.0
+                        }
 
                         list.Add(number, $"{skillName}\t{value}");
                         break;
@@ -135,13 +140,21 @@ namespace Server.Items
                             int needed = 0;
 
                             if (value == 105)
+                            {
                                 needed = 8;
+                            }
                             else if (value == 110)
+                            {
                                 needed = 12;
+                            }
                             else if (value == 115)
+                            {
                                 needed = 10;
+                            }
                             else
+                            {
                                 return;
+                            }
 
                             Value = value;
                             Needed = needed;
@@ -162,15 +175,25 @@ namespace Server.Items
                             int needed = 0;
 
                             if (value == 230)
+                            {
                                 needed = 6;
+                            }
                             else if (value == 235)
+                            {
                                 needed = 8;
+                            }
                             else if (value == 240)
+                            {
                                 needed = 8;
+                            }
                             else if (value == 245)
+                            {
                                 needed = 5;
+                            }
                             else
+                            {
                                 return;
+                            }
 
                             Value = value;
                             Needed = needed;
@@ -226,7 +249,9 @@ namespace Server.Items
                         else if (targeted is ScrollBinderDeed sb)
                         {
                             if (sb == this)
+                            {
                                 return;
+                            }
 
                             if (sb.BinderType != BinderType || sb.Value != Value || sb.Skill != Skill)
                             {
@@ -246,9 +271,13 @@ namespace Server.Items
                             }
 
                             if (rest > 0)
+                            {
                                 sb.Has = rest;
+                            }
                             else
+                            {
                                 sb.Delete();
+                            }
                         }
                         break;
                     }
@@ -279,7 +308,9 @@ namespace Server.Items
                         else if (targeted is ScrollBinderDeed sb)
                         {
                             if (sb == this)
+                            {
                                 return;
+                            }
 
                             if (sb.BinderType != BinderType || sb.Value != Value)
                             {
@@ -299,9 +330,13 @@ namespace Server.Items
                             }
 
                             if (rest > 0)
+                            {
                                 sb.Has = rest;
+                            }
                             else
+                            {
                                 sb.Delete();
+                            }
                         }
                         break;
                     }
@@ -324,9 +359,19 @@ namespace Server.Items
                             double newValue = sot.Value + Has;
 
                             if (newValue > 2 && Needed == 2)
+                            {
                                 Needed = 5;
+                            }
 
-                            if (newValue == Needed)
+                            /* When newValue (a double) and Needed (an int) are compared, there can be
+                             precision discrepancies, especially when dealing with floating-point numbers.
+                            This is why even when newValue is 5.0 and Needed is 5, they might not be
+                            considered equal due to the way floating-point numbers are represented in memory.
+                            Due to this we will introduce a tolerance and set it to half the smallest possible
+                            increment */
+                            const double tolerance = 0.05; // Half of your smallest possible increment
+
+                            if (Math.Abs(newValue - Needed) < tolerance) 
                             {
                                 GiveItem(from, new ScrollOfTranscendence(Skill, Needed));
                                 from.SendLocalizedMessage(1113145); // You've completed your binding and received an upgraded version of your scroll!
@@ -346,7 +391,9 @@ namespace Server.Items
                         else if (targeted is ScrollBinderDeed sb)
                         {
                             if (sb == this)
+                            {
                                 return;
+                            }
 
                             if (sb.BinderType != BinderType || sb.Skill != Skill)
                             {
@@ -357,7 +404,9 @@ namespace Server.Items
                             double newValue = sb.Has + Has;
 
                             if (newValue > 2 && Needed == 2)
+                            {
                                 Needed = 5;
+                            }
 
                             Has = newValue;
 
