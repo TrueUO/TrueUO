@@ -17,6 +17,8 @@ namespace Server.Mobiles
             SetDex(200);
             SetInt(100);
 
+            SetHits(250);
+
             SetDamage(9, 14);
 
             SetDamageType(ResistanceType.Physical, 0);
@@ -34,9 +36,11 @@ namespace Server.Mobiles
             SetSkill(SkillName.Tactics, 100.0);
             SetSkill(SkillName.Wrestling, 92.0);
 
-            ControlSlots = 4;
+            ControlSlots = 2;
 
             AddItem(new LightSource());
+
+            SetSpecialAbility(SpecialAbility.Inferno);
         }
 
         public SummonedFireElemental(Serial serial)

@@ -414,17 +414,20 @@ namespace Server.Mobiles
             if (spell != null)
                 return spell;
 
-            Mobile toDispel = FindDispelTarget(true);
-
-            if (toDispel != null) // Something dispellable is attacking us
+            if (Utility.RandomDouble() < 0.25) // Only check for targets 25% of the time instead of 100%.
             {
-                m_Mobile.DebugSay("I am going to dispel {0}", toDispel);
+                Mobile toDispel = FindDispelTarget(true);
 
-                spell = DoDispel(toDispel);
+                if (toDispel != null) // Something dispellable is attacking us
+                {
+                    m_Mobile.DebugSay("I am going to dispel {0}", toDispel);
+
+                    spell = DoDispel(toDispel);
+                }
+
+                if (spell != null)
+                    return spell;
             }
-
-            if (spell != null)
-                return spell;
 
             if (c is Mobile mobile && SmartAI && m_Combo != -1) // We are doing a spell combo
             {
