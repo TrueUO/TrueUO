@@ -35,7 +35,7 @@ namespace Server.Items
             if (defender is ChaosDragoon || defender is ChaosDragoonElite)
                 return;
 
-            if (attacker is BaseCreature bc && bc.ControlMaster is PlayerMobile && bc.ControlMaster.Mounted)
+            if (attacker is BaseCreature bc && bc.ControlMaster != null && bc.ControlMaster.Mounted)
             {
                 return;
             }
