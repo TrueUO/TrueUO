@@ -3674,10 +3674,7 @@ namespace Server.Multis
                 {
                     for (int y = m_StartY; y <= m_EndY; ++y)
                     {
-                        if (m_Map != null)
-                        {
-                            m_Map.FixColumn(x, y);
-                        }
+                        m_Map.FixColumn(x, y);
                     }
                 }
             }
