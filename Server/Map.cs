@@ -972,69 +972,72 @@ namespace Server
 
             SortedSet<Item> items = AcquireFixItems(this, x, y);
 
-            foreach (Item toFix in items)
+            if (items != null)
             {
-                if (!toFix.Movable)
+                foreach (Item toFix in items)
                 {
-                    continue;
-                }
-
-                int z = int.MinValue;
-                int currentZ = toFix.Z;
-
-                if (!landTile.Ignored && landAvg <= currentZ)
-                {
-                    z = landAvg;
-                }
-
-                foreach (StaticTile tile in tiles)
-                {
-                    ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
-
-                    int checkZ = tile.Z;
-                    int checkTop = checkZ + id.CalcHeight;
-
-                    if (checkTop == checkZ && !id.Surface)
-                    {
-                        ++checkTop;
-                    }
-
-                    if (checkTop > z && checkTop <= currentZ)
-                    {
-                        z = checkTop;
-                    }
-                }
-
-                foreach (Item item in items)
-                {
-                    if (item == toFix)
+                    if (!toFix.Movable)
                     {
                         continue;
                     }
 
-                    ItemData id = item.ItemData;
+                    int z = int.MinValue;
+                    int currentZ = toFix.Z;
 
-                    int checkZ = item.Z;
-                    int checkTop = checkZ + id.CalcHeight;
-
-                    if (checkTop == checkZ && !id.Surface)
+                    if (!landTile.Ignored && landAvg <= currentZ)
                     {
-                        ++checkTop;
+                        z = landAvg;
                     }
 
-                    if (checkTop > z && checkTop <= currentZ)
+                    foreach (StaticTile tile in tiles)
                     {
-                        z = checkTop;
+                        ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
+
+                        int checkZ = tile.Z;
+                        int checkTop = checkZ + id.CalcHeight;
+
+                        if (checkTop == checkZ && !id.Surface)
+                        {
+                            ++checkTop;
+                        }
+
+                        if (checkTop > z && checkTop <= currentZ)
+                        {
+                            z = checkTop;
+                        }
+                    }
+
+                    foreach (Item item in items)
+                    {
+                        if (item == toFix)
+                        {
+                            continue;
+                        }
+
+                        ItemData id = item.ItemData;
+
+                        int checkZ = item.Z;
+                        int checkTop = checkZ + id.CalcHeight;
+
+                        if (checkTop == checkZ && !id.Surface)
+                        {
+                            ++checkTop;
+                        }
+
+                        if (checkTop > z && checkTop <= currentZ)
+                        {
+                            z = checkTop;
+                        }
+                    }
+
+                    if (z != int.MinValue)
+                    {
+                        toFix.Location = new Point3D(toFix.X, toFix.Y, z);
                     }
                 }
 
-                if (z != int.MinValue)
-                {
-                    toFix.Location = new Point3D(toFix.X, toFix.Y, z);
-                }
+                FreeFixItems(items);
             }
-
-            FreeFixItems(items);
         }
 
         /// <summary>
