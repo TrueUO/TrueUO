@@ -24,12 +24,12 @@ namespace Server.Gumps
 		private bool m_Resizable = true;
 		private bool m_Disposable = true;
 
-		public virtual int GetTypeID()
-		{
-			return GetType().FullName.GetHashCode();
-		}
+        public virtual int GetTypeID()
+        {
+            return (int)HashUtility.ComputeHash32(GetType().FullName);
+        }
 
-		public Gump(int x, int y)
+        public Gump(int x, int y)
 		{
 			do
 			{
