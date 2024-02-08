@@ -260,7 +260,7 @@ namespace Server.Items
             else
             {
                 from.SendLocalizedMessage(500617); // What instrument shall you play?
-                from.BeginTarget(1, false, TargetFlags.None, new TargetStateCallback(OnPickedInstrument), callback);
+                Timer.DelayCall(() => from.BeginTarget(1, false, TargetFlags.None, new TargetStateCallback(OnPickedInstrument), callback));
             }
         }
 
