@@ -15,7 +15,7 @@ namespace Server.Mobiles
             SetDex(70);
             SetInt(100);
 
-            SetHits(165);
+            SetHits(250);
 
             SetDamage(12, 16);
 
@@ -35,8 +35,10 @@ namespace Server.Mobiles
             SetSkill(SkillName.Tactics, 100.0);
             SetSkill(SkillName.Wrestling, 85.0);
 
-            ControlSlots = 3;
+            ControlSlots = 2;
             CanSwim = true;
+
+            SetSpecialAbility(SpecialAbility.ManaDrain);
         }
 
         public SummonedWaterElemental(Serial serial)

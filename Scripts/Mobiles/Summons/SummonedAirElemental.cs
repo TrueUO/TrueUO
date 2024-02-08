@@ -16,7 +16,7 @@ namespace Server.Mobiles
             SetDex(200);
             SetInt(100);
 
-            SetHits(150);
+            SetHits(250);
             SetStam(50);
 
             SetDamage(6, 9);
@@ -38,6 +38,8 @@ namespace Server.Mobiles
             SetSkill(SkillName.Wrestling, 80.0);
 
             ControlSlots = 2;
+
+            SetSpecialAbility(SpecialAbility.LightningForce);
         }
 
         public SummonedAirElemental(Serial serial)

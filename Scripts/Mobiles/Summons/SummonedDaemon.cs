@@ -15,6 +15,8 @@ namespace Server.Mobiles
             SetDex(110);
             SetInt(150);
 
+            SetHits(250);
+
             SetDamage(14, 21);
 
             SetDamageType(ResistanceType.Physical, 0);
@@ -33,7 +35,9 @@ namespace Server.Mobiles
             SetSkill(SkillName.Tactics, 100.0);
             SetSkill(SkillName.Wrestling, 98.1, 99.0);
 
-            ControlSlots = 4;
+            ControlSlots = 2;
+
+            SetSpecialAbility(SpecialAbility.StealLife);
         }
 
         public SummonedDaemon(Serial serial)

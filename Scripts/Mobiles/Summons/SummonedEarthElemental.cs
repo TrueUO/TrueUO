@@ -15,7 +15,7 @@ namespace Server.Mobiles
             SetDex(70);
             SetInt(70);
 
-            SetHits(180);
+            SetHits(350);
 
             SetDamage(14, 21);
 
@@ -32,6 +32,8 @@ namespace Server.Mobiles
             SetSkill(SkillName.Wrestling, 90.0);
 
             ControlSlots = 2;
+
+            SetSpecialAbility(SpecialAbility.Heal);
         }
 
         public SummonedEarthElemental(Serial serial)
