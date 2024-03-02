@@ -6,7 +6,7 @@ namespace Server.Items
 
         [Constructable]
         public KrampusMinionEarrings()
-            : base(0xA295)
+            : base(0x4213)
         {
             Layer = Layer.Earrings;
         }
@@ -38,6 +38,11 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            if (ItemID != 0x4213)
+            {
+                ItemID = 0x4213;
+            }
         }
     }
 }
