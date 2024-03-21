@@ -719,6 +719,7 @@ namespace Server.Misc
             0x422A, 0x422C,
 
             0x4210, 0x4211, 0x4212, 0x4213, 0x4D0A, 0x4D0B, 0xA34A, // Jewelry
+            0xA295,
 
             0x450D, 0x450E, 0x50D8,                                 // Belts and Half Apron
             0x457E, 0x457F, 0x45A4, 0x45A5,                         // Wing Armor
