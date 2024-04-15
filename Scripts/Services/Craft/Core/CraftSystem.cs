@@ -300,18 +300,6 @@ namespace Server.Engines.Craft
             craftItem.Mana = mana;
         }
 
-        public void SetStamReq(int index, int stam)
-        {
-            CraftItem craftItem = CraftItems.GetAt(index);
-            craftItem.Stam = stam;
-        }
-
-        public void SetHitsReq(int index, int hits)
-        {
-            CraftItem craftItem = CraftItems.GetAt(index);
-            craftItem.Hits = hits;
-        }
-
         public void SetUseAllRes(int index, bool useAll)
         {
             CraftItem craftItem = CraftItems.GetAt(index);

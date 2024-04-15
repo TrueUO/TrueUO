@@ -724,7 +724,6 @@ namespace Server
         private bool m_DisplayGuildTitle;
         private bool m_DisplayGuildAbbr;
         private Mobile m_GuildFealty;
-        private DateTime[] m_StuckMenuUses;
         private long m_NextSkillTime;
         private long m_NextActionMessage;
         private bool m_Paralyzed;
@@ -5524,20 +5523,6 @@ namespace Server
             m_StatMods = new List<StatMod>();
             m_SkillMods = new List<SkillMod>();
 
-            if (reader.ReadBool())
-            {
-                m_StuckMenuUses = new DateTime[reader.ReadInt()];
-
-                for (int i = 0; i < m_StuckMenuUses.Length; ++i)
-                {
-                    m_StuckMenuUses[i] = reader.ReadDateTime();
-                }
-            }
-            else
-            {
-                m_StuckMenuUses = null;
-            }
-
             if (m_Player && m_Map != Map.Internal)
             {
                 m_LogoutLocation = m_Location;
@@ -5785,22 +5770,6 @@ namespace Server
 			writer.Write((byte)m_StrLock);
 			writer.Write((byte)m_DexLock);
 			writer.Write((byte)m_IntLock);
-
-			if (m_StuckMenuUses != null)
-			{
-				writer.Write(true);
-
-				writer.Write(m_StuckMenuUses.Length);
-
-				for (int i = 0; i < m_StuckMenuUses.Length; ++i)
-				{
-					writer.Write(m_StuckMenuUses[i]);
-				}
-			}
-			else
-			{
-				writer.Write(false);
-			}
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
