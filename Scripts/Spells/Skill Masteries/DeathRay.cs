@@ -1,5 +1,6 @@
 using Server.Mobiles;
 using System;
+using Server.Targeting;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -44,7 +45,7 @@ namespace Server.Spells.SkillMasteries
 
         public override void OnCast()
         {
-            Caster.Target = new MasteryTarget(this);
+            Caster.Target = new MasteryTarget(this, flags: TargetFlags.Harmful);
         }
 
         protected override void OnTarget(object o)
@@ -77,7 +78,7 @@ namespace Server.Spells.SkillMasteries
                         _Mod = new ResistanceMod(ResistanceType.Energy, -mod);
                         m.AddResistanceMod(_Mod);
 
-                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DeathRay, 1155896, 1156085, $"{((int) damage).ToString()}\t{m.Name}")); // Deals ~2_DAMAGE~ to ~1_NAME~ every 3 seconds while in range. Preforming any action will end spell.
+                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DeathRay, 1155896, 1156085, $"{((int)damage).ToString()}\t{m.Name}")); // Deals ~2_DAMAGE~ to ~1_NAME~ every 3 seconds while in range. Preforming any action will end spell.
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.DeathRayDebuff, 1155896, 1156086, mod.ToString())); // Energy Resist Debuff: ~1_VAL~%
 
                         Target = m;
@@ -108,7 +109,9 @@ namespace Server.Spells.SkillMasteries
                 Expire();
                 Caster.SendLocalizedMessage(1156097); // Your ability was interrupted.
             }
-            else if (Caster.Location != _Location)
+            else if ((Caster.Location != _Location && Caster.Player) ||
+                     (Caster is BaseCreature m && m.ControlMaster != null && m.InRange(Caster.Location, 3))
+                     )
             {
                 Expire(true);
                 return false;
