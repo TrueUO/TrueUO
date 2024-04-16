@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.Fourth
 {
-    public class ArchCureSpell : MagerySpell
+    public class ArchCureSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Arch Cure", "Vas An Nox",
@@ -25,6 +25,11 @@ namespace Server.Spells.Fourth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public void Target(IPoint3D p)

@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace Server.Spells.Fifth
 {
-    public class PoisonFieldSpell : MagerySpell
+    public class PoisonFieldSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Poison Field", "In Nox Grav",
@@ -26,6 +26,11 @@ namespace Server.Spells.Fifth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public void Target(IPoint3D p)

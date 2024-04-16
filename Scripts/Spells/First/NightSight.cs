@@ -2,7 +2,7 @@ using Server.Targeting;
 
 namespace Server.Spells.First
 {
-    public class NightSightSpell : MagerySpell
+    public class NightSightSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Night Sight", "In Lor",
@@ -20,6 +20,16 @@ namespace Server.Spells.First
         public override void OnCast()
         {
             Caster.Target = new NightSightTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile targ)

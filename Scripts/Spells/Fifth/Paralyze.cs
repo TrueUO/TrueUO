@@ -5,7 +5,7 @@ using System;
 
 namespace Server.Spells.Fifth
 {
-    public class ParalyzeSpell : MagerySpell
+    public class ParalyzeSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Paralyze", "An Ex Por",
@@ -23,6 +23,16 @@ namespace Server.Spells.Fifth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile m)

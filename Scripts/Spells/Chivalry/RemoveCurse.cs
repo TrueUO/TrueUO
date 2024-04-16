@@ -8,7 +8,7 @@ using System;
 
 namespace Server.Spells.Chivalry
 {
-    public class RemoveCurseSpell : PaladinSpell
+    public class RemoveCurseSpell : PaladinSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Remove Curse", "Extermo Vomica",
@@ -37,6 +37,11 @@ namespace Server.Spells.Chivalry
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            throw new NotImplementedException();
         }
 
         public void Target(Mobile m)

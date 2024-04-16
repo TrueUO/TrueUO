@@ -4,7 +4,7 @@ using System;
 
 namespace Server.Spells.Fifth
 {
-    public class BladeSpiritsSpell : MagerySpell
+    public class BladeSpiritsSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Blade Spirits", "In Jux Hur Ylem",
@@ -42,6 +42,11 @@ namespace Server.Spells.Fifth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public void Target(IPoint3D p)

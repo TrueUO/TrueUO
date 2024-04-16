@@ -3,7 +3,7 @@ using System;
 
 namespace Server.Spells.First
 {
-    public class MagicArrowSpell : MagerySpell
+    public class MagicArrowSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Magic Arrow", "In Por Ylem",
@@ -23,7 +23,16 @@ namespace Server.Spells.First
         {
             Caster.Target = new InternalTarget(this);
         }
-
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is IDamageable)
+            {
+                Target(target as IDamageable);
+                return true;
+            }
+            else
+                return false;
+        }
         public void Target(IDamageable d)
         {
             if (!Caster.CanSee(d))

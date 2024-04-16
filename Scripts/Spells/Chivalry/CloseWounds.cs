@@ -5,7 +5,7 @@ using System;
 
 namespace Server.Spells.Chivalry
 {
-    public class CloseWoundsSpell : PaladinSpell
+    public class CloseWoundsSpell : PaladinSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Close Wounds", "Obsu Vulni",
@@ -30,6 +30,17 @@ namespace Server.Spells.Chivalry
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile m)

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.Fourth
 {
-    public class ManaDrainSpell : MagerySpell
+    public class ManaDrainSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Mana Drain", "Ort Rel",
@@ -23,6 +23,16 @@ namespace Server.Spells.Fourth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile m)

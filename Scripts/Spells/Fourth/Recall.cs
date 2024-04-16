@@ -5,10 +5,11 @@ using Server.Multis;
 using Server.Network;
 using Server.Spells.Necromancy;
 using Server.Targeting;
+using System.Numerics;
 
 namespace Server.Spells.Fourth
 {
-    public class RecallSpell : MagerySpell
+    public class RecallSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Recall", "Kal Ort Por",
@@ -50,7 +51,11 @@ namespace Server.Spells.Fourth
             else
                 base.GetCastSkills(out min, out max);
         }
-
+        public bool OnInstantCast(IEntity target)
+        {
+            new InternalTarget(this, target as object);
+                return true;
+        }
         public override void OnCast()
         {
             if (m_Entry == null && m_SearchMap == null)
@@ -223,6 +228,12 @@ namespace Server.Spells.Fourth
                 m_Owner = owner;
 
                 owner.Caster.LocalOverheadMessage(MessageType.Regular, 0x3B2, 501029); // Select Marked item.
+            }
+            public InternalTarget(RecallSpell owner, object target)
+            : base(10, false, TargetFlags.None)
+            {
+                m_Owner = owner;
+                OnTarget(owner.Caster, target);
             }
 
             protected override void OnTarget(Mobile from, object o)

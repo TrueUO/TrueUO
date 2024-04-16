@@ -4,7 +4,7 @@ using System;
 
 namespace Server.Spells.Eighth
 {
-    public class EnergyVortexSpell : MagerySpell
+    public class EnergyVortexSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Energy Vortex", "Vas Corp Por",
@@ -38,6 +38,12 @@ namespace Server.Spells.Eighth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public void Target(IPoint3D p)

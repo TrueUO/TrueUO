@@ -8,7 +8,7 @@ using Server.Engines.NewMagincia;
 
 namespace Server.Spells.Chivalry
 {
-    public class SacredJourneySpell : PaladinSpell
+    public class SacredJourneySpell : PaladinSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Sacred Journey", "Sanctum Viatas",
@@ -181,6 +181,11 @@ namespace Server.Spells.Chivalry
             }
 
             FinishSequence();
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            throw new NotImplementedException();
         }
 
         private class InternalTarget : Target

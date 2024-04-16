@@ -4,7 +4,7 @@ using Server.Targeting;
 
 namespace Server.Spells.Fifth
 {
-    public class DispelFieldSpell : MagerySpell
+    public class DispelFieldSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Dispel Field", "An Grav",
@@ -23,6 +23,11 @@ namespace Server.Spells.Fifth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target);
+            return true;
         }
 
         public void Target(IEntity e)

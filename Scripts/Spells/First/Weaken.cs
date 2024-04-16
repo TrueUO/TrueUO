@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.First
 {
-    public class WeakenSpell : MagerySpell
+    public class WeakenSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo _Info = new SpellInfo(
             "Weaken", "Des Mani",
@@ -51,7 +51,16 @@ namespace Server.Spells.First
         {
             Caster.Target = new InternalTarget(this);
         }
-
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
+        }
         public void Target(Mobile m)
         {
             if (!Caster.CanSee(m))

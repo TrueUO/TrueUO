@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.First
 {
-    public class ClumsySpell : MagerySpell
+    public class ClumsySpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo _Info = new SpellInfo(
             "Clumsy", "Uus Jux",
@@ -50,6 +50,16 @@ namespace Server.Spells.First
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile m)

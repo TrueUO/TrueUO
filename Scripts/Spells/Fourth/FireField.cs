@@ -7,7 +7,7 @@ using System.Collections;
 
 namespace Server.Spells.Fourth
 {
-    public class FireFieldSpell : MagerySpell
+    public class FireFieldSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Fire Field", "In Flam Grav",
@@ -26,6 +26,11 @@ namespace Server.Spells.Fourth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public void Target(IPoint3D p)

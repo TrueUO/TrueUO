@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.Fourth
 {
-    public class CurseSpell : MagerySpell
+    public class CurseSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo _Info = new SpellInfo(
             "Curse", "Des Sanct",
@@ -96,6 +96,16 @@ namespace Server.Spells.Fourth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public static bool DoCurse(Mobile caster, Mobile m, bool masscurse)

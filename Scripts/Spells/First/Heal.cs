@@ -4,7 +4,7 @@ using Server.Targeting;
 
 namespace Server.Spells.First
 {
-    public class HealSpell : MagerySpell
+    public class HealSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Heal", "In Mani",
@@ -23,6 +23,16 @@ namespace Server.Spells.First
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile m)

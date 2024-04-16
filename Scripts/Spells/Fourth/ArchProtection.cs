@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.Fourth
 {
-    public class ArchProtectionSpell : MagerySpell
+    public class ArchProtectionSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo _Info = new SpellInfo(
             "Arch Protection", "Vas Uus Sanct",
@@ -26,7 +26,11 @@ namespace Server.Spells.Fourth
         {
             Caster.Target = new InternalTarget(this);
         }
-
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
+        }
         public void Target(IPoint3D p)
         {
             if (!Caster.CanSee(p))
