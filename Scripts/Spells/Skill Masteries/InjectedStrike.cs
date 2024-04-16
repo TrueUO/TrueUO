@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class InjectedStrikeSpell : SkillMasterySpell
+    public class InjectedStrikeSpell : SkillMasterySpell, InstantCast
     {
         private static readonly SpellInfo _Info = new SpellInfo(
                 "Injected Strike", "",
@@ -75,6 +75,48 @@ namespace Server.Spells.SkillMasteries
             }
 
             FinishSequence();
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            BaseWeapon weapon = GetWeapon();
+
+            if (CheckWeapon())
+            {
+                if (weapon.Poison == null || weapon.PoisonCharges == 0)
+                {
+                    Caster.SendLocalizedMessage(502137); // Select the poison you wish to use.
+                    Caster.Target = (Targeting.Target)target;
+                    return true;
+                }
+
+                if (!HasSpell(Caster, GetType()))
+                {
+                    if (CheckSequence())
+                    {
+                        BeginTimer();
+                        Caster.SendLocalizedMessage(1156138); // You ready your weapon to unleash an injected strike!
+
+                        const int bonus = 30;
+
+                        // Your next successful attack will poison your target and reduce its poison resist by:<br>~1_VAL~% PvM<br>~2_VAL~% PvP
+                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.InjectedStrike, 1155927, 1156163, $"{bonus}\t{bonus / 2}"));
+                        Caster.FixedParticles(0x3728, 0x1, 0xA, 0x251E, 0x4F7, 7, (EffectLayer)2, 0);
+
+                        weapon.InvalidateProperties();
+                    }
+                }
+                else
+                {
+                    Caster.SendLocalizedMessage(501775); // This spell is already in effect.
+                }
+            }
+            else
+            {
+                Caster.SendLocalizedMessage(1060179); //You must be wielding a weapon to use this ability!
+            }
+
+            FinishSequence();
+            return false;
         }
 
         protected override void OnTarget(object o)

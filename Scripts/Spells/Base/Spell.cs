@@ -803,67 +803,12 @@ namespace Server.Spells
         #region Enhanced Client
         public bool OnCastInstantTarget()
         {
-            if (InstantTarget == null)
+            if (this is InstantCast)
+                return (this as InstantCast).OnInstantCast(InstantTarget);
+            else
                 return false;
-
-            Type spellType = GetType();
-
-            if (spellType.BaseType != null && spellType.IsSubclassOf(typeof(SkillMasterySpell)))
-            {
-                try
-                {
-                    spellType
-                        .GetTypeInfo()
-                        .GetMethod("OnTarget",
-                            BindingFlags.Instance | BindingFlags.NonPublic)
-                        ?.Invoke(this, new object[] { InstantTarget });
-                    return true;
-                }
-                catch
-                {
-                    LogBadConstructorForInstantTarget();
-                    return false;
-                }
-
-            }
-
-            Type[] types = spellType.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-            Type targetType = null;
-
-            for (var index = 0; index < types.Length; index++)
-            {
-                var t = types[index];
-
-                if (t.IsSubclassOf(typeof(Target)))
-                {
-                    targetType = t;
-                    break;
-                }
-            }
-
-            if (targetType != null)
-            {
-                Target t = null;
-
-                try
-                {
-                    t = Activator.CreateInstance(targetType, this) as Target;
-                }
-                catch
-                {
-                    LogBadConstructorForInstantTarget();
-                }
-
-                if (t != null)
-                {
-                    t.Invoke(Caster, InstantTarget);
-                    return true;
-                }
-            }
-
-            return false;
         }
+
         #endregion
 
         public virtual void OnBeginCast()

@@ -10,7 +10,7 @@ using System;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class HolyFistSpell : SkillMasterySpell
+    public class HolyFistSpell : SkillMasterySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Holy Fist", "Kal Vas Grav",
@@ -54,6 +54,12 @@ namespace Server.Spells.SkillMasteries
         public override void OnCast()
         {
             Caster.Target = new MasteryTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            OnTarget(target);
+            return true;
         }
 
         protected override void OnTarget(object o)

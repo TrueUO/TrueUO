@@ -4,7 +4,7 @@ using Server.Targeting;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class DeathRaySpell : SkillMasterySpell
+    public class DeathRaySpell : SkillMasterySpell, InstantCast
     {
         /*The mage focuses a death ray on their opponent which snares the mage to their 
          * location and does damage based on magery skill, evaluating intelligence skill,
@@ -46,6 +46,11 @@ namespace Server.Spells.SkillMasteries
         public override void OnCast()
         {
             Caster.Target = new MasteryTarget(this, flags: TargetFlags.Harmful);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            OnTarget(target);
+            return true;
         }
 
         protected override void OnTarget(object o)

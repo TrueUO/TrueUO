@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class BodyGuardSpell : SkillMasterySpell
+    public class BodyGuardSpell : SkillMasterySpell, InstantCast
     {
         private static readonly SpellInfo _Info = new SpellInfo(
                 "Body Guard", "",
@@ -78,6 +78,16 @@ namespace Server.Spells.SkillMasteries
                         }
                     });
             }
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                OnTarget(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         protected override void OnTarget(object o)

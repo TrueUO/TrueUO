@@ -1,11 +1,12 @@
 using Server.Items;
+using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class ConduitSpell : SkillMasterySpell
+    public class ConduitSpell : SkillMasterySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Conduit", "Uus Corp Grav",
@@ -43,6 +44,12 @@ namespace Server.Spells.SkillMasteries
         public override void OnCast()
         {
             Caster.Target = new MasteryTarget(this, 10, true, Targeting.TargetFlags.None);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            OnTarget(target);
+            return true;
         }
 
         protected override void OnTarget(object o)

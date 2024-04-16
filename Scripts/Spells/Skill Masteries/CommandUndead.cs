@@ -4,7 +4,7 @@ using System;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class CommandUndeadSpell : SkillMasterySpell
+    public class CommandUndeadSpell : SkillMasterySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Command Undead", "In Corp Xen Por",
@@ -34,7 +34,16 @@ namespace Server.Spells.SkillMasteries
         {
             Caster.Target = new MasteryTarget(this);
         }
-
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is BaseCreature)
+            {
+                OnTarget(target as BaseCreature);
+                return true;
+            }
+            else
+                return false;
+        }
         protected override void OnTarget(object o)
         {
             BaseCreature bc = o as BaseCreature;

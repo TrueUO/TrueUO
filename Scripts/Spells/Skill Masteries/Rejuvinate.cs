@@ -6,7 +6,7 @@ using System;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class RejuvinateSpell : SkillMasterySpell
+    public class RejuvinateSpell : SkillMasterySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Rejuvinate", "In Vas Ort Grav Mani",
@@ -55,6 +55,12 @@ namespace Server.Spells.SkillMasteries
         public override void OnCast()
         {
             Caster.Target = new MasteryTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            OnTarget(target);
+            return true;
         }
 
         protected override void OnTarget(object o)

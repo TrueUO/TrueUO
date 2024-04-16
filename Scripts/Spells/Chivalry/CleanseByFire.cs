@@ -1,9 +1,10 @@
+using Server.Spells.Bushido;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Chivalry
 {
-    public class CleanseByFireSpell : PaladinSpell
+    public class CleanseByFireSpell : PaladinSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Cleanse By Fire", "Expor Flamus",
@@ -90,6 +91,17 @@ namespace Server.Spells.Chivalry
             }
 
             FinishSequence();
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            { 
+                Target(target as Mobile);
+                 return true;
+            }
+            else
+                return false;
         }
 
         private class InternalTarget : Target

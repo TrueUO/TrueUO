@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class FlamingShotSpell : SkillMasterySpell
+    public class FlamingShotSpell : SkillMasterySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Flameing Shot", "",
@@ -46,6 +46,12 @@ namespace Server.Spells.SkillMasteries
         public override void OnCast()
         {
             Caster.Target = new MasteryTarget(this, allowGround: true);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            OnTarget(target);
+            return true;
         }
 
         protected override void OnTarget(object o)
