@@ -10,13 +10,6 @@ namespace Server.SkillHandlers
 {
     public class Provocation
     {
-        public static bool DeferredSecondaryTarget { get; set; }
-
-        static Provocation()
-        {
-            DeferredSecondaryTarget = true;
-        }
-
         public static void Initialize()
         {
             SkillInfo.Table[(int)SkillName.Provocation].Callback = OnUse;
@@ -72,14 +65,7 @@ namespace Server.SkillHandlers
                         m_Instrument.PlayInstrumentWell(from);
                         from.SendLocalizedMessage(1008085);
                         // You play your music and your target becomes angered.  Whom do you wish them to attack?
-                        if (DeferredSecondaryTarget)
-                        {
-                            Timer.DelayCall(() => from.Target = new InternalSecondTarget(from, m_Instrument, creature));
-                        }
-                        else
-                        {
-                            from.Target = new InternalSecondTarget(from, m_Instrument, creature);
-                        }
+                        from.Target = new InternalSecondTarget(from, m_Instrument, creature);
                     }
                 }
                 else
