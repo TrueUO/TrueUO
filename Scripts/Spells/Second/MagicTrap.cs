@@ -27,7 +27,7 @@ namespace Server.Spells.Second
         public bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
-            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            if (Caster.InLOS(target))
             {
                 t.Invoke(Caster, target);
                 return true;

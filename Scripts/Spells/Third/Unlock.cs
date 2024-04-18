@@ -105,7 +105,7 @@ namespace Server.Spells.Third
         public bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
-            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            if (Caster.InLOS(target))
             {
                 t.Invoke(Caster, target);
                 return true;
@@ -125,10 +125,7 @@ namespace Server.Spells.Third
 
             protected override void OnTarget(Mobile from, object o)
             {
-                if (o is Mobile mobile)
-                {
-                    m_Owner.Target(mobile);
-                }
+                m_Owner.Target(o);
             }
 
             protected override void OnTargetFinish(Mobile from)
