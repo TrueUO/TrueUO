@@ -1,4 +1,5 @@
 using Server.Mobiles;
+using Server.Spells.Base;
 using Server.Targeting;
 
 namespace Server.Spells.Fourth
@@ -22,11 +23,13 @@ namespace Server.Spells.Fourth
         {
             Caster.Target = new InternalTarget(this);
         }
+
         public bool OnInstantCast(IEntity target)
         {
-            if (target is IDamageable d)
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
             {
-                Target(d);
+                t.Invoke(Caster, target);
                 return true;
             }
             else

@@ -1,9 +1,10 @@
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Second
 {
-    public class CunningSpell : MagerySpell
+    public class CunningSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Cunning", "Uus Wis",
@@ -21,6 +22,18 @@ namespace Server.Spells.Second
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile m)

@@ -1,11 +1,12 @@
 using Server.Mobiles;
 using Server.Regions;
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Spellweaving
 {
-    public class NatureFurySpell : ArcanistSpell
+    public class NatureFurySpell : ArcanistSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Nature's Fury", "Rauvvrae",
@@ -36,6 +37,12 @@ namespace Server.Spells.Spellweaving
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public void Target(IPoint3D point)

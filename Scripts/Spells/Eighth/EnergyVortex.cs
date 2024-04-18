@@ -1,4 +1,5 @@
 using Server.Mobiles;
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 
@@ -42,8 +43,14 @@ namespace Server.Spells.Eighth
 
         public bool OnInstantCast(IEntity target)
         {
-            Target(target.Location);
-            return true;
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(IPoint3D p)

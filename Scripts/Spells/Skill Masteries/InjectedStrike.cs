@@ -1,5 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
+using Server.Spells.Base;
 using System;
 using System.Collections.Generic;
 
@@ -76,6 +77,7 @@ namespace Server.Spells.SkillMasteries
 
             FinishSequence();
         }
+
         public bool OnInstantCast(IEntity target)
         {
             BaseWeapon weapon = GetWeapon();

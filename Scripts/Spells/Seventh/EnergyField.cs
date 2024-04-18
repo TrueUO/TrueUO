@@ -1,12 +1,13 @@
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Seventh
 {
-    public class EnergyFieldSpell : MagerySpell
+    public class EnergyFieldSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Energy Field", "In Sanct Grav",
@@ -26,6 +27,18 @@ namespace Server.Spells.Seventh
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(IPoint3D p)

@@ -1,9 +1,10 @@
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Spellweaving
 {
-    public class WordOfDeathSpell : ArcanistSpell
+    public class WordOfDeathSpell : ArcanistSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo("Word of Death", "Nyraxle", -1);
         public WordOfDeathSpell(Mobile caster, Item scroll)
@@ -17,6 +18,17 @@ namespace Server.Spells.Spellweaving
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile m)

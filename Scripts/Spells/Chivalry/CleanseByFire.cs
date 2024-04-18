@@ -1,3 +1,4 @@
+using Server.Spells.Base;
 using Server.Spells.Bushido;
 using Server.Targeting;
 using System;
@@ -24,6 +25,18 @@ namespace Server.Spells.Chivalry
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public override bool CheckDisturb(DisturbType type, bool firstCircle, bool resistable)
@@ -93,16 +106,6 @@ namespace Server.Spells.Chivalry
             FinishSequence();
         }
 
-        public bool OnInstantCast(IEntity target)
-        {
-            if (target is Mobile)
-            { 
-                Target(target as Mobile);
-                 return true;
-            }
-            else
-                return false;
-        }
 
         private class InternalTarget : Target
         {

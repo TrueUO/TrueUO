@@ -1,10 +1,11 @@
 using Server.Items;
 using Server.Mobiles;
+using Server.Spells.Base;
 using Server.Targeting;
 
 namespace Server.Spells.Sixth
 {
-    public class DispelSpell : MagerySpell
+    public class DispelSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Dispel", "An Ort",
@@ -22,6 +23,18 @@ namespace Server.Spells.Sixth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public class InternalTarget : Target

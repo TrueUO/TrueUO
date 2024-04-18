@@ -15,6 +15,7 @@ using Server.Targeting;
 using System;
 using System.Collections.Generic;
 using Server.Spells.SkillMasteries;
+using Server.Spells.Base;
 
 #endregion
 

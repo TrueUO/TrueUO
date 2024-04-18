@@ -1,10 +1,11 @@
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Spellweaving
 {
-    public class GiftOfRenewalSpell : ArcanistSpell
+    public class GiftOfRenewalSpell : ArcanistSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Gift of Renewal", "Olorisstra",
@@ -23,6 +24,17 @@ namespace Server.Spells.Spellweaving
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                Target(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile m)

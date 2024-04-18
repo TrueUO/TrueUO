@@ -6,10 +6,11 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using Server.Engines.NewMagincia;
+using Server.Spells.Base;
 
 namespace Server.Spells.Seventh
 {
-    public class GateTravelSpell : MagerySpell
+    public class GateTravelSpell : MagerySpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Gate Travel", "Vas Rel Por",
@@ -50,6 +51,18 @@ namespace Server.Spells.Seventh
                     Effect(m_Entry.Location, m_Entry.Map, true, false);
                 }
             }
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public override bool CheckCast()

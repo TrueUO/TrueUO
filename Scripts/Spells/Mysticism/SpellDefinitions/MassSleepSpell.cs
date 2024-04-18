@@ -1,9 +1,10 @@
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Mysticism
 {
-    public class MassSleepSpell : MysticSpell
+    public class MassSleepSpell : MysticSpell, InstantCast
     {
         public override SpellCircle Circle => SpellCircle.Fifth;
 
@@ -23,6 +24,11 @@ namespace Server.Spells.Mysticism
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public class InternalTarget : Target

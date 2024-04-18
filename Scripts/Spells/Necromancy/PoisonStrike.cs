@@ -30,6 +30,18 @@ namespace Server.Spells.Necromancy
             Caster.Target = new InternalTarget(this);
         }
 
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
+        }
+
         public void Target(IDamageable m)
         {
             if (CheckHSequence(m))
@@ -45,7 +57,7 @@ namespace Server.Spells.Necromancy
 
             FinishSequence();
         }
-
+            
         public void ApplyEffects(IDamageable m, double strength = 1.0)
         {
             /* Creates a blast of poisonous energy centered on the target.

@@ -1,4 +1,4 @@
-namespace Server.Spells
+namespace Server.Spells.Base
 {
     public interface InstantCast
     {

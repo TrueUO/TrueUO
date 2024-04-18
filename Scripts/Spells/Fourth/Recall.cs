@@ -3,6 +3,7 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
+using Server.Spells.Base;
 using Server.Spells.Necromancy;
 using Server.Targeting;
 using System.Numerics;
@@ -51,11 +52,19 @@ namespace Server.Spells.Fourth
             else
                 base.GetCastSkills(out min, out max);
         }
+
         public bool OnInstantCast(IEntity target)
         {
-            new InternalTarget(this, target as object);
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
                 return true;
+            }
+            else
+                return false;
         }
+
         public override void OnCast()
         {
             if (m_Entry == null && m_SearchMap == null)

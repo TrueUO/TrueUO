@@ -1,3 +1,4 @@
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
@@ -51,16 +52,19 @@ namespace Server.Spells.First
         {
             Caster.Target = new InternalTarget(this);
         }
+
         public bool OnInstantCast(IEntity target)
         {
-            if (target is Mobile)
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
             {
-                Target(target as Mobile);
+                t.Invoke(Caster, target);
                 return true;
             }
             else
                 return false;
         }
+
         public void Target(Mobile m)
         {
             if (!Caster.CanSee(m))

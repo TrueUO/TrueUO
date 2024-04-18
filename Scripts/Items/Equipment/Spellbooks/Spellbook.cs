@@ -349,7 +349,6 @@ namespace Server.Items
                             {
                                 spell.InstantTarget = toI;
                             }
-
                             spell.Cast();
                         }
                     }

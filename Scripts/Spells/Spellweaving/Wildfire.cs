@@ -1,13 +1,14 @@
 using Server.Mobiles;
 using Server.Multis;
 using Server.Regions;
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Spellweaving
 {
-    public class WildfireSpell : ArcanistSpell
+    public class WildfireSpell : ArcanistSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Wildfire", "Haelyn",
@@ -25,6 +26,12 @@ namespace Server.Spells.Spellweaving
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public void Target(Point3D p)

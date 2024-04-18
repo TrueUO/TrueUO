@@ -1,3 +1,4 @@
+using Server.Spells.Base;
 using Server.Targeting;
 
 namespace Server.Spells.First
@@ -23,9 +24,10 @@ namespace Server.Spells.First
         }
         public bool OnInstantCast(IEntity target)
         {
-            if (target is Mobile)
+            Target t = new NightSightTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
             {
-                Target(target as Mobile);
+                t.Invoke(Caster, target);
                 return true;
             }
             else

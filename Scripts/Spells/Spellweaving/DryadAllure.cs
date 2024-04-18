@@ -1,11 +1,12 @@
 using Server.Items;
 using Server.Mobiles;
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Spellweaving
 {
-    public class DryadAllureSpell : ArcanistSpell
+    public class DryadAllureSpell : ArcanistSpell, InstantCast
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Dryad Allure", "Rathril",
@@ -44,6 +45,17 @@ namespace Server.Spells.Spellweaving
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            if (target is BaseCreature)
+            {
+                Target(target as BaseCreature);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(BaseCreature bc)

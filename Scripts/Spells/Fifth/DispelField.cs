@@ -1,5 +1,6 @@
 using Server.Items;
 using Server.Misc;
+using Server.Spells.Base;
 using Server.Targeting;
 
 namespace Server.Spells.Fifth
@@ -24,10 +25,17 @@ namespace Server.Spells.Fifth
         {
             Caster.Target = new InternalTarget(this);
         }
+
         public bool OnInstantCast(IEntity target)
         {
-            Target(target);
-            return true;
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(IEntity e)
