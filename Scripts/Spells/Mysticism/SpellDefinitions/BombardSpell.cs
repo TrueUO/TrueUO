@@ -1,9 +1,10 @@
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Mysticism
 {
-    public class BombardSpell : MysticSpell
+    public class BombardSpell : MysticSpell, InstantCast
     {
         public override SpellCircle Circle => SpellCircle.Sixth;
         public override bool DelayedDamage => true;
@@ -26,6 +27,18 @@ namespace Server.Spells.Mysticism
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void OnTarget(IDamageable d)
@@ -81,6 +94,7 @@ namespace Server.Spells.Mysticism
 
             FinishSequence();
         }
+
 
         public class InternalTarget : Target
         {

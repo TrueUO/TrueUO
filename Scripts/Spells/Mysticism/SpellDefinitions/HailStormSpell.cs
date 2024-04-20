@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Server.Spells.Mysticism
 {
-    public class HailStormSpell : MysticSpell
+    public class HailStormSpell : MysticSpell, InstantCast
     {
         public override SpellCircle Circle => SpellCircle.Seventh;
         public override bool DelayedDamage => false;
@@ -29,6 +29,18 @@ namespace Server.Spells.Mysticism
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void OnTarget(IPoint3D p)

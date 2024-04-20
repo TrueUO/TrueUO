@@ -1,5 +1,6 @@
 using Server.Engines.PartySystem;
 using Server.Items;
+using Server.Spells.Base;
 using Server.Spells.First;
 using Server.Spells.Fourth;
 using Server.Spells.Necromancy;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace Server.Spells.Mysticism
 {
-    public class CleansingWindsSpell : MysticSpell
+    public class CleansingWindsSpell : MysticSpell, InstantCast
     {
         public override SpellCircle Circle => SpellCircle.Sixth;
 
@@ -31,6 +32,18 @@ namespace Server.Spells.Mysticism
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void OnTarget(object o)
