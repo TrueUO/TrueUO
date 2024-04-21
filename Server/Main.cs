@@ -599,7 +599,7 @@ namespace Server
 
 				while (!Closing)
 				{
-					_Signal.WaitOne();
+					_Signal.WaitOne(1);
 
 					Mobile.ProcessDeltaQueue();
 					Item.ProcessDeltaQueue();
