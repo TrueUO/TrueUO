@@ -46,7 +46,7 @@ namespace Server.Spells.SkillMasteries
 
         public override void OnCast()
         {
-            Caster.Target = new MasteryTarget(this, flags: TargetFlags.Harmful);
+            Caster.Target = new MasteryTarget(this);
         }
         public bool OnInstantCast(IEntity target)
         {
@@ -90,7 +90,7 @@ namespace Server.Spells.SkillMasteries
                         _Mod = new ResistanceMod(ResistanceType.Energy, -mod);
                         m.AddResistanceMod(_Mod);
 
-                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DeathRay, 1155896, 1156085, $"{((int)damage).ToString()}\t{m.Name}")); // Deals ~2_DAMAGE~ to ~1_NAME~ every 3 seconds while in range. Preforming any action will end spell.
+                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DeathRay, 1155896, 1156085, $"{((int) damage).ToString()}\t{m.Name}")); // Deals ~2_DAMAGE~ to ~1_NAME~ every 3 seconds while in range. Preforming any action will end spell.
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.DeathRayDebuff, 1155896, 1156086, mod.ToString())); // Energy Resist Debuff: ~1_VAL~%
 
                         Target = m;
