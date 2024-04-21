@@ -1,4 +1,5 @@
 using Server.Network;
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;

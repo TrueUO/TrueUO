@@ -1,4 +1,5 @@
 using Server.Items;
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 

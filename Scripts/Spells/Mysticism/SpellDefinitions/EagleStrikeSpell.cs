@@ -1,3 +1,4 @@
+using Server.Spells.Base;
 using Server.Targeting;
 using System;
 

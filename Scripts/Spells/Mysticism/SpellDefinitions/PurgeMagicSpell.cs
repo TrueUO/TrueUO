@@ -1,4 +1,5 @@
 using Server.Items;
+using Server.Spells.Base;
 using Server.Spells.Fifth;
 using Server.Spells.First;
 using Server.Spells.Ninjitsu;
