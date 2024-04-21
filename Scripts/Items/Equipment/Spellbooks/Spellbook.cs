@@ -347,7 +347,7 @@ namespace Server.Items
                             }
                             else if (toI != null)
                             {
-                                spell.InstantTarget = toI as IDamageableItem;
+                                spell.InstantTarget = toI as IEntity;
                             }
                             spell.Cast();
                         }
