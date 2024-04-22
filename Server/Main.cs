@@ -590,21 +590,21 @@ namespace Server
 		{
 			try
 			{
-				long now, last = TickCount;
+                long last = Stopwatch.GetTimestamp();
 
-				const int sampleInterval = 100;
-				const float ticksPerSecond = 1000.0f * sampleInterval;
+                const int interval = 100;
 
-				long sample = 0;
+                double frequency = Stopwatch.Frequency * interval;
+
+                long sample = 0;
 
 				while (!Closing)
 				{
-					_Signal.WaitOne(1);
-
 					Mobile.ProcessDeltaQueue();
 					Item.ProcessDeltaQueue();
 
 					Timer.Slice(TickCount);
+
 					MessagePump.Slice();
 
 					NetState.FlushAll();
@@ -615,14 +615,19 @@ namespace Server
 						Slice();
 					}
 
-					if (sample++ % sampleInterval != 0)
+					if (sample++ % interval != 0)
 					{
-						continue;
-					}
+                        long now = Stopwatch.GetTimestamp();
 
-					now = TickCount;
-					_CyclesPerSecond[_CycleIndex++ % _CyclesPerSecond.Length] = ticksPerSecond / (now - last);
-					last = now;
+                        double cyclesPerSecond = frequency / (now - last);
+
+                        last = now;
+
+                        if (cyclesPerSecond > 125)
+                        {
+                            Thread.Sleep(2);
+                        }
+                    }
 				}
 			}
 			catch (Exception e)
