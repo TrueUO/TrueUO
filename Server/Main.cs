@@ -585,22 +585,41 @@ namespace Server
 
             NetState.Initialize();
 		}
+        private static void NOP(double durationMilliSeconds)
+        {
+            var durationTicks = Math.Round(durationMilliSeconds * Stopwatch.Frequency)/1000;
+            var sw = Stopwatch.StartNew();
 
-		public static void Run()
+            while (sw.ElapsedTicks < durationTicks)
+            {
+                if(durationMilliSeconds>20)
+                {
+                    _Signal.WaitOne((int)durationMilliSeconds);
+                }
+            }
+        }
+        public static void Run()
 		{
 			try
 			{
                 long last = Stopwatch.GetTimestamp();
-
-                const int interval = 100;
+                const int interval = 125;
+                int intervalDurationMS = 1000 / interval;
 
                 double frequency = Stopwatch.Frequency * interval;
 
-                long sample = 0;
+                const int calculationIntervalMilliseconds = 1000;
+                int loopCount = 0;
+                Stopwatch stopwatch = new Stopwatch();
 
-				while (!Closing)
+                stopwatch.Start();
+
+
+                while (!Closing)
 				{
-					Mobile.ProcessDeltaQueue();
+                    loopCount++;
+                    last = Stopwatch.GetTimestamp();
+                    Mobile.ProcessDeltaQueue();
 					Item.ProcessDeltaQueue();
 
 					Timer.Slice(TickCount);
@@ -615,20 +634,21 @@ namespace Server
 						Slice();
 					}
 
-					if (sample++ % interval != 0)
-					{
-                        long now = Stopwatch.GetTimestamp();
-
-                        double cyclesPerSecond = frequency / (now - last);
-
-                        last = now;
-
-                        if (cyclesPerSecond > 125)
-                        {
-                            Thread.Sleep(2);
-                        }
+                    
+                    int currentThreadDuration = (int)((Stopwatch.GetTimestamp() - last)) / 10000;
+                    
+                    if (currentThreadDuration < intervalDurationMS && (intervalDurationMS - currentThreadDuration) > 0)
+                    {
+                        NOP(intervalDurationMS - currentThreadDuration);
                     }
-				}
+
+                    if (stopwatch.ElapsedMilliseconds >= calculationIntervalMilliseconds)
+                    {
+                        double loopFrequency = (double)loopCount / stopwatch.Elapsed.TotalSeconds;
+                        loopCount = 0;
+                        stopwatch.Restart();
+                    }
+                }
 			}
 			catch (Exception e)
 			{
