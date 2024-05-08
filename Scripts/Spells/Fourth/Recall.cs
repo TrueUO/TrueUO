@@ -55,9 +55,9 @@ namespace Server.Spells.Fourth
 
         public override bool OnInstantCast(IEntity target)
         {
-            Target t = new InternalTarget(this);
             if (Caster.InLOS(target))
             {
+                Target t = new InternalTarget(this);
                 t.Invoke(Caster, target);
                 return true;
             }
@@ -237,12 +237,6 @@ namespace Server.Spells.Fourth
                 m_Owner = owner;
 
                 owner.Caster.LocalOverheadMessage(MessageType.Regular, 0x3B2, 501029); // Select Marked item.
-            }
-            public InternalTarget(RecallSpell owner, object target)
-            : base(10, false, TargetFlags.None)
-            {
-                m_Owner = owner;
-                OnTarget(owner.Caster, target);
             }
 
             protected override void OnTarget(Mobile from, object o)
