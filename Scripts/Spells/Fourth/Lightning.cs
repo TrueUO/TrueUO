@@ -74,7 +74,7 @@ namespace Server.Spells.Fourth
             }
             else
             {
-                Effects.SendBoltEffect(EffectMobile.Create(entity.Location, entity.Map, EffectMobile.DefaultDuration), true, new Random().Next(128), false);
+                Effects.SendBoltEffect(EffectMobile.Create(entity.Location, entity.Map, EffectMobile.DefaultDuration), true, Utility.Random(128), false);
             }
         }
 
