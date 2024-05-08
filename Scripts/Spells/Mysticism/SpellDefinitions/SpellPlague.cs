@@ -1,12 +1,12 @@
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Mysticism
 {
-    public class SpellPlagueSpell : MysticSpell, InstantCast
+    public class SpellPlagueSpell : MysticSpell
     {
         private static readonly SpellInfo _Info = new SpellInfo(
                 "Spell Plague", "Vas Rel Jux Ort",
@@ -30,7 +30,7 @@ namespace Server.Spells.Mysticism
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

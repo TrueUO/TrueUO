@@ -1,12 +1,12 @@
 using Server.Network;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Mysticism
 {
-    public class SleepSpell : MysticSpell, InstantCast
+    public class SleepSpell : MysticSpell
     {
         public override SpellCircle Circle => SpellCircle.Third;
 
@@ -29,7 +29,7 @@ namespace Server.Spells.Mysticism
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

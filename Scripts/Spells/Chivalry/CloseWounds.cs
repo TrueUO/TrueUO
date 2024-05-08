@@ -1,12 +1,12 @@
 using Server.Mobiles;
 using Server.Network;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Chivalry
 {
-    public class CloseWoundsSpell : PaladinSpell, InstantCast
+    public class CloseWoundsSpell : PaladinSpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Close Wounds", "Obsu Vulni",
@@ -33,7 +33,7 @@ namespace Server.Spells.Chivalry
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

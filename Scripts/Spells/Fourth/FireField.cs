@@ -1,14 +1,14 @@
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections;
 
 namespace Server.Spells.Fourth
 {
-    public class FireFieldSpell : MagerySpell, InstantCast
+    public class FireFieldSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Fire Field", "In Flam Grav",
@@ -29,7 +29,7 @@ namespace Server.Spells.Fourth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

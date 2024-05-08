@@ -1,11 +1,10 @@
-using Server.Spells.Base;
 using Server.Spells.Bushido;
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Chivalry
 {
-    public class CleanseByFireSpell : PaladinSpell, InstantCast
+    public class CleanseByFireSpell : PaladinSpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Cleanse By Fire", "Expor Flamus",
@@ -27,7 +26,7 @@ namespace Server.Spells.Chivalry
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

@@ -1,11 +1,11 @@
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Mysticism
 {
-    public class AnimatedWeaponSpell : MysticSpell, InstantCast
+    public class AnimatedWeaponSpell : MysticSpell
     {
         public override SpellCircle Circle => SpellCircle.Fourth;
 
@@ -28,7 +28,7 @@ namespace Server.Spells.Mysticism
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target(target.Location);
             return true;

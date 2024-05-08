@@ -1,12 +1,12 @@
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Fourth
 {
-    public class ArchCureSpell : MagerySpell, InstantCast
+    public class ArchCureSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Arch Cure", "Vas An Nox",
@@ -27,7 +27,7 @@ namespace Server.Spells.Fourth
         {
             Caster.Target = new InternalTarget(this);
         }
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

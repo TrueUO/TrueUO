@@ -1,10 +1,10 @@
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Sixth
 {
-    public class EnergyBoltSpell : MagerySpell, InstantCast
+    public class EnergyBoltSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Energy Bolt", "Corp Por",
@@ -24,7 +24,7 @@ namespace Server.Spells.Sixth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

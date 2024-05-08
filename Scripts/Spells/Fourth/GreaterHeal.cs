@@ -1,11 +1,11 @@
 using Server.Mobiles;
 using Server.Network;
-using Server.Spells.Base;
+
 using Server.Targeting;
 
 namespace Server.Spells.Fourth
 {
-    public class GreaterHealSpell : MagerySpell, InstantCast
+    public class GreaterHealSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Greater Heal", "In Vas Mani",
@@ -27,7 +27,7 @@ namespace Server.Spells.Fourth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

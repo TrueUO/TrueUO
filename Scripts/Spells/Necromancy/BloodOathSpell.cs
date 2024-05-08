@@ -1,4 +1,4 @@
-using Server.Spells.Base;
+
 using Server.Spells.SkillMasteries;
 using Server.Targeting;
 using System;
@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace Server.Spells.Necromancy
 {
-    public class BloodOathSpell : NecromancerSpell, InstantCast
+    public class BloodOathSpell : NecromancerSpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Blood Oath", "In Jux Mani Xen",
@@ -51,7 +51,7 @@ namespace Server.Spells.Necromancy
         {
             Caster.Target = new InternalTarget(this);
         }
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

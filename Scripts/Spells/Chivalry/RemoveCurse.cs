@@ -1,5 +1,5 @@
 using Server.Items;
-using Server.Spells.Base;
+
 using Server.Spells.First;
 using Server.Spells.Fourth;
 using Server.Spells.Mysticism;
@@ -9,7 +9,7 @@ using System;
 
 namespace Server.Spells.Chivalry
 {
-    public class RemoveCurseSpell : PaladinSpell, InstantCast
+    public class RemoveCurseSpell : PaladinSpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Remove Curse", "Extermo Vomica",
@@ -40,7 +40,7 @@ namespace Server.Spells.Chivalry
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

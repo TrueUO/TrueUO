@@ -1,6 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class ConduitSpell : SkillMasterySpell, InstantCast
+    public class ConduitSpell : SkillMasterySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Conduit", "Uus Corp Grav",
@@ -48,7 +48,7 @@ namespace Server.Spells.SkillMasteries
             Caster.Target = new MasteryTarget(this, 10, true, Targeting.TargetFlags.None);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new MasteryTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

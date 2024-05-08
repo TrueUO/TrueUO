@@ -1,4 +1,4 @@
-using Server.Spells.Base;
+
 using Server.Spells.SkillMasteries;
 using Server.Targeting;
 using System;
@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace Server.Spells.Necromancy
 {
-    public class MindRotSpell : NecromancerSpell, InstantCast
+    public class MindRotSpell : NecromancerSpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Mind Rot", "Wis An Ben",
@@ -70,7 +70,7 @@ namespace Server.Spells.Necromancy
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

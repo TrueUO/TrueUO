@@ -1,7 +1,7 @@
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
-using Server.Spells.Base;
+
 using Server.Spells.Ninjitsu;
 using Server.Targeting;
 using System;
@@ -12,7 +12,7 @@ using System;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class HolyFistSpell : SkillMasterySpell, InstantCast
+    public class HolyFistSpell : SkillMasterySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Holy Fist", "Kal Vas Grav",
@@ -58,7 +58,7 @@ namespace Server.Spells.SkillMasteries
             Caster.Target = new MasteryTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new MasteryTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

@@ -1,11 +1,11 @@
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Mysticism
 {
-    public class RisingColossusSpell : MysticSpell, InstantCast
+    public class RisingColossusSpell : MysticSpell
     {
         public override SpellCircle Circle => SpellCircle.Eighth;
 
@@ -27,7 +27,7 @@ namespace Server.Spells.Mysticism
         {
             Caster.Target = new InternalTarget(this);
         }
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target(target.Location);
             return true;

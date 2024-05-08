@@ -1,5 +1,5 @@
 using Server.Items;
-using Server.Spells.Base;
+
 using Server.Spells.Fifth;
 using Server.Spells.First;
 using Server.Spells.Ninjitsu;
@@ -26,7 +26,7 @@ namespace Server.Spells.Mysticism
         Bless
     }
 
-    public class PurgeMagicSpell : MysticSpell, InstantCast
+    public class PurgeMagicSpell : MysticSpell
     {
         public override SpellCircle Circle => SpellCircle.Second;
 
@@ -49,7 +49,7 @@ namespace Server.Spells.Mysticism
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

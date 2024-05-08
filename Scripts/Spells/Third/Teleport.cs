@@ -1,11 +1,11 @@
 using Server.Items;
 using Server.Regions;
-using Server.Spells.Base;
+
 using Server.Targeting;
 
 namespace Server.Spells.Third
 {
-    public class TeleportSpell : MagerySpell, InstantCast
+    public class TeleportSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Teleport", "Rel Por",
@@ -35,7 +35,7 @@ namespace Server.Spells.Third
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             if (target != null)
             {

@@ -5,11 +5,11 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using Server.Engines.NewMagincia;
-using Server.Spells.Base;
+
 
 namespace Server.Spells.Chivalry
 {
-    public class SacredJourneySpell : PaladinSpell, InstantCast
+    public class SacredJourneySpell : PaladinSpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Sacred Journey", "Sanctum Viatas",
@@ -57,7 +57,7 @@ namespace Server.Spells.Chivalry
             }
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InLOS(target))

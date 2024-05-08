@@ -1,12 +1,12 @@
 using Server.Items;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections;
 
 namespace Server.Spells.Sixth
 {
-    public class InvisibilitySpell : MagerySpell, InstantCast
+    public class InvisibilitySpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Invisibility", "An Lor Xen",
@@ -42,7 +42,7 @@ namespace Server.Spells.Sixth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

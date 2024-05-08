@@ -1,11 +1,11 @@
 using Server.Engines.PartySystem;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System.Collections.Generic;
 
 namespace Server.Spells.Fourth
 {
-    public class ArchProtectionSpell : MagerySpell, InstantCast
+    public class ArchProtectionSpell : MagerySpell
     {
         private static readonly SpellInfo _Info = new SpellInfo(
             "Arch Protection", "Vas Uus Sanct",
@@ -28,7 +28,7 @@ namespace Server.Spells.Fourth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

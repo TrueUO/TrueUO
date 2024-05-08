@@ -1,11 +1,11 @@
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Necromancy
 {
-    public class VengefulSpiritSpell : NecromancerSpell, InstantCast
+    public class VengefulSpiritSpell : NecromancerSpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Vengeful Spirit", "Kal Xen Bal Beh",
@@ -41,7 +41,7 @@ namespace Server.Spells.Necromancy
             return true;
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

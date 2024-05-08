@@ -1,9 +1,9 @@
-using Server.Spells.Base;
+
 using Server.Targeting;
 
 namespace Server.Spells.Second
 {
-    public class HarmSpell : MagerySpell, InstantCast
+    public class HarmSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Harm", "An Mani",
@@ -23,7 +23,7 @@ namespace Server.Spells.Second
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

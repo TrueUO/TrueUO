@@ -1,4 +1,4 @@
-using Server.Spells.Base;
+
 using Server.Spells.SkillMasteries;
 using Server.Targeting;
 using System;
@@ -6,7 +6,7 @@ using System.Collections;
 
 namespace Server.Spells.Necromancy
 {
-    public class StrangleSpell : NecromancerSpell, InstantCast
+    public class StrangleSpell : NecromancerSpell
     {
         private static readonly SpellInfo _Info = new SpellInfo(
             "Strangle", "In Bal Nox",
@@ -54,7 +54,7 @@ namespace Server.Spells.Necromancy
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

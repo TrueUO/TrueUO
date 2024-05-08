@@ -1,11 +1,11 @@
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Third
 {
-    public class BlessSpell : MagerySpell, InstantCast
+    public class BlessSpell : MagerySpell
     {
         private static readonly SpellInfo _Info = new SpellInfo(
             "Bless", "Rel Sanct",
@@ -59,7 +59,7 @@ namespace Server.Spells.Third
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

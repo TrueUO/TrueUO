@@ -1,13 +1,13 @@
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Sixth
 {
-    public class ParalyzeFieldSpell : MagerySpell, InstantCast
+    public class ParalyzeFieldSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Paralyze Field", "In Ex Grav",
@@ -28,7 +28,7 @@ namespace Server.Spells.Sixth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

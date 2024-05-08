@@ -1,11 +1,11 @@
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Fourth
 {
-    public class ManaDrainSpell : MagerySpell, InstantCast
+    public class ManaDrainSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Mana Drain", "Ort Rel",
@@ -26,7 +26,7 @@ namespace Server.Spells.Fourth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

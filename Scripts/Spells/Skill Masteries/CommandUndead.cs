@@ -1,12 +1,12 @@
 using Server.Items;
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class CommandUndeadSpell : SkillMasterySpell, InstantCast
+    public class CommandUndeadSpell : SkillMasterySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Command Undead", "In Corp Xen Por",
@@ -37,7 +37,7 @@ namespace Server.Spells.SkillMasteries
             Caster.Target = new MasteryTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new MasteryTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

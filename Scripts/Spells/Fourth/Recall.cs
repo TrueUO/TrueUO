@@ -3,14 +3,14 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
-using Server.Spells.Base;
+
 using Server.Spells.Necromancy;
 using Server.Targeting;
 using System.Numerics;
 
 namespace Server.Spells.Fourth
 {
-    public class RecallSpell : MagerySpell, InstantCast
+    public class RecallSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Recall", "Kal Ort Por",
@@ -53,7 +53,7 @@ namespace Server.Spells.Fourth
                 base.GetCastSkills(out min, out max);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InLOS(target))

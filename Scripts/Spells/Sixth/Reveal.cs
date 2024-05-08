@@ -1,10 +1,10 @@
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System.Collections.Generic;
 
 namespace Server.Spells.Sixth
 {
-    public class RevealSpell : MagerySpell, InstantCast
+    public class RevealSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Reveal", "Wis Quas",
@@ -23,7 +23,7 @@ namespace Server.Spells.Sixth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
 

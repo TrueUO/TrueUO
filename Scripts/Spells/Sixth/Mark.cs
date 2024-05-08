@@ -1,12 +1,12 @@
 using Server.Items;
 using Server.Multis;
 using Server.Network;
-using Server.Spells.Base;
+
 using Server.Targeting;
 
 namespace Server.Spells.Sixth
 {
-    public class MarkSpell : MagerySpell, InstantCast
+    public class MarkSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Mark", "Kal Por Ylem",
@@ -34,7 +34,7 @@ namespace Server.Spells.Sixth
             return SpellHelper.CheckTravel(Caster, TravelCheckType.Mark);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InLOS(target))

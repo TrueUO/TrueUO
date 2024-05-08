@@ -1,13 +1,13 @@
 using Server.Items;
 using Server.Network;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class FlamingShotSpell : SkillMasterySpell, InstantCast
+    public class FlamingShotSpell : SkillMasterySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Flameing Shot", "",
@@ -50,7 +50,7 @@ namespace Server.Spells.SkillMasteries
             Caster.Target = new MasteryTarget(this, allowGround: true);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new MasteryTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

@@ -1,9 +1,9 @@
-using Server.Spells.Base;
+
 using Server.Targeting;
 
 namespace Server.Spells.First
 {
-    public class NightSightSpell : MagerySpell, InstantCast
+    public class NightSightSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Night Sight", "In Lor",
@@ -22,7 +22,7 @@ namespace Server.Spells.First
         {
             Caster.Target = new NightSightTarget(this);
         }
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new NightSightTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

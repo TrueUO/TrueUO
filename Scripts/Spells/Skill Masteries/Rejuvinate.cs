@@ -1,6 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Spells.Fourth;
 using Server.Spells.Necromancy;
 using Server.Targeting;
@@ -8,7 +8,7 @@ using System;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class RejuvinateSpell : SkillMasterySpell, InstantCast
+    public class RejuvinateSpell : SkillMasterySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Rejuvinate", "In Vas Ort Grav Mani",
@@ -59,7 +59,7 @@ namespace Server.Spells.SkillMasteries
             Caster.Target = new MasteryTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new MasteryTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

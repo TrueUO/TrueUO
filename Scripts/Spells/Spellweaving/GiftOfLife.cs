@@ -1,13 +1,13 @@
 using Server.Gumps;
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Spellweaving
 {
-    public class GiftOfLifeSpell : ArcanistSpell, InstantCast
+    public class GiftOfLifeSpell : ArcanistSpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Gift of Life", "Illorae",
@@ -44,7 +44,7 @@ namespace Server.Spells.Spellweaving
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             if (target is Mobile)
             {

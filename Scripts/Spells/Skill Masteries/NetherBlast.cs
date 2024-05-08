@@ -1,13 +1,13 @@
 using Server.Items;
 using Server.Misc;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class NetherBlastSpell : SkillMasterySpell, InstantCast
+    public class NetherBlastSpell : SkillMasterySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Nether Blast", "In Vas Por Grav",
@@ -64,7 +64,7 @@ namespace Server.Spells.SkillMasteries
             Caster.Target = new MasteryTarget(this, 10, true, Targeting.TargetFlags.None);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new MasteryTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

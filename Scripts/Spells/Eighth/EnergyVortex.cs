@@ -1,11 +1,11 @@
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Eighth
 {
-    public class EnergyVortexSpell : MagerySpell, InstantCast
+    public class EnergyVortexSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Energy Vortex", "Vas Corp Por",
@@ -41,7 +41,7 @@ namespace Server.Spells.Eighth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

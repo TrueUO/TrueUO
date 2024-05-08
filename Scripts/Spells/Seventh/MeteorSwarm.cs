@@ -1,13 +1,13 @@
 using Server.Items;
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Seventh
 {
-    public class MeteorSwarmSpell : MagerySpell, InstantCast
+    public class MeteorSwarmSpell : MagerySpell
     {
         public override DamageType SpellDamageType => DamageType.SpellAOE;
         public Item Item { get; }
@@ -51,7 +51,7 @@ namespace Server.Spells.Seventh
             Caster.Target = new InternalTarget(this, Item);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this, Item);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

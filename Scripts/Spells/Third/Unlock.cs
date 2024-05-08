@@ -1,6 +1,6 @@
 using Server.Items;
 using Server.Network;
-using Server.Spells.Base;
+
 using Server.Targeting;
 
 namespace Server.Spells.Third
@@ -10,7 +10,7 @@ namespace Server.Spells.Third
         void OnMageUnlock(Mobile from);
     }
 
-    public class UnlockSpell : MagerySpell, InstantCast
+    public class UnlockSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Unlock Spell", "Ex Por",
@@ -102,7 +102,7 @@ namespace Server.Spells.Third
 
             FinishSequence();
         }
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InLOS(target))

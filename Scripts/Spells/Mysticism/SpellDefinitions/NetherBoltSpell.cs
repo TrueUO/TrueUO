@@ -1,10 +1,10 @@
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Mysticism
 {
-    public class NetherBoltSpell : MysticSpell, InstantCast
+    public class NetherBoltSpell : MysticSpell
     {
         public override SpellCircle Circle => SpellCircle.First;
 
@@ -29,7 +29,7 @@ namespace Server.Spells.Mysticism
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

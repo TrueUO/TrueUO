@@ -1,10 +1,10 @@
 using Server.Items;
-using Server.Spells.Base;
+
 using Server.Targeting;
 
 namespace Server.Spells.Second
 {
-    public class RemoveTrapSpell : MagerySpell, InstantCast
+    public class RemoveTrapSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Remove Trap", "An Jux",
@@ -23,7 +23,7 @@ namespace Server.Spells.Second
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InLOS(target))

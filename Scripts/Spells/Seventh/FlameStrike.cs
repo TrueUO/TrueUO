@@ -1,9 +1,9 @@
-using Server.Spells.Base;
+
 using Server.Targeting;
 
 namespace Server.Spells.Seventh
 {
-    public class FlameStrikeSpell : MagerySpell, InstantCast
+    public class FlameStrikeSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Flame Strike", "Kal Vas Flam",
@@ -23,7 +23,7 @@ namespace Server.Spells.Seventh
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

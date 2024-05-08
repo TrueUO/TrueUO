@@ -1,13 +1,13 @@
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
-using Server.Spells.Base;
+
 using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.SkillMasteries
 {
-    public class BodyGuardSpell : SkillMasterySpell, InstantCast
+    public class BodyGuardSpell : SkillMasterySpell
     {
         private static readonly SpellInfo _Info = new SpellInfo(
                 "Body Guard", "",
@@ -80,7 +80,7 @@ namespace Server.Spells.SkillMasteries
                     });
             }
         }
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             if (target is Mobile)
             {

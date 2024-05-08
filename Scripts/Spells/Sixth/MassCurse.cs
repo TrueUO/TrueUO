@@ -1,10 +1,10 @@
-using Server.Spells.Base;
+
 using Server.Spells.Fourth;
 using Server.Targeting;
 
 namespace Server.Spells.Sixth
 {
-    public class MassCurseSpell : MagerySpell, InstantCast
+    public class MassCurseSpell : MagerySpell
     {
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Mass Curse", "Vas Des Sanct",
@@ -27,7 +27,7 @@ namespace Server.Spells.Sixth
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))

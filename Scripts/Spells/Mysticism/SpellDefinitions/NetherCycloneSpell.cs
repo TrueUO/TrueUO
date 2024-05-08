@@ -1,11 +1,11 @@
 using Server.Items;
-using Server.Spells.Base;
+
 using Server.Targeting;
 using System;
 
 namespace Server.Spells.Mysticism
 {
-    public class NetherCycloneSpell : MysticSpell, InstantCast
+    public class NetherCycloneSpell : MysticSpell
     {
         public override SpellCircle Circle => SpellCircle.Eighth;
         public override DamageType SpellDamageType => DamageType.SpellAOE;
@@ -29,7 +29,7 @@ namespace Server.Spells.Mysticism
             Caster.Target = new InternalTarget(this);
         }
 
-        public bool OnInstantCast(IEntity target)
+        public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
