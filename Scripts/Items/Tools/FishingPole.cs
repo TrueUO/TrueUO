@@ -195,11 +195,15 @@ namespace Server.Items
                 HookUses--;
 
                 if (m_HookType == HookType.None)
+                {
                     from.SendLocalizedMessage(1149854); //As the magic of the hook fades, it transforms to a normal fishhook.  The fishing pole returns to normal.
+                }
             }
 
             if (caughtAnything && m_BaitType != null)
-                m_BaitType = null;
+            {
+                BaitType = null;
+            }
         }
 
         public override bool AllowEquipedCast(Mobile from)
