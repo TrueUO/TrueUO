@@ -293,16 +293,16 @@ namespace Server
 
         public static bool Closing { get; private set; }
 
-        private static int _CycleIndex = 1;
-        private static readonly float[] _CyclesPerSecond = new float[100];
+        private static int _CycleIndex = -1;
+        private static readonly double[] _CyclesPerSecond = new double[100];
 
-        public static float CyclesPerSecond => _CyclesPerSecond[(_CycleIndex - 1) % _CyclesPerSecond.Length];
+        public static double CyclesPerSecond => _CyclesPerSecond[_CycleIndex];
 
-        public static float AverageCPS
+        public static double AverageCPS
         {
             get
             {
-                float t = 0.0f;
+                double t = 0.0d;
                 int c = 0;
 
                 for (int i = 0; i < _CycleIndex && i < _CyclesPerSecond.Length; ++i)
@@ -601,11 +601,12 @@ namespace Server
         {
             try
             {
-                Stopwatch.GetTimestamp();
                 const int interval = 125;
                 const int intervalDurationMs = 1000 / interval;
+                double frequency = Stopwatch.Frequency * interval;
 
                 const int calculationIntervalMilliseconds = 1000;
+                int loopCount = 0;
                 Stopwatch stopwatch = new Stopwatch();
 
                 stopwatch.Start();
@@ -631,10 +632,18 @@ namespace Server
                     {
                         WaitForInterval(intervalDurationMs - currentThreadDuration);
                     }
+                    loopCount++;
+                    double loopFrequency = (double)loopCount / stopwatch.Elapsed.TotalSeconds;
+                    _CyclesPerSecond[++_CycleIndex] = loopFrequency;
 
-                    if (stopwatch.ElapsedMilliseconds < calculationIntervalMilliseconds) continue;
+                    if (_CycleIndex >= 99)
+                        _CycleIndex = -1;
 
-                    stopwatch.Restart();
+                    if (stopwatch.ElapsedMilliseconds >= calculationIntervalMilliseconds)
+                    {
+                        loopCount = 0;
+                        stopwatch.Restart();
+                    }
                 }
             }
             catch (Exception e)
