@@ -603,17 +603,18 @@ namespace Server
             {
                 const int interval = 125;
                 const int intervalDurationMs = 1000 / interval;
-                double frequency = Stopwatch.Frequency * interval;
-
                 const int calculationIntervalMilliseconds = 1000;
+
                 int loopCount = 0;
+
                 Stopwatch stopwatch = new Stopwatch();
 
                 stopwatch.Start();
 
                 while (!Closing)
                 {
-                    var last = Stopwatch.GetTimestamp();
+                    long last = Stopwatch.GetTimestamp();
+
                     Mobile.ProcessDeltaQueue();
                     Item.ProcessDeltaQueue();
 
@@ -632,12 +633,17 @@ namespace Server
                     {
                         WaitForInterval(intervalDurationMs - currentThreadDuration);
                     }
+
                     loopCount++;
-                    double loopFrequency = (double)loopCount / stopwatch.Elapsed.TotalSeconds;
+
+                    double loopFrequency = loopCount / stopwatch.Elapsed.TotalSeconds;
+
                     _CyclesPerSecond[++_CycleIndex] = loopFrequency;
 
                     if (_CycleIndex >= 99)
+                    {
                         _CycleIndex = -1;
+                    }
 
                     if (stopwatch.ElapsedMilliseconds >= calculationIntervalMilliseconds)
                     {
