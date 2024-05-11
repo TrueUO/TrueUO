@@ -65,9 +65,8 @@ namespace Server.Gumps
         [Description("Displays a menu to configure Treasures of Tokuno.")]
         public static void ToTAdmin_OnCommand(CommandEventArgs e)
         {
-            ToTAdminGump tg;
+            ToTAdminGump tg = new();
 
-            tg = new ToTAdminGump();
             e.Mobile.CloseGump(typeof(ToTAdminGump));
             e.Mobile.SendGump(tg);
         }

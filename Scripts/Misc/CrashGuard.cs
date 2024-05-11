@@ -95,8 +95,10 @@ namespace Server.Misc
 
         private static void CreateDirectory(string path)
         {
-            if (!Directory.Exists(path))
+            if (!Directory.Exists(path) && path != null)
+            {
                 Directory.CreateDirectory(path);
+            }
         }
 
         private static void CreateDirectory(string path1, string path2)

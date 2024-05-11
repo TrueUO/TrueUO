@@ -135,11 +135,14 @@ namespace Server.Misc
 
             try
             {
-                IPHostEntry iphe = Dns.GetHostEntry(addr);
-
-                if (iphe.AddressList.Length > 0)
+                if (addr != null)
                 {
-                    outValue = iphe.AddressList[iphe.AddressList.Length - 1];
+                    IPHostEntry iphe = Dns.GetHostEntry(addr);
+
+                    if (iphe.AddressList.Length > 0)
+                    {
+                        outValue = iphe.AddressList[iphe.AddressList.Length - 1];
+                    }
                 }
             }
             catch(Exception e)

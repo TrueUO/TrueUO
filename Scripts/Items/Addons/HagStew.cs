@@ -7,12 +7,12 @@ namespace Server.Items
         [Constructable]
         public HagStew()
         {
-            AddonComponent stew;
-            stew = new AddonComponent(2416)
+            AddonComponent stew = new AddonComponent(2416)
             {
                 Name = "stew",
                 Visible = true
             };
+
             AddComponent(stew, 0, 0, -7);      //stew
         }
 

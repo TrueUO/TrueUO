@@ -35,8 +35,12 @@ namespace System
                 value = Timestamp + value;
             }
 
-            byte[] data = Encoding.GetBytes(value);
-            m_OldOutput.Write(data, 0, data.Length);
+            if (value != null)
+            {
+                byte[] data = Encoding.GetBytes(value);
+                m_OldOutput.Write(data, 0, data.Length);
+            }
+
             m_OldOutput.WriteByte(10);
             m_Newline = true;
         }
@@ -48,8 +52,12 @@ namespace System
                 value = Timestamp + value;
             }
 
-            byte[] data = Encoding.GetBytes(value);
-            m_OldOutput.Write(data, 0, data.Length);
+            if (value != null)
+            {
+                byte[] data = Encoding.GetBytes(value);
+                m_OldOutput.Write(data, 0, data.Length);
+            }
+
             m_Newline = false;
         }
     }
