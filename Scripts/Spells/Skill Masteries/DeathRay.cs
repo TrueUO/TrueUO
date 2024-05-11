@@ -1,5 +1,7 @@
 using Server.Mobiles;
 using System;
+using Server.Targeting;
+
 
 namespace Server.Spells.SkillMasteries
 {
@@ -45,6 +47,17 @@ namespace Server.Spells.SkillMasteries
         public override void OnCast()
         {
             Caster.Target = new MasteryTarget(this);
+        }
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new MasteryTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         protected override void OnTarget(object o)
@@ -108,7 +121,9 @@ namespace Server.Spells.SkillMasteries
                 Expire();
                 Caster.SendLocalizedMessage(1156097); // Your ability was interrupted.
             }
-            else if (Caster.Location != _Location)
+            else if ((Caster.Location != _Location && Caster.Player) ||
+                     (Caster is BaseCreature m && m.ControlMaster != null && m.InRange(Caster.Location, 3))
+                     )
             {
                 Expire(true);
                 return false;

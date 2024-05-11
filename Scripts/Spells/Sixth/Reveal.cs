@@ -1,3 +1,4 @@
+
 using Server.Targeting;
 using System.Collections.Generic;
 
@@ -20,6 +21,14 @@ namespace Server.Spells.Sixth
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+
+            t.Invoke(Caster, Caster);
+            return true;
         }
 
         public void Target(IPoint3D p)

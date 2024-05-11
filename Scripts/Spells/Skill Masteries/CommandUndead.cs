@@ -1,5 +1,7 @@
 using Server.Items;
 using Server.Mobiles;
+
+using Server.Targeting;
 using System;
 
 namespace Server.Spells.SkillMasteries
@@ -33,6 +35,18 @@ namespace Server.Spells.SkillMasteries
         public override void OnCast()
         {
             Caster.Target = new MasteryTarget(this);
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new MasteryTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         protected override void OnTarget(object o)

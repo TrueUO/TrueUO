@@ -1,5 +1,6 @@
 using Server.Items;
 using Server.Network;
+
 using Server.Targeting;
 
 namespace Server.Spells.Third
@@ -22,6 +23,18 @@ namespace Server.Spells.Third
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(LockableContainer targ)

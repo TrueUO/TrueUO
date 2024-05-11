@@ -6,6 +6,7 @@ using Server.Targeting;
 using System;
 using Server.Engines.NewMagincia;
 
+
 namespace Server.Spells.Chivalry
 {
     public class SacredJourneySpell : PaladinSpell
@@ -54,6 +55,18 @@ namespace Server.Spells.Chivalry
                     Effect(m_Entry.Location, m_Entry.Map, true, false);
                 }
             }
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public override bool CheckCast()

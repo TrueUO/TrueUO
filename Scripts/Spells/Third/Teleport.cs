@@ -1,5 +1,6 @@
 using Server.Items;
 using Server.Regions;
+
 using Server.Targeting;
 
 namespace Server.Spells.Third
@@ -32,6 +33,17 @@ namespace Server.Spells.Third
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            if (target != null)
+            {
+                Target(target.Location);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(IPoint3D p)
