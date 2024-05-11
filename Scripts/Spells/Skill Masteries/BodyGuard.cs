@@ -1,6 +1,7 @@
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
+
 using System;
 using System.Collections.Generic;
 
@@ -78,6 +79,16 @@ namespace Server.Spells.SkillMasteries
                         }
                     });
             }
+        }
+        public override bool OnInstantCast(IEntity target)
+        {
+            if (target is Mobile)
+            {
+                OnTarget(target as Mobile);
+                return true;
+            }
+            else
+                return false;
         }
 
         protected override void OnTarget(object o)

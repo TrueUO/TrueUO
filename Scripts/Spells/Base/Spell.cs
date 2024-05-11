@@ -14,7 +14,9 @@ using Server.Spells.Second;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using Server.Spells.SkillMasteries;
+
+
 #endregion
 
 namespace Server.Spells
@@ -26,7 +28,6 @@ namespace Server.Spells
         private readonly SpellInfo m_Info;
         private SpellState m_State;
         private long m_CastTime;
-        private IDamageable m_InstantTarget;
 
         public int ID => SpellRegistry.GetRegistryNumber(this);
 
@@ -40,7 +41,7 @@ namespace Server.Spells
         public Item Scroll => m_Scroll;
         public long CastTime => m_CastTime;
 
-        public IDamageable InstantTarget { get => m_InstantTarget; set => m_InstantTarget = value; }
+        public IEntity InstantTarget { get; set; }
 
         public bool Disturbed { get; set; }
 
@@ -486,7 +487,7 @@ namespace Server.Spells
 
                     if (atkSlayer != null && atkSlayer == atkSlayer.Group.Super && atkSlayer.Group != SlayerGroup.Groups[6]) //Fey Slayers give 300% damage
                         isSuper = true;
-                    else if (atkSlayer2 != null && atkSlayer2 == atkSlayer2.Group.Super && atkSlayer2.Group != SlayerGroup.Groups[6]) 
+                    else if (atkSlayer2 != null && atkSlayer2 == atkSlayer2.Group.Super && atkSlayer2.Group != SlayerGroup.Groups[6])
                         isSuper = true;
 
                     scalar = isSuper ? 2.0 : 3.0;
@@ -785,10 +786,9 @@ namespace Server.Spells
             m_Caster.Region?.OnSpellCast(m_Caster, this);
 
             m_Caster.NextSpellTime = Core.TickCount + (int)GetCastRecovery().TotalMilliseconds;
-
             Target originalTarget = m_Caster.Target;
 
-            if (InstantTarget == null || !OnCastInstantTarget())
+            if (InstantTarget == null || !OnInstantCast(InstantTarget))
             {
                 OnCast();
             }
@@ -800,50 +800,11 @@ namespace Server.Spells
         }
 
         #region Enhanced Client
-        public bool OnCastInstantTarget()
+        public virtual bool OnInstantCast(IEntity target)
         {
-            if (InstantTarget == null)
-                return false;
-
-            Type spellType = GetType();
-
-            Type[] types = spellType.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-            Type targetType = null;
-
-            for (var index = 0; index < types.Length; index++)
-            {
-                var t = types[index];
-
-                if (t.IsSubclassOf(typeof(Target)))
-                {
-                    targetType = t;
-                    break;
-                }
-            }
-
-            if (targetType != null)
-            {
-                Target t = null;
-
-                try
-                {
-                    t = Activator.CreateInstance(targetType, this) as Target;
-                }
-                catch
-                {
-                    LogBadConstructorForInstantTarget();
-                }
-
-                if (t != null)
-                {
-                    t.Invoke(Caster, InstantTarget);
-                    return true;
-                }
-            }
-
             return false;
         }
+
         #endregion
 
         public virtual void OnBeginCast()

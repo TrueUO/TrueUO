@@ -1,5 +1,8 @@
+using Server.Items;
 using Server.Mobiles;
+
 using Server.Targeting;
+using System;
 
 namespace Server.Spells.Fourth
 {
@@ -23,37 +26,56 @@ namespace Server.Spells.Fourth
             Caster.Target = new InternalTarget(this);
         }
 
-        public void Target(IDamageable m)
+        public override bool OnInstantCast(IEntity target)
         {
-            if (!Caster.CanSee(m))
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
             {
-                Caster.SendLocalizedMessage(500237); // Target can not be seen.
+                t.Invoke(Caster, target);
+                return true;
             }
-            else if (CheckHSequence(m))
+            else
+                return false;
+        }
+
+        public void Target(IEntity entity)
+        {
+            if (entity is IDamageable m)
             {
-                Mobile source = Caster;
-                SpellHelper.Turn(Caster, m.Location);
-
-                SpellHelper.CheckReflect(this, ref source, ref m);
-
-                double damage = GetNewAosDamage(23, 1, 4, m);
-
-                if (m is Mobile)
+                if (!Caster.CanSee(m))
                 {
-                    Effects.SendBoltEffect(m, true, 0, false);
+                    Caster.SendLocalizedMessage(500237); // Target can not be seen.
                 }
-                else
+                else if (CheckHSequence(m))
                 {
-                    Effects.SendBoltEffect(EffectMobile.Create(m.Location, m.Map, EffectMobile.DefaultDuration), true, 0, false);
+                    Mobile source = Caster;
+                    SpellHelper.Turn(Caster, m.Location);
+
+                    SpellHelper.CheckReflect(this, ref source, ref m);
+
+                    double damage = GetNewAosDamage(23, 1, 4, m);
+
+                    if (m is Mobile)
+                    {
+                        Effects.SendBoltEffect(m, true, 0, false);
+                    }
+                    else
+                    {
+                        Effects.SendBoltEffect(EffectMobile.Create(m.Location, m.Map, EffectMobile.DefaultDuration), true, 0, false);
+                    }
+
+                    if (damage > 0)
+                    {
+                        SpellHelper.Damage(this, m, damage, 0, 0, 0, 0, 100);
+                    }
                 }
 
-                if (damage > 0)
-                {
-                    SpellHelper.Damage(this, m, damage, 0, 0, 0, 0, 100);
-                }
+                FinishSequence();
             }
-
-            FinishSequence();
+            else
+            {
+                Effects.SendBoltEffect(EffectMobile.Create(entity.Location, entity.Map, EffectMobile.DefaultDuration), true, Utility.Random(128), false);
+            }
         }
 
         private class InternalTarget : Target
@@ -67,8 +89,8 @@ namespace Server.Spells.Fourth
 
             protected override void OnTarget(Mobile from, object o)
             {
-                if (o is IDamageable damageable)
-                    m_Owner.Target(damageable);
+                if (o is IEntity entity)
+                    m_Owner.Target(entity);
             }
 
             protected override void OnTargetFinish(Mobile from)

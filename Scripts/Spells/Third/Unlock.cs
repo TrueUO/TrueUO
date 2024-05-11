@@ -1,5 +1,6 @@
 using Server.Items;
 using Server.Network;
+
 using Server.Targeting;
 
 namespace Server.Spells.Third
@@ -28,6 +29,103 @@ namespace Server.Spells.Third
             Caster.Target = new InternalTarget(this);
         }
 
+        private void Target(object targetObject)
+        {
+            IPoint3D loc = targetObject as IPoint3D;
+
+            if (loc != null)
+            {
+                if (CheckSequence())
+                    Cast(targetObject, loc);
+
+                FinishSequence();
+            }
+        }
+
+        private void Cast(object o, IPoint3D loc)
+        {
+            SpellHelper.Turn(Caster, o);
+
+            Effects.SendLocationParticles(EffectItem.Create(new Point3D(loc), Caster.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, 5024);
+
+            Effects.PlaySound(loc, Caster.Map, 0x1FF);
+
+            if (o is Mobile)
+                Caster.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503101); // That did not need to be unlocked.
+            else if (o is IMageUnlockable mageUnlockable)
+                mageUnlockable.OnMageUnlock(Caster);
+            else if (o is LockableContainer lockable)
+                CastOnLockable(lockable);
+            else
+            {
+                Caster.SendLocalizedMessage(501666); // You can't unlock that!
+            }
+        }
+
+        private void CastOnLockable(LockableContainer cont)
+        {
+            if (Multis.BaseHouse.CheckSecured(cont))
+                Caster.SendLocalizedMessage(503098); // You cannot cast this on a secure item.
+            else if (!cont.Locked)
+                Caster.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503101); // That did not need to be unlocked.
+            else if (cont.LockLevel == 0)
+                Caster.SendLocalizedMessage(501666); // You can't unlock that!
+            else if (cont is HotItemChest)
+                Caster.SendLocalizedMessage(503099); // My spell does not seem to have an effect on that lock
+            else if (cont is TreasureMapChest chest && chest.Level > 2)
+                Caster.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503099); // My spell does not seem to have an effect on that lock.
+            else
+            {
+                UnlockAttempt(cont);
+            }
+        }
+
+        private void UnlockAttempt(LockableContainer cont)
+        {
+            int level;
+            int reqSkill;
+
+            if (cont is TreasureMapChest mapChest)
+            {
+                level = (int)Caster.Skills[SkillName.Magery].Value;
+
+                switch (mapChest.Level)
+                {
+                    default:
+                    case 0: reqSkill = 50; break;
+                    case 1: reqSkill = 80; break;
+                    case 2: reqSkill = 100; break;
+                }
+            }
+            else
+            {
+                level = (int)(Caster.Skills[SkillName.Magery].Value * 0.8) - 4;
+                reqSkill = cont.RequiredSkill;
+            }
+
+            if (level >= reqSkill)
+            {
+                cont.Locked = false;
+
+                if (cont.LockLevel == -255)
+                    cont.LockLevel = cont.RequiredSkill - 10;
+            }
+            else
+                Caster.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503099); // My spell does not seem to have an effect on that lock.
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
+        }
+
         private class InternalTarget : Target
         {
             private readonly UnlockSpell m_Owner;
@@ -39,76 +137,7 @@ namespace Server.Spells.Third
 
             protected override void OnTarget(Mobile from, object o)
             {
-                IPoint3D loc = o as IPoint3D;
-
-                if (loc == null)
-                    return;
-
-                if (m_Owner.CheckSequence())
-                {
-                    SpellHelper.Turn(from, o);
-
-                    Effects.SendLocationParticles(EffectItem.Create(new Point3D(loc), from.Map, EffectItem.DefaultDuration), 0x376A, 9, 32, 5024);
-
-                    Effects.PlaySound(loc, from.Map, 0x1FF);
-
-                    if (o is Mobile)
-                        from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503101); // That did not need to be unlocked.
-                    else if (o is IMageUnlockable mageUnlockable)
-                        mageUnlockable.OnMageUnlock(from);
-                    else if (!(o is LockableContainer))
-                        from.SendLocalizedMessage(501666); // You can't unlock that!
-                    else
-                    {
-                        LockableContainer cont = (LockableContainer)o;
-
-                        if (Multis.BaseHouse.CheckSecured(cont))
-                            from.SendLocalizedMessage(503098); // You cannot cast this on a secure item.
-                        else if (!cont.Locked)
-                            from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503101); // That did not need to be unlocked.
-                        else if (cont.LockLevel == 0)
-                            from.SendLocalizedMessage(501666); // You can't unlock that!
-                        else if (cont is HotItemChest)
-                            from.SendLocalizedMessage(503099); // My spell does not seem to have an effect on that lock
-                        else if (cont is TreasureMapChest chest && chest.Level > 2)
-                            from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503099); // My spell does not seem to have an effect on that lock.
-                        else
-                        {
-                            int level;
-                            int reqSkill;
-
-                            if (cont is TreasureMapChest mapChest)
-                            {
-                                level = (int)from.Skills[SkillName.Magery].Value;
-
-                                switch (mapChest.Level)
-                                {
-                                    default:
-                                    case 0: reqSkill = 50; break;
-                                    case 1: reqSkill = 80; break;
-                                    case 2: reqSkill = 100; break;
-                                }
-                            }
-                            else
-                            {
-                                level = (int)(from.Skills[SkillName.Magery].Value * 0.8) - 4;
-                                reqSkill = cont.RequiredSkill;
-                            }
-
-                            if (level >= reqSkill)
-                            {
-                                cont.Locked = false;
-
-                                if (cont.LockLevel == -255)
-                                    cont.LockLevel = cont.RequiredSkill - 10;
-                            }
-                            else
-                                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503099); // My spell does not seem to have an effect on that lock.
-                        }
-                    }
-                }
-
-                m_Owner.FinishSequence();
+                m_Owner.Target(o);
             }
 
             protected override void OnTargetFinish(Mobile from)

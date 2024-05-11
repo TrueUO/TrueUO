@@ -3,8 +3,10 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
+
 using Server.Spells.Necromancy;
 using Server.Targeting;
+using System.Numerics;
 
 namespace Server.Spells.Fourth
 {
@@ -49,6 +51,18 @@ namespace Server.Spells.Fourth
                 min = max = 0;
             else
                 base.GetCastSkills(out min, out max);
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            if (Caster.InLOS(target))
+            {
+                Target t = new InternalTarget(this);
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public override void OnCast()

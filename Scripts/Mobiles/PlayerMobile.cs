@@ -833,24 +833,37 @@ namespace Server.Mobiles
 
             from.TargetLocked = true;
 
-            if (e.SkillID == 35)
+            if (e.SkillID == (short)SkillName.Provocation)
+            {
+                Provocation.DeferredSecondaryTarget = true;
+                InvokeTarget(e, from, target);
+                Provocation.DeferredSecondaryTarget = false;
+            }
+
+            else if (e.SkillID == (short)SkillName.AnimalTaming)
             {
                 AnimalTaming.DisableMessage = true;
                 AnimalTaming.DeferredTarget = false;
+                InvokeTarget(e, from, target);
+                AnimalTaming.DeferredTarget = true;
+                AnimalTaming.DisableMessage = false;
+
+            }
+            else
+            {
+                InvokeTarget(e, from, target);
             }
 
+
+            from.TargetLocked = false;
+        }
+
+        private static void InvokeTarget(TargetedSkillEventArgs e, Mobile from, IEntity target)
+        {
             if (from.UseSkill(e.SkillID))
             {
                 from.Target?.Invoke(from, target);
             }
-
-            if (e.SkillID == 35)
-            {
-                AnimalTaming.DeferredTarget = true;
-                AnimalTaming.DisableMessage = false;
-            }
-
-            from.TargetLocked = false;
         }
 
         public static void EquipMacro(EquipMacroEventArgs e)

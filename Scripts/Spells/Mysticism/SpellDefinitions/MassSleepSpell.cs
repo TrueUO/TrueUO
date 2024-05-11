@@ -1,3 +1,4 @@
+
 using Server.Targeting;
 using System;
 
@@ -23,6 +24,11 @@ namespace Server.Spells.Mysticism
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target(target.Location);
+            return true;
         }
 
         public class InternalTarget : Target
