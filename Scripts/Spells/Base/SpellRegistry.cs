@@ -52,12 +52,7 @@ namespace Server.Spells
 
         public static int GetRegistryNumber(Type type)
         {
-            if (m_IDsFromTypes.TryGetValue(type, out int value))
-            {
-                return value;
-            }
-
-            return -1;
+            return m_IDsFromTypes.GetValueOrDefault(type, -1);
         }
 
         public static void Register(int spellID, Type type)

@@ -288,7 +288,7 @@ namespace Server.Spells
 
         private static SpecialMoveContext GetContext(Mobile m)
         {
-            return m_PlayersTable.TryGetValue(m, out SpecialMoveContext value) ? value : null;
+            return m_PlayersTable.GetValueOrDefault(m);
         }
 
         public static bool GetContext(Mobile m, Type type)

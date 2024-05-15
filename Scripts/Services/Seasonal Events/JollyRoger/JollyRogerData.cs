@@ -61,12 +61,7 @@ namespace Server.Engines.JollyRoger
 
         public static int GetShrineTitle(PlayerMobile pm)
         {
-            if (ShrineTitles.TryGetValue(pm, out int value))
-            {
-                return value;
-            }
-
-            return 0;
+            return ShrineTitles.GetValueOrDefault(pm, 0);
         }
 
         public static void SetShrineTitle(PlayerMobile pm, int title)

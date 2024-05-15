@@ -549,12 +549,7 @@ namespace Server.Engines.NewMagincia
 
         public static StorageEntry GetStorageEntry(Mobile from)
         {
-            if (m_WarehouseStorage.TryGetValue(from, out StorageEntry value))
-            {
-                return value;
-            }
-
-            return null;
+            return m_WarehouseStorage.GetValueOrDefault(from);
         }
 
         public static void RemoveFromStorage(Mobile from)

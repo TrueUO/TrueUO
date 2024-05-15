@@ -579,12 +579,7 @@ namespace Server.Engines.VendorSearching
 
         public static SearchCriteria GetContext(PlayerMobile pm)
         {
-            if (Contexts.TryGetValue(pm, out SearchCriteria value))
-            {
-                return value;
-            }
-
-            return null;
+            return Contexts.GetValueOrDefault(pm);
         }
 
         public static Dictionary<PlayerMobile, SearchCriteria> Contexts { get; set; }

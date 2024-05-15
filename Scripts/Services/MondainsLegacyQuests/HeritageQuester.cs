@@ -248,7 +248,7 @@ namespace Server.Engines.Quests
 
         public static HeritageQuester Pending(Mobile m)
         {
-            return m_Pending.TryGetValue(m, out HeritageQuester value) ? value : null;
+            return m_Pending.GetValueOrDefault(m);
         }
 
         public static void Say(Mobile m, object message)

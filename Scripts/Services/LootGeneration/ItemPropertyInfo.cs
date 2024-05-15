@@ -635,22 +635,12 @@ namespace Server.Items
         {
             int id = GetID(attribute);
 
-            if (Table.TryGetValue(id, out ItemPropertyInfo value))
-            {
-                return value;
-            }
-
-            return null;
+            return Table.GetValueOrDefault(id);
         }
 
         public static ItemPropertyInfo GetInfo(int id)
         {
-            if (Table.TryGetValue(id, out ItemPropertyInfo value))
-            {
-                return value;
-            }
-
-            return null;
+            return Table.GetValueOrDefault(id);
         }
 
         public static TextDefinition GetAttributeName(int id)

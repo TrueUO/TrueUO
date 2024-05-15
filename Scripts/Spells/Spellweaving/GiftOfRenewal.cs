@@ -28,13 +28,13 @@ namespace Server.Spells.Spellweaving
 
         public override bool OnInstantCast(IEntity target)
         {
-            if (target is Mobile)
+            if (target is Mobile mobile)
             {
-                Target(target as Mobile);
+                Target(mobile);
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         public void Target(Mobile m)
@@ -149,19 +149,10 @@ namespace Server.Spells.Spellweaving
             }
         }
 
-        public static bool IsUnderEffects(Mobile m)
-        {
-            return m_Table.ContainsKey(m);
-        }
-
         public static bool StopEffect(Mobile m)
         {
-            GiftOfRenewalInfo info;
-
-            if (m_Table.TryGetValue(m, out info))
+            if (m_Table.Remove(m, out GiftOfRenewalInfo info))
             {
-                m_Table.Remove(m);
-
                 info.m_Timer.Stop();
                 BuffInfo.RemoveBuff(m, BuffIcon.GiftOfRenewal);
 

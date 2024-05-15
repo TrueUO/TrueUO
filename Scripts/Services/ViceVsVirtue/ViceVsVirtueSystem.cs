@@ -360,7 +360,9 @@ namespace Server.Engines.VvV
             SkillLossContext context;
 
             if (!m_SkillLoss.TryGetValue(mob, out context))
+            {
                 return false;
+            }
 
             m_SkillLoss.Remove(mob);
 

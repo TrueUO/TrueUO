@@ -2760,11 +2760,9 @@ namespace Server.Network
 
 			uint authID = pvSrc.ReadUInt32();
 
-			if (m_AuthIDWindow.TryGetValue(authID, out AuthIDPersistence value))
+			if (m_AuthIDWindow.Remove(authID, out AuthIDPersistence value))
 			{
-                m_AuthIDWindow.Remove(authID);
-
-				state.Version = value.Version;
+                state.Version = value.Version;
 			}
 			else if (m_ClientVerification)
 			{

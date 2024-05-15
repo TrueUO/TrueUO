@@ -146,12 +146,7 @@ namespace Server.Items
 
         public static DawnsMusicInfo GetInfo(MusicName name)
         {
-            if (m_Info.TryGetValue(name, out DawnsMusicInfo value))
-            {
-                return value;
-            }
-
-            return null;
+            return m_Info.GetValueOrDefault(name);
         }
 
         public static MusicName RandomTrack(DawnsMusicRarity rarity)

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Server.Engines.Craft;
 using Server.Mobiles;
 using Server.Network;
@@ -38,18 +39,7 @@ namespace Server.Items
             }
         }
 
-        public Recipe Recipe
-        {
-            get
-            {
-                if (Recipe.Recipes.TryGetValue(m_RecipeID, out Recipe value))
-                {
-                    return value;
-                }
-
-                return null;
-            }
-        }
+        public Recipe Recipe => Recipe.Recipes.GetValueOrDefault(m_RecipeID);
 
         public override void GetProperties(ObjectPropertyList list)
         {

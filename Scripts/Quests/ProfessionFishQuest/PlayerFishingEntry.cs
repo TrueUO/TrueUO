@@ -145,14 +145,7 @@ namespace Server.Engines.Quests
                 }
             }
 
-            if (m_HaveFished.TryGetValue(index, out int value))
-            {
-                amount = value;
-            }
-            else
-            {
-                amount = 10;
-            }
+            amount = m_HaveFished.GetValueOrDefault(index, 10);
         }
 
         public void OnQuestResign(Type type)

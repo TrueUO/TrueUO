@@ -82,12 +82,7 @@ namespace Server.Spells.Chivalry
 
         public static EnemyOfOneContext GetContext(Mobile m)
         {
-            if (!_Table.TryGetValue(m, out EnemyOfOneContext value))
-            {
-                return null;
-            }
-
-            return value;
+            return _Table.GetValueOrDefault(m);
         }
 
         public static bool UnderEffect(Mobile m)
@@ -97,10 +92,8 @@ namespace Server.Spells.Chivalry
 
         public static void RemoveEffect(Mobile m)
         {
-            if (_Table.TryGetValue(m, out EnemyOfOneContext value))
+            if (_Table.Remove(m, out EnemyOfOneContext value))
             {
-                _Table.Remove(m);
-
                 value.OnRemoved();
 
                 m.PlaySound(0x1F8);

@@ -320,11 +320,7 @@ namespace Server.Engines.CannedEvil
 
         public int GetMobileCurrentDamage(Mobile mobile)
         {
-            if (m_DamageEntries.TryGetValue(mobile, out int value))
-            {
-                return value;
-            }
-            return 0;
+            return m_DamageEntries.GetValueOrDefault(mobile, 0);
         }
 
         public void Stop()

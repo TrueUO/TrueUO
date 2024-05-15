@@ -22,18 +22,7 @@ namespace Server
 
         public string Language { get; private set; }
 
-        public string this[int number]
-        {
-            get
-            {
-                if (_StringTable.TryGetValue(number, out string value))
-                {
-                    return value;
-                }
-
-                return null;
-            }
-        }
+        public string this[int number] => _StringTable.GetValueOrDefault(number);
 
         public StringList()
             : this("enu")

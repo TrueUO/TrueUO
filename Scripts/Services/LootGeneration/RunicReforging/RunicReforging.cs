@@ -1019,10 +1019,7 @@ namespace Server.Items
             else if (attr is AosElementAttribute elementAttribute)
                 id = ItemPropertyInfo.GetIDForAttribute(elementAttribute);
 
-            if (ItemPropertyInfo.Table.TryGetValue(id, out ItemPropertyInfo value))
-                return value;
-
-            return null;
+            return ItemPropertyInfo.Table.GetValueOrDefault(id);
         }
 
         private static int GetCollectionIndex(IEntity item)
