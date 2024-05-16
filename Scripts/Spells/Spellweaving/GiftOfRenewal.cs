@@ -28,13 +28,13 @@ namespace Server.Spells.Spellweaving
 
         public override bool OnInstantCast(IEntity target)
         {
-            if (target is Mobile)
+            if (target is Mobile mobile)
             {
-                Target(target as Mobile);
+                Target(mobile);
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         public void Target(Mobile m)
