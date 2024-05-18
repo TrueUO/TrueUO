@@ -260,7 +260,6 @@ namespace Server.Spells.Mysticism
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);
 
             writer.Write(m_SpellDef.SpellId);
@@ -269,36 +268,24 @@ namespace Server.Spells.Mysticism
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            int spellId = reader.ReadInt();
 
-            switch (version)
+            for (int i = 0; i < SpellTriggerSpell.Definitions.Length; i++)
             {
-                case 1:
-                    {
-                        int spellId = reader.ReadInt();
+                SpellTriggerDef def = SpellTriggerSpell.Definitions[i];
 
-                        for (int i = 0; i < SpellTriggerSpell.Definitions.Length; i++)
-                        {
-                            SpellTriggerDef def = SpellTriggerSpell.Definitions[i];
+                if (def.SpellId == spellId)
+                {
+                    m_SpellDef = def;
+                    break;
+                }
+            }
 
-                            if (def.SpellId == spellId)
-                            {
-                                m_SpellDef = def;
-                                break;
-                            }
-                        }
-
-                        if (m_SpellDef == null)
-                            Delete();
-
-                        break;
-                    }
-                case 0:
-                    {
-                        Delete();
-                        break;
-                    }
+            if (m_SpellDef == null)
+            {
+                Delete();
             }
         }
     }

@@ -52,13 +52,14 @@ namespace Server.Spells.Mysticism
         public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
+
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
             {
                 t.Invoke(Caster, target);
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         public void OnTarget(object o)
@@ -257,11 +258,9 @@ namespace Server.Spells.Mysticism
 
         public static void RemoveImmunity(Mobile from)
         {
-            if (_ImmuneTable.TryGetValue(from, out ImmuneTimer value))
+            if (_ImmuneTable.Remove(from, out ImmuneTimer value))
             {
                 value.Stop();
-
-                _ImmuneTable.Remove(from);
             }
         }
 

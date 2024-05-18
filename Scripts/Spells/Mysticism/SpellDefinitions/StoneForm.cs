@@ -5,10 +5,11 @@ namespace Server.Spells.Mysticism
 {
     public class StoneFormSpell : MysticTransformationSpell
     {
-        private static readonly HashSet<Mobile> m_Effected = new HashSet<Mobile>();
+        private static readonly HashSet<Mobile> _Effected = new HashSet<Mobile>();
+
         public static bool IsEffected(Mobile m)
         {
-            return m_Effected.Contains(m);
+            return _Effected.Contains(m);
         }
 
         private static readonly SpellInfo m_Info = new SpellInfo(
@@ -20,18 +21,18 @@ namespace Server.Spells.Mysticism
                 Reagent.Garlic
             );
 
-        private int m_ResisMod;
+        private int _ResistMod;
 
         public override SpellCircle Circle => SpellCircle.Fourth;
 
         public override TimeSpan CastDelayBase => TimeSpan.FromSeconds(2.0);
 
         public override int Body => 705;
-        public override int PhysResistOffset => m_ResisMod;
-        public override int FireResistOffset => m_ResisMod;
-        public override int ColdResistOffset => m_ResisMod;
-        public override int PoisResistOffset => m_ResisMod;
-        public override int NrgyResistOffset => m_ResisMod;
+        public override int PhysResistOffset => _ResistMod;
+        public override int FireResistOffset => _ResistMod;
+        public override int ColdResistOffset => _ResistMod;
+        public override int PoisResistOffset => _ResistMod;
+        public override int NrgyResistOffset => _ResistMod;
 
         public StoneFormSpell(Mobile caster, Item scroll) : base(caster, scroll, m_Info)
         {
@@ -48,7 +49,9 @@ namespace Server.Spells.Mysticism
             }
 
             if (doCast)
-                m_ResisMod = GetResBonus(Caster);
+            {
+                _ResistMod = GetResBonus(Caster);
+            }
 
             return doCast;
         }
@@ -59,9 +62,9 @@ namespace Server.Spells.Mysticism
             m.FixedParticles(0x3728, 1, 13, 9918, 92, 3, EffectLayer.Head);
 
             Timer.DelayCall(MobileDelta_Callback);
-            m_Effected.Add(m);
+            _Effected.Add(m);
 
-            string args = $"-10\t-2\t{GetResBonus(m).ToString()}\t{GetMaxResistance(m).ToString()}\t{GetDamBonus(m).ToString()}";
+            string args = $"-10\t-2\t{GetResBonus(m)}\t{GetMaxResistance(m)}\t{GetDamBonus(m)}";
             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.StoneForm, 1080145, 1080146, args));
             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.PoisonImmunity, 1153785, 1153814));
         }
@@ -75,7 +78,7 @@ namespace Server.Spells.Mysticism
         public override void RemoveEffect(Mobile m)
         {
             m.Delta(MobileDelta.WeaponDamage);
-            m_Effected.Remove(m);
+            _Effected.Remove(m);
             BuffInfo.RemoveBuff(m, BuffIcon.StoneForm);
             BuffInfo.RemoveBuff(m, BuffIcon.PoisonImmunity);
         }
