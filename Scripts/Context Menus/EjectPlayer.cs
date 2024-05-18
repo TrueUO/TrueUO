@@ -1,8 +1,4 @@
-#region
-
 using Server.Multis;
-
-#endregion
 
 namespace Server.ContextMenus
 {
@@ -16,16 +12,16 @@ namespace Server.ContextMenus
 
     public class EjectPlayerEntry : ContextMenuEntry
     {
-        private readonly Mobile m_From;
-        private readonly Mobile m_Target;
-        private readonly BaseHouse m_TargetHouse;
+        private readonly Mobile _From;
+        private readonly Mobile _Target;
+        private readonly BaseHouse _TargetHouse;
 
         public EjectPlayerEntry(Mobile from, Mobile target)
             : base(6206, 12)
         {
-            m_From = from;
-            m_Target = target;
-            m_TargetHouse = BaseHouse.FindHouseAt(m_Target);
+            _From = from;
+            _Target = target;
+            _TargetHouse = BaseHouse.FindHouseAt(_Target);
         }
 
         public static bool CheckAccessible(Mobile from, Mobile target)
@@ -34,10 +30,10 @@ namespace Server.ContextMenus
 
             if (house != null)
             {
-                var fromaccess = GetAccess(from, house);
-                var targetaccess = GetAccess(target, house);
+                HouseAccessType fromAccess = GetAccess(from, house);
+                HouseAccessType targetAccess = GetAccess(target, house);
 
-                if (house.IsFriend(from) && fromaccess > targetaccess)
+                if (house.IsFriend(from) && fromAccess > targetAccess)
                 {
                     return true;
                 }
@@ -53,7 +49,7 @@ namespace Server.ContextMenus
                 return HouseAccessType.Owner; // Staff can access anything
             }
 
-            var type = HouseAccessType.None;
+            HouseAccessType type = HouseAccessType.None;
 
             if (house != null)
             {
@@ -76,14 +72,14 @@ namespace Server.ContextMenus
 
         public override void OnClick()
         {
-            if (!m_From.Alive || m_TargetHouse.Deleted || !m_TargetHouse.IsFriend(m_From))
+            if (!_From.Alive || _TargetHouse.Deleted || !_TargetHouse.IsFriend(_From))
             {
                 return;
             }
 
-            if (m_Target is Mobile)
+            if (_Target != null)
             {
-                m_TargetHouse.Kick(m_From, m_Target);
+                _TargetHouse.Kick(_From, _Target);
             }
         }
     }

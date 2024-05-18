@@ -49,13 +49,13 @@ namespace Server.Spells.Spellweaving
 
         public override bool OnInstantCast(IEntity target)
         {
-            if (target is BaseCreature)
+            if (target is BaseCreature creature)
             {
-                Target(target as BaseCreature);
+                Target(creature);
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         public void Target(BaseCreature bc)
