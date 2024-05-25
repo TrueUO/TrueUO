@@ -1,3 +1,4 @@
+
 using Server.Targeting;
 
 namespace Server.Spells.Second
@@ -20,6 +21,18 @@ namespace Server.Spells.Second
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public override double GetSlayerDamageScalar(Mobile target)

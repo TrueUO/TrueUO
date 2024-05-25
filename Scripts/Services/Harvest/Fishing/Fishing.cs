@@ -215,8 +215,9 @@ namespace Server.Engines.Harvest
                     if (oracle != null && sp != null)
                     {
                         if (from.Map != sp.Map)
+                        {
                             from.SendLocalizedMessage(1150861); //Charybdis have never been seen in these waters, try somewhere else.
-
+                        }
                         else if (pole.BaitType == typeof(Charydbis) && from.Skills[SkillName.Fishing].Value >= 100)
                         {
                             if (sp.Charydbis == null && !sp.HasSpawned && sp.CurrentLocation.Contains(loc))
@@ -234,7 +235,9 @@ namespace Server.Engines.Harvest
                             }
                         }
                         else
+                        {
                             from.SendLocalizedMessage(1150858); //You see a few bubbles, but no charybdis.
+                        }
                     }
                 }
                 #endregion

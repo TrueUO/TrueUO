@@ -9,4 +9,4 @@
 
 Have a shard you'd like to advertise? Check out https://shardportal.com
 
-TrueUO now requires .NET 7.
+TrueUO now requires .NET 8.

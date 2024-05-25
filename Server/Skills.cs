@@ -24,6 +24,7 @@ namespace Server
 		Locked = 2
 	}
 
+    [Flags]
 	public enum SkillName
 	{
 		Alchemy = 0,

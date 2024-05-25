@@ -1,5 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
+
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
@@ -48,6 +49,18 @@ namespace Server.Spells.Seventh
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this, Item);
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this, Item);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(IPoint3D p, Item item)

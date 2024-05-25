@@ -1,6 +1,7 @@
 using Server.Items;
 using Server.Multis;
 using Server.Network;
+
 using Server.Targeting;
 
 namespace Server.Spells.Sixth
@@ -31,6 +32,18 @@ namespace Server.Spells.Sixth
                 return false;
 
             return SpellHelper.CheckTravel(Caster, TravelCheckType.Mark);
+        }
+
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new InternalTarget(this);
+            if (Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(RecallRune rune)

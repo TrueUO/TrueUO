@@ -1,3 +1,4 @@
+
 using Server.Targeting;
 
 namespace Server.Spells.First
@@ -20,6 +21,17 @@ namespace Server.Spells.First
         public override void OnCast()
         {
             Caster.Target = new NightSightTarget(this);
+        }
+        public override bool OnInstantCast(IEntity target)
+        {
+            Target t = new NightSightTarget(this);
+            if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
+            {
+                t.Invoke(Caster, target);
+                return true;
+            }
+            else
+                return false;
         }
 
         public void Target(Mobile targ)
