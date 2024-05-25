@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
-using System.Threading.Channels;
 using System.Threading.Tasks;
 using Server.Guilds;
 
@@ -79,49 +77,6 @@ namespace Server
             Console.WriteLine("mobiles time: " + sw.ElapsedMilliseconds);
         }
 
-        private void SaveItemsOld()
-        {
-            Stopwatch sw = Stopwatch.StartNew();
-            sw.Start();
-            Dictionary<Serial, Item> items = World.Items;
-            
-            BinaryFileWriter idx = new BinaryFileWriter(World.ItemIndexPath, false);
-            BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false);
-            BinaryFileWriter bin = new BinaryFileWriter(World.ItemDataPath, true);
-
-            idx.Write(items.Count);
-            foreach (Item item in items.Values)
-            {
-                if (item.Decays && item.Parent == null && item.Map != Map.Internal && (item.LastMoved + item.DecayTime) <= DateTime.UtcNow)
-                {
-                    _DecayQueue.Enqueue(item);
-                }
-
-                long start = bin.Position;
-
-                idx.Write(item.m_TypeRef);
-                idx.Write(item.Serial);
-                idx.Write(start);
-
-                item.Serialize(bin);
-
-                idx.Write((int)(bin.Position - start));
-
-                item.FreeCache();
-            }
-
-            tdb.Write(World.m_ItemTypes.Count);
-
-            for (int i = 0; i < World.m_ItemTypes.Count; ++i)
-                tdb.Write(World.m_ItemTypes[i].FullName);
-
-            idx.Close();
-            tdb.Close();
-            bin.Close();
-            sw.Stop();
-            Console.WriteLine("item old method time: " + sw.ElapsedMilliseconds + "ms");
-        }
-
         private void SaveItems()
         {
             Stopwatch sw = Stopwatch.StartNew();
@@ -139,13 +94,10 @@ namespace Server
 
             foreach (var item in items.Values)
             {
-                if (index % chunkSize == 0)
+                if (index % chunkSize == 0 && currentChunk.Count > 0)
                 {
-                    if (currentChunk.Count > 0)
-                    {
-                        chunks.Add(currentChunk);
-                        currentChunk = new List<Item>();
-                    }
+                    chunks.Add(currentChunk);
+                    currentChunk = new List<Item>();
                 }
 
                 currentChunk.Add(item);
@@ -161,7 +113,6 @@ namespace Server
 
             using (BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false))
             {
-
                 Parallel.ForEach(chunks, (chunk, state, chunkIndex) =>
             {
                 string idxPath = World.ItemIndexPath.Replace(".idx", $"_{chunkIndex.ToString("D" + 8)}.idx");
@@ -196,7 +147,9 @@ namespace Server
                 tdb.Write(World.m_ItemTypes.Count);
 
                 for (int i = 0; i < World.m_ItemTypes.Count; ++i)
+                {
                     tdb.Write(World.m_ItemTypes[i].FullName);
+                }
             }
             sw.Stop();
             Console.WriteLine($"Items Save complete: {sw.ElapsedMilliseconds}ms");
