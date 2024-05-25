@@ -77,6 +77,51 @@ namespace Server
             Console.WriteLine("mobiles time: " + sw.ElapsedMilliseconds);
         }
 
+        /*Kept for backwards compatibility at this time. Will remove once the new SaveItems method
+        is fully implemented/tested.*/
+        private void SaveItemsOld()
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+            sw.Start();
+            Dictionary<Serial, Item> items = World.Items;
+
+            BinaryFileWriter idx = new BinaryFileWriter(World.ItemIndexPath, false);
+            BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false);
+            BinaryFileWriter bin = new BinaryFileWriter(World.ItemDataPath, true);
+
+            idx.Write(items.Count);
+            foreach (Item item in items.Values)
+            {
+                if (item.Decays && item.Parent == null && item.Map != Map.Internal && (item.LastMoved + item.DecayTime) <= DateTime.UtcNow)
+                {
+                    _DecayQueue.Enqueue(item);
+                }
+
+                long start = bin.Position;
+
+                idx.Write(item.m_TypeRef);
+                idx.Write(item.Serial);
+                idx.Write(start);
+
+                item.Serialize(bin);
+
+                idx.Write((int)(bin.Position - start));
+
+                item.FreeCache();
+            }
+
+            tdb.Write(World.m_ItemTypes.Count);
+
+            for (int i = 0; i < World.m_ItemTypes.Count; ++i)
+                tdb.Write(World.m_ItemTypes[i].FullName);
+
+            idx.Close();
+            tdb.Close();
+            bin.Close();
+            sw.Stop();
+            Console.WriteLine("item old method time: " + sw.ElapsedMilliseconds + "ms");
+        }
+
         private void SaveItems()
         {
             Stopwatch sw = Stopwatch.StartNew();
