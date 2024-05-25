@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -677,7 +676,14 @@ namespace Server
 
                     if (Console.ReadKey(true).Key == ConsoleKey.Y)
                     {
-                        List<ItemEntry> allItems = items.SelectMany(kvp => kvp.Value).ToList();
+                        List<ItemEntry> allItems = new List<ItemEntry>();
+                        foreach (KeyValuePair<int, List<ItemEntry>> kvp in items)
+                        {
+                            foreach (ItemEntry item in kvp.Value)
+                            {
+                                allItems.Add(item);
+                            }
+                        }
 
                         if (failedType != typeof(BaseGuild))
                         {
