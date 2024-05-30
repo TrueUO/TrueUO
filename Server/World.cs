@@ -925,7 +925,7 @@ namespace Server
 
             if (doubleSave)
             {
-                ISaveStrategy strategicSave = new SaveStrategy();
+                ISaveStrategy strategicSave = new BackupStrategy();
                 strategicSave.Save();
             }
 
