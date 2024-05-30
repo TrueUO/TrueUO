@@ -876,7 +876,7 @@ namespace Server
             }
         }
 
-        public static void Save(bool message)
+        public static void Save(bool message, bool doubleSave = false)
         {
             if (Saving)
             {
@@ -923,8 +923,13 @@ namespace Server
                 throw new Exception("FATAL: Exception in EventSink.BeforeWorldSave", e);
             }
 
-            SaveStrategy strategy = new SaveStrategy();
+            if (doubleSave)
+            {
+                ISaveStrategy strategicSave = new SaveStrategy();
+                strategicSave.Save();
+            }
 
+            ISaveStrategy strategy = new ThreadedSaveStrategy();
             strategy.Save();
 
             try
