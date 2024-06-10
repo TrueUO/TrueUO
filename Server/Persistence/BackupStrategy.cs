@@ -1,10 +1,7 @@
-using Server.Guilds;
 using System;
-using System.Buffers;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
+using Server.Guilds;
 
 namespace Server
 {
@@ -27,8 +24,6 @@ namespace Server
 
         private void SaveItems()
         {
-            Stopwatch sw = Stopwatch.StartNew();
-            sw.Start();
             Dictionary<Serial, Item> items = World.Items;
 
             BinaryFileWriter idx = new BinaryFileWriter(World.ItemIndexPath, false);
@@ -48,7 +43,6 @@ namespace Server
                 idx.Write(item.m_TypeRef);
                 idx.Write(item.Serial);
                 idx.Write(start);
-                new ArrayBufferWriter<Item>();
                 item.Serialize(bin);
 
                 idx.Write((int)(bin.Position - start));
@@ -64,11 +58,7 @@ namespace Server
             idx.Close();
             tdb.Close();
             bin.Close();
-            sw.Stop();
-            Console.WriteLine("item old method time: " + sw.ElapsedMilliseconds + "ms");
         }
-
-
         public void Save()
         {
             Thread saveItemsThread = new Thread(SaveItems)
@@ -86,8 +76,6 @@ namespace Server
 
         private void SaveMobiles()
         {
-            Stopwatch sw = Stopwatch.StartNew();
-            sw.Start();
             Dictionary<Serial, Mobile> mobiles = World.Mobiles;
 
             BinaryFileWriter idx = new BinaryFileWriter(World.MobileIndexPath, false);
@@ -118,8 +106,6 @@ namespace Server
             idx.Close();
             tdb.Close();
             bin.Close();
-            sw.Stop();
-            Console.WriteLine("mobiles time: " + sw.ElapsedMilliseconds);
         }
 
         private void SaveGuilds()
