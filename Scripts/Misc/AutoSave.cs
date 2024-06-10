@@ -78,7 +78,6 @@ namespace Server.Misc
                 BackupCopy();
                 World.Save(true);
             }
-
         }
 
         private static void Tick()
@@ -221,19 +220,6 @@ namespace Server.Misc
 
             if (Directory.Exists(saves))
                 Directory.Move(saves, Path.Combine(root, m_Backups[m_Backups.Length - 1]));
-        }
-
-        private static void CopyFilesRecursively(string sourcePath, string targetPath)
-        {
-            foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
-            {
-                Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
-            }
-
-            foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
-            {
-                File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
-            }
         }
 
         private static DirectoryInfo Match(IReadOnlyList<string> paths, string match)

@@ -108,7 +108,6 @@ namespace Server.Misc
         {
             string originPath = Combine(rootOrigin, path);
             string backupPath = Combine(rootBackup, path);
-           // string pattern = fileName + "_?\\d*\\." + fileExtension;
             string pattern = fileName + "*." + fileExtension;
 
             String[] files = Directory.GetFiles(originPath, pattern);

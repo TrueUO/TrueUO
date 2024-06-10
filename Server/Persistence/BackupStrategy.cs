@@ -22,6 +22,21 @@ namespace Server
             }
         }
 
+        public void Save()
+        {
+            Thread saveItemsThread = new Thread(SaveItems)
+            {
+                Name = "Item Save Subset"
+            };
+
+            saveItemsThread.Start();
+
+            SaveMobiles();
+            SaveGuilds();
+
+            saveItemsThread.Join();
+        }
+
         private void SaveItems()
         {
             Dictionary<Serial, Item> items = World.Items;
@@ -58,20 +73,6 @@ namespace Server
             idx.Close();
             tdb.Close();
             bin.Close();
-        }
-        public void Save()
-        {
-            Thread saveItemsThread = new Thread(SaveItems)
-            {
-                Name = "Item Save Subset"
-            };
-
-            saveItemsThread.Start();
-
-            SaveMobiles();
-            SaveGuilds();
-
-            saveItemsThread.Join();
         }
 
         private void SaveMobiles()
