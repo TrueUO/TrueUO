@@ -53,7 +53,7 @@ namespace Server.Misc
                 e.Mobile.SendMessage("Format: SetSaves <true | false>");
         }
 
-        public static void Save(bool doubleSave = false)
+        public static void Save(bool oldSaveStrategy = false)
         {
             if (AutoRestart.Restarting || CreateWorld.WorldCreating)
                 return;
@@ -71,7 +71,14 @@ namespace Server.Misc
                 Diagnostics.ExceptionLogging.LogException(e);
             }
 
-            World.Save(true, doubleSave);
+            World.Save(true, oldSaveStrategy);
+
+            if(oldSaveStrategy)
+            {
+                BackupCopy();
+                World.Save(true);
+            }
+
         }
 
         private static void Tick()
@@ -158,6 +165,81 @@ namespace Server.Misc
                 Directory.Move(saves, Path.Combine(root, m_Backups[m_Backups.Length - 1]));
 
             return anySuccess;
+        }
+
+        private static bool BackupCopy()
+        {
+            if (m_Backups.Length == 0)
+                return false;
+
+            string root = Path.Combine(Core.BaseDirectory, "DailyBackups/Automatic");
+
+            if (!Directory.Exists(root))
+                Directory.CreateDirectory(root);
+
+            string tempRoot = Path.Combine(Core.BaseDirectory, "DailyBackups/Temp");
+
+            if (Directory.Exists(tempRoot))
+                Directory.Delete(tempRoot, true);
+
+            string[] existing = Directory.GetDirectories(root);
+
+            bool anySuccess = existing.Length == 0;
+
+            for (int i = 0; i < m_Backups.Length; ++i)
+            {
+                DirectoryInfo dir = Match(existing, m_Backups[i]);
+
+                if (dir == null)
+                {
+                    continue;
+                }
+
+                if (i > 0)
+                {
+                    try
+                    {
+                        dir.MoveTo(Path.Combine(root, m_Backups[i - 1]));
+
+                        anySuccess = true;
+                    }
+                    catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
+                }
+                else
+                {
+                    try
+                    {
+                        dir.MoveTo(tempRoot);
+                    }
+                    catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
+
+                    try
+                    {
+                        dir.Delete(true);
+                    }
+                    catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
+                }
+            }
+
+            string saves = Path.Combine(Core.BaseDirectory, "Saves");
+
+            if (Directory.Exists(saves))
+                Directory.Move(saves, Path.Combine(root, m_Backups[m_Backups.Length - 1]));
+           
+            return anySuccess;
+        }
+
+        private static void CopyFilesRecursively(string sourcePath, string targetPath)
+        {
+            foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+            }
+
+            foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+            {
+                File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+            }
         }
 
         private static DirectoryInfo Match(IReadOnlyList<string> paths, string match)

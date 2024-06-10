@@ -876,7 +876,7 @@ namespace Server
             }
         }
 
-        public static void Save(bool message, bool doubleSave = false)
+        public static void Save(bool message, bool oldStrategy = false)
         {
             if (Saving)
             {
@@ -923,14 +923,9 @@ namespace Server
                 throw new Exception("FATAL: Exception in EventSink.BeforeWorldSave", e);
             }
 
-            if (doubleSave)
-            {
-                ISaveStrategy strategicSave = new BackupStrategy();
-                strategicSave.Save();
-            }
+            ISaveStrategy strategicSave = oldStrategy ? new BackupStrategy(): new ThreadedSaveStrategy();
 
-            ISaveStrategy strategy = new ThreadedSaveStrategy();
-            strategy.Save();
+            strategicSave.Save();
 
             try
             {
@@ -949,7 +944,7 @@ namespace Server
 
             ProcessSafetyQueues();
 
-            strategy.ProcessDecay();
+            strategicSave.ProcessDecay();
 
             Console.WriteLine($"Save finished in {watch.Elapsed.TotalSeconds:F2} seconds.");
 
