@@ -167,10 +167,10 @@ namespace Server.Misc
             return anySuccess;
         }
 
-        private static bool BackupCopy()
+        private static void BackupCopy()
         {
             if (m_Backups.Length == 0)
-                return false;
+                return;
 
             string root = Path.Combine(Core.BaseDirectory, "DailyBackups/Automatic");
 
@@ -183,8 +183,6 @@ namespace Server.Misc
                 Directory.Delete(tempRoot, true);
 
             string[] existing = Directory.GetDirectories(root);
-
-            bool anySuccess = existing.Length == 0;
 
             for (int i = 0; i < m_Backups.Length; ++i)
             {
@@ -200,8 +198,6 @@ namespace Server.Misc
                     try
                     {
                         dir.MoveTo(Path.Combine(root, m_Backups[i - 1]));
-
-                        anySuccess = true;
                     }
                     catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                 }
@@ -225,8 +221,6 @@ namespace Server.Misc
 
             if (Directory.Exists(saves))
                 Directory.Move(saves, Path.Combine(root, m_Backups[m_Backups.Length - 1]));
-           
-            return anySuccess;
         }
 
         private static void CopyFilesRecursively(string sourcePath, string targetPath)
