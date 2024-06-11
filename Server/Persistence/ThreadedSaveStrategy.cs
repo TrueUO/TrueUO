@@ -11,8 +11,8 @@ namespace Server
     public class ThreadedSaveStrategy : ISaveStrategy
     {
         private readonly Queue<Item> _DecayQueue = new();
-        private bool allFilesSaved = true;
-        List<String> expectedFiles = new List<String>();
+        private bool _AllFilesSaved = true;
+        readonly List<String> _ExpectedFiles = new List<String>();
 
         public bool Save()
 		{
@@ -27,7 +27,7 @@ namespace Server
             SaveGuilds();
 
             saveItemsThread.Join();
-            return allFilesSaved;
+            return _AllFilesSaved;
         }
 
 		public void ProcessDecay()
@@ -65,8 +65,8 @@ namespace Server
                     chunks.Add(currentChunk);
                     currentChunk = new List<Item>();
                     int currentChuckIndex = chunks.Count - 1;
-                    expectedFiles.Add(World.ItemIndexPath.Replace(".idx", $"_{currentChuckIndex.ToString("D" + 8)}.idx"));
-                    expectedFiles.Add(World.ItemDataPath.Replace(".bin", $"_{currentChuckIndex.ToString("D" + 8)}.bin"));
+                    _ExpectedFiles.Add(World.ItemIndexPath.Replace(".idx", $"_{currentChuckIndex.ToString("D" + 8)}.idx"));
+                    _ExpectedFiles.Add(World.ItemDataPath.Replace(".bin", $"_{currentChuckIndex.ToString("D" + 8)}.bin"));
                 }
 
                 currentChunk.Add(item);
@@ -130,14 +130,14 @@ namespace Server
             Console.WriteLine($"Items Save complete: {sw.ElapsedMilliseconds}ms");
             if (totalItemCount != itemCount)
             {
-                allFilesSaved = false;
+                _AllFilesSaved = false;
                 Console.WriteLine($"Expected to save {itemCount}, but only saved {totalItemCount}. Unthreaded Save will be triggered");
             }
-            foreach (var item in expectedFiles)
+            foreach (var item in _ExpectedFiles)
             {
                 if (!File.Exists(item))
                 {
-                    allFilesSaved = false;
+                    _AllFilesSaved = false;
                     Console.WriteLine($"Save is missing file {item}. Unthreaded Save will be triggered");
                 }
             }
