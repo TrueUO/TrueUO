@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +11,7 @@ namespace Server
     {
         private readonly Queue<Item> _DecayQueue = new();
         private bool _AllFilesSaved = true;
-        readonly List<String> _ExpectedFiles = new List<String>();
+        private readonly List<string> _ExpectedFiles = new();
 
         public bool Save()
 		{
@@ -45,15 +44,11 @@ namespace Server
 
         private void SaveItems()
         {
-            Stopwatch sw = Stopwatch.StartNew();
-            sw.Start();
-
             Dictionary<Serial, Item> items = World.Items;
             int itemCount = items.Count;
-            Console.WriteLine($"Saving {itemCount} items");
 
             List<List<Item>> chunks = new List<List<Item>>();
-            int chunkSize = 500;
+            int chunkSize = 150000;
 
             List<Item> currentChunk = new List<Item>();
             int index = 0;
@@ -64,7 +59,9 @@ namespace Server
                 {
                     chunks.Add(currentChunk);
                     currentChunk = new List<Item>();
+
                     int currentChuckIndex = chunks.Count - 1;
+
                     _ExpectedFiles.Add(World.ItemIndexPath.Replace(".idx", $"_{currentChuckIndex.ToString("D" + 8)}.idx"));
                     _ExpectedFiles.Add(World.ItemDataPath.Replace(".bin", $"_{currentChuckIndex.ToString("D" + 8)}.bin"));
                 }
@@ -78,7 +75,6 @@ namespace Server
                 chunks.Add(currentChunk);
             }
 
-            Console.WriteLine($"Time to split Items: {sw.ElapsedMilliseconds}ms");
             int totalItemCount = 0;
 
             using (BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false))
@@ -123,30 +119,29 @@ namespace Server
                     tdb.Write(World.m_ItemTypes[i].FullName);
                 }
 
+                //Will keep this one for now but will remove at a later date 6/11/2024
                 Console.WriteLine("totalItemCount:" + totalItemCount + " original:" + itemCount);
 
             }
-            sw.Stop();
-            Console.WriteLine($"Items Save complete: {sw.ElapsedMilliseconds}ms");
+           
             if (totalItemCount != itemCount)
             {
                 _AllFilesSaved = false;
-                Console.WriteLine($"Expected to save {itemCount}, but only saved {totalItemCount}. Unthreaded Save will be triggered");
+                Console.WriteLine($"Expected to save {itemCount}, but only saved {totalItemCount}. Un-threaded Save will be triggered");
             }
-            foreach (var item in _ExpectedFiles)
+
+            foreach (string item in _ExpectedFiles)
             {
                 if (!File.Exists(item))
                 {
                     _AllFilesSaved = false;
-                    Console.WriteLine($"Save is missing file {item}. Unthreaded Save will be triggered");
+                    Console.WriteLine($"Save is missing file {item}. Un-threaded Save will be triggered");
                 }
             }
         }
 
         private static void SaveMobiles()
         {
-            Stopwatch sw = Stopwatch.StartNew();
-            sw.Start();
             Dictionary<Serial, Mobile> mobiles = World.Mobiles;
 
             BinaryFileWriter idx = new BinaryFileWriter(World.MobileIndexPath, false);
@@ -177,8 +172,6 @@ namespace Server
             idx.Close();
             tdb.Close();
             bin.Close();
-            sw.Stop();
-            Console.WriteLine("mobiles time: " + sw.ElapsedMilliseconds);
         }
 
         private static void SaveGuilds()
