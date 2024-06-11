@@ -359,7 +359,7 @@ namespace Server
 
                             try
                             {
-                                m = (Mobile)ctor.Invoke([(Serial)serial]);
+                                m = (Mobile)ctor.Invoke(new object[] { (Serial)serial });
                             }
                             catch (Exception ex)
                             {
@@ -439,7 +439,7 @@ namespace Server
 
                                     try
                                     {
-                                        item = (Item)ctor.Invoke([(Serial)serial]);
+                                        item = (Item)ctor.Invoke(new object[] { (Serial)serial });
                                     }
                                     catch (Exception e)
                                     {
