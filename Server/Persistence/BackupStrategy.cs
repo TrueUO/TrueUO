@@ -9,6 +9,22 @@ namespace Server
     {
         private readonly Queue<Item> _DecayQueue = new();
 
+        public bool Save()
+        {
+            Thread saveItemsThread = new Thread(SaveItems)
+            {
+                Name = "Item Save Subset"
+            };
+
+            saveItemsThread.Start();
+
+            SaveMobiles();
+            SaveGuilds();
+
+            saveItemsThread.Join();
+            return true;
+        }
+
         public void ProcessDecay()
         {
             while (_DecayQueue.Count > 0)
@@ -59,23 +75,8 @@ namespace Server
             tdb.Close();
             bin.Close();
         }
-        public bool Save()
-        {
-            Thread saveItemsThread = new Thread(SaveItems)
-            {
-                Name = "Item Save Subset"
-            };
-
-            saveItemsThread.Start();
-
-            SaveMobiles();
-            SaveGuilds();
-
-            saveItemsThread.Join();
-            return true;
-        }
-
-        private void SaveMobiles()
+        
+        private static void SaveMobiles()
         {
             Dictionary<Serial, Mobile> mobiles = World.Mobiles;
 
@@ -109,7 +110,7 @@ namespace Server
             bin.Close();
         }
 
-        private void SaveGuilds()
+        private static void SaveGuilds()
         {
             BinaryFileWriter idx = new BinaryFileWriter(World.GuildIndexPath, false);
             BinaryFileWriter bin = new BinaryFileWriter(World.GuildDataPath, true);
