@@ -6317,72 +6317,69 @@ namespace Server.Mobiles
         }
         #endregion
 
-        //TODO : Watch this for a while to see if infinite loop still happens
+        //TODO : Watch this for a while to see if infinite loop still happens 6/11/2024
         public override void OnHeal(ref int amount, Mobile from)
         {
             base.OnHeal(ref amount, from);
 
-            if (from == null)
+            if (from == null || amount <= 0 || from == this)
             {
                 return;
             }
 
-            if (amount > 0 && from != this)
+            for (int i = Aggressed.Count - 1; i >= 0; i--)
             {
-                for (int i = Aggressed.Count - 1; i >= 0; i--)
+                AggressorInfo info = Aggressed[i];
+
+                bool any = false;
+
+                for (int index = 0; index < info.Defender.DamageEntries.Count; index++)
                 {
-                    AggressorInfo info = Aggressed[i];
+                    DamageEntry de = info.Defender.DamageEntries[index];
 
-                    bool any = false;
-
-                    for (int index = 0; index < info.Defender.DamageEntries.Count; index++)
+                    if (de.Damager == this)
                     {
-                        DamageEntry de = info.Defender.DamageEntries[index];
-
-                        if (de.Damager == this)
-                        {
-                            any = true;
-                            break;
-                        }
-                    }
-
-                    if (info.Defender.InRange(Location, Core.GlobalMaxUpdateRange) && any)
-                    {
-                        info.Defender.RegisterDamage(amount, from);
-                    }
-
-                    if (info.Defender.Player && from.CanBeHarmful(info.Defender, false))
-                    {
-                        from.DoHarmful(info.Defender, true);
+                        any = true;
+                        break;
                     }
                 }
 
-                for (int i = Aggressors.Count - 1; i >= 0; i--)
+                if (info.Defender.InRange(Location, Core.GlobalMaxUpdateRange) && any)
                 {
-                    AggressorInfo info = Aggressors[i];
+                    info.Defender.RegisterDamage(amount, from);
+                }
 
-                    bool any = false;
+                if (info.Defender.Player && from.CanBeHarmful(info.Defender, false))
+                {
+                    from.DoHarmful(info.Defender, true);
+                }
+            }
 
-                    for (int index = 0; index < info.Attacker.DamageEntries.Count; index++)
+            for (int i = Aggressors.Count - 1; i >= 0; i--)
+            {
+                AggressorInfo info = Aggressors[i];
+
+                bool any = false;
+
+                for (int index = 0; index < info.Attacker.DamageEntries.Count; index++)
+                {
+                    DamageEntry de = info.Attacker.DamageEntries[index];
+
+                    if (de.Damager == this)
                     {
-                        DamageEntry de = info.Attacker.DamageEntries[index];
-
-                        if (de.Damager == this)
-                        {
-                            any = true;
-                            break;
-                        }
+                        any = true;
+                        break;
                     }
+                }
 
-                    if (info.Attacker.InRange(Location, Core.GlobalMaxUpdateRange) && any)
-                    {
-                        info.Attacker.RegisterDamage(amount, from);
-                    }
+                if (info.Attacker.InRange(Location, Core.GlobalMaxUpdateRange) && any)
+                {
+                    info.Attacker.RegisterDamage(amount, from);
+                }
 
-                    if (info.Attacker.Player && from.CanBeHarmful(info.Attacker, false))
-                    {
-                        from.DoHarmful(info.Attacker, true);
-                    }
+                if (info.Attacker.Player && from.CanBeHarmful(info.Attacker, false))
+                {
+                    from.DoHarmful(info.Attacker, true);
                 }
             }
         }
