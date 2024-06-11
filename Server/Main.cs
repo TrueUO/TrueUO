@@ -296,7 +296,7 @@ namespace Server
         private static int _CycleIndex = -1;
         private static readonly double[] _CyclesPerSecond = new double[100];
 
-        public static double CyclesPerSecond => _CyclesPerSecond[_CycleIndex];
+        public static double CyclesPerSecond => _CycleIndex >= 0 ? _CyclesPerSecond[_CycleIndex] : 0;
 
         public static double AverageCPS
         {
@@ -584,6 +584,7 @@ namespace Server
 
             NetState.Initialize();
         }
+
         private static void WaitForInterval(double durationMilliSeconds)
         {
             var durationTicks = Math.Round(durationMilliSeconds * Stopwatch.Frequency) / 1000;
@@ -597,6 +598,7 @@ namespace Server
                 }
             }
         }
+
         public static void Run()
         {
             try
@@ -638,12 +640,12 @@ namespace Server
 
                     double loopFrequency = loopCount / stopwatch.Elapsed.TotalSeconds;
 
-                    _CyclesPerSecond[++_CycleIndex] = loopFrequency;
-
-                    if (_CycleIndex >= 99)
+                    if (++_CycleIndex >= _CyclesPerSecond.Length)
                     {
-                        _CycleIndex = -1;
+                        _CycleIndex = 0;
                     }
+
+                    _CyclesPerSecond[_CycleIndex] = loopFrequency;
 
                     if (stopwatch.ElapsedMilliseconds >= calculationIntervalMilliseconds)
                     {
