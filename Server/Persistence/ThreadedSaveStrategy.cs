@@ -120,7 +120,7 @@ namespace Server
                 }
 
                 //Will keep this one for now but will remove at a later date 6/11/2024
-                Console.WriteLine("totalItemCount:" + totalItemCount + " original:" + itemCount);
+                Console.WriteLine($"Saved {totalItemCount} vs Original {itemCount} item count.");
 
             }
            

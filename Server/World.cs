@@ -418,7 +418,7 @@ namespace Server
                                 int itemCount = idxReader.ReadInt32();
                                 var subItems = new List<ItemEntry>();
                                 items.Add(indexValue, subItems);
-                                Console.WriteLine($"Loading {itemCount} files");
+                                Console.WriteLine($"Loading {itemCount} items.");
                                 for (int i = 0; i < itemCount; ++i)
                                 {
                                     int typeID = idxReader.ReadInt32();
