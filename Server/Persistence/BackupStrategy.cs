@@ -59,7 +59,7 @@ namespace Server
             tdb.Close();
             bin.Close();
         }
-        public void Save()
+        public bool Save()
         {
             Thread saveItemsThread = new Thread(SaveItems)
             {
@@ -72,6 +72,7 @@ namespace Server
             SaveGuilds();
 
             saveItemsThread.Join();
+            return true;
         }
 
         private void SaveMobiles()

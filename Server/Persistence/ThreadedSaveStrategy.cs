@@ -1,17 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Server.Guilds;
 
 namespace Server
 {
-	public class ThreadedSaveStrategy : ISaveStrategy
+    public class ThreadedSaveStrategy : ISaveStrategy
     {
         private readonly Queue<Item> _DecayQueue = new();
+        private bool allFilesSaved = true;
+        List<String> expectedFiles = new List<String>();
 
-        public void Save()
+        public bool Save()
 		{
             Thread saveItemsThread = new Thread(SaveItems)
             {
@@ -24,6 +27,7 @@ namespace Server
             SaveGuilds();
 
             saveItemsThread.Join();
+            return allFilesSaved;
         }
 
 		public void ProcessDecay()
@@ -87,7 +91,7 @@ namespace Server
             Console.WriteLine($"Saving {itemCount} items");
 
             List<List<Item>> chunks = new List<List<Item>>();
-            int chunkSize = 150000;
+            int chunkSize = 500;
 
             List<Item> currentChunk = new List<Item>();
             int index = 0;
@@ -98,6 +102,9 @@ namespace Server
                 {
                     chunks.Add(currentChunk);
                     currentChunk = new List<Item>();
+                    int currentChuckIndex = chunks.Count - 1;
+                    expectedFiles.Add(World.ItemIndexPath.Replace(".idx", $"_{currentChuckIndex.ToString("D" + 8)}.idx"));
+                    expectedFiles.Add(World.ItemDataPath.Replace(".bin", $"_{currentChuckIndex.ToString("D" + 8)}.bin"));
                 }
 
                 currentChunk.Add(item);
@@ -110,6 +117,7 @@ namespace Server
             }
 
             Console.WriteLine($"Time to split Items: {sw.ElapsedMilliseconds}ms");
+            int totalItemCount = 0;
 
             using (BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false))
             {
@@ -121,6 +129,7 @@ namespace Server
                 using (BinaryFileWriter idx = new BinaryFileWriter(idxPath, false))
                 using (BinaryFileWriter bin = new BinaryFileWriter(binPath, true))
                 {
+                    int itemsWritten = 0;
                     idx.Write(chunk.Count);
                     foreach (Item item in chunk)
                     {
@@ -140,19 +149,36 @@ namespace Server
                         idx.Write((int)(bin.Position - start));
 
                         item.FreeCache();
+                        itemsWritten++;
                     }
+                    Interlocked.Add(ref totalItemCount, itemsWritten);
                 }
             });
-
                 tdb.Write(World.m_ItemTypes.Count);
 
                 for (int i = 0; i < World.m_ItemTypes.Count; ++i)
                 {
                     tdb.Write(World.m_ItemTypes[i].FullName);
                 }
+
+                Console.WriteLine("totalItemCount:" + totalItemCount + " original:" + itemCount);
+
             }
             sw.Stop();
             Console.WriteLine($"Items Save complete: {sw.ElapsedMilliseconds}ms");
+            if(totalItemCount!=itemCount)
+            {
+                allFilesSaved = false;
+                Console.WriteLine($"Expected to save {itemCount}, but only saved {totalItemCount}. Unthreaded Save will be triggered");
+            }
+            foreach (var item in expectedFiles)
+            {
+                if(!File.Exists(item))
+                {
+                    allFilesSaved = false;
+                    Console.WriteLine($"Save is missing file {item}. Unthreaded Save will be triggered");
+                }
+            }
         }
 
         private void SaveGuilds()

@@ -418,6 +418,7 @@ namespace Server
                                 int itemCount = idxReader.ReadInt32();
                                 var subItems = new List<ItemEntry>();
                                 items.Add(indexValue, subItems);
+                                Console.WriteLine($"Loading {itemCount} files");
                                 for (int i = 0; i < itemCount; ++i)
                                 {
                                     int typeID = idxReader.ReadInt32();
@@ -876,11 +877,11 @@ namespace Server
             }
         }
 
-        public static void Save(bool message, bool oldStrategy = false)
+        public static bool Save(bool message, ISaveStrategy strategicSave)
         {
             if (Saving)
             {
-                return;
+                return true;
             }
 
             NetState.FlushAll();
@@ -923,9 +924,7 @@ namespace Server
                 throw new Exception("FATAL: Exception in EventSink.BeforeWorldSave", e);
             }
 
-            ISaveStrategy strategicSave = oldStrategy ? new BackupStrategy(): new ThreadedSaveStrategy();
-
-            strategicSave.Save();
+            bool successfulSave = strategicSave.Save();
 
             try
             {
@@ -963,6 +962,7 @@ namespace Server
             {
                 throw new Exception("FATAL: Exception in EventSink.AfterWorldSave", e);
             }
+            return successfulSave;
         }
 
         internal static readonly List<Type> m_ItemTypes = new List<Type>();

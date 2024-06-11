@@ -1,8 +1,8 @@
-﻿namespace Server
+namespace Server
 {
     public interface ISaveStrategy
     {
         void ProcessDecay();
-        void Save();
+        bool Save();
     }
 }
