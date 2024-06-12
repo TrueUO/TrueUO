@@ -4171,8 +4171,7 @@ namespace Server.Mobiles
             get
             {
                 int facetBonus = !Siege.SiegeShard && Map == Map.Felucca ? RandomItemGenerator.FeluccaLuckBonus : 0;
-
-                return Luck + FountainOfFortune.GetLuckBonus(this) + facetBonus;
+                return Luck + facetBonus;
             }
         }
 
