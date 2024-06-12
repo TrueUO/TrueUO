@@ -1,4 +1,5 @@
 using Server.Commands;
+using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
 using System;
@@ -143,7 +144,7 @@ namespace Server.Engines.PartySystem
             from.SendLocalizedMessage(1008090); // You have invited them to join the party.
 
             target.Send(new PartyInvitation(from));
-            target.Party = from;
+            target.Party = from.Party;
 
             DeclineTimer.Start(target, from);
         }

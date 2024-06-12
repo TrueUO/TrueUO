@@ -92,7 +92,7 @@ namespace Server.Engines.PartySystem
 
         public override void OnAccept(Mobile from, Mobile sentLeader)
         {
-            Mobile leader = from.Party as Mobile;
+            Mobile leader = from.Party.Leader as Mobile;
             from.Party = null;
 
             Party p = Party.Get(leader);
@@ -105,7 +105,7 @@ namespace Server.Engines.PartySystem
 
         public override void OnDecline(Mobile from, Mobile sentLeader)
         {
-            Mobile leader = from.Party as Mobile;
+            Mobile leader = from.Party.Leader as Mobile;
             from.Party = null;
 
             Party p = Party.Get(leader);

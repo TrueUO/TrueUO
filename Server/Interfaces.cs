@@ -81,7 +81,8 @@ namespace Server
 		void OnStamChanged(Mobile m);
 		void OnManaChanged(Mobile m);
 		void OnStatsQuery(Mobile beholder, Mobile beheld);
-	}
+        Mobile Leader { get; }
+    }
 
 	public interface ISpawner
 	{

@@ -744,7 +744,7 @@ namespace Server
         private WarmodeTimer m_WarmodeTimer;
         private int m_Thirst, m_BAC;
         private VirtueInfo m_Virtues;
-        private object m_Party;
+        private IParty m_Party;
         private List<SkillMod> m_SkillMods;
         private Body m_BodyMod;
         private DateTime m_LastStrGain;
@@ -1122,7 +1122,7 @@ namespace Server
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
         public VirtueInfo Virtues { get => m_Virtues; set { } }
 
-        public object Party { get => m_Party; set => m_Party = value; }
+        public IParty Party { get => m_Party; set => m_Party = value; }
         public List<SkillMod> SkillMods => m_SkillMods;
 
         /// <summary>

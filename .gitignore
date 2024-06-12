@@ -56,3 +56,5 @@
 
 # Include Data Files
 !/Data/*
+/DailyBackups/Automatic
+/FailedSaves/Automatic
