@@ -234,12 +234,9 @@ namespace Server.Engines.Quests
                     {
                         DateTime endTime = restartInfo.RestartTime;
 
-                        if (DateTime.UtcNow < endTime)
+                        if (DateTime.UtcNow < endTime && (earliestEndTime == null || endTime < earliestEndTime))
                         {
-                            if (earliestEndTime == null || endTime < earliestEndTime)
-                            {
-                                earliestEndTime = endTime;
-                            }
+                            earliestEndTime = endTime;
                         }
                     }
                 }
