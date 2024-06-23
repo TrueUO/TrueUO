@@ -1,7 +1,6 @@
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.Mobiles;
-using Server.Network;
 using Server.Regions;
 using Server.Targeting;
 using System;
@@ -92,6 +91,7 @@ namespace Server.Engines.Quests
                     return false;
                 }
 
+                // if player already has an active quest from the chain
                 if (InChainProgress(from, quest))
                 {
                     return false;
