@@ -29,18 +29,18 @@ namespace Server
             return _AllFilesSaved;
         }
 
-		public void ProcessDecay()
-		{
-			while (_DecayQueue.Count > 0)
-			{
-				Item item = _DecayQueue.Dequeue();
+        public void ProcessDecay()
+        {
+            while (_DecayQueue.Count > 0)
+            {
+                Item item = _DecayQueue.Dequeue();
 
-				if (item.OnDecay())
-				{
-					item.Delete();
-				}
-			}
-		}
+                if (item != null && item.OnDecay())
+                {
+                    item.Delete();
+                }
+            }
+        }
 
         private void SaveItems()
         {
