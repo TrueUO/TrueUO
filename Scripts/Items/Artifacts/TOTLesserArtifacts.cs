@@ -983,7 +983,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);
 
             writer.WriteEncodedInt((int)m_Type);
@@ -992,17 +991,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BasePigmentsOfTokuno insertion
-
-            switch (version)
-            {
-                case 1:
-                    Type = (LesserPigmentType)reader.ReadEncodedInt();
-                    break;
-                case 0:
-                    break;
-            }
+            Type = (LesserPigmentType)reader.ReadEncodedInt();
         }
     }
 
@@ -1034,15 +1025,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for BasePigmentsOfTokuno insertion
+            reader.ReadInt();
         }
     }
 }
