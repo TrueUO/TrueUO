@@ -38,6 +38,8 @@ namespace Server.Engines.Quests
 
         public virtual bool IsQuestionQuest => false;
 
+        public virtual bool UseAccountWideQuestRestrictions => false;
+
         private List<BaseObjective> m_Objectives;
         private List<BaseReward> m_Rewards;
         private PlayerMobile m_Owner;
