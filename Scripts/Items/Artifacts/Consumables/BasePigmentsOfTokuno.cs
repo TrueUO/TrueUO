@@ -4,30 +4,23 @@ namespace Server.Items
 {
     public abstract class BasePigmentsOfTokuno : Item, IUsesRemaining
     {
-        public override int LabelNumber => 1070933;// Pigments of Tokuno
+        public override int LabelNumber => 1070933; // Pigments of Tokuno
 
         private int m_UsesRemaining;
-        private TextDefinition m_Label;
+        private TextDefinition _Label;
 
         protected TextDefinition Label
         {
             get
             {
-                return m_Label;
+                return _Label;
             }
             set
             {
-                m_Label = value;
+                _Label = value;
                 InvalidateProperties();
             }
         }
-
-        #region Old Item Serialization Vars
-        /* DO NOT USE! Only used in serialization of pigments that originally derived from Item */
-        private bool m_InheritsItem;
-
-        protected bool InheritsItem => m_InheritsItem;
-        #endregion
 
         public BasePigmentsOfTokuno()
             : base(0xEFF)
@@ -52,8 +45,10 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            if (m_Label != null && m_Label > 0)
-                TextDefinition.AddTo(list, m_Label);
+            if (_Label != null && _Label > 0)
+            {
+                TextDefinition.AddTo(list, _Label);
+            }
         }
 
         public override void AddUsesRemainingProperties(ObjectPropertyList list)
@@ -69,7 +64,9 @@ namespace Server.Items
                 from.BeginTarget(3, false, Targeting.TargetFlags.None, new TargetStateCallback(InternalCallback), this);
             }
             else
+            {
                 from.SendLocalizedMessage(502436); // That is not accessible.
+            }
         }
 
         private void InternalCallback(Mobile from, object targeted, object state)
@@ -108,9 +105,9 @@ namespace Server.Items
         public static bool IsValidItem(Item i)
         {
             if (i is BasePigmentsOfTokuno)
+            {
                 return false;
-
-            Type t = i.GetType();
+            }
 
             CraftResource resource = CraftResource.None;
 
@@ -139,7 +136,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);
 
             writer.WriteEncodedInt(m_UsesRemaining);
@@ -148,32 +144,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_UsesRemaining = reader.ReadEncodedInt();
-                        break;
-                    }
-                case 0: // Old pigments that inherited from item
-                    {
-                        m_InheritsItem = true;
-
-                        if (this is LesserPigmentsOfTokuno)
-                            ((LesserPigmentsOfTokuno)this).Type = (LesserPigmentType)reader.ReadEncodedInt();
-                        else if (this is PigmentsOfTokuno)
-                            ((PigmentsOfTokuno)this).Type = (PigmentType)reader.ReadEncodedInt();
-                        else if (this is MetalPigmentsOfTokuno)
-                            reader.ReadEncodedInt();
-
-                        m_UsesRemaining = reader.ReadEncodedInt();
-
-                        break;
-                    }
-            }
+            m_UsesRemaining = reader.ReadEncodedInt();
         }
 
         #region IUsesRemaining Members
