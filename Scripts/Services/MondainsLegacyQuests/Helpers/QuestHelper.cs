@@ -341,15 +341,15 @@ namespace Server.Engines.Quests
 
                         if (ts.Days > 0)
                         {
-                            player.SendLocalizedMessage(1158377, string.Format("{0}\t{1}", ts.Days.ToString(), "day[s]"));
+                            player.SendLocalizedMessage(1158377, $"{ts.Days}\tday[s]");
                         }
                         else if (ts.Hours > 0)
                         {
-                            player.SendLocalizedMessage(1158377, string.Format("{0}\t{1}", ts.Hours.ToString(), "hour[s]"));
+                            player.SendLocalizedMessage(1158377, $"{ts.Hours}\thour[s]");
                         }
                         else
                         {
-                            player.SendLocalizedMessage(1158377, string.Format("{0}\t{1}", ts.Minutes.ToString(), "minute[s]"));
+                            player.SendLocalizedMessage(1158377, $"{ts.Minutes}\tminute[s]");
                         }
 
                         return false;
@@ -997,27 +997,6 @@ namespace Server.Engines.Quests
             list.Add(new SelectQuestItem());
         }
 
-        public static bool FindCompletedQuest(PlayerMobile from, Type type, bool delete)
-        {
-            if (type == null)
-                return false;
-
-            for (int i = from.DoneQuests.Count - 1; i >= 0; i--)
-            {
-                QuestRestartInfo restartInfo = from.DoneQuests[i];
-
-                if (restartInfo.QuestType == type)
-                {
-                    if (delete)
-                        from.DoneQuests.RemoveAt(i);
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public static bool HasQuest<T>(PlayerMobile from) where T : BaseQuest
         {
             return GetQuest(from, typeof(T)) != null;
@@ -1084,7 +1063,9 @@ namespace Server.Engines.Quests
         public override void OnClick()
         {
             if (!Owner.From.Alive)
+            {
                 return;
+            }
 
             Owner.From.SendLocalizedMessage(1072352); // Target the item you wish to toggle Quest Item status on <ESC> to cancel
             Owner.From.BeginTarget(-1, false, TargetFlags.None, ToggleQuestItem_Callback);
@@ -1099,13 +1080,19 @@ namespace Server.Engines.Quests
                     if (item.Parent != null && item.Parent == player.Backpack)
                     {
                         if (!QuestHelper.CheckItem(player, item))
+                        {
                             player.SendLocalizedMessage(1072355, null, 0x23); // That item does not match any of your quest criteria
+                        }
                     }
                     else
+                    {
                         player.SendLocalizedMessage(1074769); // An item must be in your backpack (and not in a container within) to be toggled as a quest item.
+                    }
                 }
                 else
+                {
                     player.SendLocalizedMessage(1074769); // An item must be in your backpack (and not in a container within) to be toggled as a quest item.
+                }
 
                 player.BeginTarget(-1, false, TargetFlags.None, ToggleQuestItem_Callback);
             }
