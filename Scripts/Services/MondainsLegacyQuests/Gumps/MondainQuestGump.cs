@@ -363,7 +363,7 @@ namespace Server.Engines.Quests
         public void SecDescription()
         {
             SecBackground();
-            SecHeader(true);            
+            SecHeader(true);
 
             if (!m_Quest.RenderDescription(this, m_Offer))
             {
@@ -381,7 +381,7 @@ namespace Server.Engines.Quests
                 }
                 else
                 {
-                    AddHtml(98, 156, 312, 240, string.Format("<BASEFONT COLOR=#BFEA95>{0}</DIV>", m_Quest.Description), false, false);
+                    AddHtml(98, 156, 312, 240, $"<BASEFONT COLOR=#BFEA95>{m_Quest.Description}</DIV>", false, true);
                 }
             }
 
