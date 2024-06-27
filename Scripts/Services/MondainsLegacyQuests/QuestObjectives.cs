@@ -212,13 +212,18 @@ namespace Server.Engines.Quests
                 return false;
             }
 
-            for (var index = 0; index < Creatures.Length; index++)
+            for (int index = 0; index < Creatures.Length; index++)
             {
                 Type type = Creatures[index];
 
                 if (type.IsInstanceOfType(mob))
                 {
                     if (Region != null && !mob.Region.IsPartOf(Region))
+                    {
+                        return false;
+                    }
+
+                    if (mob is BaseCreature bc && bc.Controlled)
                     {
                         return false;
                     }
