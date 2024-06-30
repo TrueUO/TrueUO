@@ -119,7 +119,7 @@ namespace Server
 		public abstract void WriteGuildList<T>(List<T> list, bool tidy) where T : BaseGuild;
     }
     
-	public class BinaryFileWriter : GenericWriter
+	public class BinaryFileWriter : GenericWriter, IDisposable
 	{
 		private readonly bool _PrefixStrings;
 		private Stream _File;
@@ -704,7 +704,17 @@ namespace Server
 				Write(list[i]);
 			}
 		}
-	}
+
+        public void Dispose()
+        {
+            if (_Index > 0)
+            {
+                Flush();
+            }
+
+            _File.Close();
+        }
+    }
 
 	public sealed class BinaryFileReader : GenericReader
 	{

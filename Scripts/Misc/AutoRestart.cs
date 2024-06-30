@@ -20,6 +20,7 @@ namespace Server.Misc
         public static int Hour = Config.Get("AutoRestart.Hour", 12);
         public static int Minutes = Config.Get("AutoRestart.Minute", 0);
         public static int Frequency = Config.Get("AutoRestart.Frequency", 24);
+        public static readonly bool LegacySaveBackup = Config.Get("AutoRestart.LegacySaveBackup", true);
 
         public static readonly string RecompilePath = Path.Combine(Core.BaseDirectory, Core.Debug ? "Compile.WIN - Debug.bat" : "Compile.WIN - Release.bat");
 
@@ -81,7 +82,7 @@ namespace Server.Misc
 
                 DelayCall(TimeSpan.FromSeconds(1), () =>
                     {
-                        AutoSave.Save();
+                        AutoSave.Save(LegacySaveBackup);
 
                         Restarting = true;
                         TimedShutdown(true, recompile);
@@ -103,7 +104,7 @@ namespace Server.Misc
 
                 DelayCall(TimeSpan.FromSeconds(1), () =>
                 {
-                    AutoSave.Save();
+                    AutoSave.Save(LegacySaveBackup);
                     Restarting = true;
 
                     TimedShutdown(false);
@@ -146,7 +147,7 @@ namespace Server.Misc
                 return;
             }
 
-            AutoSave.Save();
+            AutoSave.Save(LegacySaveBackup);
             Restarting = true;
 
             TimedShutdown(true);
