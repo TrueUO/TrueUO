@@ -2012,7 +2012,7 @@ namespace Server.Engines.Craft
             }
             else
             {
-                ConsumeType consumeType = UseAllRes ? ConsumeType.Half : ConsumeType.All;
+                ConsumeType consumeType = UseAllRes ? ConsumeType.All : ConsumeType.Half;
                 int resHue = 0;
                 int maxAmount = 0;
 
