@@ -334,7 +334,7 @@ namespace Server.Items
 
                                 BaseGalleon g = FindValidBoatTarget(newPoint, map, ammo);
 
-                                if (g != null && g != m_Galleon && g.IsEnemy(m_Galleon))
+                                if (g != null && g != m_Galleon && g.BoatCanBeAttacked(m_Galleon))
                                     list.Add(g);
 
                                 mobs.AddRange(FindMobiles(shooter, newPoint, map, false, false, false, true));

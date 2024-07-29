@@ -599,7 +599,7 @@ namespace Server.Items
 
                                 BaseBoat b = FindValidBoatTarget(newPoint, map, ammo);
 
-                                if (b != null && b != Galleon && b.IsEnemy(Galleon))
+                                if (b != null && b != Galleon && b.BoatCanBeAttacked(Galleon))
                                     list.Add(b);
 
                                 damageables.AddRange(FindDamageables(shooter, newPoint, map, false, false, false, true, true));
@@ -649,7 +649,7 @@ namespace Server.Items
 
                                 BaseBoat b = FindValidBoatTarget(newPoint, map, ammo);
 
-                                if (b != null && b != Galleon && b.IsEnemy(Galleon))
+                                if (b != null && b != Galleon && b.BoatCanBeAttacked(Galleon))
                                     list.Add(b);
 
                                 damageables.AddRange(FindDamageables(shooter, newPoint, map, true, true, false, true, true));

@@ -1054,21 +1054,26 @@ namespace Server.Multis
             return Rotate(p, (int)m_Facing / 2);
         }
 
-        public virtual bool IsEnemy(BaseBoat boat)
+        public virtual bool BoatCanBeAttacked(BaseBoat boatBeingAttacked)
         {
             if (Map != null && Map.Rules == MapRules.FeluccaRules)
+            {
                 return true;
+            }
 
-            Mobile thisOwner = Owner;
-            Mobile themOwner = boat.Owner;
+            Mobile attacker = Owner; // the boat owner that engages
 
-            if (thisOwner == null || themOwner == null)
+            if (boatBeingAttacked.Owner == null || boatBeingAttacked.Owner is BaseCreature)
+            {
                 return true;
+            }
 
-            if (thisOwner is PlayerMobile && themOwner is PlayerMobile && Map != Map.Felucca)
+            if (boatBeingAttacked.Owner is PlayerMobile && attacker is PlayerMobile && Map != Map.Felucca)
+            {
                 return false;
+            }
 
-            return thisOwner.CanBeHarmful(themOwner, false);
+            return boatBeingAttacked.Owner.CanBeHarmful(attacker, false);
         }
 
         public virtual bool IsEnemy(Mobile from)
