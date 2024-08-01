@@ -166,6 +166,7 @@ namespace Server.Mobiles
     public class Clone : BaseCreature
     {
         public override bool AlwaysAttackable => m_Caster is Travesty;
+        public override bool AlwaysMurderer => m_Caster is BaseCreature bc && bc.AlwaysMurderer;
 
         private Mobile m_Caster;
 
