@@ -116,7 +116,7 @@ namespace Server.Spells.SkillMasteries
             if (!base.OnTick())
                 return false;
 
-            if (Target == Caster || !Target.Alive)
+            if (Target == Caster || !Target.Alive || Caster.Map != Target.Map)
             {
                 Expire();
                 Caster.SendLocalizedMessage(1156097); // Your ability was interrupted.
