@@ -1,47 +1,7 @@
-#region References
 using Server.Accounting;
-#endregion
 
 namespace Server.Items
 {
-    public static class BankCheckExtensions
-    {
-        public static int GetChecksWorth(this Container cont, bool recurse)
-        {
-            int count = 0;
-
-            Item[] items = cont.FindItemsByType(typeof(BankCheck), recurse);
-            foreach (BankCheck check in items)
-            {
-                count += check.Worth;
-            }
-            return count;
-        }
-        public static int TakeFromChecks(this Container cont, int amount, bool recurse)
-        {
-            int left = amount;
-
-            Item[] items = cont.FindItemsByType(typeof(BankCheck), recurse);
-            foreach (BankCheck check in items)
-            {
-                if (check.Worth <= left)
-                {
-                    left -= check.Worth;
-                    check.Delete();
-                }
-                else
-                {
-                    check.Worth -= left;
-                    check.InvalidateProperties();
-                    left = 0;
-                    break;
-                }
-            }
-
-            return amount - left;
-        }
-    }
-
     public class BankCheck : Item
     {
         private int m_Worth;
@@ -79,7 +39,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Worth);
@@ -88,18 +47,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            LootType = LootType.Blessed;
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_Worth = reader.ReadInt();
-                        break;
-                    }
-            }
+            m_Worth = reader.ReadInt();
         }
 
         public override void GetProperties(ObjectPropertyList list)
