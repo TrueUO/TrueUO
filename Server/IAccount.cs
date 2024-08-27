@@ -24,12 +24,6 @@ namespace Server.Accounting
 		/// </summary>
 		public static bool ConvertOnBank = true;
 
-		/// <summary>
-		/// Enables or Disables automatic conversion of Gold and Checks to Bank Currency
-		/// when they are added to a secure trade container.
-		/// </summary>
-		public static bool ConvertOnTrade = false;
-
 		public static double GetGoldTotal(Mobile m)
 		{
 			if (m == null)

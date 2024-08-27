@@ -53,13 +53,7 @@ namespace Server.Items
         {
             base.OnAdded(parent);
 
-            if (!AccountGold.Enabled)
-            {
-                return;
-            }
-
             Mobile owner = null;
-            SecureTradeInfo tradeInfo = null;
 
             Container root = parent as Container;
 
@@ -70,20 +64,7 @@ namespace Server.Items
 
             parent = root ?? parent;
 
-            if (parent is SecureTradeContainer trade && AccountGold.ConvertOnTrade)
-            {
-                if (trade.Trade.From.Container == trade)
-                {
-                    tradeInfo = trade.Trade.From;
-                    owner = tradeInfo.Mobile;
-                }
-                else if (trade.Trade.To.Container == trade)
-                {
-                    tradeInfo = trade.Trade.To;
-                    owner = tradeInfo.Mobile;
-                }
-            }
-            else if (parent is BankBox box && AccountGold.ConvertOnBank)
+            if (parent is BankBox box && AccountGold.ConvertOnBank)
             {
                 owner = box.Owner;
             }
@@ -91,14 +72,6 @@ namespace Server.Items
             if (owner == null || owner.Account == null || !owner.Account.DepositGold(Amount))
             {
                 return;
-            }
-
-            if (tradeInfo != null)
-            {
-                if (tradeInfo.VirtualCheck != null)
-                {
-                    tradeInfo.VirtualCheck.UpdateTrade(tradeInfo.Mobile);
-                }
             }
 
             owner.SendLocalizedMessage(1042763, Amount.ToString("#,0"));
@@ -113,7 +86,9 @@ namespace Server.Items
             int baseTotal = base.GetTotal(type);
 
             if (type == TotalType.Gold)
+            {
                 baseTotal += Amount;
+            }
 
             return baseTotal;
         }

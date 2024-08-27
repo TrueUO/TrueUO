@@ -12,7 +12,6 @@ namespace Server
         {
             AccountGold.Enabled = true;
             AccountGold.ConvertOnBank = true;
-            AccountGold.ConvertOnTrade = false;
             VirtualCheck.UseEditGump = true;
 
             TownCryerSystem.Enabled = true;
