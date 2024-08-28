@@ -97,73 +97,23 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            // This probably isn't OSI accurate, but we can't just make the quests redundant.
-            // Double-clicking the BankCheck in your pack will now credit your account.
-
-            Container box = AccountGold.Enabled ? from.Backpack : from.FindBankNoCreate();
+            Container box = from.Backpack;
 
             if (box == null || !IsChildOf(box))
             {
-                from.SendLocalizedMessage(AccountGold.Enabled ? 1080058 : 1047026);
-                // This must be in your backpack to use it. : That must be in your bank box to use it.
+                from.SendLocalizedMessage(1080058); // This must be in your backpack to use it.
                 return;
             }
 
             Delete();
 
-            int deposited = 0;
-            int toAdd = m_Worth;
-
-            if (AccountGold.Enabled && from.Account != null && from.Account.DepositGold(toAdd))
+            if (from.Account != null)
             {
-                deposited = toAdd;
-                toAdd = 0;
-            }
-
-            if (toAdd > 0)
-            {
-                Gold gold;
-
-                while (toAdd > 60000)
-                {
-                    gold = new Gold(60000);
-
-                    if (box.TryDropItem(from, gold, false))
-                    {
-                        toAdd -= 60000;
-                        deposited += 60000;
-                    }
-                    else
-                    {
-                        gold.Delete();
-
-                        from.AddToBackpack(new BankCheck(toAdd));
-                        toAdd = 0;
-
-                        break;
-                    }
-                }
-
-                if (toAdd > 0)
-                {
-                    gold = new Gold(toAdd);
-
-                    if (box.TryDropItem(from, gold, false))
-                    {
-                        deposited += toAdd;
-                    }
-                    else
-                    {
-                        gold.Delete();
-
-                        from.AddToBackpack(new BankCheck(toAdd));
-                    }
-                }
+                from.Account.DepositGold(m_Worth);
             }
 
             // Gold was deposited in your account:
-            from.SendLocalizedMessage(1042672, true, deposited.ToString("#,0"));
-
+            from.SendLocalizedMessage(1042672, true, m_Worth.ToString("#,0"));
         }
     }
 }

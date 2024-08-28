@@ -1692,13 +1692,10 @@ namespace Server.Mobiles
                         fromBank = true;
                     }
                 }
-                else if (buyer.Account != null && AccountGold.Enabled)
+                else if (buyer.Account != null && buyer.Account.WithdrawCurrency(totalCost / AccountGold.CurrencyThreshold))
                 {
-                    if (buyer.Account.WithdrawCurrency(totalCost / AccountGold.CurrencyThreshold))
-                    {
-                        bought = true;
-                        fromBank = true;
-                    }
+                    bought = true;
+                    fromBank = true;
                 }
             }
 

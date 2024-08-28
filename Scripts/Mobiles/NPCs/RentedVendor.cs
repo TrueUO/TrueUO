@@ -1,4 +1,3 @@
-using Server.Accounting;
 using Server.ContextMenus;
 using Server.Gumps;
 using Server.Misc;
@@ -161,18 +160,11 @@ namespace Server.Mobiles
         {
             if (RentalGold > 0 && House != null)
             {
-                if (AccountGold.Enabled && Landlord != null)
+                if (Landlord != null)
                 {
                     Banker.Deposit(Landlord, RentalGold, true);
                 }
-                else
-                {
-                    if (House.MovingCrate == null)
-                        House.MovingCrate = new MovingCrate(House);
-
-                    Banker.Deposit(House.MovingCrate, RentalGold);
-                }
-
+               
                 RentalGold = 0;
             }
 

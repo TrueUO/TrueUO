@@ -1,7 +1,5 @@
-#region References
 using Server.Accounting;
 using Server.Services.TownCryer;
-#endregion
 
 namespace Server
 {
@@ -10,7 +8,6 @@ namespace Server
         [CallPriority(int.MinValue)]
         public static void Configure()
         {
-            AccountGold.Enabled = true;
             AccountGold.ConvertOnBank = true;
             VirtualCheck.UseEditGump = true;
 
