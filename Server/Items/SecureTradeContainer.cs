@@ -106,7 +106,7 @@ namespace Server.Items
 		{
 			if (child is VirtualCheck)
 			{
-				return !AccountGold.Enabled;
+				return false;
 			}
 
 			return base.IsChildVisibleTo(m, child);

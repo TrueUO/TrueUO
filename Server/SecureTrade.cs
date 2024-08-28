@@ -217,32 +217,29 @@ namespace Server
 					}
 				}
 
-				if (AccountGold.Enabled)
-				{
-					if (m_From.Mobile.Account != null)
-					{
-						double cur = m_From.Mobile.Account.TotalCurrency;
-						double off = m_From.Plat + (m_From.Gold / Math.Max(1.0, AccountGold.CurrencyThreshold));
+				if (m_From.Mobile.Account != null)
+                {
+                    double cur = m_From.Mobile.Account.TotalCurrency;
+                    double off = m_From.Plat + (m_From.Gold / Math.Max(1.0, AccountGold.CurrencyThreshold));
 
-						if (off > cur)
-						{
-							allowed = false;
-							m_From.Mobile.SendMessage("You do not have enough currency to complete this trade.");
-						}
-					}
+                    if (off > cur)
+                    {
+                        allowed = false;
+                        m_From.Mobile.SendMessage("You do not have enough currency to complete this trade.");
+                    }
+                }
 
-					if (m_To.Mobile.Account != null)
-					{
-						double cur = m_To.Mobile.Account.TotalCurrency;
-						double off = m_To.Plat + (m_To.Gold / Math.Max(1.0, AccountGold.CurrencyThreshold));
+                if (m_To.Mobile.Account != null)
+                {
+                    double cur = m_To.Mobile.Account.TotalCurrency;
+                    double off = m_To.Plat + (m_To.Gold / Math.Max(1.0, AccountGold.CurrencyThreshold));
 
-						if (off > cur)
-						{
-							allowed = false;
-							m_To.Mobile.SendMessage("You do not have enough currency to complete this trade.");
-						}
-					}
-				}
+                    if (off > cur)
+                    {
+                        allowed = false;
+                        m_To.Mobile.SendMessage("You do not have enough currency to complete this trade.");
+                    }
+                }
 
 				if (!allowed)
 				{
@@ -255,7 +252,7 @@ namespace Server
 					return;
 				}
 
-				if (AccountGold.Enabled && m_From.Mobile.Account != null && m_To.Mobile.Account != null)
+				if (m_From.Mobile.Account != null && m_To.Mobile.Account != null)
 				{
 					HandleAccountGoldTrade();
 				}
