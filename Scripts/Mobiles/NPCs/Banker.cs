@@ -86,32 +86,6 @@ namespace Server.Mobiles
             return 0;
         }
 
-        public static void Deposit(Container cont, int amount)
-        {
-            while (amount > 0)
-            {
-                Item item;
-
-                if (amount < 5000)
-                {
-                    item = new Gold(amount);
-                    amount = 0;
-                }
-                else if (amount <= 1000000)
-                {
-                    item = new BankCheck(amount);
-                    amount = 0;
-                }
-                else
-                {
-                    item = new BankCheck(1000000);
-                    amount -= 1000000;
-                }
-
-                cont.DropItem(item);
-            }
-        }
-
         public override void InitSBInfo()
         {
             m_SBInfos.Add(new SBBanker());

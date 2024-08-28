@@ -6,7 +6,6 @@ using Server.Network;
 
 using Server.Spells.Necromancy;
 using Server.Targeting;
-using System.Numerics;
 
 namespace Server.Spells.Fourth
 {

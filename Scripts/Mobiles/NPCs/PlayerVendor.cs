@@ -1,4 +1,3 @@
-using Server.Accounting;
 using Server.ContextMenus;
 using Server.Gumps;
 using Server.Items;
@@ -565,14 +564,7 @@ namespace Server.Mobiles
 
                         if (HoldGold > 0)
                         {
-                            if (AccountGold.Enabled)
-                            {
-                                Banker.Deposit(Owner, HoldGold, true);
-                            }
-                            else
-                            {
-                                Banker.Deposit(House.MovingCrate, HoldGold);
-                            }
+                            Banker.Deposit(Owner, HoldGold, true);
                             
                             HoldGold = 0;
                         }
@@ -608,13 +600,9 @@ namespace Server.Mobiles
 
                     if (HoldGold > 0)
                     {
-                        if (AccountGold.Enabled && Owner != null)
+                        if (Owner != null)
                         {
                             Banker.Deposit(Owner, HoldGold, true);
-                        }
-                        else
-                        {
-                            Banker.Deposit(backpack, HoldGold);
                         }
                         
                         HoldGold = 0;

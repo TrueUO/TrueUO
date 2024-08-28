@@ -1,4 +1,3 @@
-using Server.Accounting;
 using Server.Multis;
 using System;
 using System.Collections.Generic;
@@ -124,7 +123,7 @@ namespace Server.Mobiles
                 {
                     if (m_Inventory.Gold > 0 && m_Inventory.Owner != null)
                     {
-                        Banker.Deposit(m_Inventory.Owner, m_Inventory.Gold, true);
+                        Banker.Deposit(house.Owner, m_Inventory.Gold, true);
                     }
 
                     foreach (Item item in m_Inventory.Items)
