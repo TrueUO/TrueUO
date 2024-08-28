@@ -189,16 +189,10 @@ namespace Server.Mobiles
                                 break;
                             }
 
-                            if (AccountGold.Enabled && e.Mobile.Account is Account account)
+                            if (e.Mobile.Account is Account account)
                             {
                                 vendor.Say(1155855, $"{account.TotalPlat:#,0}\t{account.TotalGold:#,0}", 0x3BC);
-
                                 vendor.Say(1155848, $"{account.GetSecureAccountAmount(e.Mobile):#,0}", 0x3BC);
-                            }
-                            else
-                            {
-                                // Thy current bank balance is ~1_AMOUNT~ gold.
-                                vendor.Say(1042759, GetBalance(e.Mobile).ToString("#,0"));
                             }
                         }
                             break;

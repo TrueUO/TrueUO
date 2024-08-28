@@ -1,4 +1,3 @@
-using Server.Accounting;
 using Server.ContextMenus;
 using Server.Mobiles;
 using Server.Multis;
@@ -262,7 +261,7 @@ namespace Server.Items
 
         public void CheckBank(BankBox bank, Mobile from)
         {
-            if (AccountGold.Enabled && bank.Owner == from && from.Account != null)
+            if (bank.Owner == from && from.Account != null)
             {
                 List<BankCheck> checks = new List<BankCheck>(Items.OfType<BankCheck>());
 
