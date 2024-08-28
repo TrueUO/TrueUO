@@ -27,7 +27,7 @@ namespace Server.Mobiles
         {
             double balance = 0;
 
-            if (AccountGold.Enabled && m.Account != null)
+            if (m.Account != null)
             {
                 int goldStub;
                 m.Account.GetGoldBalance(out goldStub, out balance);
@@ -43,10 +43,12 @@ namespace Server.Mobiles
 
         public static bool Withdraw(Mobile from, int amount, bool message = false)
         {
-            if (AccountGold.Enabled && from.Account != null && from.Account.WithdrawGold(amount))
+            if (from.Account != null && from.Account.WithdrawGold(amount))
             {
                 if (message)
+                {
                     from.SendLocalizedMessage(1155856, amount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))); // ~1_AMOUNT~ gold has been removed from your bank box.
+                }
 
                 return true;
             }
@@ -56,11 +58,12 @@ namespace Server.Mobiles
 
         public static bool Deposit(Mobile from, int amount, bool message = false)
         {
-            // If for whatever reason the TOL checks fail, we should still try old methods for depositing currency.
-            if (AccountGold.Enabled && from.Account != null && from.Account.DepositGold(amount))
+            if (from.Account != null && from.Account.DepositGold(amount))
             {
                 if (message)
+                {
                     from.SendLocalizedMessage(1042763, amount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))); // ~1_AMOUNT~ gold was deposited in your account.
+                }
 
                 return true;
             }
@@ -70,56 +73,17 @@ namespace Server.Mobiles
 
         public static int DepositUpTo(Mobile from, int amount, bool message = false)
         {
-            // If for whatever reason the TOL checks fail, we should still try old methods for depositing currency.
-            if (AccountGold.Enabled && from.Account != null && from.Account.DepositGold(amount))
+            if (from.Account != null && from.Account.DepositGold(amount))
             {
                 if (message)
+                {
                     from.SendLocalizedMessage(1042763, amount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("en-US"))); // ~1_AMOUNT~ gold was deposited in your account.
+                }
 
                 return amount;
             }
 
-            BankBox box = from.Player ? from.BankBox : from.FindBankNoCreate();
-
-            if (box == null)
-            {
-                return 0;
-            }
-
-            int amountLeft = amount;
-            while (amountLeft > 0)
-            {
-                Item item;
-                int amountGiven;
-
-                if (amountLeft < 5000)
-                {
-                    item = new Gold(amountLeft);
-                    amountGiven = amountLeft;
-                }
-                else if (amountLeft <= 1000000)
-                {
-                    item = new BankCheck(amountLeft);
-                    amountGiven = amountLeft;
-                }
-                else
-                {
-                    item = new BankCheck(1000000);
-                    amountGiven = 1000000;
-                }
-
-                if (box.TryDropItem(from, item, false))
-                {
-                    amountLeft -= amountGiven;
-                }
-                else
-                {
-                    item.Delete();
-                    break;
-                }
-            }
-
-            return amount - amountLeft;
+            return 0;
         }
 
         public static void Deposit(Container cont, int amount)
