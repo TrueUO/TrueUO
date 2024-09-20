@@ -82,7 +82,6 @@ namespace Server.Network
 			Register(0x6C, 19, true, TargetResponse);
 			Register(0x6F, 0, true, SecureTrade);
 			Register(0x72, 5, true, SetWarMode);
-			Register(0x73, 2, false, PingReq);
 			Register(0x75, 35, true, RenameRequest);
 			Register(0x79, 9, true, ResourceQuery);
 			Register(0x7E, 2, true, GodviewQuery);
@@ -1565,11 +1564,6 @@ namespace Server.Network
 			{
 				HandleSingleClick(state.Mobile, World.FindEntity(pvSrc.ReadInt32()));
 			}
-		}
-
-		public static void PingReq(NetState state, PacketReader pvSrc)
-		{
-			state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
 		}
 
 		public static void SetUpdateRange(NetState state, PacketReader pvSrc)
