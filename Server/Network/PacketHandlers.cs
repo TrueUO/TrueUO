@@ -143,7 +143,6 @@ namespace Server.Network
 			RegisterExtended(0x2E, true, TargetedSkillUse);
 			RegisterExtended(0x30, true, TargetByResourceMacro);
             RegisterEncoded(0x19, true, SetAbility);
-			RegisterEncoded(0x28, true, GuildGumpRequest);
             RegisterEncoded(0x32, true, QuestGumpRequest);
 		}
 
@@ -225,11 +224,6 @@ namespace Server.Network
 		public static void SetAbility(NetState state, IEntity e, EncodedReader reader)
 		{
 			EventSink.InvokeSetAbility(new SetAbilityEventArgs(state.Mobile, reader.ReadInt32()));
-		}
-
-		public static void GuildGumpRequest(NetState state, IEntity e, EncodedReader reader)
-		{
-			EventSink.InvokeGuildGumpRequest(new GuildGumpRequestArgs(state.Mobile));
 		}
 
         private static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)

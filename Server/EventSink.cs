@@ -56,8 +56,6 @@ namespace Server
 
 	public delegate void CreateGuildHandler(CreateGuildEventArgs e);
 
-	public delegate void GuildGumpRequestHandler(GuildGumpRequestArgs e);
-
 	public delegate void ClientVersionReceivedHandler(ClientVersionReceivedArgs e);
 
 	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
@@ -118,18 +116,6 @@ namespace Server
 		public CreateGuildEventArgs(int id)
 		{
 			Id = id;
-		}
-	}
-
-	public class GuildGumpRequestArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public GuildGumpRequestArgs(Mobile mobile)
-		{
-			m_Mobile = mobile;
 		}
 	}
 
@@ -809,7 +795,6 @@ namespace Server
 		public static event SetAbilityEventHandler SetAbility;
 		public static event FastWalkEventHandler FastWalk;
 		public static event CreateGuildHandler CreateGuild;
-		public static event GuildGumpRequestHandler GuildGumpRequest;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
@@ -841,11 +826,6 @@ namespace Server
 		public static void InvokeSetAbility(SetAbilityEventArgs e)
         {
             SetAbility?.Invoke(e);
-        }
-
-		public static void InvokeGuildGumpRequest(GuildGumpRequestArgs e)
-        {
-            GuildGumpRequest?.Invoke(e);
         }
 
 		public static void InvokeFastWalk(FastWalkEventArgs e)

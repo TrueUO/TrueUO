@@ -3,6 +3,7 @@ using Server.Engines.Help;
 using Server.Items;
 using System;
 using Server.Misc;
+using Server.Guilds;
 
 namespace Server.Network
 {
@@ -17,6 +18,8 @@ namespace Server.Network
 
             PacketHandlers.RegisterExtended(0x2C, true, BandageTarget);
             PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
+
+            PacketHandlers.RegisterEncoded(0x28, true, GuildGumpRequest);
         }
 
         public static void HelpRequest(NetState state, PacketReader pvSrc)
@@ -254,6 +257,11 @@ namespace Server.Network
             int spellID = pvSrc.ReadInt16() - 1;
 
             Spellbook.CastSpellRequest(from, spellID, spellbook);
+        }
+
+        public static void GuildGumpRequest(NetState state, IEntity e, EncodedReader reader)
+        {
+            Guild.GuildGumpRequest(state.Mobile);
         }
     }
 }
