@@ -94,7 +94,6 @@ namespace Server.Network
 			Register(0x96, 0, true, GameCentralMoniter);
 			Register(0x98, 0, true, MobileNameRequest);
 			Register(0x9A, 0, true, AsciiPromptResponse);
-			Register(0x9B, 258, true, HelpRequest);
 			Register(0x9D, 51, true, GMSingle);
 			Register(0x9F, 0, true, VendorSellReply);
 			Register(0xA0, 3, false, PlayServer);
@@ -1105,11 +1104,6 @@ namespace Server.Network
 			{
 				s.SetLockNoRelay((SkillLock)pvSrc.ReadByte());
 			}
-		}
-
-		public static void HelpRequest(NetState state, PacketReader pvSrc)
-		{
-			EventSink.InvokeHelpRequest(new HelpRequestEventArgs(state.Mobile));
 		}
 
 		public static void TargetResponse(NetState state, PacketReader pvSrc)

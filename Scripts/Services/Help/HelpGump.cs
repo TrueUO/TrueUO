@@ -160,11 +160,6 @@ namespace Server.Engines.Help
             AddHtmlLocalized(180, 390, 335, 40, 1001015, false, false); // NO  - I meant to ask for help with another matter.
         }
 
-        public static void Initialize()
-        {
-            EventSink.HelpRequest += EventSink_HelpRequest;
-        }
-
         public static bool CheckCombat(Mobile m)
         {
             for (int i = 0; i < m.Aggressed.Count; ++i)
@@ -288,21 +283,21 @@ namespace Server.Engines.Help
                 from.SendGump(new PagePromptGump(from, type));
         }
 
-        private static void EventSink_HelpRequest(HelpRequestEventArgs e)
+        public static void HelpRequest(Mobile m)
         {
-            foreach (Gump g in e.Mobile.NetState.Gumps)
+            foreach (Gump g in m.NetState.Gumps)
             {
                 if (g is HelpGump)
                     return;
             }
 
-            if (!PageQueue.CheckAllowedToPage(e.Mobile))
+            if (!PageQueue.CheckAllowedToPage(m))
                 return;
 
-            if (PageQueue.Contains(e.Mobile))
-                e.Mobile.SendMenu(new ContainedMenu(e.Mobile));
+            if (PageQueue.Contains(m))
+                m.SendMenu(new ContainedMenu(m));
             else
-                e.Mobile.SendGump(new HelpGump(e.Mobile));
+                m.SendGump(new HelpGump(m));
         }
 
         private static bool IsYoung(Mobile m)

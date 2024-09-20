@@ -24,8 +24,6 @@ namespace Server
 
 	public delegate void ShutdownEventHandler(ShutdownEventArgs e);
 
-	public delegate void HelpRequestEventHandler(HelpRequestEventArgs e);
-
 	public delegate void OpenSpellbookRequestEventHandler(OpenSpellbookRequestEventArgs e);
 
 	public delegate void CastSpellRequestEventHandler(CastSpellRequestEventArgs e);
@@ -456,18 +454,6 @@ namespace Server
 		{
 			m_Mobile = m;
 			m_Type = type;
-		}
-	}
-
-	public class HelpRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public HelpRequestEventArgs(Mobile m)
-		{
-			m_Mobile = m;
 		}
 	}
 
@@ -931,7 +917,6 @@ namespace Server
 		public static event MovementEventHandler Movement;
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
-		public static event HelpRequestEventHandler HelpRequest;
 		public static event OpenSpellbookRequestEventHandler OpenSpellbookRequest;
 		public static event CastSpellRequestEventHandler CastSpellRequest;
 		public static event BandageTargetRequestEventHandler BandageTargetRequest;
@@ -1083,11 +1068,6 @@ namespace Server
 		public static void InvokeOpenSpellbookRequest(OpenSpellbookRequestEventArgs e)
         {
             OpenSpellbookRequest?.Invoke(e);
-        }
-
-		public static void InvokeHelpRequest(HelpRequestEventArgs e)
-        {
-            HelpRequest?.Invoke(e);
         }
 
 		public static void InvokeShutdown(ShutdownEventArgs e)
