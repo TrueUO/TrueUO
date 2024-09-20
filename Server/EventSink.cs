@@ -12,8 +12,6 @@ namespace Server
 {
 	public delegate void CharacterCreatedEventHandler(CharacterCreatedEventArgs e);
 
-	public delegate void OpenDoorMacroEventHandler(OpenDoorMacroEventArgs e);
-
 	public delegate void SpeechEventHandler(SpeechEventArgs e);
 
 	public delegate void ServerListEventHandler(ServerListEventArgs e);
@@ -23,16 +21,6 @@ namespace Server
 	public delegate void CrashedEventHandler(CrashedEventArgs e);
 
 	public delegate void ShutdownEventHandler(ShutdownEventArgs e);
-
-	public delegate void HelpRequestEventHandler(HelpRequestEventArgs e);
-
-	public delegate void OpenSpellbookRequestEventHandler(OpenSpellbookRequestEventArgs e);
-
-	public delegate void CastSpellRequestEventHandler(CastSpellRequestEventArgs e);
-
-	public delegate void BandageTargetRequestEventHandler(BandageTargetRequestEventArgs e);
-
-	public delegate void AnimateRequestEventHandler(AnimateRequestEventArgs e);
 
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
@@ -47,10 +35,6 @@ namespace Server
 	public delegate void AccountLoginEventHandler(AccountLoginEventArgs e);
 
 	public delegate void PaperdollRequestEventHandler(PaperdollRequestEventArgs e);
-
-	public delegate void ProfileRequestEventHandler(ProfileRequestEventArgs e);
-
-	public delegate void ChangeProfileRequestEventHandler(ChangeProfileRequestEventArgs e);
 
 	public delegate void AggressiveActionEventHandler(AggressiveActionEventArgs e);
 
@@ -72,8 +56,6 @@ namespace Server
 
 	public delegate void CreateGuildHandler(CreateGuildEventArgs e);
 
-	public delegate void GuildGumpRequestHandler(GuildGumpRequestArgs e);
-
 	public delegate void ClientVersionReceivedHandler(ClientVersionReceivedArgs e);
 
 	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
@@ -87,10 +69,6 @@ namespace Server
 	public delegate void TargetedSpellEventHandler(TargetedSpellEventArgs e);
 
 	public delegate void TargetedSkillEventHandler(TargetedSkillEventArgs e);
-
-	public delegate void EquipMacroEventHandler(EquipMacroEventArgs e);
-
-	public delegate void UnequipMacroEventHandler(UnequipMacroEventArgs e);
 
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
 
@@ -134,18 +112,6 @@ namespace Server
 		public CreateGuildEventArgs(int id)
 		{
 			Id = id;
-		}
-	}
-
-	public class GuildGumpRequestArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public GuildGumpRequestArgs(Mobile mobile)
-		{
-			m_Mobile = mobile;
 		}
 	}
 
@@ -241,39 +207,6 @@ namespace Server
 		public void Free()
 		{
 			m_Pool.Enqueue(this);
-		}
-	}
-
-	public class ProfileRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Beholder;
-		private readonly Mobile m_Beheld;
-
-		public Mobile Beholder => m_Beholder;
-		public Mobile Beheld => m_Beheld;
-
-		public ProfileRequestEventArgs(Mobile beholder, Mobile beheld)
-		{
-			m_Beholder = beholder;
-			m_Beheld = beheld;
-		}
-	}
-
-	public class ChangeProfileRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Beholder;
-		private readonly Mobile m_Beheld;
-		private readonly string m_Text;
-
-		public Mobile Beholder => m_Beholder;
-		public Mobile Beheld => m_Beheld;
-		public string Text => m_Text;
-
-		public ChangeProfileRequestEventArgs(Mobile beholder, Mobile beheld, string text)
-		{
-			m_Beholder = beholder;
-			m_Beheld = beheld;
-			m_Text = text;
 		}
 	}
 
@@ -390,84 +323,6 @@ namespace Server
 		{
 			m_Socket = s;
 			AllowConnection = true;
-		}
-	}
-
-	public class AnimateRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly string m_Action;
-
-		public Mobile Mobile => m_Mobile;
-		public string Action => m_Action;
-
-		public AnimateRequestEventArgs(Mobile m, string action)
-		{
-			m_Mobile = m;
-			m_Action = action;
-		}
-	}
-
-	public class CastSpellRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly Item m_Spellbook;
-		private readonly int m_SpellID;
-
-		public Mobile Mobile => m_Mobile;
-		public Item Spellbook => m_Spellbook;
-		public int SpellID => m_SpellID;
-
-		public CastSpellRequestEventArgs(Mobile m, int spellID, Item book)
-		{
-			m_Mobile = m;
-			m_Spellbook = book;
-			m_SpellID = spellID;
-		}
-	}
-
-	public class BandageTargetRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly Item m_Bandage;
-		private readonly Mobile m_Target;
-
-		public Mobile Mobile => m_Mobile;
-		public Item Bandage => m_Bandage;
-		public Mobile Target => m_Target;
-
-		public BandageTargetRequestEventArgs(Mobile m, Item bandage, Mobile target)
-		{
-			m_Mobile = m;
-			m_Bandage = bandage;
-			m_Target = target;
-		}
-	}
-
-	public class OpenSpellbookRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly int m_Type;
-
-		public Mobile Mobile => m_Mobile;
-		public int Type => m_Type;
-
-		public OpenSpellbookRequestEventArgs(Mobile m, int type)
-		{
-			m_Mobile = m;
-			m_Type = type;
-		}
-	}
-
-	public class HelpRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public HelpRequestEventArgs(Mobile m)
-		{
-			m_Mobile = m;
 		}
 	}
 
@@ -687,18 +542,6 @@ namespace Server
 		}
 	}
 
-	public class OpenDoorMacroEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public OpenDoorMacroEventArgs(Mobile mobile)
-		{
-			m_Mobile = mobile;
-		}
-	}
-
 	public class SpeechEventArgs : EventArgs
 	{
 		private readonly Mobile m_Mobile;
@@ -866,36 +709,6 @@ namespace Server
 		}
 	}
 
-	public class EquipMacroEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly List<int> m_List;
-
-		public Mobile Mobile => m_Mobile;
-		public List<int> List => m_List;
-
-		public EquipMacroEventArgs(Mobile mobile, List<int> list)
-		{
-			m_Mobile = mobile;
-			m_List = list;
-		}
-	}
-
-	public class UnequipMacroEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly List<int> m_List;
-
-		public Mobile Mobile => m_Mobile;
-		public List<int> List => m_List;
-
-		public UnequipMacroEventArgs(Mobile mobile, List<int> list)
-		{
-			m_Mobile = mobile;
-			m_List = list;
-		}
-	}
-
 	public class ContainerDroppedToEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -925,17 +738,11 @@ namespace Server
 	public static class EventSink
 	{
 		public static event CharacterCreatedEventHandler CharacterCreated;
-		public static event OpenDoorMacroEventHandler OpenDoorMacroUsed;
 		public static event SpeechEventHandler Speech;
 		public static event ServerListEventHandler ServerList;
 		public static event MovementEventHandler Movement;
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
-		public static event HelpRequestEventHandler HelpRequest;
-		public static event OpenSpellbookRequestEventHandler OpenSpellbookRequest;
-		public static event CastSpellRequestEventHandler CastSpellRequest;
-		public static event BandageTargetRequestEventHandler BandageTargetRequest;
-		public static event AnimateRequestEventHandler AnimateRequest;
 		public static event SocketConnectEventHandler SocketConnect;
 		public static event RenameRequestEventHandler RenameRequest;
 		public static event VirtueGumpRequestEventHandler VirtueGumpRequest;
@@ -943,8 +750,6 @@ namespace Server
 		public static event VirtueMacroRequestEventHandler VirtueMacroRequest;
 		public static event AccountLoginEventHandler AccountLogin;
 		public static event PaperdollRequestEventHandler PaperdollRequest;
-		public static event ProfileRequestEventHandler ProfileRequest;
-		public static event ChangeProfileRequestEventHandler ChangeProfileRequest;
 		public static event AggressiveActionEventHandler AggressiveAction;
 		public static event CommandEventHandler Command;
 		public static event GameLoginEventHandler GameLogin;
@@ -956,7 +761,6 @@ namespace Server
 		public static event SetAbilityEventHandler SetAbility;
 		public static event FastWalkEventHandler FastWalk;
 		public static event CreateGuildHandler CreateGuild;
-		public static event GuildGumpRequestHandler GuildGumpRequest;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
@@ -964,8 +768,6 @@ namespace Server
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event TargetedSpellEventHandler TargetedSpell;
 		public static event TargetedSkillEventHandler TargetedSkill;
-		public static event EquipMacroEventHandler EquipMacro;
-		public static event UnequipMacroEventHandler UnequipMacro;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
@@ -988,11 +790,6 @@ namespace Server
 		public static void InvokeSetAbility(SetAbilityEventArgs e)
         {
             SetAbility?.Invoke(e);
-        }
-
-		public static void InvokeGuildGumpRequest(GuildGumpRequestArgs e)
-        {
-            GuildGumpRequest?.Invoke(e);
         }
 
 		public static void InvokeFastWalk(FastWalkEventArgs e)
@@ -1018,16 +815,6 @@ namespace Server
 		public static void InvokeAggressiveAction(AggressiveActionEventArgs e)
         {
             AggressiveAction?.Invoke(e);
-        }
-
-		public static void InvokeProfileRequest(ProfileRequestEventArgs e)
-        {
-            ProfileRequest?.Invoke(e);
-        }
-
-		public static void InvokeChangeProfileRequest(ChangeProfileRequestEventArgs e)
-        {
-            ChangeProfileRequest?.Invoke(e);
         }
 
 		public static void InvokePaperdollRequest(PaperdollRequestEventArgs e)
@@ -1065,31 +852,6 @@ namespace Server
             SocketConnect?.Invoke(e);
         }
 
-		public static void InvokeAnimateRequest(AnimateRequestEventArgs e)
-        {
-            AnimateRequest?.Invoke(e);
-        }
-
-		public static void InvokeCastSpellRequest(CastSpellRequestEventArgs e)
-        {
-            CastSpellRequest?.Invoke(e);
-        }
-
-		public static void InvokeBandageTargetRequest(BandageTargetRequestEventArgs e)
-        {
-            BandageTargetRequest?.Invoke(e);
-        }
-
-		public static void InvokeOpenSpellbookRequest(OpenSpellbookRequestEventArgs e)
-        {
-            OpenSpellbookRequest?.Invoke(e);
-        }
-
-		public static void InvokeHelpRequest(HelpRequestEventArgs e)
-        {
-            HelpRequest?.Invoke(e);
-        }
-
 		public static void InvokeShutdown(ShutdownEventArgs e)
         {
             Shutdown?.Invoke(e);
@@ -1118,11 +880,6 @@ namespace Server
 		public static void InvokeCharacterCreated(CharacterCreatedEventArgs e)
         {
             CharacterCreated?.Invoke(e);
-        }
-
-		public static void InvokeOpenDoorMacroUsed(OpenDoorMacroEventArgs e)
-        {
-            OpenDoorMacroUsed?.Invoke(e);
         }
 
 		public static void InvokeWorldLoad()
@@ -1173,16 +930,6 @@ namespace Server
 		public static void InvokeTargetByResourceMacro(TargetByResourceMacroEventArgs e)
         {
             TargetByResourceMacro?.Invoke(e);
-        }
-
-		public static void InvokeEquipMacro(EquipMacroEventArgs e)
-        {
-            EquipMacro?.Invoke(e);
-        }
-
-		public static void InvokeUnequipMacro(UnequipMacroEventArgs e)
-        {
-            UnequipMacro?.Invoke(e);
         }
 
 		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)

@@ -66,7 +66,6 @@ namespace Server.Network
 			Register(0x08, 15, true, DropReq);
 			Register(0x09, 5, true, LookReq);
 			Register(0x0A, 11, true, Edit);
-			Register(0x12, 0, true, TextCommand);
 			Register(0x13, 10, true, EquipReq);
 			Register(0x14, 6, true, ChangeZ);
 			Register(0x22, 3, true, Resynchronize);
@@ -82,7 +81,6 @@ namespace Server.Network
 			Register(0x6C, 19, true, TargetResponse);
 			Register(0x6F, 0, true, SecureTrade);
 			Register(0x72, 5, true, SetWarMode);
-			Register(0x73, 2, false, PingReq);
 			Register(0x75, 35, true, RenameRequest);
 			Register(0x79, 9, true, ResourceQuery);
 			Register(0x7E, 2, true, GodviewQuery);
@@ -94,7 +92,6 @@ namespace Server.Network
 			Register(0x96, 0, true, GameCentralMoniter);
 			Register(0x98, 0, true, MobileNameRequest);
 			Register(0x9A, 0, true, AsciiPromptResponse);
-			Register(0x9B, 258, true, HelpRequest);
 			Register(0x9D, 51, true, GMSingle);
 			Register(0x9F, 0, true, VendorSellReply);
 			Register(0xA0, 3, false, PlayServer);
@@ -103,7 +100,6 @@ namespace Server.Network
 			Register(0xAD, 0, true, UnicodeSpeech);
 			Register(0xB1, 0, true, DisplayGumpResponse);
 			Register(0xB6, 9, true, ObjectHelpRequest);
-			Register(0xB8, 0, true, ProfileReq);
 			Register(0xBB, 9, false, AccountID);
 			Register(0xBD, 0, true, ClientVersion);
 			Register(0xBE, 0, true, AssistVersion);
@@ -118,8 +114,6 @@ namespace Server.Network
 			Register(0xD6, 0, true, BatchQueryProperties);
 			Register(0xD7, 0, true, EncodedCommand);
 			Register(0xE1, 0, false, ClientType);
-			Register(0xEC, 0, false, EquipMacro);
-			Register(0xED, 0, false, UnequipMacro);
 			Register(0xEF, 21, false, LoginServerSeed);
 			Register(0xF4, 0, false, CrashReport);
 			Register(0xF8, 106, false, CreateCharacter70160);
@@ -141,15 +135,12 @@ namespace Server.Network
 			RegisterExtended(0x13, true, ContextMenuRequest);
 			RegisterExtended(0x15, true, ContextMenuResponse);
 			RegisterExtended(0x1A, true, StatLockChange);
-			RegisterExtended(0x1C, true, CastSpell);
 			RegisterExtended(0x24, false, UnhandledBF);
-			RegisterExtended(0x2C, true, BandageTarget);
             RegisterExtended(0x32, true, ToggleFlying);
             RegisterExtended(0x2D, true, TargetedSpell);
 			RegisterExtended(0x2E, true, TargetedSkillUse);
 			RegisterExtended(0x30, true, TargetByResourceMacro);
             RegisterEncoded(0x19, true, SetAbility);
-			RegisterEncoded(0x28, true, GuildGumpRequest);
             RegisterEncoded(0x32, true, QuestGumpRequest);
 		}
 
@@ -231,11 +222,6 @@ namespace Server.Network
 		public static void SetAbility(NetState state, IEntity e, EncodedReader reader)
 		{
 			EventSink.InvokeSetAbility(new SetAbilityEventArgs(state.Mobile, reader.ReadInt32()));
-		}
-
-		public static void GuildGumpRequest(NetState state, IEntity e, EncodedReader reader)
-		{
-			EventSink.InvokeGuildGumpRequest(new GuildGumpRequestArgs(state.Mobile));
 		}
 
         private static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
@@ -723,137 +709,6 @@ namespace Server.Network
             return true;
         }
 
-		public static void TextCommand(NetState state, PacketReader pvSrc)
-		{
-			int type = pvSrc.ReadByte();
-			string command = pvSrc.ReadString();
-
-			Mobile m = state.Mobile;
-
-			switch (type)
-			{
-				case 0x00: // Go
-				{
-					if (VerifyGC(state))
-					{
-						try
-						{
-							string[] split = command.Split(' ');
-
-							int x = Utility.ToInt32(split[0]);
-							int y = Utility.ToInt32(split[1]);
-
-							int z;
-
-							if (split.Length >= 3)
-							{
-								z = Utility.ToInt32(split[2]);
-							}
-							else if (m.Map != null)
-							{
-								z = m.Map.GetAverageZ(x, y);
-							}
-							else
-							{
-								z = 0;
-							}
-
-							m.Location = new Point3D(x, y, z);
-						}
-						catch (Exception e)
-						{
-                                ExceptionLogging.LogException(e);
-						}
-					}
-
-					break;
-				}
-				case 0xC7: // Animate
-				{
-					EventSink.InvokeAnimateRequest(new AnimateRequestEventArgs(m, command));
-
-					break;
-				}
-				case 0x24: // Use skill
-				{
-
-					if (!int.TryParse(command.Split(' ')[0], out int skillIndex))
-					{
-						break;
-					}
-
-					Skills.UseSkill(m, skillIndex);
-
-					break;
-				}
-				case 0x43: // Open spellbook
-				{
-
-					if (!int.TryParse(command, out int booktype))
-					{
-						booktype = 1;
-					}
-
-					EventSink.InvokeOpenSpellbookRequest(new OpenSpellbookRequestEventArgs(m, booktype));
-
-					break;
-				}
-				case 0x27: // Cast spell from book
-				{
-					string[] split = command.Split(' ');
-
-					if (split.Length > 0)
-					{
-						int spellID = Utility.ToInt32(split[0]) - 1;
-						int serial = split.Length > 1 ? Utility.ToInt32(split[1]) : -1;
-
-						EventSink.InvokeCastSpellRequest(new CastSpellRequestEventArgs(m, spellID, World.FindItem(serial)));
-					}
-
-					break;
-				}
-				case 0x58: // Open door
-				{
-					EventSink.InvokeOpenDoorMacroUsed(new OpenDoorMacroEventArgs(m));
-
-					break;
-				}
-				case 0x56: // Cast spell from macro
-				{
-					int spellID = Utility.ToInt32(command) - 1;
-
-					EventSink.InvokeCastSpellRequest(new CastSpellRequestEventArgs(m, spellID, null));
-
-					break;
-				}
-				case 0xF4: // Invoke virtues from macro
-				{
-					int virtueID = Utility.ToInt32(command) - 1;
-
-					EventSink.InvokeVirtueMacroRequest(new VirtueMacroRequestEventArgs(m, virtueID));
-
-					break;
-				}
-				case 0x2F: // Old scroll double click
-				{
-					/*
-				 * This command is still sent for items 0xEF3 - 0xEF9
-				 *
-				 * Command is one of three, depending on the item ID of the scroll:
-				 * - [scroll serial]
-				 * - [scroll serial] [target serial]
-				 * - [scroll serial] [x] [y] [z]
-				 */
-					break;
-				}
-				default:
-				{
-					Console.WriteLine("Client: {0}: Unknown text-command type 0x{1:X2}: {2}", state, type, command);
-					break;
-				}
-			}
-		}
-
 		public static void GodModeRequest(NetState state, PacketReader pvSrc)
 		{
 			if (VerifyGC(state))
@@ -956,46 +811,6 @@ namespace Server.Network
                 }
             }
         }
-
-		public static void ProfileReq(NetState state, PacketReader pvSrc)
-		{
-			int type = pvSrc.ReadByte();
-			Serial serial = pvSrc.ReadInt32();
-
-			Mobile beholder = state.Mobile;
-			Mobile beheld = World.FindMobile(serial);
-
-			if (beheld == null)
-			{
-				return;
-			}
-
-			switch (type)
-			{
-				case 0x00: // display request
-				{
-					EventSink.InvokeProfileRequest(new ProfileRequestEventArgs(beholder, beheld));
-
-					break;
-				}
-				case 0x01: // edit request
-				{
-					pvSrc.ReadInt16(); // Skip
-					int length = pvSrc.ReadUInt16();
-
-					if (length > 511)
-					{
-						return;
-					}
-
-					string text = pvSrc.ReadUnicodeString(length);
-
-					EventSink.InvokeChangeProfileRequest(new ChangeProfileRequestEventArgs(beholder, beheld, text));
-
-					break;
-				}
-			}
-		}
 
 		public static void Disconnect(NetState state, PacketReader pvSrc)
 		{
@@ -1105,11 +920,6 @@ namespace Server.Network
 			{
 				s.SetLockNoRelay((SkillLock)pvSrc.ReadByte());
 			}
-		}
-
-		public static void HelpRequest(NetState state, PacketReader pvSrc)
-		{
-			EventSink.InvokeHelpRequest(new HelpRequestEventArgs(state.Mobile));
 		}
 
 		public static void TargetResponse(NetState state, PacketReader pvSrc)
@@ -1573,11 +1383,6 @@ namespace Server.Network
 			}
 		}
 
-		public static void PingReq(NetState state, PacketReader pvSrc)
-		{
-			state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
-		}
-
 		public static void SetUpdateRange(NetState state, PacketReader pvSrc)
 		{
 			//            min   max  default
@@ -1705,62 +1510,6 @@ namespace Server.Network
 			else
 			{
 				pvSrc.Trace(state);
-			}
-		}
-
-		public static void CastSpell(NetState state, PacketReader pvSrc)
-		{
-			Mobile from = state.Mobile;
-
-			if (from == null)
-			{
-				return;
-			}
-
-			Item spellbook = null;
-
-			if (pvSrc.ReadInt16() == 1)
-			{
-				spellbook = World.FindItem(pvSrc.ReadInt32());
-			}
-
-			int spellID = pvSrc.ReadInt16() - 1;
-
-			EventSink.InvokeCastSpellRequest(new CastSpellRequestEventArgs(from, spellID, spellbook));
-		}
-
-		public static void BandageTarget(NetState state, PacketReader pvSrc)
-		{
-			Mobile from = state.Mobile;
-
-			if (from == null)
-			{
-				return;
-			}
-
-			if (from.IsStaff() || Core.TickCount - from.NextActionTime >= 0)
-			{
-				Item bandage = World.FindItem(pvSrc.ReadInt32());
-
-				if (bandage == null)
-				{
-					return;
-				}
-
-				Mobile target = World.FindMobile(pvSrc.ReadInt32());
-
-				if (target == null)
-				{
-					return;
-				}
-
-				EventSink.InvokeBandageTargetRequest(new BandageTargetRequestEventArgs(from, bandage, target));
-
-				from.NextActionTime = Core.TickCount + Mobile.ActionDelay;
-			}
-			else
-			{
-				from.SendActionMessage();
 			}
 		}
 
@@ -3088,36 +2837,6 @@ namespace Server.Network
 					state.Dispose();
 				}
 			}
-		}
-
-		public static void EquipMacro(NetState ns, PacketReader pvSrc)
-		{
-			int length = pvSrc.Size;
-
-			int count = pvSrc.ReadByte();
-			List<int> serialList = new List<int>(count);
-			for (int i = 0; i < count; ++i)
-			{
-				Serial s = pvSrc.ReadInt32();
-				serialList.Add(s);
-			}
-
-			EventSink.InvokeEquipMacro(new EquipMacroEventArgs(ns.Mobile, serialList));
-		}
-
-		public static void UnequipMacro(NetState ns, PacketReader pvSrc)
-		{
-			int length = pvSrc.Size;
-
-			int count = pvSrc.ReadByte();
-			List<int> layers = new List<int>(count);
-			for (int i = 0; i < count; ++i)
-			{
-				int s = pvSrc.ReadInt16();
-				layers.Add(s);
-			}
-
-			EventSink.InvokeUnequipMacro(new UnequipMacroEventArgs(ns.Mobile, layers));
 		}
 
 		public static void TargetedSpell(NetState ns, PacketReader pvSrc)
