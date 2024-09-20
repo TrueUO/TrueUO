@@ -114,8 +114,6 @@ namespace Server.Network
 			Register(0xD6, 0, true, BatchQueryProperties);
 			Register(0xD7, 0, true, EncodedCommand);
 			Register(0xE1, 0, false, ClientType);
-			Register(0xEC, 0, false, EquipMacro);
-			Register(0xED, 0, false, UnequipMacro);
 			Register(0xEF, 21, false, LoginServerSeed);
 			Register(0xF4, 0, false, CrashReport);
 			Register(0xF8, 106, false, CreateCharacter70160);
@@ -2839,36 +2837,6 @@ namespace Server.Network
 					state.Dispose();
 				}
 			}
-		}
-
-		public static void EquipMacro(NetState ns, PacketReader pvSrc)
-		{
-			int length = pvSrc.Size;
-
-			int count = pvSrc.ReadByte();
-			List<int> serialList = new List<int>(count);
-			for (int i = 0; i < count; ++i)
-			{
-				Serial s = pvSrc.ReadInt32();
-				serialList.Add(s);
-			}
-
-			EventSink.InvokeEquipMacro(new EquipMacroEventArgs(ns.Mobile, serialList));
-		}
-
-		public static void UnequipMacro(NetState ns, PacketReader pvSrc)
-		{
-			int length = pvSrc.Size;
-
-			int count = pvSrc.ReadByte();
-			List<int> layers = new List<int>(count);
-			for (int i = 0; i < count; ++i)
-			{
-				int s = pvSrc.ReadInt16();
-				layers.Add(s);
-			}
-
-			EventSink.InvokeUnequipMacro(new UnequipMacroEventArgs(ns.Mobile, layers));
 		}
 
 		public static void TargetedSpell(NetState ns, PacketReader pvSrc)

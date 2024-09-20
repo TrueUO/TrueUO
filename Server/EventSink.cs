@@ -70,10 +70,6 @@ namespace Server
 
 	public delegate void TargetedSkillEventHandler(TargetedSkillEventArgs e);
 
-	public delegate void EquipMacroEventHandler(EquipMacroEventArgs e);
-
-	public delegate void UnequipMacroEventHandler(UnequipMacroEventArgs e);
-
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
 
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
@@ -713,36 +709,6 @@ namespace Server
 		}
 	}
 
-	public class EquipMacroEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly List<int> m_List;
-
-		public Mobile Mobile => m_Mobile;
-		public List<int> List => m_List;
-
-		public EquipMacroEventArgs(Mobile mobile, List<int> list)
-		{
-			m_Mobile = mobile;
-			m_List = list;
-		}
-	}
-
-	public class UnequipMacroEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly List<int> m_List;
-
-		public Mobile Mobile => m_Mobile;
-		public List<int> List => m_List;
-
-		public UnequipMacroEventArgs(Mobile mobile, List<int> list)
-		{
-			m_Mobile = mobile;
-			m_List = list;
-		}
-	}
-
 	public class ContainerDroppedToEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -802,8 +768,6 @@ namespace Server
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event TargetedSpellEventHandler TargetedSpell;
 		public static event TargetedSkillEventHandler TargetedSkill;
-		public static event EquipMacroEventHandler EquipMacro;
-		public static event UnequipMacroEventHandler UnequipMacro;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
@@ -966,16 +930,6 @@ namespace Server
 		public static void InvokeTargetByResourceMacro(TargetByResourceMacroEventArgs e)
         {
             TargetByResourceMacro?.Invoke(e);
-        }
-
-		public static void InvokeEquipMacro(EquipMacroEventArgs e)
-        {
-            EquipMacro?.Invoke(e);
-        }
-
-		public static void InvokeUnequipMacro(UnequipMacroEventArgs e)
-        {
-            UnequipMacro?.Invoke(e);
         }
 
 		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)

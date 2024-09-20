@@ -815,8 +815,6 @@ namespace Server.Mobiles
 
             #region Enchanced Client
             EventSink.TargetedSkill += Targeted_Skill;
-            EventSink.EquipMacro += EquipMacro;
-            EventSink.UnequipMacro += UnequipMacro;
             #endregion
 
             Timer.DelayCall(TimeSpan.Zero, CheckPets);
@@ -866,23 +864,23 @@ namespace Server.Mobiles
             }
         }
 
-        public static void EquipMacro(EquipMacroEventArgs e)
+        public static void EquipMacro(Mobile m, List<Serial> list)
         {
-            if (e.Mobile is PlayerMobile pm && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0 && !pm.HasTrade)
+            if (m is PlayerMobile pm && pm.Backpack != null && pm.Alive && list != null && list.Count > 0 && !pm.HasTrade)
             {
                 if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
                     Container pack = pm.Backpack;
 
-                    for (var itemSerial = 0; itemSerial < e.List.Count; itemSerial++)
+                    for (int itemSerial = 0; itemSerial < list.Count; itemSerial++)
                     {
-                        var serial = e.List[itemSerial];
+                        Serial serial = list[itemSerial];
 
                         Item item = null;
 
-                        for (var index = 0; index < pack.Items.Count; index++)
+                        for (int index = 0; index < pack.Items.Count; index++)
                         {
-                            var i = pack.Items[index];
+                            Item i = pack.Items[index];
 
                             if (i.Serial == serial)
                             {
@@ -915,7 +913,7 @@ namespace Server.Mobiles
                         }
                     }
 
-                    pm.NextActionTime = Core.TickCount + ActionDelay * e.List.Count;
+                    pm.NextActionTime = Core.TickCount + ActionDelay * list.Count;
                 }
 	            else
 	            {
@@ -924,9 +922,9 @@ namespace Server.Mobiles
 	        }
         }
 
-        public static void UnequipMacro(UnequipMacroEventArgs e)
+        public static void UnequipMacro(Mobile m, List<Layer> layers)
         {
-            if (e.Mobile is PlayerMobile pm && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0 && !pm.HasTrade)
+            if (m is PlayerMobile pm && pm.Backpack != null && pm.Alive && layers != null && layers.Count > 0 && !pm.HasTrade)
             {
                 if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
@@ -934,11 +932,11 @@ namespace Server.Mobiles
 
                     List<Item> worn = new List<Item>(pm.Items);
 
-                    for (var index = 0; index < worn.Count; index++)
+                    for (int index = 0; index < worn.Count; index++)
                     {
                         Item item = worn[index];
 
-                        if (e.List.Contains((int) item.Layer))
+                        if (layers.Contains(item.Layer))
                         {
                             pack.TryDropItem(pm, item, false);
                         }

@@ -2,8 +2,10 @@ using Server.Diagnostics;
 using Server.Engines.Help;
 using Server.Items;
 using System;
+using System.Collections.Generic;
 using Server.Misc;
 using Server.Guilds;
+using Server.Mobiles;
 
 namespace Server.Network
 {
@@ -11,65 +13,19 @@ namespace Server.Network
     {
         public static void Configure()
         {
-            PacketHandlers.Register(0x9B, 258, true, HelpRequest);
-            PacketHandlers.Register(0x73, 2, false, PingReq);
-            PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0x12, 0, true, TextCommand);
+            PacketHandlers.Register(0x73, 2, false, PingReq);
+            PacketHandlers.Register(0x9B, 258, true, HelpRequest);
+            PacketHandlers.Register(0xB8, 0, true, ProfileReq);
+            PacketHandlers.Register(0xEC, 0, false, EquipMacro);
+            PacketHandlers.Register(0xED, 0, false, UnequipMacro);
 
+            // Extended
             PacketHandlers.RegisterExtended(0x2C, true, BandageTarget);
             PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
 
+            // Encoded
             PacketHandlers.RegisterEncoded(0x28, true, GuildGumpRequest);
-        }
-
-        public static void HelpRequest(NetState state, PacketReader pvSrc)
-        {
-            HelpGump.HelpRequest(state.Mobile);
-        }
-
-        public static void PingReq(NetState state, PacketReader pvSrc)
-        {
-            state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
-        }
-
-        public static void ProfileReq(NetState state, PacketReader pvSrc)
-        {
-            int type = pvSrc.ReadByte();
-            Serial serial = pvSrc.ReadInt32();
-
-            Mobile beholder = state.Mobile;
-            Mobile beheld = World.FindMobile(serial);
-
-            if (beheld == null)
-            {
-                return;
-            }
-
-            switch (type)
-            {
-                case 0x00: // display request
-                {
-                    Profile.ProfileRequest(beholder, beheld);
-
-                    break;
-                }
-                case 0x01: // edit request
-                {
-                    pvSrc.ReadInt16(); // Skip
-                    int length = pvSrc.ReadUInt16();
-
-                    if (length > 511)
-                    {
-                        return;
-                    }
-
-                    string text = pvSrc.ReadUnicodeString(length);
-
-                    Profile.ChangeProfileRequest(beholder, beheld, text);
-
-                    break;
-                }
-            }
         }
 
         public static void TextCommand(NetState state, PacketReader pvSrc)
@@ -202,6 +158,82 @@ namespace Server.Network
 				}
 			}
 		}
+
+        public static void PingReq(NetState state, PacketReader pvSrc)
+        {
+            state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
+        }
+
+        public static void HelpRequest(NetState state, PacketReader pvSrc)
+        {
+            HelpGump.HelpRequest(state.Mobile);
+        }
+
+        public static void ProfileReq(NetState state, PacketReader pvSrc)
+        {
+            int type = pvSrc.ReadByte();
+            Serial serial = pvSrc.ReadInt32();
+
+            Mobile beholder = state.Mobile;
+            Mobile beheld = World.FindMobile(serial);
+
+            if (beheld == null)
+            {
+                return;
+            }
+
+            switch (type)
+            {
+                case 0x00: // display request
+                {
+                    Profile.ProfileRequest(beholder, beheld);
+
+                    break;
+                }
+                case 0x01: // edit request
+                {
+                    pvSrc.ReadInt16(); // Skip
+                    int length = pvSrc.ReadUInt16();
+
+                    if (length > 511)
+                    {
+                        return;
+                    }
+
+                    string text = pvSrc.ReadUnicodeString(length);
+
+                    Profile.ChangeProfileRequest(beholder, beheld, text);
+
+                    break;
+                }
+            }
+        }
+
+        public static void EquipMacro(NetState ns, PacketReader pvSrc)
+        {
+            int count = pvSrc.ReadByte();
+            List<Serial> serialList = new List<Serial>(count);
+
+            for (var i = 0; i < count; ++i)
+            {
+                serialList.Add(pvSrc.ReadInt32());
+            }
+
+            PlayerMobile.EquipMacro(ns.Mobile, serialList);
+        }
+
+        public static void UnequipMacro(NetState ns, PacketReader pvSrc)
+        {
+            int count = pvSrc.ReadByte();
+            List<Layer> layers = new List<Layer>(count);
+
+            for (int i = 0; i < count; ++i)
+            {
+                layers.Add((Layer)pvSrc.ReadUInt16());
+            }
+
+            PlayerMobile.UnequipMacro(ns.Mobile, layers);
+        }
 
         public static void BandageTarget(NetState state, PacketReader pvSrc)
         {
