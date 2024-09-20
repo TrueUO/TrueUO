@@ -20,7 +20,6 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1049786;// Happy Birthday!  ...
-        public override bool DisplayLootType => true;
 
         public override void OnDoubleClick(Mobile from)
         {

@@ -482,8 +482,6 @@ namespace Server.Items
 
         private static readonly TimeSpan m_DefaultDecayTime = TimeSpan.FromMinutes(1.0);
 
-        public override bool DisplayLootType => true;
-
         [Constructable]
         public DeathRobe()
         {

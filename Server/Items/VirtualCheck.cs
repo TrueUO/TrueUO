@@ -16,7 +16,6 @@ namespace Server
 		public override bool IsVirtualItem => true;
 
 		public override bool DisplayWeight => false;
-		public override bool DisplayLootType => false;
 
 		public override double DefaultWeight => 0;
 
