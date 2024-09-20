@@ -138,7 +138,6 @@ namespace Server.Network
 			RegisterExtended(0x15, true, ContextMenuResponse);
 			RegisterExtended(0x1A, true, StatLockChange);
 			RegisterExtended(0x24, false, UnhandledBF);
-			RegisterExtended(0x2C, true, BandageTarget);
             RegisterExtended(0x32, true, ToggleFlying);
             RegisterExtended(0x2D, true, TargetedSpell);
 			RegisterExtended(0x2E, true, TargetedSkillUse);
@@ -1519,41 +1518,6 @@ namespace Server.Network
 			else
 			{
 				pvSrc.Trace(state);
-			}
-		}
-
-		public static void BandageTarget(NetState state, PacketReader pvSrc)
-		{
-			Mobile from = state.Mobile;
-
-			if (from == null)
-			{
-				return;
-			}
-
-			if (from.IsStaff() || Core.TickCount - from.NextActionTime >= 0)
-			{
-				Item bandage = World.FindItem(pvSrc.ReadInt32());
-
-				if (bandage == null)
-				{
-					return;
-				}
-
-				Mobile target = World.FindMobile(pvSrc.ReadInt32());
-
-				if (target == null)
-				{
-					return;
-				}
-
-				EventSink.InvokeBandageTargetRequest(new BandageTargetRequestEventArgs(from, bandage, target));
-
-				from.NextActionTime = Core.TickCount + Mobile.ActionDelay;
-			}
-			else
-			{
-				from.SendActionMessage();
 			}
 		}
 

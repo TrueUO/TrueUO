@@ -22,8 +22,6 @@ namespace Server
 
 	public delegate void ShutdownEventHandler(ShutdownEventArgs e);
 
-	public delegate void BandageTargetRequestEventHandler(BandageTargetRequestEventArgs e);
-
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
 	public delegate void RenameRequestEventHandler(RenameRequestEventArgs e);
@@ -343,24 +341,6 @@ namespace Server
 		{
 			m_Socket = s;
 			AllowConnection = true;
-		}
-	}
-
-	public class BandageTargetRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly Item m_Bandage;
-		private readonly Mobile m_Target;
-
-		public Mobile Mobile => m_Mobile;
-		public Item Bandage => m_Bandage;
-		public Mobile Target => m_Target;
-
-		public BandageTargetRequestEventArgs(Mobile m, Item bandage, Mobile target)
-		{
-			m_Mobile = m;
-			m_Bandage = bandage;
-			m_Target = target;
 		}
 	}
 
@@ -811,7 +791,6 @@ namespace Server
 		public static event MovementEventHandler Movement;
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
-		public static event BandageTargetRequestEventHandler BandageTargetRequest;
 		public static event SocketConnectEventHandler SocketConnect;
 		public static event RenameRequestEventHandler RenameRequest;
 		public static event VirtueGumpRequestEventHandler VirtueGumpRequest;
@@ -927,11 +906,6 @@ namespace Server
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
         {
             SocketConnect?.Invoke(e);
-        }
-
-		public static void InvokeBandageTargetRequest(BandageTargetRequestEventArgs e)
-        {
-            BandageTargetRequest?.Invoke(e);
         }
 
 		public static void InvokeShutdown(ShutdownEventArgs e)

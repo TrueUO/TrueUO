@@ -15,6 +15,7 @@ namespace Server.Network
             PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0x12, 0, true, TextCommand);
 
+            PacketHandlers.RegisterExtended(0x2C, true, BandageTarget);
             PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
         }
 
@@ -198,6 +199,41 @@ namespace Server.Network
 				}
 			}
 		}
+
+        public static void BandageTarget(NetState state, PacketReader pvSrc)
+        {
+            Mobile from = state.Mobile;
+
+            if (from == null)
+            {
+                return;
+            }
+
+            if (from.IsStaff() || Core.TickCount - from.NextActionTime >= 0)
+            {
+                Item bandage = World.FindItem(pvSrc.ReadInt32());
+
+                if (bandage == null)
+                {
+                    return;
+                }
+
+                Mobile target = World.FindMobile(pvSrc.ReadInt32());
+
+                if (target == null)
+                {
+                    return;
+                }
+
+                Bandage.BandageTargetRequest(from, bandage, target);
+
+                from.NextActionTime = Core.TickCount + Mobile.ActionDelay;
+            }
+            else
+            {
+                from.SendActionMessage();
+            }
+        }
 
         public static void CastSpell(NetState state, PacketReader pvSrc)
         {
