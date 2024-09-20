@@ -32,8 +32,6 @@ namespace Server.Items
             }
         }
 
-        public override bool DisplayLootType => true;
-
         public override int LabelNumber => 1041361;  // A bank check
 
         public override void Serialize(GenericWriter writer)
