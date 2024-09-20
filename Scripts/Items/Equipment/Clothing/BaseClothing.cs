@@ -1149,13 +1149,10 @@ namespace Server.Items
 
         public virtual void AddEquipInfoAttributes(Mobile from, List<EquipInfoAttribute> attrs)
         {
-            if (DisplayLootType)
-            {
-                if (LootType == LootType.Blessed)
+            if (LootType == LootType.Blessed)
                     attrs.Add(new EquipInfoAttribute(1038021)); // blessed
-                else if (LootType == LootType.Cursed)
-                    attrs.Add(new EquipInfoAttribute(1049643)); // cursed
-            }
+            else if (LootType == LootType.Cursed)
+                attrs.Add(new EquipInfoAttribute(1049643)); // cursed
 
             if (m_Quality == ItemQuality.Exceptional)
                 attrs.Add(new EquipInfoAttribute(1018305 - (int)m_Quality));

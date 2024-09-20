@@ -185,8 +185,6 @@ namespace Server.Items
             }
         }
 
-        public override bool DisplayLootType => true;
-
         [CommandProperty(AccessLevel.GameMaster)]
         public SlayerName Slayer
         {

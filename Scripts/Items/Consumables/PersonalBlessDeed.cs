@@ -31,7 +31,6 @@ namespace Server.Items
             LootType = LootType.Blessed;
         }
 
-        public override bool DisplayLootType => true;
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Owner
         {

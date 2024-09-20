@@ -174,7 +174,6 @@ namespace Server.Mobiles
 
         public override double DefaultWeight => 1.0;
 
-        public override bool DisplayLootType => true;
         public virtual int FollowerSlots => 1;
 
         [CommandProperty(AccessLevel.GameMaster)]
