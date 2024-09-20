@@ -100,7 +100,6 @@ namespace Server.Network
 			Register(0xAD, 0, true, UnicodeSpeech);
 			Register(0xB1, 0, true, DisplayGumpResponse);
 			Register(0xB6, 9, true, ObjectHelpRequest);
-			Register(0xB8, 0, true, ProfileReq);
 			Register(0xBB, 9, false, AccountID);
 			Register(0xBD, 0, true, ClientVersion);
 			Register(0xBE, 0, true, AssistVersion);
@@ -821,46 +820,6 @@ namespace Server.Network
                 }
             }
         }
-
-		public static void ProfileReq(NetState state, PacketReader pvSrc)
-		{
-			int type = pvSrc.ReadByte();
-			Serial serial = pvSrc.ReadInt32();
-
-			Mobile beholder = state.Mobile;
-			Mobile beheld = World.FindMobile(serial);
-
-			if (beheld == null)
-			{
-				return;
-			}
-
-			switch (type)
-			{
-				case 0x00: // display request
-				{
-					EventSink.InvokeProfileRequest(new ProfileRequestEventArgs(beholder, beheld));
-
-					break;
-				}
-				case 0x01: // edit request
-				{
-					pvSrc.ReadInt16(); // Skip
-					int length = pvSrc.ReadUInt16();
-
-					if (length > 511)
-					{
-						return;
-					}
-
-					string text = pvSrc.ReadUnicodeString(length);
-
-					EventSink.InvokeChangeProfileRequest(new ChangeProfileRequestEventArgs(beholder, beheld, text));
-
-					break;
-				}
-			}
-		}
 
 		public static void Disconnect(NetState state, PacketReader pvSrc)
 		{

@@ -38,10 +38,6 @@ namespace Server
 
 	public delegate void PaperdollRequestEventHandler(PaperdollRequestEventArgs e);
 
-	public delegate void ProfileRequestEventHandler(ProfileRequestEventArgs e);
-
-	public delegate void ChangeProfileRequestEventHandler(ChangeProfileRequestEventArgs e);
-
 	public delegate void AggressiveActionEventHandler(AggressiveActionEventArgs e);
 
 	public delegate void GameLoginEventHandler(GameLoginEventArgs e);
@@ -231,39 +227,6 @@ namespace Server
 		public void Free()
 		{
 			m_Pool.Enqueue(this);
-		}
-	}
-
-	public class ProfileRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Beholder;
-		private readonly Mobile m_Beheld;
-
-		public Mobile Beholder => m_Beholder;
-		public Mobile Beheld => m_Beheld;
-
-		public ProfileRequestEventArgs(Mobile beholder, Mobile beheld)
-		{
-			m_Beholder = beholder;
-			m_Beheld = beheld;
-		}
-	}
-
-	public class ChangeProfileRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Beholder;
-		private readonly Mobile m_Beheld;
-		private readonly string m_Text;
-
-		public Mobile Beholder => m_Beholder;
-		public Mobile Beheld => m_Beheld;
-		public string Text => m_Text;
-
-		public ChangeProfileRequestEventArgs(Mobile beholder, Mobile beheld, string text)
-		{
-			m_Beholder = beholder;
-			m_Beheld = beheld;
-			m_Text = text;
 		}
 	}
 
@@ -856,8 +819,6 @@ namespace Server
 		public static event VirtueMacroRequestEventHandler VirtueMacroRequest;
 		public static event AccountLoginEventHandler AccountLogin;
 		public static event PaperdollRequestEventHandler PaperdollRequest;
-		public static event ProfileRequestEventHandler ProfileRequest;
-		public static event ChangeProfileRequestEventHandler ChangeProfileRequest;
 		public static event AggressiveActionEventHandler AggressiveAction;
 		public static event CommandEventHandler Command;
 		public static event GameLoginEventHandler GameLogin;
@@ -931,16 +892,6 @@ namespace Server
 		public static void InvokeAggressiveAction(AggressiveActionEventArgs e)
         {
             AggressiveAction?.Invoke(e);
-        }
-
-		public static void InvokeProfileRequest(ProfileRequestEventArgs e)
-        {
-            ProfileRequest?.Invoke(e);
-        }
-
-		public static void InvokeChangeProfileRequest(ChangeProfileRequestEventArgs e)
-        {
-            ChangeProfileRequest?.Invoke(e);
         }
 
 		public static void InvokePaperdollRequest(PaperdollRequestEventArgs e)

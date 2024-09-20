@@ -12,6 +12,7 @@ namespace Server.Network
         {
             PacketHandlers.Register(0x9B, 258, true, HelpRequest);
             PacketHandlers.Register(0x73, 2, false, PingReq);
+            PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0x12, 0, true, TextCommand);
 
             PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
@@ -25,6 +26,46 @@ namespace Server.Network
         public static void PingReq(NetState state, PacketReader pvSrc)
         {
             state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
+        }
+
+        public static void ProfileReq(NetState state, PacketReader pvSrc)
+        {
+            int type = pvSrc.ReadByte();
+            Serial serial = pvSrc.ReadInt32();
+
+            Mobile beholder = state.Mobile;
+            Mobile beheld = World.FindMobile(serial);
+
+            if (beheld == null)
+            {
+                return;
+            }
+
+            switch (type)
+            {
+                case 0x00: // display request
+                {
+                    Profile.ProfileRequest(beholder, beheld);
+
+                    break;
+                }
+                case 0x01: // edit request
+                {
+                    pvSrc.ReadInt16(); // Skip
+                    int length = pvSrc.ReadUInt16();
+
+                    if (length > 511)
+                    {
+                        return;
+                    }
+
+                    string text = pvSrc.ReadUnicodeString(length);
+
+                    Profile.ChangeProfileRequest(beholder, beheld, text);
+
+                    break;
+                }
+            }
         }
 
         public static void TextCommand(NetState state, PacketReader pvSrc)
@@ -178,7 +219,5 @@ namespace Server.Network
 
             Spellbook.CastSpellRequest(from, spellID, spellbook);
         }
-
-        
     }
 }
