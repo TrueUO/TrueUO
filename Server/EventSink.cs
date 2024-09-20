@@ -12,8 +12,6 @@ namespace Server
 {
 	public delegate void CharacterCreatedEventHandler(CharacterCreatedEventArgs e);
 
-	public delegate void OpenDoorMacroEventHandler(OpenDoorMacroEventArgs e);
-
 	public delegate void SpeechEventHandler(SpeechEventArgs e);
 
 	public delegate void ServerListEventHandler(ServerListEventArgs e);
@@ -24,13 +22,7 @@ namespace Server
 
 	public delegate void ShutdownEventHandler(ShutdownEventArgs e);
 
-	public delegate void OpenSpellbookRequestEventHandler(OpenSpellbookRequestEventArgs e);
-
-	public delegate void CastSpellRequestEventHandler(CastSpellRequestEventArgs e);
-
 	public delegate void BandageTargetRequestEventHandler(BandageTargetRequestEventArgs e);
-
-	public delegate void AnimateRequestEventHandler(AnimateRequestEventArgs e);
 
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
@@ -391,39 +383,6 @@ namespace Server
 		}
 	}
 
-	public class AnimateRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly string m_Action;
-
-		public Mobile Mobile => m_Mobile;
-		public string Action => m_Action;
-
-		public AnimateRequestEventArgs(Mobile m, string action)
-		{
-			m_Mobile = m;
-			m_Action = action;
-		}
-	}
-
-	public class CastSpellRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly Item m_Spellbook;
-		private readonly int m_SpellID;
-
-		public Mobile Mobile => m_Mobile;
-		public Item Spellbook => m_Spellbook;
-		public int SpellID => m_SpellID;
-
-		public CastSpellRequestEventArgs(Mobile m, int spellID, Item book)
-		{
-			m_Mobile = m;
-			m_Spellbook = book;
-			m_SpellID = spellID;
-		}
-	}
-
 	public class BandageTargetRequestEventArgs : EventArgs
 	{
 		private readonly Mobile m_Mobile;
@@ -439,21 +398,6 @@ namespace Server
 			m_Mobile = m;
 			m_Bandage = bandage;
 			m_Target = target;
-		}
-	}
-
-	public class OpenSpellbookRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly int m_Type;
-
-		public Mobile Mobile => m_Mobile;
-		public int Type => m_Type;
-
-		public OpenSpellbookRequestEventArgs(Mobile m, int type)
-		{
-			m_Mobile = m;
-			m_Type = type;
 		}
 	}
 
@@ -670,18 +614,6 @@ namespace Server
 			m_Race = race;
 			m_Face = faceID;
 			m_FaceHue = faceHue;
-		}
-	}
-
-	public class OpenDoorMacroEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-
-		public Mobile Mobile => m_Mobile;
-
-		public OpenDoorMacroEventArgs(Mobile mobile)
-		{
-			m_Mobile = mobile;
 		}
 	}
 
@@ -911,16 +843,12 @@ namespace Server
 	public static class EventSink
 	{
 		public static event CharacterCreatedEventHandler CharacterCreated;
-		public static event OpenDoorMacroEventHandler OpenDoorMacroUsed;
 		public static event SpeechEventHandler Speech;
 		public static event ServerListEventHandler ServerList;
 		public static event MovementEventHandler Movement;
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
-		public static event OpenSpellbookRequestEventHandler OpenSpellbookRequest;
-		public static event CastSpellRequestEventHandler CastSpellRequest;
 		public static event BandageTargetRequestEventHandler BandageTargetRequest;
-		public static event AnimateRequestEventHandler AnimateRequest;
 		public static event SocketConnectEventHandler SocketConnect;
 		public static event RenameRequestEventHandler RenameRequest;
 		public static event VirtueGumpRequestEventHandler VirtueGumpRequest;
@@ -1050,24 +978,9 @@ namespace Server
             SocketConnect?.Invoke(e);
         }
 
-		public static void InvokeAnimateRequest(AnimateRequestEventArgs e)
-        {
-            AnimateRequest?.Invoke(e);
-        }
-
-		public static void InvokeCastSpellRequest(CastSpellRequestEventArgs e)
-        {
-            CastSpellRequest?.Invoke(e);
-        }
-
 		public static void InvokeBandageTargetRequest(BandageTargetRequestEventArgs e)
         {
             BandageTargetRequest?.Invoke(e);
-        }
-
-		public static void InvokeOpenSpellbookRequest(OpenSpellbookRequestEventArgs e)
-        {
-            OpenSpellbookRequest?.Invoke(e);
         }
 
 		public static void InvokeShutdown(ShutdownEventArgs e)
@@ -1098,11 +1011,6 @@ namespace Server
 		public static void InvokeCharacterCreated(CharacterCreatedEventArgs e)
         {
             CharacterCreated?.Invoke(e);
-        }
-
-		public static void InvokeOpenDoorMacroUsed(OpenDoorMacroEventArgs e)
-        {
-            OpenDoorMacroUsed?.Invoke(e);
         }
 
 		public static void InvokeWorldLoad()
