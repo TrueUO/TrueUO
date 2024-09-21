@@ -11,6 +11,8 @@ using Server.Gumps;
 using Server.Services.Virtues;
 using Server.Engines.Quests;
 using Server.Engines.UOStore;
+using Server.Multis;
+using Server.Engines.Chat;
 
 namespace Server.Network
 {
@@ -23,6 +25,8 @@ namespace Server.Network
             PacketHandlers.Register(0x75, 35, true, RenameRequest);
             PacketHandlers.Register(0x9B, 258, true, HelpRequest);
             PacketHandlers.Register(0xB1, 0, true, DisplayGumpResponse);
+            PacketHandlers.Register(0xB3, 0, true, ChatAction);
+            PacketHandlers.Register(0xB5, 0x40, true, OpenChatWindowRequest);
             PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0xEC, 0, true, EquipMacro);
             PacketHandlers.Register(0xED, 0, true, UnequipMacro);
@@ -34,9 +38,11 @@ namespace Server.Network
             PacketHandlers.RegisterExtended(0x2D, true, TargetedSpell);
             PacketHandlers.RegisterExtended(0x2E, true, TargetedSkillUse);
             PacketHandlers.RegisterExtended(0x30, true, TargetByResourceMacro);
+            PacketHandlers.RegisterExtended(0x33, true, MultiMouseBoatMovementRequest);
 
             // Encoded
             PacketHandlers.RegisterEncoded(0x19, true, SetWeaponAbility);
+            PacketHandlers.RegisterEncoded(0x1E, true, EquipLastWeaponRequest);
             PacketHandlers.RegisterEncoded(0x28, true, GuildGumpRequest);
             PacketHandlers.RegisterExtended(0x2A, true, HeritageTransform);
             PacketHandlers.RegisterEncoded(0x32, true, QuestGumpRequest);
@@ -332,6 +338,68 @@ namespace Server.Network
 			}
 		}
 
+        public static void ChatAction(NetState state, PacketReader pvSrc)
+        {
+            if (!ChatSystem.Enabled)
+                return;
+
+            try
+            {
+                Mobile from = state.Mobile;
+                ChatUser user = ChatUser.GetChatUser(from);
+
+                if (user == null)
+                    return;
+
+                string lang = pvSrc.ReadStringSafe(4);
+                short actionId = pvSrc.ReadInt16();
+                string param = pvSrc.ReadUnicodeString();
+
+                ChatActionHandler handler = ChatActionHandlers.GetHandler(actionId);
+
+                if (handler != null)
+                {
+                    Channel channel = user.CurrentChannel;
+
+                    if (handler.RequireConference && channel == null)
+                    {
+                        /* You must be in a conference to do this.
+                         * To join a conference, select one from the Conference menu.
+                         */
+                        user.SendMessage(31);
+                    }
+                    else
+                    {
+                        handler.Callback(user, channel, param);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Client: {0}: Unknown chat action 0x{1:X}: {2}", state, actionId, param);
+                }
+            }
+            catch (Exception e)
+            {
+                ExceptionLogging.LogException(e);
+            }
+        }
+
+        public static void OpenChatWindowRequest(NetState state, PacketReader pvSrc)
+        {
+            Mobile from = state.Mobile;
+
+            if (!ChatSystem.Enabled)
+            {
+                from.SendMessage("The chat system has been disabled.");
+                return;
+            }
+
+            string chatName = from.Name;
+
+            ChatSystem.SendCommandTo(from, ChatCommand.OpenChatWindow, chatName);
+            ChatUser.AddChatUser(from);
+        }
+
         public static void ProfileReq(NetState state, PacketReader pvSrc)
         {
             int type = pvSrc.ReadByte();
@@ -486,9 +554,62 @@ namespace Server.Network
             }
         }
 
+        public static void MultiMouseBoatMovementRequest(NetState state, PacketReader reader)
+        {
+            Serial playerSerial = reader.ReadInt32();
+            Direction movement = (Direction)reader.ReadByte();
+            reader.ReadByte(); // movement direction duplicated
+            int speed = reader.ReadByte();
+
+            Mobile mob = World.FindMobile(playerSerial);
+            if (mob == null || mob.NetState == null || !mob.Mounted)
+                return;
+
+            IMount multi = mob.Mount;
+            if (!(multi is BaseBoat))
+                return;
+
+            BaseBoat boat = (BaseBoat)multi;
+            boat.OnMousePilotCommand(mob, movement, speed);
+        }
+
+        // Encoded
         public static void SetWeaponAbility(NetState state, IEntity e, EncodedReader reader)
         {
             WeaponAbility.SetWeaponAbility(state.Mobile, reader.ReadInt32());
+        }
+
+        public static void EquipLastWeaponRequest(NetState state, IEntity e, EncodedReader reader)
+        {
+            PlayerMobile from = state.Mobile as PlayerMobile;
+
+            if (from == null || from.Backpack == null)
+                return;
+
+            if (from.IsStaff() || Core.TickCount - from.NextActionTime >= 0)
+            {
+                BaseWeapon toEquip = from.LastWeapon;
+                BaseWeapon toDisarm = from.FindItemOnLayer(Layer.OneHanded) as BaseWeapon;
+
+                if (toDisarm == null)
+                    toDisarm = from.FindItemOnLayer(Layer.TwoHanded) as BaseWeapon;
+
+                if (toDisarm != null)
+                {
+                    from.Backpack.DropItem(toDisarm);
+                    from.NextActionTime = Core.TickCount + Mobile.ActionDelay;
+                }
+
+                if (toEquip != toDisarm && toEquip != null && toEquip.Movable && toEquip.IsChildOf(from.Backpack))
+                {
+                    from.EquipItem(toEquip);
+                    from.NextActionTime = Core.TickCount + Mobile.ActionDelay;
+                }
+            }
+            else
+            {
+                from.SendActionMessage();
+            }
         }
 
         public static void GuildGumpRequest(NetState state, IEntity e, EncodedReader reader)

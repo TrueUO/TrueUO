@@ -1,6 +1,4 @@
-using Server.Network;
-
-namespace Server.Engines.Chat
+namespace Server.Network
 {
     public sealed class ChatMessagePacket : Packet
     {
