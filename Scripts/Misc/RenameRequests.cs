@@ -4,17 +4,8 @@ namespace Server.Misc
 {
     public class RenameRequests
     {
-        public static void Initialize()
+        public static void RenameRequest(Mobile from, Mobile targ, string name)
         {
-            EventSink.RenameRequest += EventSink_RenameRequest;
-        }
-
-        private static void EventSink_RenameRequest(RenameRequestEventArgs e)
-        {
-            Mobile from = e.From;
-            Mobile targ = e.Target;
-            string name = e.Name;
-
             if (from.CanSee(targ) && from.InRange(targ, 12) && targ.CanBeRenamedBy(from))
             {
                 name = name.Trim();

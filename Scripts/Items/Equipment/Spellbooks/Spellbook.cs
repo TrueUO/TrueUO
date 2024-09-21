@@ -300,42 +300,35 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            EventSink.TargetedSpell += Targeted_Spell;
-
             CommandSystem.Register("AllSpells", AccessLevel.GameMaster, AllSpells_OnCommand);
         }
 
-        #region Enhanced Client
-        private static void Targeted_Spell(TargetedSpellEventArgs e)
+        public static void TargetedSpell(Mobile from, IEntity target, int spellId)
         {
             try
             {
-                Mobile from = e.Mobile;
-
                 if (!DesignContext.Check(from))
                 {
                     return; // They are customizing
                 }
 
-                int spellID = e.SpellID;
+                Spellbook book = Find(from, spellId);
 
-                Spellbook book = Find(from, spellID);
-
-                if (book != null && book.HasSpell(spellID))
+                if (book != null && book.HasSpell(spellId))
                 {
-                    SpecialMove move = SpellRegistry.GetSpecialMove(spellID);
+                    SpecialMove move = SpellRegistry.GetSpecialMove(spellId);
 
                     if (move != null)
                     {
                         SpecialMove.SetCurrentMove(from, move);
                     }
-                    else if (e.Target != null)
+                    else if (target != null)
                     {
-                        Mobile to = World.FindMobile(e.Target.Serial);
-                        Item toI = World.FindItem(e.Target.Serial);
-                        Spell spell = SpellRegistry.NewSpell(spellID, from, null);
+                        Mobile to = World.FindMobile(target.Serial);
+                        Item toI = World.FindItem(target.Serial);
+                        Spell spell = SpellRegistry.NewSpell(spellId, from, null);
 
-                        if (spell != null && !Spells.SkillMasteries.MasteryInfo.IsPassiveMastery(spellID))
+                        if (spell != null && !Spells.SkillMasteries.MasteryInfo.IsPassiveMastery(spellId))
                         {
                             if (to != null)
                             {
@@ -345,6 +338,7 @@ namespace Server.Items
                             {
                                 spell.InstantTarget = toI as IEntity;
                             }
+
                             spell.Cast();
                         }
                     }
@@ -359,7 +353,6 @@ namespace Server.Items
                 Diagnostics.ExceptionLogging.LogException(ex);
             }
         }
-        #endregion
 
         public static SpellbookType GetTypeForSpell(int spellID)
         {

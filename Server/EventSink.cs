@@ -24,8 +24,6 @@ namespace Server
 
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
-	public delegate void RenameRequestEventHandler(RenameRequestEventArgs e);
-
 	public delegate void VirtueGumpRequestEventHandler(VirtueGumpRequestEventArgs e);
 
 	public delegate void VirtueItemRequestEventHandler(VirtueItemRequestEventArgs e);
@@ -65,10 +63,6 @@ namespace Server
 	public delegate void QuestCompleteEventHandler(QuestCompleteEventArgs e);
 
 	public delegate void ItemDeletedEventHandler(ItemDeletedEventArgs e);
-
-	public delegate void TargetedSpellEventHandler(TargetedSpellEventArgs e);
-
-	public delegate void TargetedSkillEventHandler(TargetedSkillEventArgs e);
 
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
 
@@ -291,24 +285,6 @@ namespace Server
 		{
 			m_Mobile = mobile;
 			m_VirtueID = virtueID;
-		}
-	}
-
-	public class RenameRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_From;
-		private readonly Mobile m_Target;
-		private readonly string m_Name;
-
-		public Mobile From => m_From;
-		public Mobile Target => m_Target;
-		public string Name => m_Name;
-
-		public RenameRequestEventArgs(Mobile from, Mobile target, string name)
-		{
-			m_From = from;
-			m_Target = target;
-			m_Name = name;
 		}
 	}
 
@@ -655,42 +631,6 @@ namespace Server
 		}
 	}
 
-	public class TargetedSpellEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly IEntity m_Target;
-		private readonly short m_SpellID;
-
-		public Mobile Mobile => m_Mobile;
-		public IEntity Target => m_Target;
-		public short SpellID => m_SpellID;
-
-		public TargetedSpellEventArgs(Mobile m, IEntity target, short spellID)
-		{
-			m_Mobile = m;
-			m_Target = target;
-			m_SpellID = spellID;
-		}
-	}
-
-	public class TargetedSkillEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly IEntity m_Target;
-		private readonly short m_SkillID;
-
-		public Mobile Mobile => m_Mobile;
-		public IEntity Target => m_Target;
-		public short SkillID => m_SkillID;
-
-		public TargetedSkillEventArgs(Mobile m, IEntity target, short skillID)
-		{
-			m_Mobile = m;
-			m_Target = target;
-			m_SkillID = skillID;
-		}
-	}
-
 	public class TargetByResourceMacroEventArgs : EventArgs
 	{
 		private readonly Mobile m_Mobile;
@@ -744,7 +684,6 @@ namespace Server
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
 		public static event SocketConnectEventHandler SocketConnect;
-		public static event RenameRequestEventHandler RenameRequest;
 		public static event VirtueGumpRequestEventHandler VirtueGumpRequest;
 		public static event VirtueItemRequestEventHandler VirtueItemRequest;
 		public static event VirtueMacroRequestEventHandler VirtueMacroRequest;
@@ -766,8 +705,6 @@ namespace Server
 		public static event OnEnterRegionEventHandler OnEnterRegion;
 		public static event QuestCompleteEventHandler QuestComplete;
 		public static event ItemDeletedEventHandler ItemDeleted;
-		public static event TargetedSpellEventHandler TargetedSpell;
-		public static event TargetedSkillEventHandler TargetedSkill;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
@@ -842,11 +779,6 @@ namespace Server
             VirtueMacroRequest?.Invoke(e);
         }
 
-		public static void InvokeRenameRequest(RenameRequestEventArgs e)
-        {
-            RenameRequest?.Invoke(e);
-        }
-
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
         {
             SocketConnect?.Invoke(e);
@@ -915,16 +847,6 @@ namespace Server
 		public static void InvokeItemDeleted(ItemDeletedEventArgs e)
         {
             ItemDeleted?.Invoke(e);
-        }
-
-		public static void InvokeTargetedSpell(TargetedSpellEventArgs e)
-        {
-            TargetedSpell?.Invoke(e);
-        }
-
-		public static void InvokeTargetedSkill(TargetedSkillEventArgs e)
-        {
-            TargetedSkill?.Invoke(e);
         }
 
 		public static void InvokeTargetByResourceMacro(TargetByResourceMacroEventArgs e)

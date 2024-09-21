@@ -15,14 +15,17 @@ namespace Server.Network
         {
             PacketHandlers.Register(0x12, 0, true, TextCommand);
             PacketHandlers.Register(0x73, 2, false, PingReq);
+            PacketHandlers.Register(0x75, 35, true, RenameRequest);
             PacketHandlers.Register(0x9B, 258, true, HelpRequest);
             PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0xEC, 0, false, EquipMacro);
             PacketHandlers.Register(0xED, 0, false, UnequipMacro);
 
             // Extended
-            PacketHandlers.RegisterExtended(0x2C, true, BandageTarget);
             PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
+            PacketHandlers.RegisterExtended(0x2C, true, BandageTarget);
+            PacketHandlers.RegisterExtended(0x2D, true, TargetedSpell);
+            PacketHandlers.RegisterExtended(0x2E, true, TargetedSkillUse);
 
             // Encoded
             PacketHandlers.RegisterEncoded(0x28, true, GuildGumpRequest);
@@ -164,6 +167,17 @@ namespace Server.Network
             state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
         }
 
+        public static void RenameRequest(NetState state, PacketReader pvSrc)
+        {
+            Mobile from = state.Mobile;
+            Mobile targ = World.FindMobile(pvSrc.ReadInt32());
+
+            if (targ != null)
+            {
+                RenameRequests.RenameRequest(from, targ, pvSrc.ReadStringSafe());
+            }
+        }
+
         public static void HelpRequest(NetState state, PacketReader pvSrc)
         {
             HelpGump.HelpRequest(state.Mobile);
@@ -235,6 +249,27 @@ namespace Server.Network
             PlayerMobile.UnequipMacro(ns.Mobile, layers);
         }
 
+        public static void CastSpell(NetState state, PacketReader pvSrc)
+        {
+            Mobile from = state.Mobile;
+
+            if (from == null)
+            {
+                return;
+            }
+
+            Item spellbook = null;
+
+            if (pvSrc.ReadInt16() == 1)
+            {
+                spellbook = World.FindItem(pvSrc.ReadInt32());
+            }
+
+            int spellID = pvSrc.ReadInt16() - 1;
+
+            Spellbook.CastSpellRequest(from, spellID, spellbook);
+        }
+
         public static void BandageTarget(NetState state, PacketReader pvSrc)
         {
             Mobile from = state.Mobile;
@@ -270,25 +305,20 @@ namespace Server.Network
             }
         }
 
-        public static void CastSpell(NetState state, PacketReader pvSrc)
+        public static void TargetedSpell(NetState ns, PacketReader pvSrc)
         {
-            Mobile from = state.Mobile;
+            short spellId = (short)(pvSrc.ReadInt16() - 1);    // zero based;
+            Serial target = pvSrc.ReadInt32();
 
-            if (from == null)
-            {
-                return;
-            }
+            Spellbook.TargetedSpell(ns.Mobile, World.FindEntity(target), spellId);
+        }
 
-            Item spellbook = null;
+        public static void TargetedSkillUse(NetState ns, PacketReader pvSrc)
+        {
+            short skillId = pvSrc.ReadInt16();
+            Serial target = pvSrc.ReadInt32();
 
-            if (pvSrc.ReadInt16() == 1)
-            {
-                spellbook = World.FindItem(pvSrc.ReadInt32());
-            }
-
-            int spellID = pvSrc.ReadInt16() - 1;
-
-            Spellbook.CastSpellRequest(from, spellID, spellbook);
+            PlayerMobile.TargetedSkillUse(ns.Mobile, World.FindEntity(target), skillId);
         }
 
         public static void GuildGumpRequest(NetState state, IEntity e, EncodedReader reader)
