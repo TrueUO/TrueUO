@@ -52,8 +52,6 @@ namespace Server
 
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
-	public delegate void QuestCompleteEventHandler(QuestCompleteEventArgs e);
-
 	public delegate void ItemDeletedEventHandler(ItemDeletedEventArgs e);
 
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
@@ -538,18 +536,6 @@ namespace Server
 		public Region NewRegion => m_NewRegion;
 	}
 
-	public class QuestCompleteEventArgs : EventArgs
-	{
-		public Type QuestType { get; }
-		public Mobile Mobile { get; }
-
-		public QuestCompleteEventArgs(Mobile from, Type type)
-		{
-			Mobile = from;
-			QuestType = type;
-		}
-	}
-
 	public class ItemDeletedEventArgs : EventArgs
 	{
 		public Item Item { get; set; }
@@ -628,7 +614,6 @@ namespace Server
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
-		public static event QuestCompleteEventHandler QuestComplete;
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
@@ -742,11 +727,6 @@ namespace Server
 		public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
         {
             OnEnterRegion?.Invoke(e);
-        }
-
-		public static void InvokeQuestComplete(QuestCompleteEventArgs e)
-        {
-            QuestComplete?.Invoke(e);
         }
 
 		public static void InvokeItemDeleted(ItemDeletedEventArgs e)

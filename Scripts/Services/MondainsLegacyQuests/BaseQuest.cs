@@ -2,6 +2,7 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
+using Server.Engines.Points;
 
 namespace Server.Engines.Quests
 {
@@ -402,7 +403,7 @@ namespace Server.Engines.Quests
                 TierQuestInfo.CompleteQuest(Owner, (ITierQuest)this);
             }
 
-            EventSink.InvokeQuestComplete(new QuestCompleteEventArgs(Owner, GetType()));
+            PointsSystem.CompleteQuest(Owner, GetType());
         }
 
         public virtual void RefuseRewards()
