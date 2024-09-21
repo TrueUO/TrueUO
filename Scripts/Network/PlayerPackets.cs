@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Server.Misc;
 using Server.Guilds;
 using Server.Mobiles;
+using Server.Gumps;
+using Server.Services.Virtues;
 
 namespace Server.Network
 {
@@ -17,6 +19,7 @@ namespace Server.Network
             PacketHandlers.Register(0x73, 2, false, PingReq);
             PacketHandlers.Register(0x75, 35, true, RenameRequest);
             PacketHandlers.Register(0x9B, 258, true, HelpRequest);
+            PacketHandlers.Register(0xB1, 0, true, DisplayGumpResponse);
             PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0xEC, 0, false, EquipMacro);
             PacketHandlers.Register(0xED, 0, false, UnequipMacro);
@@ -136,9 +139,9 @@ namespace Server.Network
 				}
 				case 0xF4: // Invoke virtues from macro
 				{
-					int virtueID = Utility.ToInt32(command) - 1;
+					int virtueId = Utility.ToInt32(command) - 1;
 
-					EventSink.InvokeVirtueMacroRequest(new VirtueMacroRequestEventArgs(m, virtueID));
+                    VirtueGump.VirtueMacroRequest(m, virtueId);
 
 					break;
 				}
@@ -182,6 +185,144 @@ namespace Server.Network
         {
             HelpGump.HelpRequest(state.Mobile);
         }
+
+        public static void DisplayGumpResponse(NetState state, PacketReader pvSrc)
+		{
+			int serial = pvSrc.ReadInt32();
+			int typeID = pvSrc.ReadInt32();
+			int buttonID = pvSrc.ReadInt32();
+
+            for (var index = 0; index < state.Gumps.Count; index++)
+            {
+                Gump gump = state.Gumps[index];
+
+                if (gump.Serial == serial && gump.TypeID == typeID)
+                {
+                    bool buttonExists = buttonID == 0; // 0 is always 'close'
+
+                    if (!buttonExists)
+                    {
+                        for (var i = 0; i < gump.Entries.Count; i++)
+                        {
+                            GumpEntry e = gump.Entries[i];
+
+                            if (e is GumpButton button && button.ButtonID == buttonID)
+                            {
+                                buttonExists = true;
+                                break;
+                            }
+
+                            if (e is GumpImageTileButton tileButton && tileButton.ButtonID == buttonID)
+                            {
+                                buttonExists = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!buttonExists)
+                    {
+                        Utility.PushColor(ConsoleColor.Red);
+                        state.WriteConsole("Invalid gump response, disconnecting...");
+                        Utility.PopColor();
+                        state.Dispose();
+                        return;
+                    }
+
+                    int switchCount = pvSrc.ReadInt32();
+
+                    if (switchCount < 0 || switchCount > gump.Switches)
+                    {
+                        Utility.PushColor(ConsoleColor.Red);
+                        state.WriteConsole("Invalid gump response, disconnecting...");
+                        Utility.PopColor();
+                        state.Dispose();
+                        return;
+                    }
+
+                    int[] switches = new int[switchCount];
+
+                    for (int j = 0; j < switches.Length; ++j)
+                    {
+                        switches[j] = pvSrc.ReadInt32();
+                    }
+
+                    int textCount = pvSrc.ReadInt32();
+
+                    if (textCount < 0 || textCount > gump.TextEntries)
+                    {
+                        Utility.PushColor(ConsoleColor.Red);
+                        state.WriteConsole("Invalid gump response, disconnecting...");
+                        Utility.PopColor();
+                        state.Dispose();
+                        return;
+                    }
+
+                    TextRelay[] textEntries = new TextRelay[textCount];
+
+                    for (int j = 0; j < textEntries.Length; ++j)
+                    {
+                        int entryID = pvSrc.ReadUInt16();
+                        int textLength = pvSrc.ReadUInt16();
+
+                        if (textLength > 239)
+                        {
+                            Utility.PushColor(ConsoleColor.Red);
+                            state.WriteConsole("Invalid gump response, disconnecting...");
+                            Utility.PopColor();
+                            state.Dispose();
+                            return;
+                        }
+
+                        string text = pvSrc.ReadUnicodeStringSafe(textLength);
+                        textEntries[j] = new TextRelay(entryID, text);
+                    }
+
+                    state.RemoveGump(gump);
+
+                    GumpProfile prof = GumpProfile.Acquire(gump.GetType());
+
+                    if (prof != null)
+                    {
+                        prof.Start();
+                    }
+
+                    gump.OnResponse(state, new RelayInfo(buttonID, switches, textEntries));
+
+                    if (prof != null)
+                    {
+                        prof.Finish();
+                    }
+
+                    return;
+                }
+            }
+
+            if (typeID == 461)
+			{
+				// Virtue gump
+				int switchCount = pvSrc.ReadInt32();
+
+				if (buttonID == 1 && switchCount > 0)
+				{
+					Mobile beheld = World.FindMobile(pvSrc.ReadInt32());
+
+					if (beheld != null)
+					{
+                        VirtueGump.VirtueGumpRequest(state.Mobile, beheld);
+					}
+				}
+				else
+				{
+					Mobile beheld = World.FindMobile(serial);
+
+					if (beheld != null)
+					{
+                        VirtueGump.VirtueItemRequest(state.Mobile, beheld, buttonID);
+					}
+				}
+			}
+		}
 
         public static void ProfileReq(NetState state, PacketReader pvSrc)
         {

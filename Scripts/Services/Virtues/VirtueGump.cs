@@ -51,13 +51,6 @@ namespace Server.Services.Virtues
             }
         }
 
-        public static void Initialize()
-        {
-            EventSink.VirtueGumpRequest += EventSink_VirtueGumpRequest;
-            EventSink.VirtueItemRequest += EventSink_VirtueItemRequest;
-            EventSink.VirtueMacroRequest += EventSink_VirtueMacroRequest;
-        }
-
         public static void Register(int gumpID, OnVirtueUsed callback)
         {
             m_Callbacks[gumpID] = callback;
@@ -69,52 +62,47 @@ namespace Server.Services.Virtues
                 m_Beholder.SendGump(new VirtueStatusGump(m_Beholder));
         }
 
-        private static void EventSink_VirtueItemRequest(VirtueItemRequestEventArgs e)
+        public static void VirtueItemRequest(Mobile beholder, Mobile beheld, int buttonId)
         {
-            if (e.Beholder != e.Beheld)
+            if (beholder != beheld)
                 return;
 
-            e.Beholder.CloseGump(typeof(VirtueGump));
+            beholder.CloseGump(typeof(VirtueGump));
 
-            if (e.Beholder.Murderer)
+            if (beholder.Murderer)
             {
-                e.Beholder.SendLocalizedMessage(1049609); // Murderers cannot invoke this virtue.
+                beholder.SendLocalizedMessage(1049609); // Murderers cannot invoke this virtue.
                 return;
             }
 
-            OnVirtueUsed callback = (OnVirtueUsed)m_Callbacks[e.GumpID];
+            OnVirtueUsed callback = (OnVirtueUsed)m_Callbacks[buttonId];
 
             if (callback != null)
-                callback(e.Beholder);
+                callback(beholder);
             else
-                e.Beholder.SendLocalizedMessage(1052066); // That virtue is not active yet.
+                beholder.SendLocalizedMessage(1052066); // That virtue is not active yet.
         }
 
-        private static void EventSink_VirtueMacroRequest(VirtueMacroRequestEventArgs e)
+        public static void VirtueMacroRequest(Mobile beholder, int virtueId)
         {
-            int virtueID = 0;
-
-            switch (e.VirtueID)
+            switch (virtueId)
             {
                 case 0: // Honor
-                    virtueID = 107;
+                    virtueId = 107;
                     break;
                 case 1: // Sacrifice
-                    virtueID = 110;
+                    virtueId = 110;
                     break;
                 case 2: // Valor;
-                    virtueID = 112;
+                    virtueId = 112;
                     break;
             }
 
-            EventSink_VirtueItemRequest(new VirtueItemRequestEventArgs(e.Mobile, e.Mobile, virtueID));
+            VirtueItemRequest(beholder, beholder, virtueId);
         }
 
-        private static void EventSink_VirtueGumpRequest(VirtueGumpRequestEventArgs e)
+        public static void VirtueGumpRequest(Mobile beholder, Mobile beheld)
         {
-            Mobile beholder = e.Beholder;
-            Mobile beheld = e.Beheld;
-
             if (beholder == beheld && beholder.Murderer)
             {
                 beholder.SendLocalizedMessage(1049609); // Murderers cannot invoke this virtue.
@@ -157,7 +145,7 @@ namespace Server.Services.Virtues
 
         private class InternalEntry : GumpImage
         {
-            private static readonly byte[] m_Class = StringToBuffer(" class=VirtueGumpItem");
+            private static readonly byte[] _Class = StringToBuffer(" class=VirtueGumpItem");
 
             public InternalEntry(int x, int y, int gumpID, int hue)
                 : base(x, y, gumpID, hue)
@@ -165,14 +153,14 @@ namespace Server.Services.Virtues
 
             public override string Compile()
             {
-                return string.Format("{{ gumppic {0} {1} {2} hue={3} class=VirtueGumpItem }}", X, Y, GumpID, Hue);
+                return $"{{ gumppic {X} {Y} {GumpID} hue={Hue} class=VirtueGumpItem }}";
             }
 
             public override void AppendTo(IGumpWriter disp)
             {
                 base.AppendTo(disp);
 
-                disp.AppendLayout(m_Class);
+                disp.AppendLayout(_Class);
             }
         }
     }

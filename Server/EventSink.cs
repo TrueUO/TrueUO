@@ -24,12 +24,6 @@ namespace Server
 
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
-	public delegate void VirtueGumpRequestEventHandler(VirtueGumpRequestEventArgs e);
-
-	public delegate void VirtueItemRequestEventHandler(VirtueItemRequestEventArgs e);
-
-	public delegate void VirtueMacroRequestEventHandler(VirtueMacroRequestEventArgs e);
-
 	public delegate void AccountLoginEventHandler(AccountLoginEventArgs e);
 
 	public delegate void PaperdollRequestEventHandler(PaperdollRequestEventArgs e);
@@ -237,54 +231,6 @@ namespace Server
 			m_Username = username;
 			m_Password = password;
 			Accepted = true;
-		}
-	}
-
-	public class VirtueItemRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Beholder;
-		private readonly Mobile m_Beheld;
-		private readonly int m_GumpID;
-
-		public Mobile Beholder => m_Beholder;
-		public Mobile Beheld => m_Beheld;
-		public int GumpID => m_GumpID;
-
-		public VirtueItemRequestEventArgs(Mobile beholder, Mobile beheld, int gumpID)
-		{
-			m_Beholder = beholder;
-			m_Beheld = beheld;
-			m_GumpID = gumpID;
-		}
-	}
-
-	public class VirtueGumpRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Beholder;
-		private readonly Mobile m_Beheld;
-
-		public Mobile Beholder => m_Beholder;
-		public Mobile Beheld => m_Beheld;
-
-		public VirtueGumpRequestEventArgs(Mobile beholder, Mobile beheld)
-		{
-			m_Beholder = beholder;
-			m_Beheld = beheld;
-		}
-	}
-
-	public class VirtueMacroRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly int m_VirtueID;
-
-		public Mobile Mobile => m_Mobile;
-		public int VirtueID => m_VirtueID;
-
-		public VirtueMacroRequestEventArgs(Mobile mobile, int virtueID)
-		{
-			m_Mobile = mobile;
-			m_VirtueID = virtueID;
 		}
 	}
 
@@ -684,9 +630,6 @@ namespace Server
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
 		public static event SocketConnectEventHandler SocketConnect;
-		public static event VirtueGumpRequestEventHandler VirtueGumpRequest;
-		public static event VirtueItemRequestEventHandler VirtueItemRequest;
-		public static event VirtueMacroRequestEventHandler VirtueMacroRequest;
 		public static event AccountLoginEventHandler AccountLogin;
 		public static event PaperdollRequestEventHandler PaperdollRequest;
 		public static event AggressiveActionEventHandler AggressiveAction;
@@ -762,21 +705,6 @@ namespace Server
 		public static void InvokeAccountLogin(AccountLoginEventArgs e)
         {
             AccountLogin?.Invoke(e);
-        }
-
-		public static void InvokeVirtueItemRequest(VirtueItemRequestEventArgs e)
-        {
-            VirtueItemRequest?.Invoke(e);
-        }
-
-		public static void InvokeVirtueGumpRequest(VirtueGumpRequestEventArgs e)
-        {
-            VirtueGumpRequest?.Invoke(e);
-        }
-
-		public static void InvokeVirtueMacroRequest(VirtueMacroRequestEventArgs e)
-        {
-            VirtueMacroRequest?.Invoke(e);
         }
 
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
