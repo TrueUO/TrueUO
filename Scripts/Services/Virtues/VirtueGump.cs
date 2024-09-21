@@ -1,4 +1,5 @@
 #region References
+using Server.Engines.Quests;
 using Server.Gumps;
 using Server.Network;
 using System.Collections;
@@ -53,8 +54,6 @@ namespace Server.Services.Virtues
 
         public static void Initialize()
         {
-            EventSink.VirtueGumpRequest += EventSink_VirtueGumpRequest;
-            EventSink.VirtueItemRequest += EventSink_VirtueItemRequest;
             EventSink.VirtueMacroRequest += EventSink_VirtueMacroRequest;
         }
 
@@ -69,25 +68,25 @@ namespace Server.Services.Virtues
                 m_Beholder.SendGump(new VirtueStatusGump(m_Beholder));
         }
 
-        private static void EventSink_VirtueItemRequest(VirtueItemRequestEventArgs e)
+        public static void VirtueItemRequest(Mobile beholder, Mobile beheld, int buttonId)
         {
-            if (e.Beholder != e.Beheld)
+            if (beholder != beheld)
                 return;
 
-            e.Beholder.CloseGump(typeof(VirtueGump));
+            beholder.CloseGump(typeof(VirtueGump));
 
-            if (e.Beholder.Murderer)
+            if (beholder.Murderer)
             {
-                e.Beholder.SendLocalizedMessage(1049609); // Murderers cannot invoke this virtue.
+                beholder.SendLocalizedMessage(1049609); // Murderers cannot invoke this virtue.
                 return;
             }
 
-            OnVirtueUsed callback = (OnVirtueUsed)m_Callbacks[e.GumpID];
+            OnVirtueUsed callback = (OnVirtueUsed)m_Callbacks[buttonId];
 
             if (callback != null)
-                callback(e.Beholder);
+                callback(beholder);
             else
-                e.Beholder.SendLocalizedMessage(1052066); // That virtue is not active yet.
+                beholder.SendLocalizedMessage(1052066); // That virtue is not active yet.
         }
 
         private static void EventSink_VirtueMacroRequest(VirtueMacroRequestEventArgs e)
@@ -107,14 +106,11 @@ namespace Server.Services.Virtues
                     break;
             }
 
-            EventSink_VirtueItemRequest(new VirtueItemRequestEventArgs(e.Mobile, e.Mobile, virtueID));
+            VirtueItemRequest(e.Mobile, e.Mobile, virtueID);
         }
 
-        private static void EventSink_VirtueGumpRequest(VirtueGumpRequestEventArgs e)
+        public static void VirtueGumpRequest(Mobile beholder, Mobile beheld)
         {
-            Mobile beholder = e.Beholder;
-            Mobile beheld = e.Beheld;
-
             if (beholder == beheld && beholder.Murderer)
             {
                 beholder.SendLocalizedMessage(1049609); // Murderers cannot invoke this virtue.

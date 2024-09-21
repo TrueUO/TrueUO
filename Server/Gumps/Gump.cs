@@ -12,9 +12,10 @@ namespace Server.Gumps
 		private readonly List<GumpEntry> m_Entries;
 		private readonly List<string> m_Strings;
 
-		internal int m_TextEntries, m_Switches;
+        public int TextEntries { get; private set; }
+        public int Switches { get; private set; }
 
-		private static int m_NextSerial = 1;
+        private static int m_NextSerial = 1;
 
 		private int m_Serial;
 		private int m_X, m_Y;
@@ -478,8 +479,8 @@ namespace Server.Gumps
 
 			disp.Flush();
 
-			m_TextEntries = disp.TextEntries;
-			m_Switches = disp.Switches;
+			TextEntries = disp.TextEntries;
+			Switches = disp.Switches;
 
 			return (Packet)disp;
 		}
