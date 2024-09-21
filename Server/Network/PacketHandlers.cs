@@ -132,7 +132,6 @@ namespace Server.Network
 			RegisterExtended(0x1A, true, StatLockChange);
 			RegisterExtended(0x24, false, UnhandledBF);
             RegisterExtended(0x32, true, ToggleFlying);
-			RegisterExtended(0x30, true, TargetByResourceMacro);
 		}
 
 		public static void Register(int packetID, int length, bool ingame, OnPacketReceive onReceive)
@@ -2667,17 +2666,6 @@ namespace Server.Network
 					state.BlockAllPackets = false;
 					state.Dispose();
 				}
-			}
-		}
-
-		public static void TargetByResourceMacro(NetState ns, PacketReader pvSrc)
-		{
-			Serial serial = pvSrc.ReadInt32();
-			int resourcetype = pvSrc.ReadInt16();
-
-			if (serial.IsItem)
-			{
-				EventSink.InvokeTargetByResourceMacro(new TargetByResourceMacroEventArgs(ns.Mobile, World.FindItem(serial), resourcetype));
 			}
 		}
 	}

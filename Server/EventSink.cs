@@ -54,8 +54,6 @@ namespace Server
 
 	public delegate void ItemDeletedEventHandler(ItemDeletedEventArgs e);
 
-	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
-
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
@@ -546,24 +544,6 @@ namespace Server
 		}
 	}
 
-	public class TargetByResourceMacroEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly Item m_Tool;
-		private readonly int m_ResourceType;
-
-		public Mobile Mobile => m_Mobile;
-		public Item Tool => m_Tool;
-		public int ResourceType => m_ResourceType;
-
-		public TargetByResourceMacroEventArgs(Mobile mobile, Item tool, int type)
-		{
-			m_Mobile = mobile;
-			m_Tool = tool;
-			m_ResourceType = type;
-		}
-	}
-
 	public class ContainerDroppedToEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
@@ -615,7 +595,6 @@ namespace Server
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
 		public static event ItemDeletedEventHandler ItemDeleted;
-		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
 
@@ -732,11 +711,6 @@ namespace Server
 		public static void InvokeItemDeleted(ItemDeletedEventArgs e)
         {
             ItemDeleted?.Invoke(e);
-        }
-
-		public static void InvokeTargetByResourceMacro(TargetByResourceMacroEventArgs e)
-        {
-            TargetByResourceMacro?.Invoke(e);
         }
 
 		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)

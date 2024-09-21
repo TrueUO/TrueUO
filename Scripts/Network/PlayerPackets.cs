@@ -3,6 +3,7 @@ using Server.Engines.Help;
 using Server.Items;
 using System;
 using System.Collections.Generic;
+using Server.Engines.Harvest;
 using Server.Misc;
 using Server.Guilds;
 using Server.Mobiles;
@@ -32,6 +33,7 @@ namespace Server.Network
             PacketHandlers.RegisterExtended(0x2C, true, BandageTarget);
             PacketHandlers.RegisterExtended(0x2D, true, TargetedSpell);
             PacketHandlers.RegisterExtended(0x2E, true, TargetedSkillUse);
+            PacketHandlers.RegisterExtended(0x30, true, TargetByResourceMacro);
 
             // Encoded
             PacketHandlers.RegisterEncoded(0x19, true, SetWeaponAbility);
@@ -459,7 +461,7 @@ namespace Server.Network
 
         public static void TargetedSpell(NetState ns, PacketReader pvSrc)
         {
-            short spellId = (short)(pvSrc.ReadInt16() - 1);    // zero based;
+            short spellId = (short)(pvSrc.ReadInt16() - 1); // zero based;
             Serial target = pvSrc.ReadInt32();
 
             Spellbook.TargetedSpell(ns.Mobile, World.FindEntity(target), spellId);
@@ -471,6 +473,17 @@ namespace Server.Network
             Serial target = pvSrc.ReadInt32();
 
             PlayerMobile.TargetedSkillUse(ns.Mobile, World.FindEntity(target), skillId);
+        }
+
+        public static void TargetByResourceMacro(NetState ns, PacketReader pvSrc)
+        {
+            Serial serial = pvSrc.ReadInt32();
+            int resourceType = pvSrc.ReadInt16();
+
+            if (serial.IsItem)
+            {
+                HarvestSystem.TargetByResourceMacro(ns.Mobile, World.FindItem(serial), resourceType);
+            }
         }
 
         public static void SetWeaponAbility(NetState state, IEntity e, EncodedReader reader)
