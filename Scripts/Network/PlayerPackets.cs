@@ -15,6 +15,7 @@ namespace Server.Network
         {
             PacketHandlers.Register(0x12, 0, true, TextCommand);
             PacketHandlers.Register(0x73, 2, false, PingReq);
+            PacketHandlers.Register(0x75, 35, true, RenameRequest);
             PacketHandlers.Register(0x9B, 258, true, HelpRequest);
             PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0xEC, 0, false, EquipMacro);
@@ -164,6 +165,17 @@ namespace Server.Network
         public static void PingReq(NetState state, PacketReader pvSrc)
         {
             state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
+        }
+
+        public static void RenameRequest(NetState state, PacketReader pvSrc)
+        {
+            Mobile from = state.Mobile;
+            Mobile targ = World.FindMobile(pvSrc.ReadInt32());
+
+            if (targ != null)
+            {
+                RenameRequests.RenameRequest(from, targ, pvSrc.ReadStringSafe());
+            }
         }
 
         public static void HelpRequest(NetState state, PacketReader pvSrc)

@@ -81,7 +81,6 @@ namespace Server.Network
 			Register(0x6C, 19, true, TargetResponse);
 			Register(0x6F, 0, true, SecureTrade);
 			Register(0x72, 5, true, SetWarMode);
-			Register(0x75, 35, true, RenameRequest);
 			Register(0x79, 9, true, ResourceQuery);
 			Register(0x7E, 2, true, GodviewQuery);
 			Register(0x7D, 13, true, MenuResponse);
@@ -252,17 +251,6 @@ namespace Server.Network
 			else
 			{
 				pvSrc.Trace(state);
-			}
-		}
-
-		public static void RenameRequest(NetState state, PacketReader pvSrc)
-		{
-			Mobile from = state.Mobile;
-			Mobile targ = World.FindMobile(pvSrc.ReadInt32());
-
-			if (targ != null)
-			{
-				EventSink.InvokeRenameRequest(new RenameRequestEventArgs(from, targ, pvSrc.ReadStringSafe()));
 			}
 		}
 

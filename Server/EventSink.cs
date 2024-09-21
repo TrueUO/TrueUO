@@ -24,8 +24,6 @@ namespace Server
 
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
-	public delegate void RenameRequestEventHandler(RenameRequestEventArgs e);
-
 	public delegate void VirtueGumpRequestEventHandler(VirtueGumpRequestEventArgs e);
 
 	public delegate void VirtueItemRequestEventHandler(VirtueItemRequestEventArgs e);
@@ -287,24 +285,6 @@ namespace Server
 		{
 			m_Mobile = mobile;
 			m_VirtueID = virtueID;
-		}
-	}
-
-	public class RenameRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_From;
-		private readonly Mobile m_Target;
-		private readonly string m_Name;
-
-		public Mobile From => m_From;
-		public Mobile Target => m_Target;
-		public string Name => m_Name;
-
-		public RenameRequestEventArgs(Mobile from, Mobile target, string name)
-		{
-			m_From = from;
-			m_Target = target;
-			m_Name = name;
 		}
 	}
 
@@ -704,7 +684,6 @@ namespace Server
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
 		public static event SocketConnectEventHandler SocketConnect;
-		public static event RenameRequestEventHandler RenameRequest;
 		public static event VirtueGumpRequestEventHandler VirtueGumpRequest;
 		public static event VirtueItemRequestEventHandler VirtueItemRequest;
 		public static event VirtueMacroRequestEventHandler VirtueMacroRequest;
@@ -798,11 +777,6 @@ namespace Server
 		public static void InvokeVirtueMacroRequest(VirtueMacroRequestEventArgs e)
         {
             VirtueMacroRequest?.Invoke(e);
-        }
-
-		public static void InvokeRenameRequest(RenameRequestEventArgs e)
-        {
-            RenameRequest?.Invoke(e);
         }
 
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
