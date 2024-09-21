@@ -42,8 +42,6 @@ namespace Server
 
 	public delegate void AfterWorldSaveEventHandler(AfterWorldSaveEventArgs e);
 
-	public delegate void SetAbilityEventHandler(SetAbilityEventArgs e);
-
 	public delegate void FastWalkEventHandler(FastWalkEventArgs e);
 
 	public delegate void CreateGuildHandler(CreateGuildEventArgs e);
@@ -100,21 +98,6 @@ namespace Server
 		public CreateGuildEventArgs(int id)
 		{
 			Id = id;
-		}
-	}
-
-	public class SetAbilityEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly int m_Index;
-
-		public Mobile Mobile => m_Mobile;
-		public int Index => m_Index;
-
-		public SetAbilityEventArgs(Mobile mobile, int index)
-		{
-			m_Mobile = mobile;
-			m_Index = index;
 		}
 	}
 
@@ -640,7 +623,6 @@ namespace Server
 		public static event WorldSaveEventHandler WorldSave;
 		public static event BeforeWorldSaveEventHandler BeforeWorldSave;
 		public static event AfterWorldSaveEventHandler AfterWorldSave;
-		public static event SetAbilityEventHandler SetAbility;
 		public static event FastWalkEventHandler FastWalk;
 		public static event CreateGuildHandler CreateGuild;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
@@ -665,11 +647,6 @@ namespace Server
 		public static void InvokeCreateGuild(CreateGuildEventArgs e)
         {
             CreateGuild?.Invoke(e);
-        }
-
-		public static void InvokeSetAbility(SetAbilityEventArgs e)
-        {
-            SetAbility?.Invoke(e);
         }
 
 		public static void InvokeFastWalk(FastWalkEventArgs e)

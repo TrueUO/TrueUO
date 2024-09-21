@@ -136,8 +136,6 @@ namespace Server.Network
 			RegisterExtended(0x24, false, UnhandledBF);
             RegisterExtended(0x32, true, ToggleFlying);
 			RegisterExtended(0x30, true, TargetByResourceMacro);
-            RegisterEncoded(0x19, true, SetAbility);
-            RegisterEncoded(0x32, true, QuestGumpRequest);
 		}
 
 		public static void Register(int packetID, int length, bool ingame, OnPacketReceive onReceive)
@@ -206,21 +204,10 @@ namespace Server.Network
 			}
 		}
 
-		private static void Unhandled(NetState state, PacketReader pvSrc)
-		{ }
-
 		private static void UnhandledBF(NetState state, PacketReader pvSrc)
 		{ }
 
         private static void Empty(NetState state, PacketReader pvSrc)
-		{ }
-
-		public static void SetAbility(NetState state, IEntity e, EncodedReader reader)
-		{
-			EventSink.InvokeSetAbility(new SetAbilityEventArgs(state.Mobile, reader.ReadInt32()));
-		}
-
-        private static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
 		{ }
 
 		public static void EncodedCommand(NetState state, PacketReader pvSrc)
