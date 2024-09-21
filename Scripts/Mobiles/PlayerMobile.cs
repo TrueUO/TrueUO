@@ -813,52 +813,44 @@ namespace Server.Mobiles
                 PacketHandlers.RegisterThrottler(0x02, MovementThrottle_Callback);
             }
 
-            #region Enchanced Client
-            EventSink.TargetedSkill += Targeted_Skill;
-            #endregion
-
             Timer.DelayCall(TimeSpan.Zero, CheckPets);
         }
 
-        #region Enhanced Client
-        private static void Targeted_Skill(TargetedSkillEventArgs e)
+        public static void TargetedSkillUse(Mobile from, IEntity target, int skillId)
         {
-            Mobile from = e.Mobile;
-            IEntity target = e.Target;
-
             if (from == null || target == null)
                 return;
 
             from.TargetLocked = true;
 
-            if (e.SkillID == (short)SkillName.Provocation)
+            if (skillId == (short)SkillName.Provocation)
             {
                 Provocation.DeferredSecondaryTarget = true;
-                InvokeTarget(e, from, target);
+                InvokeTarget(from, target, skillId);
                 Provocation.DeferredSecondaryTarget = false;
             }
 
-            else if (e.SkillID == (short)SkillName.AnimalTaming)
+            else if (skillId == (short)SkillName.AnimalTaming)
             {
                 AnimalTaming.DisableMessage = true;
                 AnimalTaming.DeferredTarget = false;
-                InvokeTarget(e, from, target);
+                InvokeTarget(from, target, skillId);
                 AnimalTaming.DeferredTarget = true;
                 AnimalTaming.DisableMessage = false;
 
             }
             else
             {
-                InvokeTarget(e, from, target);
+                InvokeTarget(from, target, skillId);
             }
 
 
             from.TargetLocked = false;
         }
 
-        private static void InvokeTarget(TargetedSkillEventArgs e, Mobile from, IEntity target)
+        private static void InvokeTarget(Mobile from, IEntity target, int skillId)
         {
-            if (from.UseSkill(e.SkillID))
+            if (from.UseSkill(skillId))
             {
                 from.Target?.Invoke(from, target);
             }
@@ -951,7 +943,6 @@ namespace Server.Mobiles
 	            }
 	        }
         }
-        #endregion
 
         private static void CheckPets()
         {

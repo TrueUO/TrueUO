@@ -137,8 +137,6 @@ namespace Server.Network
 			RegisterExtended(0x1A, true, StatLockChange);
 			RegisterExtended(0x24, false, UnhandledBF);
             RegisterExtended(0x32, true, ToggleFlying);
-            RegisterExtended(0x2D, true, TargetedSpell);
-			RegisterExtended(0x2E, true, TargetedSkillUse);
 			RegisterExtended(0x30, true, TargetByResourceMacro);
             RegisterEncoded(0x19, true, SetAbility);
             RegisterEncoded(0x32, true, QuestGumpRequest);
@@ -2837,22 +2835,6 @@ namespace Server.Network
 					state.Dispose();
 				}
 			}
-		}
-
-		public static void TargetedSpell(NetState ns, PacketReader pvSrc)
-		{
-			short spellId = (short)(pvSrc.ReadInt16() - 1);    // zero based;
-			Serial target = pvSrc.ReadInt32();
-
-			EventSink.InvokeTargetedSpell(new TargetedSpellEventArgs(ns.Mobile, World.FindEntity(target), spellId));
-		}
-
-		public static void TargetedSkillUse(NetState ns, PacketReader pvSrc)
-		{
-			short skillId = pvSrc.ReadInt16();
-			Serial target = pvSrc.ReadInt32();
-
-			EventSink.InvokeTargetedSkill(new TargetedSkillEventArgs(ns.Mobile, World.FindEntity(target), skillId));
 		}
 
 		public static void TargetByResourceMacro(NetState ns, PacketReader pvSrc)

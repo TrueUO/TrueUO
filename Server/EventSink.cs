@@ -66,10 +66,6 @@ namespace Server
 
 	public delegate void ItemDeletedEventHandler(ItemDeletedEventArgs e);
 
-	public delegate void TargetedSpellEventHandler(TargetedSpellEventArgs e);
-
-	public delegate void TargetedSkillEventHandler(TargetedSkillEventArgs e);
-
 	public delegate void TargetByResourceMacroEventHandler(TargetByResourceMacroEventArgs e);
 
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
@@ -655,42 +651,6 @@ namespace Server
 		}
 	}
 
-	public class TargetedSpellEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly IEntity m_Target;
-		private readonly short m_SpellID;
-
-		public Mobile Mobile => m_Mobile;
-		public IEntity Target => m_Target;
-		public short SpellID => m_SpellID;
-
-		public TargetedSpellEventArgs(Mobile m, IEntity target, short spellID)
-		{
-			m_Mobile = m;
-			m_Target = target;
-			m_SpellID = spellID;
-		}
-	}
-
-	public class TargetedSkillEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly IEntity m_Target;
-		private readonly short m_SkillID;
-
-		public Mobile Mobile => m_Mobile;
-		public IEntity Target => m_Target;
-		public short SkillID => m_SkillID;
-
-		public TargetedSkillEventArgs(Mobile m, IEntity target, short skillID)
-		{
-			m_Mobile = m;
-			m_Target = target;
-			m_SkillID = skillID;
-		}
-	}
-
 	public class TargetByResourceMacroEventArgs : EventArgs
 	{
 		private readonly Mobile m_Mobile;
@@ -766,8 +726,6 @@ namespace Server
 		public static event OnEnterRegionEventHandler OnEnterRegion;
 		public static event QuestCompleteEventHandler QuestComplete;
 		public static event ItemDeletedEventHandler ItemDeleted;
-		public static event TargetedSpellEventHandler TargetedSpell;
-		public static event TargetedSkillEventHandler TargetedSkill;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
@@ -915,16 +873,6 @@ namespace Server
 		public static void InvokeItemDeleted(ItemDeletedEventArgs e)
         {
             ItemDeleted?.Invoke(e);
-        }
-
-		public static void InvokeTargetedSpell(TargetedSpellEventArgs e)
-        {
-            TargetedSpell?.Invoke(e);
-        }
-
-		public static void InvokeTargetedSkill(TargetedSkillEventArgs e)
-        {
-            TargetedSkill?.Invoke(e);
         }
 
 		public static void InvokeTargetByResourceMacro(TargetByResourceMacroEventArgs e)
