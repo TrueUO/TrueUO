@@ -139,9 +139,9 @@ namespace Server.Network
 				}
 				case 0xF4: // Invoke virtues from macro
 				{
-					int virtueID = Utility.ToInt32(command) - 1;
+					int virtueId = Utility.ToInt32(command) - 1;
 
-					EventSink.InvokeVirtueMacroRequest(new VirtueMacroRequestEventArgs(m, virtueID));
+                    VirtueGump.VirtueMacroRequest(m, virtueId);
 
 					break;
 				}

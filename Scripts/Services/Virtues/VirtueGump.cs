@@ -1,5 +1,4 @@
 #region References
-using Server.Engines.Quests;
 using Server.Gumps;
 using Server.Network;
 using System.Collections;
@@ -52,11 +51,6 @@ namespace Server.Services.Virtues
             }
         }
 
-        public static void Initialize()
-        {
-            EventSink.VirtueMacroRequest += EventSink_VirtueMacroRequest;
-        }
-
         public static void Register(int gumpID, OnVirtueUsed callback)
         {
             m_Callbacks[gumpID] = callback;
@@ -89,24 +83,22 @@ namespace Server.Services.Virtues
                 beholder.SendLocalizedMessage(1052066); // That virtue is not active yet.
         }
 
-        private static void EventSink_VirtueMacroRequest(VirtueMacroRequestEventArgs e)
+        public static void VirtueMacroRequest(Mobile beholder, int virtueId)
         {
-            int virtueID = 0;
-
-            switch (e.VirtueID)
+            switch (virtueId)
             {
                 case 0: // Honor
-                    virtueID = 107;
+                    virtueId = 107;
                     break;
                 case 1: // Sacrifice
-                    virtueID = 110;
+                    virtueId = 110;
                     break;
                 case 2: // Valor;
-                    virtueID = 112;
+                    virtueId = 112;
                     break;
             }
 
-            VirtueItemRequest(e.Mobile, e.Mobile, virtueID);
+            VirtueItemRequest(beholder, beholder, virtueId);
         }
 
         public static void VirtueGumpRequest(Mobile beholder, Mobile beheld)
@@ -153,7 +145,7 @@ namespace Server.Services.Virtues
 
         private class InternalEntry : GumpImage
         {
-            private static readonly byte[] m_Class = StringToBuffer(" class=VirtueGumpItem");
+            private static readonly byte[] _Class = StringToBuffer(" class=VirtueGumpItem");
 
             public InternalEntry(int x, int y, int gumpID, int hue)
                 : base(x, y, gumpID, hue)
@@ -161,14 +153,14 @@ namespace Server.Services.Virtues
 
             public override string Compile()
             {
-                return string.Format("{{ gumppic {0} {1} {2} hue={3} class=VirtueGumpItem }}", X, Y, GumpID, Hue);
+                return $"{{ gumppic {X} {Y} {GumpID} hue={Hue} class=VirtueGumpItem }}";
             }
 
             public override void AppendTo(IGumpWriter disp)
             {
                 base.AppendTo(disp);
 
-                disp.AppendLayout(m_Class);
+                disp.AppendLayout(_Class);
             }
         }
     }

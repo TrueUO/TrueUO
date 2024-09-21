@@ -24,8 +24,6 @@ namespace Server
 
 	public delegate void SocketConnectEventHandler(SocketConnectEventArgs e);
 
-	public delegate void VirtueMacroRequestEventHandler(VirtueMacroRequestEventArgs e);
-
 	public delegate void AccountLoginEventHandler(AccountLoginEventArgs e);
 
 	public delegate void PaperdollRequestEventHandler(PaperdollRequestEventArgs e);
@@ -233,21 +231,6 @@ namespace Server
 			m_Username = username;
 			m_Password = password;
 			Accepted = true;
-		}
-	}
-
-	public class VirtueMacroRequestEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly int m_VirtueID;
-
-		public Mobile Mobile => m_Mobile;
-		public int VirtueID => m_VirtueID;
-
-		public VirtueMacroRequestEventArgs(Mobile mobile, int virtueID)
-		{
-			m_Mobile = mobile;
-			m_VirtueID = virtueID;
 		}
 	}
 
@@ -647,7 +630,6 @@ namespace Server
 		public static event CrashedEventHandler Crashed;
 		public static event ShutdownEventHandler Shutdown;
 		public static event SocketConnectEventHandler SocketConnect;
-		public static event VirtueMacroRequestEventHandler VirtueMacroRequest;
 		public static event AccountLoginEventHandler AccountLogin;
 		public static event PaperdollRequestEventHandler PaperdollRequest;
 		public static event AggressiveActionEventHandler AggressiveAction;
@@ -723,11 +705,6 @@ namespace Server
 		public static void InvokeAccountLogin(AccountLoginEventArgs e)
         {
             AccountLogin?.Invoke(e);
-        }
-
-		public static void InvokeVirtueMacroRequest(VirtueMacroRequestEventArgs e)
-        {
-            VirtueMacroRequest?.Invoke(e);
         }
 
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
