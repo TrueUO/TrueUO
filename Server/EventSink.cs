@@ -42,8 +42,6 @@ namespace Server
 
 	public delegate void AfterWorldSaveEventHandler(AfterWorldSaveEventArgs e);
 
-	public delegate void SetAbilityEventHandler(SetAbilityEventArgs e);
-
 	public delegate void FastWalkEventHandler(FastWalkEventArgs e);
 
 	public delegate void CreateGuildHandler(CreateGuildEventArgs e);
@@ -53,8 +51,6 @@ namespace Server
 	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
 
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
-
-	public delegate void QuestCompleteEventHandler(QuestCompleteEventArgs e);
 
 	public delegate void ItemDeletedEventHandler(ItemDeletedEventArgs e);
 
@@ -100,21 +96,6 @@ namespace Server
 		public CreateGuildEventArgs(int id)
 		{
 			Id = id;
-		}
-	}
-
-	public class SetAbilityEventArgs : EventArgs
-	{
-		private readonly Mobile m_Mobile;
-		private readonly int m_Index;
-
-		public Mobile Mobile => m_Mobile;
-		public int Index => m_Index;
-
-		public SetAbilityEventArgs(Mobile mobile, int index)
-		{
-			m_Mobile = mobile;
-			m_Index = index;
 		}
 	}
 
@@ -555,18 +536,6 @@ namespace Server
 		public Region NewRegion => m_NewRegion;
 	}
 
-	public class QuestCompleteEventArgs : EventArgs
-	{
-		public Type QuestType { get; }
-		public Mobile Mobile { get; }
-
-		public QuestCompleteEventArgs(Mobile from, Type type)
-		{
-			Mobile = from;
-			QuestType = type;
-		}
-	}
-
 	public class ItemDeletedEventArgs : EventArgs
 	{
 		public Item Item { get; set; }
@@ -640,13 +609,11 @@ namespace Server
 		public static event WorldSaveEventHandler WorldSave;
 		public static event BeforeWorldSaveEventHandler BeforeWorldSave;
 		public static event AfterWorldSaveEventHandler AfterWorldSave;
-		public static event SetAbilityEventHandler SetAbility;
 		public static event FastWalkEventHandler FastWalk;
 		public static event CreateGuildHandler CreateGuild;
 		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
-		public static event QuestCompleteEventHandler QuestComplete;
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event TargetByResourceMacroEventHandler TargetByResourceMacro;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
@@ -665,11 +632,6 @@ namespace Server
 		public static void InvokeCreateGuild(CreateGuildEventArgs e)
         {
             CreateGuild?.Invoke(e);
-        }
-
-		public static void InvokeSetAbility(SetAbilityEventArgs e)
-        {
-            SetAbility?.Invoke(e);
         }
 
 		public static void InvokeFastWalk(FastWalkEventArgs e)
@@ -765,11 +727,6 @@ namespace Server
 		public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
         {
             OnEnterRegion?.Invoke(e);
-        }
-
-		public static void InvokeQuestComplete(QuestCompleteEventArgs e)
-        {
-            QuestComplete?.Invoke(e);
         }
 
 		public static void InvokeItemDeleted(ItemDeletedEventArgs e)

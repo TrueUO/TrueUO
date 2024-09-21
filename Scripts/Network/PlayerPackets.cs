@@ -21,8 +21,8 @@ namespace Server.Network
             PacketHandlers.Register(0x9B, 258, true, HelpRequest);
             PacketHandlers.Register(0xB1, 0, true, DisplayGumpResponse);
             PacketHandlers.Register(0xB8, 0, true, ProfileReq);
-            PacketHandlers.Register(0xEC, 0, false, EquipMacro);
-            PacketHandlers.Register(0xED, 0, false, UnequipMacro);
+            PacketHandlers.Register(0xEC, 0, true, EquipMacro);
+            PacketHandlers.Register(0xED, 0, true, UnequipMacro);
 
             // Extended
             PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
@@ -31,7 +31,9 @@ namespace Server.Network
             PacketHandlers.RegisterExtended(0x2E, true, TargetedSkillUse);
 
             // Encoded
+            PacketHandlers.RegisterEncoded(0x19, true, SetWeaponAbility);
             PacketHandlers.RegisterEncoded(0x28, true, GuildGumpRequest);
+            PacketHandlers.RegisterEncoded(0x32, true, QuestGumpRequest);
         }
 
         public static void TextCommand(NetState state, PacketReader pvSrc)
@@ -462,9 +464,18 @@ namespace Server.Network
             PlayerMobile.TargetedSkillUse(ns.Mobile, World.FindEntity(target), skillId);
         }
 
+        public static void SetWeaponAbility(NetState state, IEntity e, EncodedReader reader)
+        {
+            WeaponAbility.SetWeaponAbility(state.Mobile, reader.ReadInt32());
+        }
+
         public static void GuildGumpRequest(NetState state, IEntity e, EncodedReader reader)
         {
             Guild.GuildGumpRequest(state.Mobile);
+        }
+
+        public static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
+        {
         }
     }
 }

@@ -1,4 +1,5 @@
 using Server.ContextMenus;
+using Server.Engines.Points;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -380,7 +381,7 @@ namespace Server.Engines.Quests
 
         public virtual void Complete()
         {
-            EventSink.InvokeQuestComplete(new QuestCompleteEventArgs(From, GetType()));
+            PointsSystem.CompleteQuest(From, GetType());
 
             ClearQuest(true);
         }
