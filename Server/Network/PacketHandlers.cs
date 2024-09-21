@@ -114,9 +114,7 @@ namespace Server.Network
 			Register(0xEF, 21, false, LoginServerSeed);
 			Register(0xF4, 0, false, CrashReport);
 			Register(0xF8, 106, false, CreateCharacter70160);
-			//Register(0xFA, 1, true, Unhandled); // Currently Handled in UltimaStore.cs
 			Register(0xFB, 2, false, PublicHouseContent);
-
 			Register(0x8D, 0, false, ECCreateCharacter);
 
 			RegisterExtended(0x05, false, ScreenSize);

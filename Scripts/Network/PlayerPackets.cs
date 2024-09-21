@@ -9,6 +9,7 @@ using Server.Mobiles;
 using Server.Gumps;
 using Server.Services.Virtues;
 using Server.Engines.Quests;
+using Server.Engines.UOStore;
 
 namespace Server.Network
 {
@@ -24,6 +25,7 @@ namespace Server.Network
             PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0xEC, 0, true, EquipMacro);
             PacketHandlers.Register(0xED, 0, true, UnequipMacro);
+            PacketHandlers.Register(0xFA, 1, true, UOStoreRequest);
 
             // Extended
             PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
@@ -392,6 +394,11 @@ namespace Server.Network
             }
 
             PlayerMobile.UnequipMacro(ns.Mobile, layers);
+        }
+
+        public static void UOStoreRequest(NetState state, PacketReader pvSrc)
+        {
+            UltimaStore.OpenStore(state.Mobile as PlayerMobile);
         }
 
         public static void CastSpell(NetState state, PacketReader pvSrc)
