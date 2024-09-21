@@ -5,7 +5,6 @@ using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
-using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,8 +66,6 @@ namespace Server.Engines.UOStore
 
         public static void Configure()
         {
-            PacketHandlers.Register(0xFA, 1, true, UOStoreRequest);
-
             CommandSystem.Register("Store", AccessLevel.Player, e => OpenStore(e.Mobile as PlayerMobile));
 
             EventSink.WorldSave += OnSave;
@@ -406,11 +403,6 @@ namespace Server.Engines.UOStore
         public static bool CanSearch(Mobile m)
         {
             return m != null && m.Region.GetLogoutDelay(m) <= TimeSpan.Zero;
-        }
-
-        public static void UOStoreRequest(NetState state, PacketReader pvSrc)
-        {
-            OpenStore(state.Mobile as PlayerMobile);
         }
 
         public static void OpenStore(PlayerMobile user, StoreEntry forcedEntry = null)

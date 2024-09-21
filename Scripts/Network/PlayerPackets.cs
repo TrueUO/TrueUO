@@ -8,6 +8,8 @@ using Server.Guilds;
 using Server.Mobiles;
 using Server.Gumps;
 using Server.Services.Virtues;
+using Server.Engines.Quests;
+using Server.Engines.UOStore;
 
 namespace Server.Network
 {
@@ -23,6 +25,7 @@ namespace Server.Network
             PacketHandlers.Register(0xB8, 0, true, ProfileReq);
             PacketHandlers.Register(0xEC, 0, true, EquipMacro);
             PacketHandlers.Register(0xED, 0, true, UnequipMacro);
+            PacketHandlers.Register(0xFA, 1, true, UOStoreRequest);
 
             // Extended
             PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
@@ -33,6 +36,7 @@ namespace Server.Network
             // Encoded
             PacketHandlers.RegisterEncoded(0x19, true, SetWeaponAbility);
             PacketHandlers.RegisterEncoded(0x28, true, GuildGumpRequest);
+            PacketHandlers.RegisterExtended(0x2A, true, HeritageTransform);
             PacketHandlers.RegisterEncoded(0x32, true, QuestGumpRequest);
         }
 
@@ -392,6 +396,11 @@ namespace Server.Network
             PlayerMobile.UnequipMacro(ns.Mobile, layers);
         }
 
+        public static void UOStoreRequest(NetState state, PacketReader pvSrc)
+        {
+            UltimaStore.OpenStore(state.Mobile as PlayerMobile);
+        }
+
         public static void CastSpell(NetState state, PacketReader pvSrc)
         {
             Mobile from = state.Mobile;
@@ -474,8 +483,68 @@ namespace Server.Network
             Guild.GuildGumpRequest(state.Mobile);
         }
 
+        public static void HeritageTransform(NetState state, PacketReader reader)
+        {
+            Mobile m = state.Mobile;
+
+            if (reader.Size == 5)
+            {
+                m.SendLocalizedMessage(1073645); // You may try this again later...	
+            }
+            else if (reader.Size == 15 && HeritageQuester.Check(m))
+            {
+                bool proceed = false;
+
+                if (HeritageQuester.IsPending(m))
+                {
+                    proceed = true;
+
+                    HeritageQuester quester = HeritageQuester.Pending(m);
+                    m.Race = quester.Race;
+
+                    quester.CheckCompleted(m, true); // removes done quests
+
+                    if (m.Race == Race.Elf)
+                        m.SendLocalizedMessage(1073653); // You are now fully initiated into the Elven culture.
+                    else if (m.Race == Race.Human)
+                        m.SendLocalizedMessage(1073654); // You are now fully human.
+                }
+                else if (RaceChangeToken.IsPending(m))
+                {
+                    Race race = RaceChangeToken.GetPendingRace(m);
+
+                    if (race != null)
+                    {
+                        m.Race = race;
+
+                        proceed = true;
+                        m.SendLocalizedMessage(1111914); // You have successfully changed your race.
+
+                        RaceChangeToken.OnRaceChange(m);
+                    }
+                }
+
+                if (proceed)
+                {
+                    m.Hue = reader.ReadUInt16();
+                    m.HairItemID = reader.ReadUInt16();
+                    m.HairHue = reader.ReadUInt16();
+                    m.FacialHairItemID = reader.ReadUInt16();
+                    m.FacialHairHue = reader.ReadUInt16();
+                }
+            }
+
+            HeritageQuester.RemovePending(m);
+            RaceChangeToken.RemovePending(m);
+        }
+
         public static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
         {
+            if (state.Mobile is PlayerMobile from)
+            {
+                from.CloseGump(typeof(MondainQuestGump));
+                from.SendGump(new MondainQuestGump(from));
+            }
         }
     }
 }
