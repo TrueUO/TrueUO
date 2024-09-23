@@ -74,10 +74,12 @@ namespace Server.Multis
             return null;
         }
 
+        // Called After World.Load
         public static void Initialize()
         {
-            new UpdateAllTimer().Start();
-            EventSink.WorldSave += EventSink_WorldSave;
+            UpdateAllComponents();
+
+            EventSink.AfterWorldSave += EventSink_AfterWorldSave;
         }
 
         public static void UpdateAllComponents()
@@ -105,9 +107,9 @@ namespace Server.Multis
             toDelete.TrimExcess();
         }
 
-        private static void EventSink_WorldSave(WorldSaveEventArgs e)
+        private static void EventSink_AfterWorldSave(AfterWorldSaveEventArgs e)
         {
-            new UpdateAllTimer().Start();
+            UpdateAllComponents();
         }
 
         public static void OnDisconnected(Mobile m)
@@ -3333,19 +3335,6 @@ namespace Server.Multis
                 BoatTrackingArrow.StartTracking(from);
             else if (speech.ToLower().IndexOf("stop") >= 0)
                 BoatTrackingArrow.StopTracking(from);
-        }
-
-        public class UpdateAllTimer : Timer
-        {
-            public UpdateAllTimer()
-                : base(TimeSpan.FromSeconds(1.0))
-            {
-            }
-
-            protected override void OnTick()
-            {
-                UpdateAllComponents();
-            }
         }
     }
 

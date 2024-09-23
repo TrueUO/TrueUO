@@ -15,8 +15,8 @@ namespace Server.Items
 
         private int m_ActiveItemID;
         private int m_InactiveItemID;
-
         private SecureLevel m_Level;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public SecureLevel Level { get => m_Level; set => m_Level = value; }
 
@@ -47,7 +47,6 @@ namespace Server.Items
         }
 
         private string m_Account, m_LastUserName;
-        private DateTime m_NextUse; // TODO: unused, it's here not to break serialize/deserialize
 
         private SkillName m_Skill;
         private double m_SkillValue;
@@ -243,12 +242,12 @@ namespace Server.Items
 
         private class SelectSkillGump : Gump
         {
-            private readonly SoulStone m_Stone;
+            private readonly SoulStone _Stone;
 
             public SelectSkillGump(SoulStone stone, Mobile from)
                 : base(50, 50)
             {
-                m_Stone = stone;
+                _Stone = stone;
 
                 AddPage(0);
 
@@ -305,7 +304,7 @@ namespace Server.Items
 
             public override void OnResponse(NetState sender, RelayInfo info)
             {
-                if (info.ButtonID == 0 || !m_Stone.IsEmpty)
+                if (info.ButtonID == 0 || !_Stone.IsEmpty)
                     return;
 
                 Mobile from = sender.Mobile;
@@ -318,23 +317,23 @@ namespace Server.Items
                 if (skill.Base <= 0.0)
                     return;
 
-                if (!m_Stone.CheckUse(from))
+                if (!_Stone.CheckUse(from))
                     return;
 
-                from.SendGump(new ConfirmSkillGump(m_Stone, skill));
+                from.SendGump(new ConfirmSkillGump(_Stone, skill));
             }
         }
 
         private class ConfirmSkillGump : Gump
         {
-            private readonly SoulStone m_Stone;
-            private readonly Skill m_Skill;
+            private readonly SoulStone _Stone;
+            private readonly Skill _Skill;
 
             public ConfirmSkillGump(SoulStone stone, Skill skill)
                 : base(50, 50)
             {
-                m_Stone = stone;
-                m_Skill = skill;
+                _Stone = stone;
+                _Skill = skill;
 
                 AddBackground(0, 0, 520, 440, 0x13BE);
 
@@ -387,24 +386,24 @@ namespace Server.Items
 
             public override void OnResponse(NetState sender, RelayInfo info)
             {
-                if (info.ButtonID == 0 || !m_Stone.IsEmpty)
+                if (info.ButtonID == 0 || !_Stone.IsEmpty)
                     return;
 
                 Mobile from = sender.Mobile;
 
-                if (!m_Stone.CheckUse(from))
+                if (!_Stone.CheckUse(from))
                     return;
 
                 if (info.ButtonID == 1) // Is asking for another selection
                 {
-                    from.SendGump(new SelectSkillGump(m_Stone, from));
+                    from.SendGump(new SelectSkillGump(_Stone, from));
                     return;
                 }
 
-                if (m_Skill.Base <= 0.0)
+                if (_Skill.Base <= 0.0)
                     return;
 
-                if (m_Skill.Lock != SkillLock.Down)
+                if (_Skill.Lock != SkillLock.Down)
                 {
                     // <CENTER>Unable to Transfer Selected Skill to Soulstone</CENTER>
                     /* You cannot transfer the selected skill to the Soulstone at this time. The selected
@@ -413,20 +412,20 @@ namespace Server.Items
                     * Make any needed adjustments, then click "Continue". If you do not wish to transfer
                     * the selected skill at this time, click "Cancel".
                     */
-                    from.SendGump(new ErrorGump(m_Stone, 1070710, 1070711));
+                    from.SendGump(new ErrorGump(_Stone, 1070710, 1070711));
                     return;
                 }
 
-                m_Stone.Skill = m_Skill.SkillName;
-                m_Stone.SkillValue = m_Skill.Base;
+                _Stone.Skill = _Skill.SkillName;
+                _Stone.SkillValue = _Skill.Base;
 
-                m_Skill.Base = 0.0;
+                _Skill.Base = 0.0;
 
                 CheckSkill(from);
 
                 from.SendLocalizedMessage(1070712); // You have successfully transferred your skill points into the Soulstone.
 
-                m_Stone.LastUserName = from.Name;
+                _Stone.LastUserName = from.Name;
 
                 Effects.SendLocationParticles(EffectItem.Create(from.Location, from.Map, EffectItem.DefaultDuration), 0, 0, 0, 0, 0, 5060, 0);
                 Effects.PlaySound(from.Location, from.Map, 0x243);
@@ -435,12 +434,12 @@ namespace Server.Items
 
                 Effects.SendTargetParticles(from, 0x375A, 35, 90, 0x00, 0x00, 9502, (EffectLayer)255, 0x100);
 
-                m_Stone.OnSkillTransfered(from);
+                _Stone.OnSkillTransfered(from);
             }
 
             private void CheckSkill(Mobile from)
             {
-                if (m_Skill.SkillName == SkillName.AnimalTaming && from is PlayerMobile owner && owner.AllFollowers != null && owner.AllFollowers.Count > 0)
+                if (_Skill.SkillName == SkillName.AnimalTaming && from is PlayerMobile owner && owner.AllFollowers != null && owner.AllFollowers.Count > 0)
                 {
                     for (var index = 0; index < owner.AllFollowers.Count; index++)
                     {
@@ -464,12 +463,12 @@ namespace Server.Items
 
         private class ConfirmTransferGump : Gump
         {
-            private readonly SoulStone m_Stone;
+            private readonly SoulStone _Stone;
 
             public ConfirmTransferGump(SoulStone stone, Mobile from)
                 : base(50, 50)
             {
-                m_Stone = stone;
+                _Stone = stone;
 
                 AddBackground(0, 0, 520, 440, 0x13BE);
 
@@ -524,23 +523,22 @@ namespace Server.Items
 
             public override void OnResponse(NetState sender, RelayInfo info)
             {
-                if (info.ButtonID == 0 || m_Stone.IsEmpty)
+                if (info.ButtonID == 0 || _Stone.IsEmpty)
                     return;
 
                 Mobile from = sender.Mobile;
 
-                if (!m_Stone.CheckUse(from))
+                if (!_Stone.CheckUse(from))
                     return;
 
                 if (info.ButtonID == 1) // Remove skill points
                 {
-                    from.SendGump(new ConfirmRemovalGump(m_Stone));
+                    from.SendGump(new ConfirmRemovalGump(_Stone));
                     return;
                 }
 
-                SkillName skill = m_Stone.Skill;
-                double skillValue = m_Stone.SkillValue;
-                Skill fromSkill = from.Skills[m_Stone.Skill];
+                double skillValue = _Stone.SkillValue;
+                Skill fromSkill = from.Skills[_Stone.Skill];
 
                 /* If we have, say, 88.4 in our skill and the stone holds 100, we need
                 * 11.6 free points. Also, if we're below our skillcap by, say, 8.2 points,
@@ -580,7 +578,7 @@ namespace Server.Items
                     * then click "Continue". If you do not wish to transfer the selected skill at this
                     * time, click "Cancel".
                     */
-                    from.SendGump(new ErrorGump(m_Stone, 1070717, 1070716));
+                    from.SendGump(new ErrorGump(_Stone, 1070717, 1070716));
                     return;
                 }
 
@@ -592,7 +590,7 @@ namespace Server.Items
                     * obtain a Power Scroll of the appropriate type and level in order to increase your
                     * skill cap.  You cannot currently retrieve the skill points stored in this stone.
                     */
-                    from.SendGump(new ErrorGump(m_Stone, 1070717, 1070715));
+                    from.SendGump(new ErrorGump(_Stone, 1070717, 1070715));
                     return;
                 }
 
@@ -603,7 +601,7 @@ namespace Server.Items
                     * skill has a skill level higher than what is stored in the Soulstone.
                     */
                     // Wrong message?!
-                    from.SendGump(new ErrorGump(m_Stone, 1070717, 1070802));
+                    from.SendGump(new ErrorGump(_Stone, 1070717, 1070802));
                     return;
                 }
 
@@ -613,7 +611,7 @@ namespace Server.Items
                     // <CENTER>Unable to Absorb Selected Skill from Soulstone</CENTER>
                     /*You may not use a soulstone while your character is under the effects of a Scroll of Alacrity.*/
                     // Wrong message?!
-                    from.SendGump(new ErrorGump(m_Stone, 1070717, 1078115));
+                    from.SendGump(new ErrorGump(_Stone, 1070717, 1078115));
                     return;
                 }
                 #endregion
@@ -639,11 +637,11 @@ namespace Server.Items
                 }
 
                 fromSkill.Base = skillValue;
-                m_Stone.SkillValue = 0.0;
+                _Stone.SkillValue = 0.0;
 
                 from.SendLocalizedMessage(1070713); // You have successfully absorbed the Soulstone's skill points.
 
-                m_Stone.LastUserName = from.Name;
+                _Stone.LastUserName = from.Name;
 
                 Effects.SendLocationParticles(EffectItem.Create(from.Location, from.Map, EffectItem.DefaultDuration), 0, 0, 0, 0, 0, 5060, 0);
                 Effects.PlaySound(from.Location, from.Map, 0x243);
@@ -652,7 +650,7 @@ namespace Server.Items
 
                 Effects.SendTargetParticles(from, 0x375A, 35, 90, 0x00, 0x00, 9502, (EffectLayer)255, 0x100);
 
-                if (m_Stone is SoulstoneFragment frag)
+                if (_Stone is SoulstoneFragment frag)
                 {
                     if (--frag.UsesRemaining <= 0)
                         from.SendLocalizedMessage(1070974); // You have used up your soulstone fragment.
@@ -662,12 +660,12 @@ namespace Server.Items
 
         private class ConfirmRemovalGump : Gump
         {
-            private readonly SoulStone m_Stone;
+            private readonly SoulStone _Stone;
 
             public ConfirmRemovalGump(SoulStone stone)
                 : base(50, 50)
             {
-                m_Stone = stone;
+                _Stone = stone;
 
                 AddBackground(0, 0, 520, 440, 0x13BE);
 
@@ -697,27 +695,27 @@ namespace Server.Items
 
             public override void OnResponse(NetState sender, RelayInfo info)
             {
-                if (info.ButtonID == 0 || m_Stone.IsEmpty)
+                if (info.ButtonID == 0 || _Stone.IsEmpty)
                     return;
 
                 Mobile from = sender.Mobile;
 
-                if (!m_Stone.CheckUse(from))
+                if (!_Stone.CheckUse(from))
                     return;
 
-                m_Stone.SkillValue = 0.0;
+                _Stone.SkillValue = 0.0;
                 from.SendLocalizedMessage(1070726); // You have successfully deleted the Soulstone's skill points.
             }
         }
 
         private class ErrorGump : Gump
         {
-            private readonly SoulStone m_Stone;
+            private readonly SoulStone _Stone;
 
             public ErrorGump(SoulStone stone, int title, int message)
                 : base(50, 50)
             {
-                m_Stone = stone;
+                _Stone = stone;
 
                 AddBackground(0, 0, 520, 440, 0x13BE);
 
@@ -745,13 +743,13 @@ namespace Server.Items
 
                 Mobile from = sender.Mobile;
 
-                if (!m_Stone.CheckUse(from))
+                if (!_Stone.CheckUse(from))
                     return;
 
-                if (m_Stone.IsEmpty)
-                    from.SendGump(new SelectSkillGump(m_Stone, from));
+                if (_Stone.IsEmpty)
+                    from.SendGump(new SelectSkillGump(_Stone, from));
                 else
-                    from.SendGump(new ConfirmTransferGump(m_Stone, from));
+                    from.SendGump(new ConfirmTransferGump(_Stone, from));
             }
         }
 
@@ -763,20 +761,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.WriteEncodedInt(3); // version
+            writer.WriteEncodedInt(4); // version
 
-            //version 3
             writer.Write(m_LastUserName);
-
-            //version 2
             writer.Write((int)m_Level);
-
             writer.Write(m_ActiveItemID);
             writer.Write(m_InactiveItemID);
-
             writer.Write(m_Account);
-            writer.Write(m_NextUse); //TODO: delete it in a harmless way
-
             writer.WriteEncodedInt((int)m_Skill);
             writer.Write(m_SkillValue);
         }
@@ -788,6 +779,7 @@ namespace Server.Items
 
             switch (version)
             {
+                case 4:
                 case 3:
                     {
                         m_LastUserName = reader.ReadString();
@@ -808,18 +800,16 @@ namespace Server.Items
                 case 0:
                     {
                         m_Account = reader.ReadString();
-                        m_NextUse = reader.ReadDateTime(); //TODO: delete it in a harmless way
+
+                        if (version < 4)
+                        {
+                            reader.ReadDateTime();
+                        }
 
                         m_Skill = (SkillName)reader.ReadEncodedInt();
                         m_SkillValue = reader.ReadDouble();
                         break;
                     }
-            }
-
-            if (version == 0)
-            {
-                m_ActiveItemID = 0x2A94;
-                m_InactiveItemID = 0x2A93;
             }
         }
     }
@@ -890,26 +880,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_UsesRemaining = reader.ReadEncodedInt();
-
-            if (version <= 1)
-            {
-                if (ItemID == 0x2A93 || ItemID == 0x2A94)
-                {
-                    ActiveItemID = Utility.Random(0x2AA1, 9);
-                }
-                else
-                {
-                    ActiveItemID = ItemID;
-                }
-
-                InactiveItemID = ActiveItemID;
-            }
-
-            if (version == 0 && Weight == 1)
-                Weight = -1;
         }
 
         public SoulstoneFragment(Serial serial)
@@ -1046,16 +1019,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_IsRewardItem = reader.ReadBool();
-                        break;
-                    }
-            }
+            m_IsRewardItem = reader.ReadBool();
         }
     }
 
