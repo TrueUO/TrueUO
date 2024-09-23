@@ -12,7 +12,6 @@ using Server.Regions;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Multis
 {
@@ -213,9 +212,18 @@ namespace Server.Multis
 
         public virtual void KillVendors()
         {
-            PlayerVendors.OfType<PlayerVendor>().IterateReverse(o => o.Destroy(true));
+            List<PlayerVendor> playerVendorsList = new List<PlayerVendor>();
+            foreach (Mobile vendor in PlayerVendors)
+            {
+                if (vendor is PlayerVendor pv)
+                {
+                    playerVendorsList.Add(pv);
+                }
+            }
 
-            PlayerBarkeepers.IterateReverse(o => o.Delete());
+            // Use your custom IterateReverse method to apply the action in reverse order
+            playerVendorsList.IterateReverse(vendor => vendor.Destroy(true));
+            PlayerBarkeepers.IterateReverse(barKeep => barKeep.Delete());
         }
 
         public virtual void Decay_Sandbox()

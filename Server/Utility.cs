@@ -1317,23 +1317,18 @@ namespace Server
 			}
 		}
 
-		public static void IterateReverse<T>(this List<T> list, Action<T> action)
-		{
-			if (list == null || action == null)
-			{
-				return;
-			}
+        public static void IterateReverse<T>(this List<T> list, Action<T> action)
+        {
+            if (list == null || action == null)
+            {
+                return;
+            }
 
-			int i = list.Count;
-
-			while (--i >= 0)
-			{
-				if (i < list.Count)
-				{
-					action(list[i]);
-				}
-			}
-		}
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                action(list[i]);
+            }
+        }
 
 		public static void IterateReverse<T>(this IEnumerable<T> list, Action<T> action)
 		{
