@@ -221,7 +221,7 @@ namespace Server.Multis
                 }
             }
 
-            // Use your custom IterateReverse method to apply the action in reverse order
+            // Use custom IterateReverse method to apply the action in reverse order
             playerVendorsList.IterateReverse(vendor => vendor.Destroy(true));
             PlayerBarkeepers.IterateReverse(barKeep => barKeep.Delete());
         }

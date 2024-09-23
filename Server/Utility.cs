@@ -1299,23 +1299,18 @@ namespace Server
 			Free(l);
 		}
 
-		public static void IterateReverse<T>(this T[] list, Action<T> action)
-		{
-			if (list == null || action == null)
-			{
-				return;
-			}
+        public static void IterateReverse<T>(this T[] list, Action<T> action)
+        {
+            if (list == null || action == null)
+            {
+                return;
+            }
 
-			int i = list.Length;
-
-			while (--i >= 0)
-			{
-				if (i < list.Length)
-				{
-					action(list[i]);
-				}
-			}
-		}
+            for (int i = list.Length - 1; i >= 0; i--)
+            {
+                action(list[i]);
+            }
+        }
 
         public static void IterateReverse<T>(this List<T> list, Action<T> action)
         {
@@ -1377,23 +1372,21 @@ namespace Server
 		/// </summary>
 		/// <param name="list"></param>
 		/// <param name="predicate"></param>
-		public static void SafeDelete<T>(List<T> list, Func<T, bool> predicate)
-		{
-			if (list == null)
-			{
-				return;
-			}
+        public static void SafeDelete<T>(List<T> list, Func<T, bool> predicate)
+        {
+            if (list == null)
+            {
+                return;
+            }
 
-			int i = list.Count;
-
-			while (--i >= 0)
-			{
-				if (i < list.Count && list[i] is IEntity entity && !entity.Deleted && (predicate == null || predicate((T)entity)))
-				{
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                if (list[i] is IEntity entity && !entity.Deleted && (predicate == null || predicate((T)entity)))
+                {
                     entity.Delete();
                 }
-			}
-		}
+            }
+        }
 
         public static void Shuffle<T>(List<T> list)
         {
