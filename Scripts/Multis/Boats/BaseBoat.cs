@@ -74,6 +74,7 @@ namespace Server.Multis
             return null;
         }
 
+        // Called After World.Load
         public static void Initialize()
         {
             UpdateAllComponents();
