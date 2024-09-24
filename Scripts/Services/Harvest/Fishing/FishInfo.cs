@@ -1,10 +1,8 @@
 using Server.Mobiles;
 using Server.Regions;
 using Server.Spells;
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -334,9 +332,12 @@ namespace Server.Items
                 enhanced = baitable.EnhancedBait;
             }
 
-            var infos = GetInfoFor(from, harvestItem, skill, deep);
+            List<FishInfo> infos = GetInfoFor(from, harvestItem, skill, deep);
 
-            foreach (var info in infos.OrderByDescending(i => i.Type == bait))
+            // Sort manually based on whether the FishInfo's Type matches the bait
+            infos.Sort((i1, i2) => (i2.Type == bait).CompareTo(i1.Type == bait));
+
+            foreach (FishInfo info in infos)
             {
                 if (info.Roll(from, bait, enhanced, bump))
                 {

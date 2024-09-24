@@ -5,7 +5,6 @@ using Server.SkillHandlers;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -325,9 +324,15 @@ namespace Server.Items
                 list = _SpecialCacheHordeAndTrove;
             }
 
+            // Manually concatenate arrays if the package is greater than Artisan
             if (package > TreasurePackage.Artisan)
             {
-                list.Concat(_FunctionalMinorArtifacts);
+                Type[] combinedList = new Type[list.Length + _FunctionalMinorArtifacts.Length];
+
+                Array.Copy(list, combinedList, list.Length);
+                Array.Copy(_FunctionalMinorArtifacts, 0, combinedList, list.Length, _FunctionalMinorArtifacts.Length);
+
+                list = combinedList;
             }
 
             return list;

@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Misc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -656,8 +655,19 @@ namespace Server.Mobiles
 
         public override void AddGumpLayout()
         {
-            List<BaseCreature> pets = new List<BaseCreature>(User.AllFollowers.OfType<BaseCreature>().Where(p =>
-                p.TrainingProfile != null && p.TrainingProfile.HasBegunTraining && p.Map == User.Map));
+            List<BaseCreature> pets = new List<BaseCreature>();
+
+            // Manually filter AllFollowers for BaseCreature
+            foreach (Mobile follower in User.AllFollowers)
+            {
+                if (follower is BaseCreature baseCreature &&
+                    baseCreature.TrainingProfile != null &&
+                    baseCreature.TrainingProfile.HasBegunTraining &&
+                    baseCreature.Map == User.Map)
+                {
+                    pets.Add(baseCreature);
+                }
+            }
 
             if (pets.Count == 0)
             {
