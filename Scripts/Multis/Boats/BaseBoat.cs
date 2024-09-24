@@ -6,7 +6,6 @@ using Server.Regions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Server.Accounting;
 
 namespace Server.Multis
@@ -356,9 +355,33 @@ namespace Server.Multis
         [CommandProperty(AccessLevel.GameMaster)]
         public Direction Facing { get => m_Facing; set => SetFacing(value); }
 
-        public IEnumerable<Item> ItemsOnBoard => GetEntitiesOnBoard().OfType<Item>();
+        public IEnumerable<Item> ItemsOnBoard
+        {
+            get
+            {
+                foreach (IEntity entity in GetEntitiesOnBoard())
+                {
+                    if (entity is Item item)
+                    {
+                        yield return item;
+                    }
+                }
+            }
+        }
 
-        public IEnumerable<Mobile> MobilesOnBoard => GetEntitiesOnBoard().OfType<Mobile>();
+        public IEnumerable<Mobile> MobilesOnBoard
+        {
+            get
+            {
+                foreach (IEntity entity in GetEntitiesOnBoard())
+                {
+                    if (entity is Mobile mobile)
+                    {
+                        yield return mobile;
+                    }
+                }
+            }
+        }
 
         public override bool HandlesOnSpeech => true;
 
@@ -392,8 +415,24 @@ namespace Server.Multis
         [CommandProperty(AccessLevel.GameMaster)]
         public BoatOrder Order { get; set; }
 
-        public int PlayerCount => MobilesOnBoard.Count(m => m is PlayerMobile);
+        public int PlayerCount
+        {
+            get
+            {
+                int count = 0;
 
+                foreach (Mobile mobile in MobilesOnBoard)
+                {
+                    if (mobile is PlayerMobile)
+                    {
+                        count++;
+                    }
+                }
+
+                return count;
+            }
+        }
+        
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Pilot { get; set; }
 
@@ -3227,7 +3266,17 @@ namespace Server.Multis
 
         public void RowBoat_Tick_Callback()
         {
-            if (!MobilesOnBoard.Any())
+            bool hasMobiles = false;
+
+            // Manually check if there are any mobiles on board
+            foreach (Mobile unused in MobilesOnBoard)
+            {
+                hasMobiles = true;
+                break; // Exit the loop early if a mobile is found
+            }
+
+            // If no mobiles were found, delete the rowboat
+            if (!hasMobiles)
             {
                 Delete();
             }

@@ -20,7 +20,6 @@ using Server.Spells.Spellweaving;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Server.Engines.Points;
 using Server.Engines.Quests;
@@ -6562,11 +6561,18 @@ namespace Server.Mobiles
                 return null;
             }
 
-            if (m == null || m == this || !CanBeHarmful(m, false) || creaturesOnly && !(m is BaseCreature))
+            if (m == null || m == this || !CanBeHarmful(m, false) || (creaturesOnly && m is not BaseCreature))
             {
                 List<AggressorInfo> list = new List<AggressorInfo>();
 
-                list.AddRange(Aggressors.Where(info => !creaturesOnly || info.Attacker is PlayerMobile));
+                // Manually filter aggressors based on the creaturesOnly flag
+                foreach (AggressorInfo info in Aggressors)
+                {
+                    if (!creaturesOnly || info.Attacker is PlayerMobile)
+                    {
+                        list.Add(info);
+                    }
+                }
 
                 if (list.Count > 0)
                 {
@@ -6577,7 +6583,7 @@ namespace Server.Mobiles
                     m = null;
                 }
 
-                ColUtility.Free(list);
+                ColUtility.Free(list); 
             }
 
             return m;
