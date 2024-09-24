@@ -6,7 +6,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -819,16 +818,12 @@ namespace Server.Spells.SkillMasteries
                 }
             }
 
-            IEnumerable<SkillMasterySpell> e;
-
-            lock (_Lock)
+            foreach (SkillMasterySpell spell in list)
             {
-                e = list.Where(s => s.GetType() == t || t == null);
-            }
-
-            foreach (SkillMasterySpell spell in e)
-            {
-                yield return spell;
+                if (t == null || spell.GetType() == t)
+                {
+                    yield return spell;
+                }
             }
         }
 

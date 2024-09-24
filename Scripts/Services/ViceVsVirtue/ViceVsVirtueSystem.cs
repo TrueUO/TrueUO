@@ -8,7 +8,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VvV
 {
@@ -86,8 +85,12 @@ namespace Server.Engines.VvV
 
             if (ventry != null && ventry.Active)
             {
-                List<DamageEntry> list = victim.DamageEntries.OrderBy(d => -d.DamageGiven).ToList();
+                // Sort the list manually based on DamageGiven in descending order
+                List<DamageEntry> list = new List<DamageEntry>(victim.DamageEntries);
+                list.Sort((d1, d2) => d2.DamageGiven.CompareTo(d1.DamageGiven));
+                
                 List<Mobile> handled = new List<Mobile>();
+
                 bool statloss = false;
 
                 for (int i = 0; i < list.Count; i++)
@@ -608,6 +611,7 @@ namespace Server.Engines.VvV
             Guild guildA = a.Guild as Guild;
             Guild guildB = b.Guild as Guild;
 
+            // Check if both mobiles are in the same guild or allied guilds
             if (guildA != null && guildB != null && (guildA == guildB || guildA.IsAlly(guildB)))
             {
                 return true;
@@ -618,15 +622,36 @@ namespace Server.Engines.VvV
                 return false;
             }
 
-            TemporaryCombatant tempA = TempCombatants.FirstOrDefault(c => c.From == a);
-            TemporaryCombatant tempB = TempCombatants.FirstOrDefault(c => c.From == b);
+            TemporaryCombatant tempA = null;
+            TemporaryCombatant tempB = null;
 
-            if (tempA != null && (tempA.Friendly == b || tempA.FriendlyGuild != null && tempA.FriendlyGuild == guildB))
+            // Manually find the TemporaryCombatant for 'a' and 'b'
+            foreach (TemporaryCombatant combatant in TempCombatants)
+            {
+                if (combatant.From == a)
+                {
+                    tempA = combatant;
+                }
+
+                if (combatant.From == b)
+                {
+                    tempB = combatant;
+                }
+
+                // Break early if both are found
+                if (tempA != null && tempB != null)
+                {
+                    break;
+                }
+            }
+
+            // Check if 'a' and 'b' are friendly or part of friendly guilds
+            if (tempA != null && (tempA.Friendly == b || (tempA.FriendlyGuild != null && tempA.FriendlyGuild == guildB)))
             {
                 return true;
             }
 
-            if (tempB != null && (tempB.Friendly == a || tempB.FriendlyGuild != null && tempB.FriendlyGuild == guildA))
+            if (tempB != null && (tempB.Friendly == a || (tempB.FriendlyGuild != null && tempB.FriendlyGuild == guildA)))
             {
                 return true;
             }
@@ -1031,15 +1056,26 @@ namespace Server.Engines.VvV
 
         public static void DeleteSilverTraders()
         {
-            List<Mobile> list = new List<Mobile>(World.Mobiles.Values.Where(m => m is SilverTrader));
+            List<Mobile> list = new List<Mobile>();
 
-            for (var index = 0; index < list.Count; index++)
+            // Manually filter for SilverTrader instances
+            foreach (Mobile mob in World.Mobiles.Values)
+            {
+                if (mob is SilverTrader)
+                {
+                    list.Add(mob);
+                }
+            }
+
+            // Delete all SilverTrader instances
+            for (int index = 0; index < list.Count; index++)
             {
                 Mobile mob = list[index];
 
                 mob.Delete();
             }
 
+            // Free the list after use
             ColUtility.Free(list);
         }
 

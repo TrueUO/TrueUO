@@ -4381,16 +4381,8 @@ namespace Server.Mobiles
 
                             for (int i = 0; i < count; ++i)
                             {
-                                Type questType;
-
-                                if (version >= 42)
-                                    questType = reader.ReadObjectType();
-                                else
-                                    questType = QuestSerializer.ReadQuestType(reader);
-
-                                DateTime restartTime;
-
-                                restartTime = reader.ReadDateTime();
+                                Type questType = reader.ReadObjectType();
+                                DateTime restartTime = reader.ReadDateTime();
 
                                 m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
                             }

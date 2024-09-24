@@ -1,12 +1,10 @@
 using Server.Engines.PartySystem;
 using Server.Items;
-
 using Server.Spells.First;
 using Server.Spells.Fourth;
 using Server.Spells.Necromancy;
 using Server.Targeting;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.Mysticism
 {
@@ -62,9 +60,22 @@ namespace Server.Spells.Mysticism
 
                 Caster.PlaySound(0x64C);
 
-                List<Mobile> targets = new List<Mobile> { targeted };
+                List<Mobile> targets = [targeted];
 
-                targets.AddRange(FindAdditionalTargets(targeted).Take(3)); // This effect can hit up to 3 additional players beyond the primary target.
+                // Find additional targets manually, ensuring only up to 3 are added
+                IEnumerable<Mobile> additionalTargets = FindAdditionalTargets(targeted);
+                int count = 0;
+
+                foreach (Mobile target in additionalTargets)
+                {
+                    if (count >= 3)
+                    {
+                        break; // Stop after adding 3 additional targets
+                    }
+
+                    targets.Add(target);
+                    count++;
+                } // This effect can hit up to 3 additional players beyond the primary target.
 
                 double primarySkill = Caster.Skills[CastSkill].Value;
                 double secondarySkill = Caster.Skills[DamageSkill].Value;

@@ -4,7 +4,6 @@ using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Server.Engines.VendorSearching
@@ -100,17 +99,38 @@ namespace Server.Engines.VendorSearching
 
             yOffset = 0;
 
-            SearchCriteriaCategory.AllCategories.OrderByDescending(x => x.PageID == 2).ThenByDescending(x => x.PageID == 6).ToList().ForEach(x =>
+            // Copy the list of categories
+            List<SearchCriteriaCategory> sortedCategories = new List<SearchCriteriaCategory>(SearchCriteriaCategory.AllCategories);
+
+            // Manually sort the list based on PageID == 2 first, then PageID == 6
+            sortedCategories.Sort((a, b) =>
+            {
+                int result = (b.PageID == 2).CompareTo(a.PageID == 2); // Sort by PageID == 2 in descending order
+
+                if (result == 0) // If equal, then sort by PageID == 6
+                {
+                    result = (b.PageID == 6).CompareTo(a.PageID == 6); // Sort by PageID == 6 in descending order
+                }
+
+                return result;
+            });
+
+            // Now manually iterate through the sorted list
+            foreach (SearchCriteriaCategory x in sortedCategories)
             {
                 AddButton(10, 74 + yOffset * 22, 30533, 30533, 0, GumpButtonType.Page, x.PageID);
 
                 if (x.Category == Category.PriceRange)
+                {
                     AddHtmlLocalized(50, 75 + yOffset * 22, 215, 20, x.Cliloc, $"@{Criteria.MinPrice.ToString("N0", CultureInfo.GetCultureInfo("en-US"))}@{Criteria.MaxPrice.ToString("N0", CultureInfo.GetCultureInfo("en-US"))}", LabelColor, false, false);
+                }
                 else
+                {
                     AddHtmlLocalized(50, 75 + yOffset * 22, 215, 20, x.Cliloc, LabelColor, false, false);
+                }
 
                 yOffset++;
-            });
+            }
 
             AddButton(10, 570, 0x7747, 0x7747, 0, GumpButtonType.Reply, 0);
             AddHtmlLocalized(50, 570, 50, 20, 1150300, LabelColor, false, false); // Cancel
@@ -350,18 +370,37 @@ namespace Server.Engines.VendorSearching
                         if (Criteria.Details.Count >= 20)
                         {
                             SendGump(new VendorSearchGump(User, 1154681)); // You may not add any more search criteria items.
+                            return; // Ensure that no further code runs after showing the gump
                         }
 
-                        var criteria = SearchCriteriaCategory.AllCategories.SelectMany(x => x.Criteria, (x, c) => new { x.Category, c.Object, c.Cliloc, c.PropCliloc }).ToList()[info.ButtonID - 50];
-                        object o = criteria.Object;
+                        // Manual flattening of SearchCriteriaCategory.AllCategories and combining properties
+                        List<(object Object, int Cliloc, int PropCliloc, Category Category)> criteriaList = new List<(object, int, int, Category)>();
+
+                        foreach (SearchCriteriaCategory category in SearchCriteriaCategory.AllCategories)
+                        {
+                            foreach (SearchCriterionEntry criterion in category.Criteria)
+                            {
+                                criteriaList.Add((criterion.Object, criterion.Cliloc, criterion.PropCliloc, category.Category));
+                            }
+                        }
+
+                        // Accessing the correct criteria item based on ButtonID
+                        (object Object, int Cliloc, int PropCliloc, Category Category) selectedCriteria = criteriaList[info.ButtonID - 50];
+                        object o = selectedCriteria.Object;
                         int value = 0;
 
+                        // Get the text entry value for further processing
                         TextRelay valuetext = info.GetTextEntry(info.ButtonID - 40);
 
                         if (valuetext != null)
+                        {
                             value = Math.Max(o is AosAttribute attribute && attribute == AosAttribute.CastSpeed ? -1 : 0, Utility.ToInt32(valuetext.Text));
+                        }
 
-                        Criteria.TryAddDetails(o, criteria.Cliloc, criteria.PropCliloc, value, criteria.Category);
+                        // Add criteria details
+                        Criteria.TryAddDetails(o, selectedCriteria.Cliloc, selectedCriteria.PropCliloc, value, selectedCriteria.Category);
+
+                        // Refresh the UI
                         Refresh();
                     }
                     break;

@@ -1,10 +1,8 @@
 using Server.ContextMenus;
 using Server.Engines.Craft;
 using Server.Misc;
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -948,36 +946,38 @@ namespace Server.Items
 
             private bool Refill<T>(Mobile m, Container c) where T : Item
             {
-                List<T> list = c.FindItemsByType<T>(true).ToList();
+                List<T> list = new List<T>(c.FindItemsByType<T>(true));
 
                 if (list.Count > 0)
                 {
                     int amt = 0;
 
-                    list = list.OrderByDescending(e => e.Amount).ToList();
+                    // Manually sort the list in descending order based on the Amount
+                    list.Sort((e1, e2) => e2.Amount.CompareTo(e1.Amount));
 
-                    int famount = m_quiver.Ammo == null ? 0 : m_quiver.Ammo.Amount;
+                    int fillAmount = m_quiver.Ammo == null ? 0 : m_quiver.Ammo.Amount;
 
                     if (m_quiver.Ammo != null)
                     {
                         m_quiver.Ammo.Delete();
                     }
 
-                    while (famount < m_quiver.Capacity && list.Count > 0)
+                    // Fill the quiver
+                    while (fillAmount < m_quiver.Capacity && list.Count > 0)
                     {
-                        T data = list[list.Count - 1];
+                        T data = list[list.Count - 1];  // Get the last item in the list
 
-                        int remaining = m_quiver.Capacity - famount;
+                        int remaining = m_quiver.Capacity - fillAmount;
 
                         if (data.Amount > remaining)
                         {
-                            famount += remaining;
+                            fillAmount += remaining;
                             amt += remaining;
                             data.Amount -= remaining;
                         }
                         else
                         {
-                            famount += data.Amount;
+                            fillAmount += data.Amount;
                             amt += data.Amount;
                             data.Delete();
                             list.RemoveAt(list.Count - 1);
@@ -987,12 +987,18 @@ namespace Server.Items
                     if (amt > 0 && m != null)
                     {
                         T obj = (T)Activator.CreateInstance(typeof(T));
-                        obj.Amount = famount;
-                        m_quiver.DropItem(obj);
+
+                        if (obj != null)
+                        {
+                            obj.Amount = fillAmount;
+                            m_quiver.DropItem(obj);
+                        }
+
                         m.SendLocalizedMessage(1072664, amt.ToString());
                         return true;
                     }
                 }
+
                 return false;
             }
 
