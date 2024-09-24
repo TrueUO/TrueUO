@@ -155,8 +155,8 @@ namespace Server.Spells.SkillMasteries
 
             BeginTimer();            
 
-            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType.ToString()}\t{Target.Name}\t{ScaleUpkeep().ToString()}"));
             //You train ~2_NAME~ to use ~1_SKILLNAME~.<br>Mana Upkeep: ~3_COST~
+            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType}\t{Target.Name}\t{ScaleUpkeep()}"));
 
             FinishSequence();
         }
@@ -483,13 +483,10 @@ namespace Server.Spells.SkillMasteries
 
         public static void EndRageCooldown(Mobile m)
         {
-            if (_RageCooldown != null && _RageCooldown.ContainsKey(m))
-            {
-                _RageCooldown.Remove(m);
-            }
+            _RageCooldown?.Remove(m);
         }
 
-        public static Dictionary<Mobile, Timer> _RageCooldown;
+        private static Dictionary<Mobile, Timer> _RageCooldown;
     }
 
     public class ChooseTrainingGump : Gump

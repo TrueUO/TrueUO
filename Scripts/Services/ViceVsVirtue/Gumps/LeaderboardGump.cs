@@ -4,7 +4,7 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using Server.Engines.Points;
+using System.Linq;
 
 namespace Server.Engines.VvV
 {
@@ -62,31 +62,14 @@ namespace Server.Engines.VvV
             AddButton(280, 290, 4005, 4007, 4, GumpButtonType.Reply, 0);
             AddHtmlLocalized(315, 290, 150, 20, 1114923, 0xFFFF, false, false); // Guild Rankings
 
-            List<VvVPlayerEntry> list = new List<VvVPlayerEntry>();
-
-            // Manually iterate through the PlayerTable and filter out VvVPlayerEntry objects
-            foreach (PointsEntry entry in ViceVsVirtueSystem.Instance.PlayerTable)
-            {
-                if (entry is VvVPlayerEntry vvvPlayerEntry)
-                {
-                    list.Add(vvvPlayerEntry);
-                }
-            }
+            List<VvVPlayerEntry> list = new List<VvVPlayerEntry>(ViceVsVirtueSystem.Instance.PlayerTable.OfType<VvVPlayerEntry>());
 
             switch (Filter)
             {
                 default:
-                case Filter.Score:
-                    list.Sort((e1, e2) => e2.Score.CompareTo(e1.Score)); // Sort in descending order of Score
-                    break;
-
-                case Filter.Kills:
-                    list.Sort((e1, e2) => e2.Kills.CompareTo(e1.Kills)); // Sort in descending order of Kills
-                    break;
-
-                case Filter.ReturnedSigils:
-                    list.Sort((e1, e2) => e2.ReturnedSigils.CompareTo(e1.ReturnedSigils)); // Sort in descending order of ReturnedSigils
-                    break;
+                case Filter.Score: list = list.OrderBy(e => -e.Score).ToList(); break;
+                case Filter.Kills: list = list.OrderBy(e => -e.Kills).ToList(); break;
+                case Filter.ReturnedSigils: list = list.OrderBy(e => -e.ReturnedSigils).ToList(); break;
             }
 
             int pages = (int)Math.Ceiling((double)list.Count / PerPage);
@@ -98,7 +81,7 @@ namespace Server.Engines.VvV
                 pages = 1;
 
             AddPage(page);
-            AddHtmlLocalized(60, 290, 150, 20, 1153561, string.Format("{0}\t{1}", page.ToString(), pages.ToString()), 0xFFFF, false, false); // Page ~1_CUR~ of ~2_MAX~
+            AddHtmlLocalized(60, 290, 150, 20, 1153561, $"{page}\t{pages}", 0xFFFF, false, false); // Page ~1_CUR~ of ~2_MAX~
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -125,7 +108,7 @@ namespace Server.Engines.VvV
 
                 if (pageindex == PerPage)
                 {
-                    AddHtmlLocalized(60, 290, 150, 20, 1153561, string.Format("{0}\t{1}", page.ToString(), pages.ToString()), 0xFFFF, false, false); // Page ~1_CUR~ of ~2_MAX~
+                    AddHtmlLocalized(60, 290, 150, 20, 1153561, $"{page}\t{pages}", 0xFFFF, false, false); // Page ~1_CUR~ of ~2_MAX~
 
                     if (i > 0 && i < list.Count - 1)
                     {
@@ -164,22 +147,22 @@ namespace Server.Engines.VvV
 
         private string CenterGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=CENTER>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=CENTER>{format}</DIV>";
         }
 
         private string RightGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=RIGHT>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=RIGHT>{format}</DIV>";
         }
 
         private string LeftGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=LEFT>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=LEFT>{format}</DIV>";
         }
 
         private string RightGreen(string format)
         {
-            return string.Format("<basefont color=#00FA9A><DIV ALIGN=RIGHT>{0}</DIV>", format);
+            return $"<basefont color=#00FA9A><DIV ALIGN=RIGHT>{format}</DIV>";
         }
     }
 }
