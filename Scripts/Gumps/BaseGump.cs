@@ -2,7 +2,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Server.Gumps
@@ -86,24 +85,35 @@ namespace Server.Gumps
 
         public void Dispose()
         {
-            ColUtility.ForEach(Children.AsEnumerable(), child => Children.Remove(child));
-            
+            // Create a temporary list to avoid modifying the collection while iterating
+            List<BaseGump> childrenCopy = new List<BaseGump>(Children);
+
+            // Manually iterate through the copied list and remove each child from the original list
+            foreach (var child in childrenCopy)
+            {
+                Children.Remove(child);
+            }
+
             Children = null;
             Parent = null;
 
+            // Free all text tooltips
             foreach (KeyValuePair<string, Spoof> kvp in _TextTooltips)
             {
                 kvp.Value.Free();
             }
 
+            // Free all cliloc tooltips
             foreach (KeyValuePair<Dictionary<int, string>, Spoof> kvp in _ClilocTooltips)
             {
                 kvp.Value.Free();
             }
 
+            // Clear the tooltip dictionaries
             _ClilocTooltips.Clear();
             _TextTooltips.Clear();
 
+            // Perform any additional cleanup
             OnDispose();
         }
 

@@ -1,7 +1,6 @@
 using Server.Gumps;
 using Server.Items;
 using Server.Regions;
-using System.Linq;
 
 namespace Server.Multis
 {
@@ -45,18 +44,10 @@ namespace Server.Multis
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 0:
-                    {
-                        MultiID = reader.ReadInt();
-                        Offset = reader.ReadPoint3D();
-
-                        break;
-                    }
-            }
+            MultiID = reader.ReadInt();
+            Offset = reader.ReadPoint3D();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -130,10 +121,35 @@ namespace Server.Multis
             {
                 if (boat.IsRowBoat)
                 {
-                    BaseBoat lastrowboat = World.Items.Values.OfType<BaseBoat>().Where(x => x.Owner == from && x.IsRowBoat && x.Map != Map.Internal && !x.MobilesOnBoard.Any()).MaxBy(y => y.Serial);
+                    BaseBoat lastRowBoat = null;
+                    foreach (var item in World.Items.Values)
+                    {
+                        if (item is BaseBoat baseBoat && baseBoat.Owner == from && baseBoat.IsRowBoat && baseBoat.Map != Map.Internal)
+                        {
+                            bool hasNoMobilesOnBoard = true;
 
-                    if (lastrowboat != null)
-                        lastrowboat.Delete();
+                            // Check if the boat has any mobiles on board
+                            foreach (Mobile _ in baseBoat.MobilesOnBoard)
+                            {
+                                hasNoMobilesOnBoard = false;
+                                break;
+                            }
+
+                            if (hasNoMobilesOnBoard)
+                            {
+                                // Check if this is the boat with the maximum Serial
+                                if (lastRowBoat == null || baseBoat.Serial > lastRowBoat.Serial)
+                                {
+                                    lastRowBoat = baseBoat;
+                                }
+                            }
+                        }
+                    }
+
+                    if (lastRowBoat != null)
+                    {
+                        lastRowBoat.Delete();
+                    }
                 }
                 else
                 {
