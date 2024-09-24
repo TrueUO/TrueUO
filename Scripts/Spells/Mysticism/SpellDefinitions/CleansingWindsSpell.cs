@@ -1,12 +1,10 @@
 using Server.Engines.PartySystem;
 using Server.Items;
-
 using Server.Spells.First;
 using Server.Spells.Fourth;
 using Server.Spells.Necromancy;
 using Server.Targeting;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.Mysticism
 {
@@ -64,7 +62,20 @@ namespace Server.Spells.Mysticism
 
                 List<Mobile> targets = new List<Mobile> { targeted };
 
-                targets.AddRange(FindAdditionalTargets(targeted).Take(3)); // This effect can hit up to 3 additional players beyond the primary target.
+                // Manually add up to 3 additional targets
+                IEnumerable<Mobile> additionalTargets = FindAdditionalTargets(targeted);
+                int count = 0;
+
+                foreach (Mobile target in additionalTargets)
+                {
+                    if (count >= 3)
+                    {
+                        break;
+                    }
+
+                    targets.Add(target);
+                    count++;
+                }
 
                 double primarySkill = Caster.Skills[CastSkill].Value;
                 double secondarySkill = Caster.Skills[DamageSkill].Value;
@@ -133,6 +144,7 @@ namespace Server.Spells.Mysticism
 
             Entity from = new Entity(Serial.Zero, new Point3D(m.X, m.Y, m.Z - 10), m.Map);
             Entity to = new Entity(Serial.Zero, new Point3D(m.X, m.Y, m.Z + 50), m.Map);
+
             Effects.SendMovingParticles(from, to, 0x2255, 1, 0, false, false, 13, 3, 9501, 1, 0, EffectLayer.Head, 0x100);
         }
 
@@ -259,8 +271,8 @@ namespace Server.Spells.Mysticism
             {
             }
 
-            public InternalTarget(CleansingWindsSpell owner, bool allowland)
-                : base(12, allowland, TargetFlags.Beneficial)
+            public InternalTarget(CleansingWindsSpell owner, bool allowLand)
+                : base(12, allowLand, TargetFlags.Beneficial)
             {
                 Owner = owner;
             }

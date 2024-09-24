@@ -2,7 +2,7 @@ using Server.Engines.PartySystem;
 using Server.Items;
 using Server.Mobiles;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Engines.Shadowguard
 {
@@ -157,15 +157,27 @@ namespace Server.Engines.Shadowguard
                 return;
             }
 
-            ColUtility.ForEach(ShadowguardController.Instance.Addons.Where(addon => addon.Map != Map.Internal), addon =>
-                {
-                    ShadowguardInstance instance = ShadowguardController.GetInstance(addon.Location, addon.Map);
+            List<BaseAddon> filteredAddons = new List<BaseAddon>();
 
-                    if (instance != null && !instance.InUse)
-                    {
-                        instance.ClearRegion();
-                    }
-                });
+            // Manually filter the addons where Map is not internal
+            foreach (BaseAddon addon in ShadowguardController.Instance.Addons)
+            {
+                if (addon.Map != Map.Internal)
+                {
+                    filteredAddons.Add(addon);
+                }
+            }
+
+            // Now process the filtered list of addons
+            ColUtility.ForEach(filteredAddons, addon =>
+            {
+                ShadowguardInstance instance = ShadowguardController.GetInstance(addon.Location, addon.Map);
+
+                if (instance != null && !instance.InUse)
+                {
+                    instance.ClearRegion();
+                }
+            });
         }
     }
 }

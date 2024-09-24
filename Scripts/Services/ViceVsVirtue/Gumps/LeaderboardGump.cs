@@ -4,7 +4,7 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Server.Engines.Points;
 
 namespace Server.Engines.VvV
 {
@@ -62,14 +62,31 @@ namespace Server.Engines.VvV
             AddButton(280, 290, 4005, 4007, 4, GumpButtonType.Reply, 0);
             AddHtmlLocalized(315, 290, 150, 20, 1114923, 0xFFFF, false, false); // Guild Rankings
 
-            List<VvVPlayerEntry> list = new List<VvVPlayerEntry>(ViceVsVirtueSystem.Instance.PlayerTable.OfType<VvVPlayerEntry>());
+            List<VvVPlayerEntry> list = new List<VvVPlayerEntry>();
+
+            // Manually iterate through the PlayerTable and filter out VvVPlayerEntry objects
+            foreach (PointsEntry entry in ViceVsVirtueSystem.Instance.PlayerTable)
+            {
+                if (entry is VvVPlayerEntry vvvPlayerEntry)
+                {
+                    list.Add(vvvPlayerEntry);
+                }
+            }
 
             switch (Filter)
             {
                 default:
-                case Filter.Score: list = list.OrderBy(e => -e.Score).ToList(); break;
-                case Filter.Kills: list = list.OrderBy(e => -e.Kills).ToList(); break;
-                case Filter.ReturnedSigils: list = list.OrderBy(e => -e.ReturnedSigils).ToList(); break;
+                case Filter.Score:
+                    list.Sort((e1, e2) => e2.Score.CompareTo(e1.Score)); // Sort in descending order of Score
+                    break;
+
+                case Filter.Kills:
+                    list.Sort((e1, e2) => e2.Kills.CompareTo(e1.Kills)); // Sort in descending order of Kills
+                    break;
+
+                case Filter.ReturnedSigils:
+                    list.Sort((e1, e2) => e2.ReturnedSigils.CompareTo(e1.ReturnedSigils)); // Sort in descending order of ReturnedSigils
+                    break;
             }
 
             int pages = (int)Math.Ceiling((double)list.Count / PerPage);
