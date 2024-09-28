@@ -547,8 +547,6 @@ namespace Server.Engines.Blackthorn
                     }
                 }
             }
-
-            Timer.DelayCall(TimeSpan.FromSeconds(30), CleanupSpawn);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -616,8 +614,19 @@ namespace Server.Engines.Blackthorn
             });
         }
 
+        public static void AfterWorldSave(AfterWorldSaveEventArgs e)
+        {
+            InvasionController controller = TramInstance ?? FelInstance;
+            if (controller != null)
+            {
+                Timer.DelayCall(TimeSpan.FromSeconds(30), controller.CleanupSpawn);
+            }
+        }
+
         public static void Initialize()
         {
+            EventSink.AfterWorldSave += AfterWorldSave;
+
             if (TramInstance == null)
             {
                 TramInstance = new InvasionController();
