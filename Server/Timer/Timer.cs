@@ -12,9 +12,7 @@
  * You should have received a copy of the GNU General Public License     *
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  *************************************************************************/
-
 using System;
-using Server.Diagnostics;
 
 namespace Server;
 
@@ -45,13 +43,6 @@ public partial class Timer
         Next = DateTime.UtcNow + Delay;
         _ring = -1;
         _slot = -1;
-
-        var prof = GetProfile();
-
-        if (prof != null)
-        {
-            prof.Created++;
-        }
     }
 
     protected int Version { get; set; } // Used to determine if a timer was altered and we should abandon it.
@@ -61,10 +52,8 @@ public partial class Timer
     public TimeSpan Interval { get; set; }
     public int Index { get; private set; }
     public int Count { get; private set; }
-    public int RemainingCount => Count - Index;
+    public int RemainingCount => Count == 0 ? int.MaxValue : Count - Index;
     public bool Running { get; private set; }
-
-    public TimerProfile GetProfile() => !Core.Profiling ? null : TimerProfile.Acquire(ToString() ?? "null");
 
     public override string ToString() => GetType().FullName;
 
@@ -79,13 +68,6 @@ public partial class Timer
         Running = true;
         AddTimer(this, (long)Delay.TotalMilliseconds);
 
-        var prof = GetProfile();
-
-        if (prof != null)
-        {
-            prof.Started++;
-        }
-
         return this;
     }
 
@@ -96,6 +78,16 @@ public partial class Timer
             return;
         }
 
+        InternalStop();
+
+        Detach();
+        OnDetach();
+
+        Version++;
+    }
+
+    private void InternalStop()
+    {
         Running = false;
 
         // We are the head on the timer ring
@@ -108,17 +100,6 @@ public partial class Timer
         if (_executingRings[_ring] == this)
         {
             _executingRings[_ring] = _nextTimer;
-        }
-
-        Detach();
-
-        Version++;
-        OnDetach();
-
-        var prof = GetProfile();
-        if (prof != null)
-        {
-            prof.Stopped++;
         }
     }
 
