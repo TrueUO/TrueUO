@@ -12,12 +12,17 @@
  * You should have received a copy of the GNU General Public License     *
  * along with this program.  If not, see <http://www.gnu.org/licenses/>. *
  *************************************************************************/
+
 using System;
+using System.Diagnostics;
+using Server.Logging;
 
 namespace Server;
 
 public partial class Timer
 {
+    protected internal static readonly ILogger logger = LogFactory.GetLogger(typeof(Timer));
+
     // We need to know what ring/slot we are in so we can be removed if we are "head" of the link list.
     private int _ring;
     private int _slot;
@@ -59,6 +64,28 @@ public partial class Timer
 
     public Timer Start()
     {
+        if (World.Saving)
+        {
+            logger.Error(
+                $"Attempted to start timer {{Timer}} ({{HashCode}}) while world is saving{Environment.NewLine}{{StackTrace}}",
+                GetType(),
+                GetHashCode(),
+                new StackTrace()
+            );
+        }
+
+#if THREADGUARD
+        if (Thread.CurrentThread != Core.Thread)
+        {
+            logger.Error(
+                $"Attempted to start timer {{Timer}} ({{HashCode}}) from an invalid thread!{Environment.NewLine}{{StackTrace}}",
+                GetType(),
+                GetHashCode(),
+                new StackTrace()
+            );
+        }
+#endif
+
         if (Running)
         {
             return this;
@@ -73,6 +100,28 @@ public partial class Timer
 
     public void Stop()
     {
+        if (World.Saving)
+        {
+            logger.Error(
+                $"Attempted to stop timer {{Timer}} ({{HashCode}}) while world is saving{Environment.NewLine}{{StackTrace}}",
+                GetType(),
+                GetHashCode(),
+                new StackTrace()
+            );
+        }
+
+#if THREADGUARD
+        if (Thread.CurrentThread != Core.Thread)
+        {
+            logger.Error(
+                $"Attempted to stop timer {{Timer}} ({{HashCode}}) from an invalid thread!{Environment.NewLine}{{StackTrace}}",
+                GetType(),
+                GetHashCode(),
+                new StackTrace()
+            );
+        }
+#endif
+
         if (!Running)
         {
             return;
@@ -109,10 +158,30 @@ public partial class Timer
 
     private void Attach(Timer timer)
     {
+#if DEBUG_TIMERS
+        if (_nextTimer != null)
+        {
+            logger.Error(
+                "{Timer} ({HashCode}) attached with a next timer already set!",
+                this,
+                GetHashCode()
+            );
+        }
+#endif
         _nextTimer = timer;
 
         if (timer != null)
         {
+#if DEBUG_TIMERS
+            if (timer._prevTimer != null)
+            {
+                logger.Error(
+                    "{Timer} ({HashCode}) attached from with a previous timer already set!",
+                    timer,
+                    timer.GetHashCode()
+                );
+            }
+#endif
             timer._prevTimer = this;
         }
     }
@@ -137,6 +206,11 @@ public partial class Timer
     {
         if (Running)
         {
+            logger.Error(
+                $"{{Timer}} detached while still running!{Environment.NewLine}{{StackTrace}}",
+                this,
+                new StackTrace()
+            );
             return;
         }
 

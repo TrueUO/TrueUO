@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -51,6 +52,7 @@ public partial class Timer
 
     public static void Slice(long tickCount)
     {
+        // Seemed to fix an issue on TrueUO with world saves and timers
         if (World.Saving || World.Loading)
         {
             return;
@@ -206,6 +208,14 @@ public partial class Timer
                     // In this case, we will just throw it on the last slot.
                     if (lastRing && slot > _ringSize)
                     {
+                        logger.Error(
+                            $"Timer {{Timer}} has a duration of {{Duration}}ms, more than max capacity of {{MaxDuration}}ms.{Environment.NewLine}{{StackTrace}}",
+                            timer.GetType(),
+                            originalDelay,
+                            _maxDuration,
+                            new StackTrace()
+                        );
+
                         slot = Math.Max(0, ringIndex - 1);
                     }
                 }
@@ -228,7 +238,7 @@ public partial class Timer
 
     public static void DumpInfo(TextWriter tw)
     {
-        tw.WriteLine($"Date: {DateTime.UtcNow.ToLocalTime()}{Environment.NewLine}");
+        tw.WriteLine($"Date: {DateTime.Now.ToLocalTime()}{Environment.NewLine}");
 
         var total = 0.0;
         var hash = new Dictionary<string, int>();
