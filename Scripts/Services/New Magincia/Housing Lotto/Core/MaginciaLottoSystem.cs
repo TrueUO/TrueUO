@@ -1,6 +1,5 @@
 using Server.Accounting;
 using Server.Gumps;
-using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
@@ -33,8 +32,20 @@ namespace Server.Engines.NewMagincia
 
         public static void Initialize()
         {
+            EventSink.AfterWorldSave += AfterWorldSave;
+
             if (m_Instance != null)
+            {
                 m_Instance.PruneMessages();
+            }
+        }
+
+        public static void AfterWorldSave(AfterWorldSaveEventArgs e)
+        {
+            if (m_Instance != null)
+            {
+                Timer.DelayCall(TimeSpan.FromSeconds(30), m_Instance.PruneMessages);
+            }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -195,41 +206,6 @@ namespace Server.Engines.NewMagincia
             return false;
         }
 
-        public static void CheckHousePlacement(Mobile from, Point3D center)
-        {
-            MaginciaLottoSystem system = Instance;
-
-            if (system != null && system.Enabled && from.Backpack != null && IsInMagincia(center.X, center.Y, from.Map))
-            {
-                List<Item> items = new List<Item>();
-
-                Item[] packItems = from.Backpack.FindItemsByType(typeof(WritOfLease));
-                Item[] bankItems = from.BankBox.FindItemsByType(typeof(WritOfLease));
-
-                if (packItems != null && packItems.Length > 0)
-                    items.AddRange(packItems);
-
-                if (bankItems != null && bankItems.Length > 0)
-                    items.AddRange(bankItems);
-
-                for (var index = 0; index < items.Count; index++)
-                {
-                    Item item = items[index];
-
-                    if (item is WritOfLease lease && !lease.Expired && lease.Plot != null && lease.Plot.Bounds.Contains(center) && @from.Map == lease.Plot.Map)
-                    {
-                        lease.OnExpired();
-                        return;
-                    }
-                }
-            }
-        }
-
-        public static bool IsInMagincia(int x, int y, Map map)
-        {
-            return x > 3614 && x < 3817 && y > 2031 && y < 2274 && (map == Map.Trammel || map == Map.Felucca);
-        }
-
         private void LoadPlots()
         {
             for (int i = 0; i < m_MagHousingZones.Length; i++)
@@ -355,28 +331,6 @@ namespace Server.Engines.NewMagincia
 
             int z = plot.Map.GetAverageZ(plot.Bounds.X - 1, plot.Bounds.Y - 1);
             return new Point3D(plot.Bounds.X - 1, plot.Bounds.Y - 1, z);
-        }
-
-        public static string FormatSextant(MaginciaHousingPlot plot)
-        {
-            int z = plot.Map.GetAverageZ(plot.Bounds.X, plot.Bounds.Y);
-            Point3D p = new Point3D(plot.Bounds.X, plot.Bounds.Y, z);
-
-            return FormatSextant(p, plot.Map);
-        }
-
-        public static string FormatSextant(Point3D p, Map map)
-        {
-            int xLong = 0, yLat = 0;
-            int xMins = 0, yMins = 0;
-            bool xEast = false, ySouth = false;
-
-            if (Sextant.Format(p, map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
-            {
-                return string.Format("{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
-            }
-
-            return p.ToString();
         }
 
         #region Messages
@@ -631,8 +585,6 @@ namespace Server.Engines.NewMagincia
                     message.Serialize(writer);
                 }
             }
-
-            Timer.DelayCall(TimeSpan.FromSeconds(30), PruneMessages);
         }
 
         public override void Deserialize(GenericReader reader)

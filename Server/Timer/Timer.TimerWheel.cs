@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -51,6 +52,7 @@ public partial class Timer
 
     public static void Slice(long tickCount)
     {
+        // Seemed to fix an issue on TrueUO with world saves and timers
         if (World.Saving || World.Loading)
         {
             return;
@@ -122,11 +124,6 @@ public partial class Timer
                         Execute(timer);
                     }
                 }
-
-                if (!timer.Running)
-                {
-                    timer.OnDetach();
-                }
             }
 #if DEBUG_TIMERS
             if (executionCount > _chainExecutionThreshold)
@@ -143,29 +140,38 @@ public partial class Timer
 
     private static void Execute(Timer timer)
     {
-        var finished = timer.Count != 0 && ++timer.Index >= timer.Count;
+        var finished = timer.Count != 0 && timer.Index + 1 >= timer.Count;
+
+        // Stop the timer from running so that way if Start() is called in OnTick, the timer will be started.
+        if (finished)
+        {
+            timer.InternalStop();
+            timer.Version++;
+        }
 
         var version = timer.Version;
 
-        var prof = timer.GetProfile();
-        prof?.Start();
         timer.OnTick();
-        prof?.Finish();
 
-        // If the timer has not been stopped, and it has not been altered (restarted, returned etc)
-        if (timer.Running && timer.Version == version)
+        // Starting doesn't change the timer version, so we need to check if it's finished and if it's still running.
+        if (timer.Version != version || finished && timer.Running)
         {
-            if (finished)
-            {
-                timer.Stop();
-            }
-            else
-            {
-                timer.Delay = timer.Interval;
-                timer.Next = DateTime.UtcNow + timer.Interval;
-                AddTimer(timer, (long)timer.Delay.TotalMilliseconds);
-            }
+            return;
         }
+
+        if (!finished)
+        {
+            timer.Delay = timer.Interval;
+            timer.Next = DateTime.UtcNow + timer.Interval;
+            AddTimer(timer, (long)timer.Delay.TotalMilliseconds);
+        }
+        else
+        {
+            // Already stopped and detached, now run OnDetach
+            timer.OnDetach();
+        }
+
+        timer.Index++;
     }
 
     private static void AddTimer(Timer timer, long delay)
@@ -202,6 +208,14 @@ public partial class Timer
                     // In this case, we will just throw it on the last slot.
                     if (lastRing && slot > _ringSize)
                     {
+                        logger.Error(
+                            $"Timer {{Timer}} has a duration of {{Duration}}ms, more than max capacity of {{MaxDuration}}ms.{Environment.NewLine}{{StackTrace}}",
+                            timer.GetType(),
+                            originalDelay,
+                            _maxDuration,
+                            new StackTrace()
+                        );
+
                         slot = Math.Max(0, ringIndex - 1);
                     }
                 }
@@ -224,7 +238,7 @@ public partial class Timer
 
     public static void DumpInfo(TextWriter tw)
     {
-        tw.WriteLine($"Date: {DateTime.UtcNow.ToLocalTime()}{Environment.NewLine}");
+        tw.WriteLine($"Date: {DateTime.Now.ToLocalTime()}{Environment.NewLine}");
 
         var total = 0.0;
         var hash = new Dictionary<string, int>();
