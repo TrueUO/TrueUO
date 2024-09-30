@@ -23,12 +23,16 @@ namespace Server.Items
 
         public override int DefaultGumpID => 0x40;
 
+        public static List<Incubator> IncubatorInstances = new List<Incubator>();
+
         [Constructable]
         public Incubator()
             : base(0x407C)
         {
             m_Level = SecureLevel.CoOwners;
             Weight = 10;
+
+            IncubatorInstances.Add(this);
         }
 
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
@@ -101,9 +105,27 @@ namespace Server.Items
             }
         }
 
+        public override void OnDelete()
+        {
+            base.OnDelete();
+
+            IncubatorInstances.Remove(this);
+        }
+
         public static void Initialize()
         {
             CommandSystem.Register("IncreaseStage", AccessLevel.Counselor, IncreaseStage_OnCommand);
+
+            EventSink.AfterWorldSave += AfterWorldSave;
+        }
+
+        public static void AfterWorldSave(AfterWorldSaveEventArgs e)
+        {
+            foreach (Incubator incubator in IncubatorInstances)
+            {
+                if (incubator.Items.Count > 0)
+                    Timer.DelayCall(TimeSpan.FromSeconds(10), incubator.CheckEggs_Callback);
+            }
         }
 
         public static void IncreaseStage_OnCommand(CommandEventArgs e)
@@ -132,9 +154,6 @@ namespace Server.Items
             writer.Write(0); // version
 
             writer.Write((int)m_Level);
-
-            if (Items.Count > 0)
-                Timer.DelayCall(TimeSpan.FromSeconds(10), CheckEggs_Callback);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -146,6 +165,9 @@ namespace Server.Items
 
             if (Items.Count > 0)
                 Timer.DelayCall(TimeSpan.FromSeconds(60), CheckEggs_Callback);
+
+            // Needed to add existing ones to new list. Do I need to keep this?
+            IncubatorInstances.Add(this);
         }
     }
 }

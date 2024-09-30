@@ -426,7 +426,6 @@ namespace Server.Engines.Points
         {
             EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
-            EventSink.QuestComplete += CompleteQuest;
 
             Systems = new List<PointsSystem>();
 
@@ -463,13 +462,13 @@ namespace Server.Engines.Points
             }
         }
 
-        public static void CompleteQuest(QuestCompleteEventArgs e)
+        public static void CompleteQuest(PlayerMobile pm, Type type)
         {
             for (var index = 0; index < Systems.Count; index++)
             {
                 var s = Systems[index];
 
-                s.ProcessQuest(e.Mobile, e.QuestType);
+                s.ProcessQuest(pm, type);
             }
         }
         #endregion

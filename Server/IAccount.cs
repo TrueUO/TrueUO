@@ -1,13 +1,9 @@
-#region References
 using System;
-#endregion
 
 namespace Server.Accounting
 {
 	public static class AccountGold
 	{
-		public static bool Enabled = false;
-
 		/// <summary>
 		/// This amount specifies the value at which point Gold turns to Platinum.
 		/// By default, when 1,000,000,000 Gold is accumulated, it will transform
@@ -23,12 +19,6 @@ namespace Server.Accounting
 		/// when they are added to a bank box container.
 		/// </summary>
 		public static bool ConvertOnBank = true;
-
-		/// <summary>
-		/// Enables or Disables automatic conversion of Gold and Checks to Bank Currency
-		/// when they are added to a secure trade container.
-		/// </summary>
-		public static bool ConvertOnTrade = false;
 
 		public static double GetGoldTotal(Mobile m)
 		{

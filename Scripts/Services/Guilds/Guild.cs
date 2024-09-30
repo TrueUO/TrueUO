@@ -580,7 +580,6 @@ namespace Server.Guilds
         public static void Configure()
         {
             EventSink.CreateGuild += EventSink_CreateGuild;
-            EventSink.GuildGumpRequest += EventSink_GuildGumpRequest;
 
             CommandSystem.Register("GuildProps", AccessLevel.Counselor, GuildProps_OnCommand);
         }
@@ -665,10 +664,9 @@ namespace Server.Guilds
         }
         #endregion
 
-        #region EventSinks
-        public static void EventSink_GuildGumpRequest(GuildGumpRequestArgs args)
+        public static void GuildGumpRequest(Mobile m)
         {
-            PlayerMobile pm = args.Mobile as PlayerMobile;
+            PlayerMobile pm = m as PlayerMobile;
 
             if (pm == null)
             {
@@ -689,7 +687,6 @@ namespace Server.Guilds
         {
             args.Guild = new Guild(args.Id);
         }
-        #endregion
 
         public static readonly int RegistrationFee = 25000;
         public static readonly int AbbrevLimit = 4;

@@ -11,11 +11,6 @@ namespace Server.Items
 {
     public class Bandage : Item, IDyable, ICommodity
     {
-        public static void Initialize()
-        {
-            EventSink.BandageTargetRequest += BandageTargetRequest;
-        }
-
         public static int Range = 2;
 
         public override double DefaultWeight => 0.1;
@@ -80,17 +75,14 @@ namespace Server.Items
             }
         }
 
-        public static void BandageTargetRequest(BandageTargetRequestEventArgs e)
+        public static void BandageTargetRequest(Mobile from, Item item, Mobile target)
         {
-            BandageTargetRequest(e.Bandage as Bandage, e.Mobile, e.Target);
-        }
-
-        public static void BandageTargetRequest(Bandage bandage, Mobile from, Mobile target)
-        {
-            if (bandage == null || bandage.Deleted)
+            if (item is not Bandage b || b.Deleted)
+            {
                 return;
+            }
 
-            if (from.InRange(bandage.GetWorldLocation(), Range))
+            if (from.InRange(b.GetWorldLocation(), Range))
             {
                 Target t = from.Target;
 
@@ -103,7 +95,7 @@ namespace Server.Items
                 from.RevealingAction();
                 from.SendLocalizedMessage(500948); // Who will you use the bandages on?
 
-                new InternalTarget(bandage).Invoke(from, target);
+                new InternalTarget(b).Invoke(from, target);
             }
             else
             {

@@ -140,12 +140,26 @@ namespace Server.Engines.Shadowguard
                 return;
             }
 
-            BaseAddon ad = Controller.Addons.FirstOrDefault(a => a.GetType() == addon && a.Map == Map.Internal);
+            BaseAddon ad = null;
+
+            // Manually iterate through the Addons to find the matching one
+            foreach (BaseAddon a in Controller.Addons)
+            {
+                if (a.GetType() == addon && a.Map == Map.Internal)
+                {
+                    ad = a;
+                    break;
+                }
+            }
 
             if (ad == null)
             {
                 ad = Activator.CreateInstance(addon) as BaseAddon;
-                Controller.Addons.Add(ad);
+
+                if (ad != null)
+                {
+                    Controller.Addons.Add(ad);
+                }
             }
 
             if (ad != null)
@@ -176,9 +190,13 @@ namespace Server.Engines.Shadowguard
 
                 if (p != null)
                 {
-                    foreach (Mobile pm in p.Members.Select(x => x.Mobile))
+                    // Manually iterate over the party members and add each mobile
+                    foreach (PartyMemberInfo info in p.Members)
                     {
-                        AddPlayer(pm);
+                        if (info.Mobile != null)
+                        {
+                            AddPlayer(info.Mobile);
+                        }
                     }
                 }
 
@@ -190,9 +208,13 @@ namespace Server.Engines.Shadowguard
         {
             if (HasBegun)
             {
-                foreach (PlayerMobile pm in Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+                // Manually filter mobiles in the region to find PlayerMobile
+                foreach (Mobile m in Region.GetEnumeratedMobiles())
                 {
-                    pm.SendLocalizedMessage(cliloc, null, hue);
+                    if (m is PlayerMobile pm)
+                    {
+                        pm.SendLocalizedMessage(cliloc, null, hue);
+                    }
                 }
             }
             else
@@ -203,9 +225,20 @@ namespace Server.Engines.Shadowguard
                 Party p = Party.Get(PartyLeader);
 
                 if (p != null)
-                    p.Members.ForEach(info => info.Mobile.SendLocalizedMessage(cliloc, null, hue));
+                {
+                    // Manually iterate over the party members
+                    foreach (PartyMemberInfo info in p.Members)
+                    {
+                        if (info.Mobile != null)
+                        {
+                            info.Mobile.SendLocalizedMessage(cliloc, null, hue);
+                        }
+                    }
+                }
                 else
+                {
                     PartyLeader.SendLocalizedMessage(cliloc, null, hue);
+                }
             }
         }
 

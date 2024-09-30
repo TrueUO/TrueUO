@@ -5,7 +5,6 @@ using Server.Spells.Chivalry;
 using Server.Spells.Fourth;
 using Server.Spells.Seventh;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Gumps
 {
@@ -13,16 +12,21 @@ namespace Server.Gumps
     {
         public void PrecompileStringTable()
         {
-            Intern("Charges", true);              // 0
-            Intern("Max Charges", true);          // 1
-                                                  // Next 16 entries are Location Values
+            Intern("Charges", true);      // 0
+            Intern("Max Charges", true);  // 1
+
+            // Next 16 entries are Location Values
             for (int i = 0; i < 16; ++i)
             {
                 string desc;
                 if (i < Book.Entries.Count)
+                {
                     desc = GetName(Book.Entries[i].Description);
+                }
                 else
+                {
                     desc = "Empty";
+                }
 
                 Intern(desc, false);
             }
@@ -189,7 +193,7 @@ namespace Server.Gumps
 
                 if (index < 16)
                 {
-                    if (Book.Entries.ElementAtOrDefault(index) != null)
+                    if (index >= 0 && index < Book.Entries.Count)
                     {
                         RunebookEntry e = Book.Entries[index];
 
@@ -357,136 +361,129 @@ namespace Server.Gumps
                 if (type == 0 || type == 1)
                     index = buttonID - 10;
 
-                if (Book.Entries.ElementAtOrDefault(index) != null)
+                if (index >= 0 && index < Book.Entries.Count)
                 {
-                    if (index >= 0 && index < Book.Entries.Count)
-                    {
-                        RunebookEntry e = Book.Entries[index];
+                    RunebookEntry e = Book.Entries[index];
 
-                        switch (type)
+                    switch (type)
+                    {
+                        case 0:
+                        case 1: // Use charges
                         {
-                            case 0:
-                            case 1: // Use charges
-                                {
-                                    if (Book.CurCharges <= 0)
-                                    {
-                                        from.CloseGump(typeof(RunebookGump));
-                                        from.SendGump(new RunebookGump(from, Book));
+                            if (Book.CurCharges <= 0)
+                            {
+                                from.CloseGump(typeof(RunebookGump));
+                                from.SendGump(new RunebookGump(from, Book));
 
-                                        from.SendLocalizedMessage(502412); // There are no charges left on that item.
-                                    }
-                                    else
-                                    {
-                                        SendLocationMessage(e, from);
+                                from.SendLocalizedMessage(502412); // There are no charges left on that item.
+                            }
+                            else
+                            {
+                                SendLocationMessage(e, from);
 
-                                        Book.OnTravel();
-                                        new RecallSpell(from, Book, e, Book).Cast();
+                                Book.OnTravel();
+                                new RecallSpell(from, Book, e, Book).Cast();
 
-                                        Book.Openers.Remove(from);
-                                    }
+                                Book.Openers.Remove(from);
+                            }
 
-                                    break;
-                                }
-                            case 8: // Drop rune
-                                {
-                                    if (Book.CheckAccess(from) && Book.Movable)
-                                    {
-                                        Book.DropRune(from, e, index);
-
-                                        from.CloseGump(typeof(RunebookGump));
-                                        from.SendGump(new RunebookGump(from, Book));
-                                    }
-                                    else
-                                    {
-                                        Book.Openers.Remove(from);
-
-                                        from.SendLocalizedMessage(502413); // That cannot be done while the book is locked down.
-                                    }
-
-                                    break;
-                                }
-                            case 12: // Set default
-                                {
-                                    if (Book.CheckAccess(from))
-                                    {
-                                        Book.Default = e;
-
-                                        from.CloseGump(typeof(RunebookGump));
-                                        from.SendGump(new RunebookGump(from, Book));
-
-                                        from.SendLocalizedMessage(502417, "", 0x35); // New default location set.
-
-                                        Book.Openers.Remove(from);
-                                    }
-                                    else
-                                    {
-                                        from.SendLocalizedMessage(502413); // That cannot be done while the book is locked down.
-                                    }
-
-                                    break;
-                                }
-                            case 2: // Recall
-                                {
-                                    if (HasSpell(from, 31))
-                                    {
-                                        SendLocationMessage(e, from);
-
-                                        Book.OnTravel();
-                                        new RecallSpell(from, null, e, null).Cast();
-                                    }
-                                    else
-                                    {
-                                        from.SendLocalizedMessage(500015); // You do not have that spell!
-                                    }
-
-                                    Book.Openers.Remove(from);
-
-                                    break;
-                                }
-                            case 4: // Gate
-                                {
-                                    if (HasSpell(from, 51))
-                                    {
-                                        SendLocationMessage(e, from);
-
-                                        Book.OnTravel();
-                                        new GateTravelSpell(from, null, e).Cast();
-                                    }
-                                    else
-                                    {
-                                        from.SendLocalizedMessage(500015); // You do not have that spell!
-                                    }
-
-                                    Book.Openers.Remove(from);
-
-                                    break;
-                                }
-                            case 3: // Sacred Journey
-                                {
-                                    if (HasSpell(from, 209))
-                                    {
-                                        SendLocationMessage(e, from);
-
-                                        Book.OnTravel();
-                                        new SacredJourneySpell(from, null, e, null).Cast();
-                                    }
-                                    else
-                                    {
-                                        from.SendLocalizedMessage(500015); // You do not have that spell!
-                                    }
-
-                                    Book.Openers.Remove(from);
-
-                                    break;
-                                }
-
-                            default:
-                                break;
+                            break;
                         }
-                    }
-                    else
-                    {
-                        Book.Openers.Remove(from);
+                        case 8: // Drop rune
+                        {
+                            if (Book.CheckAccess(from) && Book.Movable)
+                            {
+                                Book.DropRune(from, e, index);
+
+                                from.CloseGump(typeof(RunebookGump));
+                                from.SendGump(new RunebookGump(from, Book));
+                            }
+                            else
+                            {
+                                Book.Openers.Remove(from);
+
+                                from.SendLocalizedMessage(502413); // That cannot be done while the book is locked down.
+                            }
+
+                            break;
+                        }
+                        case 12: // Set default
+                        {
+                            if (Book.CheckAccess(from))
+                            {
+                                Book.Default = e;
+
+                                from.CloseGump(typeof(RunebookGump));
+                                from.SendGump(new RunebookGump(from, Book));
+
+                                from.SendLocalizedMessage(502417, "", 0x35); // New default location set.
+
+                                Book.Openers.Remove(from);
+                            }
+                            else
+                            {
+                                from.SendLocalizedMessage(502413); // That cannot be done while the book is locked down.
+                            }
+
+                            break;
+                        }
+                        case 2: // Recall
+                        {
+                            if (HasSpell(from, 31))
+                            {
+                                SendLocationMessage(e, from);
+
+                                Book.OnTravel();
+                                new RecallSpell(from, null, e, null).Cast();
+                            }
+                            else
+                            {
+                                from.SendLocalizedMessage(500015); // You do not have that spell!
+                            }
+
+                            Book.Openers.Remove(from);
+
+                            break;
+                        }
+                        case 4: // Gate
+                        {
+                            if (HasSpell(from, 51))
+                            {
+                                SendLocationMessage(e, from);
+
+                                Book.OnTravel();
+                                new GateTravelSpell(from, null, e).Cast();
+                            }
+                            else
+                            {
+                                from.SendLocalizedMessage(500015); // You do not have that spell!
+                            }
+
+                            Book.Openers.Remove(from);
+
+                            break;
+                        }
+                        case 3: // Sacred Journey
+                        {
+                            if (HasSpell(from, 209))
+                            {
+                                SendLocationMessage(e, from);
+
+                                Book.OnTravel();
+                                new SacredJourneySpell(from, null, e, null).Cast();
+                            }
+                            else
+                            {
+                                from.SendLocalizedMessage(500015); // You do not have that spell!
+                            }
+
+                            Book.Openers.Remove(from);
+
+                            break;
+                        }
+
+                        default:
+                            break;
                     }
                 }
                 else

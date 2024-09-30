@@ -53,25 +53,41 @@ namespace Server.Misc
                 e.Mobile.SendMessage("Format: SetSaves <true | false>");
         }
 
-        public static void Save()
+        public static void Save(bool saveLegacyBackup = false)
         {
             if (AutoRestart.Restarting || CreateWorld.WorldCreating)
                 return;
 
+            RunBackup("Backups");
             World.WaitForWriteCompletion();
 
+            if (saveLegacyBackup)
+            {
+                World.Save(true, new BackupStrategy());
+                RunBackup("DailyBackups");
+            }
+
+            bool saveSuccessful = World.Save(true, new ThreadedSaveStrategy());
+
+            if (!saveSuccessful)
+            {
+                RunBackup("FailedSaves");
+                World.Save(true, new BackupStrategy());
+            }
+        }
+
+        private static void RunBackup(string folder)
+        {
             try
             {
-                if (!Backup())
-                    Console.WriteLine("WARNING: Automatic backup FAILED");
+                if (!Backup(folder))
+                    Console.WriteLine($"WARNING: Automatic backup FAILED to {folder}");
             }
             catch (Exception e)
             {
-                Console.WriteLine("WARNING: Automatic backup FAILED:\n{0}", e);
+                Console.WriteLine("WARNING: Automatic backup FAILED to folder{0}:\n{1}",folder, e);
                 Diagnostics.ExceptionLogging.LogException(e);
             }
-
-            World.Save(true);
         }
 
         private static void Tick()
@@ -94,21 +110,21 @@ namespace Server.Misc
                 else
                     World.Broadcast(0x35, false, "The world will save in {0} second{1}.", s, s != 1 ? "s" : "");
 
-                Timer.DelayCall(m_Warning, Save);
+                Timer.DelayCall(m_Warning, () => Save());
             }
         }
 
-        private static bool Backup()
+        private static bool Backup(string rootFolder)
         {
             if (m_Backups.Length == 0)
                 return false;
 
-            string root = Path.Combine(Core.BaseDirectory, "Backups/Automatic");
+            string root = Path.Combine(Core.BaseDirectory, $"{rootFolder}/Automatic");
 
             if (!Directory.Exists(root))
                 Directory.CreateDirectory(root);
 
-            string tempRoot = Path.Combine(Core.BaseDirectory, "Backups/Temp");
+            string tempRoot = Path.Combine(Core.BaseDirectory, $"{rootFolder}/Temp");
 
             if (Directory.Exists(tempRoot))
                 Directory.Delete(tempRoot, true);

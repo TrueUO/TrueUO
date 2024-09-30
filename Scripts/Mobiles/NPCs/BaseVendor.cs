@@ -1692,13 +1692,10 @@ namespace Server.Mobiles
                         fromBank = true;
                     }
                 }
-                else if (buyer.Account != null && AccountGold.Enabled)
+                else if (buyer.Account != null && buyer.Account.WithdrawCurrency(totalCost / AccountGold.CurrencyThreshold))
                 {
-                    if (buyer.Account.WithdrawCurrency(totalCost / AccountGold.CurrencyThreshold))
-                    {
-                        bought = true;
-                        fromBank = true;
-                    }
+                    bought = true;
+                    fromBank = true;
                 }
             }
 
@@ -2179,6 +2176,28 @@ namespace Server.Mobiles
             return true;
         }
 
+        public static void Initialize()
+        {
+            EventSink.AfterWorldSave += AfterWorldSave;
+        }
+
+        public static void AfterWorldSave(AfterWorldSaveEventArgs e)
+        {
+            foreach (BaseVendor vendor in AllVendors)
+            {
+                if (vendor.NextMultiplierDecay != DateTime.MinValue && vendor.NextMultiplierDecay < DateTime.UtcNow)
+                {
+                    Timer.DelayCall(TimeSpan.FromSeconds(10), () =>
+                    {
+                        if (vendor.BribeMultiplier > 0)
+                            vendor.BribeMultiplier /= 2;
+                        vendor.CheckNextMultiplierDecay();
+                    });
+                }
+            }
+        }
+
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -2234,17 +2253,6 @@ namespace Server.Mobiles
             }
 
             writer.WriteEncodedInt(0);
-
-            if (NextMultiplierDecay != DateTime.MinValue && NextMultiplierDecay < DateTime.UtcNow)
-            {
-                Timer.DelayCall(TimeSpan.FromSeconds(10), () =>
-                {
-                    if (BribeMultiplier > 0)
-                        BribeMultiplier /= 2;
-
-                    CheckNextMultiplierDecay();
-                });
-            }
         }
 
         public override void Deserialize(GenericReader reader)

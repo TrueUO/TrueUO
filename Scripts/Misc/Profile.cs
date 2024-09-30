@@ -6,38 +6,37 @@ namespace Server.Misc
 {
     public class Profile
     {
-        public static void Initialize()
+        public static void ChangeProfileRequest(Mobile beholder, Mobile beheld, string text)
         {
-            EventSink.ProfileRequest += EventSink_ProfileRequest;
-            EventSink.ChangeProfileRequest += EventSink_ChangeProfileRequest;
-        }
-
-        public static void EventSink_ChangeProfileRequest(ChangeProfileRequestEventArgs e)
-        {
-            if (e.Beholder != e.Beheld && e.Beholder.AccessLevel <= e.Beheld.AccessLevel)
+            if (beholder != beheld && beholder.AccessLevel <= beheld.AccessLevel)
             {
-                e.Beholder.SendMessage("You do not have permission to do that.");
+                beholder.SendMessage("You do not have permission to do that.");
                 return;
             }
 
-            Mobile from = e.Beholder;
+            Mobile from = beholder;
 
             if (from.ProfileLocked)
+            {
                 from.SendMessage("Your profile is locked. You may not change it.");
+            }
             else
-                from.Profile = e.Text;
+            {
+                from.Profile = text;
+            }
         }
 
-        public static void EventSink_ProfileRequest(ProfileRequestEventArgs e)
+        public static void ProfileRequest(Mobile beholder, Mobile beheld)
         {
-            Mobile beholder = e.Beholder;
-            Mobile beheld = e.Beheld;
-
             if (!beheld.Player)
+            {
                 return;
+            }
 
             if (beholder.Map != beheld.Map || !beholder.InRange(beheld, 12) || !beholder.CanSee(beheld))
+            {
                 return;
+            }
 
             string header = Titles.ComputeTitle(beholder, beheld);
 
@@ -46,18 +45,26 @@ namespace Server.Misc
             if (beheld.ProfileLocked)
             {
                 if (beholder == beheld)
+                {
                     footer = "Your profile has been locked.";
+                }
                 else if (beholder.IsStaff())
+                {
                     footer = "This profile has been locked.";
+                }
             }
 
             if (footer.Length == 0 && beholder == beheld)
+            {
                 footer = GetAccountDuration(beheld);
+            }
 
             string body = beheld.Profile;
 
             if (body == null || body.Length <= 0)
+            {
                 body = "";
+            }
 
             beholder.Send(new DisplayProfile(beholder != beheld || !beheld.ProfileLocked, beheld, header, body, footer));
         }

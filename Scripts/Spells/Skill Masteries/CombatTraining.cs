@@ -4,7 +4,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -156,8 +155,8 @@ namespace Server.Spells.SkillMasteries
 
             BeginTimer();            
 
-            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType.ToString()}\t{Target.Name}\t{ScaleUpkeep().ToString()}"));
             //You train ~2_NAME~ to use ~1_SKILLNAME~.<br>Mana Upkeep: ~3_COST~
+            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType}\t{Target.Name}\t{ScaleUpkeep()}"));
 
             FinishSequence();
         }
@@ -178,16 +177,36 @@ namespace Server.Spells.SkillMasteries
 
         public override bool OnTick()
         {
-            if (Target == null || Target.IsDeadBondedPet /* || Target.Map != Caster.Map*/)
+            if (Target == null || Target.IsDeadBondedPet)
             {
                 Expire();
                 return false;
             }
 
-            if (SpellType == TrainingType.AsOne && Caster is PlayerMobile pm && pm.AllFollowers.Count(m => m.Map != Map.Internal && m.InRange(pm.Location, 15)) < 2)
+            if (SpellType == TrainingType.AsOne && Caster is PlayerMobile pm)
             {
-                Expire();
-                return false;
+                int followerCount = 0;
+
+                // Manually iterate over AllFollowers and count the ones meeting the condition
+                foreach (Mobile follower in pm.AllFollowers)
+                {
+                    if (follower.Map != Map.Internal && follower.InRange(pm.Location, 15))
+                    {
+                        followerCount++;
+
+                        // If at least 2 followers meet the criteria, no need to continue counting
+                        if (followerCount >= 2)
+                        {
+                            break;
+                        }
+                    }
+                }
+
+                if (followerCount < 2)
+                {
+                    Expire();
+                    return false;
+                }
             }
 
             return base.OnTick();
@@ -464,13 +483,10 @@ namespace Server.Spells.SkillMasteries
 
         public static void EndRageCooldown(Mobile m)
         {
-            if (_RageCooldown != null && _RageCooldown.ContainsKey(m))
-            {
-                _RageCooldown.Remove(m);
-            }
+            _RageCooldown?.Remove(m);
         }
 
-        public static Dictionary<Mobile, Timer> _RageCooldown;
+        private static Dictionary<Mobile, Timer> _RageCooldown;
     }
 
     public class ChooseTrainingGump : Gump

@@ -18,14 +18,29 @@ namespace Server
 
 		public const int Stride = 32;
 
-		static SpawnArea()
-		{
-			_EmptyFilters = Array.Empty<TileFlag>();
+        static SpawnArea()
+        {
+            _EmptyFilters = Array.Empty<TileFlag>();
 
-			_AllFilters = Enum.GetValues(typeof(TileFlag)).Cast<TileFlag>().Where(f => f != TileFlag.None).ToArray();
+            // Get all values from the TileFlag enum
+            Array values = Enum.GetValues(typeof(TileFlag));
 
-			_Cache = new Dictionary<int, SpawnArea>();
-		}
+            List<TileFlag> allFiltersList = new List<TileFlag>();
+
+            // Manually filter out TileFlag.None and add the rest to the list
+            foreach (TileFlag flag in values)
+            {
+                if (flag != TileFlag.None)
+                {
+                    allFiltersList.Add(flag);
+                }
+            }
+
+            // Convert the list to an array
+            _AllFilters = allFiltersList.ToArray();
+
+            _Cache = new Dictionary<int, SpawnArea>();
+        }
 
 		public static SpawnArea Instantiate(Region region, TileFlag filter, SpawnValidator validator, bool cache)
 		{

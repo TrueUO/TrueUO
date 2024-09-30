@@ -10,11 +10,6 @@ namespace Server.Engines.Harvest
 {
     public abstract class HarvestSystem
     {
-        public static void Configure()
-        {
-            EventSink.TargetByResourceMacro += TargetByResource;
-        }
-
         public HarvestSystem()
         {
             Definitions = new List<HarvestDefinition>();
@@ -535,11 +530,8 @@ namespace Server.Engines.Harvest
         }
 
         #region Enhanced Client
-        public static void TargetByResource(TargetByResourceMacroEventArgs e)
+        public static void TargetByResourceMacro(Mobile m, Item tool, int resourceType)
         {
-            Mobile m = e.Mobile;
-            Item tool = e.Tool;
-
             HarvestSystem system = null;
             HarvestDefinition def = null;
 
@@ -550,7 +542,7 @@ namespace Server.Engines.Harvest
 
             if (system != null)
             {
-                switch (e.ResourceType)
+                switch (resourceType)
                 {
                     case 0: // ore
                         if (system is Mining miningOreStone)

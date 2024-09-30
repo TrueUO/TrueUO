@@ -5,7 +5,6 @@ using System.IO;
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.Diagnostics;
-using Server.Gumps;
 using Server.HuePickers;
 using Server.Items;
 using Server.Menus;
@@ -66,7 +65,6 @@ namespace Server.Network
 			Register(0x08, 15, true, DropReq);
 			Register(0x09, 5, true, LookReq);
 			Register(0x0A, 11, true, Edit);
-			Register(0x12, 0, true, TextCommand);
 			Register(0x13, 10, true, EquipReq);
 			Register(0x14, 6, true, ChangeZ);
 			Register(0x22, 3, true, Resynchronize);
@@ -82,8 +80,6 @@ namespace Server.Network
 			Register(0x6C, 19, true, TargetResponse);
 			Register(0x6F, 0, true, SecureTrade);
 			Register(0x72, 5, true, SetWarMode);
-			Register(0x73, 2, false, PingReq);
-			Register(0x75, 35, true, RenameRequest);
 			Register(0x79, 9, true, ResourceQuery);
 			Register(0x7E, 2, true, GodviewQuery);
 			Register(0x7D, 13, true, MenuResponse);
@@ -94,16 +90,13 @@ namespace Server.Network
 			Register(0x96, 0, true, GameCentralMoniter);
 			Register(0x98, 0, true, MobileNameRequest);
 			Register(0x9A, 0, true, AsciiPromptResponse);
-			Register(0x9B, 258, true, HelpRequest);
 			Register(0x9D, 51, true, GMSingle);
 			Register(0x9F, 0, true, VendorSellReply);
 			Register(0xA0, 3, false, PlayServer);
 			Register(0xA4, 149, false, SystemInfo);
 			Register(0xA7, 4, true, RequestScrollWindow);
 			Register(0xAD, 0, true, UnicodeSpeech);
-			Register(0xB1, 0, true, DisplayGumpResponse);
 			Register(0xB6, 9, true, ObjectHelpRequest);
-			Register(0xB8, 0, true, ProfileReq);
 			Register(0xBB, 9, false, AccountID);
 			Register(0xBD, 0, true, ClientVersion);
 			Register(0xBE, 0, true, AssistVersion);
@@ -118,14 +111,10 @@ namespace Server.Network
 			Register(0xD6, 0, true, BatchQueryProperties);
 			Register(0xD7, 0, true, EncodedCommand);
 			Register(0xE1, 0, false, ClientType);
-			Register(0xEC, 0, false, EquipMacro);
-			Register(0xED, 0, false, UnequipMacro);
 			Register(0xEF, 21, false, LoginServerSeed);
 			Register(0xF4, 0, false, CrashReport);
 			Register(0xF8, 106, false, CreateCharacter70160);
-			//Register(0xFA, 1, true, Unhandled); // Currently Handled in UltimaStore.cs
 			Register(0xFB, 2, false, PublicHouseContent);
-
 			Register(0x8D, 0, false, ECCreateCharacter);
 
 			RegisterExtended(0x05, false, ScreenSize);
@@ -141,16 +130,8 @@ namespace Server.Network
 			RegisterExtended(0x13, true, ContextMenuRequest);
 			RegisterExtended(0x15, true, ContextMenuResponse);
 			RegisterExtended(0x1A, true, StatLockChange);
-			RegisterExtended(0x1C, true, CastSpell);
 			RegisterExtended(0x24, false, UnhandledBF);
-			RegisterExtended(0x2C, true, BandageTarget);
             RegisterExtended(0x32, true, ToggleFlying);
-            RegisterExtended(0x2D, true, TargetedSpell);
-			RegisterExtended(0x2E, true, TargetedSkillUse);
-			RegisterExtended(0x30, true, TargetByResourceMacro);
-            RegisterEncoded(0x19, true, SetAbility);
-			RegisterEncoded(0x28, true, GuildGumpRequest);
-            RegisterEncoded(0x32, true, QuestGumpRequest);
 		}
 
 		public static void Register(int packetID, int length, bool ingame, OnPacketReceive onReceive)
@@ -219,26 +200,10 @@ namespace Server.Network
 			}
 		}
 
-		private static void Unhandled(NetState state, PacketReader pvSrc)
-		{ }
-
 		private static void UnhandledBF(NetState state, PacketReader pvSrc)
 		{ }
 
         private static void Empty(NetState state, PacketReader pvSrc)
-		{ }
-
-		public static void SetAbility(NetState state, IEntity e, EncodedReader reader)
-		{
-			EventSink.InvokeSetAbility(new SetAbilityEventArgs(state.Mobile, reader.ReadInt32()));
-		}
-
-		public static void GuildGumpRequest(NetState state, IEntity e, EncodedReader reader)
-		{
-			EventSink.InvokeGuildGumpRequest(new GuildGumpRequestArgs(state.Mobile));
-		}
-
-        private static void QuestGumpRequest(NetState state, IEntity e, EncodedReader reader)
 		{ }
 
 		public static void EncodedCommand(NetState state, PacketReader pvSrc)
@@ -268,17 +233,6 @@ namespace Server.Network
 			else
 			{
 				pvSrc.Trace(state);
-			}
-		}
-
-		public static void RenameRequest(NetState state, PacketReader pvSrc)
-		{
-			Mobile from = state.Mobile;
-			Mobile targ = World.FindMobile(pvSrc.ReadInt32());
-
-			if (targ != null)
-			{
-				EventSink.InvokeRenameRequest(new RenameRequestEventArgs(from, targ, pvSrc.ReadStringSafe()));
 			}
 		}
 
@@ -723,137 +677,6 @@ namespace Server.Network
             return true;
         }
 
-		public static void TextCommand(NetState state, PacketReader pvSrc)
-		{
-			int type = pvSrc.ReadByte();
-			string command = pvSrc.ReadString();
-
-			Mobile m = state.Mobile;
-
-			switch (type)
-			{
-				case 0x00: // Go
-				{
-					if (VerifyGC(state))
-					{
-						try
-						{
-							string[] split = command.Split(' ');
-
-							int x = Utility.ToInt32(split[0]);
-							int y = Utility.ToInt32(split[1]);
-
-							int z;
-
-							if (split.Length >= 3)
-							{
-								z = Utility.ToInt32(split[2]);
-							}
-							else if (m.Map != null)
-							{
-								z = m.Map.GetAverageZ(x, y);
-							}
-							else
-							{
-								z = 0;
-							}
-
-							m.Location = new Point3D(x, y, z);
-						}
-						catch (Exception e)
-						{
-                                ExceptionLogging.LogException(e);
-						}
-					}
-
-					break;
-				}
-				case 0xC7: // Animate
-				{
-					EventSink.InvokeAnimateRequest(new AnimateRequestEventArgs(m, command));
-
-					break;
-				}
-				case 0x24: // Use skill
-				{
-
-					if (!int.TryParse(command.Split(' ')[0], out int skillIndex))
-					{
-						break;
-					}
-
-					Skills.UseSkill(m, skillIndex);
-
-					break;
-				}
-				case 0x43: // Open spellbook
-				{
-
-					if (!int.TryParse(command, out int booktype))
-					{
-						booktype = 1;
-					}
-
-					EventSink.InvokeOpenSpellbookRequest(new OpenSpellbookRequestEventArgs(m, booktype));
-
-					break;
-				}
-				case 0x27: // Cast spell from book
-				{
-					string[] split = command.Split(' ');
-
-					if (split.Length > 0)
-					{
-						int spellID = Utility.ToInt32(split[0]) - 1;
-						int serial = split.Length > 1 ? Utility.ToInt32(split[1]) : -1;
-
-						EventSink.InvokeCastSpellRequest(new CastSpellRequestEventArgs(m, spellID, World.FindItem(serial)));
-					}
-
-					break;
-				}
-				case 0x58: // Open door
-				{
-					EventSink.InvokeOpenDoorMacroUsed(new OpenDoorMacroEventArgs(m));
-
-					break;
-				}
-				case 0x56: // Cast spell from macro
-				{
-					int spellID = Utility.ToInt32(command) - 1;
-
-					EventSink.InvokeCastSpellRequest(new CastSpellRequestEventArgs(m, spellID, null));
-
-					break;
-				}
-				case 0xF4: // Invoke virtues from macro
-				{
-					int virtueID = Utility.ToInt32(command) - 1;
-
-					EventSink.InvokeVirtueMacroRequest(new VirtueMacroRequestEventArgs(m, virtueID));
-
-					break;
-				}
-				case 0x2F: // Old scroll double click
-				{
-					/*
-				 * This command is still sent for items 0xEF3 - 0xEF9
-				 *
-				 * Command is one of three, depending on the item ID of the scroll:
-				 * - [scroll serial]
-				 * - [scroll serial] [target serial]
-				 * - [scroll serial] [x] [y] [z]
-				 */
-					break;
-				}
-				default:
-				{
-					Console.WriteLine("Client: {0}: Unknown text-command type 0x{1:X2}: {2}", state, type, command);
-					break;
-				}
-			}
-		}
-
 		public static void GodModeRequest(NetState state, PacketReader pvSrc)
 		{
 			if (VerifyGC(state))
@@ -956,46 +779,6 @@ namespace Server.Network
                 }
             }
         }
-
-		public static void ProfileReq(NetState state, PacketReader pvSrc)
-		{
-			int type = pvSrc.ReadByte();
-			Serial serial = pvSrc.ReadInt32();
-
-			Mobile beholder = state.Mobile;
-			Mobile beheld = World.FindMobile(serial);
-
-			if (beheld == null)
-			{
-				return;
-			}
-
-			switch (type)
-			{
-				case 0x00: // display request
-				{
-					EventSink.InvokeProfileRequest(new ProfileRequestEventArgs(beholder, beheld));
-
-					break;
-				}
-				case 0x01: // edit request
-				{
-					pvSrc.ReadInt16(); // Skip
-					int length = pvSrc.ReadUInt16();
-
-					if (length > 511)
-					{
-						return;
-					}
-
-					string text = pvSrc.ReadUnicodeString(length);
-
-					EventSink.InvokeChangeProfileRequest(new ChangeProfileRequestEventArgs(beholder, beheld, text));
-
-					break;
-				}
-			}
-		}
 
 		public static void Disconnect(NetState state, PacketReader pvSrc)
 		{
@@ -1105,11 +888,6 @@ namespace Server.Network
 			{
 				s.SetLockNoRelay((SkillLock)pvSrc.ReadByte());
 			}
-		}
-
-		public static void HelpRequest(NetState state, PacketReader pvSrc)
-		{
-			EventSink.InvokeHelpRequest(new HelpRequestEventArgs(state.Mobile));
 		}
 
 		public static void TargetResponse(NetState state, PacketReader pvSrc)
@@ -1223,144 +1001,6 @@ namespace Server.Network
 					if (prof != null)
 					{
 						prof.Finish();
-					}
-				}
-			}
-		}
-
-		public static void DisplayGumpResponse(NetState state, PacketReader pvSrc)
-		{
-			int serial = pvSrc.ReadInt32();
-			int typeID = pvSrc.ReadInt32();
-			int buttonID = pvSrc.ReadInt32();
-
-            for (var index = 0; index < state.Gumps.Count; index++)
-            {
-                Gump gump = state.Gumps[index];
-
-                if (gump.Serial == serial && gump.TypeID == typeID)
-                {
-                    bool buttonExists = buttonID == 0; // 0 is always 'close'
-
-                    if (!buttonExists)
-                    {
-                        for (var i = 0; i < gump.Entries.Count; i++)
-                        {
-                            GumpEntry e = gump.Entries[i];
-
-                            if (e is GumpButton button && button.ButtonID == buttonID)
-                            {
-                                buttonExists = true;
-                                break;
-                            }
-
-                            if (e is GumpImageTileButton tileButton && tileButton.ButtonID == buttonID)
-                            {
-                                buttonExists = true;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!buttonExists)
-                    {
-                        Utility.PushColor(ConsoleColor.Red);
-                        state.WriteConsole("Invalid gump response, disconnecting...");
-                        Utility.PopColor();
-                        state.Dispose();
-                        return;
-                    }
-
-                    int switchCount = pvSrc.ReadInt32();
-
-                    if (switchCount < 0 || switchCount > gump.m_Switches)
-                    {
-                        Utility.PushColor(ConsoleColor.Red);
-                        state.WriteConsole("Invalid gump response, disconnecting...");
-                        Utility.PopColor();
-                        state.Dispose();
-                        return;
-                    }
-
-                    int[] switches = new int[switchCount];
-
-                    for (int j = 0; j < switches.Length; ++j)
-                    {
-                        switches[j] = pvSrc.ReadInt32();
-                    }
-
-                    int textCount = pvSrc.ReadInt32();
-
-                    if (textCount < 0 || textCount > gump.m_TextEntries)
-                    {
-                        Utility.PushColor(ConsoleColor.Red);
-                        state.WriteConsole("Invalid gump response, disconnecting...");
-                        Utility.PopColor();
-                        state.Dispose();
-                        return;
-                    }
-
-                    TextRelay[] textEntries = new TextRelay[textCount];
-
-                    for (int j = 0; j < textEntries.Length; ++j)
-                    {
-                        int entryID = pvSrc.ReadUInt16();
-                        int textLength = pvSrc.ReadUInt16();
-
-                        if (textLength > 239)
-                        {
-                            Utility.PushColor(ConsoleColor.Red);
-                            state.WriteConsole("Invalid gump response, disconnecting...");
-                            Utility.PopColor();
-                            state.Dispose();
-                            return;
-                        }
-
-                        string text = pvSrc.ReadUnicodeStringSafe(textLength);
-                        textEntries[j] = new TextRelay(entryID, text);
-                    }
-
-                    state.RemoveGump(gump);
-
-                    GumpProfile prof = GumpProfile.Acquire(gump.GetType());
-
-                    if (prof != null)
-                    {
-                        prof.Start();
-                    }
-
-                    gump.OnResponse(state, new RelayInfo(buttonID, switches, textEntries));
-
-                    if (prof != null)
-                    {
-                        prof.Finish();
-                    }
-
-                    return;
-                }
-            }
-
-            if (typeID == 461)
-			{
-				// Virtue gump
-				int switchCount = pvSrc.ReadInt32();
-
-				if (buttonID == 1 && switchCount > 0)
-				{
-					Mobile beheld = World.FindMobile(pvSrc.ReadInt32());
-
-					if (beheld != null)
-					{
-						EventSink.InvokeVirtueGumpRequest(new VirtueGumpRequestEventArgs(state.Mobile, beheld));
-					}
-				}
-				else
-				{
-					Mobile beheld = World.FindMobile(serial);
-
-					if (beheld != null)
-					{
-						EventSink.InvokeVirtueItemRequest(new VirtueItemRequestEventArgs(state.Mobile, beheld, buttonID));
 					}
 				}
 			}
@@ -1573,11 +1213,6 @@ namespace Server.Network
 			}
 		}
 
-		public static void PingReq(NetState state, PacketReader pvSrc)
-		{
-			state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
-		}
-
 		public static void SetUpdateRange(NetState state, PacketReader pvSrc)
 		{
 			//            min   max  default
@@ -1705,62 +1340,6 @@ namespace Server.Network
 			else
 			{
 				pvSrc.Trace(state);
-			}
-		}
-
-		public static void CastSpell(NetState state, PacketReader pvSrc)
-		{
-			Mobile from = state.Mobile;
-
-			if (from == null)
-			{
-				return;
-			}
-
-			Item spellbook = null;
-
-			if (pvSrc.ReadInt16() == 1)
-			{
-				spellbook = World.FindItem(pvSrc.ReadInt32());
-			}
-
-			int spellID = pvSrc.ReadInt16() - 1;
-
-			EventSink.InvokeCastSpellRequest(new CastSpellRequestEventArgs(from, spellID, spellbook));
-		}
-
-		public static void BandageTarget(NetState state, PacketReader pvSrc)
-		{
-			Mobile from = state.Mobile;
-
-			if (from == null)
-			{
-				return;
-			}
-
-			if (from.IsStaff() || Core.TickCount - from.NextActionTime >= 0)
-			{
-				Item bandage = World.FindItem(pvSrc.ReadInt32());
-
-				if (bandage == null)
-				{
-					return;
-				}
-
-				Mobile target = World.FindMobile(pvSrc.ReadInt32());
-
-				if (target == null)
-				{
-					return;
-				}
-
-				EventSink.InvokeBandageTargetRequest(new BandageTargetRequestEventArgs(from, bandage, target));
-
-				from.NextActionTime = Core.TickCount + Mobile.ActionDelay;
-			}
-			else
-			{
-				from.SendActionMessage();
 			}
 		}
 
@@ -3087,63 +2666,6 @@ namespace Server.Network
 					state.BlockAllPackets = false;
 					state.Dispose();
 				}
-			}
-		}
-
-		public static void EquipMacro(NetState ns, PacketReader pvSrc)
-		{
-			int length = pvSrc.Size;
-
-			int count = pvSrc.ReadByte();
-			List<int> serialList = new List<int>(count);
-			for (int i = 0; i < count; ++i)
-			{
-				Serial s = pvSrc.ReadInt32();
-				serialList.Add(s);
-			}
-
-			EventSink.InvokeEquipMacro(new EquipMacroEventArgs(ns.Mobile, serialList));
-		}
-
-		public static void UnequipMacro(NetState ns, PacketReader pvSrc)
-		{
-			int length = pvSrc.Size;
-
-			int count = pvSrc.ReadByte();
-			List<int> layers = new List<int>(count);
-			for (int i = 0; i < count; ++i)
-			{
-				int s = pvSrc.ReadInt16();
-				layers.Add(s);
-			}
-
-			EventSink.InvokeUnequipMacro(new UnequipMacroEventArgs(ns.Mobile, layers));
-		}
-
-		public static void TargetedSpell(NetState ns, PacketReader pvSrc)
-		{
-			short spellId = (short)(pvSrc.ReadInt16() - 1);    // zero based;
-			Serial target = pvSrc.ReadInt32();
-
-			EventSink.InvokeTargetedSpell(new TargetedSpellEventArgs(ns.Mobile, World.FindEntity(target), spellId));
-		}
-
-		public static void TargetedSkillUse(NetState ns, PacketReader pvSrc)
-		{
-			short skillId = pvSrc.ReadInt16();
-			Serial target = pvSrc.ReadInt32();
-
-			EventSink.InvokeTargetedSkill(new TargetedSkillEventArgs(ns.Mobile, World.FindEntity(target), skillId));
-		}
-
-		public static void TargetByResourceMacro(NetState ns, PacketReader pvSrc)
-		{
-			Serial serial = pvSrc.ReadInt32();
-			int resourcetype = pvSrc.ReadInt16();
-
-			if (serial.IsItem)
-			{
-				EventSink.InvokeTargetByResourceMacro(new TargetByResourceMacroEventArgs(ns.Mobile, World.FindItem(serial), resourcetype));
 			}
 		}
 	}

@@ -1,7 +1,5 @@
 #region References
 using System;
-
-using Server.Accounting;
 using Server.Network;
 #endregion
 
@@ -102,7 +100,7 @@ namespace Server.Items
 
 		public override int GetTotal(TotalType type)
 		{
-			if (AccountGold.Enabled && Owner != null && Owner.Account != null && type == TotalType.Gold)
+			if (Owner != null && Owner.Account != null && type == TotalType.Gold)
 			{
 				return Owner.Account.TotalGold;
 			}
@@ -114,7 +112,7 @@ namespace Server.Items
 		{
 			Type type = item.GetType();
 
-			if (AccountGold.Enabled && Owner != null && Owner.Account != null && (type.IsAssignableFrom(_GoldType) || type.IsAssignableFrom(_CheckType)))
+			if (Owner != null && Owner.Account != null && (type.IsAssignableFrom(_GoldType) || type.IsAssignableFrom(_CheckType)))
 			{
 				return true;
 			}

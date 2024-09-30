@@ -1170,21 +1170,18 @@ namespace Server
 		/// </summary>
 		public virtual void AddLootTypeProperty(ObjectPropertyList list)
 		{
-			if (DisplayLootType)
-			{
-				if (m_LootType == LootType.Blessed)
-				{
-					list.Add(1038021); // blessed
-				}
-				else if (m_LootType == LootType.Cursed)
-				{
-					list.Add(1049643); // cursed
-				}
-				else if (Insured)
-				{
-					list.Add(1061682); // <b>insured</b>
-				}
-			}
+			if (m_LootType == LootType.Blessed)
+            {
+                list.Add(1038021); // blessed
+            }
+            else if (m_LootType == LootType.Cursed)
+            {
+                list.Add(1049643); // cursed
+            }
+            else if (Insured)
+            {
+                list.Add(1061682); // <b>insured</b>
+            }
 		}
 
 		/// <summary>
@@ -1870,10 +1867,7 @@ namespace Server
 				{
 					m_LootType = value;
 
-					if (DisplayLootType)
-					{
-						InvalidateProperties();
-					}
+					InvalidateProperties();
 				}
 			}
 		}
@@ -5235,7 +5229,6 @@ namespace Server
         }
 
 		public virtual bool CanTarget => true;
-		public virtual bool DisplayLootType => true;
 
 		public virtual void OnAosSingleClick(Mobile from)
 		{

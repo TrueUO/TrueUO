@@ -104,6 +104,32 @@ namespace Server.Misc
             CreateDirectory(Combine(path1, path2));
         }
 
+        private static void CopyWildcardFile(string rootOrigin, string rootBackup, string path, string fileName, string fileExtension)
+        {
+            string originPath = Combine(rootOrigin, path);
+            string backupPath = Combine(rootBackup, path);
+            string pattern = fileName + "*." + fileExtension;
+
+            String[] files = Directory.GetFiles(originPath, pattern);
+
+            foreach (String file in files)
+            {
+                try
+                {
+                    if (File.Exists(file))
+                    {
+                        File.Copy(file, file.Replace(originPath, backupPath));
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Diagnostics.ExceptionLogging.LogException(e);
+                }
+            }
+
+        }
+
         private static void CopyFile(string rootOrigin, string rootBackup, string path)
         {
             string originPath = Combine(rootOrigin, path);
@@ -143,8 +169,8 @@ namespace Server.Misc
                 // Copy files
                 CopyFile(rootOrigin, rootBackup, "Accounts/Accounts.xml");
 
-                CopyFile(rootOrigin, rootBackup, "Items/Items.bin");
-                CopyFile(rootOrigin, rootBackup, "Items/Items.idx");
+                CopyWildcardFile(rootOrigin, rootBackup, "Items","Items", "bin");
+                CopyWildcardFile(rootOrigin, rootBackup, "Items","Items","idx");
                 CopyFile(rootOrigin, rootBackup, "Items/Items.tdb");
 
                 CopyFile(rootOrigin, rootBackup, "Mobiles/Mobiles.bin");

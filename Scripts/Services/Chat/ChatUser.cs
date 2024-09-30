@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Server.Network;
 
 namespace Server.Engines.Chat
 {

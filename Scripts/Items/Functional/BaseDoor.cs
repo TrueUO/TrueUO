@@ -138,8 +138,6 @@ namespace Server.Items
         // Called by RunUO
         public static void Initialize()
         {
-            EventSink.OpenDoorMacroUsed += EventSink_OpenDoorMacroUsed;
-
             CommandSystem.Register("Link", AccessLevel.GameMaster, Link_OnCommand);
             CommandSystem.Register("ChainLink", AccessLevel.GameMaster, ChainLink_OnCommand);
         }
@@ -429,10 +427,8 @@ namespace Server.Items
             }
         }
 
-        private static void EventSink_OpenDoorMacroUsed(OpenDoorMacroEventArgs args)
+        public static void OpenDoorMacroUsed(Mobile m)
         {
-            Mobile m = args.Mobile;
-
             if (m.Map != null)
             {
                 int x = m.X, y = m.Y;

@@ -139,13 +139,10 @@ namespace Server.Items
             writer.Write(3);
 
             writer.Write((byte)m_Quality);
-
             writer.Write(m_Crafter);
-
             writer.Write((int)Level);
 
             writer.Write(m_Entries.Count);
-
             for (int i = 0; i < m_Entries.Count; ++i)
                 m_Entries[i].Serialize(writer);
 
@@ -158,42 +155,21 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 3:
-                    {
-                        m_Quality = (BookQuality)reader.ReadByte();
-                        goto case 2;
-                    }
-                case 2:
-                    {
-                        m_Crafter = reader.ReadMobile();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        Level = (SecureLevel)reader.ReadInt();
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        int count = reader.ReadInt();
+            m_Quality = (BookQuality)reader.ReadByte();
+            m_Crafter = reader.ReadMobile();
+            Level = (SecureLevel)reader.ReadInt();
 
-                        m_Entries = new List<RunebookEntry>(count);
+            int count = reader.ReadInt();
+            m_Entries = new List<RunebookEntry>(count);
+            for (int i = 0; i < count; ++i)
+                m_Entries.Add(new RunebookEntry(reader));
 
-                        for (int i = 0; i < count; ++i)
-                            m_Entries.Add(new RunebookEntry(reader));
-
-                        m_Description = reader.ReadString();
-                        CurCharges = reader.ReadInt();
-                        MaxCharges = reader.ReadInt();
-                        DefaultIndex = reader.ReadInt();
-
-                        break;
-                    }
-            }
+            m_Description = reader.ReadString();
+            CurCharges = reader.ReadInt();
+            MaxCharges = reader.ReadInt();
+            DefaultIndex = reader.ReadInt();
         }
 
         public void DropRune(Mobile from, RunebookEntry e, int index)
@@ -255,8 +231,6 @@ namespace Server.Items
         {
             m.CloseGump(typeof(RunebookGump));
         }
-
-        public override bool DisplayLootType => true;
 
         public override void GetProperties(ObjectPropertyList list)
         {
