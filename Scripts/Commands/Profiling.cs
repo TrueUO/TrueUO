@@ -37,10 +37,6 @@ namespace Server.Commands
                     BaseProfile.WriteAll(sw, PacketReceiveProfile.Profiles);
                     sw.WriteLine();
 
-                    sw.WriteLine("# Timer");
-                    BaseProfile.WriteAll(sw, TimerProfile.Profiles);
-                    sw.WriteLine();
-
                     sw.WriteLine("# Gump response");
                     BaseProfile.WriteAll(sw, GumpProfile.Profiles);
                     sw.WriteLine();
