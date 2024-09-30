@@ -548,8 +548,8 @@ namespace Server.Engines.VendorSearching
                 AddHtmlLocalized(27, 47, 380, 80, 1154637, $"@{coord[0]}@{coord[1]}", 0x4E73, false, false); // Please select 'Accept' if you would like to return to ~1_loc~ (~2_facet~).  This map will be deleted after use.
             }
             else
-                AddHtmlLocalized(27, 47, 380, 80, 1154635, $"@{VendorMap.TeleportCost.ToString()}@{VendorMap.Name()[0]}@{VendorMap.DeleteDelayMinutes.ToString()}", 0x4E73, false, false); // Please select 'Accept' if you would like to pay ~1_cost~ gold to teleport to vendor ~2_name~.  For this price you will also be able to teleport back to this location within the next ~3_minutes~ minutes.
-
+                AddHtmlLocalized(27, 47, 380, 80, 1154635, $"@{VendorMap.TeleportCost}@{VendorMap.Name()[0].Split(' ')[0]}@{VendorMap.DeleteDelayMinutes}", 0x4E73, false, false); // Please select 'Accept' if you would like to pay ~1_cost~ gold to teleport to vendor ~2_name~.  For this price you will also be able to teleport back to this location within the next ~3_minutes~ minutes.
+                
             AddButton(7, 167, 0x7747, 0x7747, 0, GumpButtonType.Reply, 0);
             AddHtmlLocalized(47, 167, 100, 40, 1150300, 0x4E73, false, false); // CANCEL
 
