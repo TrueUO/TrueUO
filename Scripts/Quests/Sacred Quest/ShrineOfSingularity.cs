@@ -24,6 +24,7 @@ namespace Server.Items
         }
 
         public override bool HandlesOnSpeech => true;
+
         public override void OnSpeech(SpeechEventArgs e)
         {
             if (e.Mobile is PlayerMobile pm)
@@ -104,47 +105,32 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(2); // version
-
-            Timer.DelayCall(TimeSpan.FromSeconds(10), DefragDelays_Callback);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Instance = this;
-
-            if (version == 0)
-            {
-                Item book = new BookOfCircles
-                {
-                    Movable = false
-                };
-                book.MoveToWorld(new Point3D(1000, 3991, -33), Map.TerMur);
-
-                book = new ShrineMantra
-                {
-                    Movable = false
-                };
-                book.MoveToWorld(new Point3D(994, 3991, -33), Map.TerMur);
-            }
-
-            if (version == 1)
-            {
-                Timer.DelayCall(() => SpawnerPersistence.Delete("shrineofsingularity"));
-            }
         }
 
         public static ShrineOfSingularity Instance { get; set; }
 
         public static void Initialize()
         {
+            EventSink.AfterWorldSave += AfterWorldSave;
+
             if (Instance == null)
             {
                 Instance = new ShrineOfSingularity();
                 Instance.MoveToWorld(new Point3D(995, 3802, -19), Map.TerMur);
             }
+        }
+
+        public static void AfterWorldSave(AfterWorldSaveEventArgs e)
+        {
+            Timer.DelayCall(TimeSpan.FromSeconds(10), DefragDelays_Callback);
         }
     }
 }

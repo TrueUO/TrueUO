@@ -123,19 +123,22 @@ namespace Server.Engines.JollyRoger
             }
         }
 
+        public static List<ShrineBattleController> AllControllers = new List<ShrineBattleController>();
         public Dictionary<BaseCreature, List<BaseCreature>> Spawn { get; set; }
 
         [Constructable]
         public ShrineBattleController(Shrine shrine)
             : base(7960)
         {
-            Name = string.Format("{0} Shrine Battle Controller", shrine.ToString());
+            Name = $"{shrine} Shrine Battle Controller";
             Shrine = shrine;
             Movable = false;
             Visible = false;
             Weight = 0;
 
             Spawn = new Dictionary<BaseCreature, List<BaseCreature>>();
+
+            AllControllers.Add(this);
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -148,6 +151,13 @@ namespace Server.Engines.JollyRoger
         public override void OnMapChange()
         {
             RegisterRegion();
+        }
+
+        public override void OnDelete()
+        {
+            base.OnDelete();
+
+            AllControllers.Remove(this);
         }
 
         public override void OnAfterDelete()
@@ -424,8 +434,6 @@ namespace Server.Engines.JollyRoger
                     }
                 }
             }
-
-            Timer.DelayCall(TimeSpan.FromSeconds(30), CleanupSpawn);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -464,10 +472,23 @@ namespace Server.Engines.JollyRoger
             }
 
             Timer.DelayCall(TimeSpan.Zero, RegisterRegion);
+
+            // Needed to add existing ones to new list. Do I need to keep this?
+            AllControllers.Add(this);
         }
 
+        public static void AfterWorldSave(AfterWorldSaveEventArgs e)
+        {
+            foreach (ShrineBattleController controller in ShrineBattleController.AllControllers) 
+            {
+                Timer.DelayCall(TimeSpan.FromSeconds(30), controller.CleanupSpawn);
+            }
+        }
+        
         public static void Initialize()
         {
+            EventSink.AfterWorldSave += AfterWorldSave;
+
             Defs = new Dictionary<Shrine, Rectangle2D[]>
             {
                 [Shrine.Honesty] =
