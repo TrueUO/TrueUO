@@ -12,7 +12,6 @@ namespace Server.Engines.VendorSearching
     public class VendorSearchGump : BaseGump
     {
         public SearchCriteria Criteria { get; }
-        public Map SetMap { get; set; }
 
         public int Feedback { get; }
 
@@ -213,7 +212,7 @@ namespace Server.Engines.VendorSearching
             }
         }
 
-        public override void OnResponse(RelayInfo info)
+        public override async void OnResponse(RelayInfo info)
         {
             if (info.ButtonID != 0)
             {
@@ -223,14 +222,14 @@ namespace Server.Engines.VendorSearching
                     return;
                 }
 
-                TextRelay searchname = info.GetTextEntry(1);
+                TextRelay searchName = info.GetTextEntry(1);
 
-                if (searchname != null && !string.IsNullOrEmpty(searchname.Text))
+                if (searchName != null && !string.IsNullOrEmpty(searchName.Text))
                 {
-                    string text = searchname.Text.Trim();
+                    string text = searchName.Text.Trim();
 
                     if (Criteria.SearchName == null || text.ToLower() != Criteria.SearchName.ToLower())
-                        Criteria.SearchName = searchname.Text;
+                        Criteria.SearchName = searchName.Text;
                 }
             }
 
@@ -238,39 +237,35 @@ namespace Server.Engines.VendorSearching
             {
                 case 0: break;
                 case 1: // Search
-                    {
-                        User.CloseGump(typeof(SearchResultsGump));
+                {
+                    User.CloseGump(typeof(SearchResultsGump));
 
-                        if (Criteria.IsEmpty)
+                    if (Criteria.IsEmpty)
+                    {
+                        SendGump(new VendorSearchGump(User, 1154586)); // Please select some criteria to search for.
+                    }
+                    else
+                    {
+                        SendGump(new SearchWaitGump(User));
+
+                        List<SearchItem> results = await FindVendorItemsAsync(Criteria).ConfigureAwait(true);
+
+                        User.CloseGump(typeof(SearchWaitGump));
+
+                        if (results?.Count > 0)
                         {
-                            SendGump(new VendorSearchGump(User, 1154586)); // Please select some criteria to search for.
+                            Refresh();
+
+                            SendGump(new SearchResultsGump(User, results));
                         }
                         else
                         {
-                            Task<List<SearchItem>> resultsTask = FindVendorItemsAsync(Criteria);
-
-                            TaskPollingTimer<List<SearchItem>> pollingTimer = new TaskPollingTimer<List<SearchItem>>(resultsTask, results =>
-                            {
-                                User.CloseGump(typeof(SearchWaitGump));
-
-                                if (results == null || results.Count == 0)
-                                {
-                                    SendGump(new VendorSearchGump(User, 1154587)); // No items matched your search.                                     
-                                }
-                                else
-                                {
-                                    Refresh();
-                                    SendGump(new SearchResultsGump(User, results));
-                                }
-                            });
-
-                            resultsTask.Start();
-                            pollingTimer.Start();
-
-                            SendGump(new SearchWaitGump(User, pollingTimer));
+                            SendGump(new VendorSearchGump(User, 1154587)); // No items matched your search.                                     
                         }
-                        break;
                     }
+
+                    break;
+                }
                 case 2: // Clear Criteria
                     {
                         Criteria.Reset();
@@ -370,21 +365,15 @@ namespace Server.Engines.VendorSearching
 
         public static Task<List<SearchItem>> FindVendorItemsAsync(SearchCriteria criteria)
         {
-            return new Task<List<SearchItem>>(() =>
-            {
-                return criteria.Auction ? VendorSearch.DoSearchAuction(criteria) : VendorSearch.DoSearch(criteria);
-            });
+            return Task.Run(() => criteria.Auction ? VendorSearch.DoSearchAuction(criteria) : VendorSearch.DoSearch(criteria));
         }
     }
 
     public class SearchWaitGump : BaseGump
     {
-        private readonly Timer m_PollingTimer;
-
-        public SearchWaitGump(PlayerMobile pm, Timer waitTimer)
+        public SearchWaitGump(PlayerMobile pm)
             : base(pm, 10, 10)
         {
-            m_PollingTimer = waitTimer;
         }
 
         public override void AddGumpLayout()
@@ -394,11 +383,6 @@ namespace Server.Engines.VendorSearching
             AddBackground(0, 0, 414, 214, 0x7752);
 
             AddHtmlLocalized(27, 47, 380, 80, 1114513, "#1154678", 0x4E73, false, false); // <DIV ALIGN=CENTER>Please wait for your search to complete.</DIV>
-        }
-
-        public override void OnResponse(RelayInfo info)
-        {
-            m_PollingTimer.Stop();
         }
     }
 
@@ -416,9 +400,11 @@ namespace Server.Engines.VendorSearching
         {
             Items = items;
             Index = 0;
+
+            AddGumpLayout();
         }
 
-        public override void AddGumpLayout()
+        public sealed override void AddGumpLayout()
         {
             AddBackground(0, 0, 500, 550, 30536);
 
