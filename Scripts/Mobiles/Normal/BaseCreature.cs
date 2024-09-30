@@ -3493,7 +3493,12 @@ namespace Server.Mobiles
             set
             {
                 m_Movement = value;
-                m_AI.OnCurrentMovementChanged();
+
+                if (m_AI != null)
+                {
+                    m_AI.OnCurrentMovementChanged();
+                }
+
                 InvalidateProperties();
             }
         }
@@ -3505,7 +3510,12 @@ namespace Server.Mobiles
             set
             {
                 m_GuardMode = value;
-                m_AI.OnCurrentGuardChanged();
+
+                if (m_AI != null)
+                {
+                    m_AI.OnCurrentGuardChanged();
+                }
+
                 InvalidateProperties();
 
                 if (m_ControlMaster != null)
