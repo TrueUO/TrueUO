@@ -413,7 +413,7 @@ namespace Server.Engines.VoidPool
         {
             Region.SendRegionMessage(1152530); // Cora's forces have destroyed the Void Pool walls. The battle is lost!
 
-            VoidPoolStats.OnInvasionEnd(this /*CurrentScore, Wave*/);
+            VoidPoolStats.OnInvasionEnd(this);
 
             NextStart = DateTime.UtcNow + TimeSpan.FromMinutes(RestartSpan);
 
@@ -435,9 +435,9 @@ namespace Server.Engines.VoidPool
             {
                 Mobile m = list[index];
 
-                if (CurrentScore.ContainsKey(m))
+                if (CurrentScore.TryGetValue(m, out long value))
                 {
-                    m.SendLocalizedMessage(1152650, $"{GetTotalWaves(m)}\t{Wave.ToString()}\t{Wave.ToString()}\t{CurrentScore[m]}"); // During the battle, you helped fight back ~1_COUNT~ out of ~2_TOTAL~ waves of enemy forces. Your final wave was ~3_MAX~. Your total score for the battle was ~4_SCORE~ points.
+                    m.SendLocalizedMessage(1152650, $"{GetTotalWaves(m)}\t{Wave.ToString()}\t{Wave.ToString()}\t{value}"); // During the battle, you helped fight back ~1_COUNT~ out of ~2_TOTAL~ waves of enemy forces. Your final wave was ~3_MAX~. Your total score for the battle was ~4_SCORE~ points.
 
                     if (m is PlayerMobile mobile)
                     {
@@ -642,20 +642,20 @@ namespace Server.Engines.VoidPool
 
         public static int GetPlayerScore(Dictionary<Mobile, long> score, Mobile m)
         {
-            if (score == null || m == null || !score.ContainsKey(m))
+            if (score == null || m == null || !score.TryGetValue(m, out long value))
                 return 0;
 
-            return (int)score[m];
+            return (int)value;
         }
 
-        public static Type[][] SpawnTable =
-        {
-            new[] { typeof(DaemonMongbat),         typeof(GargoyleAssassin),   typeof(CovetousDoppleganger),   typeof(LesserOni),       typeof(CovetousFireDaemon) },
-            new[] { typeof(LizardmanWitchdoctor),  typeof(OrcFootSoldier),     typeof(RatmanAssassin),         typeof(OgreBoneCrusher), typeof(TitanRockHunter) },
-            new[] { typeof(AngeredSpirit),         typeof(BoneSwordSlinger),   typeof(VileCadaver),            typeof(DiseasedLich),    typeof(CovetousRevenant) },
-            new[] { typeof(WarAlligator),          typeof(MagmaLizard),        typeof(ViciousDrake),           typeof(CorruptedWyvern), typeof(CovetousWyrm) },
-            new[] { typeof(CovetousEarthElemental),typeof(CovetousWaterElemental), typeof(VortexElemental),    typeof(SearingElemental),typeof(VenomElemental) }
-        };
+        public static readonly Type[][] SpawnTable =
+        [
+            [typeof(DaemonMongbat),         typeof(GargoyleAssassin),   typeof(CovetousDoppleganger),   typeof(LesserOni),       typeof(CovetousFireDaemon)],
+            [typeof(LizardmanWitchdoctor),  typeof(OrcFootSoldier),     typeof(RatmanAssassin),         typeof(OgreBoneCrusher), typeof(TitanRockHunter)],
+            [typeof(AngeredSpirit),         typeof(BoneSwordSlinger),   typeof(VileCadaver),            typeof(DiseasedLich),    typeof(CovetousRevenant)],
+            [typeof(WarAlligator),          typeof(MagmaLizard),        typeof(ViciousDrake),           typeof(CorruptedWyvern), typeof(CovetousWyrm)],
+            [typeof(CovetousEarthElemental),typeof(CovetousWaterElemental), typeof(VortexElemental),    typeof(SearingElemental),typeof(VenomElemental)]
+        ];
 
         public override void Delete()
         {

@@ -18,65 +18,63 @@ namespace Server.Misc
     public static class PreventInaccess
     {
         public static readonly bool Enabled = true;
-        private static readonly LocationInfo[] m_Destinations = new LocationInfo[]
-        {
+
+        private static readonly LocationInfo[] _Destinations =
+        [
             new LocationInfo(new Point3D(5275, 1163, 0), Map.Felucca), // Jail
             new LocationInfo(new Point3D(5275, 1163, 0), Map.Trammel),
             new LocationInfo(new Point3D(5445, 1153, 0), Map.Felucca), // Green acres
             new LocationInfo(new Point3D(5445, 1153, 0), Map.Trammel)
-        };
-        private static Dictionary<Mobile, LocationInfo> m_MoveHistory;
+        ];
+
+        private static Dictionary<Mobile, LocationInfo> _MoveHistory;
+
         public static void Initialize()
         {
-            m_MoveHistory = new Dictionary<Mobile, LocationInfo>();
+            _MoveHistory = new Dictionary<Mobile, LocationInfo>();
         }
 
         public static void OnLogin(Mobile from)
         {
             if (from == null || from.IsPlayer())
+            {
                 return;
+            }
 
             if (HasDisconnected(from))
             {
-                if (!m_MoveHistory.ContainsKey(from))
-                    m_MoveHistory[from] = new LocationInfo(from.Location, from.Map);
+                if (!_MoveHistory.ContainsKey(from))
+                {
+                    _MoveHistory[from] = new LocationInfo(from.Location, from.Map);
+                }
 
                 LocationInfo dest = GetRandomDestination();
 
                 from.Location = dest.Location;
                 from.Map = dest.Map;
             }
-            else if (m_MoveHistory.ContainsKey(from))
+            else if (_MoveHistory.TryGetValue(from, out LocationInfo orig))
             {
-                LocationInfo orig = m_MoveHistory[from];
-                from.SendMessage("Your character was moved from {0} ({1}) due to a detected client crash.", orig.Location, orig.Map);
+                from.SendMessage($"Your character was moved from {orig.Location} ({orig.Map}) due to a detected client crash.");
 
-                m_MoveHistory.Remove(from);
+                _MoveHistory.Remove(from);
             }
         }
 
         private static bool HasDisconnected(Mobile m)
         {
-            return (m.NetState == null || m.NetState.Socket == null);
+            return m.NetState == null || m.NetState.Socket == null;
         }
 
         private static LocationInfo GetRandomDestination()
         {
-            return m_Destinations[Utility.Random(m_Destinations.Length)];
+            return _Destinations[Utility.Random(_Destinations.Length)];
         }
 
-        private class LocationInfo
+        private class LocationInfo(Point3D loc, Map map)
         {
-            private readonly Point3D m_Location;
-            private readonly Map m_Map;
-            public LocationInfo(Point3D loc, Map map)
-            {
-                m_Location = loc;
-                m_Map = map;
-            }
-
-            public Point3D Location => m_Location;
-            public Map Map => m_Map;
+            public Point3D Location { get; } = loc;
+            public Map Map { get; } = map;
         }
     }
 }
