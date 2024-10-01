@@ -587,15 +587,20 @@ namespace Server
 
         private static void WaitForInterval(double durationMilliSeconds)
         {
-            var durationTicks = Math.Round(durationMilliSeconds * Stopwatch.Frequency) / 1000;
-            var sw = Stopwatch.StartNew();
+            double durationTicks = Math.Round(durationMilliSeconds * Stopwatch.Frequency / 1000.0); 
+            Stopwatch sw = Stopwatch.StartNew();
 
+            // Use the signal for waits longer than 20 ms to handle synchronization efficiently
+            if (durationMilliSeconds > 20)
+            {
+                _Signal.WaitOne((int)durationMilliSeconds);
+            }
+
+            // Spin-wait for shorter intervals 
             while (sw.ElapsedTicks < durationTicks)
             {
-                if (durationMilliSeconds > 20)
-                {
-                    _Signal.WaitOne((int)durationMilliSeconds);
-                }
+                // Keep CPU usage efficient during the spin-wait
+                Thread.SpinWait(1);  
             }
         }
 
@@ -603,15 +608,13 @@ namespace Server
         {
             try
             {
-                const int interval = 125;
-                const int intervalDurationMs = 1000 / interval;
+                const int interval = 100;
+                const double intervalDurationMs = 1000.0 / interval; // Change to double for more precise timing
                 const int calculationIntervalMilliseconds = 1000;
 
                 int loopCount = 0;
 
-                Stopwatch stopwatch = new Stopwatch();
-
-                stopwatch.Start();
+                Stopwatch stopwatch = Stopwatch.StartNew();
 
                 while (!Closing)
                 {
@@ -629,11 +632,11 @@ namespace Server
 
                     Slice?.Invoke();
 
-                    int currentThreadDuration = (int)(Stopwatch.GetTimestamp() - last) / 10000;
+                    double currentThreadDuration = (Stopwatch.GetTimestamp() - last) * (1000.0 / Stopwatch.Frequency);
 
                     if (currentThreadDuration < intervalDurationMs && (intervalDurationMs - currentThreadDuration) > 0)
                     {
-                        WaitForInterval(intervalDurationMs - currentThreadDuration);
+                        WaitForInterval(intervalDurationMs - currentThreadDuration);  // Wait for the remaining time
                     }
 
                     loopCount++;
