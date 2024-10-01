@@ -56,12 +56,13 @@ namespace Server.Items
             ForceArrowInfo info = new ForceArrowInfo(attacker, defender);
             info.Timer = new ForceArrowTimer(info);
 
-            if (!_Table.ContainsKey(attacker))
+            if (!_Table.TryGetValue(attacker, out List<ForceArrowInfo> value))
             {
-                _Table[attacker] = new List<ForceArrowInfo>();
+                value = new List<ForceArrowInfo>();
+                _Table[attacker] = value;
             }
 
-            _Table[attacker].Add(info);
+            value.Add(info);
 
             BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.ForceArrow, 1151285, 1151286, info.DefenseChanceMalus.ToString()));
         }

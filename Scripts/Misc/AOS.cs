@@ -283,8 +283,10 @@ namespace Server
 
             EpiphanyHelper.OnHit(m, totalDamage);
 
-            if (type == DamageType.Spell && m != null && Feint.Registry.ContainsKey(m) && Feint.Registry[m].Enemy == from)
-                totalDamage -= (int)(damage * ((double)Feint.Registry[m].DamageReduction / 100));
+            if (type == DamageType.Spell && m != null && Feint.Registry.TryGetValue(m, out Feint.FeintTimer value) && value.Enemy == from)
+            {
+                totalDamage -= (int)(damage * ((double)value.DamageReduction / 100));
+            }
 
             if (m.Hidden && type >= DamageType.Spell)
             {
@@ -640,8 +642,10 @@ namespace Server
                 if (BaseMagicalFood.IsUnderInfluence(m, MagicalFood.GrapesOfWrath))
                     value += 15;
 
-                if (PsychicAttack.Registry.ContainsKey(m))
-                    value -= PsychicAttack.Registry[m].SpellDamageMalus;
+                if (PsychicAttack.Registry.TryGetValue(m, out PsychicAttack.PsychicAttackTimer timerValue))
+                {
+                    value -= timerValue.SpellDamageMalus;
+                }
 
                 TransformContext context = TransformationSpellHelper.GetContext(m);
 

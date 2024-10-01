@@ -56,14 +56,13 @@ namespace Server.SkillHandlers
 
         public static bool GetEffect(Mobile targ, ref int effect, bool pvp)
         {
-            if (!m_Table.ContainsKey(targ) || m_Table[targ].m_PVP != pvp)
+            if (!m_Table.TryGetValue(targ, out DiscordanceInfo info) || info.m_PVP != pvp)
             {
                 return false;
             }
 
-            DiscordanceInfo info = m_Table[targ];
-
             effect = info.m_Effect;
+
             return true;
         }
 
@@ -88,7 +87,7 @@ namespace Server.SkillHandlers
                 else
                 {
                     int maxRange = BaseInstrument.GetBardRange(from, SkillName.Discordance);
-                    bool inRange = targ.InRange((IPoint3D)from, maxRange);
+                    bool inRange = targ.InRange(from, maxRange);
 
                     Map targetMap = targ.Map;
 
@@ -96,7 +95,7 @@ namespace Server.SkillHandlers
                     {
                         Mobile rider = mount.Rider;
 
-                        inRange = rider.InRange((IPoint3D)from, maxRange);
+                        inRange = rider.InRange(from, maxRange);
                         targetMap = rider.Map;
                     }
 
@@ -130,12 +129,12 @@ namespace Server.SkillHandlers
 
         public class DiscordanceTarget : Target
         {
-            private readonly BaseInstrument m_Instrument;
+            private readonly BaseInstrument _Instrument;
 
             public DiscordanceTarget(Mobile from, BaseInstrument inst)
                 : base(BaseInstrument.GetBardRange(from, SkillName.Discordance), false, TargetFlags.None)
             {
-                m_Instrument = inst;
+                _Instrument = inst;
             }
 
             protected override void OnTarget(Mobile from, object target)
@@ -143,7 +142,7 @@ namespace Server.SkillHandlers
                 from.RevealingAction();
                 from.NextSkillTime = Core.TickCount + 1000;
 
-                if (!m_Instrument.IsChildOf(from.Backpack))
+                if (!_Instrument.IsChildOf(from.Backpack))
                 {
                     from.SendLocalizedMessage(1062488); // The instrument you are trying to play is no longer in your backpack!
                 }
@@ -160,7 +159,7 @@ namespace Server.SkillHandlers
                     }
                     else if (!targ.Player || from is BaseCreature bc && bc.CanDiscord || targ.Player && from.Player && CanDiscordPVP(from))
                     {
-                        double diff = m_Instrument.GetDifficultyFor(targ) - 10.0;
+                        double diff = _Instrument.GetDifficultyFor(targ) - 10.0;
                         double music = from.Skills[SkillName.Musicianship].Value;
 
                         if (from is BaseCreature)
@@ -186,18 +185,20 @@ namespace Server.SkillHandlers
                         if (!BaseInstrument.CheckMusicianship(from))
                         {
                             from.SendLocalizedMessage(500612); // You play poorly, and there is no effect.
-                            m_Instrument.PlayInstrumentBadly(from);
-                            m_Instrument.ConsumeUse(from);
+                            _Instrument.PlayInstrumentBadly(from);
+                            _Instrument.ConsumeUse(from);
                         }
                         else if (from.CheckTargetSkill(SkillName.Discordance, targ, diff - 25.0, diff + 25.0))
                         {
                             from.SendLocalizedMessage(1049539); // You play the song surpressing your targets strength
 
                             if (targ.Player)
+                            {
                                 targ.SendLocalizedMessage(1072061); // You hear jarring music, suppressing your strength.
+                            }
 
-                            m_Instrument.PlayInstrumentWell(from);
-                            m_Instrument.ConsumeUse(from);
+                            _Instrument.PlayInstrumentWell(from);
+                            _Instrument.ConsumeUse(from);
 
                             DiscordanceInfo info;
 
@@ -212,14 +213,14 @@ namespace Server.SkillHandlers
 
                                 double discord = from.Skills[SkillName.Discordance].Value;
 
-                                var effect = (int)Math.Max(-28.0, discord / -4.0);
+                                int effect = (int)Math.Max(-28.0, discord / -4.0);
 
                                 if (BaseInstrument.GetBaseDifficulty(targ) >= 160.0)
                                 {
                                     effect /= 2;
                                 }
 
-                                var scalar = (double)effect / 100;
+                                double scalar = (double)effect / 100;
 
                                 mods.Add(new ResistanceMod(ResistanceType.Physical, effect));
                                 mods.Add(new ResistanceMod(ResistanceType.Fire, effect));
@@ -243,7 +244,7 @@ namespace Server.SkillHandlers
 
                                     if (quest != null)
                                     {
-                                        for (var index = 0; index < quest.Objectives.Count; index++)
+                                        for (int index = 0; index < quest.Objectives.Count; index++)
                                         {
                                             BaseObjective objective = quest.Objectives[index];
 
@@ -268,15 +269,15 @@ namespace Server.SkillHandlers
                             if (targ.Player)
                                 targ.SendLocalizedMessage(1072064); // You hear jarring music, but it fails to disrupt you.
 
-                            m_Instrument.PlayInstrumentBadly(from);
-                            m_Instrument.ConsumeUse(from);
+                            _Instrument.PlayInstrumentBadly(from);
+                            _Instrument.ConsumeUse(from);
 
                             from.NextSkillTime = Core.TickCount + 5000;
                         }
                     }
                     else
                     {
-                        m_Instrument.PlayInstrumentBadly(from);
+                        _Instrument.PlayInstrumentBadly(from);
                     }
                 }
                 else
@@ -289,7 +290,7 @@ namespace Server.SkillHandlers
             {
                 bool any = false;
 
-                foreach (var info in m_Table.Values)
+                foreach (DiscordanceInfo info in m_Table.Values)
                 {
                     if (info.m_From == m && info.m_PVP)
                     {
@@ -343,7 +344,7 @@ namespace Server.SkillHandlers
             {
                 if (m_PVP)
                 {
-                    for (var index = 0; index < m_Target.Items.Count; index++)
+                    for (int index = 0; index < m_Target.Items.Count; index++)
                     {
                         Item item = m_Target.Items[index];
 
@@ -380,7 +381,7 @@ namespace Server.SkillHandlers
                 {
                     Timer.DelayCall(() =>
                     {
-                        for (var index = 0; index < m_Target.Items.Count; index++)
+                        for (int index = 0; index < m_Target.Items.Count; index++)
                         {
                             Item item = m_Target.Items[index];
 
