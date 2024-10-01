@@ -23,8 +23,11 @@ namespace Server.Services.Community_Collections
             if (!m_Mobiles.Contains(mob))
             {
                 m_Mobiles.Add(mob);
-                if (m_Collections.ContainsKey(mob.CollectionID))
-                    mob.SetData(m_Collections[mob.CollectionID]);
+
+                if (m_Collections.TryGetValue(mob.CollectionID, out CollectionData value))
+                {
+                    mob.SetData(value);
+                }
             }
         }
 

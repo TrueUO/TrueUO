@@ -52,12 +52,7 @@ namespace Server.Spells
 
         public static int GetRegistryNumber(Type type)
         {
-            if (m_IDsFromTypes.TryGetValue(type, out int value))
-            {
-                return value;
-            }
-
-            return -1;
+            return m_IDsFromTypes.GetValueOrDefault(type, -1);
         }
 
         public static void Register(int spellID, Type type)
@@ -93,14 +88,18 @@ namespace Server.Spells
         public static SpecialMove GetSpecialMove(int spellID)
         {
             if (spellID < 0 || spellID >= m_Types.Length)
+            {
                 return null;
+            }
 
             Type t = m_Types[spellID];
 
-            if (t == null || !t.IsSubclassOf(typeof(SpecialMove)) || !m_SpecialMoves.ContainsKey(spellID))
+            if (t == null || !t.IsSubclassOf(typeof(SpecialMove)) || !m_SpecialMoves.TryGetValue(spellID, out SpecialMove value))
+            {
                 return null;
+            }
 
-            return m_SpecialMoves[spellID];
+            return value;
         }
 
         private static readonly object[] m_Params = new object[2];

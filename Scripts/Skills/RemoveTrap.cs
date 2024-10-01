@@ -76,9 +76,9 @@ namespace Server.SkillHandlers
                         {
                             bool any = false;
 
-                            for (var index = 0; index < tChest.AncientGuardians.Count; index++)
+                            for (int index = 0; index < tChest.AncientGuardians.Count; index++)
                             {
-                                var g = tChest.AncientGuardians[index];
+                                Mobile g = tChest.AncientGuardians[index];
 
                                 if (!g.Deleted)
                                 {
@@ -211,10 +211,8 @@ namespace Server.SkillHandlers
 
         public static void EndChestDisarmTimer(Mobile from)
         {
-            if (_Table != null && _Table.ContainsKey(from))
+            if (_Table != null && _Table.TryGetValue(from, out RemoveTrapTimer timer))
             {
-                RemoveTrapTimer timer = _Table[from];
-
                 if (timer != null)
                 {
                     timer.Stop();
@@ -246,7 +244,7 @@ namespace Server.SkillHandlers
                 return false;
             }
 
-            foreach (var timer in _Table.Values)
+            foreach (RemoveTrapTimer timer in _Table.Values)
             {
                 if (timer.Chest == chest)
                 {
