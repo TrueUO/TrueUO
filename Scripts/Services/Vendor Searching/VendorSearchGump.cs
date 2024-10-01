@@ -129,16 +129,16 @@ namespace Server.Engines.VendorSearching
 
             List<SearchCriteriaCategory> list = new List<SearchCriteriaCategory>();
 
-            for (var index = 0; index < SearchCriteriaCategory.AllCategories.Length; index++)
+            for (int index = 0; index < SearchCriteriaCategory.AllCategories.Length; index++)
             {
-                var category = SearchCriteriaCategory.AllCategories[index];
+                SearchCriteriaCategory category = SearchCriteriaCategory.AllCategories[index];
 
                 list.Add(category);
             }
 
-            for (var index = 0; index < list.Count; index++)
+            for (int index = 0; index < list.Count; index++)
             {
-                var x = list[index];
+                SearchCriteriaCategory x = list[index];
 
                 AddPage(x.PageID);
 
@@ -183,16 +183,16 @@ namespace Server.Engines.VendorSearching
 
                     List<SearchCriterionEntry> list1 = new List<SearchCriterionEntry>();
 
-                    for (var i = 0; i < x.Criteria.Length; i++)
+                    for (int i = 0; i < x.Criteria.Length; i++)
                     {
-                        var criterion = x.Criteria[i];
+                        SearchCriterionEntry criterion = x.Criteria[i];
 
                         list1.Add(criterion);
                     }
 
-                    for (var i = 0; i < list1.Count; i++)
+                    for (int i = 0; i < list1.Count; i++)
                     {
-                        var y = list1[i];
+                        SearchCriterionEntry y = list1[i];
 
                         AddHtmlLocalized(306, 50 + yOffset * 22, 215, 20, y.Cliloc, LabelColor, false, false);
                         AddButton(266, 50 + yOffset * 22, 30533, 30533, buttonIdx, GumpButtonType.Reply, 0);
@@ -351,10 +351,12 @@ namespace Server.Engines.VendorSearching
                         object o = criteria.Object;
                         int value = 0;
 
-                        TextRelay valuetext = info.GetTextEntry(info.ButtonID - 40);
+                        TextRelay valueText = info.GetTextEntry(info.ButtonID - 40);
 
-                        if (valuetext != null)
-                            value = Math.Max(o is AosAttribute attribute && attribute == AosAttribute.CastSpeed ? -1 : 0, Utility.ToInt32(valuetext.Text));
+                        if (valueText != null)
+                        {
+                            value = Math.Max(o is AosAttribute attribute && attribute == AosAttribute.CastSpeed ? -1 : 0, Utility.ToInt32(valueText.Text));
+                        }
 
                         Criteria.TryAddDetails(o, criteria.Cliloc, criteria.PropCliloc, value, criteria.Category);
                         Refresh();
@@ -422,9 +424,9 @@ namespace Server.Engines.VendorSearching
 
             for (int i = start; i < start + PerPage && i < Items.Count; i++)
             {
-                var item = Items[i].Item;
-                var price = Items[i].Price;
-                var map = Items[i].Map;
+                Item item = Items[i].Item;
+                int price = Items[i].Price;
+                Map map = Items[i].Map;
 
                 Rectangle2D bounds = ItemBounds.Table[item.ItemID];
                 int y = 101 + index * 75;
@@ -477,17 +479,23 @@ namespace Server.Engines.VendorSearching
                     if (item != null && (item.AuctionSafe != null && item.AuctionSafe.CheckAuctionItem(item.Item) || item.Vendor != null && item.Vendor.GetVendorItem(item.Item) != null))
                     {
                         if (_GivenTo == null)
+                        {
                             _GivenTo = new Dictionary<Item, List<PlayerMobile>>();
+                        }
 
                         if (!_GivenTo.ContainsKey(item.Item))
+                        {
                             _GivenTo[item.Item] = new List<PlayerMobile>();
+                        }
 
                         if (!_GivenTo[item.Item].Contains(User))
                         {
                             VendorSearchMap map = new VendorSearchMap(item);
 
                             if (User.Backpack == null || !User.Backpack.TryDropItem(User, map, false))
+                            {
                                 map.Delete();
+                            }
                             else
                             {
                                 User.SendLocalizedMessage(1154690); // The vendor map has been placed in your backpack.
@@ -513,7 +521,7 @@ namespace Server.Engines.VendorSearching
 
         public static void Initialize()
         {
-            Timer t = Timer.DelayCall(TimeSpan.FromMinutes(30), TimeSpan.FromMinutes(30), () =>
+            Timer.DelayCall(TimeSpan.FromMinutes(30), TimeSpan.FromMinutes(30), () =>
             {
                 if (_GivenTo != null)
                 {
@@ -523,7 +531,7 @@ namespace Server.Engines.VendorSearching
             });
         }
 
-        public static Dictionary<Item, List<PlayerMobile>> _GivenTo;
+        private static Dictionary<Item, List<PlayerMobile>> _GivenTo;
     }
 
     public class ConfirmTeleportGump : BaseGump
