@@ -11,7 +11,7 @@ namespace Server.Items
         Compassion = 2,
         Valor = 3,
         Justice = 4,
-        Sacrafice = 5,
+        Sacrifice = 5,
         Honor = 6,
         Spirituality = 7,
         Humility = 8
@@ -39,44 +39,63 @@ namespace Server.Items
             Item ankh = from.FindItemOnLayer(Layer.Neck);
 
             if (!(ankh is AnkhPendant))
+            {
                 return;
+            }
 
             string str = e.Speech.ToLower();
             VirtueType t = VirtueType.None;
 
-            if (str == "ahm")
-                t = VirtueType.Honesty;
-            else if (str == "mu")
-                t = VirtueType.Compassion;
-            else if (str == "ra")
-                t = VirtueType.Valor;
-            else if (str == "beh")
-                t = VirtueType.Justice;
-            else if (str == "cah")
-                t = VirtueType.Sacrafice;
-            else if (str == "summ")
-                t = VirtueType.Honor;
-            else if (str == "om")
-                t = VirtueType.Spirituality;
-            else if (str == "lum")
-                t = VirtueType.Humility;
+            switch (str)
+            {
+                case "ahm":
+                    t = VirtueType.Honesty;
+                    break;
+                case "mu":
+                    t = VirtueType.Compassion;
+                    break;
+                case "ra":
+                    t = VirtueType.Valor;
+                    break;
+                case "beh":
+                    t = VirtueType.Justice;
+                    break;
+                case "cah":
+                    t = VirtueType.Sacrifice;
+                    break;
+                case "summ":
+                    t = VirtueType.Honor;
+                    break;
+                case "om":
+                    t = VirtueType.Spirituality;
+                    break;
+                case "lum":
+                    t = VirtueType.Humility;
+                    break;
+            }
 
             if (t != VirtueType.None && CheckShrine(t, from))
+            {
                 ApplyBonus(t, from);
+            }
         }
 
         public static int GetHitsRegenModifier(Mobile from)
         {
-            if (!m_Table.ContainsKey(from))
+            if (!m_Table.TryGetValue(from, out AnkhPendantBonusContext context))
+            {
                 return 0;
+            }
 
             if (CheckExpired(from))
+            {
                 return 0;
-
-            AnkhPendantBonusContext context = m_Table[from];
+            }
 
             if (context == null)
+            {
                 return 0;
+            }
 
             switch (context.VType)
             {
@@ -86,7 +105,7 @@ namespace Server.Items
                 case VirtueType.Valor: break;
                 case VirtueType.Justice:
                     return context.DoBump ? 2 : 1;
-                case VirtueType.Sacrafice:
+                case VirtueType.Sacrifice:
                     return context.DoBump ? 2 : 1;
                 case VirtueType.Honor: break;
                 case VirtueType.Spirituality:
@@ -101,16 +120,20 @@ namespace Server.Items
 
         public static int GetStamRegenModifier(Mobile from)
         {
-            if (!m_Table.ContainsKey(from))
+            if (!m_Table.TryGetValue(from, out AnkhPendantBonusContext context))
+            {
                 return 0;
+            }
 
             if (CheckExpired(from))
+            {
                 return 0;
-
-            AnkhPendantBonusContext context = m_Table[from];
+            }
 
             if (context == null)
+            {
                 return 0;
+            }
 
             switch (context.VType)
             {
@@ -120,7 +143,7 @@ namespace Server.Items
                     return 2;
                 case VirtueType.Justice:
                     break;
-                case VirtueType.Sacrafice:
+                case VirtueType.Sacrifice:
                     return context.DoBump ? 2 : 1;
                 case VirtueType.Honor:
                     return context.DoBump ? 2 : 1;
@@ -136,16 +159,20 @@ namespace Server.Items
 
         public static int GetManaRegenModifier(Mobile from)
         {
-            if (!m_Table.ContainsKey(from))
+            if (!m_Table.TryGetValue(from, out AnkhPendantBonusContext context))
+            {
                 return 0;
+            }
 
             if (CheckExpired(from))
+            {
                 return 0;
-
-            AnkhPendantBonusContext context = m_Table[from];
+            }
 
             if (context == null)
+            {
                 return 0;
+            }
 
             switch (context.VType)
             {
@@ -156,7 +183,7 @@ namespace Server.Items
                     break;
                 case VirtueType.Justice:
                     return context.DoBump ? 2 : 1;
-                case VirtueType.Sacrafice:
+                case VirtueType.Sacrifice:
                     break;
                 case VirtueType.Honor:
                     return context.DoBump ? 2 : 1;
@@ -172,11 +199,12 @@ namespace Server.Items
 
         public static bool CheckExpired(Mobile from)
         {
-            if (m_Table.ContainsKey(from) && m_Table[from].Expired)
+            if (m_Table.TryGetValue(from, out AnkhPendantBonusContext value) && value.Expired)
             {
                 AddToCooldown(from);
                 return true;
             }
+
             return false;
         }
 
@@ -186,13 +214,15 @@ namespace Server.Items
             Map map = from.Map;
 
             if (r is DungeonRegion || r is TownRegion || (map != Map.Trammel && map != Map.Felucca))
+            {
                 return false;
+            }
 
             bool atShrine = false;
 
-            for (int i = 0; i < m_ShrineLocs.Length; i++)
+            for (int i = 0; i < _ShrineLocs.Length; i++)
             {
-                if (m_ShrineLocs[i].Contains(new Point2D(from.X, from.Y)) && (int)t == i + 1)
+                if (_ShrineLocs[i].Contains(new Point2D(from.X, from.Y)) && (int)t == i + 1)
                 {
                     atShrine = true;
                     break;
@@ -212,9 +242,13 @@ namespace Server.Items
                     TimeSpan ts = DateTime.UtcNow - m_Cooldown[from];
 
                     if (ts.TotalHours >= 1)
+                    {
                         from.SendLocalizedMessage(1079550, ((int)ts.TotalHours).ToString()); //You can improve your fortunes again in about ~1_TIME~ hours.
+                    }
                     else
+                    {
                         from.SendLocalizedMessage(1079547); //Your fortunes are about to improve.
+                    }
 
                     return false;
                 }
@@ -223,18 +257,17 @@ namespace Server.Items
             return atShrine;
         }
 
-        public static Rectangle2D[] ShrineLocs => m_ShrineLocs;
-        private static readonly Rectangle2D[] m_ShrineLocs = new Rectangle2D[]
-        {
-            new Rectangle2D(4208, 563, 2, 2), //Honesty
-			new Rectangle2D(1857, 874, 2, 2), //Compassion
-			new Rectangle2D(2491, 3930, 2, 2), //Valor
-			new Rectangle2D(1300, 633, 2, 2), //Justice
-			new Rectangle2D(3354, 289, 2, 2), //Sacrafice
-			new Rectangle2D(1726, 3527, 2, 2), //Honor
-			new Rectangle2D(1605, 2489, 2, 2), //Spirituality
-			new Rectangle2D(4273, 3696, 2, 2), //Humility
-		};
+        private static readonly Rectangle2D[] _ShrineLocs =
+        [
+            new Rectangle2D(4208, 563, 2, 2), // Honesty
+			new Rectangle2D(1857, 874, 2, 2), // Compassion
+			new Rectangle2D(2491, 3930, 2, 2), // Valor
+			new Rectangle2D(1300, 633, 2, 2), // Justice
+			new Rectangle2D(3354, 289, 2, 2), // Sacrifice
+			new Rectangle2D(1726, 3527, 2, 2), // Honor
+			new Rectangle2D(1605, 2489, 2, 2), // Spirituality
+			new Rectangle2D(4273, 3696, 2, 2) // Humility
+        ];
 
         private static void ApplyBonus(VirtueType t, Mobile from)
         {
@@ -254,7 +287,7 @@ namespace Server.Items
                 case VirtueType.Compassion: return 1079535;
                 case VirtueType.Valor: return 1079543;
                 case VirtueType.Justice: return 1079536;
-                case VirtueType.Sacrafice: return 1079538;
+                case VirtueType.Sacrifice: return 1079538;
                 case VirtueType.Honor: return 1079540;
                 case VirtueType.Spirituality: return 1079542;
                 case VirtueType.Humility: return 1079541;
@@ -268,8 +301,10 @@ namespace Server.Items
 
         public static bool IsWaitingCooldown(Mobile from)
         {
-            if (m_Cooldown.ContainsKey(from) && m_Cooldown[from] < DateTime.UtcNow)
+            if (m_Cooldown.TryGetValue(from, out DateTime value) && value < DateTime.UtcNow)
+            {
                 m_Cooldown.Remove(from);
+            }
 
             return m_Cooldown.ContainsKey(from);
         }
@@ -323,7 +358,7 @@ namespace Server.Items
                         m_Random = Utility.Random(3);
                         break;
                     case VirtueType.Justice:
-                    case VirtueType.Sacrafice:
+                    case VirtueType.Sacrifice:
                     case VirtueType.Honor:
                         m_DoBump = Utility.RandomBool();
                         break;
@@ -345,18 +380,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-                reader.ReadBool();
+            reader.ReadInt();
         }
     }
 }

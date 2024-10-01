@@ -24,28 +24,33 @@ namespace Server.Multis
         public static bool RemoveContext(Mobile from)
         {
             if (!m_Table.ContainsKey(from))
+            {
                 return false;
+            }
 
             m_Table.Remove(from);
+
             return true;
         }
 
         public static bool CanAddContext(Mobile from)
         {
-            if (!m_Table.ContainsKey(from))
+            if (!m_Table.TryGetValue(from, out ShipTrackingContext value))
+            {
                 return true;
+            }
 
-            if (m_Table[from] != null && m_Table[from].Arrows.Count > 5)
+            if (value != null && value.Arrows.Count > 5)
+            {
                 return false;
+            }
+
             return true;
         }
 
         public static ShipTrackingContext GetContext(Mobile from)
         {
-            if (!m_Table.ContainsKey(from))
-                return null;
-
-            return m_Table[from];
+            return m_Table.GetValueOrDefault(from);
         }
 
         public bool IsTrackingBoat(Item item)
@@ -210,41 +215,41 @@ namespace Server.Multis
 
     public class BoatTrackingTimer : Timer
     {
-        private readonly Mobile m_From;
-        private readonly Item m_Target;
-        private readonly int m_Range;
-        private int m_LastX, m_LastY;
-        private readonly QuestArrow m_Arrow;
+        private readonly Mobile _From;
+        private readonly Item _Target;
+        private readonly int _Range;
+        private int _LastX, _LastY;
+        private readonly QuestArrow _Arrow;
 
         public BoatTrackingTimer(Mobile from, Item target, int range, QuestArrow arrow) : base(TimeSpan.FromSeconds(0.25), TimeSpan.FromSeconds(2.5))
         {
-            m_From = from;
-            m_Target = target;
-            m_Range = range;
-            m_Arrow = arrow;
+            _From = from;
+            _Target = target;
+            _Range = range;
+            _Arrow = arrow;
         }
 
         protected override void OnTick()
         {
-            if (!m_Arrow.Running)
+            if (!_Arrow.Running)
             {
                 Stop();
                 return;
             }
 
-            if (m_From.NetState == null || m_From.Deleted || m_Target.Deleted || m_From.Map != m_Target.Map || !m_From.InRange(m_Target, m_Range))
+            if (_From.NetState == null || _From.Deleted || _Target.Deleted || _From.Map != _Target.Map || !_From.InRange(_Target, _Range))
             {
-                m_Arrow.Stop();
+                _Arrow.Stop();
                 Stop();
                 return;
             }
 
-            if (m_LastX != m_Target.X || m_LastY != m_Target.Y)
+            if (_LastX != _Target.X || _LastY != _Target.Y)
             {
-                m_LastX = m_Target.X;
-                m_LastY = m_Target.Y;
+                _LastX = _Target.X;
+                _LastY = _Target.Y;
 
-                m_Arrow.Update();
+                _Arrow.Update();
             }
         }
     }

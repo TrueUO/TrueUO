@@ -1328,14 +1328,14 @@ namespace Server.Mobiles
                         }
 
                         // Per EA, new bribe replaced old pending bribe
-                        if (!Bribes.ContainsKey(m))
+                        if (!Bribes.TryGetValue(m, out PendingBribe value))
                         {
                             Bribes[m] = new PendingBribe(bod, amount);
                         }
                         else
                         {
-                            Bribes[m].BOD = bod;
-                            Bribes[m].Amount = amount;
+                            value.BOD = bod;
+                            value.Amount = amount;
                         }
 
                         SayTo(from, 1152292, amount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("en-US")), 0x3B2);

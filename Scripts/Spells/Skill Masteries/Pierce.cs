@@ -15,7 +15,7 @@ namespace Server.Spells.SkillMasteries
         public override double RequiredSkill => 90.0;
 
         public override SkillName MoveSkill => SkillName.Fencing;
-        public override TextDefinition AbilityMessage => new TextDefinition(1155991);  // You ready yourself to pierce your opponent!
+        public override TextDefinition AbilityMessage => new(1155991);  // You ready yourself to pierce your opponent!
 
         private Dictionary<Mobile, Timer> _Table;
 
@@ -51,7 +51,7 @@ namespace Server.Spells.SkillMasteries
 
             ClearCurrentMove(attacker);
 
-            if (attacker.Weapon is BaseWeapon weapon && (_Table == null || !_Table.ContainsKey(attacker)))
+            if (attacker.Weapon is BaseWeapon && (_Table == null || !_Table.ContainsKey(attacker)))
             {
                 int toDrain = (int)(attacker.Skills[MoveSkill].Value + attacker.Skills[SkillName.Tactics].Value + (MasteryInfo.GetMasteryLevel(attacker, SkillName.Fencing) * 40) / 3);
                 toDrain /= 3;
@@ -80,9 +80,9 @@ namespace Server.Spells.SkillMasteries
 
         public void RemoveEffects(Mobile attacker)
         {
-            if (_Table != null && _Table.ContainsKey(attacker))
+            if (_Table != null && _Table.TryGetValue(attacker, out Timer value))
             {
-                _Table[attacker].Stop();
+                value.Stop();
                 _Table.Remove(attacker);
             }
         }

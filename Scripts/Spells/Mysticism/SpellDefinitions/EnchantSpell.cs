@@ -8,7 +8,7 @@ namespace Server.Spells.Mysticism
 {
     public class EnchantSpell : MysticSpell
     {
-        private static readonly string ModName = "EnchantAttribute";
+        private const string _ModName = "EnchantAttribute";
 
         public override SpellCircle Circle => SpellCircle.Second;
         public override bool ClearHandsOnCast => false;
@@ -16,7 +16,7 @@ namespace Server.Spells.Mysticism
         public BaseWeapon Weapon { get; }
         public AosWeaponAttribute Attribute { get; }
 
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo m_Info = new(
                 "Enchant", "In Ort Ylem",
                 230,
                 9022,
@@ -138,12 +138,12 @@ namespace Server.Spells.Mysticism
                 if (Table == null)
                     Table = new Dictionary<Mobile, EnchantmentTimer>();
 
-                Enhancement.SetValue(Caster, Attribute, value, ModName);
+                Enhancement.SetValue(Caster, Attribute, value, _ModName);
 
                 if (prim >= 80 && sec >= 80 && Weapon.Attributes.SpellChanneling == 0)
                 {
-                    Enhancement.SetValue(Caster, AosAttribute.SpellChanneling, 1, ModName);
-                    Enhancement.SetValue(Caster, AosAttribute.CastSpeed, -1, ModName);
+                    Enhancement.SetValue(Caster, AosAttribute.SpellChanneling, 1, _ModName);
+                    Enhancement.SetValue(Caster, AosAttribute.CastSpeed, -1, _ModName);
                     malus = 1;
                 }
 
@@ -172,12 +172,14 @@ namespace Server.Spells.Mysticism
 
         public static Dictionary<Mobile, EnchantmentTimer> Table { get; set; }
 
-        public static bool IsUnderSpellEffects(Mobile Caster, BaseWeapon wep)
+        public static bool IsUnderSpellEffects(Mobile mobile, BaseWeapon wep)
         {
             if (Table == null)
+            {
                 return false;
+            }
 
-            return Table.ContainsKey(Caster) && Table[Caster].Weapon == wep;
+            return Table.ContainsKey(mobile) && Table[mobile].Weapon == wep;
         }
 
         public static AosWeaponAttribute BonusAttribute(Mobile from)
@@ -212,11 +214,11 @@ namespace Server.Spells.Mysticism
 
         public static void RemoveEnchantment(Mobile caster)
         {
-            if (Table != null && Table.ContainsKey(caster))
+            if (Table != null && Table.TryGetValue(caster, out EnchantmentTimer value))
             {
-                var weapon = Table[caster].Weapon;
+                BaseWeapon weapon = value.Weapon;
 
-                Table[caster].Stop();
+                value.Stop();
                 Table[caster] = null;
                 Table.Remove(caster);
 
