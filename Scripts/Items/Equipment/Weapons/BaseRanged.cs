@@ -125,13 +125,9 @@ namespace Server.Items
             {
                 Type ammo = AmmoType;
 
-                if (p.RecoverableAmmo.ContainsKey(ammo))
+                if (!p.RecoverableAmmo.TryAdd(ammo, 1))
                 {
                     p.RecoverableAmmo[ammo]++;
-                }
-                else
-                {
-                    p.RecoverableAmmo.Add(ammo, 1);
                 }
 
                 if (!p.Warmode)
@@ -203,33 +199,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 4:
-                case 3:
-                    {
-                        if (version == 3 && reader.ReadBool())
-                            Attributes.BalancedWeapon = 1;
-
-                        m_Velocity = reader.ReadInt();
-
-                        goto case 2;
-                    }
-                case 2:
-                case 1:
-                    {
-                        break;
-                    }
-                case 0:
-                    {
-                        /*m_EffectID =*/
-                        reader.ReadInt();
-                        break;
-                    }
-            }
+            m_Velocity = reader.ReadInt();
         }
     }
 }
