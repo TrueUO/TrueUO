@@ -483,12 +483,13 @@ namespace Server.Engines.VendorSearching
                             _GivenTo = new Dictionary<Item, List<PlayerMobile>>();
                         }
 
-                        if (!_GivenTo.ContainsKey(item.Item))
+                        if (!_GivenTo.TryGetValue(item.Item, out List<PlayerMobile> value))
                         {
-                            _GivenTo[item.Item] = new List<PlayerMobile>();
+                            value = new List<PlayerMobile>();
+                            _GivenTo[item.Item] = value;
                         }
 
-                        if (!_GivenTo[item.Item].Contains(User))
+                        if (!value.Contains(User))
                         {
                             VendorSearchMap map = new VendorSearchMap(item);
 
@@ -499,7 +500,7 @@ namespace Server.Engines.VendorSearching
                             else
                             {
                                 User.SendLocalizedMessage(1154690); // The vendor map has been placed in your backpack.
-                                _GivenTo[item.Item].Add(User);
+                                value.Add(User);
                             }
                         }
                     }
