@@ -3230,7 +3230,7 @@ namespace Server.Multis
             EventSink.AfterWorldSave += AfterWorldSave;
         }
 
-        public static void AfterWorldSave(AfterWorldSaveEventArgs e)
+        private static void AfterWorldSave(AfterWorldSaveEventArgs e)
         {
             foreach (BaseHouse house in AllHouses)
             {
