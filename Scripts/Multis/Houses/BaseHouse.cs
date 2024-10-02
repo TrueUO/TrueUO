@@ -3238,7 +3238,9 @@ namespace Server.Multis
                         Item child = children[j];
 
                         if (child.Decays && !child.IsLockedDown && !child.IsSecure && child.LastMoved + child.DecayTime <= DateTime.UtcNow)
-                            Timer.DelayCall(TimeSpan.Zero, child.Delete);
+                        {
+                            child.Delete();
+                        }
                     }
                 }
             }
