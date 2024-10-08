@@ -1,10 +1,5 @@
-#region References
 using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
-using System.Threading;
-#endregion
+using System.Numerics;
 
 namespace Server
 {
@@ -13,532 +8,131 @@ namespace Server
 	/// </summary>
 	public static class RandomImpl
 	{
-		private static readonly IRandomImpl _Random;
+		public static Random Random => Random.Shared;
 
-		static RandomImpl()
+		private static bool Validate<N>(ref N min, ref N max) where N : INumber<N>
 		{
-			if (Core.Unix && Core.Is64Bit && File.Exists("libdrng.so"))
+			if (min == max)
 			{
-				_Random = new RDRand64();
-			}
-			else if (Core.Unix && File.Exists("libdrng.so"))
-			{
-				_Random = new RDRand32();
-			}
-			else if (Core.Unix)
-			{
-				_Random = new SimpleRandom();
-			}
-			else if (Core.Is64Bit && File.Exists("drng64.dll"))
-			{
-				_Random = new RDRand64();
-			}
-			else if (!Core.Is64Bit && File.Exists("drng32.dll"))
-			{
-				_Random = new RDRand32();
-			}
-			else
-			{
-				_Random = new CSPRandom();
+				return false;
 			}
 
-			if (_Random is IHardwareRNG rng)
+			if (min > max)
 			{
-				if (!rng.IsSupported())
+				(min, max) = (max, min);
+			}
+
+			return true;
+		}
+
+		public static bool GetBool()
+		{
+			return Random.Next() % 2 != 0;
+		}
+
+        public static short GetShort(short min, short max, bool maxInclusive = false)
+		{
+			if (Validate(ref min, ref max))
+			{
+				if (maxInclusive)
 				{
-					_Random = new CSPRandom();
-				}
-			}
-		}
-
-		public static bool IsHardwareRNG => _Random is IHardwareRNG;
-
-		public static Type Type => _Random.GetType();
-
-		public static int Next(int c)
-		{
-			return _Random.Next(c);
-		}
-
-		public static bool NextBool()
-		{
-			return _Random.NextBool();
-		}
-
-		public static void NextBytes(byte[] b)
-		{
-			_Random.NextBytes(b);
-		}
-
-		public static double NextDouble()
-		{
-			return _Random.NextDouble();
-		}
-	}
-
-	public interface IRandomImpl
-	{
-		int Next(int c);
-		bool NextBool();
-		void NextBytes(byte[] b);
-		double NextDouble();
-	}
-
-	public interface IHardwareRNG
-	{
-		bool IsSupported();
-	}
-
-	public sealed class SimpleRandom : IRandomImpl
-	{
-		private readonly Random m_Random = new Random();
-
-		public int Next(int c)
-		{
-			if (c <= 0)
-				return 0;
-
-			int r;
-			lock (m_Random)
-				r = m_Random.Next(c);
-			return r;
-		}
-
-		public bool NextBool()
-		{
-			return NextDouble() >= .5;
-		}
-
-		public void NextBytes(byte[] b)
-		{
-			lock (m_Random)
-				m_Random.NextBytes(b);
-		}
-
-		public double NextDouble()
-		{
-			double r;
-			lock (m_Random)
-				r = m_Random.NextDouble();
-			return r;
-		}
-	}
-
-    public sealed class CSPRandom : IRandomImpl
-    {
-        private static readonly RandomNumberGenerator _Rng = RandomNumberGenerator.Create();
-
-        private const int _BufferSize = 0x4000;
-        private const int _LargeRequest = 0x40;
-
-        private byte[] _Working = new byte[_BufferSize];
-        private byte[] _Buffer = new byte[_BufferSize];
-
-        private int _Index;
-
-        private readonly object _Sync = new();
-        private readonly object _SyncB = new();
-
-        public CSPRandom()
-        {
-            _Rng.GetBytes(_Working);
-            ThreadPool.QueueUserWorkItem(Fill);
-        }
-
-        private void CheckSwap(int c)
-        {
-            lock (_Sync)
-            {
-                if (_Index + c < _BufferSize)
-                {
-                    return;
-                }
-
-                lock (_SyncB)
-                {
-                    byte[] b = _Working;
-                    _Working = _Buffer;
-                    _Buffer = b;
-                    _Index = 0;
-                }
-            }
-            ThreadPool.QueueUserWorkItem(Fill);
-        }
-
-        private void Fill(object o)
-        {
-            lock (_SyncB)
-            {
-                _Rng.GetBytes(_Buffer);
-            }
-        }
-
-        private void _GetBytes(byte[] b, int offset, int count)
-        {
-            lock (_Sync)
-            {
-                CheckSwap(count);
-                Buffer.BlockCopy(_Working, _Index, b, offset, count);
-                _Index += count;
-            }
-        }
-
-        public int Next(int c)
-        {
-            return (int)(c * NextDouble());
-        }
-
-        public bool NextBool()
-        {
-            return (NextByte() & 1) == 1;
-        }
-
-        private byte NextByte()
-        {
-            lock (_Sync)
-            {
-                CheckSwap(1);
-                return _Working[_Index++];
-            }
-        }
-
-        public void NextBytes(byte[] b)
-        {
-            int c = b.Length;
-
-            if (c >= _LargeRequest)
-            {
-                _Rng.GetBytes(b);
-                return;
-            }
-            _GetBytes(b, 0, b.Length);
-        }
-
-        public unsafe double NextDouble()
-        {
-            byte[] b = new byte[8];
-
-            if (BitConverter.IsLittleEndian)
-            {
-                b[7] = 0;
-                _GetBytes(b, 0, 7);
-            }
-            else
-            {
-                b[0] = 0;
-                _GetBytes(b, 1, 7);
-            }
-
-            ulong r = 0;
-            fixed (byte* buf = b)
-            {
-                r = *(ulong*)&buf[0] >> 3;
-            }
-
-            /* double: 53 bits of significand precision
-             * ulong.MaxValue >> 11 = 9007199254740991
-             * 2^53 = 9007199254740992
-             */
-
-            return (double)r / 9007199254740992;
-        }
-    }
-
-    public sealed class RDRand32 : IRandomImpl, IHardwareRNG
-	{
-        private class SafeNativeMethods
-		{
-			[DllImport("drng32")]
-			internal static extern RDRandError rdrand_32(ref uint rand, bool retry);
-
-			[DllImport("drng32")]
-			internal static extern RDRandError rdrand_get_bytes(int n, byte[] buffer);
-		}
-
-        private const int BUFFER_SIZE = 0x10000;
-        private const int LARGE_REQUEST = 0x40;
-
-        private byte[] _Working = new byte[BUFFER_SIZE];
-		private byte[] _Buffer = new byte[BUFFER_SIZE];
-
-		private int _Index;
-
-		private readonly object _sync = new object();
-		private readonly object _syncB = new object();
-
-		public RDRand32()
-		{
-			SafeNativeMethods.rdrand_get_bytes(BUFFER_SIZE, _Working);
-			ThreadPool.QueueUserWorkItem(Fill);
-		}
-
-		public bool IsSupported()
-		{
-			uint r = 0;
-			return SafeNativeMethods.rdrand_32(ref r, true) == RDRandError.Success;
-		}
-
-		private void CheckSwap(int c)
-		{
-			lock (_sync)
-			{
-				if (_Index + c < BUFFER_SIZE)
-				{
-					return;
+					return (short)(min + Random.Next(max - min + 1));
 				}
 
-				lock (_syncB)
+				return (short)(min + Random.Next(max - min));
+			}
+
+			return min;
+		}
+
+        public static int GetInt(int max, bool maxInclusive = false)
+		{
+			return GetInt(0, max, maxInclusive);
+		}
+
+		public static int GetInt(int min, int max, bool maxInclusive = false)
+		{
+			if (Validate(ref min, ref max))
+			{
+				if (maxInclusive)
 				{
-					byte[] b = _Working;
-					_Working = _Buffer;
-					_Buffer = b;
-					_Index = 0;
-				}
-			}
-			ThreadPool.QueueUserWorkItem(Fill);
-		}
-
-		private void Fill(object o)
-		{
-			lock (_syncB)
-				SafeNativeMethods.rdrand_get_bytes(BUFFER_SIZE, _Buffer);
-		}
-
-		private void _GetBytes(byte[] b)
-		{
-			int c = b.Length;
-
-			CheckSwap(c);
-
-			lock (_sync)
-			{
-				Buffer.BlockCopy(_Working, _Index, b, 0, c);
-				_Index += c;
-			}
-		}
-
-		private void _GetBytes(byte[] b, int offset, int count)
-		{
-			CheckSwap(count);
-
-			lock (_sync)
-			{
-				Buffer.BlockCopy(_Working, _Index, b, offset, count);
-				_Index += count;
-			}
-		}
-
-		public int Next(int c)
-		{
-			return (int)(c * NextDouble());
-		}
-
-		public bool NextBool()
-		{
-			return (NextByte() & 1) == 1;
-		}
-
-		private byte NextByte()
-		{
-			CheckSwap(1);
-
-			lock (_sync)
-				return _Working[_Index++];
-		}
-
-		public void NextBytes(byte[] b)
-		{
-			int c = b.Length;
-
-			if (c >= LARGE_REQUEST)
-			{
-				SafeNativeMethods.rdrand_get_bytes(c, b);
-				return;
-			}
-			_GetBytes(b);
-		}
-
-		public unsafe double NextDouble()
-		{
-			byte[] b = new byte[8];
-
-			if (BitConverter.IsLittleEndian)
-			{
-				b[7] = 0;
-				_GetBytes(b, 0, 7);
-			}
-			else
-			{
-				b[0] = 0;
-				_GetBytes(b, 1, 7);
-			}
-
-			ulong r = 0;
-			fixed (byte* buf = b)
-			{
-				r = *(ulong*)&buf[0] >> 3;
-			}
-
-			/* double: 53 bits of significand precision
-			 * ulong.MaxValue >> 11 = 9007199254740991
-			 * 2^53 = 9007199254740992
-			 */
-
-			return (double)r / 9007199254740992;
-		}
-	}
-
-	public sealed class RDRand64 : IRandomImpl, IHardwareRNG
-	{
-        private class SafeNativeMethods
-		{
-			[DllImport("drng64")]
-			internal static extern RDRandError rdrand_64(ref ulong rand, bool retry);
-
-			[DllImport("drng64")]
-			internal static extern RDRandError rdrand_get_bytes(int n, byte[] buffer);
-		}
-
-        private const int BUFFER_SIZE = 0x10000;
-        private const int LARGE_REQUEST = 0x40;
-
-        private byte[] _Working = new byte[BUFFER_SIZE];
-		private byte[] _Buffer = new byte[BUFFER_SIZE];
-
-		private int _Index;
-
-		private readonly object _sync = new object();
-		private readonly object _syncB = new object();
-
-		public RDRand64()
-		{
-			SafeNativeMethods.rdrand_get_bytes(BUFFER_SIZE, _Working);
-			ThreadPool.QueueUserWorkItem(Fill);
-		}
-
-		public bool IsSupported()
-		{
-			ulong r = 0;
-			return SafeNativeMethods.rdrand_64(ref r, true) == RDRandError.Success;
-		}
-
-		private void CheckSwap(int c)
-		{
-			lock (_sync)
-			{
-				if (_Index + c < BUFFER_SIZE)
-				{
-					return;
+					return min + Random.Next(max - min + 1);
 				}
 
-				lock (_syncB)
+				return min + Random.Next(max - min);
+			}
+
+			return min;
+		}
+
+        public static long GetLong(long min, long max, bool maxInclusive = false)
+		{
+			if (Validate(ref min, ref max))
+			{
+				if (maxInclusive)
 				{
-					byte[] b = _Working;
-					_Working = _Buffer;
-					_Buffer = b;
-					_Index = 0;
+					return min + Random.NextInt64(max - min + 1L);
 				}
+
+				return min + Random.NextInt64(max - min);
 			}
-			ThreadPool.QueueUserWorkItem(Fill);
+
+			return min;
 		}
 
-		private void Fill(object o)
+        public static double GetDouble(bool maxInclusive = false)
 		{
-			lock (_syncB)
-				SafeNativeMethods.rdrand_get_bytes(BUFFER_SIZE, _Buffer);
+			return GetDouble(1d, maxInclusive);
 		}
 
-		private void _GetBytes(byte[] b)
+		public static double GetDouble(double max, bool maxInclusive = false)
 		{
-			int c = b.Length;
+			return GetDouble(0d, max, maxInclusive);
+		}
 
-			CheckSwap(c);
-
-			lock (_sync)
+		public static double GetDouble(double min, double max, bool maxInclusive = false)
+		{
+			if (Validate(ref min, ref max))
 			{
-				Buffer.BlockCopy(_Working, _Index, b, 0, c);
-				_Index += c;
+				if (maxInclusive)
+				{
+					return min + (Random.NextDouble() * (max - min + 0.01d)) - 0.01d;
+				}
+
+				return min + (Random.NextDouble() * (max - min));
 			}
+
+			return min;
 		}
 
-		private void _GetBytes(byte[] b, int offset, int count)
+		public static void GetBytes(byte[] buffer)
 		{
-			CheckSwap(count);
+			GetBytes(buffer.AsSpan());
+		}
 
-			lock (_sync)
+		public static void GetBytes(Span<byte> buffer)
+		{
+			if (buffer.Length > 0)
 			{
-				Buffer.BlockCopy(_Working, _Index, b, offset, count);
-				_Index += count;
+				Random.NextBytes(buffer);
 			}
 		}
 
-		public int Next(int c)
+		public static T GetObject<T>(T[] choices)
 		{
-			return (int)(c * NextDouble());
+			return GetObject<T>(choices.AsSpan());
 		}
 
-		public bool NextBool()
+        public static T GetObject<T>(ReadOnlySpan<T> choices)
 		{
-			return (NextByte() & 1) == 1;
-		}
+			var obj = default(T);
 
-		private byte NextByte()
-		{
-			CheckSwap(1);
-
-			lock (_sync)
-				return _Working[_Index++];
-		}
-
-		public void NextBytes(byte[] b)
-		{
-			int c = b.Length;
-
-			if (c >= LARGE_REQUEST)
+			if (!choices.IsEmpty)
 			{
-				SafeNativeMethods.rdrand_get_bytes(c, b);
-				return;
+				Random.GetItems(choices, new Span<T>(ref obj));
 			}
-			_GetBytes(b);
+
+			return obj;
 		}
-
-		public unsafe double NextDouble()
-		{
-			byte[] b = new byte[8];
-
-			if (BitConverter.IsLittleEndian)
-			{
-				b[7] = 0;
-				_GetBytes(b, 0, 7);
-			}
-			else
-			{
-				b[0] = 0;
-				_GetBytes(b, 1, 7);
-			}
-
-			ulong r = 0;
-			fixed (byte* buf = b)
-			{
-				r = *(ulong*)&buf[0] >> 3;
-			}
-
-			/* double: 53 bits of significand precision
-			 * ulong.MaxValue >> 11 = 9007199254740991
-			 * 2^53 = 9007199254740992
-			 */
-
-			return (double)r / 9007199254740992;
-		}
-	}
-
-	public enum RDRandError
-	{
-		Unknown = -4,
-		Unsupported = -3,
-		Supported = -2,
-		NotReady = -1,
-        Failure = 0,
-        Success = 1
     }
 }
