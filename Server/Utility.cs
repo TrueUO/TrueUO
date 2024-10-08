@@ -569,20 +569,20 @@ namespace Server
         }
 
         #region Random
-        /// <summary>
-        /// Enables or disables floating dice. 
-        /// Floating dice uses a double to obtain a lower average value range.
-        /// Consistent average values for [1,000,000 x 1d6+0] rolls: [Integral: 3.50]  [Floating: 2.25]
-        /// </summary>
-        private const bool FloatingDice = false;
+		/// <summary>
+		/// Enables or disables floating dice. 
+		/// Floating dice uses a double to obtain a lower average value range.
+		/// Consistent average values for [1,000,000 x 1d6+0] rolls: [Integral: 3.50]  [Floating: 2.25]
+		/// </summary>
+		public static bool FloatingDice { get; set; } = false;
 
-        //4d6+8 would be: Utility.Dice( 4, 6, 8 )
+		//4d6+8 would be: Utility.Dice( 4, 6, 8 )
 		public static int Dice(int numDice, int numSides, int bonus)
 		{
 			return Dice(numDice, numSides, bonus, FloatingDice);
 		}
 
-        private static int Dice(int numDice, int numSides, int bonus, bool floating)
+		public static int Dice(int numDice, int numSides, int bonus, bool floating)
 		{
 			if (floating)
 			{
@@ -608,74 +608,57 @@ namespace Server
 
 		public static T RandomList<T>(params T[] list)
 		{
-			return list[RandomImpl.Next(list.Length)];
+			return RandomImpl.GetObject(list);
 		}
 
-		public static bool RandomBool()
+        public static bool RandomBool()
 		{
-			return RandomImpl.NextBool();
+			return RandomImpl.GetBool();
+		}
+
+        public static int RandomMinMax(int min, int max)
+		{
+			return RandomImpl.GetInt(min, max, true);
+		}
+
+		public static long RandomMinMax(long min, long max)
+		{
+			return RandomImpl.GetLong(min, max, true);
 		}
 
         public static double RandomMinMax(double min, double max)
 		{
-			if (min > max)
-			{
-				double copy = min;
-				min = max;
-				max = copy;
-			}
-			else if (min == max)
-			{
-				return min;
-			}
-
-			return min + (RandomImpl.NextDouble() * (max - min));
+			return RandomImpl.GetDouble(min, max, true);
 		}
 
-		public static int RandomMinMax(int min, int max)
+        public static short Random(short from, short count)
 		{
-			if (min > max)
-			{
-				int copy = min;
-				min = max;
-				max = copy;
-			}
-			else if (min == max)
-			{
-				return min;
-			}
-
-			return min + RandomImpl.Next(max - min + 1);
+			return RandomImpl.GetShort(from, (short)(from + count));
 		}
-
-		public static int Random(int from, int count)
-        {
-            if (count == 0)
-			{
-				return from;
-			}
-
-            if (count > 0)
-            {
-                return from + RandomImpl.Next(count);
-            }
-
-            return from - RandomImpl.Next(-count);
-        }
 
 		public static int Random(int count)
 		{
-			return RandomImpl.Next(count);
+			return RandomImpl.GetInt(count);
 		}
 
-		public static void RandomBytes(byte[] buffer)
+		public static int Random(int from, int count)
 		{
-			RandomImpl.NextBytes(buffer);
+			return RandomImpl.GetInt(from, from + count);
 		}
 
-		public static double RandomDouble()
+        public static double RandomDouble()
 		{
-			return RandomImpl.NextDouble();
+			return RandomImpl.GetDouble();
+		}
+
+        public static void RandomBytes(byte[] buffer)
+		{
+			RandomImpl.GetBytes(buffer);
+		}
+
+        public static TimeSpan RandomMinMax(TimeSpan min, TimeSpan max)
+		{
+			return TimeSpan.FromTicks(RandomMinMax(min.Ticks, max.Ticks));
 		}
 		#endregion
 
