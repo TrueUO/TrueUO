@@ -296,8 +296,7 @@ namespace Server
                     value = 0xFFFF;
                 }
 
-                // Round the value before setting it
-                ushort sv = (ushort)Math.Round((double)value);
+                ushort sv = (ushort)value;
 
                 int oldBase = m_Base;
 
