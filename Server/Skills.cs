@@ -282,44 +282,44 @@ namespace Server
 			set;
 		}
 
-		public int BaseFixedPoint
-		{
-			get => m_Base;
-			set
-			{
-				if (value < 0)
-				{
-					value = 0;
-				}
-				else if (value >= 0x10000)
-				{
-					value = 0xFFFF;
-				}
+        public int BaseFixedPoint
+        {
+            get => m_Base;
+            set
+            {
+                if (value < 0)
+                {
+                    value = 0;
+                }
+                else if (value >= 0x10000)
+                {
+                    value = 0xFFFF;
+                }
 
-				ushort sv = (ushort)value;
+                ushort sv = (ushort)value;
 
-				int oldBase = m_Base;
+                int oldBase = m_Base;
 
-				if (m_Base != sv)
-				{
-					m_Owner.Total = m_Owner.Total - m_Base + sv;
+                if (m_Base != sv)
+                {
+                    m_Owner.Total = m_Owner.Total - m_Base + sv;
 
-					m_Base = sv;
+                    m_Base = sv;
 
-					m_Owner.OnSkillChange(this);
+                    m_Owner.OnSkillChange(this);
 
-					Mobile m = m_Owner.Owner;
+                    Mobile m = m_Owner.Owner;
 
-					if (m != null)
-					{
-						m.OnSkillChange(SkillName, (double)oldBase / 10);
-					}
-				}
-			}
-		}
+                    if (m != null)
+                    {
+                        m.OnSkillChange(SkillName, (double)oldBase / 10);
+                    }
+                }
+            }
+        }
 
-		[CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-		public double Base { get => m_Base / 10.0; set => BaseFixedPoint = (int)(value * 10.0); }
+        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
+        public double Base { get => m_Base / 10.0; set => BaseFixedPoint = (int)Math.Round(value * 10.0); }
 
 		public int CapFixedPoint
 		{
