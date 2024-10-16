@@ -1,10 +1,8 @@
-#region References
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Server.Network;
-#endregion
 
 namespace Server
 {
@@ -393,9 +391,10 @@ namespace Server
 
 				inv /= 100.0;
 
-				double statsOffset = ((m_UseStatMods ? m_Owner.Owner.Str : m_Owner.Owner.RawStr) * m_Info.StrScale) +
-									 ((m_UseStatMods ? m_Owner.Owner.Dex : m_Owner.Owner.RawDex) * m_Info.DexScale) +
-									 ((m_UseStatMods ? m_Owner.Owner.Int : m_Owner.Owner.RawInt) * m_Info.IntScale);
+				double statsOffset = (m_UseStatMods ? m_Owner.Owner.Str : m_Owner.Owner.RawStr) * m_Info.StrScale +
+									 (m_UseStatMods ? m_Owner.Owner.Dex : m_Owner.Owner.RawDex) * m_Info.DexScale +
+									 (m_UseStatMods ? m_Owner.Owner.Int : m_Owner.Owner.RawInt) * m_Info.IntScale;
+
 				double statTotal = m_Info.StatTotal * inv;
 
 				statsOffset *= inv;
@@ -1004,17 +1003,6 @@ namespace Server
 				}
 				case 1:
 				{
-					if (version < 2)
-					{
-						m_Cap = 7000;
-					}
-
-					if (version < 3)
-					{
-						/*m_Total =*/
-						reader.ReadInt();
-					}
-
 					SkillInfo[] info = SkillInfo.Table;
 
 					m_Skills = new Skill[info.Length];
