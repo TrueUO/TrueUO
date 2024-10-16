@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -9,12 +10,12 @@ namespace Server
 {
     public class ThreadedSaveStrategy : ISaveStrategy
     {
-        private readonly Queue<Item> _DecayQueue = new();
+        private readonly ConcurrentQueue<Item> _DecayQueue = new(); 
         private bool _AllFilesSaved = true;
         private readonly List<string> _ExpectedFiles = new();
 
         public bool Save()
-		{
+        {
             Thread saveItemsThread = new Thread(SaveItems)
             {
                 Name = "Item Save Subset"
@@ -33,10 +34,9 @@ namespace Server
         {
             while (_DecayQueue.Count > 0)
             {
-                Item item = _DecayQueue.Dequeue();
-
-                if (item != null && item.OnDecay())
+                if (_DecayQueue.TryDequeue(out Item item) && item != null && item.OnDecay())
                 {
+                    // Thread-safe dequeuing
                     item.Delete();
                 }
             }
@@ -48,22 +48,22 @@ namespace Server
             int itemCount = items.Count;
 
             List<List<Item>> chunks = new List<List<Item>>();
-            int chunkSize = 150000;
+            int chunkSize = 100000; // Reduced chunk size to prevent large array copying issues
 
             List<Item> currentChunk = new List<Item>();
             int index = 0;
 
-            foreach (var item in items.Values)
+            foreach (Item item in items.Values)
             {
                 if (index % chunkSize == 0 && currentChunk.Count > 0)
                 {
                     chunks.Add(currentChunk);
                     currentChunk = new List<Item>();
 
-                    int currentChuckIndex = chunks.Count - 1;
+                    int currentChunkIndex = chunks.Count - 1;
 
-                    _ExpectedFiles.Add(World.ItemIndexPath.Replace(".idx", $"_{currentChuckIndex.ToString("D" + 8)}.idx"));
-                    _ExpectedFiles.Add(World.ItemDataPath.Replace(".bin", $"_{currentChuckIndex.ToString("D" + 8)}.bin"));
+                    _ExpectedFiles.Add(World.ItemIndexPath.Replace(".idx", $"_{currentChunkIndex:D8}.idx"));
+                    _ExpectedFiles.Add(World.ItemDataPath.Replace(".bin", $"_{currentChunkIndex:D8}.bin"));
                 }
 
                 currentChunk.Add(item);
@@ -81,37 +81,46 @@ namespace Server
             {
                 Parallel.ForEach(chunks, (chunk, state, chunkIndex) =>
                 {
-                    string idxPath = World.ItemIndexPath.Replace(".idx", $"_{chunkIndex.ToString("D" + 8)}.idx");
-                    string binPath = World.ItemDataPath.Replace(".bin", $"_{chunkIndex.ToString("D" + 8)}.bin");
-
-                    using (BinaryFileWriter idx = new BinaryFileWriter(idxPath, false))
-                    using (BinaryFileWriter bin = new BinaryFileWriter(binPath, true))
+                    try
                     {
-                        int itemsWritten = 0;
-                        idx.Write(chunk.Count);
-                        foreach (Item item in chunk)
+                        string idxPath = World.ItemIndexPath.Replace(".idx", $"_{chunkIndex:D8}.idx");
+                        string binPath = World.ItemDataPath.Replace(".bin", $"_{chunkIndex:D8}.bin");
+
+                        using (BinaryFileWriter idx = new BinaryFileWriter(idxPath, false))
+                        using (BinaryFileWriter bin = new BinaryFileWriter(binPath, true))
                         {
-                            if (item.Decays && item.Parent == null && item.Map != Map.Internal && (item.LastMoved + item.DecayTime) <= DateTime.UtcNow)
+                            int itemsWritten = 0;
+                            idx.Write(chunk.Count);
+                            foreach (Item item in chunk)
                             {
-                                _DecayQueue.Enqueue(item);
+                                if (item.Decays && item.Parent == null && item.Map != Map.Internal && (item.LastMoved + item.DecayTime) <= DateTime.UtcNow)
+                                {
+                                    _DecayQueue.Enqueue(item); // Thread-safe enqueueing
+                                }
+
+                                long start = bin.Position;
+
+                                idx.Write(item.m_TypeRef);
+                                idx.Write(item.Serial);
+                                idx.Write(start);
+
+                                item.Serialize(bin);
+
+                                idx.Write((int)(bin.Position - start));
+
+                                item.FreeCache();
+                                itemsWritten++;
                             }
-
-                            long start = bin.Position;
-
-                            idx.Write(item.m_TypeRef);
-                            idx.Write(item.Serial);
-                            idx.Write(start);
-
-                            item.Serialize(bin);
-
-                            idx.Write((int)(bin.Position - start));
-
-                            item.FreeCache();
-                            itemsWritten++;
+                            Interlocked.Add(ref totalItemCount, itemsWritten);
                         }
-                        Interlocked.Add(ref totalItemCount, itemsWritten);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error saving chunk {chunkIndex}: {ex.Message}");
+                        state.Stop(); // Stop parallel processing on error
                     }
                 });
+
                 tdb.Write(World.m_ItemTypes.Count);
 
                 for (int i = 0; i < World.m_ItemTypes.Count; ++i)
@@ -119,11 +128,9 @@ namespace Server
                     tdb.Write(World.m_ItemTypes[i].FullName);
                 }
 
-                //Will keep this one for now but will remove at a later date 6/11/2024
-                Console.WriteLine($"Saved {totalItemCount} vs Original {itemCount} item count.");
-
+                Console.WriteLine("totalItemCount: " + totalItemCount + " original: " + itemCount);
             }
-           
+
             if (totalItemCount != itemCount)
             {
                 _AllFilesSaved = false;
@@ -184,7 +191,7 @@ namespace Server
             {
                 long start = bin.Position;
 
-                idx.Write(0);//guilds have no typeid
+                idx.Write(0); // guilds have no typeid
                 idx.Write(guild.Id);
                 idx.Write(start);
 
