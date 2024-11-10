@@ -5,7 +5,6 @@ using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
-
     public enum TrainingMode
     {
         Regular,
@@ -219,16 +218,16 @@ namespace Server.Mobiles
 
         private bool CheckCanProgress(BaseCreature bc, double toGain)
         {
-            if (_ProgressTable.ContainsKey(bc))
+            if (_ProgressTable.TryGetValue(bc, out int value))
             {
                 int gains = GetGainsPerCreature(toGain);
 
-                if (_ProgressTable[bc] >= gains)
+                if (value >= gains)
                 {
                     return false;
                 }
 
-                _ProgressTable[bc]++;
+                _ProgressTable[bc] = ++value;
                 return true;
             }
 

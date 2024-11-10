@@ -757,7 +757,7 @@ namespace Server.Spells.SkillMasteries
             }
         }
 
-        private static readonly object _Lock = new object();
+        private static readonly object _Lock = new();
 
         public static void CheckTable(Mobile m)
         {
@@ -846,14 +846,15 @@ namespace Server.Spells.SkillMasteries
         {
             lock (_Lock)
             {
-                if (!_Table.ContainsKey(from))
+                if (!_Table.TryGetValue(from, out List<SkillMasterySpell> value))
                 {
-                    _Table[from] = new List<SkillMasterySpell>();
+                    value = new List<SkillMasterySpell>();
+                    _Table[from] = value;
                 }
 
-                if (!_Table[from].Contains(spell))
+                if (!value.Contains(spell))
                 {
-                    _Table[from].Add(spell);
+                    value.Add(spell);
                 }
             }
         }

@@ -1,10 +1,8 @@
-#region References
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Server.Network;
-#endregion
 
 namespace Server
 {
@@ -282,44 +280,44 @@ namespace Server
 			set;
 		}
 
-		public int BaseFixedPoint
-		{
-			get => m_Base;
-			set
-			{
-				if (value < 0)
-				{
-					value = 0;
-				}
-				else if (value >= 0x10000)
-				{
-					value = 0xFFFF;
-				}
+        public int BaseFixedPoint
+        {
+            get => m_Base;
+            set
+            {
+                if (value < 0)
+                {
+                    value = 0;
+                }
+                else if (value >= 0x10000)
+                {
+                    value = 0xFFFF;
+                }
 
-				ushort sv = (ushort)value;
+                ushort sv = (ushort)value;
 
-				int oldBase = m_Base;
+                int oldBase = m_Base;
 
-				if (m_Base != sv)
-				{
-					m_Owner.Total = m_Owner.Total - m_Base + sv;
+                if (m_Base != sv)
+                {
+                    m_Owner.Total = m_Owner.Total - m_Base + sv;
 
-					m_Base = sv;
+                    m_Base = sv;
 
-					m_Owner.OnSkillChange(this);
+                    m_Owner.OnSkillChange(this);
 
-					Mobile m = m_Owner.Owner;
+                    Mobile m = m_Owner.Owner;
 
-					if (m != null)
-					{
-						m.OnSkillChange(SkillName, (double)oldBase / 10);
-					}
-				}
-			}
-		}
+                    if (m != null)
+                    {
+                        m.OnSkillChange(SkillName, (double)oldBase / 10);
+                    }
+                }
+            }
+        }
 
-		[CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-		public double Base { get => m_Base / 10.0; set => BaseFixedPoint = (int)(value * 10.0); }
+        [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
+        public double Base { get => m_Base / 10.0; set => BaseFixedPoint = (int)Math.Round(value * 10.0); }
 
 		public int CapFixedPoint
 		{
@@ -393,9 +391,10 @@ namespace Server
 
 				inv /= 100.0;
 
-				double statsOffset = ((m_UseStatMods ? m_Owner.Owner.Str : m_Owner.Owner.RawStr) * m_Info.StrScale) +
-									 ((m_UseStatMods ? m_Owner.Owner.Dex : m_Owner.Owner.RawDex) * m_Info.DexScale) +
-									 ((m_UseStatMods ? m_Owner.Owner.Int : m_Owner.Owner.RawInt) * m_Info.IntScale);
+				double statsOffset = (m_UseStatMods ? m_Owner.Owner.Str : m_Owner.Owner.RawStr) * m_Info.StrScale +
+									 (m_UseStatMods ? m_Owner.Owner.Dex : m_Owner.Owner.RawDex) * m_Info.DexScale +
+									 (m_UseStatMods ? m_Owner.Owner.Int : m_Owner.Owner.RawInt) * m_Info.IntScale;
+
 				double statTotal = m_Info.StatTotal * inv;
 
 				statsOffset *= inv;
@@ -1004,17 +1003,6 @@ namespace Server
 				}
 				case 1:
 				{
-					if (version < 2)
-					{
-						m_Cap = 7000;
-					}
-
-					if (version < 3)
-					{
-						/*m_Total =*/
-						reader.ReadInt();
-					}
-
 					SkillInfo[] info = SkillInfo.Table;
 
 					m_Skills = new Skill[info.Length];

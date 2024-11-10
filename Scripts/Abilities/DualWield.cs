@@ -65,15 +65,17 @@ namespace Server.Items
 
         public static void RemoveFromRegistry(Mobile from)
         {
-            if (m_Registry.ContainsKey(from))
+            if (m_Registry.TryGetValue(from, out DualWieldTimer value))
             {
                 from.SendLocalizedMessage(1150285); // You no longer try to strike with both weapons at the same time.
 
-                m_Registry[from].Stop();
+                value.Stop();
                 m_Registry.Remove(from);
 
                 if (from.Weapon is BaseWeapon weapon)
+                {
                     weapon.ProcessingMultipleHits = false;
+                }
             }
         }
 

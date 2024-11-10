@@ -12,7 +12,6 @@ namespace Server.Engines.VendorSearching
     public class VendorSearchGump : BaseGump
     {
         public SearchCriteria Criteria { get; }
-        public Map SetMap { get; set; }
 
         public int Feedback { get; }
 
@@ -130,16 +129,16 @@ namespace Server.Engines.VendorSearching
 
             List<SearchCriteriaCategory> list = new List<SearchCriteriaCategory>();
 
-            for (var index = 0; index < SearchCriteriaCategory.AllCategories.Length; index++)
+            for (int index = 0; index < SearchCriteriaCategory.AllCategories.Length; index++)
             {
-                var category = SearchCriteriaCategory.AllCategories[index];
+                SearchCriteriaCategory category = SearchCriteriaCategory.AllCategories[index];
 
                 list.Add(category);
             }
 
-            for (var index = 0; index < list.Count; index++)
+            for (int index = 0; index < list.Count; index++)
             {
-                var x = list[index];
+                SearchCriteriaCategory x = list[index];
 
                 AddPage(x.PageID);
 
@@ -184,16 +183,16 @@ namespace Server.Engines.VendorSearching
 
                     List<SearchCriterionEntry> list1 = new List<SearchCriterionEntry>();
 
-                    for (var i = 0; i < x.Criteria.Length; i++)
+                    for (int i = 0; i < x.Criteria.Length; i++)
                     {
-                        var criterion = x.Criteria[i];
+                        SearchCriterionEntry criterion = x.Criteria[i];
 
                         list1.Add(criterion);
                     }
 
-                    for (var i = 0; i < list1.Count; i++)
+                    for (int i = 0; i < list1.Count; i++)
                     {
-                        var y = list1[i];
+                        SearchCriterionEntry y = list1[i];
 
                         AddHtmlLocalized(306, 50 + yOffset * 22, 215, 20, y.Cliloc, LabelColor, false, false);
                         AddButton(266, 50 + yOffset * 22, 30533, 30533, buttonIdx, GumpButtonType.Reply, 0);
@@ -213,7 +212,7 @@ namespace Server.Engines.VendorSearching
             }
         }
 
-        public override void OnResponse(RelayInfo info)
+        public override async void OnResponse(RelayInfo info)
         {
             if (info.ButtonID != 0)
             {
@@ -223,14 +222,14 @@ namespace Server.Engines.VendorSearching
                     return;
                 }
 
-                TextRelay searchname = info.GetTextEntry(1);
+                TextRelay searchName = info.GetTextEntry(1);
 
-                if (searchname != null && !string.IsNullOrEmpty(searchname.Text))
+                if (searchName != null && !string.IsNullOrEmpty(searchName.Text))
                 {
-                    string text = searchname.Text.Trim();
+                    string text = searchName.Text.Trim();
 
                     if (Criteria.SearchName == null || text.ToLower() != Criteria.SearchName.ToLower())
-                        Criteria.SearchName = searchname.Text;
+                        Criteria.SearchName = searchName.Text;
                 }
             }
 
@@ -238,39 +237,35 @@ namespace Server.Engines.VendorSearching
             {
                 case 0: break;
                 case 1: // Search
-                    {
-                        User.CloseGump(typeof(SearchResultsGump));
+                {
+                    User.CloseGump(typeof(SearchResultsGump));
 
-                        if (Criteria.IsEmpty)
+                    if (Criteria.IsEmpty)
+                    {
+                        SendGump(new VendorSearchGump(User, 1154586)); // Please select some criteria to search for.
+                    }
+                    else
+                    {
+                        SendGump(new SearchWaitGump(User));
+
+                        List<SearchItem> results = await FindVendorItemsAsync(Criteria).ConfigureAwait(true);
+
+                        User.CloseGump(typeof(SearchWaitGump));
+
+                        if (results?.Count > 0)
                         {
-                            SendGump(new VendorSearchGump(User, 1154586)); // Please select some criteria to search for.
+                            Refresh();
+
+                            SendGump(new SearchResultsGump(User, results));
                         }
                         else
                         {
-                            Task<List<SearchItem>> resultsTask = FindVendorItemsAsync(Criteria);
-
-                            TaskPollingTimer<List<SearchItem>> pollingTimer = new TaskPollingTimer<List<SearchItem>>(resultsTask, results =>
-                            {
-                                User.CloseGump(typeof(SearchWaitGump));
-
-                                if (results == null || results.Count == 0)
-                                {
-                                    SendGump(new VendorSearchGump(User, 1154587)); // No items matched your search.                                     
-                                }
-                                else
-                                {
-                                    Refresh();
-                                    SendGump(new SearchResultsGump(User, results));
-                                }
-                            });
-
-                            resultsTask.Start();
-                            pollingTimer.Start();
-
-                            SendGump(new SearchWaitGump(User, pollingTimer));
+                            SendGump(new VendorSearchGump(User, 1154587)); // No items matched your search.                                     
                         }
-                        break;
                     }
+
+                    break;
+                }
                 case 2: // Clear Criteria
                     {
                         Criteria.Reset();
@@ -356,10 +351,12 @@ namespace Server.Engines.VendorSearching
                         object o = criteria.Object;
                         int value = 0;
 
-                        TextRelay valuetext = info.GetTextEntry(info.ButtonID - 40);
+                        TextRelay valueText = info.GetTextEntry(info.ButtonID - 40);
 
-                        if (valuetext != null)
-                            value = Math.Max(o is AosAttribute attribute && attribute == AosAttribute.CastSpeed ? -1 : 0, Utility.ToInt32(valuetext.Text));
+                        if (valueText != null)
+                        {
+                            value = Math.Max(o is AosAttribute attribute && attribute == AosAttribute.CastSpeed ? -1 : 0, Utility.ToInt32(valueText.Text));
+                        }
 
                         Criteria.TryAddDetails(o, criteria.Cliloc, criteria.PropCliloc, value, criteria.Category);
                         Refresh();
@@ -370,21 +367,15 @@ namespace Server.Engines.VendorSearching
 
         public static Task<List<SearchItem>> FindVendorItemsAsync(SearchCriteria criteria)
         {
-            return new Task<List<SearchItem>>(() =>
-            {
-                return criteria.Auction ? VendorSearch.DoSearchAuction(criteria) : VendorSearch.DoSearch(criteria);
-            });
+            return Task.Run(() => criteria.Auction ? VendorSearch.DoSearchAuction(criteria) : VendorSearch.DoSearch(criteria));
         }
     }
 
     public class SearchWaitGump : BaseGump
     {
-        private readonly Timer m_PollingTimer;
-
-        public SearchWaitGump(PlayerMobile pm, Timer waitTimer)
+        public SearchWaitGump(PlayerMobile pm)
             : base(pm, 10, 10)
         {
-            m_PollingTimer = waitTimer;
         }
 
         public override void AddGumpLayout()
@@ -394,11 +385,6 @@ namespace Server.Engines.VendorSearching
             AddBackground(0, 0, 414, 214, 0x7752);
 
             AddHtmlLocalized(27, 47, 380, 80, 1114513, "#1154678", 0x4E73, false, false); // <DIV ALIGN=CENTER>Please wait for your search to complete.</DIV>
-        }
-
-        public override void OnResponse(RelayInfo info)
-        {
-            m_PollingTimer.Stop();
         }
     }
 
@@ -416,9 +402,11 @@ namespace Server.Engines.VendorSearching
         {
             Items = items;
             Index = 0;
+
+            AddGumpLayout();
         }
 
-        public override void AddGumpLayout()
+        public sealed override void AddGumpLayout()
         {
             AddBackground(0, 0, 500, 550, 30536);
 
@@ -436,9 +424,9 @@ namespace Server.Engines.VendorSearching
 
             for (int i = start; i < start + PerPage && i < Items.Count; i++)
             {
-                var item = Items[i].Item;
-                var price = Items[i].Price;
-                var map = Items[i].Map;
+                Item item = Items[i].Item;
+                int price = Items[i].Price;
+                Map map = Items[i].Map;
 
                 Rectangle2D bounds = ItemBounds.Table[item.ItemID];
                 int y = 101 + index * 75;
@@ -491,21 +479,28 @@ namespace Server.Engines.VendorSearching
                     if (item != null && (item.AuctionSafe != null && item.AuctionSafe.CheckAuctionItem(item.Item) || item.Vendor != null && item.Vendor.GetVendorItem(item.Item) != null))
                     {
                         if (_GivenTo == null)
+                        {
                             _GivenTo = new Dictionary<Item, List<PlayerMobile>>();
+                        }
 
-                        if (!_GivenTo.ContainsKey(item.Item))
-                            _GivenTo[item.Item] = new List<PlayerMobile>();
+                        if (!_GivenTo.TryGetValue(item.Item, out List<PlayerMobile> value))
+                        {
+                            value = new List<PlayerMobile>();
+                            _GivenTo[item.Item] = value;
+                        }
 
-                        if (!_GivenTo[item.Item].Contains(User))
+                        if (!value.Contains(User))
                         {
                             VendorSearchMap map = new VendorSearchMap(item);
 
                             if (User.Backpack == null || !User.Backpack.TryDropItem(User, map, false))
+                            {
                                 map.Delete();
+                            }
                             else
                             {
                                 User.SendLocalizedMessage(1154690); // The vendor map has been placed in your backpack.
-                                _GivenTo[item.Item].Add(User);
+                                value.Add(User);
                             }
                         }
                     }
@@ -527,7 +522,7 @@ namespace Server.Engines.VendorSearching
 
         public static void Initialize()
         {
-            Timer t = Timer.DelayCall(TimeSpan.FromMinutes(30), TimeSpan.FromMinutes(30), () =>
+            Timer.DelayCall(TimeSpan.FromMinutes(30), TimeSpan.FromMinutes(30), () =>
             {
                 if (_GivenTo != null)
                 {
@@ -537,7 +532,7 @@ namespace Server.Engines.VendorSearching
             });
         }
 
-        public static Dictionary<Item, List<PlayerMobile>> _GivenTo;
+        private static Dictionary<Item, List<PlayerMobile>> _GivenTo;
     }
 
     public class ConfirmTeleportGump : BaseGump
@@ -562,8 +557,8 @@ namespace Server.Engines.VendorSearching
                 AddHtmlLocalized(27, 47, 380, 80, 1154637, $"@{coord[0]}@{coord[1]}", 0x4E73, false, false); // Please select 'Accept' if you would like to return to ~1_loc~ (~2_facet~).  This map will be deleted after use.
             }
             else
-                AddHtmlLocalized(27, 47, 380, 80, 1154635, $"@{VendorMap.TeleportCost.ToString()}@{VendorMap.Name()[0]}@{VendorMap.DeleteDelayMinutes.ToString()}", 0x4E73, false, false); // Please select 'Accept' if you would like to pay ~1_cost~ gold to teleport to vendor ~2_name~.  For this price you will also be able to teleport back to this location within the next ~3_minutes~ minutes.
-
+                AddHtmlLocalized(27, 47, 380, 80, 1154635, $"@{VendorMap.TeleportCost}@{VendorMap.Name()[0].Split(' ')[0]}@{VendorMap.DeleteDelayMinutes}", 0x4E73, false, false); // Please select 'Accept' if you would like to pay ~1_cost~ gold to teleport to vendor ~2_name~.  For this price you will also be able to teleport back to this location within the next ~3_minutes~ minutes.
+                
             AddButton(7, 167, 0x7747, 0x7747, 0, GumpButtonType.Reply, 0);
             AddHtmlLocalized(47, 167, 100, 40, 1150300, 0x4E73, false, false); // CANCEL
 

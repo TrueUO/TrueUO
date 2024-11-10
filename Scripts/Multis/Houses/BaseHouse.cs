@@ -3223,22 +3223,35 @@ namespace Server.Multis
 
             writer.Write(MaxLockDowns);
             writer.Write(MaxSecures);
+        }
 
-            // Items in locked down containers that aren't locked down themselves must decay!
-            foreach (KeyValuePair<Item, Mobile> kvp in LockDowns)
+        public static void Initialize()
+        {
+            EventSink.AfterWorldSave += AfterWorldSave;
+        }
+
+        private static void AfterWorldSave(AfterWorldSaveEventArgs e)
+        {
+            foreach (BaseHouse house in AllHouses)
             {
-                Item item = kvp.Key;
-
-                if (item is Container cont && CheckContentsDecay(cont))
+                // Items in locked down containers that aren't locked down themselves must decay!
+                foreach (KeyValuePair<Item, Mobile> kvp in house.LockDowns)
                 {
-                    List<Item> children = cont.Items;
+                    Item item = kvp.Key;
 
-                    for (int j = 0; j < children.Count; ++j)
+                    if (item is Container cont && house.CheckContentsDecay(cont))
                     {
-                        Item child = children[j];
+                        List<Item> children = cont.Items;
 
-                        if (child.Decays && !child.IsLockedDown && !child.IsSecure && child.LastMoved + child.DecayTime <= DateTime.UtcNow)
-                            Timer.DelayCall(TimeSpan.Zero, child.Delete);
+                        for (int j = 0; j < children.Count; ++j)
+                        {
+                            Item child = children[j];
+
+                            if (child.Decays && !child.IsLockedDown && !child.IsSecure && child.LastMoved + child.DecayTime <= DateTime.UtcNow)
+                            {
+                                child.Delete();
+                            }
+                        }
                     }
                 }
             }

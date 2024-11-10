@@ -6,7 +6,7 @@ namespace Server.Spells.Chivalry
 {
     public class ConsecrateWeaponSpell : PaladinSpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo m_Info = new(
             "Consecrate Weapon", "Consecrus Arma",
             -1,
             9002);
@@ -24,6 +24,7 @@ namespace Server.Spells.Chivalry
         public override int RequiredTithing => 10;
         public override int MantraNumber => 1060720;// Consecrus Arma
         public override bool BlocksMovement => false;
+
         public override void OnCast()
         {
             BaseWeapon weapon = (BaseWeapon) Caster.Weapon;
@@ -124,10 +125,8 @@ namespace Server.Spells.Chivalry
 
         public static void RemoveEffects(Mobile m)
         {
-            if (m_Table.ContainsKey(m))
+            if (m_Table.TryGetValue(m, out ConsecratedWeaponContext context))
             {
-                ConsecratedWeaponContext context = m_Table[m];
-
                 context.Expire();
 
                 m_Table.Remove(m);

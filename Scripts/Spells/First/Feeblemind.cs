@@ -1,4 +1,3 @@
-
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
@@ -7,12 +6,13 @@ namespace Server.Spells.First
 {
     public class FeeblemindSpell : MagerySpell
     {
-        private static readonly SpellInfo m_Info = new SpellInfo(
+        private static readonly SpellInfo m_Info = new(
             "Feeblemind", "Rel Wis",
             212,
             9031,
             Reagent.Ginseng,
             Reagent.Nightshade);
+
         public FeeblemindSpell(Mobile caster, Item scroll)
             : base(caster, scroll, m_Info)
         {
@@ -27,10 +27,8 @@ namespace Server.Spells.First
 
         public static void RemoveEffects(Mobile m, bool removeMod = true)
         {
-            if (m_Table.ContainsKey(m))
+            if (m_Table.TryGetValue(m, out Timer t))
             {
-                Timer t = m_Table[m];
-
                 if (t != null && t.Running)
                 {
                     t.Stop();
@@ -39,27 +37,33 @@ namespace Server.Spells.First
                 BuffInfo.RemoveBuff(m, BuffIcon.FeebleMind);
 
                 if (removeMod)
+                {
                     m.RemoveStatMod("[Magic] Int Curse");
+                }
 
                 m_Table.Remove(m);
             }
         }
 
         public override SpellCircle Circle => SpellCircle.First;
+
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
         }
+
         public override bool OnInstantCast(IEntity target)
         {
             Target t = new InternalTarget(this);
+
             if (Caster.InRange(target, t.Range) && Caster.InLOS(target))
             {
                 t.Invoke(Caster, target);
+
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         public void Target(Mobile m)
@@ -105,8 +109,10 @@ namespace Server.Spells.First
                         TimeSpan length = SpellHelper.GetDuration(Caster, m);
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.FeebleMind, 1075833, length, m, percentage.ToString()));
 
-                        if (m_Table.ContainsKey(m))
-                            m_Table[m].Stop();
+                        if (m_Table.TryGetValue(m, out Timer value))
+                        {
+                            value.Stop();
+                        }
 
                         m_Table[m] = Timer.DelayCall(length, () =>
                         {
@@ -121,24 +127,25 @@ namespace Server.Spells.First
 
         private class InternalTarget : Target
         {
-            private readonly FeeblemindSpell m_Owner;
+            private readonly FeeblemindSpell _Owner;
+
             public InternalTarget(FeeblemindSpell owner)
                 : base(10, false, TargetFlags.Harmful)
             {
-                m_Owner = owner;
+                _Owner = owner;
             }
 
             protected override void OnTarget(Mobile from, object o)
             {
                 if (o is Mobile mobile)
                 {
-                    m_Owner.Target(mobile);
+                    _Owner.Target(mobile);
                 }
             }
 
             protected override void OnTargetFinish(Mobile from)
             {
-                m_Owner.FinishSequence();
+                _Owner.FinishSequence();
             }
         }
     }

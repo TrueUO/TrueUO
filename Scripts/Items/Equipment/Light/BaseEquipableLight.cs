@@ -1,3 +1,5 @@
+using Server.Mobiles;
+
 namespace Server.Items
 {
     public abstract class BaseEquipableLight : BaseLight
@@ -16,22 +18,31 @@ namespace Server.Items
 
         public override void Ignite()
         {
-            if (!(Parent is Mobile) && RootParent is Mobile mobile)
+            // Not holding the item, but it is in the mobiles backpack.
+            if (Parent is not Mobile && RootParent is Mobile mobile)
             {
-                Mobile holder = mobile;
+                // Prevents forcing their equip when double-clicked inside a pack animals backpack.
+                if (mobile is BaseCreature)
+                {
+                    return;
+                }
 
-                if (holder.EquipItem(this))
+                if (mobile.EquipItem(this))
                 {
                     if (this is Candle)
-                        holder.SendLocalizedMessage(502969); // You put the candle in your left hand.
+                    {
+                        mobile.SendLocalizedMessage(502969); // You put the candle in your left hand.
+                    }
                     else if (this is Torch)
-                        holder.SendLocalizedMessage(502971); // You put the torch in your left hand.
+                    {
+                        mobile.SendLocalizedMessage(502971); // You put the torch in your left hand.
+                    }
 
                     base.Ignite();
                 }
                 else
                 {
-                    holder.SendLocalizedMessage(502449); // You cannot hold this item.
+                    mobile.SendLocalizedMessage(502449); // You cannot hold this item.
                 }
             }
             else
@@ -43,7 +54,9 @@ namespace Server.Items
         public override void OnAdded(object parent)
         {
             if (Burning && parent is Container)
+            {
                 Douse();
+            }
 
             base.OnAdded(parent);
         }
@@ -57,7 +70,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

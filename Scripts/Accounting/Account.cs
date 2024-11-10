@@ -554,9 +554,9 @@ namespace Server.Accounting
                 m_Mobiles[i] = null;
             }
 
-            if (LoginIPs.Length != 0 && AccountHandler.IPTable.ContainsKey(LoginIPs[0]))
+            if (LoginIPs.Length != 0 && AccountHandler.IPTable.TryGetValue(LoginIPs[0], out int value))
             {
-                --AccountHandler.IPTable[LoginIPs[0]];
+                AccountHandler.IPTable[LoginIPs[0]] = --value;
             }
 
             Accounts.Remove(Username);
