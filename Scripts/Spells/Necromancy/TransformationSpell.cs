@@ -16,12 +16,10 @@ namespace Server.Spells.Necromancy
         public virtual int NrgyResistOffset => 0;
         public override bool BlockedByHorrificBeast => false;
         public virtual double TickRate => 1.0;
+
         public override bool CheckCast()
         {
-            if (!TransformationSpellHelper.CheckCast(Caster, this))
-                return false;
-
-            return base.CheckCast();
+            return TransformationSpellHelper.CheckCast(Caster, this) && base.CheckCast();
         }
 
         public override void OnCast()
