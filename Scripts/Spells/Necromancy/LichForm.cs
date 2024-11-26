@@ -24,7 +24,7 @@ namespace Server.Spells.Necromancy
         public override int FireResistOffset => -10;
         public override int ColdResistOffset => +10;
         public override int PoisResistOffset => +10;
-        public override double TickRate => 2.0;
+        public override int TickRate => 2;
 
         public override void DoEffect(Mobile m)
         {

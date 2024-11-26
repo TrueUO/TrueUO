@@ -32,7 +32,7 @@ namespace Server.Spells.Mysticism
             FinishSequence();
         }
 
-        public virtual double TickRate => 1.0;
+        public virtual int TickRate => 1;
 
         public virtual void OnTick(Mobile m)
         {

@@ -1756,7 +1756,7 @@ namespace Server.Spells
         int PoisResistOffset { get; }
         int NrgyResistOffset { get; }
 
-        double TickRate { get; }
+        int TickRate { get; }
         void OnTick(Mobile m);
 
         void DoEffect(Mobile m);
