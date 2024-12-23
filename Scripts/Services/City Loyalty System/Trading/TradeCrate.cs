@@ -178,6 +178,12 @@ namespace Server.Engines.CityLoyalty
                         break;
                     }
 
+                    if (item is Container container && container.Items.Count > 0)
+                    {
+                        // If item is a container type, and it has items inside it, reject it.
+                        break;
+                    }
+
                     canAdd = true;
                     break;
                 }
