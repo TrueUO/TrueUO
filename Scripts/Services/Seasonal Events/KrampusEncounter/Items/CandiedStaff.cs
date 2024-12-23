@@ -4,7 +4,6 @@ namespace Server.Items
     public class CandiedStaff : BaseStaff
     {
         public override int LabelNumber => 1126971;  // candied staff
-        public override bool IsArtifact => true;
 
         [Constructable]
         public CandiedStaff()

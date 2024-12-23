@@ -214,13 +214,14 @@ namespace Server.SkillHandlers
         }
 
         private static readonly Type[] _SpecialImbuable =
-       {
-            typeof(ClockworkLeggings), typeof(GargishClockworkLeggings), typeof(OrcishKinMask), typeof(SavageMask), typeof(VirtuososArmbands),
-            typeof(VirtuososCap), typeof(VirtuososCollar), typeof(VirtuososEarpieces), typeof(VirtuososKidGloves), typeof(VirtuososKilt),
-            typeof(VirtuososNecklace), typeof(VirtuososTunic), typeof(BestialArms), typeof(BestialEarrings), typeof(BestialGloves), typeof(BestialGorget),
-            typeof(BestialHelm), typeof(BestialKilt), typeof(BestialLegs), typeof(BestialNecklace), typeof(BarbedWhip), typeof(BladedWhip),
-            typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword), typeof(JukaBow),
-            typeof(SlayerLongbow), typeof(JackOLanternHelm), typeof(BakeKitsuneHat), typeof(GargishOctopusNecklace), typeof(CandiedStaff)
+        {
+            typeof(ClockworkLeggings), typeof(GargishClockworkLeggings), typeof(OrcishKinMask), typeof(SavageMask),
+            typeof(VirtuososArmbands), typeof(VirtuososCap), typeof(VirtuososCollar), typeof(VirtuososEarpieces),
+            typeof(VirtuososKidGloves), typeof(VirtuososKilt), typeof(VirtuososNecklace), typeof(VirtuososTunic),
+            typeof(BestialArms), typeof(BestialEarrings), typeof(BestialGloves), typeof(BestialGorget), typeof(BestialHelm),
+            typeof(BestialKilt), typeof(BestialLegs), typeof(BestialNecklace), typeof(SkullGnarledStaff),
+            typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword), typeof(JukaBow),
+            typeof(SlayerLongbow), typeof(JackOLanternHelm), typeof(BakeKitsuneHat), typeof(GargishOctopusNecklace)
         };
 
         private static readonly Type[] _NonCraftables =
