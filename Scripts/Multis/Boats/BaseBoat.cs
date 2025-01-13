@@ -268,10 +268,6 @@ namespace Server.Multis
         #endregion
 
         #region Properties
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool Anchored { get; set; }
-
         [CommandProperty(AccessLevel.GameMaster)]
         public BoatCourse BoatCourse { get; set; }
 
@@ -615,7 +611,6 @@ namespace Server.Multis
             DoesDecay = true;
             Facing = direction;
             Layer = Layer.Mount;
-            Anchored = false;
 
             m_Hits = MaxHits;
             m_DamageTaken = DamageLevel.Pristine;
@@ -883,8 +878,7 @@ namespace Server.Multis
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(5);
+            writer.Write(6);
 
             writer.Write(m_Hits);
             writer.Write((int)m_DamageTaken);
@@ -902,7 +896,6 @@ namespace Server.Multis
             writer.Write(VirtualMount);
             writer.Write(DoesDecay);
 
-            // version 3
             writer.Write(MapItem);
             writer.Write(NextNavPoint);
 
@@ -920,7 +913,6 @@ namespace Server.Multis
                 writer.Write(item);
 
             writer.Write(Hold);
-            writer.Write(Anchored);
             writer.Write(m_ShipName);
 
             CheckDecay();
@@ -933,14 +925,17 @@ namespace Server.Multis
 
             switch (version)
             {
+                case 6:
                 case 5:
+                    {
+                        goto case 0;
+                    }
+                case 0:
                     {
                         m_Hits = reader.ReadInt();
                         m_DamageTaken = (DamageLevel)reader.ReadInt();
-                        goto case 4;
-                    }
-                case 4:
-                    {
+
+                        // Do we have a boat course check
                         if (reader.ReadInt() == 1)
                         {
                             BoatCourse = new BoatCourse(reader)
@@ -953,43 +948,14 @@ namespace Server.Multis
                         BoatItem = reader.ReadItem() as BaseDockedBoat;
                         VirtualMount = reader.ReadItem() as BoatMountItem;
                         DoesDecay = reader.ReadBool();
-                        goto case 3;
-                    }
-                case 3:
-                    {
+
                         MapItem = (MapItem)reader.ReadItem();
                         NextNavPoint = reader.ReadInt();
 
-                        goto case 2;
-                    }
-                case 2:
-                    {
                         m_Facing = (Direction)reader.ReadInt();
 
-                        goto case 1;
-                    }
-                case 1:
-                    {
                         m_DecayTime = reader.ReadDeltaTime();
 
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        if (version < 3)
-                            NextNavPoint = -1;
-
-                        if (version < 2)
-                        {
-                            if (ItemID == NorthID)
-                                m_Facing = Direction.North;
-                            else if (ItemID == SouthID)
-                                m_Facing = Direction.South;
-                            else if (ItemID == EastID)
-                                m_Facing = Direction.East;
-                            else if (ItemID == WestID)
-                                m_Facing = Direction.West;
-                        }
 
                         Owner = reader.ReadMobile();
                         PPlank = reader.ReadItem() as Plank;
@@ -1001,10 +967,14 @@ namespace Server.Multis
                             TillerMan = reader.ReadItem();
 
                         Hold = reader.ReadItem() as Hold;
-                        Anchored = reader.ReadBool();
-                        m_ShipName = reader.ReadString();
 
-                        Anchored = false; // No more anchors[High Seas]
+                        // Removed Anchors. No longer used/in-game post High-Seas
+                        if (version < 6)
+                        {
+                            reader.ReadBool();
+                        }
+                        
+                        m_ShipName = reader.ReadString();
 
                         break;
                     }
@@ -1012,13 +982,10 @@ namespace Server.Multis
 
             Boats.Add(this);
 
-            if (version == 4)
-            {
-                Timer.DelayCall(() => Hits = MaxHits);
-            }
-
             if (IsRowBoat)
+            {
                 Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), RowBoat_Tick_Callback);
+            }
         }
 
         #endregion
