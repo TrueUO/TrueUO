@@ -226,23 +226,26 @@ namespace Server.Multis
             PlayerBarkeepers.IterateReverse(barKeep => barKeep.Delete());
         }
 
-        public virtual void Decay_Sandbox()
+        private void Decay_Sandbox()
         {
             if (Deleted)
+            {
                 return;
+            }
 
-            new TempNoHousingRegion(this, null);
+            _ = new TempNoHousingRegion(this, null);
 
             Rectangle3D[] recs = m_Region.Area;
             Map map = Map;
 
+            KillVendors();
+
             Timer.DelayCall(TimeSpan.FromMilliseconds(250), () => OnAfterDecay(recs, map));
 
-            KillVendors();
             Delete();
         }
 
-        public virtual void OnAfterDecay(Rectangle3D[] recs, Map map)
+        private void OnAfterDecay(Rectangle3D[] recs, Map map)
         {
             if (map != null && recs.Length > 0)
             {
