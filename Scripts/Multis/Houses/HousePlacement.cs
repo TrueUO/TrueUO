@@ -16,7 +16,6 @@ namespace Server.Multis
         BadRegionHidden,
         BadRegionTemp,
         InvalidCastleKeep,
-        BadRegionRaffle,
         NoQueenLoyalty
     }
 
@@ -117,9 +116,6 @@ namespace Server.Multis
 
                         if (reg.IsPartOf<HouseRegion>())
                             return HousePlacementResult.BadRegionHidden;
-
-                        if (reg.IsPartOf<HouseRaffleRegion>())
-                            return HousePlacementResult.BadRegionRaffle;
 
                         return HousePlacementResult.BadRegion;
                     }
