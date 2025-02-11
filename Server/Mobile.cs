@@ -724,6 +724,7 @@ namespace Server
         private bool m_DisplayGuildTitle;
         private bool m_DisplayGuildAbbr;
         private Mobile m_GuildFealty;
+        private Timer m_ManaTimer, m_HitsTimer, m_StamTimer;
         private long m_NextSkillTime;
         private long m_NextActionMessage;
         private bool m_Paralyzed;
@@ -1691,13 +1692,6 @@ namespace Server
         private static bool m_GlobalRegenThroughPoison = true;
         public static bool GlobalRegenThroughPoison { get => m_GlobalRegenThroughPoison; set => m_GlobalRegenThroughPoison = value; }
 
-        public static readonly string _HitsRegenTimerID = "HitsRegenTimer";
-        public static readonly string _StamRegenTimerID = "StamRegenTimer";
-        public static readonly string _ManaRegenTimerID = "ManaRegenTimer";
-        public static readonly string _HitsRegenTimerPlayerID = _HitsRegenTimerID + "Player";
-        public static readonly string _StamRegenTimerPlayerID = _StamRegenTimerID + "Player";
-        public static readonly string _ManaRegenTimerPlayerID = _ManaRegenTimerID + "Player";
-
         private bool m_InternalCanRegen;
 
         public virtual bool RegenThroughPoison => m_GlobalRegenThroughPoison;
@@ -1706,42 +1700,66 @@ namespace Server
         public virtual bool CanRegenStam => Alive && !Deleted && m_InternalCanRegen;
         public virtual bool CanRegenMana => Alive && !Deleted && m_InternalCanRegen;
 
-        private void HitsOnTick()
+        private class ManaTimer : Timer
         {
-            if (CanRegenHits)
-            {
-                Hits++;
+            private readonly Mobile _Owner;
 
-                if (Hits < HitsMax)
+            public ManaTimer(Mobile m)
+                : base(GetManaRegenRate(m), GetManaRegenRate(m))
+            {
+                _Owner = m;
+            }
+
+            protected override void OnTick()
+            {
+                if (_Owner.CanRegenMana) 
                 {
-                    TimerRegistry.UpdateRegistry(Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID, this, GetHitsRegenRate(this));
+                    _Owner.Mana++;
                 }
+
+                Delay = Interval = GetManaRegenRate(_Owner);
             }
         }
 
-        private void StamOnTick()
+        private class HitsTimer : Timer
         {
-            if (CanRegenMana)
-            {
-                Stam++;
+            private readonly Mobile _Owner;
 
-                if (Stam < StamMax)
+            public HitsTimer(Mobile m)
+                : base(GetHitsRegenRate(m), GetHitsRegenRate(m))
+            {
+                _Owner = m;
+            }
+
+            protected override void OnTick()
+            {
+                if (_Owner.CanRegenHits)
                 {
-                    TimerRegistry.UpdateRegistry(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID, this, GetStamRegenRate(this));
+                    _Owner.Hits++;
                 }
+
+                Delay = Interval = GetHitsRegenRate(_Owner);
             }
         }
 
-        private void ManaOnTick()
+        private class StamTimer : Timer
         {
-            if (CanRegenMana)
-            {
-                Mana++;
+            private readonly Mobile _Owner;
 
-                if (Mana < ManaMax)
+            public StamTimer(Mobile m)
+                : base(GetStamRegenRate(m), GetStamRegenRate(m))
+            {   
+                _Owner = m;
+            }
+
+            protected override void OnTick()
+            {
+                if (_Owner.CanRegenStam)
                 {
-                    TimerRegistry.UpdateRegistry(Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID, this, GetManaRegenRate(this));
+                    _Owner.Stam++;
                 }
+
+                Delay = Interval = GetStamRegenRate(_Owner);
             }
         }
         #endregion
@@ -1894,7 +1912,7 @@ namespace Server
             if (m_Map != Map.Internal)
             {
                 OnLogout(this);
-                
+
                 m_LogoutLocation = m_Location;
                 m_LogoutMap = m_Map;
 
@@ -3630,6 +3648,21 @@ namespace Server
             if (m_PoisonTimer != null)
             {
                 m_PoisonTimer.Stop();
+            }
+
+            if (m_HitsTimer != null)
+            {
+                m_HitsTimer.Stop();
+            }
+
+            if (m_StamTimer != null)
+            {
+                m_StamTimer.Stop();
+            }
+
+            if (m_ManaTimer != null)
+            {
+                m_ManaTimer.Stop();
             }
 
             if (m_WarmodeTimer != null)
@@ -5582,34 +5615,105 @@ namespace Server
 
 		public virtual bool ShouldCheckStatTimers => true;
 
-		public virtual void CheckStatTimers()
-		{
-			if (m_Deleted)
-			{
-				return;
-			}
+        public virtual void CheckStatTimers()
+        {
+            if (m_Deleted)
+            {
+                return;
+            }
 
-			if (Hits != HitsMax)
-			{
-				Hits = m_Hits;
-			}
+            if (Hits < HitsMax)
+            {
+                if (CanRegenHits)
+                {
+                    if (m_HitsTimer == null)
+                    {
+                        m_HitsTimer = new HitsTimer(this);
+                    }
 
-			if (Stam != StamMax)
-			{
-				Stam = m_Stam;
-			}
+                    m_HitsTimer.Start();
+                }
+                else if (m_HitsTimer != null)
+                {
+                    m_HitsTimer.Stop();
+                }
+            }
+            else
+            {
+                Hits = HitsMax;
+            }
 
-			if (Mana != ManaMax)
-			{
-				Mana = m_Mana;
-			}
-		}
+            if (Stam < StamMax)
+            {
+                if (CanRegenStam)
+                {
+                    if (m_StamTimer == null)
+                    {
+                        m_StamTimer = new StamTimer(this);
+                    }
+
+                    m_StamTimer.Start();
+                }
+                else if (m_StamTimer != null)
+                {
+                    m_StamTimer.Stop();
+                }
+            }
+            else
+            {
+                Stam = StamMax;
+            }
+
+            if (Mana < ManaMax)
+            {
+                if (CanRegenMana)
+                {
+                    if (m_ManaTimer == null)
+                    {
+                        m_ManaTimer = new ManaTimer(this);
+                    }
+
+                    m_ManaTimer.Start();
+                }
+                else if (m_ManaTimer != null)
+                {
+                    m_ManaTimer.Stop();
+                }
+            }
+            else
+            {
+                Mana = ManaMax;
+            }
+        }
 
 		public virtual void ResetStatTimers()
 		{
-            TimerRegistry.RemoveFromRegistry(Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID, this);
-            TimerRegistry.RemoveFromRegistry(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID, this);
-            TimerRegistry.RemoveFromRegistry(Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID, this);
+            if (m_HitsTimer != null)
+                m_HitsTimer.Stop();
+
+            if (CanRegenHits && Hits < HitsMax)
+            {
+                m_HitsTimer = new HitsTimer(this);
+                m_HitsTimer.Start();
+            }
+
+            if (m_StamTimer != null)
+                m_StamTimer.Stop();
+
+            if (CanRegenStam && Stam < StamMax)
+            {
+                m_StamTimer = new StamTimer(this);
+                m_StamTimer.Start();
+            }
+
+            if (m_ManaTimer != null)
+                m_ManaTimer.Stop();
+
+            if (CanRegenMana && Mana < ManaMax)
+            {
+                m_ManaTimer = new ManaTimer(this);
+                m_ManaTimer.Start();
+            }
 
             if (!m_Deleted)
 			{
@@ -7385,22 +7489,17 @@ namespace Server
                     {
                         if (Hits < HitsMax)
                         {
-                            TimerRegistry.Register(
-                                Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID,
-                                this,
-                                GetHitsRegenRate(this),
-                                Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                                false,
-                                mobile => mobile.HitsOnTick());
+                            if (m_HitsTimer == null)
+                            {
+                                m_HitsTimer = new HitsTimer(this);
+                            }
+
+                            m_HitsTimer.Start();
                         }
                         else if (Hits > HitsMax)
                         {
                             Hits = HitsMax;
                         }
-                    }
-                    else
-                    {
-                        TimerRegistry.RemoveFromRegistry(Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID, this);
                     }
 
 					OnRawStrChange(oldValue);
@@ -7477,23 +7576,19 @@ namespace Server
                     {
                         if (Stam < StamMax)
                         {
-                            TimerRegistry.Register(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID,
-                                this,
-                                GetStamRegenRate(this),
-                                Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                                false, 
-                                mobile => mobile.StamOnTick());
+                            if (m_StamTimer == null)
+                            {
+                                m_StamTimer = new StamTimer(this);
+                            }
+
+                            m_StamTimer.Start();
                         }
                         else if (Stam > StamMax)
                         {
                             Stam = StamMax;
                         }
                     }
-                    else
-                    {
-                        TimerRegistry.RemoveFromRegistry(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID, this);
-                    }
-
+                   
 					OnRawDexChange(oldValue);
 					OnRawStatChange(StatType.Dex, oldValue);
 				}
@@ -7568,23 +7663,19 @@ namespace Server
                     {
                         if (Mana < ManaMax)
                         {
-                            TimerRegistry.Register(
-                                Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID,
-                                this,
-                                GetManaRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                                false, 
-                                mobile => mobile.ManaOnTick());
+                            if (m_ManaTimer == null)
+                            {
+                                m_ManaTimer = new ManaTimer(this);
+                            }
+
+                            m_ManaTimer.Start();
                         }
                         else if (Mana > ManaMax)
                         {
                             Mana = ManaMax;
                         }
                     }
-                    else
-                    {
-                        TimerRegistry.RemoveFromRegistry(Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID, this);
-                    }
-
+                    
 					OnRawIntChange(oldValue);
 					OnRawStatChange(StatType.Int, oldValue);
 				}
@@ -7660,6 +7751,11 @@ namespace Server
 				{
 					value = HitsMax;
 
+                    if (m_HitsTimer != null)
+                    {
+                        m_HitsTimer.Stop();
+                    }
+
 					for (int i = 0; i < m_Aggressors.Count; i++) //reset reports on full HP
 					{
 						m_Aggressors[i].CanReportMurder = false;
@@ -7671,6 +7767,23 @@ namespace Server
 					}
 				}
 
+                if (value < HitsMax)
+                {
+                    if (CanRegenHits)
+                    {
+                        if (m_HitsTimer == null)
+                        {
+                            m_HitsTimer = new HitsTimer(this);
+                        }
+
+                        m_HitsTimer.Start();
+                    }
+                    else if (m_HitsTimer != null)
+                    {
+                        m_HitsTimer.Stop();
+                    }
+                }
+
 				if (m_Hits != value)
 				{
 					int oldValue = m_Hits;
@@ -7678,27 +7791,6 @@ namespace Server
 					Delta(MobileDelta.Hits);
 					OnHitsChange(oldValue);
 				}
-
-				if (m_Hits < HitsMax)
-				{
-					if (CanRegenHits)
-					{
-                        TimerRegistry.Register(
-                            Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID,
-                            this, GetHitsRegenRate(this),
-                            Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                            false,
-                            mobile => mobile.HitsOnTick());
-                    }
-					else
-					{
-                        TimerRegistry.RemoveFromRegistry(Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID, this);
-                    }
-				}
-				else
-				{
-                    TimerRegistry.RemoveFromRegistry(Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID, this);
-                }
 			}
 		}
 
@@ -7732,7 +7824,30 @@ namespace Server
 				else if (value >= StamMax)
 				{
 					value = StamMax;
+
+                    if (m_StamTimer != null)
+                    {
+                        m_StamTimer.Stop();
+                    }
 				}
+
+                if (value < StamMax)
+                {
+                    if (CanRegenStam)
+                    {
+                        if (m_StamTimer == null)
+                        {
+                            m_StamTimer = new StamTimer(this);
+                        }
+
+                        m_StamTimer.Start();
+                    }
+                    else if (m_StamTimer != null)
+                    {
+                        m_StamTimer.Stop();
+                    }
+                }
+
 
 				if (m_Stam != value)
 				{
@@ -7741,28 +7856,6 @@ namespace Server
 					Delta(MobileDelta.Stam);
 					OnStamChange(oldValue);
 				}
-
-                if (m_Stam < StamMax)
-                {
-                    if (CanRegenStam)
-                    {
-                        TimerRegistry.Register(
-                            Player ? _StamRegenTimerPlayerID : _StamRegenTimerID,
-                            this,
-                            GetStamRegenRate(this),
-                            Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                            false,
-                            mobile => mobile.StamOnTick());
-                    }
-                    else
-                    {
-                        TimerRegistry.RemoveFromRegistry(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID, this);
-                    }
-                }
-                else
-                {
-                    TimerRegistry.RemoveFromRegistry(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID, this);
-                }
             }
 		}
 
@@ -7797,12 +7890,34 @@ namespace Server
 				{
 					value = ManaMax;
 
+                    if (m_ManaTimer != null)
+                    {
+                        m_ManaTimer.Stop();
+                    }
+
 					if (Meditating)
 					{
 						Meditating = false;
 						SendLocalizedMessage(501846); // You are at peace.
 					}
 				}
+
+                if (value < ManaMax)
+                {
+                    if (CanRegenMana)
+                    {
+                        if (m_ManaTimer == null)
+                        {
+                            m_ManaTimer = new ManaTimer(this);
+                        }
+
+                        m_ManaTimer.Start();
+                    }
+                    else if (m_ManaTimer != null)
+                    {
+                        m_ManaTimer.Stop();
+                    }
+                }
 
 				if (m_Mana != value)
 				{
@@ -7811,27 +7926,6 @@ namespace Server
 					Delta(MobileDelta.Mana);
 					OnManaChange(oldValue);
 				}
-
-				if (m_Mana < ManaMax)
-				{
-					if (CanRegenMana)
-					{
-                        TimerRegistry.Register(
-                            Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID,
-                            this, GetManaRegenRate(this),
-                            Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
-                            false,
-                            mobile => mobile.ManaOnTick());
-                    }
-					else
-					{
-                        TimerRegistry.RemoveFromRegistry(Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID, this);
-                    }
-				}
-				else
-				{
-                    TimerRegistry.RemoveFromRegistry(Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID, this);
-                }
 			}
 		}
 
@@ -8221,7 +8315,7 @@ namespace Server
 					if (m_NetState == null)
 					{
 						OnDisconnected(this);
-
+						
                         // Disconnected, start the logout timer
                         var logoutDelay = GetLogoutDelay();
                         if (!TimerRegistry.UpdateRegistry(_LogoutTimerID, this, logoutDelay))
@@ -8232,7 +8326,7 @@ namespace Server
 					else
 					{
 						OnConnected(this);
-
+						
                         // Connected, stop the logout timer and if needed, move to the world
                         if (TimerRegistry.HasTimer(_LogoutTimerID, this))
                         {
