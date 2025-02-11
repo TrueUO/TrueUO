@@ -6,7 +6,6 @@ using Server.Targeting;
 using System;
 using Server.Engines.NewMagincia;
 
-
 namespace Server.Spells.Chivalry
 {
     public class SacredJourneySpell : PaladinSpell
@@ -252,10 +251,6 @@ namespace Server.Spells.Chivalry
                         m_Owner.Effect(boat.GetMarkedLocation(), boat.Map, false);
                     else
                         from.Send(new MessageLocalized(from.Serial, from.Body, MessageType.Regular, 0x3B2, 3, 502357, from.Name, "")); // I can not recall from that object.
-                }
-                else if (o is HouseRaffleDeed deed && deed.ValidLocation())
-                {
-                    m_Owner.Effect(deed.PlotLocation, deed.PlotFacet, true);
                 }
                 else if (o is WritOfLease lease)
                 {
