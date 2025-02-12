@@ -724,6 +724,7 @@ namespace Server
         private bool m_DisplayGuildTitle;
         private bool m_DisplayGuildAbbr;
         private Mobile m_GuildFealty;
+        private Timer m_LogoutTimer;
         private Timer m_ManaTimer, m_HitsTimer, m_StamTimer;
         private long m_NextSkillTime;
         private long m_NextActionMessage;
@@ -1762,6 +1763,32 @@ namespace Server
                 Delay = Interval = GetStamRegenRate(_Owner);
             }
         }
+
+        private class LogoutTimer : Timer
+        {
+            private readonly Mobile _Mobile;
+
+            public LogoutTimer(Mobile m)
+                : base(m.GetLogoutDelay())
+            {
+               _Mobile = m;
+            }
+
+            protected override void OnTick()
+            {
+                if (_Mobile.m_Map != Map.Internal)
+                {
+                    _Mobile.OnLogout(_Mobile);
+
+                    _Mobile.m_LogoutLocation = _Mobile.m_Location;
+                    _Mobile.m_LogoutMap = _Mobile.m_Map;
+
+                    _Mobile.Internalize();
+                }
+            }
+        }
+
+
         #endregion
 
         #region Aggro Timer
@@ -1895,8 +1922,6 @@ namespace Server
         private Point3D m_LogoutLocation;
         private Map m_LogoutMap;
 
-        private static readonly string _LogoutTimerID = "LogoutTimer";
-
         public virtual TimeSpan GetLogoutDelay()
         {
             return Region.GetLogoutDelay(this);
@@ -1905,19 +1930,6 @@ namespace Server
         public virtual void OnLogout(Mobile m)
         {
             // Used in PlayerMobile.cs
-        }
-
-        private void DoLogout()
-        {
-            if (m_Map != Map.Internal)
-            {
-                OnLogout(this);
-
-                m_LogoutLocation = m_Location;
-                m_LogoutMap = m_Map;
-
-                Internalize();
-            }
         }
         #endregion
 
@@ -3663,6 +3675,11 @@ namespace Server
             if (m_ManaTimer != null)
             {
                 m_ManaTimer.Stop();
+            }
+
+            if (m_LogoutTimer != null)
+            {
+                m_LogoutTimer.Stop();
             }
 
             if (m_WarmodeTimer != null)
@@ -8317,10 +8334,15 @@ namespace Server
 						OnDisconnected(this);
 						
                         // Disconnected, start the logout timer
-                        var logoutDelay = GetLogoutDelay();
-                        if (!TimerRegistry.UpdateRegistry(_LogoutTimerID, this, logoutDelay))
+
+                        if (m_LogoutTimer == null)
                         {
-                            TimerRegistry.Register(_LogoutTimerID, this, logoutDelay, m => m.DoLogout());
+                            m_LogoutTimer = new LogoutTimer(this);
+                            m_LogoutTimer.Start();
+                        }
+                        else
+                        {
+                            m_LogoutTimer.Stop();
                         }
 					}
 					else
@@ -8328,10 +8350,13 @@ namespace Server
 						OnConnected(this);
 						
                         // Connected, stop the logout timer and if needed, move to the world
-                        if (TimerRegistry.HasTimer(_LogoutTimerID, this))
+
+                        if (m_LogoutTimer != null)
                         {
-                            TimerRegistry.RemoveFromRegistry(_LogoutTimerID, this);
+                            m_LogoutTimer.Stop();
                         }
+
+                        m_LogoutTimer = null;
 
                         if (m_Map == Map.Internal && m_LogoutMap != null)
 						{
