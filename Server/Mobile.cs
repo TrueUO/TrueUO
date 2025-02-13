@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-
+using System.Threading;
 using Server.Accounting;
 using Server.Commands;
 using Server.ContextMenus;
@@ -10335,7 +10335,7 @@ namespace Server
 			m_CreationTime = DateTime.UtcNow;
 		}
 
-		private static readonly List<Mobile> m_DeltaQueue = new List<Mobile>();
+        private static event Action DeltaQueue;
 
 		private bool m_InDeltaQueue;
 		private MobileDelta m_DeltaFlags;
@@ -10349,14 +10349,12 @@ namespace Server
 
 			m_DeltaFlags |= flag;
 
-			if (!m_InDeltaQueue)
+            if (!m_InDeltaQueue && m_DeltaFlags != MobileDelta.None)
 			{
 				m_InDeltaQueue = true;
 
-				m_DeltaQueue.Add(this);
+                DeltaQueue += ProcessDelta;
 			}
-
-			Core.Set();
 		}
 
 		private bool m_NoMoveHS;
@@ -10881,29 +10879,11 @@ namespace Server
 			}
 		}
 
-		private static bool _Processing;
-
 		public static void ProcessDeltaQueue()
 		{
-			if (_Processing)
-			{
-				return;
-			}
+            Action delta = Interlocked.Exchange(ref DeltaQueue, null);
 
-			_Processing = true;
-
-			int i = m_DeltaQueue.Count;
-
-			while (--i >= 0)
-			{
-				if (i < m_DeltaQueue.Count)
-				{
-					m_DeltaQueue[i].ProcessDelta();
-					m_DeltaQueue.RemoveAt(i);
-				}
-			}
-
-			_Processing = false;
+            delta?.Invoke();
 		}
 
 		[CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
