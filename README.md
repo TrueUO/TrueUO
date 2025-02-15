@@ -4,9 +4,6 @@
 [![GitHub issues](https://img.shields.io/github/issues/trueuo/trueuo.svg)](https://github.com/TrueUO/TrueUO/issues)
 [![GitHub repo size](https://img.shields.io/github/repo-size/trueuo/trueuo.svg)](https://github.com/TrueUO/TrueUO/)
 
+TrueUO is a community-driven Ultima Online Server Emulator written in C# on .NET 9 focused on the current era.
 
-[TrueUO] is a community driven Ultima Online Server Emulator written in C# focused on the current era.
-
-Have a shard you'd like to advertise? Check out https://shardportal.com
-
-TrueUO now requires .NET 8.
+Join our Discord Server: https://discord.gg/5RtDbkY3fC
