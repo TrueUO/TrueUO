@@ -6,4 +6,4 @@
 
 TrueUO is a community-driven Ultima Online Server Emulator written in C# on .NET 9 focused on the current era.
 
-https://discord.gg/5RtDbkY3fC
+Join our Discord Server: https://discord.gg/5RtDbkY3fC
