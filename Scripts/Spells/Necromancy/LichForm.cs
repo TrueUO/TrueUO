@@ -11,6 +11,7 @@ namespace Server.Spells.Necromancy
             Reagent.GraveDust,
             Reagent.DaemonBlood,
             Reagent.NoxCrystal);
+
         public LichFormSpell(Mobile caster, Item scroll)
             : base(caster, scroll, m_Info)
         {
@@ -23,7 +24,8 @@ namespace Server.Spells.Necromancy
         public override int FireResistOffset => -10;
         public override int ColdResistOffset => +10;
         public override int PoisResistOffset => +10;
-        public override double TickRate => 2;
+        public override int TickRate => 2;
+
         public override void DoEffect(Mobile m)
         {
             m.PlaySound(0x19C);
@@ -32,6 +34,7 @@ namespace Server.Spells.Necromancy
 
             m.ResetStatTimers();
         }
+
         public override void OnTick(Mobile m)
         {
             --m.Hits;

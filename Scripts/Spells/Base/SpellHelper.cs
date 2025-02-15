@@ -1542,8 +1542,6 @@ namespace Server.Spells
 
     public class TransformationSpellHelper
     {
-        private static readonly string _TimerID = "TransformSpell";
-
         #region Context Stuff
         private static readonly Dictionary<Mobile, TransformContext> m_Table = new Dictionary<Mobile, TransformContext>();
 
@@ -1567,7 +1565,9 @@ namespace Server.Spells
                 List<ResistanceMod> mods = context.Mods;
 
                 for (int i = 0; i < mods.Count; ++i)
+                {
                     m.RemoveResistanceMod(mods[i]);
+                }
 
                 if (resetGraphics)
                 {
@@ -1575,7 +1575,7 @@ namespace Server.Spells
                     m.BodyMod = 0;
                 }
 
-                TimerRegistry.RemoveFromRegistry(_TimerID, context.Spell);
+                context.Timer.Stop();
                 context.Spell.RemoveEffect(m);
             }
         }
@@ -1717,31 +1717,15 @@ namespace Server.Spells
 
                     transformSpell.DoEffect(caster);
 
-                    TimerRegistry.Register(_TimerID, transformSpell, TimeSpan.FromSeconds(transformSpell.TickRate), TimeSpan.FromSeconds(transformSpell.TickRate), false, OnTick);
+                    Timer timer = new TransformTimer(caster, transformSpell);
+                    timer.Start();
 
-                    AddContext(caster, new TransformContext(mods, ourType, transformSpell));
+                    AddContext(caster, new TransformContext(timer, mods, ourType, transformSpell));
                     return true;
                 }
             }
 
             return false;
-        }
-
-        public static void OnTick(ITransformationSpell spell)
-        {
-            if (spell is Spell s)
-            {
-                var m = s.Caster;
-
-                if (m.Deleted || !m.Alive || m.Body != spell.Body || (m.Hue != spell.Hue && !BestialSetHelper.IsBerserk(m)))
-                {
-                    RemoveContext(m, true);
-                }
-                else
-                {
-                    spell.OnTick(m);
-                }
-            }
         }
     }
 
@@ -1756,7 +1740,7 @@ namespace Server.Spells
         int PoisResistOffset { get; }
         int NrgyResistOffset { get; }
 
-        double TickRate { get; }
+        int TickRate { get; }
         void OnTick(Mobile m);
 
         void DoEffect(Mobile m);
@@ -1766,19 +1750,48 @@ namespace Server.Spells
 
     public class TransformContext
     {
+        private readonly Timer m_Timer;
         private readonly List<ResistanceMod> m_Mods;
         private readonly Type m_Type;
         private readonly ITransformationSpell m_Spell;
 
+        public Timer Timer => m_Timer;
         public List<ResistanceMod> Mods => m_Mods;
         public Type Type => m_Type;
         public ITransformationSpell Spell => m_Spell;
 
-        public TransformContext(List<ResistanceMod> mods, Type type, ITransformationSpell spell)
+        public TransformContext(Timer timer, List<ResistanceMod> mods, Type type, ITransformationSpell spell)
         {
+            m_Timer = timer;
             m_Mods = mods;
             m_Type = type;
             m_Spell = spell;
+        }
+    }
+
+    public class TransformTimer : Timer
+    {
+        private readonly Mobile _Mobile;
+        private readonly ITransformationSpell _Spell;
+
+        public TransformTimer(Mobile from, ITransformationSpell spell)
+            : base(TimeSpan.FromSeconds(spell.TickRate), TimeSpan.FromSeconds(spell.TickRate))
+        {
+            _Mobile = from;
+            _Spell = spell;
+        }
+
+        protected override void OnTick()
+        {
+            if (_Mobile.Deleted || !_Mobile.Alive || _Mobile.Body != _Spell.Body || (_Mobile.Hue != _Spell.Hue && !BestialSetHelper.IsBerserk(_Mobile)))
+            {
+                TransformationSpellHelper.RemoveContext(_Mobile, true);
+                Stop();
+            }
+            else
+            {
+                _Spell.OnTick(_Mobile);
+            }
         }
     }
 }

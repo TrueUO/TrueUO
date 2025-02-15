@@ -1,16 +1,16 @@
 {
   "runtimeTarget": {
-    "name": ".NETCoreApp,Version=v8.0",
+    "name": ".NETCoreApp,Version=v9.0",
     "signature": ""
   },
   "compilationOptions": {},
   "targets": {
-    ".NETCoreApp,Version=v8.0": {
+    ".NETCoreApp,Version=v9.0": {
       "TrueUO/1.0.0": {
         "dependencies": {
           "Scripts": "1.0.0",
-          "Serilog": "4.0.1",
-          "Serilog.Sinks.Async": "2.0.0",
+          "Serilog": "4.2.0",
+          "Serilog.Sinks.Async": "2.1.0",
           "Serilog.Sinks.Console": "6.0.0",
           "Server": "1.0.0"
         },
@@ -18,44 +18,44 @@
           "TrueUO.dll": {}
         }
       },
-      "Microsoft.Win32.SystemEvents/8.0.0": {
+      "Microsoft.Win32.SystemEvents/9.0.1": {
         "runtime": {
-          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.124.61010"
           }
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
+          "runtimes/win/lib/net9.0/Microsoft.Win32.SystemEvents.dll": {
             "rid": "win",
             "assetType": "runtime",
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.124.61010"
           }
         }
       },
-      "Serilog/4.0.1": {
+      "Serilog/4.2.0": {
         "runtime": {
-          "lib/net8.0/Serilog.dll": {
-            "assemblyVersion": "4.0.0.0",
-            "fileVersion": "4.0.0.0"
+          "lib/net9.0/Serilog.dll": {
+            "assemblyVersion": "4.2.0.0",
+            "fileVersion": "4.2.0.0"
           }
         }
       },
-      "Serilog.Sinks.Async/2.0.0": {
+      "Serilog.Sinks.Async/2.1.0": {
         "dependencies": {
-          "Serilog": "4.0.1"
+          "Serilog": "4.2.0"
         },
         "runtime": {
           "lib/net8.0/Serilog.Sinks.Async.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.0.0.0"
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.0.0"
           }
         }
       },
       "Serilog.Sinks.Console/6.0.0": {
         "dependencies": {
-          "Serilog": "4.0.1"
+          "Serilog": "4.2.0"
         },
         "runtime": {
           "lib/net8.0/Serilog.Sinks.Console.dll": {
@@ -64,46 +64,56 @@
           }
         }
       },
-      "System.Drawing.Common/8.0.8": {
+      "System.Drawing.Common/9.0.1": {
         "dependencies": {
-          "Microsoft.Win32.SystemEvents": "8.0.0"
+          "Microsoft.Win32.SystemEvents": "9.0.1"
         },
         "runtime": {
-          "lib/net8.0/System.Drawing.Common.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.824.36606"
+          "lib/net9.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.124.61006"
+          },
+          "lib/net9.0/System.Private.Windows.Core.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.124.61006"
           }
         }
       },
-      "System.IO.Hashing/8.0.0": {
+      "System.IO.Hashing/9.0.1": {
         "runtime": {
-          "lib/net8.0/System.IO.Hashing.dll": {
-            "assemblyVersion": "8.0.0.0",
-            "fileVersion": "8.0.23.53103"
+          "lib/net9.0/System.IO.Hashing.dll": {
+            "assemblyVersion": "9.0.0.1",
+            "fileVersion": "9.0.124.61010"
           }
         }
       },
       "Scripts/1.0.0": {
         "dependencies": {
-          "Serilog": "4.0.1",
-          "Serilog.Sinks.Async": "2.0.0",
+          "Serilog": "4.2.0",
+          "Serilog.Sinks.Async": "2.1.0",
           "Serilog.Sinks.Console": "6.0.0",
           "Server": "1.0.0"
         },
         "runtime": {
-          "Scripts.dll": {}
+          "Scripts.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "0.0.0.0"
+          }
         }
       },
       "Server/1.0.0": {
         "dependencies": {
-          "Serilog": "4.0.1",
-          "Serilog.Sinks.Async": "2.0.0",
+          "Serilog": "4.2.0",
+          "Serilog.Sinks.Async": "2.1.0",
           "Serilog.Sinks.Console": "6.0.0",
-          "System.Drawing.Common": "8.0.8",
-          "System.IO.Hashing": "8.0.0"
+          "System.Drawing.Common": "9.0.1",
+          "System.IO.Hashing": "9.0.1"
         },
         "runtime": {
-          "Server.dll": {}
+          "Server.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "0.5.0.0"
+          }
         }
       }
     }
@@ -114,26 +124,26 @@
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.Win32.SystemEvents/8.0.0": {
+    "Microsoft.Win32.SystemEvents/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-9opKRyOKMCi2xJ7Bj7kxtZ1r9vbzosMvRrdEhVhDz8j8MoBGgB+WmC94yH839NPH+BclAjtQ/pyagvi/8gDLkw==",
-      "path": "microsoft.win32.systemevents/8.0.0",
-      "hashPath": "microsoft.win32.systemevents.8.0.0.nupkg.sha512"
+      "sha512": "sha512-OxjcwJqBW/5A1111+vL9d+5KYTvOzeCTJY9zHZ0kpQI4wX075p6L7inHPSYuf0MGakVjUvaShvw9e9pfbInU2Q==",
+      "path": "microsoft.win32.systemevents/9.0.1",
+      "hashPath": "microsoft.win32.systemevents.9.0.1.nupkg.sha512"
     },
-    "Serilog/4.0.1": {
+    "Serilog/4.2.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-pzeDRXdpSLSsgBHpZcmpIDxqMy845Ab4s+dfnBg0sN9h8q/4Wo3vAoe0QCGPze1Q06EVtEPupS+UvLm8iXQmTQ==",
-      "path": "serilog/4.0.1",
-      "hashPath": "serilog.4.0.1.nupkg.sha512"
+      "sha512": "sha512-gmoWVOvKgbME8TYR+gwMf7osROiWAURterc6Rt2dQyX7wtjZYpqFiA/pY6ztjGQKKV62GGCyOcmtP1UKMHgSmA==",
+      "path": "serilog/4.2.0",
+      "hashPath": "serilog.4.2.0.nupkg.sha512"
     },
-    "Serilog.Sinks.Async/2.0.0": {
+    "Serilog.Sinks.Async/2.1.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-a+kTyUUxPAOZWKJiNbDqCPMiP0BWBWzObyTpRmGLrgCecgc/YJ+HqYGjsQoS6Sj9cRVXB9hH5O1mTZ0DiewG2w==",
-      "path": "serilog.sinks.async/2.0.0",
-      "hashPath": "serilog.sinks.async.2.0.0.nupkg.sha512"
+      "sha512": "sha512-SnmRknWsSMgyo9wDXeZZCqSp48kkQYy44taSM6vcpxfiRICzSf09oLKEmVr0RCwQnfd8mJQ2WNN6nvhqf0RowQ==",
+      "path": "serilog.sinks.async/2.1.0",
+      "hashPath": "serilog.sinks.async.2.1.0.nupkg.sha512"
     },
     "Serilog.Sinks.Console/6.0.0": {
       "type": "package",
@@ -142,19 +152,19 @@
       "path": "serilog.sinks.console/6.0.0",
       "hashPath": "serilog.sinks.console.6.0.0.nupkg.sha512"
     },
-    "System.Drawing.Common/8.0.8": {
+    "System.Drawing.Common/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-4ZM1wvLjz9nVVExsfPAaSl/qOvU+QNedJL5rQ+2Wbow+iGeyO0e7XN07707rMBgaffEeeLrCZBwC0oHUuvRdPw==",
-      "path": "system.drawing.common/8.0.8",
-      "hashPath": "system.drawing.common.8.0.8.nupkg.sha512"
+      "sha512": "sha512-TTPkCqSMyMaG8BXlBKYTTJFtLV0SvjjsvgUN598hYgHaX/5B7tdUc2JhQF9vwrYmlzxId+gwFnKYuxQ2XsSz2g==",
+      "path": "system.drawing.common/9.0.1",
+      "hashPath": "system.drawing.common.9.0.1.nupkg.sha512"
     },
-    "System.IO.Hashing/8.0.0": {
+    "System.IO.Hashing/9.0.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-ne1843evDugl0md7Fjzy6QjJrzsjh46ZKbhf8GwBXb5f/gw97J4bxMs0NQKifDuThh/f0bZ0e62NPl1jzTuRqA==",
-      "path": "system.io.hashing/8.0.0",
-      "hashPath": "system.io.hashing.8.0.0.nupkg.sha512"
+      "sha512": "sha512-jY+E/PElNWQiazN0YHqZGvcSedcZ4Wt0Os1nnJ2SzR3gWZlhNRDkSXOhuHJcLuImD8SrJQQ8TfU0W4mVcit2hg==",
+      "path": "system.io.hashing/9.0.1",
+      "hashPath": "system.io.hashing.9.0.1.nupkg.sha512"
     },
     "Scripts/1.0.0": {
       "type": "project",
