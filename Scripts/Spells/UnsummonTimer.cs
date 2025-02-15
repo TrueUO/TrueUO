@@ -19,8 +19,6 @@ namespace Server.Spells
             {
                 _Creature.Delete();
             }
-
-            Stop();
         }
     }
 }
