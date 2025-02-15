@@ -17,17 +17,12 @@ namespace Server.Items
             Movable = false;
 
             // Delete after 3 seconds.
-            Timer.DelayCall(TimeSpan.FromSeconds(3.0), DeleteBlood);
+            Timer.DelayCall(TimeSpan.FromSeconds(3.0), Delete);
         }
 
         public Blood(Serial serial)
             : base(serial)
         {
-        }
-
-        private void DeleteBlood()
-        {
-            Delete();
         }
 
         public override void Serialize(GenericWriter writer)
