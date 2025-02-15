@@ -47,7 +47,7 @@ namespace Server
 
         public StringList(string language, bool format)
         {
-            Language = language;            
+            Language = language;
 
             string path = Core.FindDataFile($"Cliloc.{language}");
 
@@ -62,24 +62,41 @@ namespace Server
             _EntryTable = new Dictionary<int, StringEntry>();
             Entries = new List<StringEntry>();
 
-            using (BinaryReader bin = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)))
+            // Read the entire file into a byte array.
+            byte[] fileData = File.ReadAllBytes(path);
+
+            // Check for the new (compressed) format.
+            // (ClassicUO checks if the 4th byte is 0x8E.)
+            if (fileData.Length > 3 && fileData[3] == 0x8E)
             {
-                byte[] buffer = new byte[1024];
+                try
+                {
+                    fileData = BwtDecompress.Decompress(fileData);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Decompression failed: " + ex.Message);
+                    return;
+                }
+            }
 
-                bin.ReadInt32();
-                bin.ReadInt16();
+            // Use a MemoryStream and BinaryReader to process the cliloc data.
+            using (MemoryStream ms = new MemoryStream(fileData))
+            using (BinaryReader bin = new BinaryReader(ms))
+            {
+                // Read header values.
+                bin.ReadInt32(); 
+                bin.ReadInt16(); 
 
-                while (bin.BaseStream.Length != bin.BaseStream.Position)
+                // Read each cliloc entry.
+                while (ms.Position < ms.Length)
                 {
                     int number = bin.ReadInt32();
-                    bin.ReadByte(); // flag
+                    bin.ReadByte(); // flag (ignored)
                     int length = bin.ReadInt16();
 
-                    if (length > buffer.Length)
-                        buffer = new byte[(length + 1023) & ~1023];
-
-                    bin.Read(buffer, 0, length);
-                    string text = Encoding.UTF8.GetString(buffer, 0, length);
+                    byte[] textBytes = bin.ReadBytes(length);
+                    string text = Encoding.UTF8.GetString(textBytes);
 
                     StringEntry se = new StringEntry(number, text);
                     Entries.Add(se);
@@ -96,7 +113,6 @@ namespace Server
             {
                 return null;
             }
-
             return value;
         }
 
@@ -106,7 +122,6 @@ namespace Server
             {
                 return null;
             }
-
             return value;
         }
     }
