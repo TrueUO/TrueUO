@@ -95,7 +95,6 @@ namespace Server.Misc
 
         public static void Initialize()
         {
-            EventSink.DeleteRequest += EventSink_DeleteRequest;
             EventSink.AccountLogin += EventSink_AccountLogin;
             EventSink.GameLogin += EventSink_GameLogin;
 
@@ -373,11 +372,8 @@ namespace Server.Misc
             return false;
         }
 
-        private static void EventSink_DeleteRequest(DeleteRequestEventArgs e)
+        public static void DeleteCharacterRequest(NetState state, int index)
         {
-            NetState state = e.State;
-            int index = e.Index;
-
             Account acct = state.Account as Account;
 
             if (acct == null)
