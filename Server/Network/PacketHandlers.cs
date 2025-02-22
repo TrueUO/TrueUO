@@ -4,7 +4,6 @@ using System.IO;
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.HuePickers;
-using Server.Menus;
 using Server.Mobiles;
 using Server.Prompts;
 using CV = Server.ClientVersion;
@@ -49,10 +48,6 @@ namespace Server.Network
 			m_EncodedHandlersLow = new EncodedPacketHandler[0x100];
 			m_EncodedHandlersHigh = new Dictionary<int, EncodedPacketHandler>();
 
-			Register(0x79, 9, true, ResourceQuery);
-			Register(0x7E, 2, true, GodviewQuery);
-			Register(0x7D, 13, true, MenuResponse);
-			Register(0x80, 62, false, AccountLogin);
 			Register(0x83, 39, false, DeleteCharacter);
 			Register(0x91, 65, false, GameLogin);
 			Register(0x95, 9, true, HuePickerResponse);
@@ -63,7 +58,6 @@ namespace Server.Network
 			Register(0xA0, 3, false, PlayServer);
 			Register(0xA4, 149, false, SystemInfo);
 			Register(0xA7, 4, true, RequestScrollWindow);
-			
 			Register(0xB6, 9, true, ObjectHelpRequest);
 			Register(0xBB, 9, false, AccountID);
 			Register(0xBD, 0, true, ClientVersion);
@@ -73,7 +67,6 @@ namespace Server.Network
 			Register(0xC8, 2, true, SetUpdateRange);
 			Register(0xC9, 6, true, TripTime);
 			Register(0xCA, 6, true, UTripTime);
-			Register(0xCF, 0, false, AccountLogin);
 			Register(0xD0, 0, true, ConfigurationFile);
 			Register(0xD1, 2, true, LogoutReq);
 			Register(0xD6, 0, true, BatchQueryProperties);
@@ -249,12 +242,6 @@ namespace Server.Network
 			EventSink.InvokeDeleteRequest(new DeleteRequestEventArgs(state, index));
 		}
 
-		public static void ResourceQuery(NetState state, PacketReader pvSrc)
-		{
-			if (VerifyGC(state))
-			{ }
-		}
-
 		public static void GameCentralMoniter(NetState state, PacketReader pvSrc)
 		{
 			if (VerifyGC(state))
@@ -267,14 +254,6 @@ namespace Server.Network
 				Console.WriteLine(" - Number: {0}", num1);
 
 				pvSrc.Trace(state);
-			}
-		}
-
-		public static void GodviewQuery(NetState state, PacketReader pvSrc)
-		{
-			if (VerifyGC(state))
-			{
-				Console.WriteLine("God Client: {0}: Godview query 0x{1:X}", state, pvSrc.ReadByte());
 			}
 		}
 
@@ -443,38 +422,6 @@ namespace Server.Network
 				}
 			}
 		}
-
-		public static void MenuResponse(NetState state, PacketReader pvSrc)
-		{
-			int serial = pvSrc.ReadInt32();
-			int menuID = pvSrc.ReadInt16(); // unused in our implementation
-			int index = pvSrc.ReadInt16();
-			int itemID = pvSrc.ReadInt16();
-			int hue = pvSrc.ReadInt16();
-
-			index -= 1; // convert from 1-based to 0-based
-
-            for (var i = 0; i < state.Menus.Count; i++)
-            {
-                IMenu menu = state.Menus[i];
-
-                if (menu.Serial == serial)
-                {
-                    state.RemoveMenu(menu);
-
-                    if (index >= 0 && index < menu.EntryLength)
-                    {
-                        menu.OnResponse(state, index);
-                    }
-                    else
-                    {
-                        menu.OnCancel(state);
-                    }
-
-                    break;
-                }
-            }
-        }
 
 		public static void ConfigurationFile(NetState state, PacketReader pvSrc)
 		{ }
@@ -1136,61 +1083,6 @@ namespace Server.Network
 			{
 				int address = pvSrc.ReadInt32();
 			}
-		}
-
-		public static void AccountLogin(NetState state, PacketReader pvSrc)
-		{
-			if (state.SentFirstPacket)
-			{
-				state.Dispose();
-				return;
-			}
-
-			state.SentFirstPacket = true;
-
-			string username = pvSrc.ReadString(30);
-			string password = pvSrc.ReadString(30);
-
-			AccountLoginEventArgs e = new AccountLoginEventArgs(state, username, password);
-
-			EventSink.InvokeAccountLogin(e);
-
-			if (e.Accepted)
-			{
-				AccountLogin_ReplyAck(state);
-			}
-			else
-			{
-				AccountLogin_ReplyRej(state, e.RejectReason);
-			}
-		}
-
-		public static void AccountLogin_ReplyAck(NetState state)
-		{
-			ServerListEventArgs e = new ServerListEventArgs(state, state.Account);
-
-			EventSink.InvokeServerList(e);
-
-			if (e.Rejected)
-			{
-				state.Account = null;
-				state.Send(new AccountLoginRej(ALRReason.BadComm));
-				state.Dispose();
-			}
-			else
-			{
-				ServerInfo[] info = e.Servers.ToArray();
-
-				state.ServerInfo = info;
-
-				state.Send(new AccountLoginAck(info));
-			}
-		}
-
-		public static void AccountLogin_ReplyRej(NetState state, ALRReason reason)
-		{
-			state.Send(new AccountLoginRej(reason));
-			state.Dispose();
 		}
 	}
 }
