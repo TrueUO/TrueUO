@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 
@@ -3066,16 +3065,6 @@ namespace Server.Network
 		}
 	}
 
-    // Can eventually be deleted.
-	[Flags]
-	public enum ThirdPartyFeature : ulong
-	{
-	}
-	public static class FeatureProtection
-	{
-        public static ThirdPartyFeature DisabledFeatures => 0;
-    }
-
 	public sealed class CharacterList : Packet
 	{
 		public CharacterList(IAccount a, IReadOnlyList<CityInfo> info, bool IsEnhancedClient)
@@ -3155,40 +3144,7 @@ namespace Server.Network
 			m_Stream.Write((int)flags);
 
 			m_Stream.Write((short)-1);
-
-			ThirdPartyFeature disabled = FeatureProtection.DisabledFeatures;
-
-			if (disabled != 0)
-			{
-				if (m_MD5Provider == null)
-				{
-                    m_MD5Provider = MD5.Create();
-                }
-
-				m_Stream.UnderlyingStream.Flush();
-
-				byte[] hashCode = m_MD5Provider.ComputeHash(
-					m_Stream.UnderlyingStream.GetBuffer(), 0, (int)m_Stream.UnderlyingStream.Length);
-				byte[] buffer = new byte[28];
-
-				for (int i = 0; i < count; ++i)
-				{
-					Utility.RandomBytes(buffer);
-
-					m_Stream.Seek(35 + (i * 60), SeekOrigin.Begin);
-					m_Stream.Write(buffer, 0, buffer.Length);
-				}
-
-				m_Stream.Seek(35, SeekOrigin.Begin);
-				m_Stream.Write((int)((long)disabled >> 32));
-				m_Stream.Write((int)disabled);
-
-				m_Stream.Seek(95, SeekOrigin.Begin);
-				m_Stream.Write(hashCode, 0, hashCode.Length);
-			}
 		}
-
-        private static MD5 m_MD5Provider = MD5.Create();
 
         public static CharacterListFlags AdditionalFlags { get; set; }
 	}

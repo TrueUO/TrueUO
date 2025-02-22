@@ -14,6 +14,9 @@ using Server.Engines.UOStore;
 using Server.Multis;
 using Server.Engines.Chat;
 using Server.Prompts;
+using Server.Accounting;
+using System.IO;
+using static Server.Network.PacketHandlers;
 
 namespace Server.Network
 {
@@ -21,33 +24,367 @@ namespace Server.Network
     {
         public static void Configure()
         {
-            PacketHandlers.Register(0x12, 0, true, TextCommand);
-            PacketHandlers.Register(0x73, 2, false, PingReq);
-            PacketHandlers.Register(0x75, 35, true, RenameRequest);
-            PacketHandlers.Register(0x9A, 0, true, AsciiPromptResponse);
-            PacketHandlers.Register(0x9B, 258, true, HelpRequest);
-            PacketHandlers.Register(0xB1, 0, true, DisplayGumpResponse);
-            PacketHandlers.Register(0xB3, 0, true, ChatAction);
-            PacketHandlers.Register(0xB5, 0x40, true, OpenChatWindowRequest);
-            PacketHandlers.Register(0xB8, 0, true, ProfileReq);
-            PacketHandlers.Register(0xEC, 0, true, EquipMacro);
-            PacketHandlers.Register(0xED, 0, true, UnequipMacro);
-            PacketHandlers.Register(0xFA, 1, true, UOStoreRequest);
+            Register(0x00, 104, false, CreateCharacter);
+            Register(0x12, 0, true, TextCommand);
+            Register(0x5D, 73, false, PlayCharacter);
+            Register(0x73, 2, false, PingReq);
+            Register(0x75, 35, true, RenameRequest);
+            Register(0x9A, 0, true, AsciiPromptResponse);
+            Register(0x9B, 258, true, HelpRequest);
+            Register(0xB1, 0, true, DisplayGumpResponse);
+            Register(0xB3, 0, true, ChatAction);
+            Register(0xB5, 0x40, true, OpenChatWindowRequest);
+            Register(0xB8, 0, true, ProfileReq);
+            Register(0xEC, 0, true, EquipMacro);
+            Register(0xED, 0, true, UnequipMacro);
+            Register(0xFA, 1, true, UOStoreRequest);
+            Register(0xF8, 106, false, CreateCharacter);
+            Register(0x8D, 0, false, ECCreateCharacter);
 
             // Extended
-            PacketHandlers.RegisterExtended(0x1C, true, CastSpell);
-            PacketHandlers.RegisterExtended(0x2C, true, BandageTarget);
-            PacketHandlers.RegisterExtended(0x2D, true, TargetedSpell);
-            PacketHandlers.RegisterExtended(0x2E, true, TargetedSkillUse);
-            PacketHandlers.RegisterExtended(0x30, true, TargetByResourceMacro);
-            PacketHandlers.RegisterExtended(0x33, true, MultiMouseBoatMovementRequest);
+            RegisterExtended(0x1C, true, CastSpell);
+            RegisterExtended(0x2C, true, BandageTarget);
+            RegisterExtended(0x2D, true, TargetedSpell);
+            RegisterExtended(0x2E, true, TargetedSkillUse);
+            RegisterExtended(0x30, true, TargetByResourceMacro);
+            RegisterExtended(0x33, true, MultiMouseBoatMovementRequest);
 
             // Encoded
-            PacketHandlers.RegisterEncoded(0x19, true, SetWeaponAbility);
-            PacketHandlers.RegisterEncoded(0x1E, true, EquipLastWeaponRequest);
-            PacketHandlers.RegisterEncoded(0x28, true, GuildGumpRequest);
-            PacketHandlers.RegisterExtended(0x2A, true, HeritageTransform);
-            PacketHandlers.RegisterEncoded(0x32, true, QuestGumpRequest);
+            RegisterEncoded(0x19, true, SetWeaponAbility);
+            RegisterEncoded(0x1E, true, EquipLastWeaponRequest);
+            RegisterEncoded(0x28, true, GuildGumpRequest);
+            RegisterExtended(0x2A, true, HeritageTransform);
+            RegisterEncoded(0x32, true, QuestGumpRequest);
+        }
+
+        public static void CreateCharacter(NetState state, PacketReader reader)
+		{
+            reader.Seek(9, SeekOrigin.Current);
+            /*
+			int unk1 = reader.ReadInt32();
+			int unk2 = reader.ReadInt32();
+			int unk3 = reader.ReadByte();
+            */
+
+			string name = reader.ReadString(30);
+
+			reader.Seek(2, SeekOrigin.Current);
+			int flags = reader.ReadInt32();
+			reader.Seek(8, SeekOrigin.Current);
+			int prof = reader.ReadByte();
+			reader.Seek(15, SeekOrigin.Current);
+
+			int genderRace = reader.ReadByte();
+
+			int str = reader.ReadByte();
+			int dex = reader.ReadByte();
+			int intl = reader.ReadByte();
+			int is1 = reader.ReadByte();
+			int vs1 = reader.ReadByte();
+			int is2 = reader.ReadByte();
+			int vs2 = reader.ReadByte();
+			int is3 = reader.ReadByte();
+			int vs3 = reader.ReadByte();
+			int is4 = reader.ReadByte();
+			int vs4 = reader.ReadByte();
+
+			int hue = reader.ReadUInt16();
+			int hairVal = reader.ReadInt16();
+			int hairHue = reader.ReadInt16();
+			int hairValf = reader.ReadInt16();
+			int hairHuef = reader.ReadInt16();
+            reader.ReadByte();
+			int cityIndex = reader.ReadByte();
+
+            reader.Seek(8, SeekOrigin.Current);
+            /*
+			int charSlot = reader.ReadInt32();
+			int clientIP = reader.ReadInt32();
+            */
+
+			int shirtHue = reader.ReadInt16();
+			int pantsHue = reader.ReadInt16();
+
+			/*
+			0x00, 0x01
+			0x02, 0x03 -> Human Male, Human Female
+			0x04, 0x05 -> Elf Male, Elf Female
+			0x05, 0x06 -> Gargoyle Male, Gargoyle Female
+			*/
+
+			bool female = genderRace % 2 != 0;
+
+            byte raceId = (byte)(genderRace < 4 ? 0 : genderRace / 2 - 1);
+			Race race = Race.Races[raceId] ?? Race.DefaultRace;
+
+            hue = race.ClipSkinHue(hue);
+			hairHue = race.ClipHairHue(hairHue);
+			hairHuef = race.ClipHairHue(hairHuef);
+
+			shirtHue = Math.Max(0, Math.Min(1000, shirtHue));
+			pantsHue = Math.Max(0, Math.Min(1000, pantsHue));
+
+			CityInfo[] info = state.CityInfo;
+			IAccount a = state.Account;
+
+			if (info == null || a == null || cityIndex >= info.Length)
+			{
+				state.Dispose();
+
+                return;
+            }
+
+            // Check if anyone is using this account
+            for (int i = 0; i < a.Length; ++i)
+            {
+                Mobile check = a[i];
+
+                if (check != null && check.Map != Map.Internal)
+                {
+                    state.Send(new PopupMessage(PMMessage.CharInWorld));
+
+                    return;
+                }
+            }
+
+            state.Flags = (ClientFlags)flags;
+
+            CharacterCreationArguments args = new CharacterCreationArguments
+            (
+                state,
+                a,
+                name,
+                female,
+                hue,
+                str,
+                dex,
+                intl,
+                info[cityIndex],
+                [
+                    new SkillNameValue((SkillName)is1, vs1), new SkillNameValue((SkillName)is2, vs2),
+                    new SkillNameValue((SkillName)is3, vs3), new SkillNameValue((SkillName)is4, vs4)
+                ],
+                shirtHue,
+                pantsHue,
+                hairVal,
+                hairHue,
+                hairValf,
+                hairHuef,
+                prof,
+                race
+            );
+
+            if (state.Version == null)
+            {
+                state.Send(new ClientVersionReq());
+                state.BlockAllPackets = true;
+            }
+
+            CharacterCreation.OnCharacterCreation(args);
+
+            Mobile m = args.Mobile;
+
+            if (m != null)
+            {
+                state.Mobile = m;
+                m.NetState = state;
+
+                if (state.Version == null)
+                {
+                    new LoginTimer(state).Start();
+                }
+                else
+                {
+                    DoLogin(state);
+                }
+            }
+            else
+            {
+                state.BlockAllPackets = false;
+                state.Dispose();
+            }
+        }
+
+        public static void ECCreateCharacter(NetState state, PacketReader pvSrc)
+		{
+			int length = pvSrc.Size;
+
+			int unk1 = pvSrc.ReadInt32(); // Pattern
+			int charSlot = pvSrc.ReadInt32();
+			string name = pvSrc.ReadString(30);
+			string unknown1 = pvSrc.ReadString(30); // "Unknown"
+
+			int profession = pvSrc.ReadByte();
+			int cityIndex = pvSrc.ReadByte();
+
+			int gender = pvSrc.ReadByte();
+			int genderRace = pvSrc.ReadByte();
+
+			int str = pvSrc.ReadByte();
+			int dex = pvSrc.ReadByte();
+			int intel = pvSrc.ReadByte();
+
+			int hue = pvSrc.ReadInt16();
+			int unk5 = pvSrc.ReadInt32(); // 0x00 0x00 0x00 0x00
+			int unk6 = pvSrc.ReadInt32(); // 0x00 0x00 0x00 0x00
+
+			// isX = skill amount | vsX = skill
+			int is1 = pvSrc.ReadByte();
+			int vs1 = pvSrc.ReadByte();
+			int is2 = pvSrc.ReadByte();
+			int vs2 = pvSrc.ReadByte();
+			int is3 = pvSrc.ReadByte();
+			int vs3 = pvSrc.ReadByte();
+			int is4 = pvSrc.ReadByte();
+			int vs4 = pvSrc.ReadByte();
+
+			string unknown2 = pvSrc.ReadString(25); // Pack of 0x00
+			int unk7 = pvSrc.ReadByte(); // Another 0x00
+
+			int hairColor = pvSrc.ReadInt16();
+			int hairID = pvSrc.ReadInt16();
+
+			int unk8 = pvSrc.ReadByte();
+			int unk9 = pvSrc.ReadInt32();
+			int unk10 = pvSrc.ReadByte();
+			int shirtHue = pvSrc.ReadInt16();
+			int shirtID = pvSrc.ReadInt16();
+			int unk13 = pvSrc.ReadByte();
+
+			int faceColor = pvSrc.ReadInt16();
+			int faceID = pvSrc.ReadInt16();
+
+			int unk14 = pvSrc.ReadByte();
+
+			int beardColor = pvSrc.ReadInt16();
+			int beardID = pvSrc.ReadInt16();
+
+			int pantsHue = shirtHue; // Obsolete
+
+            var female = gender != 0;
+			var race = Race.Races[(byte)(genderRace - 1)];
+
+			if (race == null)
+				race = Race.DefaultRace;
+
+			CityInfo[] info = state.CityInfo;
+			IAccount a = state.Account;
+
+			if (info == null || a == null || cityIndex >= info.Length)
+			{
+				state.Dispose();
+			}
+			else
+			{
+				// Check if anyone is using this account
+				for (int i = 0; i < a.Length; ++i)
+				{
+					Mobile check = a[i];
+
+					if (check != null && check.Map != Map.Internal)
+					{
+						Console.WriteLine("Login: {0}: Account in use", state);
+						state.Send(new PopupMessage(PMMessage.CharInWorld));
+						return;
+					}
+				}
+
+                CharacterCreationArguments args = new CharacterCreationArguments
+                (
+					state, a,
+					name, female, hue,
+					str, dex, intel,
+					info[cityIndex],
+                    [
+                        new SkillNameValue( (SkillName)is1, vs1 ),
+						new SkillNameValue( (SkillName)is2, vs2 ),
+						new SkillNameValue( (SkillName)is3, vs3 ),
+						new SkillNameValue( (SkillName)is4, vs4 )
+                    ],
+					shirtHue, pantsHue,
+					hairID, hairColor,
+					beardID, beardColor,
+					profession, race,
+					faceID, faceColor
+                );
+
+				if (state.Version == null)
+				{
+					state.Send(new ClientVersionReq());
+
+					state.BlockAllPackets = true;
+				}
+
+                CharacterCreation.OnCharacterCreation(args);
+
+				Mobile m = args.Mobile;
+
+				if (m != null)
+				{
+					state.Mobile = m;
+					m.NetState = state;
+
+					if (state.Version == null)
+					{
+						new LoginTimer(state).Start();
+					}
+					else
+					{
+						DoLogin(state);
+					}
+				}
+				else
+				{
+					state.BlockAllPackets = false;
+					state.Dispose();
+				}
+			}
+		}
+
+        public static void DoLogin(NetState state)
+        {
+            Mobile m = state.Mobile;
+
+            state.Send(new LoginConfirm(m));
+
+            if (m.Map != null)
+            {
+                state.Send(new MapChange(m));
+            }
+
+            state.Send(new MapPatches());
+
+            state.Send(SupportedFeatures.Instantiate(state));
+
+            state.Sequence = 0;
+
+            state.Send(MobileIncoming.Create(state, m, m));
+
+            state.Send(new MobileUpdate(m));
+
+            m.SendEverything();
+
+            m.CheckLightLevels(true);
+
+            state.Send(LoginComplete.Instance);
+
+            state.Send(MobileIncoming.Create(state, m, m));
+
+            state.Send(new MobileStatus(m, m));
+
+            state.Send(Network.SetWarMode.Instantiate(m.Warmode));
+
+            state.Send(SeasonChange.Instantiate(m.GetSeason(), true));
+
+            state.Send(new CurrentTime());
+
+            state.Send(new MapChange(m));
+
+            Console.WriteLine("Client: {0}: Entered World ({1})", state, m);
+
+            m.OnLogin();
+            m.SendEverything();
+            m.ClearFastwalkStack();
         }
 
         public static void TextCommand(NetState state, PacketReader pvSrc)
@@ -61,7 +398,7 @@ namespace Server.Network
 			{
 				case 0x00: // Go
 				{
-					if (PacketHandlers.VerifyGC(state))
+					if (VerifyGC(state))
 					{
 						try
 						{
@@ -103,7 +440,6 @@ namespace Server.Network
 				}
 				case 0x24: // Use skill
 				{
-
 					if (!int.TryParse(command.Split(' ')[0], out int skillIndex))
 					{
 						break;
@@ -180,6 +516,68 @@ namespace Server.Network
 				}
 			}
 		}
+
+        public static void PlayCharacter(NetState state, PacketReader pvSrc)
+        {
+            pvSrc.Seek(36, SeekOrigin.Current); // 4 = 0xEDEDEDED, 30 = Name, 2 = unknown
+            int flags = pvSrc.ReadInt32();
+            pvSrc.Seek(24, SeekOrigin.Current);
+            int charSlot = pvSrc.ReadInt32();
+            pvSrc.Seek(4, SeekOrigin.Current); // int clientIP = pvSrc.ReadInt32();
+
+            IAccount a = state.Account;
+
+            if (a == null || charSlot < 0 || charSlot >= a.Length)
+            {
+                state.Send(new PopupMessage(PMMessage.CharNoExist));
+                state.Dispose();
+
+                return;
+            }
+
+            Mobile m = a[charSlot];
+
+            // Check if anyone is using this account
+            for (int i = 0; i < a.Length; ++i)
+            {
+                Mobile check = a[i];
+
+                if (check != null && check.Map != Map.Internal && check != m)
+                {
+                    state.Send(new PopupMessage(PMMessage.CharInWorld));
+
+                    return;
+                }
+            }
+
+            if (m == null)
+            {
+                state.Send(new PopupMessage(PMMessage.CharNoExist));
+                state.Dispose();
+
+                return;
+            }
+
+            m.NetState?.Dispose();
+
+            state.Flags = (ClientFlags)flags;
+
+            state.Mobile = m;
+            m.NetState = state;
+
+            if (state.Version == null)
+            {
+                state.Send(new ClientVersionReq());
+
+                state.BlockAllPackets = true;
+
+                new LoginTimer(state).Start();
+            }
+            else
+            {
+                DoLogin(state);
+            }
+        }
 
         public static void PingReq(NetState state, PacketReader pvSrc)
         {
