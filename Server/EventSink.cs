@@ -10,8 +10,6 @@ using Server.Network;
 
 namespace Server
 {
-	public delegate void CharacterCreatedEventHandler(CharacterCreatedEventArgs e);
-
 	public delegate void SpeechEventHandler(SpeechEventArgs e);
 
 	public delegate void ServerListEventHandler(ServerListEventArgs e);
@@ -331,118 +329,6 @@ namespace Server
 		}
 	}
 
-	public class CharacterCreatedEventArgs : EventArgs
-	{
-		private readonly NetState m_State;
-		private readonly IAccount m_Account;
-		private readonly CityInfo m_City;
-		private readonly SkillNameValue[] m_Skills;
-		private readonly int m_ShirtHue;
-		private readonly int m_PantsHue;
-		private readonly int m_HairID;
-		private readonly int m_HairHue;
-		private readonly int m_BeardID;
-		private readonly int m_BeardHue;
-		private readonly string m_Name;
-		private readonly bool m_Female;
-		private readonly int m_Hue;
-		private readonly int m_Str;
-		private readonly int m_Dex;
-		private readonly int m_Int;
-		private readonly Race m_Race;
-		private readonly int m_Face;
-		private readonly int m_FaceHue;
-
-		public NetState State => m_State;
-		public IAccount Account => m_Account;
-		public Mobile Mobile { get; set; }
-		public string Name => m_Name;
-		public bool Female => m_Female;
-		public int Hue => m_Hue;
-		public int Str => m_Str;
-		public int Dex => m_Dex;
-		public int Int => m_Int;
-		public CityInfo City => m_City;
-		public SkillNameValue[] Skills => m_Skills;
-		public int ShirtHue => m_ShirtHue;
-		public int PantsHue => m_PantsHue;
-		public int HairID => m_HairID;
-		public int HairHue => m_HairHue;
-		public int BeardID => m_BeardID;
-		public int BeardHue => m_BeardHue;
-		public int Profession { get; set; }
-		public Race Race => m_Race;
-		public int FaceID => m_Face;
-		public int FaceHue => m_FaceHue;
-
-		public CharacterCreatedEventArgs(
-			NetState state,
-			IAccount a,
-			string name,
-			bool female,
-			int hue,
-			int str,
-			int dex,
-			int intel,
-			CityInfo city,
-			SkillNameValue[] skills,
-			int shirtHue,
-			int pantsHue,
-			int hairID,
-			int hairHue,
-			int beardID,
-			int beardHue,
-			int profession,
-			Race race)
-			: this(state, a, name, female, hue, str, dex, intel, city, skills, shirtHue, pantsHue, hairID, hairHue, beardID, beardHue, profession, race, 0, 0)
-		{
-		}
-
-		public CharacterCreatedEventArgs(
-			NetState state,
-			IAccount a,
-			string name,
-			bool female,
-			int hue,
-			int str,
-			int dex,
-			int intel,
-			CityInfo city,
-			SkillNameValue[] skills,
-			int shirtHue,
-			int pantsHue,
-			int hairID,
-			int hairHue,
-			int beardID,
-			int beardHue,
-			int profession,
-			Race race,
-			int faceID,
-			int faceHue)
-		{
-			m_State = state;
-			m_Account = a;
-			m_Name = name;
-			m_Female = female;
-			m_Hue = hue;
-			m_Str = str;
-			m_Dex = dex;
-			m_Int = intel;
-			m_City = city;
-			m_Skills = skills;
-			m_ShirtHue = shirtHue;
-			m_PantsHue = pantsHue;
-			m_HairID = hairID;
-			m_HairHue = hairHue;
-			m_BeardID = beardID;
-			m_BeardHue = beardHue;
-			Profession = profession;
-			m_Race = race;
-			m_Face = faceID;
-			m_FaceHue = faceHue;
-		}
-	}
-
 	public class SpeechEventArgs : EventArgs
 	{
 		private readonly Mobile m_Mobile;
@@ -572,7 +458,6 @@ namespace Server
 
 	public static class EventSink
 	{
-		public static event CharacterCreatedEventHandler CharacterCreated;
 		public static event SpeechEventHandler Speech;
 		public static event ServerListEventHandler ServerList;
 		public static event MovementEventHandler Movement;
@@ -676,11 +561,6 @@ namespace Server
 		public static void InvokeSpeech(SpeechEventArgs e)
         {
             Speech?.Invoke(e);
-        }
-
-		public static void InvokeCharacterCreated(CharacterCreatedEventArgs e)
-        {
-            CharacterCreated?.Invoke(e);
         }
 
 		public static void InvokeWorldLoad()

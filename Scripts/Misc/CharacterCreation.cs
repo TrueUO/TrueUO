@@ -1,22 +1,82 @@
-#region References
 using Server.Accounting;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using System;
-#endregion
 
 namespace Server.Misc
 {
+    public class CharacterCreationArguments(
+        NetState state,
+        IAccount a,
+        string name,
+        bool female,
+        int hue,
+        int str,
+        int dex,
+        int intel,
+        CityInfo city,
+        SkillNameValue[] skills,
+        int shirtHue,
+        int pantsHue,
+        int hairId,
+        int hairHue,
+        int beardId,
+        int beardHue,
+        int profession,
+        Race race,
+        int faceId,
+        int faceHue)
+    {
+        public NetState State { get; } = state;
+        public IAccount Account { get; } = a;
+        public Mobile Mobile { get; set; }
+		public string Name { get; } = name;
+        public bool Female { get; } = female;
+        public int Hue { get; } = hue;
+        public int Str { get; } = str;
+        public int Dex { get; } = dex;
+        public int Int { get; } = intel;
+        public CityInfo City { get; } = city;
+        public SkillNameValue[] Skills { get; } = skills;
+        public int ShirtHue { get; } = shirtHue;
+        public int PantsHue { get; } = pantsHue;
+        public int HairID { get; } = hairId;
+        public int HairHue { get; } = hairHue;
+        public int BeardID { get; } = beardId;
+        public int BeardHue { get; } = beardHue;
+        public int Profession { get; set; } = profession;
+        public Race Race { get; } = race;
+        public int FaceID { get; } = faceId;
+        public int FaceHue { get; } = faceHue;
+
+        public CharacterCreationArguments(
+			NetState state,
+			IAccount a,
+			string name,
+			bool female,
+			int hue,
+			int str,
+			int dex,
+			int intel,
+			CityInfo city,
+			SkillNameValue[] skills,
+			int shirtHue,
+			int pantsHue,
+			int hairID,
+			int hairHue,
+			int beardID,
+			int beardHue,
+			int profession,
+			Race race)
+			: this(state, a, name, female, hue, str, dex, intel, city, skills, shirtHue, pantsHue, hairID, hairHue, beardID, beardHue, profession, race, 0, 0)
+		{
+		}
+    }
+
     public class CharacterCreation
     {
         private static Mobile m_Mobile;
-
-        public static void Initialize()
-        {
-            // Register our event handler
-            EventSink.CharacterCreated += EventSink_CharacterCreated;
-        }
 
         public static bool VerifyProfession(int profession)
         {
@@ -142,7 +202,7 @@ namespace Server.Misc
             return null;
         }
 
-        private static void EventSink_CharacterCreated(CharacterCreatedEventArgs args)
+        public static void OnCharacterCreation(CharacterCreationArguments args)
         {
             if (!VerifyProfession(args.Profession))
                 args.Profession = 0;
