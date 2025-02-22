@@ -25,7 +25,7 @@ namespace Server.Misc
         private static readonly int MaxAccountsPerIP = Config.Get("Accounts.AccountsPerIp", 1);
         private static readonly bool AutoAccountCreation = Config.Get("Accounts.AutoCreateAccounts", true);
         private static readonly bool RestrictDeletion = Config.Get("Accounts.RestrictDeletion", !TestCenter.Enabled);
-        private static readonly TimeSpan DeleteDelay = TimeSpan.Zero;
+        private static readonly TimeSpan DeleteDelay = Config.Get("Accounts.DeleteDelay", TimeSpan.FromDays(7.0));
 
         private static readonly CityInfo[] StartingCities =
         {
