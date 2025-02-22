@@ -89,7 +89,6 @@ namespace Server.Network
 			Register(0x95, 9, true, HuePickerResponse);
 			Register(0x96, 0, true, GameCentralMoniter);
 			Register(0x98, 0, true, MobileNameRequest);
-			Register(0x9A, 0, true, AsciiPromptResponse);
 			Register(0x9D, 51, true, GMSingle);
 			Register(0x9F, 0, true, VendorSellReply);
 			Register(0xA0, 3, false, PlayServer);
@@ -682,36 +681,6 @@ namespace Server.Network
 			if (VerifyGC(state))
 			{
 				state.Send(new GodModeReply(pvSrc.ReadBoolean()));
-			}
-		}
-
-		public static void AsciiPromptResponse(NetState state, PacketReader pvSrc)
-		{
-			int serial = pvSrc.ReadInt32();
-			int prompt = pvSrc.ReadInt32();
-			int type = pvSrc.ReadInt32();
-			string text = pvSrc.ReadStringSafe();
-
-			if (text == null || text.Length > 128)
-			{
-				return;
-			}
-
-			Mobile from = state.Mobile;
-			Prompt p = from.Prompt;
-
-			if (p != null && p.Sender.Serial == serial && p.TypeId == prompt)
-			{
-				from.Prompt = null;
-
-				if (type == 0)
-				{
-					p.OnCancel(from);
-				}
-				else
-				{
-					p.OnResponse(from, text);
-				}
 			}
 		}
 

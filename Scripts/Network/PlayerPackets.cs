@@ -13,6 +13,7 @@ using Server.Engines.Quests;
 using Server.Engines.UOStore;
 using Server.Multis;
 using Server.Engines.Chat;
+using Server.Prompts;
 
 namespace Server.Network
 {
@@ -23,6 +24,7 @@ namespace Server.Network
             PacketHandlers.Register(0x12, 0, true, TextCommand);
             PacketHandlers.Register(0x73, 2, false, PingReq);
             PacketHandlers.Register(0x75, 35, true, RenameRequest);
+            PacketHandlers.Register(0x9A, 0, true, AsciiPromptResponse);
             PacketHandlers.Register(0x9B, 258, true, HelpRequest);
             PacketHandlers.Register(0xB1, 0, true, DisplayGumpResponse);
             PacketHandlers.Register(0xB3, 0, true, ChatAction);
@@ -192,6 +194,42 @@ namespace Server.Network
             if (targ != null)
             {
                 RenameRequests.RenameRequest(from, targ, pvSrc.ReadStringSafe());
+            }
+        }
+
+        public static void AsciiPromptResponse(NetState state, PacketReader pvSrc)
+        {
+            Mobile from = state.Mobile;
+
+            if (from == null)
+            {
+                return;
+            }
+
+            int serial = pvSrc.ReadInt32();
+            int prompt = pvSrc.ReadInt32();
+            int type = pvSrc.ReadInt32();
+            string text = pvSrc.ReadStringSafe();
+
+            if (text == null || text.Length > 128)
+            {
+                return;
+            }
+
+            Prompt p = from.Prompt;
+
+            if (p != null && p.Sender.Serial == serial && p.TypeId == prompt)
+            {
+                from.Prompt = null;
+
+                if (type == 0)
+                {
+                    p.OnCancel(from);
+                }
+                else
+                {
+                    p.OnResponse(from, text);
+                }
             }
         }
 
