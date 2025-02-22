@@ -25,7 +25,7 @@ namespace Server.Misc
         private static readonly int MaxAccountsPerIP = Config.Get("Accounts.AccountsPerIp", 1);
         private static readonly bool AutoAccountCreation = Config.Get("Accounts.AutoCreateAccounts", true);
         private static readonly bool RestrictDeletion = Config.Get("Accounts.RestrictDeletion", !TestCenter.Enabled);
-        private static readonly TimeSpan DeleteDelay = Config.Get("Accounts.DeleteDelay", TimeSpan.FromDays(7.0));
+        private static readonly TimeSpan DeleteDelay = TimeSpan.Zero;
 
         private static readonly CityInfo[] StartingCities =
         {
@@ -95,7 +95,6 @@ namespace Server.Misc
 
         public static void Initialize()
         {
-            EventSink.DeleteRequest += EventSink_DeleteRequest;
             EventSink.AccountLogin += EventSink_AccountLogin;
             EventSink.GameLogin += EventSink_GameLogin;
 
@@ -373,11 +372,8 @@ namespace Server.Misc
             return false;
         }
 
-        private static void EventSink_DeleteRequest(DeleteRequestEventArgs e)
+        public static void DeleteCharacterRequest(NetState state, int index)
         {
-            NetState state = e.State;
-            int index = e.Index;
-
             Account acct = state.Account as Account;
 
             if (acct == null)

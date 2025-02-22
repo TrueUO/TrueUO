@@ -30,8 +30,6 @@ namespace Server
 
 	public delegate void GameLoginEventHandler(GameLoginEventArgs e);
 
-	public delegate void DeleteRequestEventHandler(DeleteRequestEventArgs e);
-
 	public delegate void WorldLoadEventHandler();
 
 	public delegate void WorldSaveEventHandler(WorldSaveEventArgs e);
@@ -92,21 +90,6 @@ namespace Server
 		public CreateGuildEventArgs(int id)
 		{
 			Id = id;
-		}
-	}
-
-	public class DeleteRequestEventArgs : EventArgs
-	{
-		private readonly NetState m_State;
-		private readonly int m_Index;
-
-		public NetState State => m_State;
-		public int Index => m_Index;
-
-		public DeleteRequestEventArgs(NetState state, int index)
-		{
-			m_State = state;
-			m_Index = index;
 		}
 	}
 
@@ -469,7 +452,6 @@ namespace Server
 		public static event AggressiveActionEventHandler AggressiveAction;
 		public static event CommandEventHandler Command;
 		public static event GameLoginEventHandler GameLogin;
-		public static event DeleteRequestEventHandler DeleteRequest;
 		public static event WorldLoadEventHandler WorldLoad;
 		public static event WorldSaveEventHandler WorldSave;
 		public static event BeforeWorldSaveEventHandler BeforeWorldSave;
@@ -501,11 +483,6 @@ namespace Server
 		public static void InvokeFastWalk(FastWalkEventArgs e)
         {
             FastWalk?.Invoke(e);
-        }
-
-		public static void InvokeDeleteRequest(DeleteRequestEventArgs e)
-        {
-            DeleteRequest?.Invoke(e);
         }
 
 		public static void InvokeGameLogin(GameLoginEventArgs e)

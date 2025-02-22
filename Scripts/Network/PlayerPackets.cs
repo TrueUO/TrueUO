@@ -59,6 +59,7 @@ namespace Server.Network
             Register(0x7D, 13, true, MenuResponse);
             Register(0x7E, 2, true, GodviewQuery);
             Register(0x80, 62, false, AccountLogin);
+            Register(0x83, 39, false, DeleteCharacter);
             Register(0x9A, 0, true, AsciiPromptResponse);
             Register(0x9B, 258, true, HelpRequest);
             Register(0xAD, 0, true, UnicodeSpeech);
@@ -1770,6 +1771,14 @@ namespace Server.Network
         {
             state.Send(new AccountLoginRej(reason));
             state.Dispose();
+        }
+
+        public static void DeleteCharacter(NetState state, PacketReader pvSrc)
+        {
+            pvSrc.Seek(30, SeekOrigin.Current);
+            int index = pvSrc.ReadInt32();
+
+            AccountHandler.DeleteCharacterRequest(state, index);
         }
 
         public static void EquipMacro(NetState ns, PacketReader pvSrc)

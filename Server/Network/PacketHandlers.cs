@@ -48,7 +48,6 @@ namespace Server.Network
 			m_EncodedHandlersLow = new EncodedPacketHandler[0x100];
 			m_EncodedHandlersHigh = new Dictionary<int, EncodedPacketHandler>();
 
-			Register(0x83, 39, false, DeleteCharacter);
 			Register(0x91, 65, false, GameLogin);
 			Register(0x95, 9, true, HuePickerResponse);
 			Register(0x96, 0, true, GameCentralMoniter);
@@ -232,14 +231,6 @@ namespace Server.Network
                     state.Send(new EndVendorSell(vendor));
                 }
 			}
-		}
-
-		public static void DeleteCharacter(NetState state, PacketReader pvSrc)
-		{
-			pvSrc.Seek(30, SeekOrigin.Current);
-			int index = pvSrc.ReadInt32();
-
-			EventSink.InvokeDeleteRequest(new DeleteRequestEventArgs(state, index));
 		}
 
 		public static void GameCentralMoniter(NetState state, PacketReader pvSrc)
