@@ -1726,15 +1726,6 @@ namespace Server.Network
             }
 		}
 
-		public delegate void PlayCharCallback(NetState state, bool val);
-
-		public static PlayCharCallback ThirdPartyAuthCallback = null, ThirdPartyHackedCallback = null;
-
-		private static readonly byte[] m_ThirdPartyAuthKey =
-        {
-            0x9, 0x11, 0x83, (byte)'+', 0x4, 0x17, 0x83, 0x5, 0x24, 0x85, 0x7, 0x17, 0x87, 0x6, 0x19, 0x88
-        };
-
 		private class LoginTimer : Timer
 		{
 			private NetState m_State;
@@ -1768,60 +1759,11 @@ namespace Server.Network
 
 		public static void PlayCharacter(NetState state, PacketReader pvSrc)
 		{
-			pvSrc.ReadInt32(); // 0xEDEDEDED
-
-			string name = pvSrc.ReadString(30);
-
-			pvSrc.Seek(2, SeekOrigin.Current);
+            pvSrc.Seek(36, SeekOrigin.Current); // 4 = 0xEDEDEDED, 30 = Name, 2 = unknown
 			int flags = pvSrc.ReadInt32();
-
-			if (FeatureProtection.DisabledFeatures != 0 && ThirdPartyAuthCallback != null)
-			{
-				bool authOK = false;
-
-				ulong razorFeatures = (((ulong)pvSrc.ReadUInt32()) << 32) | pvSrc.ReadUInt32();
-
-				if (razorFeatures == (ulong)FeatureProtection.DisabledFeatures)
-				{
-					bool match = true;
-					for (int i = 0; match && i < m_ThirdPartyAuthKey.Length; i++)
-					{
-						match = pvSrc.ReadByte() == m_ThirdPartyAuthKey[i];
-					}
-
-					if (match)
-					{
-						authOK = true;
-					}
-				}
-				else
-				{
-					pvSrc.Seek(16, SeekOrigin.Current);
-				}
-
-				ThirdPartyAuthCallback(state, authOK);
-			}
-			else
-			{
-				pvSrc.Seek(24, SeekOrigin.Current);
-			}
-
-			if (ThirdPartyHackedCallback != null)
-			{
-				pvSrc.Seek(-2, SeekOrigin.Current);
-				if (pvSrc.ReadUInt16() == 0xDEAD)
-				{
-					ThirdPartyHackedCallback(state, true);
-				}
-			}
-
-			if (!state.Running)
-			{
-				return;
-			}
-
+            pvSrc.Seek(24, SeekOrigin.Current);
 			int charSlot = pvSrc.ReadInt32();
-			int clientIP = pvSrc.ReadInt32();
+            pvSrc.Seek(4, SeekOrigin.Current); // int clientIP = pvSrc.ReadInt32();
 
 			IAccount a = state.Account;
 
@@ -1832,65 +1774,53 @@ namespace Server.Network
 				Utility.PopColor();
 
 				state.Dispose();
-			}
-			else
-			{
-				Mobile m = a[charSlot];
 
-				// Check if anyone is using this account
-				for (int i = 0; i < a.Length; ++i)
-				{
-					Mobile check = a[i];
+                return;
+            }
 
-					if (check != null && check.Map != Map.Internal && check != m)
-					{
-						Utility.PushColor(ConsoleColor.Red);
-						Console.WriteLine("Login: {0}: Account In Use", state);
-						Utility.PopColor();
+            Mobile m = a[charSlot];
 
-						state.Send(new PopupMessage(PMMessage.CharInWorld));
+            // Check if anyone is using this account
+            for (int i = 0; i < a.Length; ++i)
+            {
+                Mobile check = a[i];
 
-						return;
-					}
-				}
+                if (check != null && check.Map != Map.Internal && check != m)
+                {
+                    state.Send(new PopupMessage(PMMessage.CharInWorld));
 
-				if (m == null)
-				{
-					Utility.PushColor(ConsoleColor.Red);
-					Console.WriteLine("Login: {0}: Invalid Character Selection.", state);
-					Utility.PopColor();
+                    return;
+                }
+            }
 
-					state.Dispose();
-				}
-				else
-				{
-					if (m.NetState != null)
-					{
-						m.NetState.Dispose();
-					}
+            if (m == null)
+            {
+                state.Send(new PopupMessage(PMMessage.CharNoExist));
+                state.Dispose();
 
-					NetState.ProcessDisposedQueue();
+                return;
+            }
 
-					state.Flags = (ClientFlags)flags;
+            m.NetState?.Dispose();
 
-					state.Mobile = m;
-					m.NetState = state;
+            state.Flags = (ClientFlags)flags;
 
-					if (state.Version == null)
-					{
-						state.Send(new ClientVersionReq());
+            state.Mobile = m;
+            m.NetState = state;
 
-						state.BlockAllPackets = true;
+            if (state.Version == null)
+            {
+                state.Send(new ClientVersionReq());
 
-						new LoginTimer(state).Start();
-					}
-					else
-					{
-						DoLogin(state);
-					}
-				}
-			}
-		}
+                state.BlockAllPackets = true;
+
+                new LoginTimer(state).Start();
+            }
+            else
+            {
+                DoLogin(state);
+            }
+        }
 
 		public static void DoLogin(NetState state)
 		{
