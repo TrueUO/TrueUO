@@ -5,9 +5,6 @@ namespace Server.Network
 {
     internal class NetworkUtility
     {
-        public static bool m_ClientVerification = true;
-        public static bool ClientVerification { get => m_ClientVerification; set => m_ClientVerification = value; }
-
         public struct AuthIDPersistence
         {
             public DateTime Age;

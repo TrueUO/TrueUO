@@ -42,8 +42,6 @@ namespace Server
 
 	public delegate void CreateGuildHandler(CreateGuildEventArgs e);
 
-	public delegate void ClientVersionReceivedHandler(ClientVersionReceivedArgs e);
-
 	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
 
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
@@ -53,21 +51,6 @@ namespace Server
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
-
-	public class ClientVersionReceivedArgs : EventArgs
-	{
-		private readonly NetState m_State;
-		private readonly ClientVersion m_Version;
-
-		public NetState State => m_State;
-		public ClientVersion Version => m_Version;
-
-		public ClientVersionReceivedArgs(NetState state, ClientVersion cv)
-		{
-			m_State = state;
-			m_Version = cv;
-		}
-	}
 
 	public class ClientTypeReceivedArgs : EventArgs
 	{
@@ -458,17 +441,11 @@ namespace Server
 		public static event AfterWorldSaveEventHandler AfterWorldSave;
 		public static event FastWalkEventHandler FastWalk;
 		public static event CreateGuildHandler CreateGuild;
-		public static event ClientVersionReceivedHandler ClientVersionReceived;
 		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
-
-		public static void InvokeClientVersionReceived(ClientVersionReceivedArgs e)
-        {
-            ClientVersionReceived?.Invoke(e);
-        }
 
 		public static void InvokeClientTypeReceived(ClientTypeReceivedArgs e)
         {

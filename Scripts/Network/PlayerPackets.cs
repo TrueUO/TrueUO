@@ -1417,13 +1417,12 @@ namespace Server.Network
 
             uint authID = pvSrc.ReadUInt32();
 
-            if (m_AuthIDWindow.TryGetValue(authID, out AuthIDPersistence value))
+            if (m_AuthIDWindow.Remove(authID, out AuthIDPersistence value))
             {
-                m_AuthIDWindow.Remove(authID);
-
                 state.Version = value.Version;
+
             }
-            else if (m_ClientVerification)
+            else 
             {
                 Utility.PushColor(ConsoleColor.Red);
                 Console.WriteLine("Login: {0}: Invalid Client", state);
@@ -2019,7 +2018,7 @@ namespace Server.Network
         {
             CV version = state.Version = new CV(pvSrc.ReadString());
 
-            EventSink.InvokeClientVersionReceived(new ClientVersionReceivedArgs(state, version));
+            ClientVerification.ClientVersionReceived(state, version);
         }
 
         public static void AssistVersion(NetState state, PacketReader pvSrc)

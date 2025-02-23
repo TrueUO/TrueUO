@@ -1311,6 +1311,8 @@ namespace Server.Mobiles
             {
                 Siege.OnLogin(this);
             }
+
+            ResendBuffs();
         }
 
         private bool m_NoDeltaRecursion;
