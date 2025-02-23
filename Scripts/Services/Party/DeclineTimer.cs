@@ -5,33 +5,38 @@ namespace Server.Engines.PartySystem
 {
     public class DeclineTimer : Timer
     {
-        private static readonly Hashtable m_Table = new Hashtable();
-        private readonly Mobile m_Mobile;
-        private readonly Mobile m_Leader;
+        private static readonly Hashtable _Table = new Hashtable();
+        private readonly Mobile _Mobile;
+        private readonly Mobile _Leader;
+
         private DeclineTimer(Mobile m, Mobile leader)
             : base(TimeSpan.FromSeconds(30.0))
         {
-            m_Mobile = m;
-            m_Leader = leader;
+            _Mobile = m;
+            _Leader = leader;
         }
 
         public static void Start(Mobile m, Mobile leader)
         {
-            DeclineTimer t = (DeclineTimer)m_Table[m];
+            DeclineTimer t = (DeclineTimer)_Table[m];
 
             if (t != null)
+            {
                 t.Stop();
+            }
 
-            m_Table[m] = t = new DeclineTimer(m, leader);
+            _Table[m] = t = new DeclineTimer(m, leader);
             t.Start();
         }
 
         protected override void OnTick()
         {
-            m_Table.Remove(m_Mobile);
+            _Table.Remove(_Mobile);
 
-            if (m_Mobile.Party == m_Leader && PartyCommands.Handler != null)
-                PartyCommands.Handler.OnDecline(m_Mobile, m_Leader);
+            if (_Mobile.Party == _Leader && PartyCommands.Handler != null)
+            {
+                PartyCommands.Handler.OnDecline(_Mobile, _Leader);
+            }
         }
     }
 }
