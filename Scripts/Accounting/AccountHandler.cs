@@ -2,6 +2,7 @@ using Server.Accounting;
 using Server.Commands;
 using Server.Engines.Help;
 using Server.Network;
+using Server.Network.Packets;
 using Server.Regions;
 using System;
 using System.Collections.Generic;
@@ -395,8 +396,8 @@ namespace Server.Misc
             }
             else if (index < 0 || index >= acct.Length)
             {
-                state.Send(new DeleteResult(DeleteResultType.BadRequest));
-                state.Send(new CharacterListUpdate(acct));
+                state.Send(new CharacterDeleteResultPacket(DeleteResultType.BadRequest));
+                state.Send(new CharacterListUpdatePacket(acct));
             }
             else
             {
@@ -404,23 +405,23 @@ namespace Server.Misc
 
                 if (m == null)
                 {
-                    state.Send(new DeleteResult(DeleteResultType.CharNotExist));
-                    state.Send(new CharacterListUpdate(acct));
+                    state.Send(new CharacterDeleteResultPacket(DeleteResultType.CharNotExist));
+                    state.Send(new CharacterListUpdatePacket(acct));
                 }
                 else if (m.NetState != null)
                 {
-                    state.Send(new DeleteResult(DeleteResultType.CharBeingPlayed));
-                    state.Send(new CharacterListUpdate(acct));
+                    state.Send(new CharacterDeleteResultPacket(DeleteResultType.CharBeingPlayed));
+                    state.Send(new CharacterListUpdatePacket(acct));
                 }
                 else if (RestrictDeletion && DateTime.UtcNow < m.CreationTime + DeleteDelay)
                 {
-                    state.Send(new DeleteResult(DeleteResultType.CharTooYoung));
-                    state.Send(new CharacterListUpdate(acct));
+                    state.Send(new CharacterDeleteResultPacket(DeleteResultType.CharTooYoung));
+                    state.Send(new CharacterListUpdatePacket(acct));
                 }
                 else if (m.IsPlayer() && Region.Find(m.LogoutLocation, m.LogoutMap).GetRegion(typeof(Jail)) != null)	//Don't need to check current location, if netstate is null, they're logged out
                 {
-                    state.Send(new DeleteResult(DeleteResultType.BadRequest));
-                    state.Send(new CharacterListUpdate(acct));
+                    state.Send(new CharacterDeleteResultPacket(DeleteResultType.BadRequest));
+                    state.Send(new CharacterListUpdatePacket(acct));
                 }
                 else
                 {
@@ -431,7 +432,7 @@ namespace Server.Misc
                     acct.Comments.Add(new AccountComment("System", $"Character #{index + 1} {m} deleted by {state}"));
 
                     m.Delete();
-                    state.Send(new CharacterListUpdate(acct));
+                    state.Send(new CharacterListUpdatePacket(acct));
                 }
             }
         }

@@ -1461,7 +1461,7 @@ namespace Server.Network
 
                 state.Send(SupportedFeatures.Instantiate(state));
 
-                state.Send(new CharacterList(state.Account, state.CityInfo, state.IsEnhancedClient));
+                state.Send(new CharacterListPacket(state.Account, state.CityInfo, state.IsEnhancedClient));
             }
             else
             {
