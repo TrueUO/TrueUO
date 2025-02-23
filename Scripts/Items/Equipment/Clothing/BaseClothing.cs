@@ -1147,17 +1147,6 @@ namespace Server.Items
             return drop;
         }
 
-        public virtual void AddEquipInfoAttributes(Mobile from, List<EquipInfoAttribute> attrs)
-        {
-            if (LootType == LootType.Blessed)
-                    attrs.Add(new EquipInfoAttribute(1038021)); // blessed
-            else if (LootType == LootType.Cursed)
-                attrs.Add(new EquipInfoAttribute(1049643)); // cursed
-
-            if (m_Quality == ItemQuality.Exceptional)
-                attrs.Add(new EquipInfoAttribute(1018305 - (int)m_Quality));
-        }
-
         #region Serialization
         private static void SetSaveFlag(ref SaveFlag flags, SaveFlag toSet, bool setIf)
         {
