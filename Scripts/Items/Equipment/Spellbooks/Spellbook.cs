@@ -1,14 +1,13 @@
-#region References
+using System;
+using System.Collections.Generic;
 using Server.Commands;
 using Server.Engines.Craft;
 using Server.Multis;
 using Server.Network;
+using Server.Network.Packets;
 using Server.Spells;
 using Server.Spells.Mysticism;
 using Server.Targeting;
-using System;
-using System.Collections.Generic;
-#endregion
 
 namespace Server.Items
 {
@@ -732,9 +731,9 @@ namespace Server.Items
                 to.Send(new EquipUpdate(this));
             }
 
-            to.Send(new DisplaySpellbook(this));
+            to.Send(new DisplaySpellbookPacket(this));
 
-            to.Send(new SpellbookContent(this, ItemID, BookOffset + 1, m_Content));
+            to.Send(new SpellbookContentPacket(this, ItemID, BookOffset + 1, m_Content));
         }
 
         public override void AddNameProperties(ObjectPropertyList list)

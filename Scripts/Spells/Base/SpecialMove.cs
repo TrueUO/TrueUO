@@ -1,8 +1,8 @@
-using Server.Items;
-using Server.Network;
-using Server.Spells.SkillMasteries;
 using System;
 using System.Collections.Generic;
+using Server.Items;
+using Server.Network.Packets;
+using Server.Spells.SkillMasteries;
 
 namespace Server.Spells
 {
@@ -190,7 +190,7 @@ namespace Server.Spells
                 int moveID = kvp.Key;
 
                 if (moveID != -1)
-                    m.Send(new ToggleSpecialAbility(moveID + 1, false));
+                    m.Send(new ToggleSpecialAbilityPacket(moveID + 1, false));
             }
         }
 
@@ -239,7 +239,7 @@ namespace Server.Spells
                 int moveID = SpellRegistry.GetRegistryNumber(move);
 
                 if (moveID > 0)
-                    m.Send(new ToggleSpecialAbility(moveID + 1, true));
+                    m.Send(new ToggleSpecialAbilityPacket(moveID + 1, true));
 
                 move.SendAbilityMessage(m);
 
@@ -261,7 +261,7 @@ namespace Server.Spells
                 int moveID = SpellRegistry.GetRegistryNumber(move);
 
                 if (moveID > 0)
-                    m.Send(new ToggleSpecialAbility(moveID + 1, false));
+                    m.Send(new ToggleSpecialAbilityPacket(moveID + 1, false));
             }
 
             m_Table.Remove(m);

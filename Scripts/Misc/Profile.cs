@@ -1,6 +1,6 @@
-using Server.Accounting;
-using Server.Network;
 using System;
+using Server.Accounting;
+using Server.Network.Packets;
 
 namespace Server.Misc
 {
@@ -66,7 +66,7 @@ namespace Server.Misc
                 body = "";
             }
 
-            beholder.Send(new DisplayProfile(beholder != beheld || !beheld.ProfileLocked, beheld, header, body, footer));
+            beholder.Send(new DisplayProfilePacket(beholder != beheld || !beheld.ProfileLocked, beheld, header, body, footer));
         }
 
         public static bool Format(double value, string format, out string op)

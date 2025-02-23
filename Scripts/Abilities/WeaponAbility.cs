@@ -1,9 +1,10 @@
-using Server.Mobiles;
-using Server.Network;
-using Server.Spells;
-using Server.Spells.SkillMasteries;
 using System;
 using System.Collections;
+using Server.Mobiles;
+using Server.Network;
+using Server.Network.Packets;
+using Server.Spells;
+using Server.Spells.SkillMasteries;
 
 namespace Server.Items
 {
@@ -402,7 +403,7 @@ namespace Server.Items
             m_Table.Remove(m);
 
             if (m.NetState != null)
-                m.Send(ClearWeaponAbility.Instance);
+                m.Send(ClearWeaponAbilityPacket.Instance);
         }
 
         public static void SetWeaponAbility(Mobile m, int index)

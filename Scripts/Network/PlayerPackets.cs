@@ -220,7 +220,7 @@ namespace Server.Network
 
                 if (check != null && check.Map != Map.Internal)
                 {
-                    state.Send(new PopupMessage(PMMessage.CharInWorld));
+                    state.Send(new PopupMessagePacket(PMMessage.CharInWorld));
 
                     return;
                 }
@@ -255,7 +255,7 @@ namespace Server.Network
 
             if (state.Version == null)
             {
-                state.Send(new ClientVersionReq());
+                state.Send(new ClientVersionReqPacket());
                 state.BlockAllPackets = true;
             }
 
@@ -363,7 +363,7 @@ namespace Server.Network
 					if (check != null && check.Map != Map.Internal)
 					{
 						Console.WriteLine("Login: {0}: Account in use", state);
-						state.Send(new PopupMessage(PMMessage.CharInWorld));
+						state.Send(new PopupMessagePacket(PMMessage.CharInWorld));
 						return;
 					}
 				}
@@ -389,7 +389,7 @@ namespace Server.Network
 
 				if (state.Version == null)
 				{
-					state.Send(new ClientVersionReq());
+					state.Send(new ClientVersionReqPacket());
 
 					state.BlockAllPackets = true;
 				}
@@ -424,7 +424,7 @@ namespace Server.Network
         {
             Mobile m = state.Mobile;
 
-            state.Send(new LoginConfirm(m));
+            state.Send(new LoginConfirmPacket(m));
 
             if (m.Map != null)
             {
@@ -445,7 +445,7 @@ namespace Server.Network
 
             m.CheckLightLevels(true);
 
-            state.Send(LoginComplete.Instance);
+            state.Send(LoginCompletePacket.Instance);
 
             state.Send(MobileIncoming.Create(state, m, m));
 
@@ -455,7 +455,7 @@ namespace Server.Network
 
             state.Send(SeasonChange.Instantiate(m.GetSeason(), true));
 
-            state.Send(new CurrentTime());
+            state.Send(new CurrentTimePacket());
 
             state.Send(new MapChange(m));
 
@@ -481,7 +481,7 @@ namespace Server.Network
 
             if ((state.Sequence == 0 && seq != 0) || !m.Move(dir))
             {
-                state.Send(new MovementRej(seq, m));
+                state.Send(new MovementRejPacket(seq, m));
                 state.Sequence = 0;
 
                 m.ClearFastwalkStack();
@@ -526,7 +526,7 @@ namespace Server.Network
         {
             if (VerifyGC(state))
             {
-                state.Send(new GodModeReply(pvSrc.ReadBoolean()));
+                state.Send(new GodModeReplyPacket(pvSrc.ReadBoolean()));
             }
         }
 
@@ -1072,7 +1072,7 @@ namespace Server.Network
 
             if (a == null || charSlot < 0 || charSlot >= a.Length)
             {
-                state.Send(new PopupMessage(PMMessage.CharNoExist));
+                state.Send(new PopupMessagePacket(PMMessage.CharNoExist));
                 state.Dispose();
 
                 return;
@@ -1087,7 +1087,7 @@ namespace Server.Network
 
                 if (check != null && check.Map != Map.Internal && check != m)
                 {
-                    state.Send(new PopupMessage(PMMessage.CharInWorld));
+                    state.Send(new PopupMessagePacket(PMMessage.CharInWorld));
 
                     return;
                 }
@@ -1095,7 +1095,7 @@ namespace Server.Network
 
             if (m == null)
             {
-                state.Send(new PopupMessage(PMMessage.CharNoExist));
+                state.Send(new PopupMessagePacket(PMMessage.CharNoExist));
                 state.Dispose();
 
                 return;
@@ -1110,7 +1110,7 @@ namespace Server.Network
 
             if (state.Version == null)
             {
-                state.Send(new ClientVersionReq());
+                state.Send(new ClientVersionReqPacket());
 
                 state.BlockAllPackets = true;
 
@@ -1345,7 +1345,7 @@ namespace Server.Network
 
         public static void PingReq(NetState state, PacketReader pvSrc)
         {
-            state.Send(PingAck.Instantiate(pvSrc.ReadByte()));
+            state.Send(PingAckPacket.Instantiate(pvSrc.ReadByte()));
         }
 
         public static void RenameRequest(NetState state, PacketReader pvSrc)
@@ -1526,7 +1526,7 @@ namespace Server.Network
 
             if (m != null && Utility.InUpdateRange(state.Mobile, m) && state.Mobile.CanSee(m))
             {
-                state.Send(new MobileName(m));
+                state.Send(new MobileNamePacket(m));
             }
         }
 
@@ -1637,7 +1637,7 @@ namespace Server.Network
                 state.AuthID = GenerateAuthID(state);
 
                 state.SentFirstPacket = false;
-                state.Send(new PlayServerAck(info[index], state.AuthID));
+                state.Send(new PlayServerAckPacket(info[index], state.AuthID));
             }
         }
 
@@ -2120,7 +2120,7 @@ namespace Server.Network
 
             state.UpdateRange = range;
 
-            state.Send(ChangeUpdateRange.Instantiate(state.UpdateRange));
+            state.Send(ChangeUpdateRangePacket.Instantiate(state.UpdateRange));
 
             if (state.Mobile != null)
             {
@@ -2141,7 +2141,7 @@ namespace Server.Network
             int unk1 = pvSrc.ReadByte();
             int unk2 = pvSrc.ReadInt32();
 
-            state.Send(new UTripTimeResponse(unk1));
+            state.Send(new UTripTimeResponsePacket(unk1));
         }
 
         public static void AccountLogin(NetState state, PacketReader pvSrc)
@@ -2179,7 +2179,7 @@ namespace Server.Network
             if (e.Rejected)
             {
                 state.Account = null;
-                state.Send(new AccountLoginRej(ALRReason.BadComm));
+                state.Send(new AccountLoginRejPacket(ALRReason.BadComm));
                 state.Dispose();
             }
             else
@@ -2188,12 +2188,12 @@ namespace Server.Network
 
                 state.ServerInfo = info;
 
-                state.Send(new AccountLoginAck(info));
+                state.Send(new AccountLoginAckPacket(info));
             }
         }
         private static void AccountLogin_ReplyRej(NetState state, ALRReason reason)
         {
-            state.Send(new AccountLoginRej(reason));
+            state.Send(new AccountLoginRejPacket(reason));
             state.Dispose();
         }
 
@@ -2203,7 +2203,7 @@ namespace Server.Network
 
         public static void LogoutReq(NetState state, PacketReader pvSrc)
         {
-            state.Send(new LogoutAck());
+            state.Send(new LogoutAckPacket());
         }
 
         public static void BatchQueryProperties(NetState state, PacketReader pvSrc)

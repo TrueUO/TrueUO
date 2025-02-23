@@ -1,5 +1,5 @@
-using Server.Network;
 using System;
+using Server.Network.Packets;
 
 namespace Server.Spells.Bushido
 {
@@ -25,7 +25,7 @@ namespace Server.Spells.Bushido
             int spellID = SpellRegistry.GetRegistryNumber(type);
 
             if (spellID > 0)
-                caster.Send(new ToggleSpecialAbility(spellID + 1, false));
+                caster.Send(new ToggleSpecialAbilityPacket(spellID + 1, false));
         }
 
         public override bool CheckCast()
@@ -100,7 +100,7 @@ namespace Server.Spells.Bushido
             int spellID = SpellRegistry.GetRegistryNumber(this);
 
             if (spellID > 0)
-                caster.Send(new ToggleSpecialAbility(spellID + 1, true));
+                caster.Send(new ToggleSpecialAbilityPacket(spellID + 1, true));
         }
     }
 }
