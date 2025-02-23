@@ -1417,13 +1417,12 @@ namespace Server.Network
 
             uint authID = pvSrc.ReadUInt32();
 
-            if (m_AuthIDWindow.TryGetValue(authID, out AuthIDPersistence value))
+            if (m_AuthIDWindow.Remove(authID, out AuthIDPersistence value))
             {
-                m_AuthIDWindow.Remove(authID);
-
                 state.Version = value.Version;
+
             }
-            else if (m_ClientVerification)
+            else 
             {
                 Utility.PushColor(ConsoleColor.Red);
                 Console.WriteLine("Login: {0}: Invalid Client", state);
@@ -1456,18 +1455,13 @@ namespace Server.Network
             string username = pvSrc.ReadString(30);
             string password = pvSrc.ReadString(30);
 
-            GameLoginEventArgs e = new GameLoginEventArgs(state, username, password);
-
-            EventSink.InvokeGameLogin(e);
-
-            if (e.Accepted)
+            if (AccountHandler.TryGameLogin(state, username, password))
             {
-                state.CityInfo = e.CityInfo;
                 state.CompressionEnabled = true;
 
                 state.Send(SupportedFeatures.Instantiate(state));
 
-                state.Send(new CharacterList(state.Account, state.CityInfo, state.IsEnhancedClient));
+                state.Send(new CharacterListPacket(state.Account, state.CityInfo, state.IsEnhancedClient));
             }
             else
             {
@@ -2019,7 +2013,7 @@ namespace Server.Network
         {
             CV version = state.Version = new CV(pvSrc.ReadString());
 
-            EventSink.InvokeClientVersionReceived(new ClientVersionReceivedArgs(state, version));
+            ClientVerification.ClientVersionReceived(state, version);
         }
 
         public static void AssistVersion(NetState state, PacketReader pvSrc)
@@ -2283,7 +2277,7 @@ namespace Server.Network
             pvSrc.ReadUInt16(); // 0x1
             pvSrc.ReadUInt32(); // 0x2 for KR, 0x3 for EC
 
-            EventSink.InvokeClientTypeReceived(new ClientTypeReceivedArgs(state));
+            ClientVerification.ClientTypeReceived(state);
         }
 
         public static void DeleteCharacter(NetState state, PacketReader pvSrc)

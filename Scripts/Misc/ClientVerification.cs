@@ -39,9 +39,6 @@ namespace Server.Misc
 
         public static void Initialize()
         {
-            EventSink.ClientVersionReceived += EventSink_ClientVersionReceived;
-            EventSink.ClientTypeReceived += EventSink_ClientTypeReceived;
-
             m_RequiredEC = new ClientVersion(67, 0, 59, 0, ClientType.SA);
 
             if (m_DetectClientRequirement)
@@ -74,11 +71,9 @@ namespace Server.Misc
             }
         }
 
-        private static void EventSink_ClientVersionReceived(ClientVersionReceivedArgs e)
+        public static void ClientVersionReceived(NetState state, ClientVersion version)
         {
             string kickMessage = null;
-            NetState state = e.State;
-            ClientVersion version = e.Version;
 
             if (state.Mobile != null && state.Mobile.IsStaff())
             {
@@ -155,9 +150,8 @@ namespace Server.Misc
             }
         }
 
-        private static void EventSink_ClientTypeReceived(ClientTypeReceivedArgs e)
+        public static void ClientTypeReceived(NetState state)
         {
-            NetState state = e.State;
             ClientVersion version = state.Version;
 
             if (state.IsEnhancedClient)
