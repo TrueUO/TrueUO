@@ -1,7 +1,5 @@
 using Server.Engines.Craft;
-using Server.Network;
 using System;
-using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -275,32 +273,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 3:
-                    {
-                        ShipwreckName = reader.ReadString();
-                        goto case 1;
-                    }
-                case 2: 
-                case 1:
-                    {
-                        IsShipwreckedItem = reader.ReadBool();
-                        break;
-                    }
-            }
-        }
-
-        public override void AddEquipInfoAttributes(Mobile from, List<EquipInfoAttribute> attrs)
-        {
-            base.AddEquipInfoAttributes(from, attrs);
-
-            if (IsShipwreckedItem)
-            {
-                attrs.Add(new EquipInfoAttribute(1041645));	// recovered from a shipwreck
-            }                
+            ShipwreckName = reader.ReadString();
+            IsShipwreckedItem = reader.ReadBool();
         }
 
         public override void AddNameProperties(ObjectPropertyList list)

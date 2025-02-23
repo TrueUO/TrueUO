@@ -11,9 +11,6 @@ using Server.Diagnostics;
 using Server.Gumps;
 using Server.HuePickers;
 using Server.Items;
-using Server.Menus;
-using Server.Menus.ItemLists;
-using Server.Menus.Questions;
 using Server.Prompts;
 using Server.Targeting;
 
@@ -234,22 +231,6 @@ namespace Server.Network
 		}
 	}
 
-	public class EquipInfoAttribute
-	{
-		public int Number { get; }
-		
-		public int Charges { get; }
-
-		public EquipInfoAttribute(int number)
-			: this(number, -1)
-		{ }
-
-		public EquipInfoAttribute(int number, int charges)
-		{
-			Number = number;
-			Charges = charges;
-		}
-	}
 
 	public sealed class ChangeCombatant : Packet
 	{
@@ -343,107 +324,6 @@ namespace Server.Network
 			m_Stream.Write((byte)val1);
 			m_Stream.Write(serial);
 			m_Stream.Write((byte)val2);
-		}
-	}
-
-	public sealed class DisplayItemListMenu : Packet
-	{
-		public DisplayItemListMenu(ItemListMenu menu)
-			: base(0x7C)
-		{
-			EnsureCapacity(256);
-
-			m_Stream.Write(((IMenu)menu).Serial);
-			m_Stream.Write((short)0);
-
-			string question = menu.Question;
-
-			if (question == null)
-			{
-				m_Stream.Write((byte)0);
-			}
-			else
-			{
-				int questionLength = question.Length;
-				m_Stream.Write((byte)questionLength);
-				m_Stream.WriteAsciiFixed(question, questionLength);
-			}
-
-			ItemListEntry[] entries = menu.Entries;
-
-			int entriesLength = (byte)entries.Length;
-
-			m_Stream.Write((byte)entriesLength);
-
-			for (int i = 0; i < entriesLength; ++i)
-			{
-				ItemListEntry e = entries[i];
-
-				m_Stream.Write((ushort)e.ItemID);
-				m_Stream.Write((short)e.Hue);
-
-				string name = e.Name;
-
-				if (name == null)
-				{
-					m_Stream.Write((byte)0);
-				}
-				else
-				{
-					int nameLength = name.Length;
-					m_Stream.Write((byte)nameLength);
-					m_Stream.WriteAsciiFixed(name, nameLength);
-				}
-			}
-		}
-	}
-
-	public sealed class DisplayQuestionMenu : Packet
-	{
-		public DisplayQuestionMenu(QuestionMenu menu)
-			: base(0x7C)
-		{
-			EnsureCapacity(256);
-
-			m_Stream.Write(((IMenu)menu).Serial);
-			m_Stream.Write((short)0);
-
-			string question = menu.Question;
-
-			if (question == null)
-			{
-				m_Stream.Write((byte)0);
-			}
-			else
-			{
-				int questionLength = question.Length;
-				m_Stream.Write((byte)questionLength);
-				m_Stream.WriteAsciiFixed(question, questionLength);
-			}
-
-			string[] answers = menu.Answers;
-
-			int answersLength = (byte)answers.Length;
-
-			m_Stream.Write((byte)answersLength);
-
-			for (int i = 0; i < answersLength; ++i)
-			{
-				m_Stream.Write(0);
-
-				string answer = answers[i];
-
-				if (answer == null)
-				{
-					m_Stream.Write((byte)0);
-				}
-				else
-				{
-					int answerLength = answer.Length;
-					m_Stream.Write((byte)answerLength);
-					m_Stream.WriteAsciiFixed(answer, answerLength);
-				}
-			}
 		}
 	}
 
@@ -996,72 +876,6 @@ namespace Server.Network
 				explodes,
 				hue,
 				renderMode)
-		{ }
-	}
-
-	public enum ScreenEffectType
-	{
-		FadeOut = 0x00,
-		FadeIn = 0x01,
-		LightFlash = 0x02,
-		FadeInOut = 0x03,
-		DarkFlash = 0x04
-	}
-
-	public class ScreenEffect : Packet
-	{
-		public ScreenEffect(ScreenEffectType type)
-			: base(0x70, 28)
-		{
-			m_Stream.Write((byte)0x04);
-			m_Stream.Fill(8);
-			m_Stream.Write((short)type);
-			m_Stream.Fill(16);
-		}
-	}
-
-	public sealed class ScreenFadeOut : ScreenEffect
-	{
-		public static readonly Packet Instance = SetStatic(new ScreenFadeOut());
-
-		public ScreenFadeOut()
-			: base(ScreenEffectType.FadeOut)
-		{ }
-	}
-
-	public sealed class ScreenFadeIn : ScreenEffect
-	{
-		public static readonly Packet Instance = SetStatic(new ScreenFadeIn());
-
-		public ScreenFadeIn()
-			: base(ScreenEffectType.FadeIn)
-		{ }
-	}
-
-	public sealed class ScreenFadeInOut : ScreenEffect
-	{
-		public static readonly Packet Instance = SetStatic(new ScreenFadeInOut());
-
-		public ScreenFadeInOut()
-			: base(ScreenEffectType.FadeInOut)
-		{ }
-	}
-
-	public sealed class ScreenLightFlash : ScreenEffect
-	{
-		public static readonly Packet Instance = SetStatic(new ScreenLightFlash());
-
-		public ScreenLightFlash()
-			: base(ScreenEffectType.LightFlash)
-		{ }
-	}
-
-	public sealed class ScreenDarkFlash : ScreenEffect
-	{
-		public static readonly Packet Instance = SetStatic(new ScreenDarkFlash());
-
-		public ScreenDarkFlash()
-			: base(ScreenEffectType.DarkFlash)
 		{ }
 	}
 

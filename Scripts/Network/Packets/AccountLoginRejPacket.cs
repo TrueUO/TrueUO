@@ -1,5 +1,3 @@
-using Server.Misc;
-
 namespace Server.Network.Packets
 {
     public sealed class AccountLoginRejPacket : Packet

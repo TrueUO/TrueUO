@@ -4,6 +4,7 @@ using Server.Engines.CannedEvil;
 using Server.Items;
 using Server.Misc;
 using Server.Network;
+using Server.Network.Packets;
 
 namespace Server.Mobiles
 {
