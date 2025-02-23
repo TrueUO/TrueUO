@@ -1,7 +1,8 @@
-using Server.Items;
-using Server.Network;
 using System;
 using System.Collections.Generic;
+using Server.Items;
+using Server.Network;
+using Server.Network.Packets;
 
 namespace Server.Misc
 {
@@ -328,7 +329,7 @@ namespace Server.Misc
                         continue;
 
                     if (weatherPacket == null)
-                        weatherPacket = Packet.Acquire(new Network.Weather(type, density, temperature));
+                        weatherPacket = Packet.Acquire(new WeatherPacket(type, density, temperature));
 
                     ns.Send(weatherPacket);
                 }

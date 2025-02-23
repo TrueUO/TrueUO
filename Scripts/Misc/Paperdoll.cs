@@ -1,4 +1,4 @@
-using Server.Network;
+using Server.Network.Packets;
 
 namespace Server.Misc
 {
@@ -14,7 +14,7 @@ namespace Server.Misc
             Mobile beholder = e.Beholder;
             Mobile beheld = e.Beheld;
 
-            beholder.Send(new DisplayPaperdoll(beheld, Titles.ComputeTitle(beholder, beheld), beheld.AllowEquipFrom(beholder)));
+            beholder.Send(new DisplayPaperdollPacket(beheld, Titles.ComputeTitle(beholder, beheld), beheld.AllowEquipFrom(beholder)));
 
             for (var index = 0; index < beheld.Items.Count; index++)
             {

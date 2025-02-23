@@ -19,15 +19,6 @@ using Server.Targeting;
 
 namespace Server.Network
 {
-	public enum PMMessage : byte
-	{
-		CharNoExist = 1,
-		CharExists = 2,
-		CharInWorld = 5,
-		LoginSyncError = 6,
-		IdleWarning = 7
-	}
-
 	public enum LRReason : byte
 	{
 		CannotLift = 0,
@@ -37,6 +28,16 @@ namespace Server.Network
 		AreHolding = 4,
 		Inspecific = 5
 	}
+
+    public enum ALRReason : byte
+    {
+        Invalid = 0x00,
+        InUse = 0x01,
+        Blocked = 0x02,
+        BadPass = 0x03,
+        Idle = 0xFE,
+        BadComm = 0xFF
+    }
 
 	public sealed class DamagePacket : Packet
 	{
@@ -250,31 +251,6 @@ namespace Server.Network
 		}
 	}
 
-    public sealed class ChangeUpdateRange : Packet
-	{
-		private static readonly ChangeUpdateRange[] m_Cache = new ChangeUpdateRange[0x100];
-
-		public static ChangeUpdateRange Instantiate(int range)
-		{
-			byte idx = (byte)range;
-			ChangeUpdateRange p = m_Cache[idx];
-
-			if (p == null)
-			{
-				m_Cache[idx] = p = new ChangeUpdateRange(range);
-				p.SetStatic();
-			}
-
-			return p;
-		}
-
-		public ChangeUpdateRange(int range)
-			: base(0xC8, 2)
-		{
-			m_Stream.Write((byte)range);
-		}
-	}
-
 	public sealed class ChangeCombatant : Packet
 	{
 		public ChangeCombatant(IEntity combatant)
@@ -292,16 +268,6 @@ namespace Server.Network
 			m_Stream.Write(huePicker.Serial);
 			m_Stream.Write((short)0);
 			m_Stream.Write((short)huePicker.ItemID);
-		}
-	}
-
-	public sealed class UTripTimeResponse : Packet
-	{
-		public UTripTimeResponse(int unk)
-			: base(0xCA, 6)
-		{
-			m_Stream.Write((byte)unk);
-			m_Stream.Write(Environment.TickCount);
 		}
 	}
 
@@ -377,20 +343,6 @@ namespace Server.Network
 			m_Stream.Write((byte)val1);
 			m_Stream.Write(serial);
 			m_Stream.Write((byte)val2);
-		}
-	}
-
-	public sealed class ToggleSpecialAbility : Packet
-	{
-		public ToggleSpecialAbility(int abilityID, bool active)
-			: base(0xBF)
-		{
-			EnsureCapacity(7);
-
-			m_Stream.Write((short)0x25);
-
-			m_Stream.Write((short)abilityID);
-			m_Stream.Write(active);
 		}
 	}
 
@@ -495,45 +447,6 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class GlobalLightLevel : Packet
-	{
-		private static readonly GlobalLightLevel[] m_Cache = new GlobalLightLevel[0x100];
-
-		public static GlobalLightLevel Instantiate(int level)
-		{
-			byte lvl = (byte)level;
-			GlobalLightLevel p = m_Cache[lvl];
-
-			if (p == null)
-			{
-				m_Cache[lvl] = p = new GlobalLightLevel(level);
-				p.SetStatic();
-			}
-
-			return p;
-		}
-
-		public GlobalLightLevel(int level)
-			: base(0x4F, 2)
-		{
-			m_Stream.Write((byte)level);
-		}
-	}
-
-	public sealed class PersonalLightLevel : Packet
-	{
-		public PersonalLightLevel(Mobile m)
-			: this(m, m.LightLevel)
-		{ }
-
-		public PersonalLightLevel(IEntity m, int level)
-			: base(0x4E, 6)
-		{
-			m_Stream.Write(m.Serial);
-			m_Stream.Write((byte)level);
-		}
-	}
-
     [Flags]
 	public enum CMEFlags
 	{
@@ -599,35 +512,6 @@ namespace Server.Network
 
 				m_Stream.Write((short)flags);
 			}
-		}
-	}
-
-	public sealed class DisplayProfile : Packet
-	{
-		public DisplayProfile(bool realSerial, IEntity m, string header, string body, string footer)
-			: base(0xB8)
-		{
-			if (header == null)
-			{
-				header = "";
-			}
-
-			if (body == null)
-			{
-				body = "";
-			}
-
-			if (footer == null)
-			{
-				footer = "";
-			}
-
-			EnsureCapacity(12 + header.Length + (footer.Length * 2) + (body.Length * 2));
-
-			m_Stream.Write(realSerial ? m.Serial : Serial.Zero);
-			m_Stream.WriteAsciiNull(header);
-			m_Stream.WriteBigUniNull(footer);
-			m_Stream.WriteBigUniNull(body);
 		}
 	}
 
@@ -742,38 +626,6 @@ namespace Server.Network
 			: base(0x27, 2)
 		{
 			m_Stream.Write((byte)reason);
-		}
-	}
-
-	public sealed class LogoutAck : Packet
-	{
-		public LogoutAck()
-			: base(0xD1, 2)
-		{
-			m_Stream.Write((byte)0x01);
-		}
-	}
-
-	public sealed class Weather : Packet
-	{
-		public Weather(int v1, int v2, int v3)
-			: base(0x65, 4)
-		{
-			m_Stream.Write((byte)v1);
-			m_Stream.Write((byte)v2);
-			m_Stream.Write((byte)v3);
-		}
-	}
-
-    /// <summary>
-	///     Asks the client for it's version
-	/// </summary>
-	public sealed class ClientVersionReq : Packet
-	{
-		public ClientVersionReq()
-			: base(0xBD)
-		{
-			EnsureCapacity(3);
 		}
 	}
 
@@ -1280,38 +1132,6 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class DisplaySpellbook : Packet
-	{
-		public DisplaySpellbook(IEntity book)
-			: base(0x24, 9)
-		{
-			m_Stream.Write(book.Serial);
-			m_Stream.Write((short)-1);
-			m_Stream.Write((short)0x7D);
-		}
-	}
-
-	public sealed class SpellbookContent : Packet
-	{
-		public SpellbookContent(IEntity item, int graphic, int offset, ulong content)
-			: base(0xBF)
-		{
-			EnsureCapacity(23);
-
-			m_Stream.Write((short)0x1B);
-			m_Stream.Write((short)0x01);
-
-			m_Stream.Write(item.Serial);
-			m_Stream.Write((short)graphic);
-			m_Stream.Write((short)offset);
-
-			for (int i = 0; i < 8; ++i)
-			{
-				m_Stream.Write((byte)(content >> (i * 8)));
-			}
-		}
-	}
-
 	public sealed class ContainerDisplay : Packet
 	{
 		public ContainerDisplay(Container c)
@@ -1420,17 +1240,6 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class Swing : Packet
-	{
-		public Swing(int flag, IEntity attacker, IEntity defender)
-			: base(0x2F, 10)
-		{
-			m_Stream.Write((byte)flag);
-			m_Stream.Write(attacker.Serial);
-			m_Stream.Write(defender.Serial);
-		}
-	}
-
     public sealed class RemoveItem : Packet
 	{
 		public RemoveItem(IEntity item)
@@ -1526,11 +1335,6 @@ namespace Server.Network
 			m_Stream.Write((ushort)skill.BaseFixedPoint);
 			m_Stream.Write((byte)skill.Lock);
 			m_Stream.Write((ushort)skill.CapFixedPoint);
-			/*m_Stream.Write( (short) skill.Info.SkillID );
-	m_Stream.Write( (short) (skill.Value * 10.0) );
-	m_Stream.Write( (short) (skill.Base * 10.0) );
-	m_Stream.Write( (byte) skill.Lock );
-	m_Stream.Write( (short) skill.CapFixedPoint );*/
 		}
 	}
 
@@ -1883,38 +1687,6 @@ namespace Server.Network
 		}
 	}
 
-    public sealed class DisplayPaperdoll : Packet
-	{
-		public DisplayPaperdoll(Mobile m, string text, bool canLift)
-			: base(0x88, 66)
-		{
-			byte flags = 0x00;
-
-			if (m.Warmode)
-			{
-				flags |= 0x01;
-			}
-
-			if (canLift)
-			{
-				flags |= 0x02;
-			}
-
-			m_Stream.Write(m.Serial);
-			m_Stream.WriteAsciiFixed(text, 60);
-			m_Stream.Write(flags);
-		}
-	}
-
-	public sealed class PopupMessage : Packet
-	{
-		public PopupMessage(PMMessage msg)
-			: base(0x53, 2)
-		{
-			m_Stream.Write((byte)msg);
-		}
-	}
-
 	public sealed class PlaySound : Packet
 	{
 		public PlaySound(int soundID, IPoint3D target)
@@ -1966,19 +1738,6 @@ namespace Server.Network
 			: base(0x6D, 3)
 		{
 			m_Stream.Write((short)name);
-		}
-	}
-
-    public sealed class CurrentTime : Packet
-	{
-		public CurrentTime()
-			: base(0x5B, 4)
-		{
-			DateTime now = DateTime.UtcNow;
-
-			m_Stream.Write((byte)now.Hour);
-			m_Stream.Write((byte)now.Minute);
-			m_Stream.Write((byte)now.Second);
 		}
 	}
 
@@ -2201,26 +1960,6 @@ namespace Server.Network
 			AttributeNormalizer.Write(m_Stream, m.Hits, m.HitsMax);
 			AttributeNormalizer.Write(m_Stream, m.Mana, m.ManaMax);
 			AttributeNormalizer.Write(m_Stream, m.Stam, m.StamMax);
-		}
-	}
-
-    // unsure of proper format, client crashes
-	public sealed class MobileName : Packet
-	{
-		public MobileName(IEntity m)
-			: base(0x98)
-		{
-			string name = m.Name;
-
-			if (name == null)
-			{
-				name = "";
-			}
-
-			EnsureCapacity(37);
-
-			m_Stream.Write(m.Serial);
-			m_Stream.WriteAsciiFixed(name, 30);
 		}
 	}
 
@@ -2731,43 +2470,6 @@ namespace Server.Network
 		}
 	}
 
-	public sealed class PingAck : Packet
-	{
-		private static readonly PingAck[] m_Cache = new PingAck[0x100];
-
-		public static PingAck Instantiate(byte ping)
-		{
-			PingAck p = m_Cache[ping];
-
-			if (p == null)
-			{
-				m_Cache[ping] = p = new PingAck(ping);
-				p.SetStatic();
-			}
-
-			return p;
-		}
-
-        private PingAck(byte ping)
-			: base(0x73, 2)
-		{
-			m_Stream.Write(ping);
-		}
-	}
-
-	public sealed class MovementRej : Packet
-	{
-		public MovementRej(int seq, IEntity m)
-			: base(0x21, 8)
-		{
-			m_Stream.Write((byte)seq);
-			m_Stream.Write((short)m.X);
-			m_Stream.Write((short)m.Y);
-			m_Stream.Write((byte)m.Direction);
-			m_Stream.Write((sbyte)m.Z);
-		}
-	}
-
 	public sealed class MovementAck : Packet
 	{
 		private static readonly MovementAck[][] m_Cache =
@@ -2797,46 +2499,6 @@ namespace Server.Network
 			m_Stream.Write((byte)seq);
 			m_Stream.Write((byte)noto);
 		}
-	}
-
-	public sealed class LoginConfirm : Packet
-	{
-		public LoginConfirm(Mobile m)
-			: base(0x1B, 37)
-		{
-			m_Stream.Write(m.Serial);
-			m_Stream.Write(0);
-			m_Stream.Write((short)m.Body);
-			m_Stream.Write((short)m.X);
-			m_Stream.Write((short)m.Y);
-			m_Stream.Write((short)m.Z);
-			m_Stream.Write((byte)m.Direction);
-			m_Stream.Write((byte)0);
-			m_Stream.Write(-1);
-
-			Map map = m.Map;
-
-			if (map == null || map == Map.Internal)
-			{
-				map = m.LogoutMap;
-			}
-
-			m_Stream.Write((short)0);
-			m_Stream.Write((short)0);
-			m_Stream.Write((short)(map == null ? 6144 : map.Width));
-			m_Stream.Write((short)(map == null ? 4096 : map.Height));
-
-			m_Stream.Fill();
-		}
-	}
-
-	public sealed class LoginComplete : Packet
-	{
-		public static readonly Packet Instance = SetStatic(new LoginComplete());
-
-		public LoginComplete()
-			: base(0x55, 1)
-		{ }
 	}
 
 	public sealed class CityInfo
@@ -2988,38 +2650,6 @@ namespace Server.Network
         public static CharacterListFlags AdditionalFlags { get; set; }
 	}
 
-	public sealed class ClearWeaponAbility : Packet
-	{
-		public static readonly Packet Instance = SetStatic(new ClearWeaponAbility());
-
-		public ClearWeaponAbility()
-			: base(0xBF)
-		{
-			EnsureCapacity(5);
-
-			m_Stream.Write((short)0x21);
-		}
-	}
-
-	public enum ALRReason : byte
-	{
-		Invalid = 0x00,
-		InUse = 0x01,
-		Blocked = 0x02,
-		BadPass = 0x03,
-		Idle = 0xFE,
-		BadComm = 0xFF
-	}
-
-	public sealed class AccountLoginRej : Packet
-	{
-		public AccountLoginRej(ALRReason reason)
-			: base(0x82, 2)
-		{
-			m_Stream.Write((byte)reason);
-		}
-	}
-
 	public enum AffixType : byte
 	{
 		Append = 0x00,
@@ -3127,56 +2757,6 @@ namespace Server.Network
 			FullPercent = fullPercent;
 			TimeZone = tZi.GetUtcOffset(DateTime.Now).Hours;
 			Address = address;
-		}
-	}
-
-    public sealed class AccountLoginAck : Packet
-	{
-		public AccountLoginAck(IReadOnlyList<ServerInfo> info)
-			: base(0xA8)
-		{
-			EnsureCapacity(6 + info.Count * 40);
-
-			m_Stream.Write((byte)0x5D); // Unknown
-
-			m_Stream.Write((ushort)info.Count);
-
-			for (int i = 0; i < info.Count; ++i)
-			{
-				ServerInfo si = info[i];
-
-				m_Stream.Write((ushort)i);
-				m_Stream.WriteAsciiFixed(si.Name, 32);
-				m_Stream.Write((byte)si.FullPercent);
-				m_Stream.Write((sbyte)si.TimeZone);
-				m_Stream.Write(Utility.GetAddressValue(si.Address.Address));
-			}
-		}
-	}
-
-    public sealed class GodModeReply : Packet
-	{
-		public GodModeReply(bool reply)
-			: base(0x2B, 2)
-		{
-			m_Stream.Write(reply);
-		}
-	}
-
-	public sealed class PlayServerAck : Packet
-	{
-		public PlayServerAck(ServerInfo si, uint auth)
-			: base(0x8C, 11)
-		{
-			int addr = Utility.GetAddressValue(si.Address.Address);
-
-			m_Stream.Write((byte)addr);
-			m_Stream.Write((byte)(addr >> 8));
-			m_Stream.Write((byte)(addr >> 16));
-			m_Stream.Write((byte)(addr >> 24));
-
-			m_Stream.Write((short)si.Address.Port);
-			m_Stream.Write(auth);
 		}
 	}
 

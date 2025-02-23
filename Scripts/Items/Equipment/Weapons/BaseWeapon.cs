@@ -1,8 +1,11 @@
-#region References
+using System;
+using System.Collections.Generic;
 using Server.ContextMenus;
 using Server.Engines.Craft;
+using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
+using Server.Network.Packets;
 using Server.Services.Virtues;
 using Server.Spells;
 using Server.Spells.Bushido;
@@ -12,11 +15,6 @@ using Server.Spells.Ninjitsu;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
 using Server.Spells.Spellweaving;
-using Server.Misc;
-
-using System;
-using System.Collections.Generic;
-#endregion
 
 namespace Server.Items
 {
@@ -1271,7 +1269,7 @@ namespace Server.Items
 
                 if (attacker.NetState != null)
                 {
-                    attacker.Send(new Swing(0, attacker, damageable));
+                    attacker.Send(new SwingPacket(0, attacker, damageable));
                 }
 
                 if (attacker is BaseCreature bc)
