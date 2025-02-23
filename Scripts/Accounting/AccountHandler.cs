@@ -19,15 +19,6 @@ namespace Server.Misc
         NewSecureCrypt
     }
 
-    public enum PMMessage : byte
-    {
-        CharNoExist = 1,
-        CharExists = 2,
-        CharInWorld = 5,
-        LoginSyncError = 6,
-        IdleWarning = 7
-    }
-
     public class AccountHandler
     {
         public static PasswordProtection ProtectPasswords = Config.GetEnum("Accounts.ProtectPasswords", PasswordProtection.NewSecureCrypt);
