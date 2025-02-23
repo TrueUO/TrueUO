@@ -209,7 +209,7 @@ namespace Server.Network
 
 			m_Stream.Write((short)0x19);
 
-			if (m.NetState.IsEnhancedClient)
+			if (m.NetState != null && m.NetState.IsEnhancedClient)
 			{
 				m_Stream.Write((byte)5);
 			}
