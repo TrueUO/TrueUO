@@ -105,7 +105,6 @@ namespace Server.Misc
         public static void Initialize()
         {
             EventSink.AccountLogin += EventSink_AccountLogin;
-            EventSink.GameLogin += EventSink_GameLogin;
 
             if (PasswordCommandEnabled)
                 CommandSystem.Register("Password", AccessLevel.Player, Password_OnCommand);
@@ -295,74 +294,79 @@ namespace Server.Misc
                 AccountAttackLimiter.RegisterInvalidAccess(e.State);
         }
 
-        public static void EventSink_GameLogin(GameLoginEventArgs e)
+        public static bool TryGameLogin(NetState state, string userName, string pw)
         {
-            if (!IPLimiter.SocketBlock && !IPLimiter.Verify(e.State.Address))
+            if (!IPLimiter.SocketBlock && !IPLimiter.Verify(state.Address))
             {
-                e.Accepted = false;
-
                 Utility.PushColor(ConsoleColor.Red);
-                Console.WriteLine("Login: {0}: Past IP limit threshold", e.State);
+                Console.WriteLine("Login: {0}: Past IP limit threshold", state);
                 Utility.PopColor();
 
                 using (StreamWriter op = new StreamWriter("ipLimits.log", true))
-                    op.WriteLine("{0}\tPast IP limit threshold\t{1}", e.State, DateTime.UtcNow);
+                {
+                    op.WriteLine("{0}\tPast IP limit threshold\t{1}", state, DateTime.UtcNow);
+                }
 
-                return;
+                AccountAttackLimiter.RegisterInvalidAccess(state);
+                return false;
             }
 
-            string un = e.Username;
-            string pw = e.Password;
-
-            Account acct = Accounts.GetAccount(un) as Account;
+            Account acct = Accounts.GetAccount(userName) as Account;
 
             if (acct == null)
             {
-                e.Accepted = false;
+                AccountAttackLimiter.RegisterInvalidAccess(state);
+                return false;
             }
-            else if (!acct.HasAccess(e.State))
+
+            if (!acct.HasAccess(state))
             {
                 Utility.PushColor(ConsoleColor.Red);
-                Console.WriteLine("Login: {0}: Access denied for '{1}'", e.State, un);
+                Console.WriteLine("Login: {0}: Access denied for '{1}'", state, userName);
                 Utility.PopColor();
-                e.Accepted = false;
+
+                AccountAttackLimiter.RegisterInvalidAccess(state);
+                return false;
             }
-            else if (!acct.CheckPassword(pw))
+
+            if (!acct.CheckPassword(pw))
             {
                 Utility.PushColor(ConsoleColor.Red);
-                Console.WriteLine("Login: {0}: Invalid password for '{1}'", e.State, un);
+                Console.WriteLine("Login: {0}: Invalid password for '{1}'", state, userName);
                 Utility.PopColor();
-                e.Accepted = false;
+
+                AccountAttackLimiter.RegisterInvalidAccess(state);
+                return false;
             }
-            else if (acct.Banned)
+
+            if (acct.Banned)
             {
                 Utility.PushColor(ConsoleColor.Red);
-                Console.WriteLine("Login: {0}: Banned account '{1}'", e.State, un);
+                Console.WriteLine("Login: {0}: Banned account '{1}'", state, userName);
                 Utility.PopColor();
-                e.Accepted = false;
+
+                AccountAttackLimiter.RegisterInvalidAccess(state);
+                return false;
+            }
+
+            acct.LogAccess(state);
+
+            Utility.PushColor(ConsoleColor.Yellow);
+            Console.WriteLine("Login: {0}: Account '{1}' at character list", state, userName);
+            Utility.PopColor();
+
+            state.Account = acct;
+
+            if (Siege.SiegeShard)
+            {
+                state.CityInfo = SiegeStartingCities;
             }
             else
             {
-                acct.LogAccess(e.State);
-
-                Utility.PushColor(ConsoleColor.Yellow);
-                Console.WriteLine("Login: {0}: Account '{1}' at character list", e.State, un);
-                Utility.PopColor();
-                e.State.Account = acct;
-                e.Accepted = true;
-
-                if (Siege.SiegeShard)
-                {
-                    e.CityInfo = SiegeStartingCities;
-                }
-                else
-                {
-                    e.CityInfo = StartingCities;
-                }
+                state.CityInfo = StartingCities;
             }
 
-            if (!e.Accepted)
-                AccountAttackLimiter.RegisterInvalidAccess(e.State);
+            return true;
         }
 
         public static bool CheckAccount(Mobile mobCheck, Mobile accCheck)

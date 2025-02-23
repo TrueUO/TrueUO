@@ -1455,13 +1455,8 @@ namespace Server.Network
             string username = pvSrc.ReadString(30);
             string password = pvSrc.ReadString(30);
 
-            GameLoginEventArgs e = new GameLoginEventArgs(state, username, password);
-
-            EventSink.InvokeGameLogin(e);
-
-            if (e.Accepted)
+            if (AccountHandler.TryGameLogin(state, username, password))
             {
-                state.CityInfo = e.CityInfo;
                 state.CompressionEnabled = true;
 
                 state.Send(SupportedFeatures.Instantiate(state));
@@ -2282,7 +2277,7 @@ namespace Server.Network
             pvSrc.ReadUInt16(); // 0x1
             pvSrc.ReadUInt32(); // 0x2 for KR, 0x3 for EC
 
-            EventSink.InvokeClientTypeReceived(new ClientTypeReceivedArgs(state));
+            ClientVerification.ClientTypeReceived(state);
         }
 
         public static void DeleteCharacter(NetState state, PacketReader pvSrc)

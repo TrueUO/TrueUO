@@ -28,8 +28,6 @@ namespace Server
 
 	public delegate void AggressiveActionEventHandler(AggressiveActionEventArgs e);
 
-	public delegate void GameLoginEventHandler(GameLoginEventArgs e);
-
 	public delegate void WorldLoadEventHandler();
 
 	public delegate void WorldSaveEventHandler(WorldSaveEventArgs e);
@@ -42,8 +40,6 @@ namespace Server
 
 	public delegate void CreateGuildHandler(CreateGuildEventArgs e);
 
-	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
-
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
 	public delegate void ItemDeletedEventHandler(ItemDeletedEventArgs e);
@@ -51,18 +47,6 @@ namespace Server
 	public delegate void ContainerDroppedToEventHandler(ContainerDroppedToEventArgs e);
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
-
-	public class ClientTypeReceivedArgs : EventArgs
-	{
-		private readonly NetState m_State;
-
-		public NetState State => m_State;
-
-		public ClientTypeReceivedArgs(NetState state)
-		{
-			m_State = state;
-		}
-	}
 
 	public class CreateGuildEventArgs : EventArgs
 	{
@@ -73,26 +57,6 @@ namespace Server
 		public CreateGuildEventArgs(int id)
 		{
 			Id = id;
-		}
-	}
-
-	public class GameLoginEventArgs : EventArgs
-	{
-		private readonly NetState m_State;
-		private readonly string m_Username;
-		private readonly string m_Password;
-
-		public NetState State => m_State;
-		public string Username => m_Username;
-		public string Password => m_Password;
-		public bool Accepted { get; set; }
-		public CityInfo[] CityInfo { get; set; }
-
-		public GameLoginEventArgs(NetState state, string un, string pw)
-		{
-			m_State = state;
-			m_Username = un;
-			m_Password = pw;
 		}
 	}
 
@@ -434,23 +398,16 @@ namespace Server
 		public static event PaperdollRequestEventHandler PaperdollRequest;
 		public static event AggressiveActionEventHandler AggressiveAction;
 		public static event CommandEventHandler Command;
-		public static event GameLoginEventHandler GameLogin;
 		public static event WorldLoadEventHandler WorldLoad;
 		public static event WorldSaveEventHandler WorldSave;
 		public static event BeforeWorldSaveEventHandler BeforeWorldSave;
 		public static event AfterWorldSaveEventHandler AfterWorldSave;
 		public static event FastWalkEventHandler FastWalk;
 		public static event CreateGuildHandler CreateGuild;
-		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
-
-		public static void InvokeClientTypeReceived(ClientTypeReceivedArgs e)
-        {
-            ClientTypeReceived?.Invoke(e);
-        }
 
 		public static void InvokeCreateGuild(CreateGuildEventArgs e)
         {
@@ -460,11 +417,6 @@ namespace Server
 		public static void InvokeFastWalk(FastWalkEventArgs e)
         {
             FastWalk?.Invoke(e);
-        }
-
-		public static void InvokeGameLogin(GameLoginEventArgs e)
-        {
-            GameLogin?.Invoke(e);
         }
 
 		public static void InvokeCommand(CommandEventArgs e)
