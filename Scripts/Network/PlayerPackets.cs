@@ -7,6 +7,7 @@ using Server.Diagnostics;
 using Server.Engines.Chat;
 using Server.Engines.Harvest;
 using Server.Engines.Help;
+using Server.Engines.PartySystem;
 using Server.Engines.Quests;
 using Server.Engines.UOStore;
 using Server.Guilds;

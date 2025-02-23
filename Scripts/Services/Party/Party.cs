@@ -9,10 +9,12 @@ namespace Server.Engines.PartySystem
     public class Party : IParty
     {
         public const int Capacity = 10;
+
         private readonly Mobile m_Leader;
         private readonly List<PartyMemberInfo> m_Members;
         private readonly List<Mobile> m_Candidates;
         private readonly List<Mobile> m_Listeners;// staff listening
+
         public Party(Mobile leader)
         {
             m_Leader = leader;
@@ -36,12 +38,17 @@ namespace Server.Engines.PartySystem
             get
             {
                 for (int i = 0; i < m_Members.Count; ++i)
+                {
                     if (m_Members[i].Mobile == m)
+                    {
                         return m_Members[i];
+                    }
+                }
 
                 return null;
             }
         }
+
         public static void Initialize()
         {
             CommandSystem.Register("ListenToParty", AccessLevel.GameMaster, ListenToParty_OnCommand);
@@ -104,9 +111,13 @@ namespace Server.Engines.PartySystem
             Party p = Get(m);
 
             if (p != null)
+            {
                 new RejoinTimer(m).Start();
+            }
             else
+            {
                 m.Party = null;
+            }
         }
 
         public static void OnLogout(Mobile m)
@@ -114,7 +125,9 @@ namespace Server.Engines.PartySystem
             Party p = Get(m);
 
             if (p != null)
+            {
                 p.Remove(m);
+            }
 
             m.Party = null;
         }
@@ -122,7 +135,9 @@ namespace Server.Engines.PartySystem
         public static Party Get(Mobile m)
         {
             if (m == null)
+            {
                 return null;
+            }
 
             return m.Party as Party;
         }
@@ -132,10 +147,14 @@ namespace Server.Engines.PartySystem
             Party p = Get(from);
 
             if (p == null)
+            {
                 from.Party = p = new Party(from);
+            }
 
             if (!p.Candidates.Contains(target))
+            {
                 p.Candidates.Add(target);
+            }
 
             //  : You are invited to join the party. Type /accept to join or /decline to decline the offer.
             target.Send(new MessageLocalizedAffix(target.NetState, Serial.MinusOne, -1, MessageType.Label, 0x3B2, 3, 1008089, "", AffixType.Prepend | AffixType.System, from.Name, ""));
@@ -172,13 +191,17 @@ namespace Server.Engines.PartySystem
                         f.Send(attrs);
 
                         if (f.NetState != null && f.NetState.IsEnhancedClient)
+                        {
                             Waypoints.Create(f, m, WaypointType.PartyMember);
+                        }
 
                         m.Send(new MobileStatusCompact(f.CanBeRenamedBy(m), f));
                         m.Send(new MobileAttributesN(f));
 
                         if (m.NetState != null && m.NetState.IsEnhancedClient)
+                        {
                             Waypoints.Create(m, f, WaypointType.PartyMember);
+                        }
                     }
                 }
 
@@ -315,7 +338,9 @@ namespace Server.Engines.PartySystem
                 Mobile mob = m_Listeners[i];
 
                 if (mob.Party != this)
+                {
                     m_Listeners[i].SendMessage("[{0}]: {1}", from.Name, text);
+                }
             }
 
             SendToStaffMessage(from, "[Party]: {0}", text);
@@ -330,7 +355,9 @@ namespace Server.Engines.PartySystem
                 Mobile mob = m_Listeners[i];
 
                 if (mob.Party != this)
+                {
                     m_Listeners[i].SendMessage("[{0}]->[{1}]: {2}", from.Name, to.Name, text);
+                }
             }
 
             SendToStaffMessage(from, "[Party]->[{0}]: {1}", to.Name, text);
@@ -341,7 +368,9 @@ namespace Server.Engines.PartySystem
             p.Acquire();
 
             for (int i = 0; i < m_Members.Count; ++i)
+            {
                 m_Members[i].Mobile.Send(p);
+            }
 
             if (p is MessageLocalized || p is MessageLocalizedAffix || p is UnicodeMessage || p is AsciiMessage)
             {
@@ -350,7 +379,9 @@ namespace Server.Engines.PartySystem
                     Mobile mob = m_Listeners[i];
 
                     if (mob.Party != this)
+                    {
                         mob.Send(p);
+                    }
                 }
             }
 
@@ -368,7 +399,9 @@ namespace Server.Engines.PartySystem
                 if (c != m && m.Map == c.Map && Utility.InUpdateRange(c, m) && c.CanSee(m))
                 {
                     if (p == null)
+                    {
                         p = Packet.Acquire(new MobileStamN(m));
+                    }
 
                     c.Send(p);
                 }
@@ -388,7 +421,9 @@ namespace Server.Engines.PartySystem
                 if (c != m && m.Map == c.Map && Utility.InUpdateRange(c, m) && c.CanSee(m))
                 {
                     if (p == null)
+                    {
                         p = Packet.Acquire(new MobileManaN(m));
+                    }
 
                     c.Send(p);
                 }
@@ -402,7 +437,9 @@ namespace Server.Engines.PartySystem
             if (beholder != beheld && Contains(beholder) && beholder.Map == beheld.Map && Utility.InUpdateRange(beholder, beheld))
             {
                 if (!beholder.CanSee(beheld))
+                {
                     beholder.Send(new MobileStatusCompact(beheld.CanBeRenamedBy(beholder), beheld));
+                }
 
                 beholder.Send(new MobileAttributesN(beheld));
             }
@@ -419,7 +456,9 @@ namespace Server.Engines.PartySystem
                 if (mob != null && mob.AccessLevel >= AccessLevel.GameMaster && mob.AccessLevel > from.AccessLevel && mob.Party != this && !m_Listeners.Contains(mob))
                 {
                     if (p == null)
+                    {
                         p = Packet.Acquire(new UnicodeMessage(from.Serial, from.Body, MessageType.Regular, from.SpeechHue, 3, from.Language, from.Name, text));
+                    }
 
                     ns.Send(p);
                 }
