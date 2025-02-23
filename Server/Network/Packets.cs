@@ -1,4 +1,3 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
-
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.Diagnostics;
@@ -16,10 +14,8 @@ using Server.Items;
 using Server.Menus;
 using Server.Menus.ItemLists;
 using Server.Menus.Questions;
-using Server.Mobiles;
 using Server.Prompts;
 using Server.Targeting;
-#endregion
 
 namespace Server.Network
 {
@@ -60,35 +56,19 @@ namespace Server.Network
 
 			m_Stream.Write((ushort)amount);
 		}
-
-		/*public DamagePacket( Mobile m, int amount ) : base( 0xBF )
-		{
-		EnsureCapacity( 11 );
-
-		m_Stream.Write( (short) 0x22 );
-		m_Stream.Write( (byte) 1 );
-		m_Stream.Write( (int) m.Serial );
-
-		if ( amount > 255 )
-		amount = 255;
-		else if ( amount < 0 )
-		amount = 0;
-
-		m_Stream.Write( (byte)amount );
-		}*/
 	}
 
-	public sealed class CancelArrow : Packet
-	{
-		public CancelArrow(int x, int y, Serial s)
-			: base(0xBA, 10)
-		{
-			m_Stream.Write((byte)0);
-			m_Stream.Write((short)x);
-			m_Stream.Write((short)y);
-			m_Stream.Write(s);
-		}
-	}
+    public sealed class CancelArrow : Packet
+    {
+        public CancelArrow(int x, int y, Serial s)
+            : base(0xBA, 10)
+        {
+            m_Stream.Write((byte)0);
+            m_Stream.Write((short)x);
+            m_Stream.Write((short)y);
+            m_Stream.Write(s);
+        }
+    }
 
 	public sealed class SetArrow : Packet
 	{
@@ -211,137 +191,6 @@ namespace Server.Network
 		}
 	}
 
-    public sealed class VendorBuyContent : Packet
-	{
-		public VendorBuyContent(IReadOnlyList<BuyItemState> list)
-			: base(0x3C)
-		{
-			EnsureCapacity(list.Count * 20 + 5);
-
-			m_Stream.Write((short)list.Count);
-
-			//The client sorts these by their X/Y value.
-			//OSI sends these in wierd order.  X/Y highest to lowest and serial loest to highest
-			//These are already sorted by serial (done by the vendor class) but we have to send them by x/y
-			//(the x74 packet is sent in 'correct' order.)
-			for (int i = list.Count - 1; i >= 0; --i)
-			{
-				BuyItemState bis = list[i];
-
-				m_Stream.Write(bis.MySerial);
-				m_Stream.Write((ushort)bis.ItemID);
-				m_Stream.Write((byte)0); //itemid offset
-				m_Stream.Write((ushort)bis.Amount);
-				m_Stream.Write((short)(i + 1)); //x
-				m_Stream.Write((short)1); //y
-				m_Stream.Write((byte)0); // Grid Location?
-				m_Stream.Write(bis.ContainerSerial);
-				m_Stream.Write((ushort)bis.Hue);
-			}
-		}
-	}
-
-	public sealed class DisplayBuyList : Packet
-	{
-		public DisplayBuyList(IEntity vendor)
-			: base(0x24, 9)
-		{
-			m_Stream.Write(vendor.Serial);
-			m_Stream.Write((short)0x30); // buy window id?
-			m_Stream.Write((short)0x00);
-		}
-	}
-
-	public sealed class VendorBuyList : Packet
-	{
-		public VendorBuyList(Mobile vendor, IReadOnlyList<BuyItemState> list)
-			: base(0x74)
-		{
-			EnsureCapacity(256);
-
-			Container BuyPack = vendor.FindItemOnLayer(Layer.ShopBuy) as Container;
-			m_Stream.Write(BuyPack == null ? Serial.MinusOne : BuyPack.Serial);
-
-			m_Stream.Write((byte)list.Count);
-
-			for (int i = 0; i < list.Count; ++i)
-			{
-				BuyItemState bis = list[i];
-
-				m_Stream.Write(bis.Price);
-
-				string desc = bis.Description;
-
-				if (desc == null)
-				{
-					desc = "";
-				}
-
-				m_Stream.Write((byte)(desc.Length + 1));
-				m_Stream.WriteAsciiNull(desc);
-			}
-		}
-	}
-
-	public sealed class VendorSellList : Packet
-	{
-		public VendorSellList(IEntity shopkeeper, ICollection<SellItemState> sis)
-			: base(0x9E)
-		{
-			EnsureCapacity(256);
-
-			m_Stream.Write(shopkeeper.Serial);
-
-			m_Stream.Write((ushort)sis.Count);
-
-			foreach (SellItemState state in sis)
-			{
-				m_Stream.Write(state.Item.Serial);
-				m_Stream.Write((ushort)state.Item.ItemID);
-				m_Stream.Write((ushort)state.Item.Hue);
-				m_Stream.Write((ushort)state.Item.Amount);
-				m_Stream.Write((ushort)state.Price);
-
-				string name = state.Item.Name;
-
-				if (name == null || (name = name.Trim()).Length <= 0)
-				{
-					name = state.Name;
-				}
-
-				if (name == null)
-				{
-					name = "";
-				}
-
-				m_Stream.Write((ushort)name.Length);
-				m_Stream.WriteAsciiFixed(name, (ushort)name.Length);
-			}
-		}
-	}
-
-	public sealed class EndVendorSell : Packet
-	{
-		public EndVendorSell(IEntity vendor)
-			: base(0x3B, 8)
-		{
-			m_Stream.Write((ushort)8); //length
-			m_Stream.Write(vendor.Serial);
-			m_Stream.Write((byte)0);
-		}
-	}
-
-	public sealed class EndVendorBuy : Packet
-	{
-		public EndVendorBuy(IEntity vendor)
-			: base(0x3B, 8)
-		{
-			m_Stream.Write((ushort)8); //length
-			m_Stream.Write(vendor.Serial);
-			m_Stream.Write((byte)0);
-		}
-	}
-
 	public sealed class DeathAnimation : Packet
 	{
 		public DeathAnimation(IEntity killed, IEntity corpse)
@@ -443,16 +292,6 @@ namespace Server.Network
 			m_Stream.Write(huePicker.Serial);
 			m_Stream.Write((short)0);
 			m_Stream.Write((short)huePicker.ItemID);
-		}
-	}
-
-	public sealed class TripTimeResponse : Packet
-	{
-		public TripTimeResponse(int unk)
-			: base(0xC9, 6)
-		{
-			m_Stream.Write((byte)unk);
-			m_Stream.Write(Environment.TickCount);
 		}
 	}
 

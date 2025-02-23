@@ -1,4 +1,4 @@
-namespace Server.Network
+namespace Server.Network.Packets
 {
     public sealed class ChatMessagePacket : Packet
     {

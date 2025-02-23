@@ -1,4 +1,5 @@
 using Server.Gumps;
+using Server.Network.Packets;
 using System;
 
 namespace Server.Engines.Quests

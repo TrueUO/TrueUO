@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.Engines.BulkOrders;
@@ -5,12 +8,10 @@ using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
+using Server.Network.Packets;
 using Server.Regions;
 using Server.Services.Virtues;
 using Server.Targeting;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
@@ -924,11 +925,11 @@ namespace Server.Mobiles
                     return;
                 }
 
-                from.Send(new VendorBuyContent(list));
+                from.Send(new VendorBuyContentPacket(list));
 
-                from.Send(new VendorBuyList(this, list));
+                from.Send(new VendorBuyListPacket(this, list));
 
-                from.Send(new DisplayBuyList(this));
+                from.Send(new DisplayBuyListPacket(this));
 
                 from.Send(new MobileStatus(from)); //make sure their gold amount is sent
 
@@ -1060,7 +1061,7 @@ namespace Server.Mobiles
                 {
                     SendPacksTo(from);
 
-                    from.Send(new VendorSellList(this, table.Values));
+                    from.Send(new VendorSellListPacket(this, table.Values));
                 }
                 else
                 {
