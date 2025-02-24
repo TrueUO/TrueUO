@@ -908,20 +908,12 @@ namespace Server.Network
                         }
                         case 0x04: // Stats
                         {
-                            if (from != null)
-                            {
-                                m.OnStatsQuery(from);
-                            }
-
+                            m.OnStatsQuery(from);
                             break;
                         }
                         case 0x05:
                         {
-                            if (from != null)
-                            {
-                                m.OnSkillsQuery(from);
-                            }
-
+                            m.OnSkillsQuery(from);
                             break;
                         }
                         default:
