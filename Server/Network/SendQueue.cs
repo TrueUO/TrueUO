@@ -25,16 +25,18 @@ namespace Server.Network
 					{
 						gram = new Gram();
 					}
-
+					// Acquire a new buffer from the pool
 					gram._buffer = AcquireBuffer();
 					gram._length = 0;
-
+					// Default: assume it is pooled; it may be overwritten later if needed.
+					gram.IsPooled = true;
 					return gram;
 				}
 			}
 
 			private byte[] _buffer;
 			private int _length;
+			public bool IsPooled;  // NEW: tracks if the buffer is from the pool
 
 			public byte[] Buffer => _buffer;
 
@@ -136,19 +138,11 @@ namespace Server.Network
 
 		public Gram Dequeue()
 		{
-			Gram gram = null;
-
 			if (_pending.Count > 0)
 			{
-				_pending.Dequeue().Release();
-
-				if (_pending.Count > 0)
-				{
-					gram = _pending.Peek();
-				}
+				return _pending.Dequeue();
 			}
-
-			return gram;
+			return null;
 		}
 
 		private const int PendingCap = 0x200000;
@@ -158,30 +152,38 @@ namespace Server.Network
 			return Enqueue(buffer, 0, length);
 		}
 
+		// NEW: Overload Enqueue that accepts a bool flag for pooled buffers.
+		public Gram Enqueue(byte[] buffer, int offset, int length, bool isPooled)
+		{
+			Gram gram = Enqueue(buffer, offset, length);
+			if (gram != null)
+			{
+				gram.IsPooled = isPooled;
+			}
+			return gram;
+		}
+
+		// Existing Enqueue method
 		public Gram Enqueue(byte[] buffer, int offset, int length)
 		{
 			if (buffer == null)
 			{
 				throw new ArgumentNullException(nameof(buffer));
 			}
+			if (!(offset >= 0 && offset < buffer.Length))
+			{
+				throw new ArgumentOutOfRangeException(nameof(offset), offset, "Offset must be greater than or equal to zero and less than the size of the buffer.");
+			}
+			if (length < 0 || length > buffer.Length)
+			{
+				throw new ArgumentOutOfRangeException(nameof(length), length, "Length cannot be less than zero or greater than the size of the buffer.");
+			}
+			if (buffer.Length - offset < length)
+			{
+				throw new ArgumentException("Offset and length do not point to a valid segment within the buffer.");
+			}
 
-            if (!(offset >= 0 && offset < buffer.Length))
-            {
-                throw new ArgumentOutOfRangeException(nameof(offset), offset, "Offset must be greater than or equal to zero and less than the size of the buffer.");
-            }
-
-            if (length < 0 || length > buffer.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length), length, "Length cannot be less than zero or greater than the size of the buffer.");
-            }
-
-            if (buffer.Length - offset < length)
-            {
-                throw new ArgumentException("Offset and length do not point to a valid segment within the buffer.");
-            }
-
-            int existingBytes = (_pending.Count * m_CoalesceBufferSize) + (_buffered == null ? 0 : _buffered.Length);
-
+			int existingBytes = (_pending.Count * m_CoalesceBufferSize) + (_buffered == null ? 0 : _buffered.Length);
 			if (existingBytes + length > PendingCap)
 			{
 				throw new CapacityExceededException();

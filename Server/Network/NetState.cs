@@ -453,129 +453,124 @@ namespace Server.Network
 				return;
 			}
 
+            byte[] buffer = p.Compile(CompressionEnabled, out int length);
 
-			byte[] buffer = p.Compile(CompressionEnabled, out int length);
+            if (buffer != null)
+            {
+                if (buffer.Length <= 0 || length <= 0)
+                {
+                    p.OnSend();
+                    return;
+                }
 
-			if (buffer != null)
-			{
-				if (buffer.Length <= 0 || length <= 0)
-				{
-					p.OnSend();
-					return;
-				}
+                PacketSendProfile prof = null;
+                if (Core.Profiling)
+                {
+                    prof = PacketSendProfile.Acquire(p.GetType());
+                }
+                if (prof != null)
+                {
+                    prof.Start();
+                }
 
-				PacketSendProfile prof = null;
+                // Determine if we are using a pooled buffer:
+                bool pooledBuffer = false;
 
-				if (Core.Profiling)
-				{
-					prof = PacketSendProfile.Acquire(p.GetType());
-				}
+                if (PacketEncoder != null || PacketEncryptor != null)
+                {
+                    byte[] packetBuffer = buffer;
+                    int packetLength = length;
 
-				if (prof != null)
-				{
-					prof.Start();
-				}
+                    if (BufferStaticPackets && p.State.HasFlag(PacketState.Acquired))
+                    {
+                        if (packetLength <= SendBufferSize)
+                        {
+                            // Acquire from pool:
+                            packetBuffer = m_SendBufferPool.AcquireBuffer();
+                            pooledBuffer = true;
+                        }
+                        else
+                        {
+                            packetBuffer = new byte[packetLength];
+                        }
 
-				bool buffered = false;
+                        System.Buffer.BlockCopy(buffer, 0, packetBuffer, 0, packetLength);
+                    }
 
-				if (PacketEncoder != null || PacketEncryptor != null)
-				{
-					byte[] packetBuffer = buffer;
-					int packetLength = length;
+                    if (PacketEncoder != null)
+                    {
+                        PacketEncoder.EncodeOutgoingPacket(this, ref packetBuffer, ref packetLength);
+                    }
 
-					if (BufferStaticPackets && p.State.HasFlag(PacketState.Acquired))
-					{
-						if (packetLength <= SendBufferSize)
-						{
-							packetBuffer = m_SendBufferPool.AcquireBuffer();
-						}
-						else
-						{
-							packetBuffer = new byte[packetLength];
-						}
+                    if (PacketEncryptor != null)
+                    {
+                        PacketEncryptor.EncryptOutgoingPacket(this, ref packetBuffer, ref packetLength);
+                    }
 
-						System.Buffer.BlockCopy(buffer, 0, packetBuffer, 0, packetLength);
-					}
+                    buffer = packetBuffer;
+                    length = packetLength;
+                }
 
-					if (PacketEncoder != null)
-					{
-						PacketEncoder.EncodeOutgoingPacket(this, ref packetBuffer, ref packetLength);
-					}
+                try
+                {
+                    SendQueue.Gram gram;
 
-					if (PacketEncryptor != null)
-					{
-						PacketEncryptor.EncryptOutgoingPacket(this, ref packetBuffer, ref packetLength);
-					}
+                    lock (_SendLock)
+                    {
+                        lock (m_SendQueue)
+                        {
+                            // Use the new overload that marks whether the data is pooled.
+                            gram = m_SendQueue.Enqueue(buffer, 0, length, pooledBuffer);
+                        }
 
-					buffered = buffer != packetBuffer && packetBuffer.Length == SendBufferSize;
+                        // Do not release the pooled buffer here!
+                        if (gram != null && !_Sending)
+                        {
+                            _Sending = true;
 
-					buffer = packetBuffer;
-					length = packetLength;
-				}
+                            try
+                            {
+                                Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
+                            }
+                            catch (Exception ex)
+                            {
+                                TraceException(ex);
+                                Dispose(false);
+                            }
+                        }
+                    }
 
-				try
-				{
-					SendQueue.Gram gram;
+                    p.OnSend();
 
-					lock (_SendLock)
-					{
-						lock (m_SendQueue)
-						{
-							gram = m_SendQueue.Enqueue(buffer, length);
-						}
+                    if (prof != null)
+                    {
+                        prof.Finish(length);
+                    }
+                }
+                catch (CapacityExceededException)
+                {
+                    Utility.PushColor(ConsoleColor.Red);
+                    Console.WriteLine("Client: {0}: Too much data pending, disconnecting...", this);
+                    Utility.PopColor();
 
-						if (buffered && m_SendBufferPool.Count < SendBufferCapacity)
-						{
-							m_SendBufferPool.ReleaseBuffer(buffer);
-						}
+                    Dispose(false);
+                }
+            }
+            else
+            {
+                Utility.PushColor(ConsoleColor.Red);
+                Console.WriteLine("Client: {0}: null buffer send, disconnecting...", this);
+                Utility.PopColor();
 
-						if (gram != null && !_Sending)
-						{
-							_Sending = true;
+                using (StreamWriter op = new StreamWriter("null_send.log", true))
+                {
+                    op.WriteLine("{0} Client: {1}: null buffer send, disconnecting...", DateTime.UtcNow, this);
+                    op.WriteLine(new StackTrace());
+                }
 
-							try
-							{
-								Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
-							}
-							catch (Exception ex)
-							{
-								TraceException(ex);
-								Dispose(false);
-							}
-						}
-					}
-				}
-				catch (CapacityExceededException)
-				{
-					Utility.PushColor(ConsoleColor.Red);
-					Console.WriteLine("Client: {0}: Too much data pending, disconnecting...", this);
-					Utility.PopColor();
-
-					Dispose(false);
-				}
-
-				p.OnSend();
-
-				if (prof != null)
-				{
-					prof.Finish(length);
-				}
-			}
-			else
-			{
-				Utility.PushColor(ConsoleColor.Red);
-				Console.WriteLine("Client: {0}: null buffer send, disconnecting...", this);
-				Utility.PopColor();
-
-				using (StreamWriter op = new StreamWriter("null_send.log", true))
-				{
-					op.WriteLine("{0} Client: {1}: null buffer send, disconnecting...", DateTime.UtcNow, this);
-					op.WriteLine(new StackTrace());
-				}
-
-				Dispose();
-			}
-		}
+                Dispose();
+            }
+        }
 
 		public void Start()
 		{
@@ -709,31 +704,38 @@ namespace Server.Network
 					}
 				}
 
-				if (gram != null)
-				{
-					try
-					{
-						s.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, s);
-					}
-					catch (Exception ex)
-					{
-						TraceException(ex);
-						Dispose(false);
-					}
-				}
-				else
-				{
-					lock (_SendLock)
-					{
-						_Sending = false;
-					}
-				}
-			}
-			catch (Exception)
-			{
-				Dispose(false);
-			}
-		}
+                if (gram != null)
+                {
+                    try
+                    {
+                        s.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, s);
+                    }
+                    catch (Exception ex)
+                    {
+                        TraceException(ex);
+                        Dispose(false);
+                        return;
+                    }
+
+                    // After sending is complete for this Gram, if it used a pooled buffer, release it:
+                    if (gram.IsPooled)
+                    {
+                        gram.Release();
+                    }
+                }
+                else
+                {
+                    lock (_SendLock)
+                    {
+                        _Sending = false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Dispose(false);
+            }
+        }
 
 		public static void Pause()
         {
