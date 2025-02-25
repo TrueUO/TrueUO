@@ -130,10 +130,8 @@ namespace Server.Network
 
 			lock (this)
 			{
-				Queue<NetState> temp = m_WorkingQueue;
-				m_WorkingQueue = m_Queue;
-				m_Queue = temp;
-			}
+				(m_WorkingQueue, m_Queue) = (m_Queue, m_WorkingQueue);
+            }
 
 			while (m_WorkingQueue.Count > 0)
 			{
@@ -141,6 +139,7 @@ namespace Server.Network
 
 				if (ns.Running)
 				{
+                    ns.ProcessThrottledPackets();
 					HandleReceive(ns);
 				}
 			}
@@ -156,6 +155,15 @@ namespace Server.Network
 
 		private const int BufferSize = 4096;
 		private readonly BufferPool m_Buffers = new BufferPool("Processor", 4, BufferSize);
+
+        // NEW: Dedicated BufferPool for throttled data.
+        /* I chose 16 as a starting initial capacity for the ThrottledBufferPool because it seemed like a
+         reasonable default for a moderate number of delayed packets under typical load. The idea is to have
+        enough buffers available to handle the expected delayed traffic without having to frequently allocate new ones.
+
+        Should this be increased / decreased?
+         */
+        public static readonly BufferPool ThrottledBufferPool = new BufferPool("Throttled", 16, BufferSize);
 
 		public static bool HandleSeed(NetState ns, ByteQueue buffer)
 		{
@@ -307,15 +315,27 @@ namespace Server.Network
                     {
                         if (!drop)
                         {
-                            // Instead of simply enqueuing ns, transfer the throttled packet data into the NetState’s ThrottledQueue.
-                            byte[] temp = new byte[packetLength];
+                            // For delayed packets, acquire a buffer from the dedicated pool.
+                            byte[] temp = ThrottledBufferPool.AcquireBuffer();
+
+                            // Ensure the rented buffer is large enough; if not, allocate a new one.
+                            if (temp.Length < packetLength)
+                            {
+                                temp = new byte[packetLength];
+                            }
+
+                            // Dequeue the packet data into the rented buffer.
                             buffer.Dequeue(temp, 0, packetLength);
+
+                            // Enqueue the data into the NetState's secondary queue.
                             ns.ThrottledQueue.Enqueue(temp, 0, packetLength);
+
+                            // Enqueue the NetState for later processing.
                             m_Throttled.Enqueue(ns);
                         }
                         else
                         {
-                            // If dropping, remove the data without allocation.
+                            // For dropped packets, simply remove the data without allocation.
                             buffer.Dequeue(null, 0, packetLength);
                         }
 

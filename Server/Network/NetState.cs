@@ -1063,20 +1063,35 @@ namespace Server.Network
 
 		public ByteQueue Buffer { get; private set; }
 
-        // Secondary ByteQueue to hold throttled (delayed) packet data.
+        // NEW: Secondary queue to hold throttled (delayed) packet data.
         public ByteQueue ThrottledQueue { get; } = new ByteQueue();
 
         /// <summary>
-        /// Merges all throttled packet data from ThrottledQueue back into the main Buffer.
+        /// Merges all throttled packet data from ThrottledQueue back into the main Buffer,
+        /// using the dedicated ThrottledBufferPool to avoid per-packet allocations.
         /// </summary>
         public void ProcessThrottledPackets()
         {
             int len = ThrottledQueue.Length;
             if (len > 0)
             {
-                byte[] temp = new byte[len];
+                // Rent a buffer from the dedicated pool.
+                byte[] temp = MessagePump.ThrottledBufferPool.AcquireBuffer();
+
+                // Ensure the rented buffer is large enough.
+                if (temp.Length < len)
+                {
+                    temp = new byte[len];
+                }
+
+                // Dequeue all throttled data into the temporary buffer.
                 ThrottledQueue.Dequeue(temp, 0, len);
+
+                // Append the throttled data back into the main Buffer.
                 Buffer.Enqueue(temp, 0, len);
+
+                // Return the buffer to the pool.
+                MessagePump.ThrottledBufferPool.ReleaseBuffer(temp);
             }
         }
 
