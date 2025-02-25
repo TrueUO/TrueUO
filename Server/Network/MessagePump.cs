@@ -1,11 +1,9 @@
-#region References
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
-
 using Server.Diagnostics;
-#endregion
 
 namespace Server.Network
 {
@@ -13,7 +11,7 @@ namespace Server.Network
 	{
 		private Queue<NetState> m_Queue;
 		private Queue<NetState> m_WorkingQueue;
-		private readonly Queue<NetState> m_Throttled;
+        private readonly ConcurrentQueue<NetState> m_Throttled;
 
 		public Listener[] Listeners { get; set; }
 
@@ -47,7 +45,7 @@ namespace Server.Network
 
 			m_Queue = new Queue<NetState>();
 			m_WorkingQueue = new Queue<NetState>();
-			m_Throttled = new Queue<NetState>();
+            m_Throttled = new ConcurrentQueue<NetState>();
 		}
 
 		public void AddListener(Listener l)
@@ -141,17 +139,17 @@ namespace Server.Network
 
 				if (ns.Running)
 				{
+                    // Requeue any previously throttled packets
+                    ns.ProcessThrottledPackets();
+
 					HandleReceive(ns);
 				}
 			}
 
-			lock (this)
-			{
-				while (m_Throttled.Count > 0)
-				{
-					m_Queue.Enqueue(m_Throttled.Dequeue());
-				}
-			}
+            while (m_Throttled.TryDequeue(out NetState throttled))
+            {
+                m_Queue.Enqueue(throttled);
+            }
 		}
 
 		private const int BufferSize = 4096;
@@ -301,21 +299,24 @@ namespace Server.Network
 						}
 					}
 
-					ThrottlePacketCallback throttler = handler.ThrottleCallback;
-
+                    ThrottlePacketCallback throttler = handler.ThrottleCallback;
                     bool drop;
 
-					if (throttler != null && !throttler((byte)packetID, ns, out drop))
-					{
-                        if (!drop)
+                    if (throttler != null && !throttler((byte)packetID, ns, out drop))
+                    {
+                        if (drop)
                         {
-                            m_Throttled.Enqueue(ns);
+                            // Drop the packet by simply dequeuing the data without allocation.
+                            buffer.Dequeue(null, 0, packetLength);
                         }
                         else
                         {
-                            buffer.Dequeue(null, 0, packetLength);
+                            // Allocate a byte array only if the packet is to be delayed (not dropped)
+                            byte[] packetData = new byte[packetLength];
+                            buffer.Dequeue(packetData, 0, packetLength);
+                            ns.StoreThrottledPacket(packetData);
+                            m_Throttled.Enqueue(ns);
                         }
-
                         return;
                     }
 
