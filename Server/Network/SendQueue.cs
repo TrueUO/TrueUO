@@ -9,6 +9,19 @@ namespace Server.Network
 	{
 		public class Gram
 		{
+            public static Gram CreateDirect(int length)
+            {
+                // Create a new Gram with a buffer sized exactly for the packet.
+                Gram gram = new Gram
+                {
+                    _buffer = new byte[length],
+                    _length = 0,
+                    IsPooled = false
+                };
+
+                return gram;
+            }
+
 			private static readonly Stack<Gram> _pool = new Stack<Gram>();
 
 			public static Gram Acquire()

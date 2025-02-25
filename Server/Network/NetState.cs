@@ -473,9 +473,7 @@ namespace Server.Network
                     prof.Start();
                 }
 
-                // Determine if we are using a pooled buffer:
                 bool pooledBuffer = false;
-
                 if (PacketEncoder != null || PacketEncryptor != null)
                 {
                     byte[] packetBuffer = buffer;
@@ -485,7 +483,6 @@ namespace Server.Network
                     {
                         if (packetLength <= SendBufferSize)
                         {
-                            // Acquire from pool:
                             packetBuffer = m_SendBufferPool.AcquireBuffer();
                             pooledBuffer = true;
                         }
@@ -493,20 +490,16 @@ namespace Server.Network
                         {
                             packetBuffer = new byte[packetLength];
                         }
-
                         System.Buffer.BlockCopy(buffer, 0, packetBuffer, 0, packetLength);
                     }
-
                     if (PacketEncoder != null)
                     {
                         PacketEncoder.EncodeOutgoingPacket(this, ref packetBuffer, ref packetLength);
                     }
-
                     if (PacketEncryptor != null)
                     {
                         PacketEncryptor.EncryptOutgoingPacket(this, ref packetBuffer, ref packetLength);
                     }
-
                     buffer = packetBuffer;
                     length = packetLength;
                 }
@@ -514,20 +507,15 @@ namespace Server.Network
                 try
                 {
                     SendQueue.Gram gram;
-
                     lock (_SendLock)
                     {
-                        lock (m_SendQueue)
-                        {
-                            // Use the new overload that marks whether the data is pooled.
-                            gram = m_SendQueue.Enqueue(buffer, 0, length, pooledBuffer);
-                        }
+                        // Instead of using the coalescing Enqueue that may wait for the buffer to fill,
+                        // force a flush immediately so that each packet is sent separately.
+                        gram = CreateGramForImmediateSend(buffer, length, pooledBuffer);
 
-                        // Do not release the pooled buffer here!
                         if (gram != null && !_Sending)
                         {
                             _Sending = true;
-
                             try
                             {
                                 Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
@@ -539,9 +527,7 @@ namespace Server.Network
                             }
                         }
                     }
-
                     p.OnSend();
-
                     if (prof != null)
                     {
                         prof.Finish(length);
@@ -552,7 +538,6 @@ namespace Server.Network
                     Utility.PushColor(ConsoleColor.Red);
                     Console.WriteLine("Client: {0}: Too much data pending, disconnecting...", this);
                     Utility.PopColor();
-
                     Dispose(false);
                 }
             }
@@ -561,15 +546,43 @@ namespace Server.Network
                 Utility.PushColor(ConsoleColor.Red);
                 Console.WriteLine("Client: {0}: null buffer send, disconnecting...", this);
                 Utility.PopColor();
-
                 using (StreamWriter op = new StreamWriter("null_send.log", true))
                 {
                     op.WriteLine("{0} Client: {1}: null buffer send, disconnecting...", DateTime.UtcNow, this);
                     op.WriteLine(new StackTrace());
                 }
-
                 Dispose();
             }
+        }
+
+        /// <summary>
+        /// Creates a new Gram for immediate send (without waiting for the coalescing buffer to fill).
+        /// </summary>
+        private SendQueue.Gram CreateGramForImmediateSend(byte[] buffer, int length, bool pooledBuffer)
+        {
+            SendQueue.Gram gram;
+            // Use SendQueue.CoalesceBufferSize (typically 512) as the threshold since pooled buffers are that size.
+            if (length > SendQueue.CoalesceBufferSize)
+            {
+                // Packet is larger than our pooled buffer; allocate a dedicated buffer.
+                gram = SendQueue.Gram.CreateDirect(length);
+            }
+            else
+            {
+                // Packet fits in a pooled buffer.
+                gram = SendQueue.Gram.Acquire();
+            }
+    
+            int written = gram.Write(buffer, 0, length);
+            if (written != length)
+            {
+                // This should not occur if the Gram's buffer is sized correctly.
+                throw new InvalidOperationException("Packet length exceeds the gram buffer size.");
+            }
+    
+            // Only mark as pooled if we actually used a pooled buffer.
+            gram.IsPooled = pooledBuffer && (length <= SendQueue.CoalesceBufferSize);
+            return gram;
         }
 
 		public void Start()
@@ -671,38 +684,33 @@ namespace Server.Network
 			}
 		}
 
-		private void OnSend(IAsyncResult asyncResult)
-		{
-			Socket s = (Socket)asyncResult.AsyncState;
+        private void OnSend(IAsyncResult asyncResult)
+        {
+            Socket s = (Socket)asyncResult.AsyncState;
+            try
+            {
+                int bytes = s.EndSend(asyncResult);
+                if (bytes <= 0)
+                {
+                    Dispose(false);
+                    return;
+                }
 
-			try
-			{
-				int bytes = s.EndSend(asyncResult);
+                m_NextCheckActivity = Core.TickCount + 90000;
+                if (m_CoalesceSleep >= 0)
+                {
+                    Thread.Sleep(m_CoalesceSleep);
+                }
 
-				if (bytes <= 0)
-				{
-					Dispose(false);
-					return;
-				}
-
-				m_NextCheckActivity = Core.TickCount + 90000;
-
-				if (m_CoalesceSleep >= 0)
-				{
-					Thread.Sleep(m_CoalesceSleep);
-				}
-
-				SendQueue.Gram gram;
-
-				lock (m_SendQueue)
-				{
-					gram = m_SendQueue.Dequeue();
-
-					if (gram == null && m_SendQueue.IsFlushReady)
-					{
-						gram = m_SendQueue.CheckFlushReady();
-					}
-				}
+                SendQueue.Gram gram;
+                lock (m_SendQueue)
+                {
+                    gram = m_SendQueue.Dequeue();
+                    if (gram == null && m_SendQueue.IsFlushReady)
+                    {
+                        gram = m_SendQueue.CheckFlushReady();
+                    }
+                }
 
                 if (gram != null)
                 {
@@ -716,8 +724,6 @@ namespace Server.Network
                         Dispose(false);
                         return;
                     }
-
-                    // After sending is complete for this Gram, if it used a pooled buffer, release it:
                     if (gram.IsPooled)
                     {
                         gram.Release();
