@@ -1,5 +1,6 @@
 #region References
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -440,6 +441,24 @@ namespace Server.Network
 				CreatedCallback(this);
 			}
 		}
+
+        private readonly ConcurrentQueue<byte[]> _ThrottledPackets = new ConcurrentQueue<byte[]>();
+
+        // Call this to enqueue throttled packet data
+        public void StoreThrottledPacket(byte[] packetData)
+        {
+            _ThrottledPackets.Enqueue(packetData);
+        }
+
+        // Call this when reprocessing the NetState (for example, at the start of MessagePump.Slice)
+        public void ProcessThrottledPackets()
+        {
+            // Reinsert throttled packets back into the main ByteQueue
+            while (_ThrottledPackets.TryDequeue(out byte[] packetData))
+            {
+                Buffer.Enqueue(packetData, 0, packetData.Length);
+            }
+        }
 
 		private bool _Sending;
 
