@@ -1063,6 +1063,23 @@ namespace Server.Network
 
 		public ByteQueue Buffer { get; private set; }
 
+        // Secondary ByteQueue to hold throttled (delayed) packet data.
+        public ByteQueue ThrottledQueue { get; } = new ByteQueue();
+
+        /// <summary>
+        /// Merges all throttled packet data from ThrottledQueue back into the main Buffer.
+        /// </summary>
+        public void ProcessThrottledPackets()
+        {
+            int len = ThrottledQueue.Length;
+            if (len > 0)
+            {
+                byte[] temp = new byte[len];
+                ThrottledQueue.Dequeue(temp, 0, len);
+                Buffer.Enqueue(temp, 0, len);
+            }
+        }
+
 		public ExpansionInfo ExpansionInfo
 		{
 			get

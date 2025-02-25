@@ -301,18 +301,21 @@ namespace Server.Network
 						}
 					}
 
-					ThrottlePacketCallback throttler = handler.ThrottleCallback;
+                    ThrottlePacketCallback throttler = handler.ThrottleCallback;
 
-                    bool drop;
-
-					if (throttler != null && !throttler((byte)packetID, ns, out drop))
-					{
+                    if (throttler != null && !throttler((byte)packetID, ns, out bool drop))
+                    {
                         if (!drop)
                         {
+                            // Instead of simply enqueuing ns, transfer the throttled packet data into the NetState’s ThrottledQueue.
+                            byte[] temp = new byte[packetLength];
+                            buffer.Dequeue(temp, 0, packetLength);
+                            ns.ThrottledQueue.Enqueue(temp, 0, packetLength);
                             m_Throttled.Enqueue(ns);
                         }
                         else
                         {
+                            // If dropping, remove the data without allocation.
                             buffer.Dequeue(null, 0, packetLength);
                         }
 
