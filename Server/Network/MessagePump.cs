@@ -304,18 +304,19 @@ namespace Server.Network
 
                     if (throttler != null && !throttler((byte)packetID, ns, out drop))
                     {
-                        // Always dequeue the packet data from the ByteQueue.
-                        byte[] packetData = new byte[packetLength];
-                        buffer.Dequeue(packetData, 0, packetLength);
-    
-                        if (!drop)
+                        if (drop)
                         {
-                            // Store the throttled packet in NetState for later processing.
+                            // Drop the packet by simply dequeuing the data without allocation.
+                            buffer.Dequeue(null, 0, packetLength);
+                        }
+                        else
+                        {
+                            // Allocate a byte array only if the packet is to be delayed (not dropped)
+                            byte[] packetData = new byte[packetLength];
+                            buffer.Dequeue(packetData, 0, packetLength);
                             ns.StoreThrottledPacket(packetData);
-
                             m_Throttled.Enqueue(ns);
                         }
-                        // If drop is true, the packet data is discarded.
                         return;
                     }
 
