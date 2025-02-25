@@ -403,7 +403,7 @@ namespace Server.Network
 		public NetState(Socket socket, MessagePump messagePump)
 		{
 			Socket = socket;
-			Buffer = new ByteQueue();
+			Buffer = new SegmentedByteQueue();
 
 			m_RecvBuffer = m_ReceiveBufferPool.AcquireBuffer();
 			m_MessagePump = messagePump;
@@ -1061,7 +1061,23 @@ namespace Server.Network
 
 		public Socket Socket { get; private set; }
 
-		public ByteQueue Buffer { get; private set; }
+        public SegmentedByteQueue Buffer { get; private set; } = new SegmentedByteQueue();
+        public SegmentedByteQueue ThrottledQueue { get; } = new SegmentedByteQueue();
+
+        public void ProcessThrottledPackets()
+        {
+            // Merge all data from ThrottledQueue into Buffer.
+            // First, copy the throttled data to a contiguous array.
+            // (I could implement a ToArray() method; here I use Peek and then Advance.)
+            int len = ThrottledQueue.Length;
+            if (len > 0)
+            {
+                byte[] merged = new byte[len];
+                ThrottledQueue.Peek(merged, 0, len, 0);
+                ThrottledQueue.Advance(len);
+                Buffer.Enqueue(merged, 0, len);
+            }
+        }
 
 		public ExpansionInfo ExpansionInfo
 		{
