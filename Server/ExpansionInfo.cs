@@ -148,31 +148,19 @@ namespace Server
 
 		static ExpansionInfo()
 		{
-			Table = new[]
-			{
-				new ExpansionInfo(
+			Table =
+            [
+                new ExpansionInfo(
 					0,
 					"Endless Journey",
 					new ClientVersion("7.0.61.0"),
 					FeatureFlags.ExpansionEJ,
 					CharacterListFlags.ExpansionEJ,
 					HousingFlags.HousingEJ)
-			};
+            ];
 		}
 
-		public static FeatureFlags GetFeatures(Expansion ex)
-		{
-			ExpansionInfo info = GetInfo(ex);
-
-			if (info != null)
-			{
-				return info.SupportedFeatures;
-			}
-
-			return FeatureFlags.ExpansionEJ;
-		}
-
-		public static ExpansionInfo GetInfo(Expansion ex)
+        public static ExpansionInfo GetInfo(Expansion ex)
 		{
 			return GetInfo((int)ex);
 		}
@@ -192,25 +180,12 @@ namespace Server
 		public int ID { get; }
 		public string Name { get; }
 
-		public ClientFlags ClientFlags { get; }
-		public FeatureFlags SupportedFeatures { get; }
+        public FeatureFlags SupportedFeatures { get; }
 		public CharacterListFlags CharacterListFlags { get; }
 		public ClientVersion RequiredClient { get; }
 		public HousingFlags CustomHousingFlag { get; }
 
-		public ExpansionInfo(
-			int id,
-			string name,
-			ClientFlags clientFlags,
-			FeatureFlags supportedFeatures,
-			CharacterListFlags charListFlags,
-			HousingFlags customHousingFlag)
-			: this(id, name, supportedFeatures, charListFlags, customHousingFlag)
-		{
-			ClientFlags = clientFlags;
-		}
-
-		public ExpansionInfo(
+        public ExpansionInfo(
 			int id,
 			string name,
 			ClientVersion requiredClient,
