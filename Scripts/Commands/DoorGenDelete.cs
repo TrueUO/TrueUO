@@ -343,7 +343,6 @@ namespace Server
         {
             World.Broadcast(0x35, true, "Deleting doors, please wait.");
 
-            Network.NetState.FlushAll();
             Network.NetState.Pause();
 
             m_Map = Map.Trammel;

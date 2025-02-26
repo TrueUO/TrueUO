@@ -618,7 +618,6 @@ namespace Server
 
                     MessagePump.Slice();
 
-                    NetState.FlushAll();
                     NetState.ProcessDisposedQueue();
 
                     Slice?.Invoke();

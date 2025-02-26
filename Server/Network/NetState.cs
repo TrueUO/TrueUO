@@ -440,7 +440,7 @@ namespace Server.Network
 
 		private bool _Sending;
 
-		private readonly object _SendLock = new object();
+		private readonly Lock _SendLock = new Lock();
 
 		public virtual void Send(Packet p)
 		{
@@ -723,40 +723,9 @@ namespace Server.Network
             }
         }
 
-		public bool Flush()
-		{
-			if (Socket == null)
-			{
-				return false;
-			}
-
-			lock (_SendLock)
-			{
-				if (_Sending)
-				{
-					return false;
-				}
-            }
-
-			return false;
-		}
-
 		public static PacketHandler GetHandler(int packetID)
 		{
 			return PacketHandlers.GetHandler(packetID);
-		}
-
-		public static void FlushAll()
-		{
-			int index = m_Instances.Count;
-
-			while (--index >= 0)
-			{
-				if (index < m_Instances.Count)
-                {
-                    m_Instances[index]?.Flush();
-                }
-            }
 		}
 
 		private static int m_CoalesceSleep = -1;
@@ -832,11 +801,6 @@ namespace Server.Network
 			}
 
 			m_Disposing = true;
-
-			if (flush)
-			{
-				Flush();
-			}
 
 			try
 			{

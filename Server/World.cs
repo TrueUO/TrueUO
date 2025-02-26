@@ -109,8 +109,6 @@ namespace Server
             }
 
             p.Release();
-
-            NetState.FlushAll();
         }
 
         public static void Broadcast(int hue, bool ascii, string format, params object[] args)
@@ -884,7 +882,6 @@ namespace Server
                 return true;
             }
 
-            NetState.FlushAll();
             NetState.Pause();
 
             WaitForWriteCompletion(); //Blocks Save until current disk flush is done.
