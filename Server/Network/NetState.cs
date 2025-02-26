@@ -39,7 +39,6 @@ namespace Server.Network
 		public static event NetStateCreatedCallback CreatedCallback;
 
 		private byte[] m_RecvBuffer;
-		private readonly SendQueue m_SendQueue;
 		private AsyncCallback m_OnReceive, m_OnSend;
 
 		private readonly MessagePump m_MessagePump;
@@ -413,8 +412,6 @@ namespace Server.Network
 			Menus = new List<IMenu>();
 			Trades = new List<SecureTrade>();
 
-			m_SendQueue = new SendQueue();
-
 			m_NextCheckActivity = Core.TickCount + 30000;
 
 			m_Instances.Add(this);
@@ -473,7 +470,6 @@ namespace Server.Network
                     prof.Start();
                 }
 
-                bool pooledBuffer = false;
                 if (PacketEncoder != null || PacketEncryptor != null)
                 {
                     byte[] packetBuffer = buffer;
@@ -484,7 +480,6 @@ namespace Server.Network
                         if (packetLength <= SendBufferSize)
                         {
                             packetBuffer = m_SendBufferPool.AcquireBuffer();
-                            pooledBuffer = true;
                         }
                         else
                         {
@@ -506,19 +501,14 @@ namespace Server.Network
 
                 try
                 {
-                    SendQueue.Gram gram;
                     lock (_SendLock)
                     {
-                        // Instead of using the coalescing Enqueue that may wait for the buffer to fill,
-                        // force a flush immediately so that each packet is sent separately.
-                        gram = CreateGramForImmediateSend(buffer, length, pooledBuffer);
-
-                        if (gram != null && !_Sending)
+                        if (!_Sending)
                         {
                             _Sending = true;
                             try
                             {
-                                Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
+                                Socket.BeginSend(buffer, 0, length, SocketFlags.None, m_OnSend, Socket);
                             }
                             catch (Exception ex)
                             {
@@ -527,7 +517,9 @@ namespace Server.Network
                             }
                         }
                     }
+
                     p.OnSend();
+
                     if (prof != null)
                     {
                         prof.Finish(length);
@@ -553,36 +545,6 @@ namespace Server.Network
                 }
                 Dispose();
             }
-        }
-
-        /// <summary>
-        /// Creates a new Gram for immediate send (without waiting for the coalescing buffer to fill).
-        /// </summary>
-        private SendQueue.Gram CreateGramForImmediateSend(byte[] buffer, int length, bool pooledBuffer)
-        {
-            SendQueue.Gram gram;
-            // Use SendQueue.CoalesceBufferSize (typically 512) as the threshold since pooled buffers are that size.
-            if (length > SendQueue.CoalesceBufferSize)
-            {
-                // Packet is larger than our pooled buffer; allocate a dedicated buffer.
-                gram = SendQueue.Gram.CreateDirect(length);
-            }
-            else
-            {
-                // Packet fits in a pooled buffer.
-                gram = SendQueue.Gram.Acquire();
-            }
-    
-            int written = gram.Write(buffer, 0, length);
-            if (written != length)
-            {
-                // This should not occur if the Gram's buffer is sized correctly.
-                throw new InvalidOperationException("Packet length exceeds the gram buffer size.");
-            }
-    
-            // Only mark as pooled if we actually used a pooled buffer.
-            gram.IsPooled = pooledBuffer && (length <= SendQueue.CoalesceBufferSize);
-            return gram;
         }
 
 		public void Start()
@@ -702,39 +664,9 @@ namespace Server.Network
                     Thread.Sleep(m_CoalesceSleep);
                 }
 
-                SendQueue.Gram gram;
-                lock (m_SendQueue)
+                lock (_SendLock)
                 {
-                    gram = m_SendQueue.Dequeue();
-                    if (gram == null && m_SendQueue.IsFlushReady)
-                    {
-                        gram = m_SendQueue.CheckFlushReady();
-                    }
-                }
-
-                if (gram != null)
-                {
-                    try
-                    {
-                        s.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, s);
-                    }
-                    catch (Exception ex)
-                    {
-                        TraceException(ex);
-                        Dispose(false);
-                        return;
-                    }
-                    if (gram.IsPooled)
-                    {
-                        gram.Release();
-                    }
-                }
-                else
-                {
-                    lock (_SendLock)
-                    {
-                        _Sending = false;
-                    }
+                    _Sending = false;
                 }
             }
             catch (Exception)
@@ -804,34 +736,7 @@ namespace Server.Network
 				{
 					return false;
 				}
-
-				SendQueue.Gram gram;
-
-				lock (m_SendQueue)
-				{
-					if (!m_SendQueue.IsFlushReady)
-					{
-						return false;
-					}
-
-					gram = m_SendQueue.CheckFlushReady();
-				}
-
-				if (gram != null)
-				{
-					try
-					{
-						_Sending = true;
-						Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
-						return true;
-					}
-					catch (Exception ex)
-					{
-						TraceException(ex);
-						Dispose(false);
-					}
-				}
-			}
+            }
 
 			return false;
 		}
@@ -976,14 +881,6 @@ namespace Server.Network
 			{
 				m_Disposed.Enqueue(this);
 			}
-
-			lock (m_SendQueue)
-			{
-				if (!m_SendQueue.IsEmpty)
-				{
-					m_SendQueue.Clear();
-				}
-			}
 		}
 
 		public static void Initialize()
@@ -1071,16 +968,6 @@ namespace Server.Network
 
 		public ByteQueue Buffer { get; private set; }
 
-        public int GetSendQueuePendingCount()
-        {
-            return m_SendQueue.PendingCount;
-        }
-
-        public List<SendQueue.Gram> GetSendQueueSnapshot()
-        {
-            return m_SendQueue.GetSnapshot();
-        }
-
 		public ExpansionInfo ExpansionInfo
 		{
 			get
@@ -1160,5 +1047,13 @@ namespace Server.Network
             return _Throttles[packetID] + delayMS > Core.TickCount;
         }
         #endregion
+    }
+
+    [Serializable]
+    public sealed class CapacityExceededException : Exception
+    {
+        public CapacityExceededException()
+            : base("Too much data pending.")
+        { }
     }
 }

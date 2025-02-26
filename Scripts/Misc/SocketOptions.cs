@@ -18,12 +18,9 @@ namespace Server
         };
 
         public static bool NagleEnabled = false;// Should the Nagle algorithm be enabled? This may reduce performance
-        public static int CoalesceBufferSize = 512;// MSS that the core will use when buffering packets
 
         public static void Initialize()
         {
-            SendQueue.CoalesceBufferSize = CoalesceBufferSize;
-
             EventSink.SocketConnect += EventSink_SocketConnect;
 
             Listener.EndPoints = m_ListenerEndPoints;
