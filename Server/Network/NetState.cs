@@ -1071,6 +1071,16 @@ namespace Server.Network
 
 		public ByteQueue Buffer { get; private set; }
 
+        public int GetSendQueuePendingCount()
+        {
+            return m_SendQueue.PendingCount;
+        }
+
+        public List<SendQueue.Gram> GetSendQueueSnapshot()
+        {
+            return m_SendQueue.GetSnapshot();
+        }
+
 		public ExpansionInfo ExpansionInfo
 		{
 			get

@@ -57,8 +57,6 @@ namespace Server.Network
 
 			public int Available => _buffer.Length - _length;
 
-			public bool IsFull => _length == _buffer.Length;
-
 			private Gram()
 			{ }
 
@@ -158,81 +156,7 @@ namespace Server.Network
 			return null;
 		}
 
-		private const int PendingCap = 0x200000;
-
-		public Gram Enqueue(byte[] buffer, int length)
-		{
-			return Enqueue(buffer, 0, length);
-		}
-
-		// NEW: Overload Enqueue that accepts a bool flag for pooled buffers.
-		public Gram Enqueue(byte[] buffer, int offset, int length, bool isPooled)
-		{
-			Gram gram = Enqueue(buffer, offset, length);
-			if (gram != null)
-			{
-				gram.IsPooled = isPooled;
-			}
-			return gram;
-		}
-
-		// Existing Enqueue method
-		public Gram Enqueue(byte[] buffer, int offset, int length)
-		{
-			if (buffer == null)
-			{
-				throw new ArgumentNullException(nameof(buffer));
-			}
-			if (!(offset >= 0 && offset < buffer.Length))
-			{
-				throw new ArgumentOutOfRangeException(nameof(offset), offset, "Offset must be greater than or equal to zero and less than the size of the buffer.");
-			}
-			if (length < 0 || length > buffer.Length)
-			{
-				throw new ArgumentOutOfRangeException(nameof(length), length, "Length cannot be less than zero or greater than the size of the buffer.");
-			}
-			if (buffer.Length - offset < length)
-			{
-				throw new ArgumentException("Offset and length do not point to a valid segment within the buffer.");
-			}
-
-			int existingBytes = (_pending.Count * m_CoalesceBufferSize) + (_buffered == null ? 0 : _buffered.Length);
-			if (existingBytes + length > PendingCap)
-			{
-				throw new CapacityExceededException();
-			}
-
-			Gram gram = null;
-
-			while (length > 0)
-			{
-				if (_buffered == null)
-				{
-					// nothing yet buffered
-					_buffered = Gram.Acquire();
-				}
-
-				int bytesWritten = _buffered.Write(buffer, offset, length);
-
-				offset += bytesWritten;
-				length -= bytesWritten;
-
-				if (_buffered.IsFull)
-				{
-					if (_pending.Count == 0)
-					{
-						gram = _buffered;
-					}
-
-					_pending.Enqueue(_buffered);
-					_buffered = null;
-				}
-			}
-
-			return gram;
-		}
-
-		public void Clear()
+        public void Clear()
 		{
 			if (_buffered != null)
 			{
@@ -245,6 +169,29 @@ namespace Server.Network
 				_pending.Dequeue().Release();
 			}
 		}
+
+        public int PendingCount
+        {
+            get
+            {
+                int count = _pending.Count;
+                if (_buffered != null)
+                    count++;
+                return count;
+            }
+        }
+
+        public List<Gram> GetSnapshot()
+        {
+            List<Gram> snapshot = new List<Gram>();
+            lock (_pending)
+            {
+                snapshot.AddRange(_pending);
+            }
+            if (_buffered != null)
+                snapshot.Add(_buffered);
+            return snapshot;
+        }
 	}
 
 	[Serializable]
