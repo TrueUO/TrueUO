@@ -679,11 +679,6 @@ namespace Server.Network
 
 				m_NextCheckActivity = Core.TickCount + 90000;
 
-				if (m_CoalesceSleep >= 0)
-				{
-					Thread.Sleep(m_CoalesceSleep);
-				}
-
 				SendQueue.Gram gram;
 
 				lock (m_SendQueue)
@@ -833,11 +828,7 @@ namespace Server.Network
             }
 		}
 
-		private static int m_CoalesceSleep = -1;
-
-		public static int CoalesceSleep { get => m_CoalesceSleep; set => m_CoalesceSleep = value; }
-
-		private long m_NextCheckActivity;
+        private long m_NextCheckActivity;
 
 		public void CheckAlive(long curTicks)
 		{

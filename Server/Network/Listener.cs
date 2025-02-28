@@ -55,6 +55,7 @@ namespace Server.Network
 		private static Socket Bind(IPEndPoint ipep)
 		{
 			Socket s = new Socket(ipep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            s.NoDelay = true; // Disable Nagle's algorithm for low latency
 
 			try
 			{
@@ -150,7 +151,8 @@ namespace Server.Network
 
 			try
 			{
-				accepted = listener.EndAccept(asyncResult);
+                accepted = listener.EndAccept(asyncResult);
+                accepted.NoDelay = true; // Ensure the accepted socket sends immediately
 			}
 			catch (SocketException ex)
 			{
