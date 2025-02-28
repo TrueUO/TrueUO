@@ -31,6 +31,16 @@ namespace Server.Network
 	[PropertyObject]
 	public class NetState : IComparable<NetState>
 	{
+        public int GetSendQueuePendingCount()
+        {
+            return m_SendQueue.PendingCount;
+        }
+
+        public List<SendQueue.Gram> GetSendQueueSnapshot()
+        {
+            return m_SendQueue.GetSnapshot();
+        }
+
 		public static bool BufferStaticPackets = false;
 
 		public static event NetStateCreatedCallback CreatedCallback;
