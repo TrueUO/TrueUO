@@ -440,7 +440,6 @@ namespace Server.Network
 				return;
 			}
 
-
 			byte[] buffer = p.Compile(CompressionEnabled, out int length);
 
 			if (buffer != null)
@@ -509,7 +508,14 @@ namespace Server.Network
 						lock (m_SendQueue)
 						{
 							gram = m_SendQueue.Enqueue(buffer, length);
-						}
+
+                            // If no full‑buffer Gram was returned, but we're idle and there's
+                            // a partial chunk ready, flush it immediately:
+                            if (gram == null && !_Sending && m_SendQueue.IsFlushReady)
+                            {
+                                gram = m_SendQueue.CheckFlushReady();
+                            }
+                        }
 
 						if (buffered && m_SendBufferPool.Count < SendBufferCapacity)
 						{
