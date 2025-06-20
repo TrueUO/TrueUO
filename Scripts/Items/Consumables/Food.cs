@@ -1,7 +1,5 @@
-using Server.ContextMenus;
 using Server.Engines.Craft;
 using System;
-using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -42,9 +40,13 @@ namespace Server.Items
             set
             {
                 if (value != null)
+                {
                     m_EngravedText = value;
+                }
                 else
+                {
                     m_EngravedText = string.Empty;
+                }
 
                 InvalidateProperties();
             }
@@ -73,7 +75,9 @@ namespace Server.Items
             Food food = newItem as Food;
 
             if (food == null)
+            {
                 return;
+            }
 
             food.PlayerConstructed = m_PlayerConstructed;
             food.Poisoner = Poisoner;
@@ -90,18 +94,12 @@ namespace Server.Items
             return quality;
         }
 
-        public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
-        {
-            base.GetContextMenuEntries(from, list);
-
-            if (from.Alive)
-                list.Add(new EatEntry(from, this));
-        }
-
         public virtual bool TryEat(Mobile from)
         {
             if (Deleted || !Movable || !from.CheckAlive() || !CheckItemUse(from))
+            {
                 return false;
+            }
 
             return Eat(from);
         }
@@ -117,7 +115,9 @@ namespace Server.Items
         public override void OnDoubleClick(Mobile from)
         {
             if (!Movable)
+            {
                 return;
+            }
 
             if (from.InRange(GetWorldLocation(), 1))
             {
@@ -154,7 +154,9 @@ namespace Server.Items
                 }
 
                 if (Poison != null)
+                {
                     from.ApplyPoison(Poisoner, Poison);
+                }
 
                 Consume();
 
@@ -180,7 +182,9 @@ namespace Server.Items
             int iHunger = from.Hunger + fillFactor;
 
             if (from.Stam < from.StamMax)
+            {
                 from.Stam += Utility.Random(6, 3) + fillFactor / 5;
+            }
 
             if (iHunger >= 20)
             {
@@ -192,13 +196,21 @@ namespace Server.Items
                 from.Hunger = iHunger;
 
                 if (iHunger < 5)
+                {
                     from.SendLocalizedMessage(500868); // You eat the food, but are still extremely hungry.
+                }
                 else if (iHunger < 10)
+                {
                     from.SendLocalizedMessage(500869); // You eat the food, and begin to feel more satiated.
+                }
                 else if (iHunger < 15)
+                {
                     from.SendLocalizedMessage(500870); // After eating the food, you feel much less hungry.
+                }
                 else
+                {
                     from.SendLocalizedMessage(500871); // You feel quite full after consuming the food.
+                }
             }
 
             return true;
@@ -207,16 +219,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(7); // version
+            writer.Write(0); // version
 
             writer.Write((int)_Quality);
-
             writer.Write(m_EngravedText);
-
             writer.Write(m_PlayerConstructed);
             writer.Write(Poisoner);
-
             Poison.Serialize(Poison, writer);
             writer.Write(FillFactor);
         }
@@ -224,62 +232,14 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        switch (reader.ReadInt())
-                        {
-                            case 0:
-                                Poison = null;
-                                break;
-                            case 1:
-                                Poison = Poison.Lesser;
-                                break;
-                            case 2:
-                                Poison = Poison.Regular;
-                                break;
-                            case 3:
-                                Poison = Poison.Greater;
-                                break;
-                            case 4:
-                                Poison = Poison.Deadly;
-                                break;
-                        }
-
-                        break;
-                    }
-                case 2:
-                    {
-                        Poison = Poison.Deserialize(reader);
-                        break;
-                    }
-                case 3:
-                    {
-                        Poison = Poison.Deserialize(reader);
-                        FillFactor = reader.ReadInt();
-                        break;
-                    }
-                case 4:
-                    {
-                        Poisoner = reader.ReadMobile();
-                        goto case 3;
-                    }
-                case 5:
-                    {
-                        m_PlayerConstructed = reader.ReadBool();
-                        goto case 4;
-                    }
-                case 6:
-                    m_EngravedText = reader.ReadString();
-                    goto case 5;
-                case 7:
-                    _Quality = (ItemQuality)reader.ReadInt();
-                    goto case 6;
-            }
+            _Quality = (ItemQuality)reader.ReadInt();
+            m_EngravedText = reader.ReadString();
+            m_PlayerConstructed = reader.ReadBool();
+            Poisoner = reader.ReadMobile();
+            Poison = Poison.Deserialize(reader);
+            FillFactor = reader.ReadInt();
         }
     }
 
@@ -861,7 +821,9 @@ namespace Server.Items
             int version = reader.ReadInt();
 
             if (version == 0)
+            {
                 Stackable = true;
+            }
         }
     }
 
@@ -1437,7 +1399,9 @@ namespace Server.Items
                 _Pieces = value;
 
                 if (_Pieces <= 0)
+                {
                     Delete();
+                }
             }
         }
 
