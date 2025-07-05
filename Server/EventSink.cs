@@ -48,7 +48,7 @@ namespace Server
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
 
-	public class CreateGuildEventArgs : EventArgs
+	public sealed class CreateGuildEventArgs : EventArgs
 	{
 		public int Id { get; set; }
 
@@ -60,7 +60,7 @@ namespace Server
 		}
 	}
 
-	public class AggressiveActionEventArgs : EventArgs
+	public sealed class AggressiveActionEventArgs : EventArgs
 	{
 		private Mobile m_Aggressed;
 		private Mobile m_Aggressor;
@@ -105,7 +105,7 @@ namespace Server
 		}
 	}
 
-	public class PaperdollRequestEventArgs : EventArgs
+	public sealed class PaperdollRequestEventArgs : EventArgs
 	{
 		private readonly Mobile m_Beholder;
 		private readonly Mobile m_Beheld;
@@ -120,7 +120,7 @@ namespace Server
 		}
 	}
 
-	public class AccountLoginEventArgs : EventArgs
+	public sealed class AccountLoginEventArgs : EventArgs
 	{
 		private readonly NetState m_State;
 		private readonly string m_Username;
@@ -141,7 +141,7 @@ namespace Server
 		}
 	}
 
-	public class SocketConnectEventArgs : EventArgs
+	public sealed class SocketConnectEventArgs : EventArgs
 	{
 		private readonly Socket m_Socket;
 
@@ -155,10 +155,11 @@ namespace Server
 		}
 	}
 
-	public class ShutdownEventArgs : EventArgs
-	{ }
+    public sealed class ShutdownEventArgs : EventArgs
+    {
+    }
 
-	public class CrashedEventArgs : EventArgs
+	public sealed class CrashedEventArgs : EventArgs
 	{
 		private readonly Exception m_Exception;
 
@@ -171,7 +172,7 @@ namespace Server
 		}
 	}
 
-	public class MovementEventArgs : EventArgs
+	public sealed class MovementEventArgs : EventArgs
 	{
 		private Mobile m_Mobile;
 		private Direction m_Direction;
@@ -215,7 +216,7 @@ namespace Server
 		}
 	}
 
-	public class ServerListEventArgs : EventArgs
+	public sealed class ServerListEventArgs : EventArgs
 	{
 		private readonly NetState m_State;
 		private readonly IAccount m_Account;
@@ -259,7 +260,7 @@ namespace Server
 		}
 	}
 
-	public class SpeechEventArgs : EventArgs
+	public sealed class SpeechEventArgs : EventArgs
 	{
 		private readonly Mobile m_Mobile;
 		private readonly MessageType m_Type;
@@ -297,28 +298,28 @@ namespace Server
 		}
 	}
 
-	public class WorldSaveEventArgs : EventArgs
+	public sealed class WorldSaveEventArgs : EventArgs
 	{
         public WorldSaveEventArgs()
 		{
         }
 	}
 
-	public class BeforeWorldSaveEventArgs : EventArgs
+	public sealed class BeforeWorldSaveEventArgs : EventArgs
 	{
 		public BeforeWorldSaveEventArgs()
 		{
 		}
 	}
 
-	public class AfterWorldSaveEventArgs : EventArgs
+	public sealed class AfterWorldSaveEventArgs : EventArgs
 	{
 		public AfterWorldSaveEventArgs()
 		{
 		}
 	}
 
-	public class FastWalkEventArgs : EventArgs
+	public sealed class FastWalkEventArgs : EventArgs
 	{
 		private readonly NetState m_State;
 
@@ -332,7 +333,7 @@ namespace Server
 		public bool Blocked { get; set; }
 	}
 
-	public class OnEnterRegionEventArgs : EventArgs
+	public sealed class OnEnterRegionEventArgs : EventArgs
 	{
 		private readonly Mobile m_From;
 		private readonly Region m_OldRegion;
@@ -350,7 +351,7 @@ namespace Server
 		public Region NewRegion => m_NewRegion;
 	}
 
-	public class ItemDeletedEventArgs : EventArgs
+	public sealed class ItemDeletedEventArgs : EventArgs
 	{
 		public Item Item { get; set; }
 
@@ -360,7 +361,7 @@ namespace Server
 		}
 	}
 
-	public class ContainerDroppedToEventArgs : EventArgs
+	public sealed class ContainerDroppedToEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
 		public Container Container { get; set; }
@@ -374,7 +375,7 @@ namespace Server
 		}
 	}
 
-	public class MultiDesignQueryEventArgs : EventArgs
+	public sealed class MultiDesignQueryEventArgs : EventArgs
 	{
 		public NetState State { get; set; }
 		public BaseMulti Multi { get; set; }

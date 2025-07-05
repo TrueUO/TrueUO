@@ -4,7 +4,7 @@ namespace Server.Network
 
     public delegate bool ThrottlePacketCallback(byte packetID, NetState state, out bool drop);
 
-    public class PacketHandler
+    public sealed class PacketHandler
 	{
 		private readonly int m_PacketID;
 		private readonly int m_Length;

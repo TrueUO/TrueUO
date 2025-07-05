@@ -1,13 +1,11 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-#endregion
 
 namespace Server
 {
-	public class AggressorInfo
+	public sealed class AggressorInfo
 	{
 		private Mobile m_Attacker, m_Defender;
 		private DateTime m_LastCombatTime;

@@ -96,7 +96,7 @@
         },
         "runtime": {
           "Scripts.dll": {
-            "assemblyVersion": "1.0.0",
+            "assemblyVersion": "0.0.0.0",
             "fileVersion": "0.0.0.0"
           }
         }
@@ -111,7 +111,7 @@
         },
         "runtime": {
           "Server.dll": {
-            "assemblyVersion": "1.0.0",
+            "assemblyVersion": "0.5.0.0",
             "fileVersion": "0.5.0.0"
           }
         }

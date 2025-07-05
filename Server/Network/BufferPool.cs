@@ -1,10 +1,8 @@
-#region References
 using System.Collections.Generic;
-#endregion
 
 namespace Server.Network
 {
-	public class BufferPool
+	public sealed class BufferPool
 	{
 		public static List<BufferPool> Pools { get; }
 
