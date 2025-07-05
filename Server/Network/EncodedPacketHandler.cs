@@ -2,7 +2,7 @@ namespace Server.Network
 {
 	public delegate void OnEncodedPacketReceive(NetState state, IEntity ent, EncodedReader pvSrc);
 
-	public class EncodedPacketHandler
+	public sealed class EncodedPacketHandler
 	{
 		private readonly int m_PacketID;
 		private readonly bool m_Ingame;

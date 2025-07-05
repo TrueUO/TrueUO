@@ -1,12 +1,10 @@
-#region References
 using System;
 using System.Net;
 using System.Net.Sockets;
-#endregion
 
 namespace Server.Network
 {
-	public class PingListener : IDisposable
+	public sealed class PingListener : IDisposable
 	{
 		private UdpClient _Listener;
 		private const int Port = 12000;

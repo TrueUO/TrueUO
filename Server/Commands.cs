@@ -9,7 +9,7 @@ namespace Server.Commands
 {
 	public delegate void CommandEventHandler(CommandEventArgs e);
 
-	public class CommandEventArgs : EventArgs
+	public sealed class CommandEventArgs : EventArgs
 	{
 		private readonly Mobile m_Mobile;
 		private readonly string m_Command;
@@ -85,7 +85,7 @@ namespace Server.Commands
 		}
 	}
 
-	public class CommandEntry : IComparable
+	public sealed class CommandEntry : IComparable
 	{
 		private readonly string m_Command;
 		private readonly CommandEventHandler m_Handler;

@@ -1,11 +1,9 @@
-#region References
 using System.IO;
 using System.Text;
-#endregion
 
 namespace Server.Network
 {
-	public class PacketReader
+	public sealed class PacketReader
 	{
 		private readonly byte[] m_Data;
 		private readonly int m_Size;
