@@ -6,7 +6,7 @@ namespace Server.Items
     /// <summary>
     /// Strike your opponent with great force, partially bypassing their armor and inflicting greater damage. Requires either Bushido or Ninjitsu skill
     /// </summary>
-    public class ArmorPierce : WeaponAbility
+    public sealed class ArmorPierce : WeaponAbility
     {
         private static Dictionary<Mobile, Timer> _Table = new Dictionary<Mobile, Timer>();
 

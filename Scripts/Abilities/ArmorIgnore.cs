@@ -5,7 +5,7 @@ namespace Server.Items
     /// The Armor Ignore shot does slightly less damage than normal.
     /// Against a heavily armored opponent, this ability is a big win, but when used against a very lightly armored foe, it might be better to use a standard strike!
     /// </summary>
-    public class ArmorIgnore : WeaponAbility
+    public sealed class ArmorIgnore : WeaponAbility
     {
         public override int BaseMana => 30;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class Bladeweave : WeaponAbility
+    public sealed class Bladeweave : WeaponAbility
     {
         private class BladeWeaveRedirect
         {

@@ -4858,16 +4858,10 @@ namespace Server.Mobiles
 
         public static event PlayerPropertiesEventHandler PlayerProperties;
 
-        public class PlayerPropertiesEventArgs : EventArgs
+        public sealed class PlayerPropertiesEventArgs(PlayerMobile player, ObjectPropertyList list) : EventArgs
         {
-            public PlayerMobile Player;
-            public ObjectPropertyList PropertyList;
-
-            public PlayerPropertiesEventArgs(PlayerMobile player, ObjectPropertyList list)
-            {
-                Player = player;
-                PropertyList = list;
-            }
+            public PlayerMobile Player = player;
+            public ObjectPropertyList PropertyList = list;
         }
 
         public override void GetProperties(ObjectPropertyList list)

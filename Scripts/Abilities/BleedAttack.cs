@@ -12,7 +12,7 @@ namespace Server.Items
     /// When successful, the target will bleed for several seconds, taking damage as time passes for up to ten seconds.
     /// The rate of damage slows down as time passes, and the blood loss can be completely staunched with the use of bandages. 
     /// </summary>
-    public class BleedAttack : WeaponAbility
+    public sealed class BleedAttack : WeaponAbility
     {
         private static readonly Dictionary<Mobile, BleedTimer> _BleedTable = new Dictionary<Mobile, BleedTimer>();
 
