@@ -14,7 +14,7 @@ namespace Server.Items
     // 120 parry - 20/55
     // .6875
 
-    public class Block : WeaponAbility
+    public sealed class Block : WeaponAbility
     {
         private static Dictionary<Mobile, BlockInfo> _Table;
 

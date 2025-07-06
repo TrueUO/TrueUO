@@ -8,7 +8,7 @@ using Server.Guilds;
 
 namespace Server
 {
-    public class ThreadedSaveStrategy : ISaveStrategy
+    public sealed class ThreadedSaveStrategy : ISaveStrategy
     {
         private readonly ConcurrentQueue<Item> _DecayQueue = new(); 
         private bool _AllFilesSaved = true;

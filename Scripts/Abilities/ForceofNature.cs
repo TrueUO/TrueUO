@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class ForceOfNature : WeaponAbility
+    public sealed class ForceOfNature : WeaponAbility
     {
         public override int BaseMana => 35;
 

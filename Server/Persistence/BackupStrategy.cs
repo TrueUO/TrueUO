@@ -5,7 +5,7 @@ using Server.Guilds;
 
 namespace Server
 {
-    public class BackupStrategy : ISaveStrategy
+    public sealed class BackupStrategy : ISaveStrategy
     {
         private readonly Queue<Item> _DecayQueue = new();
 

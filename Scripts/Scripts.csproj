@@ -29,4 +29,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Server\Server.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Menus\" />
+  </ItemGroup>
 </Project>

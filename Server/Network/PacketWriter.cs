@@ -1,16 +1,14 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-#endregion
 
 namespace Server.Network
 {
 	/// <summary>
 	///     Provides functionality for writing primitive binary data.
 	/// </summary>
-	public class PacketWriter
+	public sealed class PacketWriter
 	{
 		private static readonly Stack<PacketWriter> m_Pool = new Stack<PacketWriter>();
 

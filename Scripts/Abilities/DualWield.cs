@@ -6,7 +6,7 @@ namespace Server.Items
     /// <summary>
     /// Attack faster as you swing with both weapons.
     /// </summary>
-    public class DualWield : WeaponAbility
+    public sealed class DualWield : WeaponAbility
     {
         private static readonly Dictionary<Mobile, DualWieldTimer> m_Registry = new Dictionary<Mobile, DualWieldTimer>();
 

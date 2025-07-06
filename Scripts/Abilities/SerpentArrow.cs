@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class SerpentArrow : WeaponAbility
+    public sealed class SerpentArrow : WeaponAbility
     {
         public override int BaseMana => 25;
 

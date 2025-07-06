@@ -10,8 +10,6 @@ using Server.Network;
 
 namespace Server
 {
-	public delegate void CharacterCreatedEventHandler(CharacterCreatedEventArgs e);
-
 	public delegate void SpeechEventHandler(SpeechEventArgs e);
 
 	public delegate void ServerListEventHandler(ServerListEventArgs e);
@@ -30,10 +28,6 @@ namespace Server
 
 	public delegate void AggressiveActionEventHandler(AggressiveActionEventArgs e);
 
-	public delegate void GameLoginEventHandler(GameLoginEventArgs e);
-
-	public delegate void DeleteRequestEventHandler(DeleteRequestEventArgs e);
-
 	public delegate void WorldLoadEventHandler();
 
 	public delegate void WorldSaveEventHandler(WorldSaveEventArgs e);
@@ -46,10 +40,6 @@ namespace Server
 
 	public delegate void CreateGuildHandler(CreateGuildEventArgs e);
 
-	public delegate void ClientVersionReceivedHandler(ClientVersionReceivedArgs e);
-
-	public delegate void ClientTypeReceivedHandler(ClientTypeReceivedArgs e);
-
 	public delegate void OnEnterRegionEventHandler(OnEnterRegionEventArgs e);
 
 	public delegate void ItemDeletedEventHandler(ItemDeletedEventArgs e);
@@ -58,34 +48,7 @@ namespace Server
 
 	public delegate void MultiDesignQueryHandler(MultiDesignQueryEventArgs e);
 
-	public class ClientVersionReceivedArgs : EventArgs
-	{
-		private readonly NetState m_State;
-		private readonly ClientVersion m_Version;
-
-		public NetState State => m_State;
-		public ClientVersion Version => m_Version;
-
-		public ClientVersionReceivedArgs(NetState state, ClientVersion cv)
-		{
-			m_State = state;
-			m_Version = cv;
-		}
-	}
-
-	public class ClientTypeReceivedArgs : EventArgs
-	{
-		private readonly NetState m_State;
-
-		public NetState State => m_State;
-
-		public ClientTypeReceivedArgs(NetState state)
-		{
-			m_State = state;
-		}
-	}
-
-	public class CreateGuildEventArgs : EventArgs
+	public sealed class CreateGuildEventArgs : EventArgs
 	{
 		public int Id { get; set; }
 
@@ -97,42 +60,7 @@ namespace Server
 		}
 	}
 
-	public class DeleteRequestEventArgs : EventArgs
-	{
-		private readonly NetState m_State;
-		private readonly int m_Index;
-
-		public NetState State => m_State;
-		public int Index => m_Index;
-
-		public DeleteRequestEventArgs(NetState state, int index)
-		{
-			m_State = state;
-			m_Index = index;
-		}
-	}
-
-	public class GameLoginEventArgs : EventArgs
-	{
-		private readonly NetState m_State;
-		private readonly string m_Username;
-		private readonly string m_Password;
-
-		public NetState State => m_State;
-		public string Username => m_Username;
-		public string Password => m_Password;
-		public bool Accepted { get; set; }
-		public CityInfo[] CityInfo { get; set; }
-
-		public GameLoginEventArgs(NetState state, string un, string pw)
-		{
-			m_State = state;
-			m_Username = un;
-			m_Password = pw;
-		}
-	}
-
-	public class AggressiveActionEventArgs : EventArgs
+	public sealed class AggressiveActionEventArgs : EventArgs
 	{
 		private Mobile m_Aggressed;
 		private Mobile m_Aggressor;
@@ -177,7 +105,7 @@ namespace Server
 		}
 	}
 
-	public class PaperdollRequestEventArgs : EventArgs
+	public sealed class PaperdollRequestEventArgs : EventArgs
 	{
 		private readonly Mobile m_Beholder;
 		private readonly Mobile m_Beheld;
@@ -192,7 +120,7 @@ namespace Server
 		}
 	}
 
-	public class AccountLoginEventArgs : EventArgs
+	public sealed class AccountLoginEventArgs : EventArgs
 	{
 		private readonly NetState m_State;
 		private readonly string m_Username;
@@ -213,7 +141,7 @@ namespace Server
 		}
 	}
 
-	public class SocketConnectEventArgs : EventArgs
+	public sealed class SocketConnectEventArgs : EventArgs
 	{
 		private readonly Socket m_Socket;
 
@@ -227,10 +155,11 @@ namespace Server
 		}
 	}
 
-	public class ShutdownEventArgs : EventArgs
-	{ }
+    public sealed class ShutdownEventArgs : EventArgs
+    {
+    }
 
-	public class CrashedEventArgs : EventArgs
+	public sealed class CrashedEventArgs : EventArgs
 	{
 		private readonly Exception m_Exception;
 
@@ -243,7 +172,7 @@ namespace Server
 		}
 	}
 
-	public class MovementEventArgs : EventArgs
+	public sealed class MovementEventArgs : EventArgs
 	{
 		private Mobile m_Mobile;
 		private Direction m_Direction;
@@ -287,7 +216,7 @@ namespace Server
 		}
 	}
 
-	public class ServerListEventArgs : EventArgs
+	public sealed class ServerListEventArgs : EventArgs
 	{
 		private readonly NetState m_State;
 		private readonly IAccount m_Account;
@@ -331,119 +260,7 @@ namespace Server
 		}
 	}
 
-	public class CharacterCreatedEventArgs : EventArgs
-	{
-		private readonly NetState m_State;
-		private readonly IAccount m_Account;
-		private readonly CityInfo m_City;
-		private readonly SkillNameValue[] m_Skills;
-		private readonly int m_ShirtHue;
-		private readonly int m_PantsHue;
-		private readonly int m_HairID;
-		private readonly int m_HairHue;
-		private readonly int m_BeardID;
-		private readonly int m_BeardHue;
-		private readonly string m_Name;
-		private readonly bool m_Female;
-		private readonly int m_Hue;
-		private readonly int m_Str;
-		private readonly int m_Dex;
-		private readonly int m_Int;
-		private readonly Race m_Race;
-		private readonly int m_Face;
-		private readonly int m_FaceHue;
-
-		public NetState State => m_State;
-		public IAccount Account => m_Account;
-		public Mobile Mobile { get; set; }
-		public string Name => m_Name;
-		public bool Female => m_Female;
-		public int Hue => m_Hue;
-		public int Str => m_Str;
-		public int Dex => m_Dex;
-		public int Int => m_Int;
-		public CityInfo City => m_City;
-		public SkillNameValue[] Skills => m_Skills;
-		public int ShirtHue => m_ShirtHue;
-		public int PantsHue => m_PantsHue;
-		public int HairID => m_HairID;
-		public int HairHue => m_HairHue;
-		public int BeardID => m_BeardID;
-		public int BeardHue => m_BeardHue;
-		public int Profession { get; set; }
-		public Race Race => m_Race;
-		public int FaceID => m_Face;
-		public int FaceHue => m_FaceHue;
-
-		public CharacterCreatedEventArgs(
-			NetState state,
-			IAccount a,
-			string name,
-			bool female,
-			int hue,
-			int str,
-			int dex,
-			int intel,
-			CityInfo city,
-			SkillNameValue[] skills,
-			int shirtHue,
-			int pantsHue,
-			int hairID,
-			int hairHue,
-			int beardID,
-			int beardHue,
-			int profession,
-			Race race)
-			: this(state, a, name, female, hue, str, dex, intel, city, skills, shirtHue, pantsHue, hairID, hairHue, beardID, beardHue, profession, race, 0, 0)
-		{
-		}
-
-		public CharacterCreatedEventArgs(
-			NetState state,
-			IAccount a,
-			string name,
-			bool female,
-			int hue,
-			int str,
-			int dex,
-			int intel,
-			CityInfo city,
-			SkillNameValue[] skills,
-			int shirtHue,
-			int pantsHue,
-			int hairID,
-			int hairHue,
-			int beardID,
-			int beardHue,
-			int profession,
-			Race race,
-			int faceID,
-			int faceHue)
-		{
-			m_State = state;
-			m_Account = a;
-			m_Name = name;
-			m_Female = female;
-			m_Hue = hue;
-			m_Str = str;
-			m_Dex = dex;
-			m_Int = intel;
-			m_City = city;
-			m_Skills = skills;
-			m_ShirtHue = shirtHue;
-			m_PantsHue = pantsHue;
-			m_HairID = hairID;
-			m_HairHue = hairHue;
-			m_BeardID = beardID;
-			m_BeardHue = beardHue;
-			Profession = profession;
-			m_Race = race;
-			m_Face = faceID;
-			m_FaceHue = faceHue;
-		}
-	}
-
-	public class SpeechEventArgs : EventArgs
+	public sealed class SpeechEventArgs : EventArgs
 	{
 		private readonly Mobile m_Mobile;
 		private readonly MessageType m_Type;
@@ -481,28 +298,28 @@ namespace Server
 		}
 	}
 
-	public class WorldSaveEventArgs : EventArgs
+	public sealed class WorldSaveEventArgs : EventArgs
 	{
         public WorldSaveEventArgs()
 		{
         }
 	}
 
-	public class BeforeWorldSaveEventArgs : EventArgs
+	public sealed class BeforeWorldSaveEventArgs : EventArgs
 	{
 		public BeforeWorldSaveEventArgs()
 		{
 		}
 	}
 
-	public class AfterWorldSaveEventArgs : EventArgs
+	public sealed class AfterWorldSaveEventArgs : EventArgs
 	{
 		public AfterWorldSaveEventArgs()
 		{
 		}
 	}
 
-	public class FastWalkEventArgs : EventArgs
+	public sealed class FastWalkEventArgs : EventArgs
 	{
 		private readonly NetState m_State;
 
@@ -516,7 +333,7 @@ namespace Server
 		public bool Blocked { get; set; }
 	}
 
-	public class OnEnterRegionEventArgs : EventArgs
+	public sealed class OnEnterRegionEventArgs : EventArgs
 	{
 		private readonly Mobile m_From;
 		private readonly Region m_OldRegion;
@@ -534,7 +351,7 @@ namespace Server
 		public Region NewRegion => m_NewRegion;
 	}
 
-	public class ItemDeletedEventArgs : EventArgs
+	public sealed class ItemDeletedEventArgs : EventArgs
 	{
 		public Item Item { get; set; }
 
@@ -544,7 +361,7 @@ namespace Server
 		}
 	}
 
-	public class ContainerDroppedToEventArgs : EventArgs
+	public sealed class ContainerDroppedToEventArgs : EventArgs
 	{
 		public Mobile Mobile { get; set; }
 		public Container Container { get; set; }
@@ -558,7 +375,7 @@ namespace Server
 		}
 	}
 
-	public class MultiDesignQueryEventArgs : EventArgs
+	public sealed class MultiDesignQueryEventArgs : EventArgs
 	{
 		public NetState State { get; set; }
 		public BaseMulti Multi { get; set; }
@@ -572,7 +389,6 @@ namespace Server
 
 	public static class EventSink
 	{
-		public static event CharacterCreatedEventHandler CharacterCreated;
 		public static event SpeechEventHandler Speech;
 		public static event ServerListEventHandler ServerList;
 		public static event MovementEventHandler Movement;
@@ -583,30 +399,16 @@ namespace Server
 		public static event PaperdollRequestEventHandler PaperdollRequest;
 		public static event AggressiveActionEventHandler AggressiveAction;
 		public static event CommandEventHandler Command;
-		public static event GameLoginEventHandler GameLogin;
-		public static event DeleteRequestEventHandler DeleteRequest;
 		public static event WorldLoadEventHandler WorldLoad;
 		public static event WorldSaveEventHandler WorldSave;
 		public static event BeforeWorldSaveEventHandler BeforeWorldSave;
 		public static event AfterWorldSaveEventHandler AfterWorldSave;
 		public static event FastWalkEventHandler FastWalk;
 		public static event CreateGuildHandler CreateGuild;
-		public static event ClientVersionReceivedHandler ClientVersionReceived;
-		public static event ClientTypeReceivedHandler ClientTypeReceived;
 		public static event OnEnterRegionEventHandler OnEnterRegion;
 		public static event ItemDeletedEventHandler ItemDeleted;
 		public static event ContainerDroppedToEventHandler ContainerDroppedTo;
 		public static event MultiDesignQueryHandler MultiDesign;
-
-		public static void InvokeClientVersionReceived(ClientVersionReceivedArgs e)
-        {
-            ClientVersionReceived?.Invoke(e);
-        }
-
-		public static void InvokeClientTypeReceived(ClientTypeReceivedArgs e)
-        {
-            ClientTypeReceived?.Invoke(e);
-        }
 
 		public static void InvokeCreateGuild(CreateGuildEventArgs e)
         {
@@ -616,16 +418,6 @@ namespace Server
 		public static void InvokeFastWalk(FastWalkEventArgs e)
         {
             FastWalk?.Invoke(e);
-        }
-
-		public static void InvokeDeleteRequest(DeleteRequestEventArgs e)
-        {
-            DeleteRequest?.Invoke(e);
-        }
-
-		public static void InvokeGameLogin(GameLoginEventArgs e)
-        {
-            GameLogin?.Invoke(e);
         }
 
 		public static void InvokeCommand(CommandEventArgs e)
@@ -676,11 +468,6 @@ namespace Server
 		public static void InvokeSpeech(SpeechEventArgs e)
         {
             Speech?.Invoke(e);
-        }
-
-		public static void InvokeCharacterCreated(CharacterCreatedEventArgs e)
-        {
-            CharacterCreated?.Invoke(e);
         }
 
 		public static void InvokeWorldLoad()

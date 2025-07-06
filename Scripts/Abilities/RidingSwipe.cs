@@ -8,7 +8,7 @@ namespace Server.Items
     /// living mount(which must be healed before ridden again). If you are mounted, damages
     /// and stuns the mounted opponent.
     /// </summary>
-    public class RidingSwipe : WeaponAbility
+    public sealed class RidingSwipe : WeaponAbility
     {
         public override int BaseMana => 25;
 

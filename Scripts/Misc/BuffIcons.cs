@@ -6,17 +6,6 @@ namespace Server
 {
     public class BuffInfo
     {
-        public static void Initialize()
-        {
-            EventSink.ClientVersionReceived += delegate (ClientVersionReceivedArgs args)
-            {
-                if (args.State.Mobile is PlayerMobile pm)
-                {
-                    Timer.DelayCall(TimeSpan.Zero, pm.ResendBuffs);
-                }
-            };
-        }
-
         public static int Blank => 1114057;  // ~1_val~
 
         #region Properties

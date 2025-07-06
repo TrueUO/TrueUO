@@ -214,8 +214,8 @@ namespace Server
 	[Parsable]
 	public struct Point3D : IPoint3D, IComparable, IComparable<Point3D>
 	{
-		internal int m_X;
-		internal int m_Y;
+        public int m_X;
+		public int m_Y;
 		internal int m_Z;
 
 		public static readonly Point3D Zero = new Point3D(0, 0, 0);

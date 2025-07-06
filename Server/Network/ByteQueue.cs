@@ -1,10 +1,8 @@
-#region References
 using System;
-#endregion
 
 namespace Server.Network
 {
-	public class ByteQueue
+	public sealed class ByteQueue
 	{
 		private int m_Head;
 		private int m_Tail;

@@ -10,7 +10,7 @@ namespace Server.Items
     /// With this change, weapons will no longer be corroded by poison.
     /// Level 5 poison will be possible when using this special move.
     /// </summary>
-    public class InfectiousStrike : WeaponAbility
+    public sealed class InfectiousStrike : WeaponAbility
     {
         public override int BaseMana => 20;
 

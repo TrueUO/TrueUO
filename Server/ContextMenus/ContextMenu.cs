@@ -14,7 +14,7 @@ namespace Server.ContextMenus
 	///     that the menu is composed of.
 	///     <seealso cref="ContextMenuEntry" />
 	/// </summary>
-	public class ContextMenu : IDisposable
+	public sealed class ContextMenu : IDisposable
 	{
 		public bool IsDisposed { get; private set; }
 

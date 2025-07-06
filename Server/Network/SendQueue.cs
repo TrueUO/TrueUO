@@ -7,41 +7,41 @@ namespace Server.Network
 {
 	public class SendQueue
 	{
+        public int PendingCount => _pending.Count;
+
+        public List<Gram> GetSnapshot()
+        {
+            // Return a shallow copy of the pending Gram objects
+            return new List<Gram>(_pending);
+        }
+
 		public class Gram
 		{
 			private static readonly Stack<Gram> _pool = new Stack<Gram>();
 
 			public static Gram Acquire()
 			{
-				lock (_pool)
-				{
-					Gram gram;
+                lock (_pool)
+                {
+                    Gram gram = _pool.Count > 0 ? _pool.Pop() : new Gram();
 
-					if (_pool.Count > 0)
-					{
-						gram = _pool.Pop();
-					}
-					else
-					{
-						gram = new Gram();
-					}
+                    // Acquire a fresh buffer from the pool
+                    gram._buffer = AcquireBuffer();
 
-					gram._buffer = AcquireBuffer();
-					gram._length = 0;
+                    // Clear out the buffer to remove any residual data
+                    //Array.Clear(gram._buffer, 0, gram._buffer.Length);
 
-					return gram;
-				}
+                    gram._length = 0;
+                    return gram;
+                }
 			}
 
 			private byte[] _buffer;
 			private int _length;
 
 			public byte[] Buffer => _buffer;
-
 			public int Length => _length;
-
 			public int Available => _buffer.Length - _length;
-
 			public bool IsFull => _length == _buffer.Length;
 
 			private Gram()
@@ -62,8 +62,11 @@ namespace Server.Network
 			{
 				lock (_pool)
 				{
-					_pool.Push(this);
-					ReleaseBuffer(_buffer);
+                    // Return the current buffer to the pool
+                    ReleaseBuffer(_buffer);
+
+                    _buffer = null;
+                    _pool.Push(this);
 				}
 			}
 		}

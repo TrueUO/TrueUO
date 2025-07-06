@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class ForceArrow : WeaponAbility
+    public sealed class ForceArrow : WeaponAbility
     {
         public override int BaseMana => 20;
 

@@ -3,7 +3,7 @@ namespace Server.Items
     /// <summary>
     /// Also known as the Haymaker, this attack dramatically increases the damage done by a weapon reaching its mark.
     /// </summary>
-    public class CrushingBlow : WeaponAbility
+    public sealed class CrushingBlow : WeaponAbility
     {
         public override int BaseMana => 20;
 

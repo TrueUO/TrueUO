@@ -2598,7 +2598,7 @@ namespace Server.Mobiles
                 if (m_bSummoned)
                 {
                     m_SummonEnd = reader.ReadDeltaTime();
-                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete());
+                    new UnsummonTimer(this, m_SummonEnd - DateTime.UtcNow).Start();
                 }
 
                 m_iControlSlots = reader.ReadInt();
@@ -6138,8 +6138,8 @@ namespace Server.Mobiles
             creature.SetHits(
                 (int)Math.Floor(creature.HitsMax * (1 + ArcaneEmpowermentSpell.GetSpellBonus(caster, false) / 100.0)));
 
+            new UnsummonTimer(creature, duration).Start();
             creature.m_SummonEnd = DateTime.UtcNow + duration;
-            TimerRegistry.Register("UnsummonTimer", creature, duration, c => c.Delete());
 
             creature.MoveToWorld(p, caster.Map);
 

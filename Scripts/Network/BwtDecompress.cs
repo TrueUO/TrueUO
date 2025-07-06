@@ -116,7 +116,7 @@ namespace Server
 
             if (sum != len)
             {
-                return Array.Empty<byte>();
+                return [];
             }
 
             byte[] output = new byte[len];

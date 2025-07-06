@@ -4,7 +4,7 @@ namespace Server.Items
     /// Available on some crossbows, this special move allows archers to fire while on the move.
     /// This shot is somewhat less accurate than normal, but the ability to fire while running is a clear advantage.
     /// </summary>
-    public class MovingShot : WeaponAbility
+    public sealed class MovingShot : WeaponAbility
     {
         public override int BaseMana => 20;
 

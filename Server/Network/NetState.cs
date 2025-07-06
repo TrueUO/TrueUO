@@ -1,4 +1,3 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,14 +5,12 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-
 using Server.Accounting;
 using Server.Diagnostics;
 using Server.Gumps;
 using Server.HuePickers;
 using Server.Items;
 using Server.Menus;
-#endregion
 
 namespace Server.Network
 {
@@ -34,6 +31,16 @@ namespace Server.Network
 	[PropertyObject]
 	public class NetState : IComparable<NetState>
 	{
+        public int GetSendQueuePendingCount()
+        {
+            return m_SendQueue.PendingCount;
+        }
+
+        public List<SendQueue.Gram> GetSendQueueSnapshot()
+        {
+            return m_SendQueue.GetSnapshot();
+        }
+
 		public static bool BufferStaticPackets = false;
 
 		public static event NetStateCreatedCallback CreatedCallback;
@@ -143,34 +150,14 @@ namespace Server.Network
             Trades?.Remove(trade);
         }
 
-		public SecureTrade FindTrade(Mobile m)
+        public SecureTradeContainer FindTradeContainer(Mobile m)
 		{
 			if (Trades == null)
 			{
 				return null;
 			}
 
-            for (var index = 0; index < Trades.Count; index++)
-            {
-                SecureTrade trade = Trades[index];
-
-                if (trade.From.Mobile == m || trade.To.Mobile == m)
-                {
-                    return trade;
-                }
-            }
-
-            return null;
-		}
-
-		public SecureTradeContainer FindTradeContainer(Mobile m)
-		{
-			if (Trades == null)
-			{
-				return null;
-			}
-
-            for (var index = 0; index < Trades.Count; index++)
+            for (int index = 0; index < Trades.Count; index++)
             {
                 SecureTrade trade = Trades[index];
                 SecureTradeInfo from = trade.From;
@@ -453,7 +440,6 @@ namespace Server.Network
 				return;
 			}
 
-
 			byte[] buffer = p.Compile(CompressionEnabled, out int length);
 
 			if (buffer != null)
@@ -522,7 +508,14 @@ namespace Server.Network
 						lock (m_SendQueue)
 						{
 							gram = m_SendQueue.Enqueue(buffer, length);
-						}
+
+                            // If no full‑buffer Gram was returned, but we're idle and there's
+                            // a partial chunk ready, flush it immediately:
+                            if (gram == null && !_Sending && m_SendQueue.IsFlushReady)
+                            {
+                                gram = m_SendQueue.CheckFlushReady();
+                            }
+                        }
 
 						if (buffered && m_SendBufferPool.Count < SendBufferCapacity)
 						{
@@ -739,7 +732,7 @@ namespace Server.Network
         {
             m_Paused = true;
 
-            for (var index = 0; index < m_Instances.Count; index++)
+            for (int index = 0; index < m_Instances.Count; index++)
             {
                 NetState ns = m_Instances[index];
 
@@ -754,7 +747,7 @@ namespace Server.Network
         {
             m_Paused = false;
 
-            for (var index = 0; index < m_Instances.Count; index++)
+            for (int index = 0; index < m_Instances.Count; index++)
             {
                 NetState ns = m_Instances[index];
 
@@ -1063,58 +1056,7 @@ namespace Server.Network
 
 		public ByteQueue Buffer { get; private set; }
 
-		public ExpansionInfo ExpansionInfo
-		{
-			get
-			{
-				for (int i = ExpansionInfo.Table.Length - 1; i >= 0; i--)
-				{
-					ExpansionInfo info = ExpansionInfo.Table[i];
-
-					if (info.RequiredClient != null && Version >= info.RequiredClient || (Flags & info.ClientFlags) != 0)
-					{
-						return info;
-					}
-				}
-
-				return ExpansionInfo.GetInfo(Expansion.None);
-			}
-		}
-
-		[CommandProperty(AccessLevel.Administrator, true)]
-		public Expansion Expansion => (Expansion)ExpansionInfo.ID;
-
-		public bool SupportsExpansion(ExpansionInfo info, bool checkCoreExpansion)
-		{
-			if (info == null || (checkCoreExpansion && (int)Core.Expansion < info.ID))
-			{
-				return false;
-			}
-
-			if (info.RequiredClient != null)
-			{
-				return IsEnhancedClient || Version >= info.RequiredClient;
-			}
-
-			return (Flags & info.ClientFlags) != 0;
-		}
-
-		public bool SupportsExpansion(Expansion ex, bool checkCoreExpansion)
-		{
-			return SupportsExpansion(ExpansionInfo.GetInfo(ex), checkCoreExpansion);
-		}
-
-		public bool SupportsExpansion(Expansion ex)
-		{
-			return SupportsExpansion(ex, true);
-		}
-
-		public bool SupportsExpansion(ExpansionInfo info)
-		{
-			return SupportsExpansion(info, true);
-		}
-
-		public int CompareTo(NetState other)
+        public int CompareTo(NetState other)
 		{
 			if (other == null)
 			{
@@ -1124,8 +1066,7 @@ namespace Server.Network
 			return string.Compare(m_ToString, other.m_ToString, StringComparison.Ordinal);
 		}
 
-        #region Packet Throttling
-        private readonly long[] _Throttles = new long[Byte.MaxValue];
+        private readonly long[] _Throttles = new long[byte.MaxValue];
 
         public void SetPacketTime(byte packetID)
         {
@@ -1141,6 +1082,5 @@ namespace Server.Network
         {
             return _Throttles[packetID] + delayMS > Core.TickCount;
         }
-        #endregion
     }
 }

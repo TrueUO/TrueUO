@@ -1,9 +1,7 @@
-#region References
-using Server.Mobiles;
-using Server.Network;
-using Server.Spells;
 using System;
-#endregion
+using Server.Mobiles;
+using Server.Network.Packets;
+using Server.Spells;
 
 namespace Server.Items
 {
@@ -79,7 +77,7 @@ namespace Server.Items
                 if (canSwing && attacker.HarmfulCheck(damageable))
                 {
                     attacker.DisruptiveAction();
-                    attacker.Send(new Swing(0, attacker, damageable));
+                    attacker.Send(new SwingPacket(0, attacker, damageable));
 
                     if (OnFired(attacker, damageable))
                     {

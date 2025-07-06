@@ -1,27 +1,39 @@
-#region References
+using System;
+using System.Collections.Generic;
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.Engines.ArenaSystem;
 using Server.Engines.BulkOrders;
 using Server.Engines.CannedEvil;
+using Server.Engines.Chat;
 using Server.Engines.CityLoyalty;
 using Server.Engines.Craft;
+using Server.Engines.Despise;
+using Server.Engines.Doom;
+using Server.Engines.Events;
 using Server.Engines.Help;
+using Server.Engines.InstancedPeerless;
+using Server.Engines.NewMagincia;
 using Server.Engines.PartySystem;
+using Server.Engines.Plants;
 using Server.Engines.Points;
 using Server.Engines.Quests;
 using Server.Engines.Shadowguard;
 using Server.Engines.SphynxFortune;
 using Server.Engines.VendorSearching;
+using Server.Engines.VeteranRewards;
 using Server.Engines.VoidPool;
 using Server.Engines.VvV;
+using Server.Events.Halloween;
 using Server.Guilds;
 using Server.Gumps;
 using Server.Items;
 using Server.Misc;
 using Server.Multis;
 using Server.Network;
+using Server.Network.Packets;
 using Server.Regions;
+using Server.Services.TownCryer;
 using Server.Services.Virtues;
 using Server.SkillHandlers;
 using Server.Spells;
@@ -34,29 +46,13 @@ using Server.Spells.Ninjitsu;
 using Server.Spells.Seventh;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
-using Server.Targeting;
-
-using System;
-using System.Collections.Generic;
-using Server.Engines.Chat;
-using Server.Engines.Despise;
-using Server.Engines.Doom;
-using Server.Engines.Events;
-using Server.Engines.InstancedPeerless;
-using Server.Engines.NewMagincia;
-using Server.Engines.Plants;
-using Server.Engines.VeteranRewards;
-using Server.Services.TownCryer;
 using Server.Spells.Spellweaving;
+using Server.Targeting;
 using Aggression = Server.Misc.Aggression;
 using RankDefinition = Server.Guilds.RankDefinition;
-using Server.Events.Halloween;
-
-#endregion
 
 namespace Server.Mobiles
 {
-
     #region Enums
     [Flags]
     public enum PlayerFlag
@@ -1139,8 +1135,8 @@ namespace Server.Mobiles
             m_LastGlobalLight = global;
             m_LastPersonalLight = personal;
 
-            ns.Send(GlobalLightLevel.Instantiate(global));
-            ns.Send(new PersonalLightLevel(this, personal));
+            ns.Send(GlobalLightLevelPacket.Instantiate(global));
+            ns.Send(new PersonalLightLevelPacket(this, personal));
         }
 
         public override bool SendSpeedControl(SpeedControlType type)
@@ -1315,6 +1311,8 @@ namespace Server.Mobiles
             {
                 Siege.OnLogin(this);
             }
+
+            ResendBuffs();
         }
 
         private bool m_NoDeltaRecursion;
@@ -4860,16 +4858,10 @@ namespace Server.Mobiles
 
         public static event PlayerPropertiesEventHandler PlayerProperties;
 
-        public class PlayerPropertiesEventArgs : EventArgs
+        public sealed class PlayerPropertiesEventArgs(PlayerMobile player, ObjectPropertyList list) : EventArgs
         {
-            public PlayerMobile Player;
-            public ObjectPropertyList PropertyList;
-
-            public PlayerPropertiesEventArgs(PlayerMobile player, ObjectPropertyList list)
-            {
-                Player = player;
-                PropertyList = list;
-            }
+            public PlayerMobile Player = player;
+            public ObjectPropertyList PropertyList = list;
         }
 
         public override void GetProperties(ObjectPropertyList list)
