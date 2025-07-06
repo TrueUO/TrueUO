@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class PsychicAttack : WeaponAbility
+    public sealed class PsychicAttack : WeaponAbility
     {
         public override int BaseMana => 30;
 

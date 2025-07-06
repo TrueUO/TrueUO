@@ -6,7 +6,7 @@ namespace Server.Items
     /// <summary>
     /// Does damage and paralyses your opponent for a short time.
     /// </summary>
-    public class NerveStrike : WeaponAbility
+    public sealed class NerveStrike : WeaponAbility
     {
         public override int BaseMana => 30;
 

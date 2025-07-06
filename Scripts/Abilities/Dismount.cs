@@ -9,7 +9,7 @@ namespace Server.Items
     /// (with one exception: players may use a lance to dismount other players while mounted).
     /// If it works, the target will be knocked off his own mount and will take some extra damage from the fall!
     /// </summary>
-    public class Dismount : WeaponAbility
+    public sealed class Dismount : WeaponAbility
     {
         public override int BaseMana => 25;
 

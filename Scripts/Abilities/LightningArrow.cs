@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class LightningArrow : WeaponAbility
+    public sealed class LightningArrow : WeaponAbility
     {
         public override int BaseMana => 20;
 

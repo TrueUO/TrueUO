@@ -7,7 +7,7 @@ namespace Server.Items
     /// <summary>
     /// A godsend to a warrior surrounded, the Whirlwind Attack allows the fighter to strike at all nearby targets in one mighty spinning swing.
     /// </summary>
-    public class WhirlwindAttack : WeaponAbility
+    public sealed class WhirlwindAttack : WeaponAbility
     {
         public override int BaseMana => 15;
 

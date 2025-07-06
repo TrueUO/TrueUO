@@ -7,7 +7,7 @@ namespace Server.Items
     // The player infuses their throwing projectile with mystical power. 
     // The infused projectile will dismount the target if possible; otherwise it will temporarily stun the target. 
     // The target will be hit with chaos damage regardless of whether they were dismounted or paralyzed.
-    public class InfusedThrow : WeaponAbility
+    public sealed class InfusedThrow : WeaponAbility
     {
         public override int BaseMana => 25;
 
