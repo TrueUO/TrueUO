@@ -8,7 +8,7 @@ namespace Server.Items
     /// A successful Mortal Strike will render its victim unable to heal any damage for several seconds. 
     /// Use a gruesome follow-up to finish off your foe.
     /// </summary>
-    public class MortalStrike : WeaponAbility
+    public sealed class MortalStrike : WeaponAbility
     {
         public static readonly TimeSpan PlayerDuration = TimeSpan.FromSeconds(6.0);
         public static readonly TimeSpan NPCDuration = TimeSpan.FromSeconds(12.0);

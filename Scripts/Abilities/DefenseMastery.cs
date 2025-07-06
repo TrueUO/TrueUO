@@ -6,7 +6,7 @@ namespace Server.Items
     /// <summary>
     /// Raises your physical resistance for a short time while lowering your ability to inflict damage. Requires Bushido or Ninjitsu skill.
     /// </summary>
-    public class DefenseMastery : WeaponAbility
+    public sealed class DefenseMastery : WeaponAbility
     {
         private static readonly Hashtable m_Table = new Hashtable();
 

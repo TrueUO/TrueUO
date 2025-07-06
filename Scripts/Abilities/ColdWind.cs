@@ -7,7 +7,7 @@ namespace Server.Items
     /// <summary>
     /// Currently on EA, this is only available for Creatures
     /// </summary>
-    public class ColdWind : WeaponAbility
+    public sealed class ColdWind : WeaponAbility
     {
         private static readonly Dictionary<Mobile, ExpireTimer> m_Table = new Dictionary<Mobile, ExpireTimer>();
 

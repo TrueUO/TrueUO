@@ -585,15 +585,9 @@ namespace Server.SkillHandlers
         }
     }
 
-    public class ItemStolenEventArgs : EventArgs
+    public sealed class ItemStolenEventArgs(Item item, Mobile thief) : EventArgs
     {
-        public Item Item { get; }
-        public Mobile Mobile { get; }
-
-        public ItemStolenEventArgs(Item item, Mobile thief)
-        {
-            Mobile = thief;
-            Item = item;
-        }
+        public Item Item { get; } = item;
+        public Mobile Mobile { get; } = thief;
     }
 }

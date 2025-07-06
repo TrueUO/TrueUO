@@ -5,7 +5,7 @@ namespace Server.Items
     /// Successful use of Shadowstrike deals extra damage to the target — and renders the attacker invisible!
     /// Only those who are adept at the art of stealth will be able to use this ability.
     /// </summary>
-    public class ShadowStrike : WeaponAbility
+    public sealed class ShadowStrike : WeaponAbility
     {
         public override int BaseMana => 20;
 
