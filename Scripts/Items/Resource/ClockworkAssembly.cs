@@ -11,7 +11,6 @@ namespace Server.Items
         public ClockworkAssembly()
             : base(0x1EA8)
         {
-            Weight = 5.0;
             Hue = 1102;
         }
 
@@ -19,6 +18,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 5.0;
 
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;

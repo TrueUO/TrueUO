@@ -14,7 +14,6 @@ namespace Server.Items
         public BolaBall(int amount)
             : base(0xE73)
         {
-            Weight = 4.0;
             Stackable = true;
             Amount = amount;
         }
@@ -23,6 +22,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 4.0;
 
         public override void Serialize(GenericWriter writer)
         {

@@ -15,7 +15,6 @@ namespace Server.Items
             : base(0x1A9C)
         {
             Stackable = true;
-            Weight = 1.0;
             Amount = amount;
         }
 
@@ -23,6 +22,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public static void OnSpun(ISpinningWheel wheel, Mobile from, int hue)
         {

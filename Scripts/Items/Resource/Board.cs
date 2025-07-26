@@ -82,7 +82,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(4);
+            writer.Write(0);
 
             writer.Write((int)m_Resource);
         }

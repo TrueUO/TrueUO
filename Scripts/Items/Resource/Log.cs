@@ -31,7 +31,6 @@ namespace Server.Items
             : base(0x1BDD)
         {
             Stackable = true;
-            Weight = 2.0;
             Amount = amount;
 
             m_Resource = resource;
@@ -40,6 +39,8 @@ namespace Server.Items
         public BaseLog(Serial serial) : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public override int Hue => CraftResources.GetHue(m_Resource);
 

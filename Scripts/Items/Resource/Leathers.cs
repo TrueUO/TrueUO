@@ -14,7 +14,6 @@ namespace Server.Items
             : base(0x1081)
         {
             Stackable = true;
-            Weight = 1.0;
             Amount = amount;
 
             m_Resource = resource;
@@ -24,6 +23,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override int Hue => CraftResources.GetHue(m_Resource);
 
