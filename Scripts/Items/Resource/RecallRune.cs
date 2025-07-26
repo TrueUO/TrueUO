@@ -30,7 +30,6 @@ namespace Server.Items
         public RecallRune()
             : base(0x1F14)
         {
-            Weight = 1.0;
             Type = RecallRuneType.Normal;
             CalculateHue();
         }
@@ -39,6 +38,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
         public BaseHouse House

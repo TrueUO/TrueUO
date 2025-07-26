@@ -15,7 +15,6 @@ namespace Server.Items
             : base(0xDF9)
         {
             Stackable = true;
-            Weight = 4.0;
             Amount = amount;
         }
 
@@ -23,6 +22,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 4.0;
 
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;

@@ -15,13 +15,14 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Weight = 2.0;
         }
 
         public SextantParts(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public override void Serialize(GenericWriter writer)
         {
