@@ -37,13 +37,13 @@ namespace Server.Items
         [Constructable]
         public MapItem(Map map) : base(0x14EC)
         {
-            Weight = 1.0;
-
             Width = 200;
             Height = 200;
 
             Facet = map;
         }
+
+        public override double DefaultWeight => 1.0;
 
         public virtual void CraftInit(Mobile from)
         {

@@ -18,7 +18,6 @@ namespace Server.Items
         public Blowpipe(int uses)
             : base(uses, 0xE8A)
         {
-            Weight = 1.0;
             Hue = 0x3B9;
         }
 
@@ -26,6 +25,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override void Serialize(GenericWriter writer)
         {

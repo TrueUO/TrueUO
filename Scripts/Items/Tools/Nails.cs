@@ -9,20 +9,20 @@ namespace Server.Items
         public Nails()
             : base(0x102E)
         {
-            Weight = 2.0;
         }
 
         [Constructable]
         public Nails(int uses)
             : base(uses, 0x102C)
         {
-            Weight = 2.0;
         }
 
         public Nails(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public override CraftSystem CraftSystem => DefCarpentry.CraftSystem;
 

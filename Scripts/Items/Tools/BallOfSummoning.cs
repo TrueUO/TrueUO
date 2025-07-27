@@ -21,7 +21,6 @@ namespace Server.Items
         public BallOfSummoning()
             : base(0xE2E)
         {
-            Weight = 10.0;
             Light = LightType.Circle150;
 
             m_Charges = Utility.RandomMinMax(3, 9);
@@ -33,6 +32,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 10.0;
 
         private delegate void BallCallback(Mobile from);
         [CommandProperty(AccessLevel.GameMaster)]

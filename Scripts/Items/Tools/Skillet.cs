@@ -8,20 +8,20 @@ namespace Server.Items
         public Skillet()
             : base(0x97F)
         {
-            Weight = 1.0;
         }
 
         [Constructable]
         public Skillet(int uses)
             : base(uses, 0x97F)
         {
-            Weight = 1.0;
         }
 
         public Skillet(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override int LabelNumber => 1044567;// skillet
         public override CraftSystem CraftSystem => DefCooking.CraftSystem;

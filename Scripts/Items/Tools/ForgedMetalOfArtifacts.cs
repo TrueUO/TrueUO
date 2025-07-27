@@ -14,7 +14,6 @@ namespace Server.Items
         public ForgedMetalOfArtifacts(int uses)
             : base(0xE8A)
         {
-            Weight = 5.0;
             Hue = 51;
             ItemID = 4023;
             m_UsesRemaining = uses;
@@ -31,6 +30,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 5.0;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining

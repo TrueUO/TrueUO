@@ -10,20 +10,20 @@ namespace Server.Items
         public TinkerTools()
             : base(0x1EB8)
         {
-            Weight = 1.0;
         }
 
         [Constructable]
         public TinkerTools(int uses)
             : base(uses, 0x1EB8)
         {
-            Weight = 1.0;
         }
 
         public TinkerTools(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override CraftSystem CraftSystem => DefTinkering.CraftSystem;
 

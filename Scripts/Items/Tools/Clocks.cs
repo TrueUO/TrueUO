@@ -43,7 +43,6 @@ namespace Server.Items
         public Clock(int itemID)
             : base(itemID)
         {
-            Weight = 3.0;
             Level = SecureLevel.CoOwners;
         }
 
@@ -51,6 +50,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 3.0;
 
         [CallPriority(-1)]
         public static void Initialize()

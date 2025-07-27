@@ -8,20 +8,20 @@ namespace Server.Items
         public Froe()
             : base(0x10E5)
         {
-            Weight = 1.0;
         }
 
         [Constructable]
         public Froe(int uses)
             : base(uses, 0x10E5)
         {
-            Weight = 1.0;
         }
 
         public Froe(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override CraftSystem CraftSystem => DefCarpentry.CraftSystem;
 

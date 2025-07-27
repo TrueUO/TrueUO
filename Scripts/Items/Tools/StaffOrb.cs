@@ -25,7 +25,6 @@ namespace Server.Items
             : base(0x0E2F)
         {
             LootType = LootType.Blessed;
-            Weight = 0;
             Name = "Unassigned Staff Orb";
         }
 
@@ -34,7 +33,6 @@ namespace Server.Items
             : base(0x0E2F)
         {
             LootType = LootType.Blessed;
-            Weight = 0;
             m_Owner = player;
             Name = player.Name + "'s Staff Orb";
         }
@@ -43,6 +41,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
         public Point3D HomeLocation { get => m_HomeLocation; set => m_HomeLocation = value; }

@@ -23,7 +23,6 @@ namespace Server.Items
         public InteriorDecorator()
             : base(0xFC1)
         {
-            Weight = 1.0;
             LootType = LootType.Blessed;
         }
 
@@ -31,6 +30,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public DecorateCommand Command { get; set; }

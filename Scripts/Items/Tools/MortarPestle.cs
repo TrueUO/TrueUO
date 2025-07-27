@@ -8,20 +8,20 @@ namespace Server.Items
         public MortarPestle()
             : base(0xE9B)
         {
-            Weight = 1.0;
         }
 
         [Constructable]
         public MortarPestle(int uses)
             : base(uses, 0xE9B)
         {
-            Weight = 1.0;
         }
 
         public MortarPestle(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override CraftSystem CraftSystem => DefAlchemy.CraftSystem;
 

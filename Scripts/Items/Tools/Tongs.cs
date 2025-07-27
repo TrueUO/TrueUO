@@ -9,20 +9,20 @@ namespace Server.Items
         public Tongs()
             : base(0xFBB)
         {
-            Weight = 2.0;
         }
 
         [Constructable]
         public Tongs(int uses)
             : base(uses, 0xFBB)
         {
-            Weight = 2.0;
         }
 
         public Tongs(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public override CraftSystem CraftSystem => DefBlacksmithy.CraftSystem;
 

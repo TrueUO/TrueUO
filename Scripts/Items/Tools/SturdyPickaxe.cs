@@ -16,7 +16,6 @@ namespace Server.Items
         public SturdyPickaxe(int uses)
             : base(0xE86)
         {
-            Weight = 11.0;
             Hue = 0x973;
             UsesRemaining = uses;
             ShowUsesRemaining = true;
@@ -26,6 +25,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 11.0;
 
         public override HarvestSystem HarvestSystem => Mining.System;
         public override WeaponAbility PrimaryAbility => WeaponAbility.DoubleStrike;

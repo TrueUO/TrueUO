@@ -14,7 +14,6 @@ namespace Server.Items
         public SturdyShovel(int uses)
             : base(uses, 0xF39)
         {
-            Weight = 5.0;
             Hue = 0x973;
         }
 
@@ -22,6 +21,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 5.0;
 
         public override int LabelNumber => 1045125;// sturdy shovel
         public override HarvestSystem HarvestSystem => Mining.System;

@@ -22,14 +22,12 @@ namespace Server.Items
         [Constructable]
         public RunicMalletAndChisel(CraftResource resource) : base(resource, 4787)
         {
-            Weight = 2.0;
             Hue = CraftResources.GetHue(resource);
         }
 
         [Constructable]
         public RunicMalletAndChisel(CraftResource resource, int uses) : base(resource, uses, 4787)
         {
-            Weight = 2.0;
             Hue = CraftResources.GetHue(resource);
         }
 
@@ -37,6 +35,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public override void Serialize(GenericWriter writer)
         {

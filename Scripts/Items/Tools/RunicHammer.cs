@@ -9,7 +9,6 @@ namespace Server.Items
         public RunicHammer(CraftResource resource)
             : base(resource, 0x13E3)
         {
-            Weight = 8.0;
             Layer = Layer.OneHanded;
             Hue = CraftResources.GetHue(resource);
         }
@@ -18,7 +17,6 @@ namespace Server.Items
         public RunicHammer(CraftResource resource, int uses)
             : base(resource, uses, 0x13E3)
         {
-            Weight = 8.0;
             Layer = Layer.OneHanded;
             Hue = CraftResources.GetHue(resource);
         }
@@ -27,6 +25,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 8.0;
 
         public override CraftSystem CraftSystem => DefBlacksmithy.CraftSystem;
         public override int LabelNumber
