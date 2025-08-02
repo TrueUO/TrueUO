@@ -19,7 +19,6 @@ namespace Server.Items
         public RoseOfTrinsic()
             : base(0x234D)
         {
-            Weight = 1.0;
             LootType = LootType.Blessed;
 
             m_Petals = 0;
@@ -30,6 +29,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
@@ -168,7 +169,6 @@ namespace Server.Items
             Stackable = true;
             Amount = amount;
 
-            Weight = 1.0;
             Hue = 0xE;
         }
 
@@ -176,6 +176,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override int LabelNumber => 1062926;// Petal of the Rose of Trinsic
         public override void OnDoubleClick(Mobile from)

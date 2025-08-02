@@ -12,13 +12,14 @@ namespace Server.Items
         public Bedroll()
             : base(0xA57)
         {
-            Weight = 5.0;
         }
 
         public Bedroll(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 5.0;
 
         public override void OnDoubleClick(Mobile from)
         {

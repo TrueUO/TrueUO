@@ -74,7 +74,6 @@ namespace Server.Engines.Plants
         [Constructable]
         public Seed(PlantType plantType, PlantHue plantHue, bool showType) : base(0xDCF)
         {
-            Weight = 1.0;
             Stackable = true;
 
             m_PlantType = plantType;
@@ -87,6 +86,8 @@ namespace Server.Engines.Plants
         public Seed(Serial serial) : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override bool ForceShowProperties => true;
 

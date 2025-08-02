@@ -30,8 +30,6 @@ namespace Server.Items
         public BagOfSending(BagOfSendingHue hue)
             : base(0xE76)
         {
-            Weight = 2.0;
-
             BagOfSendingHue = hue;
 
             m_Charges = Utility.RandomMinMax(3, 9);
@@ -41,6 +39,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges

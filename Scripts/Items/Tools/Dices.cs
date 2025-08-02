@@ -15,8 +15,6 @@ namespace Server.Items
         public Dices()
             : base(0xFA7)
         {
-            Weight = 1.0;
-
             Level = SecureLevel.Friends;
         }
 
@@ -30,6 +28,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override void OnDoubleClick(Mobile from)
         {

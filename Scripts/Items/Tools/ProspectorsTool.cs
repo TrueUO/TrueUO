@@ -12,7 +12,6 @@ namespace Server.Items
         public ProspectorsTool()
             : base(0xFB4)
         {
-            Weight = 10.0;
             UsesRemaining = 50;
             ShowUsesRemaining = true;
         }
@@ -21,6 +20,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 10.0;
 
         public override WeaponAbility PrimaryAbility => WeaponAbility.CrushingBlow;
         public override WeaponAbility SecondaryAbility => WeaponAbility.ShadowStrike;

@@ -29,7 +29,6 @@ namespace Server.Items
             : base(0x0FC0)
         {
             LootType = LootType.Blessed;
-            Weight = 1.0;
             m_UsesRemaining = uses;
             Hue = 1260;
             ShowUsesRemaining = true;
@@ -41,6 +40,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override void AddUsesRemainingProperties(ObjectPropertyList list)
         {

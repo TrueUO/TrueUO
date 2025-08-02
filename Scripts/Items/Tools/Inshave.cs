@@ -8,20 +8,20 @@ namespace Server.Items
         public Inshave()
             : base(0x10E6)
         {
-            Weight = 1.0;
         }
 
         [Constructable]
         public Inshave(int uses)
             : base(uses, 0x10E6)
         {
-            Weight = 1.0;
         }
 
         public Inshave(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override CraftSystem CraftSystem => DefCarpentry.CraftSystem;
 

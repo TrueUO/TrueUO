@@ -16,13 +16,14 @@ namespace Server.Items
         public Shovel(int uses)
             : base(uses, 0xF39)
         {
-            Weight = 5.0;
         }
 
         public Shovel(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 5.0;
 
         public override void Serialize(GenericWriter writer)
         {

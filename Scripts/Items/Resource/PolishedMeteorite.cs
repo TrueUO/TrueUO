@@ -8,13 +8,14 @@ namespace Server.Items
         public PolishedMeteorite()
             : base(41422 + Utility.Random(12))
         {
-            Weight = 3;
         }
 
         public PolishedMeteorite(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 3.0;
 
         public override void Serialize(GenericWriter writer)
         {

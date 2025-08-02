@@ -29,8 +29,6 @@ namespace Server.Items
         public KeyRing()
             : base(0x1011)
         {
-            Weight = 1.0; 
-
             m_Keys = new List<Key>();
         }
 
@@ -38,6 +36,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public List<Key> Keys => m_Keys;
         public override bool OnDragDrop(Mobile from, Item dropped)

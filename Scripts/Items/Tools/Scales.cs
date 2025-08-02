@@ -25,13 +25,14 @@ namespace Server.Items
         public Scales()
             : base(0x1852)
         {
-            Weight = 4.0;
         }
 
         public Scales(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 4.0;
 
         public override void AddCraftedProperties(ObjectPropertyList list)
         {

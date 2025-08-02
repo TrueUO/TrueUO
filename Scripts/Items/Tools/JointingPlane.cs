@@ -11,21 +11,21 @@ namespace Server.Items
         public JointingPlane()
             : base(0x1030)
         {
-            Weight = 2.0;
         }
 
         [Constructable]
         public JointingPlane(int uses)
             : base(uses, 0x1030)
         {
-            Weight = 2.0;
         }
 
         public JointingPlane(Serial serial)
             : base(serial)
         {
-        }       
-		
+        }
+
+        public override double DefaultWeight => 2.0;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

@@ -8,7 +8,6 @@ namespace Server.Items
         public RunicFletcherTool(CraftResource resource)
             : base(resource, 0x1022)
         {
-            Weight = 2.0;
             Hue = CraftResources.GetHue(resource);
         }
 
@@ -16,7 +15,6 @@ namespace Server.Items
         public RunicFletcherTool(CraftResource resource, int uses)
             : base(resource, uses, 0x1022)
         {
-            Weight = 2.0;
             Hue = CraftResources.GetHue(resource);
         }
 
@@ -24,6 +22,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public override CraftSystem CraftSystem => DefBowFletching.CraftSystem;
         public override int LabelNumber

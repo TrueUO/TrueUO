@@ -152,7 +152,6 @@ namespace Server.Items
             : base(0x0DC0)
         {
             Layer = Layer.OneHanded;
-            Weight = 8.0;
             Resource = CraftResource.RegularWood;
 
             m_BaitType = null;
@@ -163,6 +162,8 @@ namespace Server.Items
 
             UsesRemaining = 150;
         }
+
+        public override double DefaultWeight => 8.0;
 
         public void ScaleUses()
         {

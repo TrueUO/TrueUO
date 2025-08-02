@@ -29,13 +29,14 @@ namespace Server.Items
         public Spyglass()
             : base(0x14F5)
         {
-            Weight = 3.0;
         }
 
         public Spyglass(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 3.0;
 
         public override void OnDoubleClick(Mobile from)
         {

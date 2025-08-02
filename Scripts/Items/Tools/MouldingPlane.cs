@@ -9,20 +9,20 @@ namespace Server.Items
         public MouldingPlane()
             : base(0x102C)
         {
-            Weight = 2.0;
         }
 
         [Constructable]
         public MouldingPlane(int uses)
             : base(uses, 0x102C)
         {
-            Weight = 2.0;
         }
 
         public MouldingPlane(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public override CraftSystem CraftSystem => DefCarpentry.CraftSystem;
 
