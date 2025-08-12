@@ -1,4 +1,3 @@
-#region References
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -7,7 +6,6 @@ using Server.Spells.Fifth;
 using Server.Spells.Seventh;
 using System;
 using System.Collections.Generic;
-#endregion
 
 namespace Server.Spells.Ninjitsu
 {
@@ -50,6 +48,13 @@ namespace Server.Spells.Ninjitsu
 
         public override bool CheckCast()
         {
+            // if dismounted out of animal form should not be able to instantly remount.
+            if (!BaseMount.CheckMountAllowed(Caster, true)) 
+            {
+                // CheckMountAllowed sends the message
+                return false;
+            }
+
             if (!Caster.CanBeginAction(typeof(PolymorphSpell)))
             {
                 Caster.SendLocalizedMessage(1061628); // You can't do that while polymorphed.
@@ -78,7 +83,7 @@ namespace Server.Spells.Ninjitsu
 
         private bool CasterIsMoving()
         {
-            return (Core.TickCount - Caster.LastMoveTime <= Caster.ComputeMovementSpeed(Caster.Direction));
+            return Core.TickCount - Caster.LastMoveTime <= Caster.ComputeMovementSpeed(Caster.Direction);
         }
 
         private bool m_WasMoving;
@@ -99,7 +104,12 @@ namespace Server.Spells.Ninjitsu
 
         public override void OnCast()
         {
-            if (!Caster.CanBeginAction(typeof(PolymorphSpell)))
+            // if dismounted out of animal form should not be able to instantly remount.
+            if (!BaseMount.CheckMountAllowed(Caster, true))
+            {
+                // CheckMountAllowed sends the message
+            }
+            else if (!Caster.CanBeginAction(typeof(PolymorphSpell)))
             {
                 Caster.SendLocalizedMessage(1061628); // You can't do that while polymorphed.
             }
@@ -174,12 +184,7 @@ namespace Server.Spells.Ninjitsu
 
         public int GetLastAnimalForm(Mobile m)
         {
-            if (m_LastAnimalForms.TryGetValue(m, out int value))
-            {
-                return value;
-            }
-
-            return -1;
+            return m_LastAnimalForms.GetValueOrDefault(m, -1);
         }
 
         public enum MorphResult
@@ -202,9 +207,8 @@ namespace Server.Spells.Ninjitsu
 
             if (m.Skills.Ninjitsu.Value < entry.ReqSkill)
             {
-                string args = $"{entry.ReqSkill:F1}\t{SkillName.Ninjitsu}\t ";
-                m.SendLocalizedMessage(1063013, args);
                 // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that ability.
+                m.SendLocalizedMessage(1063013, $"{entry.ReqSkill:F1}\t{SkillName.Ninjitsu}\t ");
                 return MorphResult.NoSkill;
             }
 
@@ -310,9 +314,13 @@ namespace Server.Spells.Ninjitsu
             if (context.SpeedBoost)
             {
                 if (m.Region is Regions.TwistedWealdDesert)
+                {
                     m.SendSpeedControl(SpeedControlType.WalkSpeed);
+                }
                 else
+                {
                     m.SendSpeedControl(SpeedControlType.Disable);
+                }
             }
 
             SkillMod mod = context.Mod;
@@ -345,30 +353,20 @@ namespace Server.Spells.Ninjitsu
 
         public static AnimalFormContext GetContext(Mobile m)
         {
-            if (m_Table.TryGetValue(m, out AnimalFormContext value))
-            {
-                return value;
-            }
-
-            return null;
+            return m_Table.GetValueOrDefault(m);
         }
 
         public static bool UnderTransformation(Mobile m)
         {
-            return (GetContext(m) != null);
+            return GetContext(m) != null;
         }
 
         public static bool UnderTransformation(Mobile m, Type type)
         {
             AnimalFormContext context = GetContext(m);
 
-            return (context != null && context.Type == type);
+            return context != null && context.Type == type;
         }
-
-        /*
-        private delegate void AnimalFormCallback( Mobile from );
-        private delegate bool AnimalFormRequirementCallback( Mobile from );
-        */
 
         public class AnimalFormEntry
         {
@@ -396,12 +394,7 @@ namespace Server.Spells.Ninjitsu
             public bool StealthBonus => m_StealthBonus;
             public bool SpeedBoost => m_SpeedBoost;
             public bool StealingBonus => m_StealingBonus;
-            /*
-            private AnimalFormCallback m_TransformCallback;
-            private AnimalFormCallback m_UntransformCallback;
-            private AnimalFormRequirementCallback m_RequirementCallback;
-            */
-
+           
             public AnimalFormEntry(
                 Type type,
                 string name,
@@ -487,7 +480,7 @@ namespace Server.Spells.Ninjitsu
 
                 for (int i = 0; i < entries.Length; ++i)
                 {
-                    bool enabled = (ninjitsu >= entries[i].ReqSkill && BaseFormTalisman.EntryEnabled(caster, entries[i].Type) && entries[i].Type != typeof(WildWhiteTiger));
+                    bool enabled = ninjitsu >= entries[i].ReqSkill && BaseFormTalisman.EntryEnabled(caster, entries[i].Type) && entries[i].Type != typeof(WildWhiteTiger);
 
                     int page = current / 10 + 1;
                     int pos = current % 10;
@@ -511,8 +504,8 @@ namespace Server.Spells.Ninjitsu
 
                     if (enabled)
                     {
-                        int x = (pos % 2 == 0) ? 14 : 264;
-                        int y = (pos / 2) * 64 + 44;
+                        int x = pos % 2 == 0 ? 14 : 264;
+                        int y = pos / 2 * 64 + 44;
 
                         Rectangle2D b = ItemBounds.Table[entries[i].ItemID];
 
@@ -571,9 +564,7 @@ namespace Server.Spells.Ninjitsu
                         m_Caster.FixedParticles(0x3728, 10, 13, 2023, EffectLayer.Waist);
                         m_Caster.Mana -= mana;
 
-                        string typename = entry.Name;
-
-                        BuffInfo.AddBuff(m_Caster, new BuffInfo(BuffIcon.AnimalForm, 1060612, 1075823, $"{("aeiouy".IndexOf(typename.ToLower()[0]) >= 0 ? "an" : "a")}\t{typename}"));
+                        BuffInfo.AddBuff(m_Caster, new BuffInfo(BuffIcon.AnimalForm, 1060612, 1075823, $"{("aeiouy".IndexOf(entry.Name.ToLower()[0]) >= 0 ? "an" : "a")}\t{entry.Name}"));
                     }
                 }
             }
