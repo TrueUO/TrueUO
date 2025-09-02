@@ -30,7 +30,7 @@ namespace Server.Network.Packets
 
                 if (m != null)
                 {
-                    m_Stream.WriteAsciiFixed(m.Name, 30);
+                    m_Stream.WriteAsciiFixed(m.RawName, 30);
                     m_Stream.Fill(30); // password
                 }
                 else
