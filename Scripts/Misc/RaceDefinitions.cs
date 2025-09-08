@@ -132,13 +132,13 @@ namespace Server.Misc
                     return !elfOrHuman.ElfOnly;
                 }
 
-                var itemID = item.ItemID;
+                int itemID = item.ItemID;
 
                 bool any1 = false;
 
-                for (var index = 0; index < GargoyleOnlyIDs.Length; index++)
+                for (int index = 0; index < GargoyleOnlyIDs.Length; index++)
                 {
-                    var id = GargoyleOnlyIDs[index];
+                    int id = GargoyleOnlyIDs[index];
 
                     if (id == itemID)
                     {
@@ -149,9 +149,9 @@ namespace Server.Misc
 
                 bool any2 = false;
 
-                for (var index = 0; index < ElfOnlyIDs.Length; index++)
+                for (int index = 0; index < ElfOnlyIDs.Length; index++)
                 {
-                    var id = ElfOnlyIDs[index];
+                    int id = ElfOnlyIDs[index];
 
                     if (id == itemID)
                     {
@@ -314,13 +314,13 @@ namespace Server.Misc
                     return true;
                 }
 
-                var itemID = item.ItemID;
+                int itemID = item.ItemID;
 
                 bool any = false;
 
-                for (var index = 0; index < GargoyleOnlyIDs.Length; index++)
+                for (int index = 0; index < GargoyleOnlyIDs.Length; index++)
                 {
-                    var id = GargoyleOnlyIDs[index];
+                    int id = GargoyleOnlyIDs[index];
 
                     if (id == itemID)
                     {
@@ -476,13 +476,13 @@ namespace Server.Misc
 
             public override bool ValidateEquipment(Item item)
             {
-                var itemID = item.ItemID;
+                int itemID = item.ItemID;
 
                 bool any = false;
 
-                for (var index = 0; index < GargoyleOnlyIDs.Length; index++)
+                for (int index = 0; index < GargoyleOnlyIDs.Length; index++)
                 {
-                    var id = GargoyleOnlyIDs[index];
+                    int id = GargoyleOnlyIDs[index];
 
                     if (id == itemID)
                     {
@@ -547,9 +547,9 @@ namespace Server.Misc
 
         public static bool ValidateEquipment(Mobile from, Item equipment, bool message)
         {
-            for (var index = 0; index < AllRaceTypes.Length; index++)
+            for (int index = 0; index < AllRaceTypes.Length; index++)
             {
-                var type = AllRaceTypes[index];
+                Type type = AllRaceTypes[index];
 
                 if (type == equipment.GetType())
                 {
@@ -559,9 +559,9 @@ namespace Server.Misc
 
             bool any = false;
 
-            for (var index = 0; index < AllRaceIDs.Length; index++)
+            for (int index = 0; index < AllRaceIDs.Length; index++)
             {
-                var id = AllRaceIDs[index];
+                int id = AllRaceIDs[index];
 
                 if (id == equipment.ItemID)
                 {
@@ -586,7 +586,7 @@ namespace Server.Misc
                 }
                 else
                 {
-                    var required = GetRequiredRace(equipment);
+                    Race required = GetRequiredRace(equipment);
 
                     if (required == Race.Elf)
                     {
@@ -634,11 +634,11 @@ namespace Server.Misc
 
         public static Race GetRequiredRace(Item item)
         {
-            var itemID = item.ItemID;
+            int itemID = item.ItemID;
 
-            for (var index = 0; index < GargoyleOnlyIDs.Length; index++)
+            for (int index = 0; index < GargoyleOnlyIDs.Length; index++)
             {
-                var id = GargoyleOnlyIDs[index];
+                int id = GargoyleOnlyIDs[index];
 
                 if (id == itemID)
                 {
@@ -651,9 +651,9 @@ namespace Server.Misc
                 return elfOrHuman.ElfOnly ? Race.Elf : Race.Human;
             }
 
-            for (var index = 0; index < ElfOnlyIDs.Length; index++)
+            for (int index = 0; index < ElfOnlyIDs.Length; index++)
             {
-                var id = ElfOnlyIDs[index];
+                int id = ElfOnlyIDs[index];
 
                 if (id == itemID)
                 {
@@ -667,17 +667,18 @@ namespace Server.Misc
         public static Type[] AllRaceTypes => _AllRaceTypes;
         private static Type[] _AllRaceTypes =
         {
-            typeof(BootsOfBallast), typeof(AquaPendant), typeof(DetectiveCredentials)
+            typeof(BootsOfBallast)
         };
 
         public static int[] AllRaceIDs => _AllRaceIDs;
         private static int[] _AllRaceIDs =
         {
-            0xA289, 0xA28A, 0xA28B, 0xA291, 0xA292, 0xA293, // whips
+            0xA289, 0xA28A, 0xA28B, 0xA291, 0xA292, 0xA293, // Whips
             0xE85, 0xE86,                                   // Tools
             0x1F03, 0x1F04, 0x26AE,                         // Robe & Arcane Robe
             0xE81,                                          // Crook
             0x1086, 0x108A, 0x1F06, 0x1F09,                 // Rings/Bracelet
+            0x1088, 0x1F08, 0x1085, 0x1F05, 0x1089,         // Necklaces
             0xA412,                                         // Tabard
             0xA649, 0xA64A,                                 // Pirate Shield
             0xA76A, 0xA769                                  // Lantern Shield
