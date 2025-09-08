@@ -401,7 +401,7 @@ namespace Server.Engines.Harvest
                 return false;
 
             bool boat = Multis.BaseBoat.FindBoatAt(from, from.Map) != null;
-            bool dungeon = IsDungeonRegion(from);
+            bool dungeon = IsMiningDungeonRegion(from);
 
             if (!boat && !dungeon)
                 return false;
@@ -455,19 +455,28 @@ namespace Server.Engines.Harvest
             return false;
         }
 
-        private bool IsDungeonRegion(Mobile from)
+        private bool IsMiningDungeonRegion(Mobile from)
         {
             if (from == null)
+            {
                 return false;
+            }
 
             Map map = from.Map;
             Region reg = from.Region;
             Rectangle2D bounds = new Rectangle2D(0, 0, 5114, 4100);
 
             if ((map == Map.Felucca || map == Map.Trammel) && bounds.Contains(new Point2D(from.X, from.Y)))
+            {
                 return false;
+            }
 
-            return reg != null && (reg.IsPartOf<Regions.DungeonRegion>() || map == Map.Ilshenar);
+            if (map == Map.Ilshenar)
+            {
+                return true;
+            }
+
+            return reg != null && reg.IsPartOf<Regions.DungeonRegion>();
         }
         #endregion
 
