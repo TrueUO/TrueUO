@@ -23,7 +23,6 @@ namespace Server.Items
             : base(0x1086)
         {
             Hue = 0x489;
-            Weight = 1.0;
 
             m_Inscription = "";
         }
@@ -32,6 +31,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         private delegate void BraceletCallback(Mobile from);
 

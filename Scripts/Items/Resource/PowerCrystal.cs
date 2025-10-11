@@ -10,13 +10,14 @@ namespace Server.Items
         public PowerCrystal()
             : base(0x1F1C)
         {
-            Weight = 1.0;
         }
 
         public PowerCrystal(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override void OnDoubleClick(Mobile from)
         {

@@ -8,20 +8,20 @@ namespace Server.Items
         public RollingPin()
             : base(0x1043)
         {
-            Weight = 1.0;
         }
 
         [Constructable]
         public RollingPin(int uses)
             : base(uses, 0x1043)
         {
-            Weight = 1.0;
         }
 
         public RollingPin(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override CraftSystem CraftSystem => DefCooking.CraftSystem;
 

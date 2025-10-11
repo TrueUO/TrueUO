@@ -18,7 +18,6 @@ namespace Server.Items
             : base(uses, 0x13E4)
         {
             m_Bonus = bonus;
-            Weight = 8.0;
             Layer = Layer.OneHanded;
             Hue = 0x482;
         }
@@ -27,6 +26,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 8.0;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Bonus

@@ -21,8 +21,6 @@ namespace Server.Items
         public GreaterBraceletOfBinding()
         {
             Hue = 2575;
-            Weight = 1.0;
-
             LootType = LootType.Blessed;
         }
 

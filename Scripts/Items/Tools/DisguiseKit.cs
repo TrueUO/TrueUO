@@ -16,12 +16,14 @@ namespace Server.Items
         public DisguiseKit()
             : base(0xE05)
         {
-            Weight = 1.0;
         }
 
         public DisguiseKit(Serial serial)
             : base(serial)
-        { }
+        {
+        }
+
+        public override double DefaultWeight => 1.0;
 
         public override int LabelNumber => 1041078;  // a disguise kit
 

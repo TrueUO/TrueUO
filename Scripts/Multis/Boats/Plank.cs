@@ -139,6 +139,9 @@ namespace Server.Items
                 if (from.Player && Boat != null && !Boat.Contains(from) && Locked) // If the plank is locked, no one can enter the ship from the outside.
                     return false;
 
+                if (from is BaseCreature bc && !bc.Controlled) // Uncontrolled mobiles can not enter a boat.
+                    return false;
+
                 if (from.Player && (from.Direction & Direction.Running) != 0 || Boat != null && !Boat.Contains(from))
                     return true;
 

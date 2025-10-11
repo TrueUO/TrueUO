@@ -36,13 +36,14 @@ namespace Server.Items
         public Sextant()
             : base(0x1058)
         {
-            Weight = 2.0;
         }
 
         public Sextant(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public static bool ComputeMapDetails(Map map, int x, int y, out int xCenter, out int yCenter, out int xWidth, out int yHeight)
         {

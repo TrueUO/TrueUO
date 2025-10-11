@@ -8,20 +8,20 @@ namespace Server.Items
         public Hammer()
             : base(0x102A)
         {
-            Weight = 2.0;
         }
 
         [Constructable]
         public Hammer(int uses)
             : base(uses, 0x102A)
         {
-            Weight = 2.0;
         }
 
         public Hammer(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 2.0;
 
         public override CraftSystem CraftSystem => DefCarpentry.CraftSystem;
 

@@ -69,8 +69,6 @@ namespace Server.Items
         public Key(KeyType type, uint LockVal, Item link)
             : base((int)type)
         {
-            Weight = 1.0;
-
             m_MaxRange = 3;
             m_KeyVal = LockVal;
             m_Link = link;
@@ -80,6 +78,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string Description

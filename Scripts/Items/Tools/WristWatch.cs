@@ -8,7 +8,6 @@ namespace Server.Items
         public WristWatch()
             : base(0x1086)
         {
-            Weight = 1.0;
             LootType = LootType.Blessed;
             Layer = Layer.Bracelet;
         }
@@ -17,6 +16,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override void Serialize(GenericWriter writer)
         {

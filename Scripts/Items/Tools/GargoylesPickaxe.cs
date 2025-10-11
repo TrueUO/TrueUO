@@ -16,7 +16,6 @@ namespace Server.Items
         public GargoylesPickaxe(int uses)
             : base(0xE85 + Utility.Random(2))
         {
-            Weight = 11.0;
             UsesRemaining = uses;
             ShowUsesRemaining = true;
             Hue = 0x76c;
@@ -26,6 +25,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 11.0;
 
         public override HarvestSystem HarvestSystem => Mining.System;
         public override WeaponAbility PrimaryAbility => WeaponAbility.DoubleStrike;

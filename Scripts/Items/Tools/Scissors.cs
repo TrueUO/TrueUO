@@ -46,13 +46,13 @@ namespace Server.Items
         public Scissors()
             : base(0xF9F)
         {
-            Weight = 1.0;
-
             m_UsesRemaining = 50;
 
             if (Siege.SiegeShard)
                 m_ShowUsesRemaining = true;
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override void AddCraftedProperties(ObjectPropertyList list)
         {

@@ -18,7 +18,6 @@ namespace Server.Items
         public TribalBerry(int amount)
             : base(0x9D0)
         {
-            Weight = 1.0;
             Stackable = true;
             Amount = amount;
         }
@@ -27,6 +26,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override void Serialize(GenericWriter writer)
         {

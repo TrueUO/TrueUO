@@ -10,10 +10,11 @@ namespace Server.Items
         [Constructable]
         public PetBondingPotion() : base(0x0F04)
         {
-            Weight = 1.0;
             LootType = LootType.Blessed;
             Hue = 2629;
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override void OnDoubleClick(Mobile from) // Override double click of the deed to call our target 
         {

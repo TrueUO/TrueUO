@@ -8,20 +8,20 @@ namespace Server.Items
         public MalletAndChisel()
             : base(0x12B3)
         {
-            Weight = 1.0;
         }
 
         [Constructable]
         public MalletAndChisel(int uses)
             : base(uses, 0x12B3)
         {
-            Weight = 1.0;
         }
 
         public MalletAndChisel(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override CraftSystem CraftSystem => DefMasonry.CraftSystem;
 

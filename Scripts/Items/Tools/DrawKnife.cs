@@ -15,13 +15,14 @@ namespace Server.Items
         public DrawKnife(int uses)
             : base(uses, 0x10E4)
         {
-            Weight = 1.0;
         }
 
         public DrawKnife(Serial serial)
             : base(serial)
         {
         }
+
+        public override double DefaultWeight => 1.0;
 
         public override CraftSystem CraftSystem => DefCarpentry.CraftSystem;
 
