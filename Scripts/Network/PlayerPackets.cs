@@ -546,6 +546,11 @@ namespace Server.Network
         {
             Mobile from = state.Mobile;
 
+            if (from == null) // crash on 10/15/2025 // on the now line 581.
+            {
+                return;
+            }
+
             if (from.IsStaff() || Core.TickCount - from.NextActionTime >= 0)
             {
                 int value = pvSrc.ReadInt32();
