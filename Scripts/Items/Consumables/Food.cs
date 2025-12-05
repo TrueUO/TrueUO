@@ -1145,8 +1145,6 @@ namespace Server.Items
 
     public class ChickenLeg : Food
     {
-        public override ItemQuality Quality { get => ItemQuality.Normal; set { } }
-
         [Constructable]
         public ChickenLeg()
             : this(1)
