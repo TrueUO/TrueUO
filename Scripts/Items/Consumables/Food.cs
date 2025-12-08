@@ -1109,8 +1109,6 @@ namespace Server.Items
 
     public class LambLeg : Food
     {
-        public override ItemQuality Quality { get => ItemQuality.Normal; set { } }
-
         [Constructable]
         public LambLeg()
             : this(1)
