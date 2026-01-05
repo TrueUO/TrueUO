@@ -276,7 +276,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(ChickenLeg), 1044498, 1025640, 0.0, 100.0, typeof(RawChickenLeg), 1044473, 1, 1044253);
             SetNeedHeat(index, true);
             SetUseAllRes(index, true);
-            ForceNonExceptional(index);
 
             index = AddCraft(typeof(FishSteak), 1044498, 1022427, 0.0, 100.0, typeof(RawFishSteak), 1044476, 1, 1044253);
             SetNeedHeat(index, true);
@@ -291,7 +290,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(LambLeg), 1044498, 1025642, 0.0, 100.0, typeof(RawLambLeg), 1044478, 1, 1044253);
             SetNeedHeat(index, true);
             SetUseAllRes(index, true);
-            ForceNonExceptional(index);
 
             index = AddCraft(typeof(Ribs), 1044498, 1022546, 0.0, 100.0, typeof(RawRibs), 1044485, 1, 1044253);
             SetNeedHeat(index, true);
