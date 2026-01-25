@@ -165,7 +165,6 @@ namespace Server.Mobiles
                         if (Banker.Withdraw(from, 5000, true))
                         {
                             SphynxFortune.ApplyFortune(from, Sphynx);
-                            SphynxFortune.ApplyFortune(from, Sphynx);
 
                             from.UpdateResistances();
                         }
