@@ -463,6 +463,13 @@ namespace Server
                 Utility.PopColor();
             }
 
+            Unix = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) ||
+                RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
+            Console.WriteLine("Core: Running on {0} {1}-bit", Unix ? "Unix" : "Windows", Is64Bit ? 64 : 32);
+
+            MultiProcessor = Environment.ProcessorCount > 1;
+
             ProcessorCount = Environment.ProcessorCount;
 
             if (ProcessorCount > 1)

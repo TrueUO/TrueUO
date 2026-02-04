@@ -45,6 +45,9 @@ namespace Server.Misc
 
         public static string ServerName = Config.Get("Server.Name", "My Shard");
 
+        public static string RELAYADDRESS = Config.Get("Server.Relay", "");
+
+
         private static IPAddress _PublicAddress;
 
         private static readonly Regex _AddressPattern = new Regex(@"([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})");
@@ -87,7 +90,12 @@ namespace Server.Misc
                         localAddress = _PublicAddress;
                     }
                 }
+                if (!String.IsNullOrEmpty(RELAYADDRESS))
+                {
+                    Resolve(RELAYADDRESS, out localAddress);
+                }
 
+                Console.WriteLine($"Running server relay on IP: {localAddress}");
                 e.AddServer(ServerName, new IPEndPoint(localAddress, localPort));
             }
             catch
@@ -142,7 +150,7 @@ namespace Server.Misc
                     outValue = iphe.AddressList[iphe.AddressList.Length - 1];
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Diagnostics.ExceptionLogging.LogException(e);
             }

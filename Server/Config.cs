@@ -496,6 +496,11 @@ namespace Server
 
 		public static string Get(string key, string defaultValue)
 		{
+            if(Environment.GetEnvironmentVariable(key) is string envValue)
+            {
+                Console.WriteLine($"Read {key} from Environment Variable");
+                return envValue;
+            }
 			return InternalGet(key) ?? defaultValue;
 		}
 
