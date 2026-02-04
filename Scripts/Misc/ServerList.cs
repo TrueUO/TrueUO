@@ -98,8 +98,8 @@ namespace Server.Misc
 
         public static string[] IPServices =
         {
-            "http://services.servuo.com/ip.php", "http://api.ipify.org",
-            "http://checkip.dyndns.org/"
+            "https://api.ipify.org",
+            "https://checkip.dyndns.org/"
         };
 
         private static void AutoDetection()
@@ -271,3 +271,4 @@ namespace Server.Misc
         }
     }
 }
+
