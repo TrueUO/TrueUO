@@ -10,7 +10,7 @@ Some distinct features/differences:
   - this greatly simplifies the code base and makes it easier to follow mechanics.
 * only supports the newest production client / CUO / Orion.
 * supports the newest production client files.
-* uses the newest version of .NET (.NET 9 as of this writing)
+* uses the newest version of .NET (.NET 10 as of this writing)
 * uses a new threaded save system that is 2x faster than current other RunUO versions.
 * uses the timer wheel system from ModernUO for faster and more accurate timers.
 * only works on Windows currently.
@@ -30,3 +30,4 @@ If you find bugs please submit them via GitHub.
 Always looking for help/bug fixing/enhancement support.
 
 Join our Discord Server: https://discord.gg/5RtDbkY3fC
+
