@@ -116,7 +116,7 @@ namespace Server.Items
         }
         #endregion
 
-        internal NavreysPillar[] m_Pillars;
+        private NavreysPillar[] m_Pillars;
         private Navrey m_Navrey;
 
         // Next time the daily pillar type shuffle should occur (UTC midnight schedule).
