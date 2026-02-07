@@ -35,17 +35,18 @@ namespace Server.Items
 
         private class AppraiseforCleanup : ContextMenuEntry
         {
-            private readonly Mobile m_Mobile;
+            private readonly Mobile _Mobile;
+
             public AppraiseforCleanup(Mobile mobile)
                 : base(1151298, 2) //Appraise for Cleanup
             {
-                m_Mobile = mobile;
+                _Mobile = mobile;
             }
 
             public override void OnClick()
             {
-                m_Mobile.Target = new AppraiseforCleanupTarget(m_Mobile);
-                m_Mobile.SendLocalizedMessage(1151299); //Target items to see how many Clean Up Britannia points you will receive for throwing them away. Continue targeting items until done, then press the ESC key to cancel the targeting cursor.
+                _Mobile.Target = new AppraiseforCleanupTarget(_Mobile);
+                _Mobile.SendLocalizedMessage(1151299); //Target items to see how many Clean Up Britannia points you will receive for throwing them away. Continue targeting items until done, then press the ESC key to cancel the targeting cursor.
             }
         }
 
@@ -65,6 +66,22 @@ namespace Server.Items
             reader.ReadInt();
         }
 
+        private static IEnumerable<Item> EnumerateCleanupCandidates(Item root)
+        {
+            yield return root;
+
+            if (root is BaseContainer container)
+            {
+                Container c = container;
+                List<Item> list = c.FindItemsByType<Item>();
+
+                for (int i = list.Count - 1; i >= 0; --i)
+                {
+                    yield return list[i];
+                }
+            }
+        }
+
         public virtual bool AddCleanupItem(Mobile from, Item item)
         {
             if (!CleanUpBritanniaData.Enabled)
@@ -72,37 +89,41 @@ namespace Server.Items
                 return false;
             }
 
-            double checkbagpoint;
             bool added = false;
 
-            if (item is BaseContainer container)
+            HashSet<Serial> existing = [];
+
+            for (int i = 0; i < m_Cleanup.Count; i++)
             {
-                Container c = container;
-
-                List<Item> list = c.FindItemsByType<Item>();
-
-                for (int i = list.Count - 1; i >= 0; --i)
-                {
-                    checkbagpoint = CleanUpBritanniaData.GetPoints(list[i]);
-
-                    if (checkbagpoint > 0 && m_Cleanup.Find(x => x.serials == list[i].Serial) == null)
-                    {
-                        m_Cleanup.Add(new CleanupArray { mobiles = from, items = list[i], points = checkbagpoint, serials = list[i].Serial });
-
-                        if (!added)
-                            added = true;
-                    }
-                }
+                existing.Add(m_Cleanup[i].serials);
             }
-            else
-            {
-                checkbagpoint = CleanUpBritanniaData.GetPoints(item);
 
-                if (checkbagpoint > 0 && m_Cleanup.Find(x => x.serials == item.Serial) == null)
+            foreach (Item candidate in EnumerateCleanupCandidates(item))
+            {
+                Serial s = candidate.Serial;
+
+                if (existing.Contains(s))
                 {
-                    m_Cleanup.Add(new CleanupArray { mobiles = from, items = item, points = checkbagpoint, serials = item.Serial });
-                    added = true;
+                    continue;
                 }
+
+                double points = CleanUpBritanniaData.GetPoints(candidate);
+
+                if (points <= 0)
+                {
+                    continue;
+                }
+
+                m_Cleanup.Add(new CleanupArray
+                {
+                    mobiles = from,
+                    items = candidate,
+                    points = points,
+                    serials = s
+                });
+
+                existing.Add(s);
+                added = true;
             }
 
             return added;
@@ -110,57 +131,20 @@ namespace Server.Items
 
         public void ConfirmCleanupItem(Item item)
         {
-            if (item is BaseContainer container)
+            HashSet<Serial> targets = [];
+
+            foreach (Item candidate in EnumerateCleanupCandidates(item))
             {
-                Container c = container;
-
-                List<Item> list = c.FindItemsByType<Item>();
-
-                List<CleanupArray> containerList = new List<CleanupArray>();
-
-                for (var index = 0; index < m_Cleanup.Count; index++)
-                {
-                    var r = m_Cleanup[index];
-
-                    for (var i = 0; i < list.Count; i++)
-                    {
-                        var k = list[i];
-                        var serial = k.Serial;
-
-                        if (Equals(serial, r.items.Serial))
-                        {
-                            containerList.Add(r);
-                            break;
-                        }
-                    }
-                }
-
-                for (var index = 0; index < containerList.Count; index++)
-                {
-                    var k = containerList[index];
-
-                    k.confirm = true;
-                }
+                targets.Add(candidate.Serial);
             }
-            else
+
+            for (int i = 0; i < m_Cleanup.Count; i++)
             {
-                List<CleanupArray> list = new List<CleanupArray>();
+                CleanupArray entry = m_Cleanup[i];
 
-                for (var index = 0; index < m_Cleanup.Count; index++)
+                if (targets.Contains(entry.serials))
                 {
-                    var r = m_Cleanup[index];
-
-                    if (r.items.Serial == item.Serial)
-                    {
-                        list.Add(r);
-                    }
-                }
-
-                for (var index = 0; index < list.Count; index++)
-                {
-                    var k = list[index];
-
-                    k.confirm = true;
+                    entry.confirm = true;
                 }
             }
         }
