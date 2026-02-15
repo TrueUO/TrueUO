@@ -1,10 +1,68 @@
+using Server.Gumps;
+using System;
+
 namespace Server.Mobiles
 {
+    public class HatchingUmbrascaleEgg : Item, ICreatureStatuette
+    {
+        public override int LabelNumber => 1158929;  // Triton
+
+        public Type CreatureType => typeof(JuvenileUmbrascale);
+
+        [Constructable]
+        public HatchingUmbrascaleEgg()
+            : base(45778)
+        {
+            Name = "Hatching Umbrascale Egg";
+        }
+
+        public HatchingUmbrascaleEgg(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (IsChildOf(from.Backpack))
+            {
+                if (from.Skills[SkillName.AnimalTaming].Value >= 100)
+                {
+                    from.SendGump(new ConfirmMountStatuetteGump(this));
+                }
+                else
+                {
+                    from.SendLocalizedMessage(1158959, "100"); // ~1_SKILL~ Animal Taming skill is required to redeem this pet.
+                }
+            }
+            else
+            {
+                SendLocalizedMessageTo(from, 1010095); // This must be on your person to use.
+            }
+        }
+
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            base.GetProperties(list);
+
+            list.Add(1158954); // *Redeemable for a pet*<br>*Requires Grandmaster Taming to Claim Pet*
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0); // version
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
     // Things Unknown:
-    // 1. Starting skills other than wrestling
-    // 2. AI Type - Melee vs Magic?
-    // 3. Fame and Karma values
-    // 4. Sounds - currently just using dragon
+    // 1. Fame and Karma values
+    // 2. Sounds - currently just using dragon
 
     [CorpseName("a juvenile umbrascale corpse")]
     public class JuvenileUmbrascale : BaseMount
@@ -42,10 +100,12 @@ namespace Server.Mobiles
             SetResistance(ResistanceType.Energy, 50);
 
             SetSkill(SkillName.Wrestling, 110.0, 130.0);
-            //SetSkill(SkillName.Tactics, 90.3, 99.3);
-            //SetSkill(SkillName.MagicResist, 75.3, 90.0);
-            //SetSkill(SkillName.Anatomy, 65.5, 69.4);
-            //SetSkill(SkillName.Healing, 72.2, 98.9);
+            SetSkill(SkillName.Tactics, 81.6);
+            SetSkill(SkillName.MagicResist, 57.3);
+            SetSkill(SkillName.Healing, 92.2);
+            SetSkill(SkillName.DetectHidden, 51.3);
+            SetSkill(SkillName.Parry, 63.5);
+            SetSkill(SkillName.Focus, 26.0);
 
             //Fame = 5000;  //Guessing here
             //Karma = 5000;  //Guessing here
@@ -60,12 +120,10 @@ namespace Server.Mobiles
         {
         }
 
-        public override FoodType FavoriteFood => FoodType.Meat;
-        public override bool CanAngerOnTame => true;
-     
-        public override int Hides => 10;
-        public override int Meat => 3;
+        public override bool DeleteOnRelease => true;
 
+        public override FoodType FavoriteFood => FoodType.Meat;
+        
         public override void GenerateLoot()
         {
         }
