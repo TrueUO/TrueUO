@@ -711,6 +711,7 @@ namespace Server.Mobiles
                 new TrainingDefinition(typeof(Imp), Class.MagicalClawedTailedAndNecromantic, MagicalAbility.Variety2, specialAbilityImp, WepAbility2, AreaEffectArea2, 2, 4),
                 new TrainingDefinition(typeof(IronBeetle), Class.Insectoid, MagicalAbility.StandardClawedOrTailed, specialAbilityGiantBeetle, WepAbility1, AreaEffectNone, 2, 5),
                 new TrainingDefinition(typeof(JackRabbit), Class.None, MagicalAbility.StandardClawedOrTailed, specialAbilityAnimalStandard, WepAbility1, AreaEffectNone, 1, 2),
+                new TrainingDefinition(typeof(JuvenileUmbrascale), Class.MagicalClawedAndTailed, MagicalAbility.Triton, specialAbilityClawedTailedAndMagical2, WepAbility11, AreaEffectArea2, 3, 5),
                 new TrainingDefinition(typeof(Kirin), Class.MagicalClawedAndTailed, MagicalAbility.Dragon1, specialAbilityClawedTailedAndMagical2, WepAbility2, AreaEffectArea1, 2, 5),
                 new TrainingDefinition(typeof(Lasher), Class.Magical, MagicalAbility.None, SpecialAbilityNone, WepAbilityNone, AreaEffectNone, 2, 4),
                 new TrainingDefinition(typeof(LavaLizard), Class.ClawedTailedMagicalAndTokuno, MagicalAbility.LavaLizard, SpecialAbilityNone, WepAbility6, AreaEffectArea1, 1, 4),
