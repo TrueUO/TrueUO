@@ -17,7 +17,7 @@ namespace Server.Gumps
 
         public override void Confirm(Mobile from)
         {
-            if (m_Item == null || m_Item.Deleted)
+            if (m_Item == null || m_Item.Deleted || m_Item.RootParent != from)
                 return;
 
             BaseCreature m = null;
@@ -40,6 +40,12 @@ namespace Server.Gumps
 
                     m.IsBonded = true;
                     m.MoveToWorld(from.Location, from.Map);
+
+                    if (m_Item.Hue != 0)
+                    {
+                        m.Hue = m_Item.Hue;
+                    }
+
                     m_Item.Delete();
 
                     PetTrainingHelper.GetAbilityProfile(m, true).OnTame();
