@@ -5,8 +5,6 @@ namespace Server.Mobiles
 {
     public class HatchingUmbrascaleEgg : Item, ICreatureStatuette
     {
-        public override int LabelNumber => 1158929;  // Triton
-
         public Type CreatureType => typeof(JuvenileUmbrascale);
 
         [Constructable]
@@ -61,8 +59,7 @@ namespace Server.Mobiles
     }
 
     // Things Unknown:
-    // 1. Fame and Karma values
-    // 2. Sounds - currently just using dragon
+    // 1. Sounds - currently just using dragon
 
     [CorpseName("a juvenile umbrascale corpse")]
     public class JuvenileUmbrascale : BaseMount
@@ -106,9 +103,6 @@ namespace Server.Mobiles
             SetSkill(SkillName.DetectHidden, 51.3);
             SetSkill(SkillName.Parry, 63.5);
             SetSkill(SkillName.Focus, 26.0);
-
-            //Fame = 5000;  //Guessing here
-            //Karma = 5000;  //Guessing here
 
             Tamable = true;
             ControlSlots = 3;
