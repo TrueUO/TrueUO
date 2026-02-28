@@ -134,7 +134,7 @@ namespace Server.Engines.CannedEvil
 				new[]{ typeof( CultistAmbusher  ), typeof( ShadowFiend ) },										
 				new[]{ typeof( KhalAnkurWarriors ) }											                    
 			} ),
-            new ChampionSpawnInfo( "Orcish Menace", typeof( /*Garthok*/ ), new[]{ "Contender", "Justiciar", "Justiciar" } , new[] // Khal Ankur
+            new ChampionSpawnInfo( "Orcish Menace", typeof( /*Garthok*/ ), ["Contender", "Justiciar", "Vanquisher "], new[] // Orchish Menace
             {
                 new[]{ typeof( Orc ), typeof( OrcFootSoldier ) }, // Level 1
                 new[]{ typeof( OrcBomber ), typeof( EarthElemental ) }, // Level 2
