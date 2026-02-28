@@ -1,11 +1,10 @@
-#region References
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Net.Http;          
 using System.Text.RegularExpressions;
-#endregion
 
 namespace Server.Misc
 {
@@ -48,6 +47,23 @@ namespace Server.Misc
         private static IPAddress _PublicAddress;
 
         private static readonly Regex _AddressPattern = new Regex(@"([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})");
+
+        private static readonly HttpClient _HttpClient = CreateHttpClient();
+
+        private static HttpClient CreateHttpClient()
+        {
+            HttpClientHandler handler = new HttpClientHandler
+            {
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
+            };
+
+            HttpClient client = new HttpClient(handler)
+            {
+                Timeout = TimeSpan.FromSeconds(10)
+            };
+
+            return client;
+        }
 
         public static void Initialize()
         {
@@ -150,7 +166,7 @@ namespace Server.Misc
 
             System.Collections.Generic.IEnumerable<IPAddress> uips = adapters.Select(a => a.GetIPProperties()).SelectMany(p => p.UnicastAddresses.Cast<IPAddressInformation>(), (p, u) => u.Address);
 
-            foreach (var ip in uips)
+            foreach (IPAddress ip in uips)
             {
                 if (!IPAddress.IsLoopback(ip) && ip.AddressFamily != AddressFamily.InterNetworkV6 && !IsPrivateNetwork(ip))
                 {
@@ -220,7 +236,7 @@ namespace Server.Misc
             string data;
             Match match;
 
-            for (var index = 0; index < services.Length; index++)
+            for (int index = 0; index < services.Length; index++)
             {
                 string service = services[index];
 
@@ -232,10 +248,8 @@ namespace Server.Misc
 
                         Console.WriteLine("ServerList: >>> {0}", uri.Host);
 
-                        using (WebClient client = new WebClient())
-                        {
-                            data = client.DownloadString(uri);
-                        }
+                        // HttpClient replacement for WebClient.DownloadString
+                        data = _HttpClient.GetStringAsync(uri).GetAwaiter().GetResult();
 
                         Console.WriteLine("ServerList: <<< {0}", data);
 
@@ -254,6 +268,7 @@ namespace Server.Misc
                     }
                     catch
                     {
+                        ip = null;
                     }
 
                     if (ip != null)
