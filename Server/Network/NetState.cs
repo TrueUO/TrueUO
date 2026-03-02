@@ -33,20 +33,27 @@ namespace Server.Network
 	{
         public int GetSendQueuePendingCount()
         {
-            return m_SendQueue.PendingCount;
-        }
+            ByteQueue sendQueue = m_SendQueue;
 
-        public List<SendQueue.Gram> GetSendQueueSnapshot()
-        {
-            return m_SendQueue.GetSnapshot();
+            if (sendQueue == null)
+            {
+                return 0;
+            }
+
+            lock (sendQueue)
+            {
+                return sendQueue.Length;
+            }
         }
 
 		public static bool BufferStaticPackets = false;
 
 		public static event NetStateCreatedCallback CreatedCallback;
 
+		private ByteQueue m_RecvQueue;
+		private ByteQueue m_SendQueue;
 		private byte[] m_RecvBuffer;
-		private readonly SendQueue m_SendQueue;
+		private byte[] m_SendBuffer;
 		private AsyncCallback m_OnReceive, m_OnSend;
 
 		private readonly MessagePump m_MessagePump;
@@ -390,17 +397,17 @@ namespace Server.Network
 		public NetState(Socket socket, MessagePump messagePump)
 		{
 			Socket = socket;
-			Buffer = new ByteQueue();
+			m_RecvQueue = new ByteQueue();
+			m_SendQueue = new ByteQueue();
 
 			m_RecvBuffer = m_ReceiveBufferPool.AcquireBuffer();
+			m_SendBuffer = m_SendBufferPool.AcquireBuffer();
 			m_MessagePump = messagePump;
 
 			Gumps = new List<Gump>();
 			HuePickers = new List<HuePicker>();
 			Menus = new List<IMenu>();
 			Trades = new List<SecureTrade>();
-
-			m_SendQueue = new SendQueue();
 
 			m_NextCheckActivity = Core.TickCount + 30000;
 
@@ -501,49 +508,41 @@ namespace Server.Network
 
 				try
 				{
-					SendQueue.Gram gram;
+					ByteQueue sendQueue = m_SendQueue;
 
-					lock (_SendLock)
+					if (sendQueue == null)
 					{
-						lock (m_SendQueue)
-						{
-							gram = m_SendQueue.Enqueue(buffer, length);
+						p.OnSend();
+						return;
+					}
 
-                            // If no full‑buffer Gram was returned, but we're idle and there's
-                            // a partial chunk ready, flush it immediately:
-                            if (gram == null && !_Sending && m_SendQueue.IsFlushReady)
-                            {
-                                gram = m_SendQueue.CheckFlushReady();
-                            }
-                        }
-
-						if (buffered && m_SendBufferPool.Count < SendBufferCapacity)
+					lock (sendQueue)
+					{
+						if (sendQueue.Length + length <= 0x200000)
 						{
-							m_SendBufferPool.ReleaseBuffer(buffer);
+							sendQueue.Enqueue(buffer, 0, length);
 						}
-
-						if (gram != null && !_Sending)
+						else
 						{
-							_Sending = true;
+							Utility.PushColor(ConsoleColor.Red);
+							Console.WriteLine("Client: {0}: Too much data pending, disconnecting...", this);
+							Utility.PopColor();
 
-							try
-							{
-								Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
-							}
-							catch (Exception ex)
-							{
-								TraceException(ex);
-								Dispose(false);
-							}
+							Dispose(false);
+							return;
 						}
 					}
-				}
-				catch (CapacityExceededException)
-				{
-					Utility.PushColor(ConsoleColor.Red);
-					Console.WriteLine("Client: {0}: Too much data pending, disconnecting...", this);
-					Utility.PopColor();
 
+					if (buffered && m_SendBufferPool.Count < SendBufferCapacity)
+					{
+						m_SendBufferPool.ReleaseBuffer(buffer);
+					}
+
+					Flush();
+				}
+				catch (Exception ex)
+				{
+					TraceException(ex);
 					Dispose(false);
 				}
 
@@ -635,8 +634,8 @@ namespace Server.Network
 						PacketEncoder.DecodeIncomingPacket(this, ref buffer, ref byteCount);
 					}
 
-					lock (Buffer)
-						Buffer.Enqueue(buffer, 0, byteCount);
+					lock (m_RecvQueue)
+						m_RecvQueue.Enqueue(buffer, 0, byteCount);
 
 					m_MessagePump.OnReceive(this);
 
@@ -690,36 +689,14 @@ namespace Server.Network
 					Thread.Sleep(m_CoalesceSleep);
 				}
 
-				SendQueue.Gram gram;
-
-				lock (m_SendQueue)
+				lock (_SendLock)
 				{
-					gram = m_SendQueue.Dequeue();
-
-					if (gram == null && m_SendQueue.IsFlushReady)
-					{
-						gram = m_SendQueue.CheckFlushReady();
-					}
+					_Sending = false;
 				}
 
-				if (gram != null)
+				if (m_SendQueue != null)
 				{
-					try
-					{
-						s.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, s);
-					}
-					catch (Exception ex)
-					{
-						TraceException(ex);
-						Dispose(false);
-					}
-				}
-				else
-				{
-					lock (_SendLock)
-					{
-						_Sending = false;
-					}
+					Flush();
 				}
 			}
 			catch (Exception)
@@ -785,36 +762,44 @@ namespace Server.Network
 
 			lock (_SendLock)
 			{
+				ByteQueue sendQueue = m_SendQueue;
+
+				if (sendQueue == null || m_SendBuffer == null)
+				{
+					return false;
+				}
+
 				if (_Sending)
 				{
 					return false;
 				}
 
-				SendQueue.Gram gram;
-
-				lock (m_SendQueue)
+				try
 				{
-					if (!m_SendQueue.IsFlushReady)
+					int size;
+
+					lock (sendQueue)
 					{
-						return false;
+						if (sendQueue.IsEmpty)
+						{
+							return false;
+						}
+
+						size = Math.Min(sendQueue.Length, m_SendBuffer.Length);
+						sendQueue.Dequeue(m_SendBuffer, 0, size);
 					}
 
-					gram = m_SendQueue.CheckFlushReady();
-				}
-
-				if (gram != null)
-				{
-					try
+					if (size > 0)
 					{
 						_Sending = true;
-						Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
+						Socket.BeginSend(m_SendBuffer, 0, size, SocketFlags.None, m_OnSend, Socket);
 						return true;
 					}
-					catch (Exception ex)
-					{
-						TraceException(ex);
-						Dispose(false);
-					}
+				}
+				catch (Exception ex)
+				{
+					TraceException(ex);
+					Dispose(false);
 				}
 			}
 
@@ -944,13 +929,23 @@ namespace Server.Network
 				}
 			}
 
+			if (m_SendBuffer != null)
+			{
+				lock (m_SendBufferPool)
+				{
+					m_SendBufferPool.ReleaseBuffer(m_SendBuffer);
+				}
+			}
+
 			Socket = null;
 
 			PacketEncoder = null;
 			PacketEncryptor = null;
 
-			Buffer = null;
+			m_RecvQueue = null;
+			m_SendQueue = null;
 			m_RecvBuffer = null;
+			m_SendBuffer = null;
 
 			m_OnReceive = null;
 			m_OnSend = null;
@@ -962,13 +957,6 @@ namespace Server.Network
 				m_Disposed.Enqueue(this);
 			}
 
-			lock (m_SendQueue)
-			{
-				if (!m_SendQueue.IsEmpty)
-				{
-					m_SendQueue.Clear();
-				}
-			}
 		}
 
 		public static void Initialize()
@@ -1054,7 +1042,7 @@ namespace Server.Network
 
 		public Socket Socket { get; private set; }
 
-		public ByteQueue Buffer { get; private set; }
+		public ByteQueue Buffer => m_RecvQueue;
 
         public int CompareTo(NetState other)
 		{

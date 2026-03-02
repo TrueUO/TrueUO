@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using Server.Network;
 using Server.Targeting;
@@ -51,27 +50,7 @@ namespace Server.Commands
                 int pendingCount = ns.GetSendQueuePendingCount();
                 sb.AppendLine("SendQueue Pending Count: " + pendingCount);
 
-                List<SendQueue.Gram> snapshot = ns.GetSendQueueSnapshot();
-                if (snapshot != null && snapshot.Count > 0)
-                {
-                    for (int i = 0; i < snapshot.Count; i++)
-                    {
-                        SendQueue.Gram gram = snapshot[i];
-                        sb.AppendLine(string.Format("Gram {0}: Length = {1}, Buffer Size = {2}", i, gram.Length, gram.Buffer.Length));
-                    }
-                    // If there's exactly one Gram, display a hex dump of its contents.
-                    if (snapshot.Count == 1)
-                    {
-                        SendQueue.Gram gram = snapshot[0];
-                        int dumpLength = Math.Min(gram.Length, 64);
-                        string hexDump = GetHexDump(gram.Buffer, 0, dumpLength);
-                        sb.AppendLine(string.Format("Hex Dump (first {0} bytes): {1}", dumpLength, hexDump));
-                    }
-                }
-                else
-                {
-                    sb.AppendLine("SendQueue is empty.");
-                }
+                sb.AppendLine(pendingCount > 0 ? "SendQueue contains pending bytes." : "SendQueue is empty.");
 
                 from.SendMessage(sb.ToString());
             }
@@ -81,15 +60,6 @@ namespace Server.Commands
                 return string.Format("{0:D2}:{1:D2}:{2:D2}", span.Hours, span.Minutes, span.Seconds);
             }
 
-            private string GetHexDump(byte[] data, int offset, int length)
-            {
-                StringBuilder hex = new StringBuilder();
-                for (int i = offset; i < offset + length; i++)
-                {
-                    hex.AppendFormat("{0:X2} ", data[i]);
-                }
-                return hex.ToString().Trim();
-            }
         }
     }
 }
