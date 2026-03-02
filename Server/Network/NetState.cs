@@ -690,41 +690,41 @@ namespace Server.Network
 					Thread.Sleep(m_CoalesceSleep);
 				}
 
-				SendQueue.Gram gram;
+                lock (_SendLock)
+                {
+                    SendQueue.Gram gram;
 
-				lock (m_SendQueue)
-				{
-					gram = m_SendQueue.Dequeue();
+                    lock (m_SendQueue)
+                    {
+                        gram = m_SendQueue.Dequeue();
 
-					if (gram == null && m_SendQueue.IsFlushReady)
-					{
-						gram = m_SendQueue.CheckFlushReady();
-					}
-				}
+                        if (gram == null && m_SendQueue.IsFlushReady)
+                        {
+                            gram = m_SendQueue.CheckFlushReady();
+                        }
+                    }
 
-				if (gram != null)
-				{
-					try
-					{
-						s.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, s);
-					}
-					catch (Exception ex)
-					{
-						TraceException(ex);
-						Dispose(false);
-					}
-				}
-				else
-				{
-					lock (_SendLock)
-					{
-						_Sending = false;
-					}
-				}
-			}
-			catch (Exception)
-			{
-				Dispose(false);
+                    if (gram != null)
+                    {
+                        try
+                        {
+                            s.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, s);
+                        }
+                        catch (Exception ex)
+                        {
+                            TraceException(ex);
+                            Dispose(false);
+                        }
+                    }
+                    else
+                    {
+                        _Sending = false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Dispose(false);
 			}
 		}
 
