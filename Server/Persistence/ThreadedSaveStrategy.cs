@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Server.Guilds;
@@ -51,14 +50,6 @@ namespace Server
             DateTime saveStartUtc = DateTime.UtcNow;
 
             int chunkCount = Math.Max(1, (itemCount + ChunkSize - 1) / ChunkSize);
-            string[] expectedFiles = new string[chunkCount * 2];
-
-            for (int i = 0; i < chunkCount; i++)
-            {
-                expectedFiles[i * 2] = World.ItemIndexPath.Replace(".idx", $"_{i:D8}.idx");
-                expectedFiles[(i * 2) + 1] = World.ItemDataPath.Replace(".bin", $"_{i:D8}.bin");
-            }
-
             int totalItemCount = 0;
             ConcurrentQueue<string> saveErrors = new ConcurrentQueue<string>();
 
@@ -66,8 +57,8 @@ namespace Server
             {
                 try
                 {
-                    using BinaryFileWriter idx = new BinaryFileWriter(expectedFiles[0], false);
-                    using BinaryFileWriter bin = new BinaryFileWriter(expectedFiles[1], true);
+                    using BinaryFileWriter idx = new BinaryFileWriter(World.ItemIndexPath, false);
+                    using BinaryFileWriter bin = new BinaryFileWriter(World.ItemDataPath, true);
 
                     idx.Write(itemCount);
 
@@ -79,11 +70,19 @@ namespace Server
                 }
                 catch (Exception ex)
                 {
-                    saveErrors.Enqueue($"Error saving chunk 0: {ex}");
+                    saveErrors.Enqueue($"Error saving items: {ex}");
                 }
             }
             else
             {
+                string[] expectedFiles = new string[chunkCount * 2];
+
+                for (int i = 0; i < chunkCount; i++)
+                {
+                    expectedFiles[i * 2] = World.ItemIndexPath.Replace(".idx", $"_{i:D8}.idx");
+                    expectedFiles[(i * 2) + 1] = World.ItemDataPath.Replace(".bin", $"_{i:D8}.bin");
+                }
+
                 Item[] itemArray = new Item[itemCount];
                 items.Values.CopyTo(itemArray, 0);
 
@@ -143,15 +142,6 @@ namespace Server
             {
                 _AllFilesSaved = false;
                 Console.WriteLine($"Expected to save {itemCount}, but only saved {totalItemCount}. Un-threaded Save will be triggered");
-            }
-
-            for (int i = 0; i < expectedFiles.Length; i++)
-            {
-                if (!File.Exists(expectedFiles[i]))
-                {
-                    _AllFilesSaved = false;
-                    Console.WriteLine($"Save is missing file {expectedFiles[i]}. Un-threaded Save will be triggered");
-                }
             }
 
             Console.WriteLine("totalItemCount: " + totalItemCount + " original: " + itemCount);
