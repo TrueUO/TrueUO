@@ -9,8 +9,8 @@ namespace Server
 {
     public sealed class ThreadedSaveStrategy : ISaveStrategy
     {
-        private const int ChunkSize = 300000;
-        private const int MaxParallelChunkWriters = 2;
+        private const int ChunkSize = 50000;
+        private const int MaxParallelChunkWriters = 4;
 
         private readonly ConcurrentQueue<Item> _DecayQueue = new();
         private bool _AllFilesSaved = true;
@@ -66,9 +66,11 @@ namespace Server
             Item[] itemArray = new Item[itemCount];
             items.Values.CopyTo(itemArray, 0);
 
+            int parallelWriters = Math.Max(1, Math.Min(chunkCount, Math.Min(Environment.ProcessorCount, MaxParallelChunkWriters)));
+
             ParallelOptions options = new ParallelOptions
             {
-                MaxDegreeOfParallelism = Math.Max(1, Math.Min(chunkCount, Math.Min(Environment.ProcessorCount, MaxParallelChunkWriters)))
+                MaxDegreeOfParallelism = parallelWriters
             };
 
             Parallel.For(0, chunkCount, options, chunkIndex =>
