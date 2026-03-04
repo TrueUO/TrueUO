@@ -10,7 +10,9 @@ namespace Server
 {
     public sealed class ThreadedSaveStrategy : ISaveStrategy
     {
-        private readonly ConcurrentQueue<Item> _DecayQueue = new(); 
+        private const int ChunkSize = 100000;
+
+        private readonly ConcurrentQueue<Item> _DecayQueue = new();
         private bool _AllFilesSaved = true;
 
         public bool Save()
@@ -48,99 +50,87 @@ namespace Server
             int itemCount = items.Count;
             DateTime saveStartUtc = DateTime.UtcNow;
 
-            if (itemCount == 0)
-            {
-                using BinaryFileWriter emptyIdx = new BinaryFileWriter(World.ItemIndexPath.Replace(".idx", "_00000000.idx"), false);
-                emptyIdx.Write(0);
+            int chunkCount = Math.Max(1, (itemCount + ChunkSize - 1) / ChunkSize);
+            string[] expectedFiles = new string[chunkCount * 2];
 
-                using BinaryFileWriter emptyBin = new BinaryFileWriter(World.ItemDataPath.Replace(".bin", "_00000000.bin"), true);
-                using BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false);
-
-                tdb.Write(World.m_ItemTypes.Count);
-
-                for (int i = 0; i < World.m_ItemTypes.Count; ++i)
-                {
-                    tdb.Write(World.m_ItemTypes[i].FullName);
-                }
-
-                return;
-            }
-
-            int chunkSize = 100000; // Reduced chunk size to prevent large array copying issues
-            int chunkCount = (itemCount + chunkSize - 1) / chunkSize;
-            List<Item> itemList = new List<Item>(items.Values);
-            var expectedFiles = new List<string>(chunkCount * 2);
             for (int i = 0; i < chunkCount; i++)
             {
-                expectedFiles.Add(World.ItemIndexPath.Replace(".idx", $"_{i:D8}.idx"));
-                expectedFiles.Add(World.ItemDataPath.Replace(".bin", $"_{i:D8}.bin"));
+                expectedFiles[i * 2] = World.ItemIndexPath.Replace(".idx", $"_{i:D8}.idx");
+                expectedFiles[(i * 2) + 1] = World.ItemDataPath.Replace(".bin", $"_{i:D8}.bin");
             }
 
             int totalItemCount = 0;
             ConcurrentQueue<string> saveErrors = new ConcurrentQueue<string>();
-            ParallelOptions options = new ParallelOptions
-            {
-                MaxDegreeOfParallelism = Math.Max(1, Math.Min(Environment.ProcessorCount, 4))
-            };
 
-            using (BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false))
+            if (chunkCount == 1)
             {
+                try
+                {
+                    using BinaryFileWriter idx = new BinaryFileWriter(expectedFiles[0], false);
+                    using BinaryFileWriter bin = new BinaryFileWriter(expectedFiles[1], true);
+
+                    idx.Write(itemCount);
+
+                    foreach (Item item in items.Values)
+                    {
+                        WriteItem(item, idx, bin, saveStartUtc);
+                        totalItemCount++;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    saveErrors.Enqueue($"Error saving chunk 0: {ex}");
+                }
+            }
+            else
+            {
+                Item[] itemArray = new Item[itemCount];
+                items.Values.CopyTo(itemArray, 0);
+
+                ParallelOptions options = new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = Math.Max(1, Math.Min(chunkCount, Environment.ProcessorCount))
+                };
+
                 Parallel.For(0, chunkCount, options, chunkIndex =>
                 {
                     try
                     {
-                        string idxPath = World.ItemIndexPath.Replace(".idx", $"_{chunkIndex:D8}.idx");
-                        string binPath = World.ItemDataPath.Replace(".bin", $"_{chunkIndex:D8}.bin");
-                        int startIndex = chunkIndex * chunkSize;
-                        int endIndex = Math.Min(startIndex + chunkSize, itemCount);
+                        string idxPath = expectedFiles[chunkIndex * 2];
+                        string binPath = expectedFiles[(chunkIndex * 2) + 1];
+                        int startIndex = chunkIndex * ChunkSize;
+                        int endIndex = Math.Min(startIndex + ChunkSize, itemCount);
 
-                        using (BinaryFileWriter idx = new BinaryFileWriter(idxPath, false))
-                        using (BinaryFileWriter bin = new BinaryFileWriter(binPath, true))
+                        using BinaryFileWriter idx = new BinaryFileWriter(idxPath, false);
+                        using BinaryFileWriter bin = new BinaryFileWriter(binPath, true);
+
+                        idx.Write(endIndex - startIndex);
+
+                        int itemsWritten = 0;
+
+                        for (int i = startIndex; i < endIndex; i++)
                         {
-                            idx.Write(endIndex - startIndex);
-
-                            int itemsWritten = 0;
-
-                            for (int i = startIndex; i < endIndex; i++)
-                            {
-                                Item item = itemList[i];
-
-                                if (item.Decays && item.Parent == null && item.Map != Map.Internal && (item.LastMoved + item.DecayTime) <= saveStartUtc)
-                                {
-                                    _DecayQueue.Enqueue(item);
-                                }
-
-                                long start = bin.Position;
-
-                                idx.Write(item.m_TypeRef);
-                                idx.Write(item.Serial);
-                                idx.Write(start);
-
-                                item.Serialize(bin);
-
-                                idx.Write((int)(bin.Position - start));
-
-                                item.FreeCache();
-                                itemsWritten++;
-                            }
-
-                            Interlocked.Add(ref totalItemCount, itemsWritten);
+                            WriteItem(itemArray[i], idx, bin, saveStartUtc);
+                            itemsWritten++;
                         }
+
+                        Interlocked.Add(ref totalItemCount, itemsWritten);
                     }
                     catch (Exception ex)
                     {
                         saveErrors.Enqueue($"Error saving chunk {chunkIndex}: {ex}");
                     }
                 });
+            }
 
+            using (BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false))
+            {
                 tdb.Write(World.m_ItemTypes.Count);
 
                 for (int i = 0; i < World.m_ItemTypes.Count; ++i)
                 {
                     tdb.Write(World.m_ItemTypes[i].FullName);
                 }
-
-                Console.WriteLine("totalItemCount: " + totalItemCount + " original: " + itemCount);
             }
 
             while (saveErrors.TryDequeue(out string error))
@@ -155,14 +145,36 @@ namespace Server
                 Console.WriteLine($"Expected to save {itemCount}, but only saved {totalItemCount}. Un-threaded Save will be triggered");
             }
 
-            foreach (string item in expectedFiles)
+            for (int i = 0; i < expectedFiles.Length; i++)
             {
-                if (!File.Exists(item))
+                if (!File.Exists(expectedFiles[i]))
                 {
                     _AllFilesSaved = false;
-                    Console.WriteLine($"Save is missing file {item}. Un-threaded Save will be triggered");
+                    Console.WriteLine($"Save is missing file {expectedFiles[i]}. Un-threaded Save will be triggered");
                 }
             }
+
+            Console.WriteLine("totalItemCount: " + totalItemCount + " original: " + itemCount);
+        }
+
+        private void WriteItem(Item item, BinaryFileWriter idx, BinaryFileWriter bin, DateTime saveStartUtc)
+        {
+            if (item.Decays && item.Parent == null && item.Map != Map.Internal && (item.LastMoved + item.DecayTime) <= saveStartUtc)
+            {
+                _DecayQueue.Enqueue(item);
+            }
+
+            long start = bin.Position;
+
+            idx.Write(item.m_TypeRef);
+            idx.Write(item.Serial);
+            idx.Write(start);
+
+            item.Serialize(bin);
+
+            idx.Write((int)(bin.Position - start));
+
+            item.FreeCache();
         }
 
         private static void SaveMobiles()
