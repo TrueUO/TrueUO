@@ -9,7 +9,8 @@ namespace Server
 {
     public sealed class ThreadedSaveStrategy : ISaveStrategy
     {
-        private const int ChunkSize = 100000;
+        private const int ChunkSize = 300000;
+        private const int MaxParallelChunkWriters = 2;
 
         private readonly ConcurrentQueue<Item> _DecayQueue = new();
         private bool _AllFilesSaved = true;
@@ -53,74 +54,50 @@ namespace Server
             int totalItemCount = 0;
             ConcurrentQueue<string> saveErrors = new ConcurrentQueue<string>();
 
-            if (chunkCount == 1)
+            string[] idxPaths = new string[chunkCount];
+            string[] binPaths = new string[chunkCount];
+
+            for (int i = 0; i < chunkCount; i++)
+            {
+                idxPaths[i] = World.ItemIndexPath.Replace(".idx", $"_{i:D8}.idx");
+                binPaths[i] = World.ItemDataPath.Replace(".bin", $"_{i:D8}.bin");
+            }
+
+            Item[] itemArray = new Item[itemCount];
+            items.Values.CopyTo(itemArray, 0);
+
+            ParallelOptions options = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = Math.Max(1, Math.Min(chunkCount, Math.Min(Environment.ProcessorCount, MaxParallelChunkWriters)))
+            };
+
+            Parallel.For(0, chunkCount, options, chunkIndex =>
             {
                 try
                 {
-                    using BinaryFileWriter idx = new BinaryFileWriter(World.ItemIndexPath, false);
-                    using BinaryFileWriter bin = new BinaryFileWriter(World.ItemDataPath, true);
+                    int startIndex = chunkIndex * ChunkSize;
+                    int endIndex = Math.Min(startIndex + ChunkSize, itemCount);
 
-                    idx.Write(itemCount);
+                    using BinaryFileWriter idx = new BinaryFileWriter(idxPaths[chunkIndex], false);
+                    using BinaryFileWriter bin = new BinaryFileWriter(binPaths[chunkIndex], true);
 
-                    foreach (Item item in items.Values)
+                    idx.Write(endIndex - startIndex);
+
+                    int itemsWritten = 0;
+
+                    for (int i = startIndex; i < endIndex; i++)
                     {
-                        WriteItem(item, idx, bin, saveStartUtc);
-                        totalItemCount++;
+                        WriteItem(itemArray[i], idx, bin, saveStartUtc);
+                        itemsWritten++;
                     }
+
+                    Interlocked.Add(ref totalItemCount, itemsWritten);
                 }
                 catch (Exception ex)
                 {
-                    saveErrors.Enqueue($"Error saving items: {ex}");
+                    saveErrors.Enqueue($"Error saving chunk {chunkIndex}: {ex}");
                 }
-            }
-            else
-            {
-                string[] expectedFiles = new string[chunkCount * 2];
-
-                for (int i = 0; i < chunkCount; i++)
-                {
-                    expectedFiles[i * 2] = World.ItemIndexPath.Replace(".idx", $"_{i:D8}.idx");
-                    expectedFiles[(i * 2) + 1] = World.ItemDataPath.Replace(".bin", $"_{i:D8}.bin");
-                }
-
-                Item[] itemArray = new Item[itemCount];
-                items.Values.CopyTo(itemArray, 0);
-
-                ParallelOptions options = new ParallelOptions
-                {
-                    MaxDegreeOfParallelism = Math.Max(1, Math.Min(chunkCount, Environment.ProcessorCount))
-                };
-
-                Parallel.For(0, chunkCount, options, chunkIndex =>
-                {
-                    try
-                    {
-                        string idxPath = expectedFiles[chunkIndex * 2];
-                        string binPath = expectedFiles[(chunkIndex * 2) + 1];
-                        int startIndex = chunkIndex * ChunkSize;
-                        int endIndex = Math.Min(startIndex + ChunkSize, itemCount);
-
-                        using BinaryFileWriter idx = new BinaryFileWriter(idxPath, false);
-                        using BinaryFileWriter bin = new BinaryFileWriter(binPath, true);
-
-                        idx.Write(endIndex - startIndex);
-
-                        int itemsWritten = 0;
-
-                        for (int i = startIndex; i < endIndex; i++)
-                        {
-                            WriteItem(itemArray[i], idx, bin, saveStartUtc);
-                            itemsWritten++;
-                        }
-
-                        Interlocked.Add(ref totalItemCount, itemsWritten);
-                    }
-                    catch (Exception ex)
-                    {
-                        saveErrors.Enqueue($"Error saving chunk {chunkIndex}: {ex}");
-                    }
-                });
-            }
+            });
 
             using (BinaryFileWriter tdb = new BinaryFileWriter(World.ItemTypesPath, false))
             {
