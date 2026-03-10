@@ -709,6 +709,12 @@ namespace Server
         #region Construction methods
         public static Item Construct(Type type)
         {
+            if (type == null)
+            {
+                Diagnostics.ExceptionLogging.LogException(new ArgumentNullException(nameof(type), "Loot.Construct received a null type reference."));
+                return null;
+            }
+
             Item item;
 
             try
@@ -726,7 +732,7 @@ namespace Server
 
         public static Item Construct(Type[] types)
         {
-            if (types.Length > 0)
+            if (types?.Length > 0)
             {
                 return Construct(types, Utility.Random(types.Length));
             }
@@ -736,8 +742,16 @@ namespace Server
 
         public static Item Construct(Type[] types, int index)
         {
-            if (index >= 0 && index < types.Length)
+            if (types != null && index >= 0 && index < types.Length)
             {
+                if (types[index] == null)
+                {
+                    Diagnostics.ExceptionLogging.LogException(
+                        new InvalidOperationException($"Loot.Construct selected a null type entry from a {nameof(Type)}[] pool at index {index} (length {types.Length})."));
+
+                    return null;
+                }
+
                 return Construct(types[index]);
             }
 
@@ -746,11 +760,16 @@ namespace Server
 
         public static Item Construct(params Type[][] types)
         {
+            if (types == null || types.Length == 0)
+            {
+                return null;
+            }
+
             int totalLength = 0;
 
             for (int i = 0; i < types.Length; ++i)
             {
-                totalLength += types[i].Length;
+                totalLength += types[i]?.Length ?? 0;
             }
 
             if (totalLength > 0)
@@ -759,12 +778,20 @@ namespace Server
 
                 for (int i = 0; i < types.Length; ++i)
                 {
-                    if (index >= 0 && index < types[i].Length)
+                    if (types[i] != null && index >= 0 && index < types[i].Length)
                     {
+                        if (types[i][index] == null)
+                        {
+                            Diagnostics.ExceptionLogging.LogException(
+                                new InvalidOperationException($"Loot.Construct selected a null type entry from nested pool {i} at index {index} (pool length {types[i].Length})."));
+
+                            return null;
+                        }
+
                         return Construct(types[i][index]);
                     }
 
-                    index -= types[i].Length;
+                    index -= types[i]?.Length ?? 0;
                 }
             }
 
