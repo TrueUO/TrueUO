@@ -6,9 +6,9 @@ namespace Server.Network
 {
     public static class PacketThrottles
     {
-        private static readonly int[] _Delays = new int[Byte.MaxValue];
+        private static readonly int[] _Delays = new int[Byte.MaxValue + 1];
 
-        private static readonly bool[] _Reserved = new bool[Byte.MaxValue];
+        private static readonly bool[] _Reserved = new bool[Byte.MaxValue + 1];
 
         static PacketThrottles()
         {
@@ -52,7 +52,7 @@ namespace Server.Network
 
         public static void Initialize()
         {
-            for (byte i = 0; i < Byte.MaxValue; i++)
+            for (int i = 0; i < _Delays.Length; i++)
             {
                 if (!_Reserved[i] && _Delays[i] > 0)
                 {

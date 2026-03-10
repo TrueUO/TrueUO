@@ -1066,7 +1066,7 @@ namespace Server.Network
 			return string.Compare(m_ToString, other.m_ToString, StringComparison.Ordinal);
 		}
 
-        private readonly long[] _Throttles = new long[byte.MaxValue];
+        private readonly long[] _Throttles = new long[byte.MaxValue + 1];
 
         public void SetPacketTime(byte packetID)
         {
