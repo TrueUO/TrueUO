@@ -6326,47 +6326,71 @@ namespace Server.Mobiles
         }
         #endregion
 
+        //TODO : Watch this for a while to see if infinite loop still happens 6/11/2024
         public override void OnHeal(ref int amount, Mobile from)
         {
             base.OnHeal(ref amount, from);
 
-            // Removed until we can figure out the endless loop, or do a complete refactor
-            /*
-            if (from == null)
-                return;
-
-            if (amount > 0 && from != null && from != this)
+            if (from == null || amount <= 0 || from == this)
             {
-                for (int i = Aggressed.Count - 1; i >= 0; i--)
+                return;
+            }
+
+            for (int i = Aggressed.Count - 1; i >= 0; i--)
+            {
+                AggressorInfo info = Aggressed[i];
+
+                bool any = false;
+
+                for (int index = 0; index < info.Defender.DamageEntries.Count; index++)
                 {
-                    AggressorInfo info = Aggressed[i];
+                    DamageEntry de = info.Defender.DamageEntries[index];
 
-                    if (info.Defender.InRange(Location, Core.GlobalMaxUpdateRange) && info.Defender.DamageEntries.Any(de => de.Damager == this))
+                    if (de.Damager == this)
                     {
-                        info.Defender.RegisterDamage(amount, from);
-                    }
-
-                    if (info.Defender.Player && from.CanBeHarmful(info.Defender))
-                    {
-                        from.DoHarmful(info.Defender, true);
+                        any = true;
+                        break;
                     }
                 }
 
-                for (int i = Aggressors.Count - 1; i >= 0; i--)
+                if (info.Defender.InRange(Location, Core.GlobalMaxUpdateRange) && any)
                 {
-                    AggressorInfo info = Aggressors[i];
+                    info.Defender.RegisterDamage(amount, from);
+                }
 
-                    if (info.Attacker.InRange(Location, Core.GlobalMaxUpdateRange) && info.Attacker.DamageEntries.Any(de => de.Damager == this))
-                    {
-                        info.Attacker.RegisterDamage(amount, from);
-                    }
+                if (info.Defender.Player && from.CanBeHarmful(info.Defender, false))
+                {
+                    from.DoHarmful(info.Defender, true);
+                }
+            }
 
-                    if (info.Attacker.Player && from.CanBeHarmful(info.Attacker))
+            for (int i = Aggressors.Count - 1; i >= 0; i--)
+            {
+                AggressorInfo info = Aggressors[i];
+
+                bool any = false;
+
+                for (int index = 0; index < info.Attacker.DamageEntries.Count; index++)
+                {
+                    DamageEntry de = info.Attacker.DamageEntries[index];
+
+                    if (de.Damager == this)
                     {
-                        from.DoHarmful(info.Attacker, true);
+                        any = true;
+                        break;
                     }
                 }
-            }*/
+
+                if (info.Attacker.InRange(Location, Core.GlobalMaxUpdateRange) && any)
+                {
+                    info.Attacker.RegisterDamage(amount, from);
+                }
+
+                if (info.Attacker.Player && from.CanBeHarmful(info.Attacker, false))
+                {
+                    from.DoHarmful(info.Attacker, true);
+                }
+            }
         }
 
         #region Spawn Position
