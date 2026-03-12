@@ -429,8 +429,18 @@ namespace Server.Network
 		}
 
 		private bool _Sending;
+		private SendQueue.Gram _SendingGram;
+		private int _SendingGramOffset;
 
 		private readonly object _SendLock = new object();
+
+		private void BeginSendGram(Socket socket, SendQueue.Gram gram, int offset)
+		{
+			_SendingGram = gram;
+			_SendingGramOffset = offset;
+
+			socket.BeginSend(gram.Buffer, offset, gram.Length - offset, SocketFlags.None, m_OnSend, socket);
+		}
 
 		public virtual void Send(Packet p)
 		{
@@ -528,7 +538,7 @@ namespace Server.Network
 
 							try
 							{
-								Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
+								BeginSendGram(Socket, gram, 0);
 							}
 							catch (Exception ex)
 							{
@@ -690,33 +700,62 @@ namespace Server.Network
 					Thread.Sleep(m_CoalesceSleep);
 				}
 
-				SendQueue.Gram gram;
-
-				lock (m_SendQueue)
+				lock (_SendLock)
 				{
-					gram = m_SendQueue.Dequeue();
-
-					if (gram == null && m_SendQueue.IsFlushReady)
+					if (_SendingGram == null)
 					{
-						gram = m_SendQueue.CheckFlushReady();
-					}
-				}
-
-				if (gram != null)
-				{
-					try
-					{
-						s.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, s);
-					}
-					catch (Exception ex)
-					{
-						TraceException(ex);
 						Dispose(false);
+						return;
 					}
+
+					_SendingGramOffset += bytes;
+
+					if (_SendingGramOffset < _SendingGram.Length)
+					{
+						try
+						{
+							BeginSendGram(s, _SendingGram, _SendingGramOffset);
+						}
+						catch (Exception ex)
+						{
+							TraceException(ex);
+							Dispose(false);
+						}
+
+						return;
+					}
+
+					_SendingGram = null;
+					_SendingGramOffset = 0;
 				}
-				else
+
+				lock (_SendLock)
 				{
-					lock (_SendLock)
+					SendQueue.Gram gram;
+
+					lock (m_SendQueue)
+					{
+						gram = m_SendQueue.Dequeue();
+
+						if (gram == null && m_SendQueue.IsFlushReady)
+						{
+							gram = m_SendQueue.CheckFlushReady();
+						}
+					}
+
+					if (gram != null)
+					{
+						try
+						{
+							BeginSendGram(s, gram, 0);
+						}
+						catch (Exception ex)
+						{
+							TraceException(ex);
+							Dispose(false);
+						}
+					}
+					else
 					{
 						_Sending = false;
 					}
@@ -807,7 +846,7 @@ namespace Server.Network
 					try
 					{
 						_Sending = true;
-						Socket.BeginSend(gram.Buffer, 0, gram.Length, SocketFlags.None, m_OnSend, Socket);
+						BeginSendGram(Socket, gram, 0);
 						return true;
 					}
 					catch (Exception ex)
@@ -962,12 +1001,19 @@ namespace Server.Network
 				m_Disposed.Enqueue(this);
 			}
 
-			lock (m_SendQueue)
+			lock (_SendLock)
 			{
-				if (!m_SendQueue.IsEmpty)
+				lock (m_SendQueue)
 				{
-					m_SendQueue.Clear();
+					if (!m_SendQueue.IsEmpty)
+					{
+						m_SendQueue.Clear();
+					}
 				}
+
+				_SendingGram = null;
+				_SendingGramOffset = 0;
+				_Sending = false;
 			}
 		}
 
@@ -1066,7 +1112,7 @@ namespace Server.Network
 			return string.Compare(m_ToString, other.m_ToString, StringComparison.Ordinal);
 		}
 
-        private readonly long[] _Throttles = new long[byte.MaxValue];
+        private readonly long[] _Throttles = new long[byte.MaxValue + 1];
 
         public void SetPacketTime(byte packetID)
         {
