@@ -729,33 +729,33 @@ namespace Server.Network
 					_SendingGramOffset = 0;
 				}
 
-				SendQueue.Gram gram;
-
-				lock (m_SendQueue)
+				lock (_SendLock)
 				{
-					gram = m_SendQueue.Dequeue();
+					SendQueue.Gram gram;
 
-					if (gram == null && m_SendQueue.IsFlushReady)
+					lock (m_SendQueue)
 					{
-						gram = m_SendQueue.CheckFlushReady();
-					}
-				}
+						gram = m_SendQueue.Dequeue();
 
-				if (gram != null)
-				{
-					try
-					{
-						BeginSendGram(s, gram, 0);
+						if (gram == null && m_SendQueue.IsFlushReady)
+						{
+							gram = m_SendQueue.CheckFlushReady();
+						}
 					}
-					catch (Exception ex)
+
+					if (gram != null)
 					{
-						TraceException(ex);
-						Dispose(false);
+						try
+						{
+							BeginSendGram(s, gram, 0);
+						}
+						catch (Exception ex)
+						{
+							TraceException(ex);
+							Dispose(false);
+						}
 					}
-				}
-				else
-				{
-					lock (_SendLock)
+					else
 					{
 						_Sending = false;
 					}
@@ -1001,11 +1001,14 @@ namespace Server.Network
 				m_Disposed.Enqueue(this);
 			}
 
-			lock (m_SendQueue)
+			lock (_SendLock)
 			{
-				if (!m_SendQueue.IsEmpty)
+				lock (m_SendQueue)
 				{
-					m_SendQueue.Clear();
+					if (!m_SendQueue.IsEmpty)
+					{
+						m_SendQueue.Clear();
+					}
 				}
 
 				_SendingGram = null;
