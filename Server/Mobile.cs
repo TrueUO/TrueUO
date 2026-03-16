@@ -342,7 +342,7 @@ namespace Server
 		public bool HasExpired => DateTime.UtcNow > m_LastDamage + m_ExpireDelay;
 		public List<DamageEntry> Responsible { get; set; }
 
-		private static TimeSpan m_ExpireDelay = TimeSpan.FromMinutes(2.0);
+		private static TimeSpan m_ExpireDelay = TimeSpan.FromMinutes(5.0); // changed from 2 minutes to 5 on 3/15/2026
 
 		public static TimeSpan ExpireDelay { get => m_ExpireDelay; set => m_ExpireDelay = value; }
 
