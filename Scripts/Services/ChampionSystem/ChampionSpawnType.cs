@@ -17,7 +17,8 @@ namespace Server.Engines.CannedEvil
         Terror,
         Infuse,
         DragonTurtle,
-        Khaldun
+        Khaldun,
+        OrcishMenace
     }
 
     public class ChampionSpawnInfo
@@ -132,7 +133,14 @@ namespace Server.Engines.CannedEvil
 				new[]{ typeof( SkelementalMage ), typeof( Viscera ) },											   
 				new[]{ typeof( CultistAmbusher  ), typeof( ShadowFiend ) },										
 				new[]{ typeof( KhalAnkurWarriors ) }											                    
-			} )
+			} ),
+            new ChampionSpawnInfo( "Orcish Menace", typeof( /*Garthok*/ ), ["Contender", "Justiciar", "Vanquisher "], new[] // Orchish Menace
+            {
+                new[]{ typeof( Orc ), typeof( OrcFootSoldier ) }, // Level 1
+                new[]{ typeof( OrcBomber ), typeof( EarthElemental ) }, // Level 2
+                new[]{ typeof( OrcishMage  ), typeof( BronzeElemental ) }, // Level 3
+                new[]{ typeof( OrcBrute ), typeof( /*OrcHound*/ ) } // Level 4
+            } )
         };
 
         public static ChampionSpawnInfo GetInfo(ChampionSpawnType type)
