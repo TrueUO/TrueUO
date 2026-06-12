@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path=".travis.yml" />
+    <File Path="Compile.WIN - Debug.bat" />
+    <File Path="Compile.WIN - Release.bat" />
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE" />
+    <File Path="Makefile" />
+    <File Path="Microsoft.Win32.SystemEvents.dll" />
+    <File Path="README.md" />
+    <File Path="TrueUO.deps.json" />
+    <File Path="TrueUO.runtimeconfig.json" />
+    <File Path="TrueUO.sln.DotSettings" />
+    <File Path="VersionSpecificSymbols.Common.prop" />
+    <File Path="zlibwapi32.dll" />
+    <File Path="zlibwapi64.dll" />
+  </Folder>
+  <Project Path="Application/TrueUO.csproj" />
+  <Project Path="Scripts/Scripts.csproj">
+    <BuildDependency Project="Server/Server.csproj" />
+  </Project>
+  <Project Path="Server/Server.csproj" />
+</Solution>
