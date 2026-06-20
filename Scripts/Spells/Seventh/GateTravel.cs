@@ -99,14 +99,17 @@ namespace Server.Spells.Seventh
             if (galleon == null)
             {
                 Caster.SendLocalizedMessage(1116767); // The ship could not be located.
+                FinishSequence();
             }
             else if (galleon.Map == Map.Internal)
             {
                 Caster.SendLocalizedMessage(1149569); // That ship is in dry dock.
+                FinishSequence();
             }
             else if (!galleon.HasAccess(Caster))
             {
                 Caster.SendLocalizedMessage(1116617); // You do not have permission to board this ship.
+                FinishSequence();
             }
             else
             {

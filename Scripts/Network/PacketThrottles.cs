@@ -6,9 +6,9 @@ namespace Server.Network
 {
     public static class PacketThrottles
     {
-        private static readonly int[] _Delays = new int[Byte.MaxValue];
+        private static readonly int[] _Delays = new int[Byte.MaxValue + 1];
 
-        private static readonly bool[] _Reserved = new bool[Byte.MaxValue];
+        private static readonly bool[] _Reserved = new bool[Byte.MaxValue + 1];
 
         static PacketThrottles()
         {
@@ -52,7 +52,7 @@ namespace Server.Network
 
         public static void Initialize()
         {
-            for (byte i = 0; i < Byte.MaxValue; i++)
+            for (int i = 0; i < _Delays.Length; i++)
             {
                 if (!_Reserved[i] && _Delays[i] > 0)
                 {
@@ -181,7 +181,8 @@ namespace Server.Network
 
         private static void Save(GenericWriter writer)
         {
-            writer.WriteEncodedInt(0);
+            writer.WriteEncodedInt(1);
+            writer.WriteEncodedInt(_Delays.Length);
 
             for (var i = 0; i < _Delays.Length; i++)
             {
@@ -191,11 +192,36 @@ namespace Server.Network
 
         private static void Load(GenericReader reader)
         {
-            reader.ReadEncodedInt();
+            var version = reader.ReadEncodedInt();
 
-            for (var i = 0; i < _Delays.Length; i++)
+            switch (version)
             {
-                _Delays[i] = reader.ReadEncodedInt();
+                case 1:
+                    {
+                        var count = reader.ReadEncodedInt();
+                        var max = Math.Min(count, _Delays.Length);
+
+                        for (var i = 0; i < max && !reader.End(); i++)
+                        {
+                            _Delays[i] = reader.ReadEncodedInt();
+                        }
+
+                        for (var i = max; i < count && !reader.End(); i++)
+                        {
+                            reader.ReadEncodedInt();
+                        }
+
+                        break;
+                    }
+                case 0:
+                    {
+                        for (var i = 0; i < _Delays.Length && !reader.End(); i++)
+                        {
+                            _Delays[i] = reader.ReadEncodedInt();
+                        }
+
+                        break;
+                    }
             }
         }
     }

@@ -88,15 +88,42 @@ namespace Server.Items
 
         public override int GetTotal(TotalType type)
         {
-            if (type == TotalType.Weight)
-            {
-                int weight = base.GetTotal(type);
+            return type == TotalType.Weight ? GetReducedWeight(base.GetTotal(type)) : base.GetTotal(type);
+        }
 
-                if (weight > 0)
-                    return (int)Math.Max(1, (base.GetTotal(type) * 0.3));
+        public override void UpdateTotal(Item sender, TotalType type, int delta)
+        {
+            if (type != TotalType.Weight || sender == this || delta == 0)
+            {
+                base.UpdateTotal(sender, type, delta);
+                return;
             }
 
-            return base.GetTotal(type);
+            int oldRawWeight = base.GetTotal(TotalType.Weight);
+            int oldReducedWeight = GetReducedWeight(oldRawWeight);
+
+            base.UpdateTotal(sender, type, delta);
+
+            int newRawWeight = base.GetTotal(TotalType.Weight);
+            int newReducedWeight = GetReducedWeight(newRawWeight);
+
+            int reducedDelta = newReducedWeight - oldReducedWeight;
+            int correction = reducedDelta - delta;
+
+            if (correction != 0)
+            {
+                base.UpdateTotal(this, type, correction);
+            }
+        }
+
+        private int GetReducedWeight(int rawWeight)
+        {
+            if (rawWeight <= 0)
+            {
+                return 0;
+            }
+
+            return (int)Math.Max(1, rawWeight * 0.3);
         }
 
         public override void Serialize(GenericWriter writer)

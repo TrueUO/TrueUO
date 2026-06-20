@@ -14,6 +14,8 @@ namespace Server.Network
 		private Queue<NetState> m_Queue;
 		private Queue<NetState> m_WorkingQueue;
 		private readonly Queue<NetState> m_Throttled;
+		private readonly HashSet<NetState> m_QueuedStates;
+		private readonly object m_QueueSyncRoot;
 
 		public Listener[] Listeners { get; set; }
 
@@ -48,6 +50,16 @@ namespace Server.Network
 			m_Queue = new Queue<NetState>();
 			m_WorkingQueue = new Queue<NetState>();
 			m_Throttled = new Queue<NetState>();
+			m_QueuedStates = new HashSet<NetState>();
+			m_QueueSyncRoot = new object();
+		}
+
+		private void Enqueue(NetState ns)
+		{
+			if (ns != null && m_QueuedStates.Add(ns))
+			{
+				m_Queue.Enqueue(ns);
+			}
 		}
 
 		public void AddListener(Listener l)
@@ -118,8 +130,10 @@ namespace Server.Network
 
 		public void OnReceive(NetState ns)
 		{
-			lock (this)
-				m_Queue.Enqueue(ns);
+			lock (m_QueueSyncRoot)
+			{
+				Enqueue(ns);
+			}
 
 			Core.Set();
 		}
@@ -128,7 +142,7 @@ namespace Server.Network
 		{
 			CheckListener();
 
-			lock (this)
+			lock (m_QueueSyncRoot)
 			{
 				Queue<NetState> temp = m_WorkingQueue;
 				m_WorkingQueue = m_Queue;
@@ -139,17 +153,22 @@ namespace Server.Network
 			{
 				NetState ns = m_WorkingQueue.Dequeue();
 
+				lock (m_QueueSyncRoot)
+				{
+					m_QueuedStates.Remove(ns);
+				}
+
 				if (ns.Running)
 				{
 					HandleReceive(ns);
 				}
 			}
 
-			lock (this)
+			lock (m_QueueSyncRoot)
 			{
 				while (m_Throttled.Count > 0)
 				{
-					m_Queue.Enqueue(m_Throttled.Dequeue());
+					Enqueue(m_Throttled.Dequeue());
 				}
 			}
 		}

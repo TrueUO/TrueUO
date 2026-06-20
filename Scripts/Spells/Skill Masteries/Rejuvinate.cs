@@ -87,7 +87,7 @@ namespace Server.Spells.SkillMasteries
                 {
                     Caster.SendLocalizedMessage(1046439); // That is not a valid target.
                 }
-                else if (m.Hits > m.HitsMax && m.Stam >= m.StamMax && m.Mana >= m.ManaMax)
+                else if (m.Hits >= m.HitsMax && m.Stam >= m.StamMax && m.Mana >= m.ManaMax)
                 {
                     Caster.SendLocalizedMessage(1155788); // Your target is already at full health, mana and stamina!
                 }
@@ -175,7 +175,7 @@ namespace Server.Spells.SkillMasteries
                         Caster.SendLocalizedMessage(1155790); // Your target has been rejuvenated!
                     }
 
-                    int skill = ((int)Caster.Skills[CastSkill].Value + GetWeaponSkill() + GetMasteryLevel() * 40) / 3;
+                    int skill = ((int)Caster.Skills[CastSkill].Value + GetWeaponSkill() + GetMasteryLevel() * 45) / 3;
                     int duration;
 
                     if (skill >= 120)
@@ -185,9 +185,7 @@ namespace Server.Spells.SkillMasteries
                     else
                         duration = 180;
 
-                    TimeSpan d;
-
-                    d = Caster.AccessLevel == AccessLevel.Player ? TimeSpan.FromMinutes(duration) : TimeSpan.FromSeconds(10);
+                    TimeSpan d = Caster.AccessLevel == AccessLevel.Player ? TimeSpan.FromMinutes(duration) : TimeSpan.FromSeconds(10);
 
                     AddToCooldown(d);
                 }

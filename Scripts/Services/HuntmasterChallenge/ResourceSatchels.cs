@@ -41,6 +41,24 @@ namespace Server.Items
             return total;
         }
 
+        public override void UpdateTotal(Item sender, TotalType type, int delta)
+        {
+            base.UpdateTotal(sender, type, delta);
+
+            if (type != TotalType.Weight || sender == this || delta == 0)
+            {
+                return;
+            }
+
+            int adjustedDelta = delta - (delta * _WeightReduction / 100);
+            int correction = adjustedDelta - delta;
+
+            if (correction != 0)
+            {
+                base.UpdateTotal(this, type, correction);
+            }
+        }
+
         public override bool CheckHold(Mobile m, Item item, bool message, bool checkItems, int plusItems, int plusWeight)
         {
             if (!CheckType(item))

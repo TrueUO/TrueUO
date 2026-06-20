@@ -56,14 +56,14 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (IsAccessibleTo(from) && from.InRange(GetWorldLocation(), 3))
+            if (!IsChildOf(from.Backpack)) // Make sure its in their pack
             {
-                from.SendLocalizedMessage(1070929); // Select the artifact or enhanced magic item to dye.
-                from.BeginTarget(3, false, Targeting.TargetFlags.None, new TargetStateCallback(InternalCallback), this);
+                from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
             }
             else
             {
-                from.SendLocalizedMessage(502436); // That is not accessible.
+                from.SendLocalizedMessage(1070929); // Select the artifact or enhanced magic item to dye.
+                from.BeginTarget(3, false, Targeting.TargetFlags.None, new TargetStateCallback(InternalCallback), this);
             }
         }
 
@@ -71,30 +71,46 @@ namespace Server.Items
         {
             BasePigmentsOfTokuno pigment = (BasePigmentsOfTokuno)state;
 
-            if (pigment.Deleted || pigment.UsesRemaining <= 0 || !from.InRange(pigment.GetWorldLocation(), 3) || !pigment.IsAccessibleTo(from))
+            if (pigment.Deleted || pigment.UsesRemaining <= 0 || !pigment.IsChildOf(from))
+            {
                 return;
+            }
 
             Item i = targeted as Item;
 
             if (i == null)
+            {
                 from.SendLocalizedMessage(1070931); // You can only dye artifacts and enhanced magic items with this tub.
+            }
             else if (!from.InRange(i.GetWorldLocation(), 3) || !IsAccessibleTo(from))
+            {
                 from.SendLocalizedMessage(502436); // That is not accessible.
+            }
             else if (from.Items.Contains(i))
+            {
                 from.SendLocalizedMessage(1070930); // Can't dye artifacts or enhanced magic items that are being worn.
+            }
             else if (i.IsLockedDown)
+            {
                 from.SendLocalizedMessage(1070932); // You may not dye artifacts and enhanced magic items which are locked down.
+            }
             else if (i is MetalPigmentsOfTokuno || i is LesserPigmentsOfTokuno || i is PigmentsOfTokuno || i is CompassionPigment)
+            {
                 from.SendLocalizedMessage(1042417); // You cannot dye that.
+            }
             else if (!IsValidItem(i))
+            {
                 from.SendLocalizedMessage(1070931); // You can only dye artifacts and enhanced magic items with this tub.	//Yes, it says tub on OSI.  Don't ask me why ;p
+            }
             else
             {
                 //Notes: on OSI there IS no hue check to see if it's already hued.  and no messages on successful hue either
                 i.Hue = Hue;
 
                 if (--pigment.UsesRemaining <= 0)
+                {
                     pigment.Delete();
+                }
 
                 from.PlaySound(0x23E); // As per OSI TC1
             }
@@ -107,26 +123,37 @@ namespace Server.Items
                 return false;
             }
 
-            CraftResource resource = CraftResource.None;
+            if (i is BaseArmor armor)
+            {
+                CraftResourceType restype = CraftResources.GetType(armor.Resource);
 
-            if (i is BaseWeapon weapon)
-                resource = weapon.Resource;
-            else if (i is BaseArmor armor)
-                resource = armor.Resource;
-            else if (i is BaseClothing clothing)
-                resource = clothing.Resource;
+                if ((CraftResourceType.Leather == restype || CraftResourceType.Metal == restype) && ArmorMaterialType.Bone != armor.MaterialType)
+                {
+                    return true;
+                }
+            }
 
-            if (!CraftResources.IsStandard(resource))
+            if (i is IDyable ||
+                i is BaseWeapon ||
+                i.IsArtifact ||
+                i is BaseTalisman ||
+                i is Spellbook ||
+                i is BaseJewel ||
+                i is BaseStatuette ||
+                i is Runebook ||
+                i is DecorativePlant ||
+                i is BaseBook ||
+                i is ThreeTieredCake ||
+                i is MongbatDartboard ||
+                i is FelineBlessedStatue)
+            {
                 return true;
+            }
 
-            if (i is MongbatDartboard || i is FelineBlessedStatue)
+            if (i is BaseAddonDeed { UseCraftResource: true } deed && !deed.IsReDeed && deed.Resource != CraftResource.None)
+            {
                 return true;
-
-            if (i.IsArtifact)
-                return true;
-
-            if (i is BaseAddonDeed deed && deed.UseCraftResource && !deed.IsReDeed && deed.Resource != CraftResource.None)
-                return true;
+            }
 
             return false;
         }

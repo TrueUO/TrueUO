@@ -58,9 +58,9 @@ namespace Server.Spells.Spellweaving
 
                 int sum = 0;
 
-                for (var index = 0; index < Arcanists.Count; index++)
+                for (int index = 0; index < Arcanists.Count; index++)
                 {
-                    var m = Arcanists[index];
+                    Mobile m = Arcanists[index];
 
                     sum += GetStrength(m);
                 }
@@ -164,17 +164,16 @@ namespace Server.Spells.Spellweaving
 
             if (focus == null)
             {
-                ArcaneFocus f = new ArcaneFocus((int)duration.TotalSeconds, strengthBonus);
-                if (to.PlaceInBackpack(f))
-                {
-                    to.AddStatMod(new StatMod(StatType.Str, "[ArcaneFocus]", strengthBonus, duration));
+                ArcaneFocus newFocus = new ArcaneFocus((int)duration.TotalSeconds, strengthBonus);
 
-                    f.SendTimeRemainingMessage(to);
+                if (to.PlaceInBackpack(newFocus))
+                {
+                    newFocus.SendTimeRemainingMessage(to);
                     to.SendLocalizedMessage(1072740); // An arcane focus appears in your backpack.
                 }
                 else
                 {
-                    f.Delete();
+                    newFocus.Delete();
                 }
             }
             else //OSI renewal rules: the new one will override the old one, always.
