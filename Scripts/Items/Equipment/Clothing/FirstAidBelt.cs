@@ -72,9 +72,20 @@ namespace Server.Items
 
         public override void UpdateTotal(Item sender, TotalType type, int delta)
         {
-            InvalidateProperties();
-
             base.UpdateTotal(sender, type, delta);
+
+            if (type != TotalType.Weight || sender == this || delta == 0)
+            {
+                return;
+            }
+
+            int adjustedDelta = delta - (delta * m_WeightReduction / 100);
+            int correction = adjustedDelta - delta;
+
+            if (correction != 0)
+            {
+                base.UpdateTotal(this, type, correction);
+            }
         }
 
         public override int GetTotal(TotalType type)
