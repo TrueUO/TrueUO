@@ -743,8 +743,10 @@ namespace Server.Engines.Shadowguard
                     Table = new Dictionary<Mobile, EncounterType>();
 
                 Mobile m = reader.ReadMobile();
+                EncounterType encounter = (EncounterType)reader.ReadInt();
+
                 if (m != null)
-                    Table[m] = (EncounterType)reader.ReadInt();
+                    Table[m] = encounter;
             }
 
             count = reader.ReadInt();
