@@ -13,6 +13,7 @@
 
 # Common Directories
 /.vs
+/artifacts
 /Honesty
 /Logs
 /Backups
