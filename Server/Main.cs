@@ -23,6 +23,9 @@ namespace Server
             GlobalMaxUpdateRange = 24;
             GlobalUpdateRange = 18;
             GlobalRadarRange = 40;
+
+             // Initialize Unix platform detection for platform-specific code paths.
+            Unix = !IsWindows;
         }
 
         public static Action<CrashedEventArgs> CrashedHandler { get; set; }
