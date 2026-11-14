@@ -221,58 +221,58 @@ namespace Server
 				UOPLoad(multicollectionPath);
 				UsingUOPFormat = true;
 			}
-			else
-			{
-				string idxPath = Core.FindDataFile("multi.idx");
-				string mulPath = Core.FindDataFile("multi.mul");
+            else
+            {
+                string idxPath = Core.FindDataFile("multi.idx");
+                string mulPath = Core.FindDataFile("multi.mul");
 
-				if (File.Exists(idxPath) && File.Exists(mulPath))
-				{
-					FileStream idx = new FileStream(idxPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-					m_IndexReader = new BinaryReader(idx);
+                if (File.Exists(idxPath) && File.Exists(mulPath))
+                {
+                    FileStream idx = new FileStream(idxPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    m_IndexReader = new BinaryReader(idx);
 
-					FileStream stream = new FileStream(mulPath, FileMode.Open, FileAccess.Read, FileShare.Read);
-					m_StreamReader = new BinaryReader(stream);
+                    FileStream stream = new FileStream(mulPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    m_StreamReader = new BinaryReader(stream);
 
-					string vdPath = Core.FindDataFile("verdata.mul");
+                    string vdPath = Core.FindDataFile("verdata.mul");
 
-					if (File.Exists(vdPath))
-					{
-						using (FileStream fs = new FileStream(vdPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-						{
-							BinaryReader bin = new BinaryReader(fs);
+                    if (File.Exists(vdPath))
+                    {
+                        using (FileStream fs = new FileStream(vdPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        {
+                            BinaryReader bin = new BinaryReader(fs);
 
-							int count = bin.ReadInt32();
+                            int count = bin.ReadInt32();
 
-							for (int i = 0; i < count; ++i)
-							{
-								int file = bin.ReadInt32();
-								int index = bin.ReadInt32();
-								int lookup = bin.ReadInt32();
-								int length = bin.ReadInt32();
-								/*int extra = */
-								bin.ReadInt32();
+                            for (int i = 0; i < count; ++i)
+                            {
+                                int file = bin.ReadInt32();
+                                int index = bin.ReadInt32();
+                                int lookup = bin.ReadInt32();
+                                int length = bin.ReadInt32();
+                                /*int extra = */
+                                bin.ReadInt32();
 
-								if (file == 14 && index >= 0 && lookup >= 0 && length > 0)
-								{
-									bin.BaseStream.Seek(lookup, SeekOrigin.Begin);
+                                if (file == 14 && index >= 0 && lookup >= 0 && length > 0)
+                                {
+                                    bin.BaseStream.Seek(lookup, SeekOrigin.Begin);
 
-									m_Components[index] = new MultiComponentList(bin, length / 12);
+                                    m_Components[index] = new MultiComponentList(bin, length / 12);
 
-									bin.BaseStream.Seek(24 + (i * 20), SeekOrigin.Begin);
-								}
-							}
+                                    bin.BaseStream.Seek(24 + (i * 20), SeekOrigin.Begin);
+                                }
+                            }
 
-							bin.Close();
-						}
-					}
-					else
-					{
-						Console.WriteLine("Warning: Multi data files not found!");
-					}
-				}
-			}
-		}
+                            bin.Close();
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Warning: Multi data files not found!");
+                }
+            }
+        }
 	}
 
 	public struct MultiTileEntry
