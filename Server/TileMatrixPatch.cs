@@ -70,11 +70,15 @@ namespace Server
 
 					for (int i = 0; i < count; ++i)
 					{
+						const int blockSize = 192;
+						const int blockStart = 4;
+						const int fullBlockSize = blockSize + blockStart;
 						int blockID = indexReader.ReadInt32();
 						int x = blockID / matrix.BlockHeight;
 						int y = blockID % matrix.BlockHeight;
 
-						fsData.Seek(4, SeekOrigin.Current);
+						// NativeReader doesn't increase the stream.Position. Let's jump to the requested block right after the starting int32
+						fsData.Seek((fullBlockSize * i) + blockStart, SeekOrigin.Begin);
 
 						LandTile[] tiles = new LandTile[64];
 
